@@ -375,9 +375,13 @@ public class AutoTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.POSITIVE_INT:
+            case Constants.PHONE:
                 ((EditCard) viewHolder.component).setText(ReadWriteDB.readValueQuestion(question));
                 break;
             case Constants.DROPDOWN_LIST:
+            case Constants.IMAGES_2:
+            case Constants.IMAGES_4:
+            case Constants.IMAGES_6:
 
                 ((Spinner) viewHolder.component).setSelection(ReadWriteDB.readPositionOption(question));
 
@@ -542,6 +546,7 @@ public class AutoTabAdapter extends BaseAdapter implements ITabAdapter {
                     ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
                     break;
                 case Constants.INT:
+                case Constants.PHONE:
                     rowView = initialiseView(R.layout.integer, parent, question, viewHolder, position);
 
                     //Add main component, set filters and listener
@@ -565,6 +570,9 @@ public class AutoTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;
 
                 case Constants.DROPDOWN_LIST:
+                case Constants.IMAGES_2:
+                case Constants.IMAGES_4:
+                case Constants.IMAGES_6:
                     rowView = initialiseView(R.layout.ddl, parent, question, viewHolder, position);
 
                     initialiseScorableComponent(rowView, viewHolder);

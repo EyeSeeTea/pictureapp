@@ -11,7 +11,11 @@ public class Constants {
             POSITIVE_INT = 6,
             NO_ANSWER = 7,
             RADIO_GROUP_HORIZONTAL = 8,
-            RADIO_GROUP_VERTICAL = 9;
+            RADIO_GROUP_VERTICAL = 9,
+            IMAGES_2 = 10,
+            IMAGES_4 = 11,
+            IMAGES_6 = 12,
+            PHONE = 13;
 
     public static final String DEFAULT_SELECT_OPTION = "";
 
@@ -25,7 +29,8 @@ public class Constants {
             TAB_SCORE_SUMMARY = 4,
             TAB_OTHER = 5,
             TAB_ADHERENCE = 6,
-            TAB_IQATAB=7;
+            TAB_IQATAB=7,
+            TAB_DYNAMIC_AUTOMATIC_TAB=8;
 
     //FIXME So far the special sub type of composite scores is treated by name
     public static final String COMPOSITE_SCORE_TAB_NAME="Composite Scores";

@@ -157,19 +157,10 @@ public abstract class BaseActivity extends ActionBarActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
                         Session.logout();
-                        finishAndGo(LoginActivity.class);
+                        finishAndGo(DashboardActivity.class);
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).create().show();
-    }
-
-
-    /**
-     * Called when the user clicks the New Survey button
-     */
-    public void newSurvey(View view) {
-        Intent targetActivityIntent = new Intent(this,CreateSurveyActivity.class);
-        startActivity(targetActivityIntent);
     }
 
     /**

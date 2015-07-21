@@ -238,15 +238,15 @@ public class SurveyService extends IntentService {
         Program program=survey.getProgram();
 
         //Get composite scores for current program & register them (scores)
-        List<CompositeScore> compositeScores = CompositeScore.listAllByProgram(program);
-        ScoreRegister.registerCompositeScores(compositeScores);
+//        List<CompositeScore> compositeScores = CompositeScore.listAllByProgram(program);
+//        ScoreRegister.registerCompositeScores(compositeScores);
 
         //Get tabs for current program & register them (scores)
         List<Tab> tabs = Tab.getTabsBySession();
-        ScoreRegister.registerTabScores(tabs);
+//        ScoreRegister.registerTabScores(tabs);
 
         //Since intents does NOT admit NON serializable as values we use Session instead
-        Session.putServiceValue(PREPARE_SURVEY_ACTION_COMPOSITE_SCORES,compositeScores);
+//        Session.putServiceValue(PREPARE_SURVEY_ACTION_COMPOSITE_SCORES,compositeScores);
         Session.putServiceValue(PREPARE_SURVEY_ACTION_TABS,tabs);
 
         //Returning result to anyone listening

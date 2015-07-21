@@ -304,10 +304,10 @@ public class SurveyActivity extends BaseActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG,"onReceive");
-//            List<CompositeScore> compositeScores=(List<CompositeScore>)Session.popServiceValue(SurveyService.PREPARE_SURVEY_ACTION_COMPOSITE_SCORES);
+            List<CompositeScore> compositeScores=(List<CompositeScore>)Session.popServiceValue(SurveyService.PREPARE_SURVEY_ACTION_COMPOSITE_SCORES);
             List<Tab> tabs=(List<Tab>)Session.popServiceValue(SurveyService.PREPARE_SURVEY_ACTION_TABS);
 
-            tabAdaptersCache.reloadAdapters(tabs,null);
+            tabAdaptersCache.reloadAdapters(tabs,compositeScores);
             reloadTabs(tabs);
             stopProgress();
         }
@@ -375,7 +375,6 @@ public class SurveyActivity extends BaseActivity{
             Tab firstTab=tabs.get(0);
             this.adapters.clear();
             this.adapters.put(firstTab,buildAdapter(firstTab));
-//            this.adapters.put(firstTab, AutoTabAdapter.build(firstTab, SurveyActivity.this));
             this.compositeScores=compositeScores;
         }
 

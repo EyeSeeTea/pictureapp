@@ -31,11 +31,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
+import org.eyeseetea.malariacare.database.model.OrgUnit;
+import org.eyeseetea.malariacare.database.model.Program;
+import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.InputStream;
+import java.util.List;
 
 
 public abstract class BaseActivity extends ActionBarActivity {
@@ -71,7 +75,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Customize transitions for these activities
      */
     protected void initTransition(){
-        this.overridePendingTransition(R.transition.anim_slide_in_left,R.transition.anim_slide_out_left);
+        this.overridePendingTransition(R.transition.anim_slide_in_left, R.transition.anim_slide_out_left);
     }
 
     @Override
@@ -161,6 +165,18 @@ public abstract class BaseActivity extends ActionBarActivity {
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).create().show();
+    }
+
+    public void newSurvey(View v){
+        List<OrgUnit> firstOrgUnit=OrgUnit.find(OrgUnit.class,null,null,null,null,String.valueOf(1));
+        List<Program> firstProgram=Program.find(Program.class,null,null,null,null,String.valueOf(1));
+        // Put new survey in session
+        Survey survey = new Survey((OrgUnit)firstOrgUnit.get(0), (Program)firstProgram.get(0), Session.getUser());
+        survey.save();
+        Session.setSurvey(survey);
+
+        //Call Survey Activity
+        finishAndGo(SurveyActivity.class);
     }
 
     /**

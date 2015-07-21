@@ -71,51 +71,12 @@ public class SurveyActivity extends BaseActivity{
 
     public static final String TAG = ".SurveyActivity";
 
-    //FIXME Better than a bunch of 'ifs' worse than it should
-    private static final int ORDER_PROFILE=2;
-    private static final int ORDER_C1_CLINICAL=3;
-    private static final int ORDER_C1_RDT=4;
-    private static final int ORDER_C2_CLINICAL=5;
-    private static final int ORDER_C2_RDT=6;
-    private static final int ORDER_C3_CLINICAL=7;
-    private static final int ORDER_C3_RDT=8;
-    private static final int ORDER_FEEDBACK=9;
-    private static final int ORDER_ENVIRONMENT=10;
-
-    private static final int[] ORDER_TABS_AVG_CLINICAL={ORDER_C1_CLINICAL,ORDER_C2_CLINICAL,ORDER_C3_CLINICAL};
-    private static final int[] ORDER_TABS_RDT={ORDER_C1_RDT,ORDER_C2_RDT,ORDER_C3_RDT};
-    private static final int[] ORDER_TABS_OVERALL={ORDER_PROFILE,ORDER_FEEDBACK,ORDER_ENVIRONMENT};
-
-    private static final int[] IDS_SCORES_IN_GENERAL_TAB={
-            0,                      //0
-            0,                      //1
-            R.id.profileScore,      //2
-            R.id.clinicalCase1,     //3
-            R.id.rdtCase1,          //4
-            R.id.clinicalCase2,     //5
-            R.id.rdtCase2,          //6
-            R.id.clinicalCase3,     //7
-            R.id.rdtCase3,          //8
-            R.id.feedbackScore,     //9
-            R.id.envAndMatScore     //10
-    };
-
     /**
      * List of tabs that belongs to the current selected survey
      */
     private List<Tab> tabsList=new ArrayList<>();
 
-    /**
-     * Map of adapters, each tab requires a different adapter to show its form
-     */
-    private Map<Tab, ITabAdapter> adaptersMap = new HashMap<Tab, ITabAdapter>();
-
     private TabAdaptersCache tabAdaptersCache = new TabAdaptersCache();
-
-    /**
-     * Adapter for the tabs spinner
-     */
-    private TabArrayAdapter tabAdapter;
 
     /**
      * Receiver of data from SurveyService
@@ -126,10 +87,6 @@ public class SurveyActivity extends BaseActivity{
      * Progress dialog shown while loading
      */
     private ProgressBar progressBar;
-    /**
-     * Spinner view to select change tabs
-     */
-    private Spinner spinner;
 
     /**
      * Parent view of main content
@@ -144,7 +101,6 @@ public class SurveyActivity extends BaseActivity{
         setContentView(R.layout.survey);
         registerReceiver();
         createActionBar();
-        createMenu();
         createProgress();
     }
 
@@ -180,7 +136,6 @@ public class SurveyActivity extends BaseActivity{
 
     @Override
     public void onPause(){
-        Session.getSurvey().updateSurveyStatus();
         super.onPause();
     }
 
@@ -189,34 +144,6 @@ public class SurveyActivity extends BaseActivity{
         Log.d(TAG, "onStop");
         unregisterReceiver();
         super.onStop();
-    }
-
-    /**
-     * Adds the spinner for tabs
-     */
-    private void createMenu() {
-
-        Log.d(TAG, "createMenu");
-//        this.tabAdapter=new TabArrayAdapter(this, tabsList);
-//
-//        spinner= (Spinner) this.findViewById(R.id.tabSpinner);
-//        //Invisible until info ready
-//        spinner.setVisibility(View.GONE);
-//        spinner.setAdapter(this.tabAdapter);
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Log.d(TAG, "onItemSelected..");
-//                final Tab selectedTab = (Tab) spinner.getSelectedItem();
-//                new AsyncChangeTab(selectedTab).execute((Void) null);
-//                Log.d(TAG, "onItemSelected(" + Thread.currentThread().getId() + ")..DONE");
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
     }
 
     public class AsyncChangeTab extends AsyncTask<Void, Integer, View> {
@@ -238,12 +165,7 @@ public class SurveyActivity extends BaseActivity{
         protected View doInBackground(Void... params) {
 
             Log.d(TAG, "doInBackground("+Thread.currentThread().getId()+")..");
-            View view=null;
-//            if (tab.isGeneralScore()) {
-//                showGeneralScores();
-//            } else {
-                view=prepareTab(tab);
-//            }
+            View view=prepareTab(tab);
             Log.d(TAG, "doInBackground(" + Thread.currentThread().getId() + ")..DONE");
             return view;
         }
@@ -308,116 +230,11 @@ public class SurveyActivity extends BaseActivity{
         return inflater.inflate(tabAdapter.getLayout(), content, false);
     }
 
-//    /**
-//     * Shows the special 'Score' tab
-//     */
-//    private void showGeneralScores() {
-//        LayoutInflater inflater = LayoutInflater.from(this);
-//
-//        content.removeAllViews();
-//        View view = inflater.inflate(R.layout.scoretab, content, false);
-//        content.addView(view);
-//
-//        List<ITabAdapter> adaptersList = tabAdaptersCache.list();
-//        Float avgClinical = 0F;
-//        Float avgRdt = 0F;
-//        Float avgOverall = 0F;
-//        for(ITabAdapter adapter:adaptersList){
-//            updateViewInGeneralScores(adapter);
-//            avgClinical += valueForClinical(adapter);
-//            avgRdt += valueForRdt(adapter);
-//            avgOverall += valueForOverall(adapter);
-//        }
-//
-//        avgClinical = avgClinical/3;
-//        avgRdt = avgRdt/3;
-//        avgOverall = (avgOverall+avgClinical+avgRdt)/5;
-//
-//        updateAvgInGeneralScores(R.id.clinicalAvg, avgClinical);
-//        updateAvgInGeneralScores(R.id.rdtAvg, avgRdt);
-//        updateAvgInGeneralScores(R.id.totalScore, avgOverall);
-//    }
-//
-//    private void updateViewInGeneralScores(ITabAdapter adapter){
-//
-//        if(isNotAutoTabAdapterOrNull(adapter)){
-//            return;
-//        }
-//
-//        Float score=adapter.getScore();
-//        if(score==null){
-//            return;
-//        }
-//        Tab tab=((AutoTabAdapter)adapter).getTab();
-//        int viewId=IDS_SCORES_IN_GENERAL_TAB[tab.getOrder_pos()];
-//        if(viewId!=0) {
-//            TextCard textCard=((TextCard) this.findViewById(viewId));
-//            textCard.setText(Utils.round(score));
-//            LayoutUtils.trafficLight(textCard, score, null);
-//        }
-//    }
-//
-//    private Float valueForClinical(ITabAdapter adapter){
-//        return valueForAvg(adapter,ORDER_TABS_AVG_CLINICAL);
-//    }
-//
-//    private Float valueForRdt(ITabAdapter adapter){
-//        return valueForAvg(adapter,ORDER_TABS_RDT);
-//    }
-//
-//    private Float valueForOverall(ITabAdapter adapter){
-//        return valueForAvg(adapter,ORDER_TABS_OVERALL);
-//    }
-//
-//    /**
-//     * Returns the score of the tab inside the given adapter if the tab is relevant to the metric according to given array of positions.
-//     * It the tab is NOT relevant to that metric returns 0.
-//     * @param adapter Adapter whose tab is evaluated.
-//     * @param indexToConsider Arrays of positions to consider
-//     * @return The score of the tab or 0 if it doesnt apply for the metric.
-//     */
-//    private Float valueForAvg(ITabAdapter adapter, int[] indexToConsider){
-//        if(isNotAutoTabAdapterOrNull(adapter)){
-//            return 0F;
-//        }
-//
-//        Float score=adapter.getScore();
-//        if(score==null){
-//            return 0F;
-//        }
-//        Tab tab=((AutoTabAdapter)adapter).getTab();
-//        if(contains(indexToConsider,tab.getOrder_pos())){
-//            return score;
-//        }
-//        return 0F;
-//    }
-//
-//    private boolean contains(int[] array, int value){
-//        boolean found=false;
-//        for (int i=0;i<array.length;i++){
-//            if(array[i]==value){
-//                found=true;
-//                break;
-//            }
-//        }
-//        return found;
-//    }
-//
-//    private boolean isNotAutoTabAdapterOrNull(ITabAdapter adapter){
-//        return adapter==null || !(adapter instanceof AutoTabAdapter);
-//    }
-//
-//    private void updateAvgInGeneralScores(int viewId, Float score){
-//        ((TextCard) this.findViewById(viewId)).setText(Utils.round(score));
-//        LayoutUtils.trafficLight(this.findViewById(viewId), score, null);
-//    }
-
     /**
      * Stops progress view and shows real form
      */
     private void stopProgress(){
         this.progressBar.setVisibility(View.GONE);
-//        this.spinner.setVisibility(View.VISIBLE);
         this.content.setVisibility(View.VISIBLE);
 
     }
@@ -473,8 +290,6 @@ public class SurveyActivity extends BaseActivity{
         this.tabsList.addAll(tabs);
 
         new AsyncChangeTab(tabs.get(0)).execute((Void) null);
-
-//        this.tabAdapter.notifyDataSetChanged();
 
         Log.d(TAG, "reloadTabs(" + tabs.size() + ")..DONE");
     }

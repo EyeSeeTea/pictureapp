@@ -238,9 +238,7 @@ public class SurveyService extends IntentService {
         Program program=survey.getProgram();
 
         //Get composite scores for current program & register them (scores)
-        //List<CompositeScore> compositeScores = CompositeScore.listAllByProgram(program);
-
-        List<CompositeScore> compositeScores = CompositeScore.listAll(CompositeScore.class);
+        List<CompositeScore> compositeScores = CompositeScore.listAllByProgram(program);
         ScoreRegister.registerCompositeScores(compositeScores);
 
         //Get tabs for current program & register them (scores)

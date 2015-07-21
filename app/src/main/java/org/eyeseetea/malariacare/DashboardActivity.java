@@ -53,24 +53,20 @@ public class DashboardActivity extends BaseActivity {
         setContentView(R.layout.fragment_dashboard);
 
         if (savedInstanceState == null) {
-            prepareUI();
+            DashboardUnsentFragment detailsFragment = new DashboardUnsentFragment();
+            detailsFragment.setArguments(getIntent().getExtras());
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.add(R.id.dashboard_details_container, detailsFragment);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+
+            DashboardSentFragment completedFragment = new DashboardSentFragment();
+            detailsFragment.setArguments(getIntent().getExtras());
+            FragmentTransaction ftr = getFragmentManager().beginTransaction();
+            ftr.add(R.id.dashboard_completed_container, completedFragment);
+            ftr.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ftr.commit();
         }
-    }
-
-    protected void prepareUI(){
-        DashboardUnsentFragment detailsFragment = new DashboardUnsentFragment();
-        detailsFragment.setArguments(getIntent().getExtras());
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(R.id.dashboard_details_container, detailsFragment);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
-
-        DashboardSentFragment completedFragment = new DashboardSentFragment();
-        detailsFragment.setArguments(getIntent().getExtras());
-        FragmentTransaction ftr = getFragmentManager().beginTransaction();
-        ftr.add(R.id.dashboard_completed_container, completedFragment);
-        ftr.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ftr.commit();
     }
 
     @Override
@@ -111,18 +107,6 @@ public class DashboardActivity extends BaseActivity {
                         startActivity(intent);
                     }
                 }).create().show();
-    }
-
-    public void newSurvey(View v){
-        List<OrgUnit> firstOrgUnit=OrgUnit.find(OrgUnit.class,null,null,null,null,String.valueOf(1));
-        List<Program> firstProgram=Program.find(Program.class,null,null,null,null,String.valueOf(1));
-        // Put new survey in session
-        Survey survey = new Survey((OrgUnit)firstOrgUnit.get(0), (Program)firstProgram.get(0), Session.getUser());
-        survey.save();
-        Session.setSurvey(survey);
-
-        //Call Survey Activity
-        finishAndGo(SurveyActivity.class);
     }
 
     /**

@@ -23,12 +23,24 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
+import org.eyeseetea.malariacare.database.model.OrgUnit;
+import org.eyeseetea.malariacare.database.model.Program;
+import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.utils.PopulateDB;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.services.SurveyService;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class DashboardActivity extends BaseActivity {
@@ -40,12 +52,6 @@ public class DashboardActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
 
-//        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//            // If the screen is now in landscape mode, we can show the dialog in-line so we don't need this activity
-//            finish();
-//            return;
-//        }
-
         if (savedInstanceState == null) {
             DashboardUnsentFragment detailsFragment = new DashboardUnsentFragment();
             detailsFragment.setArguments(getIntent().getExtras());
@@ -53,6 +59,7 @@ public class DashboardActivity extends BaseActivity {
             ft.add(R.id.dashboard_details_container, detailsFragment);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
+
             DashboardSentFragment completedFragment = new DashboardSentFragment();
             detailsFragment.setArguments(getIntent().getExtras());
             FragmentTransaction ftr = getFragmentManager().beginTransaction();
@@ -70,13 +77,14 @@ public class DashboardActivity extends BaseActivity {
     @Override
     public void onResume(){
         super.onResume();
-        getSurveysFromService();
+        AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
+        asyncPopulateDB.execute((Void) null);
     }
 
     public void getSurveysFromService(){
         Log.d(TAG, "getSurveysFromService");
         Intent surveysIntent=new Intent(this, SurveyService.class);
-        surveysIntent.putExtra(SurveyService.SERVICE_METHOD,SurveyService.RELOAD_DASHBOARD_ACTION);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
         this.startService(surveysIntent);
     }
 
@@ -85,7 +93,7 @@ public class DashboardActivity extends BaseActivity {
      */
     @Override
     public void onBackPressed() {
-        Log.d(".DashboardDetails", "back pressed");
+        Log.d(TAG, "back pressed");
         new AlertDialog.Builder(this)
                 .setTitle("Really Exit?")
                 .setMessage("Are you sure you want to exit the app?")
@@ -99,5 +107,74 @@ public class DashboardActivity extends BaseActivity {
                         startActivity(intent);
                     }
                 }).create().show();
+    }
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class AsyncPopulateDB extends AsyncTask<Void, Void, Exception> {
+
+        private static final String DUMMY_USER="user";
+        User user;
+
+        AsyncPopulateDB() {
+        }
+
+        @Override
+        protected Exception doInBackground(Void... params) {
+            try {
+                initUser();
+                initDataIfRequired();
+            }catch(Exception ex) {
+                Log.e(TAG, "Error initializing DB: ", ex);
+                return ex;
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final Exception exception) {
+            //Error
+            if(exception!=null){
+                new AlertDialog.Builder(DashboardActivity.this)
+                        .setTitle(R.string.dialog_title_error)
+                        .setMessage(exception.getMessage())
+                        .setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                finish();
+                            }
+                        }).create().show();
+                return;
+            }
+            //Success
+            Session.setUser(user);
+            getSurveysFromService();
+        }
+
+        /**
+         * Add user to table and session
+         */
+        private void initUser(){
+            user=new User(DUMMY_USER,DUMMY_USER);
+            user.save();
+        }
+
+        private void initDataIfRequired() throws IOException {
+            if (Program.count(Program.class, null, null)!=0) {
+                Log.i(TAG, "DB Already loaded, showing surveys...");
+                return;
+            }
+
+            Log.i(TAG, "DB empty, loading data ...");
+            PopulateDB.populateDummyData();
+            try {
+                PopulateDB.populateDB(getAssets());
+            } catch (IOException e) {
+                throw e;
+            }
+            Log.i(TAG, "DB empty, loading data ...DONE");
+        }
     }
 }

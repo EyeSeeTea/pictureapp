@@ -50,6 +50,7 @@ import org.eyeseetea.malariacare.layout.adapters.survey.AutoTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.CompositeScoreAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.CustomAdherenceAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.CustomIQTABAdapter;
+import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -157,7 +158,6 @@ public class SurveyActivity extends BaseActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //spinner
             startProgress();
         }
 
@@ -374,7 +374,7 @@ public class SurveyActivity extends BaseActivity{
         public void reloadAdapters(List<Tab> tabs, List<CompositeScore> compositeScores){
             Tab firstTab=tabs.get(0);
             this.adapters.clear();
-            this.adapters.put(firstTab, AutoTabAdapter.build(firstTab, SurveyActivity.this));
+            this.adapters.put(firstTab,buildAdapter(firstTab));
             this.compositeScores=compositeScores;
         }
 
@@ -422,6 +422,10 @@ public class SurveyActivity extends BaseActivity{
 
             if(tab.isGeneralScore()){
                 return null;
+            }
+
+            if (tab.isDynamicTab()){
+                return new DynamicTabAdapter(tab,SurveyActivity.this);
             }
 
             return AutoTabAdapter.build(tab,SurveyActivity.this);

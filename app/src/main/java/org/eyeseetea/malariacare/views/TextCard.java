@@ -59,10 +59,10 @@ public class TextCard extends TextView implements IEyeSeeView {
     }
 
     public void init(AttributeSet attrs, int defStyle) {
-        /*if(isInEditMode()){
+        if(isInEditMode()){
             this.setText(R.string.lorem_ipsum);
             return;
-        }*/
+        }
         // Load attributes
         if (attrs != null) {
             a = context.obtainStyledAttributes(attrs, R.styleable.TextCard, defStyle, 0);

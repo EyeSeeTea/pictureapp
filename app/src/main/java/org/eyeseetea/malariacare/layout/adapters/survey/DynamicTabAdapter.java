@@ -20,7 +20,9 @@
 package org.eyeseetea.malariacare.layout.adapters.survey;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -30,12 +32,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.common.primitives.Booleans;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Option;
@@ -46,6 +51,7 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
+import org.eyeseetea.malariacare.layout.adapters.survey.progress.ProgressTabStatus;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -55,7 +61,7 @@ import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.UncheckeableRadioButton;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -65,6 +71,24 @@ import java.util.List;
 public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private final static String TAG=".DynamicTabAdapter";
+
+    /**
+     * This adapter is special, despite of there might be N questions there is only 1 on screen but some header and footer are required.
+     * So getCount() will get 3 = header + currentQuestion + footerProgress
+     */
+    private final static int NUM_LIST_VISIBLE_ELEMENTS=3;
+
+    /**
+     * Hold the progress of completion
+     */
+    private ProgressTabStatus progressTabStatus;
+
+    /**
+     * This type of tab has only one header
+     */
+    private Header header;
+
+
 
     //List of Headers and Questions. Each position contains an object to be showed in the listview
     List<Object> items;
@@ -99,30 +123,47 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
-        this.items = Utils.convertTabToArray(tab);
         this.context = context;
         this.id_layout = R.layout.form_without_score;
-        this.tab = tab;
 
-        // Initialize the elementInvisibility HashMap by reading all questions and headers and decide
-        // whether or not they must be visible
-        for (int i = 0; i < items.size(); i++) {
-            Object item = items.get(i);
-            if (item instanceof Header)
-                elementInvisibility.put(item, true);
-            if (item instanceof Question) {
-                boolean hidden = isHidden((Question) item);
-                elementInvisibility.put(item, hidden);
-//                if (!(hidden)) initScoreQuestion((Question) item);
-//                else ScoreRegister.addRecord((Question) item, 0F, ScoreRegister.calcDenum((Question) item));
-                Header header = ((Question) item).getHeader();
-                boolean headerVisibility = elementInvisibility.get(header);
-                elementInvisibility.put(header, headerVisibility && elementInvisibility.get(item));
-            }
-        }
-
+        this.items=initItems(tab);
+        List<Question> questions= initHeaderAndQuestions();
+        this.progressTabStatus=initProgress(questions);
         this.readOnly = Session.getSurvey().isSent();
     }
+
+    /**
+     * Turns a tab into an ordered list of headers+questions
+     * @param tab
+     */
+    private List<Object> initItems(Tab tab){
+        this.tab=tab;
+        return Utils.convertTabToArray(tab);
+    }
+
+    /**
+     * Initializes the clean list of questions (without headers)
+     */
+    private List<Question> initHeaderAndQuestions() {
+        List<Question> questions=new ArrayList<Question>();
+
+        this.header=(Header)this.items.get(0);
+        for(int i=1;i<this.items.size();i++){
+            questions.add((Question)this.items.get(i));
+        }
+
+        return questions;
+    }
+
+    /**
+     * Builds a progress status based on the current list of questions
+     * @param questions
+     * @return
+     */
+    private ProgressTabStatus initProgress(List<Question> questions){
+        return new ProgressTabStatus(questions);
+    }
+
 
     public Tab getTab() {
         return this.tab;
@@ -156,100 +197,213 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return tab.getName();
     }
 
-    /**
-     * Get the number of elements that are hidden
-     * @return number of elements hidden (true in elementInvisibility Map)
-     */
-    private int getHiddenCount() {
-        // using Guava library and its Booleans utility class
-        return Booleans.countTrue(Booleans.toArray(elementInvisibility.values()));
-    }
-
-    /**
-     * Get the number of elements that are hidden until a given position
-     * @param position
-     * @return number of elements hidden (true in elementInvisibility Map)
-     */
-    private int getHiddenCountUpTo(int position) {
-        boolean [] upper = Arrays.copyOfRange(Booleans.toArray(elementInvisibility.values()), 0, position+1);
-        int hiddens = Booleans.countTrue(upper);
-        return hiddens;
-    }
-
-    /**
-     * Given a desired position (that means, the position shown in the screen) of an element, get the
-     * real position (that means, the position in the stored items list taking into account the hidden
-     * elements)
-     * @param position
-     * @return the real position in the elements list
-     */
-    private int getRealPosition(int position){
-        int hElements = getHiddenCountUpTo(position);
-        int diff = 0;
-
-        for (int i = 0; i < hElements; i++) {
-            diff++;
-            if (elementInvisibility.get(items.get(position + diff))) i--;
-        }
-            return (position + diff);
-    }
-
-    /**
-     * Decide whether we need or not to hide this header (if every question inside is hidden)
-     * @param header header that
-     * @return true if every header question is hidden, false otherwise
-     */
-    public boolean hideHeader(Header header) {
-        // look in every question to see if every question is hidden. In case one cuestion is not hidden, we return false
-        for (Question question : header.getQuestions()) {
-            if (!elementInvisibility.get(question)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     @Override
     public int getCount() {
-        return (items.size() - getHiddenCount());
+        return 1;
     }
 
     @Override
     public Object getItem(int position) {
-        return items.get(getRealPosition(position));
+        return this.progressTabStatus.getCurrentQuestion();
     }
 
     @Override
     public long getItemId(int position) {
-        return items.get(getRealPosition(position)).hashCode();
+        return getItem(position).hashCode();
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        //Inflate the layout
+        View rowView = lInflater.inflate(R.layout.dynamic_tab_grid_question, parent, false);
+
+        Question question=this.progressTabStatus.getCurrentQuestion();
+
+        //Header
+        TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
+        headerView.setText(question.getForm_name());
+
+        //Progress
+        ProgressBar progressView=(ProgressBar)rowView.findViewById(R.id.dynamic_progress);
+        progressView.setMax(progressTabStatus.getTotalPages());
+        progressView.setProgress(progressTabStatus.getCurrentPage()+1);
+        TextView progressText=(TextView)rowView.findViewById(R.id.dynamic_progress_text);
+        progressText.setText(progressTabStatus.getStatusAsString());
+
+//        ViewHolder viewHolder = new ViewHolder();
+//        if (item instanceof Question) {
+//            question = (Question) item;
+//
+//            //FIXME This should be moved into its own class (Ex: ViewHolderFactory.getView(item))
+//            switch (question.getAnswer().getOutput()) {
+//
+//                case Constants.LONG_TEXT:
+//                    rowView = initialiseView(R.layout.longtext, parent, question, viewHolder, position);
+//
+//                    //Add main component and listener
+//                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
+//                    break;
+//                case Constants.NO_ANSWER:
+//                    rowView = initialiseView(R.layout.label, parent, question, viewHolder, position);
+//                    break;
+//                case Constants.POSITIVE_INT:
+//                    rowView = initialiseView(R.layout.integer, parent, question, viewHolder, position);
+//
+//                    //Add main component, set filters and listener
+//                    ((EditCard) viewHolder.component).setFilters(new InputFilter[]{
+//                            new InputFilter.LengthFilter(Constants.MAX_INT_CHARS),
+//                            new MinMaxInputFilter(1, null)
+//                    });
+//                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
+//                    break;
+//                case Constants.INT:
+//                case Constants.PHONE:
+//                    rowView = initialiseView(R.layout.integer, parent, question, viewHolder, position);
+//
+//                    //Add main component, set filters and listener
+//                    ((EditCard) viewHolder.component).setFilters(new InputFilter[]{
+//                            new InputFilter.LengthFilter(Constants.MAX_INT_CHARS)
+//                    });
+//                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
+//                    break;
+//                case Constants.DATE:
+//                    rowView = initialiseView(R.layout.date, parent, question, viewHolder, position);
+//
+//                    //Add main component and listener
+//                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
+//                    break;
+//
+//                case Constants.SHORT_TEXT:
+//                    rowView = initialiseView(R.layout.shorttext, parent, question, viewHolder, position);
+//
+//                    //Add main component and listener
+//                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
+//                    break;
+//
+//                case Constants.DROPDOWN_LIST:
+//                case Constants.IMAGES_2:
+//                case Constants.IMAGES_4:
+//                case Constants.IMAGES_6:
+//                    rowView = initialiseView(R.layout.ddl, parent, question, viewHolder, position);
+//
+//                    initialiseScorableComponent(rowView, viewHolder);
+//
+//                    // In case the option is selected, we will need to show num/dems
+//                    List<Option> optionList = question.getAnswer().getOptions();
+//                    optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
+//                    Spinner spinner = (Spinner) viewHolder.component;
+//                    spinner.setAdapter(new OptionArrayAdapter(context, optionList));
+//
+////                    //Add Listener
+////                    if (!question.hasRelatives())
+////                        ((Spinner) viewHolder.component).setOnItemSelectedListener(new SpinnerListener(false, question, viewHolder));
+////                    else
+////                        autoFillAnswer(viewHolder, question);
+//                    break;
+//                case Constants.RADIO_GROUP_HORIZONTAL:
+//                    rowView = initialiseView(R.layout.radio, parent, question, viewHolder, position);
+//
+//                    initialiseScorableComponent(rowView, viewHolder);
+//
+//                    createRadioGroupComponent(question, viewHolder, LinearLayout.HORIZONTAL);
+//                    break;
+//                case Constants.RADIO_GROUP_VERTICAL:
+//                    rowView = initialiseView(R.layout.radio, parent, question, viewHolder, position);
+//
+//                    initialiseScorableComponent(rowView, viewHolder);
+//
+//                    createRadioGroupComponent(question, viewHolder, LinearLayout.VERTICAL);
+//                    break;
+//
+//                default:
+//                    break;
+//            }
+//
+//            //Put current value in the component
+//            setValues(viewHolder, question);
+//            //Disables component if survey has already been sent
+//            updateReadOnly(viewHolder.component);
+//        }
+
+        return rowView;
+    }
+
+
+    /**
+     * Enables/Disables input view according to the state of the survey.
+     * Sent surveys cannot be modified.
+     *
+     * @param view
+     */
+    private void updateReadOnly(View view) {
+        if (view == null) {
+            return;
+        }
+
+        if (view instanceof RadioGroup) {
+            RadioGroup radioGroup = (RadioGroup) view;
+            for (int i = 0; i < radioGroup.getChildCount(); i++) {
+                radioGroup.getChildAt(i).setEnabled(!readOnly);
+            }
+        } else {
+            view.setEnabled(!readOnly);
+        }
     }
 
     /**
-     * Given a question, make visible or invisible their children. In case all children in a header
-     * became invisible, that header is also hidden
-     * @param question the question whose children we want to show/hide
-     * @param visible true for make them visible, false for invisible
+     * Show a final dialog to announce the survey is over
      */
-    private void
-    toggleChildrenVisibility(Question question, boolean visible) {
-        List<Question> children = question.getQuestionChildren();
-        Question cachedQuestion = null;
+    private void showDone(){
+        final Activity activity=(Activity)context;
+        new AlertDialog.Builder((activity))
+                .setTitle(R.string.survey_title_exit)
+                .setMessage(R.string.survey_info_exit)
+                .setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        activity.finish();
+                    }
+                }).create().show();
+    }
 
-        for (Question child : children) {
-            Header childHeader = child.getHeader();
-            elementInvisibility.put(child, !visible);
-            if (!visible) {
-                ReadWriteDB.deleteValue(child); // when we hide a question, we remove its value
-                // little cache to avoid double checking same
-                if(cachedQuestion == null || (cachedQuestion.getHeader().getId() != child.getHeader().getId()))
-                    elementInvisibility.put(childHeader, hideHeader(childHeader));
-            } else {
-                elementInvisibility.put(childHeader, false);
-            }
-            cachedQuestion = question;
+    /**
+     * Checks if there are more questions to answer according to the given value + current status.
+     * @param value
+     * @return
+     */
+    private boolean isDone(Value value){
+        //First question  + NO => true
+        if(progressTabStatus.isFirstQuestion() && !value.isAYes()){
+            return true;
         }
+
+        //No more questions => true
+        return !progressTabStatus.hasNextQuestion();
+    }
+
+    /**
+     * Changes the current question moving forward
+     */
+    private void next(){
+        if(!progressTabStatus.hasNextQuestion()){
+            return;
+        }
+
+        progressTabStatus.getNextQuestion();
         notifyDataSetChanged();
     }
+
+    /**
+     * Changes the current question moving backward
+     */
+    private void previous(){
+        if(!progressTabStatus.hasPreviousQuestion()){
+            return;
+        }
+
+        progressTabStatus.getPreviousQuestion();
+        notifyDataSetChanged();
+    }
+
 
     public void setValues(ViewHolder viewHolder, Question question) {
 
@@ -280,52 +434,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    private boolean isHidden(Question question) {
-        Question parent;
-        boolean hidden = false;
-
-        if ((parent = question.getQuestion()) != null) {
-            if (parent.getValueBySession() == null)
-                hidden = true;
-        }
-
-        return hidden;
-    }
-
-    private boolean checkMatches(Question question) {
-        boolean match = true;
-
-        List<Question> relatives = question.getRelatives();
-
-        if (relatives.size() > 0) {
-
-            Option option = ReadWriteDB.readOptionAnswered(relatives.get(0));
-
-            if (option == null) match = false;
-
-            for (int i = 1; i < relatives.size() && match; i++) {
-                Option currentOption = ReadWriteDB.readOptionAnswered(relatives.get(i));
-
-                if (currentOption == null) match = false;
-                else
-                    match = match && (Float.compare(option.getFactor(), currentOption.getFactor()) == 0);
-            }
-
-        }
-
-        return match;
-    }
-
-    private void autoFillAnswer(ViewHolder viewHolder, Question question) {
-
-        viewHolder.component.setEnabled(false);
-
-        if (checkMatches(question))
-            itemSelected(viewHolder, question, question.getAnswer().getOptions().get(0));
-        else
-            itemSelected(viewHolder, question, question.getAnswer().getOptions().get(1));
-
-    }
 
     /**
      * Do the logic after a DDL option change
@@ -336,143 +444,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void itemSelected(ViewHolder viewHolder, Question question, Option option) {
         // Write option to DB
         ReadWriteDB.saveValuesDDL(question, option);
-
-        if (question.hasChildren()) {
-            toggleChildrenVisibility(question, option.isActiveChildren());
-        }
-
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        View rowView = null;
-
-        final Object item = getItem(position);
-        Question question;
-        ViewHolder viewHolder = new ViewHolder();
-
-        if (item instanceof Question) {
-            question = (Question) item;
-
-            //FIXME This should be moved into its own class (Ex: ViewHolderFactory.getView(item))
-            switch (question.getAnswer().getOutput()) {
-
-                case Constants.LONG_TEXT:
-                    rowView = initialiseView(R.layout.longtext, parent, question, viewHolder, position);
-
-                    //Add main component and listener
-                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
-                    break;
-                case Constants.NO_ANSWER:
-                    rowView = initialiseView(R.layout.label, parent, question, viewHolder, position);
-                    break;
-                case Constants.POSITIVE_INT:
-                    rowView = initialiseView(R.layout.integer, parent, question, viewHolder, position);
-
-                    //Add main component, set filters and listener
-                    ((EditCard) viewHolder.component).setFilters(new InputFilter[]{
-                            new InputFilter.LengthFilter(Constants.MAX_INT_CHARS),
-                            new MinMaxInputFilter(1, null)
-                    });
-                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
-                    break;
-                case Constants.INT:
-                case Constants.PHONE:
-                    rowView = initialiseView(R.layout.integer, parent, question, viewHolder, position);
-
-                    //Add main component, set filters and listener
-                    ((EditCard) viewHolder.component).setFilters(new InputFilter[]{
-                            new InputFilter.LengthFilter(Constants.MAX_INT_CHARS)
-                    });
-                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
-                    break;
-                case Constants.DATE:
-                    rowView = initialiseView(R.layout.date, parent, question, viewHolder, position);
-
-                    //Add main component and listener
-                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
-                    break;
-
-                case Constants.SHORT_TEXT:
-                    rowView = initialiseView(R.layout.shorttext, parent, question, viewHolder, position);
-
-                    //Add main component and listener
-                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
-                    break;
-
-                case Constants.DROPDOWN_LIST:
-                case Constants.IMAGES_2:
-                case Constants.IMAGES_4:
-                case Constants.IMAGES_6:
-                    rowView = initialiseView(R.layout.ddl, parent, question, viewHolder, position);
-
-                    initialiseScorableComponent(rowView, viewHolder);
-
-                    // In case the option is selected, we will need to show num/dems
-                    List<Option> optionList = question.getAnswer().getOptions();
-                    optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
-                    Spinner spinner = (Spinner) viewHolder.component;
-                    spinner.setAdapter(new OptionArrayAdapter(context, optionList));
-
-                    //Add Listener
-                    if (!question.hasRelatives())
-                        ((Spinner) viewHolder.component).setOnItemSelectedListener(new SpinnerListener(false, question, viewHolder));
-                    else
-                        autoFillAnswer(viewHolder, question);
-                    break;
-                case Constants.RADIO_GROUP_HORIZONTAL:
-                    rowView = initialiseView(R.layout.radio, parent, question, viewHolder, position);
-
-                    initialiseScorableComponent(rowView, viewHolder);
-
-                    createRadioGroupComponent(question, viewHolder, LinearLayout.HORIZONTAL);
-                    break;
-                case Constants.RADIO_GROUP_VERTICAL:
-                    rowView = initialiseView(R.layout.radio, parent, question, viewHolder, position);
-
-                    initialiseScorableComponent(rowView, viewHolder);
-
-                    createRadioGroupComponent(question, viewHolder, LinearLayout.VERTICAL);
-                    break;
-
-                default:
-                    break;
-            }
-
-            //Put current value in the component
-            setValues(viewHolder, question);
-            //Disables component if survey has already been sent
-            updateReadOnly(viewHolder.component);
-        } else {
-            rowView = lInflater.inflate(R.layout.headers, parent, false);
-            viewHolder.statement = (TextCard) rowView.findViewById(R.id.headerName);
-            viewHolder.statement.setText(((Header) item).getName());
-
-        }
-
-        return rowView;
-    }
-
-    /**
-     * Enables/Disables input view according to the state of the survey.
-     * Sent surveys cannot be modified.
-     *
-     * @param view
-     */
-    private void updateReadOnly(View view) {
-        if (view == null) {
-            return;
-        }
-
-        if (view instanceof RadioGroup) {
-            RadioGroup radioGroup = (RadioGroup) view;
-            for (int i = 0; i < radioGroup.getChildCount(); i++) {
-                radioGroup.getChildAt(i).setEnabled(!readOnly);
-            }
-        } else {
-            view.setEnabled(!readOnly);
-        }
     }
 
     private View initialiseView(int resource, ViewGroup parent, Question question, ViewHolder viewHolder, int position) {

@@ -94,6 +94,11 @@ public class SurveyActivity extends BaseActivity{
      */
     private LinearLayout content;
 
+    /**
+     * Flags required to decide if the survey must be deleted or not
+     */
+    private boolean isBackPressed=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +135,7 @@ public class SurveyActivity extends BaseActivity{
                     public void onClick(DialogInterface dialog, int arg1) {
                         ScoreRegister.clear();
                         unregisterReceiver();
+                        isBackPressed=true;
                         finishAndGo(DashboardActivity.class);
                     }
                 }).create().show();
@@ -137,7 +143,15 @@ public class SurveyActivity extends BaseActivity{
 
     @Override
     public void onPause(){
-        Session.getSurvey().updateSurveyStatus();
+        Survey survey=Session.getSurvey();
+
+        //Exit from survey without finishing -> delete
+        if(isBackPressed && survey.isInProgress()){
+            survey.delete();
+        }else if (!survey.isSent()){
+            //Survey paused -> updateStatus
+            survey.updateSurveyStatus();
+        }
         super.onPause();
     }
 

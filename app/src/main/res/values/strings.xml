@@ -69,6 +69,9 @@
     <string name="assessment_info_delete">Delete</string>
     <string name="assessment_title_header">Active Assessment</string>
     <string name="assessment_sent_title_header">Sent Assessment</string>
+    <string name="assessment_title_rdt" translatable="false">RDT</string>
+    <string name="assessment_title_info" translatable="false">Info</string>
+
 
     <!-- feedback -->
     <!-- XXX Should it be replaced by 'assessment_title_facility_date'?-->

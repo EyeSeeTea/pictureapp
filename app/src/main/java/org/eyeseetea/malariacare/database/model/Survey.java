@@ -31,6 +31,7 @@ import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class Survey extends SugarRecord<Survey> {
@@ -51,6 +52,9 @@ public class Survey extends SugarRecord<Survey> {
 
     @Ignore
     SurveyAnsweredRatio _answeredQuestionRatio;
+
+    @Ignore
+    List<Value> _values;
 
     public Survey() {
     }
@@ -159,10 +163,9 @@ public class Survey extends SugarRecord<Survey> {
 
         int numRequired= Question.countRequiredByProgram(this.getProgram());
         int numOptional=0;
-        int numAnswered = 0;
+        int numAnswered = Value.countBySurvey(this);
 
         for (Value value : this.getValuesFromParentQuestions()) {
-            numAnswered++;
             if (value.isAYes()) {
                 //There might be children no answer questions that should be skipped
                 for(Question childQuestion:value.getQuestion().getQuestionChildren()){
@@ -286,6 +289,45 @@ public class Survey extends SugarRecord<Survey> {
                 .orderBy("event_date")
                 .orderBy("org_unit")
                 .list();
+    }
+
+    /**
+     * Checks if the answer to the first question is 'Yes'
+     * @return true|false
+     */
+    public boolean isRDT(){
+        if(_values==null){
+            _values=Value.listAllBySurvey(this);
+        }
+
+        if(_values.size()==0){
+            return false;
+        }
+
+        Value rdtValue=_values.get(0);
+
+        return rdtValue.isAYes();
+    }
+
+    /**
+     * Turns all values from a survey into a string with values separated by commas
+     * @return String
+     */
+    public String getValuesToString(){
+        if(_values==null || _values.size()==0){
+            return "";
+        }
+
+        String valuesStr="";
+        Iterator<Value> iterator=_values.iterator();
+        while(iterator.hasNext()){
+            valuesStr+=iterator.next().getValue();
+            if(iterator.hasNext()){
+                valuesStr+=", ";
+            }
+        }
+
+        return valuesStr;
     }
 
 

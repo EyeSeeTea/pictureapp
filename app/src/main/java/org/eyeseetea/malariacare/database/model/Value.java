@@ -1,6 +1,12 @@
 package org.eyeseetea.malariacare.database.model;
 
 import com.orm.SugarRecord;
+import com.orm.query.Select;
+
+import org.eyeseetea.malariacare.utils.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Value extends SugarRecord<Value> {
 
@@ -80,6 +86,24 @@ public class Value extends SugarRecord<Value> {
      */
     public boolean isAYes() {
         return getOption() != null && getOption().getName().equals("Yes");
+    }
+
+    public static int countBySurvey(Survey survey){
+        if(survey==null || survey.getId()==null){
+            return 0;
+        }
+        String[] whereArgs={survey.getId().toString()};
+        return (int)Value.count(Value.class,"survey=?",whereArgs);
+    }
+
+    public static List<Value> listAllBySurvey(Survey survey){
+        if(survey==null || survey.getId()==null){
+            return new ArrayList<Value>();
+        }
+        return Select.from(Value.class)
+                .where(com.orm.query.Condition.prop("survey").eq(survey.getId()))
+                .orderBy("id")
+                .list();
     }
 
     @Override

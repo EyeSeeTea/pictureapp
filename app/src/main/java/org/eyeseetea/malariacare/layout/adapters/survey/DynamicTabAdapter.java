@@ -23,15 +23,19 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -45,6 +49,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -52,8 +57,10 @@ import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.progress.ProgressTabStatus;
+import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.EditCard;
@@ -73,12 +80,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private final static String TAG=".DynamicTabAdapter";
 
     /**
-     * This adapter is special, despite of there might be N questions there is only 1 on screen but some header and footer are required.
-     * So getCount() will get 3 = header + currentQuestion + footerProgress
-     */
-    private final static int NUM_LIST_VISIBLE_ELEMENTS=3;
-
-    /**
      * Hold the progress of completion
      */
     private ProgressTabStatus progressTabStatus;
@@ -88,7 +89,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private Header header;
 
-
+    /**
+     * Flag that indicates if the swipe listener has been already added to the listview container
+     */
+    private boolean isSwipeAdded;
 
     //List of Headers and Questions. Each position contains an object to be showed in the listview
     List<Object> items;
@@ -130,6 +134,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         List<Question> questions= initHeaderAndQuestions();
         this.progressTabStatus=initProgress(questions);
         this.readOnly = Session.getSurvey().isSent();
+        this.isSwipeAdded=false;
     }
 
     /**
@@ -162,6 +167,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private ProgressTabStatus initProgress(List<Question> questions){
         return new ProgressTabStatus(questions);
+    }
+
+    public void addOnSwipeListener(ListView listView){
+        if(isSwipeAdded){
+            return;
+        }
+
+
+        listView.setOnTouchListener(new OnSwipeTouchListener(context) {
+            public void onSwipeRight() {
+                previous();
+            }
+
+            public void onSwipeLeft() {
+                next();
+            }
+        });
     }
 
 
@@ -216,10 +238,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         //Inflate the layout
         View rowView = lInflater.inflate(R.layout.dynamic_tab_grid_question, parent, false);
+        rowView.getLayoutParams().height=parent.getHeight();
+        rowView.requestLayout();
 
         Question question=this.progressTabStatus.getCurrentQuestion();
 
-        //Header
+        //Question
         TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
         headerView.setText(question.getForm_name());
 
@@ -229,102 +253,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         progressView.setProgress(progressTabStatus.getCurrentPage()+1);
         TextView progressText=(TextView)rowView.findViewById(R.id.dynamic_progress_text);
         progressText.setText(progressTabStatus.getStatusAsString());
-
-//        ViewHolder viewHolder = new ViewHolder();
-//        if (item instanceof Question) {
-//            question = (Question) item;
-//
-//            //FIXME This should be moved into its own class (Ex: ViewHolderFactory.getView(item))
-//            switch (question.getAnswer().getOutput()) {
-//
-//                case Constants.LONG_TEXT:
-//                    rowView = initialiseView(R.layout.longtext, parent, question, viewHolder, position);
-//
-//                    //Add main component and listener
-//                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
-//                    break;
-//                case Constants.NO_ANSWER:
-//                    rowView = initialiseView(R.layout.label, parent, question, viewHolder, position);
-//                    break;
-//                case Constants.POSITIVE_INT:
-//                    rowView = initialiseView(R.layout.integer, parent, question, viewHolder, position);
-//
-//                    //Add main component, set filters and listener
-//                    ((EditCard) viewHolder.component).setFilters(new InputFilter[]{
-//                            new InputFilter.LengthFilter(Constants.MAX_INT_CHARS),
-//                            new MinMaxInputFilter(1, null)
-//                    });
-//                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
-//                    break;
-//                case Constants.INT:
-//                case Constants.PHONE:
-//                    rowView = initialiseView(R.layout.integer, parent, question, viewHolder, position);
-//
-//                    //Add main component, set filters and listener
-//                    ((EditCard) viewHolder.component).setFilters(new InputFilter[]{
-//                            new InputFilter.LengthFilter(Constants.MAX_INT_CHARS)
-//                    });
-//                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
-//                    break;
-//                case Constants.DATE:
-//                    rowView = initialiseView(R.layout.date, parent, question, viewHolder, position);
-//
-//                    //Add main component and listener
-//                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
-//                    break;
-//
-//                case Constants.SHORT_TEXT:
-//                    rowView = initialiseView(R.layout.shorttext, parent, question, viewHolder, position);
-//
-//                    //Add main component and listener
-//                    ((EditCard) viewHolder.component).addTextChangedListener(new TextViewListener(false, question));
-//                    break;
-//
-//                case Constants.DROPDOWN_LIST:
-//                case Constants.IMAGES_2:
-//                case Constants.IMAGES_4:
-//                case Constants.IMAGES_6:
-//                    rowView = initialiseView(R.layout.ddl, parent, question, viewHolder, position);
-//
-//                    initialiseScorableComponent(rowView, viewHolder);
-//
-//                    // In case the option is selected, we will need to show num/dems
-//                    List<Option> optionList = question.getAnswer().getOptions();
-//                    optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
-//                    Spinner spinner = (Spinner) viewHolder.component;
-//                    spinner.setAdapter(new OptionArrayAdapter(context, optionList));
-//
-////                    //Add Listener
-////                    if (!question.hasRelatives())
-////                        ((Spinner) viewHolder.component).setOnItemSelectedListener(new SpinnerListener(false, question, viewHolder));
-////                    else
-////                        autoFillAnswer(viewHolder, question);
-//                    break;
-//                case Constants.RADIO_GROUP_HORIZONTAL:
-//                    rowView = initialiseView(R.layout.radio, parent, question, viewHolder, position);
-//
-//                    initialiseScorableComponent(rowView, viewHolder);
-//
-//                    createRadioGroupComponent(question, viewHolder, LinearLayout.HORIZONTAL);
-//                    break;
-//                case Constants.RADIO_GROUP_VERTICAL:
-//                    rowView = initialiseView(R.layout.radio, parent, question, viewHolder, position);
-//
-//                    initialiseScorableComponent(rowView, viewHolder);
-//
-//                    createRadioGroupComponent(question, viewHolder, LinearLayout.VERTICAL);
-//                    break;
-//
-//                default:
-//                    break;
-//            }
-//
-//            //Put current value in the component
-//            setValues(viewHolder, question);
-//            //Disables component if survey has already been sent
-//            updateReadOnly(viewHolder.component);
-//        }
-
         return rowView;
     }
 
@@ -578,6 +506,70 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
             itemSelected(viewHolder, question, option);
         }
+    }
+
+    public class OnSwipeTouchListener implements View.OnTouchListener {
+
+        private final GestureDetector gestureDetector;
+
+        public OnSwipeTouchListener (Context ctx){
+            gestureDetector = new GestureDetector(ctx, new GestureListener());
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            return gestureDetector.onTouchEvent(event);
+        }
+
+        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+            private static final int SWIPE_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                boolean result = false;
+                try {
+                    float diffY = e2.getY() - e1.getY();
+                    float diffX = e2.getX() - e1.getX();
+                    if (Math.abs(diffX) > Math.abs(diffY)) {
+                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                            if (diffX > 0) {
+                                onSwipeRight();
+                            } else {
+                                onSwipeLeft();
+                            }
+                        }
+                        result = true;
+                    }
+                    else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffY > 0) {
+                            onSwipeBottom();
+                        } else {
+                            onSwipeTop();
+                        }
+                    }
+                    result = true;
+
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                return result;
+            }
+        }
+
+        public void onSwipeRight(){}
+
+        public void onSwipeLeft(){}
+
+        public void onSwipeTop(){}
+
+        public void onSwipeBottom(){}
     }
 
 }

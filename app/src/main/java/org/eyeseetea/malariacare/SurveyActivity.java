@@ -198,8 +198,11 @@ public class SurveyActivity extends BaseActivity{
                     tab.getType() == Constants.TAB_SCORE_SUMMARY) {
                 tabAdapter.initializeSubscore();
             }
-            ListView mQuestions = (ListView) SurveyActivity.this.findViewById(R.id.listView);
-            mQuestions.setAdapter((BaseAdapter)tabAdapter);
+            ListView listViewTab = (ListView) SurveyActivity.this.findViewById(R.id.listView);
+            if(tabAdapter instanceof DynamicTabAdapter ){
+                ((DynamicTabAdapter)tabAdapter).addOnSwipeListener(listViewTab);
+            }
+            listViewTab.setAdapter((BaseAdapter) tabAdapter);
             stopProgress();
         }
     }

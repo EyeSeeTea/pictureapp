@@ -31,7 +31,7 @@
             <!--Options as a N x 2 grid-->
             <GridLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:columnCount="2"
                 android:id="@+id/options_grid"
                 />
@@ -41,19 +41,19 @@
     <!--Horizontal Progress bar + text-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_alignParentBottom="true"
         >
         <ProgressBar
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="match_parent"
             android:id="@+id/dynamic_progress"
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:progress="5"
             android:max="10" />
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="match_parent"
             android:id="@+id/dynamic_progress_text"
             android:background="#00000000"
             android:layout_alignLeft="@id/dynamic_progress"
@@ -62,8 +62,10 @@
             android:layout_alignBottom="@id/dynamic_progress"
             android:paddingLeft="10dip"
             android:text="1/7"
-        />
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="false" />
     </RelativeLayout>
 
 
 </RelativeLayout>
+

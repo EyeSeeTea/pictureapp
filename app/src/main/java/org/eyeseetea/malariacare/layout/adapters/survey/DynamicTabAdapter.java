@@ -34,6 +34,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -85,11 +88,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private ProgressTabStatus progressTabStatus;
 
     /**
-     * This type of tab has only one header
-     */
-    private Header header;
-
-    /**
      * Flag that indicates if the swipe listener has been already added to the listview container
      */
     private boolean isSwipeAdded;
@@ -101,11 +99,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     LayoutInflater lInflater;
 
     private final Context context;
-
-    // The length of this arrays is the same that the items list. Each position indicates if the item
-    // on this position is hidden (true) or visible (false)
-
-    private final LinkedHashMap<Object, Boolean> elementInvisibility = new LinkedHashMap<>();
 
     int id_layout;
 
@@ -152,7 +145,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private List<Question> initHeaderAndQuestions() {
         List<Question> questions=new ArrayList<Question>();
 
-        this.header=(Header)this.items.get(0);
         for(int i=1;i<this.items.size();i++){
             questions.add((Question)this.items.get(i));
         }
@@ -174,14 +166,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             return;
         }
 
-
         listView.setOnTouchListener(new OnSwipeTouchListener(context) {
             public void onSwipeRight() {
                 previous();
             }
 
             public void onSwipeLeft() {
-                next();
+                if(progressTabStatus.isNextAllowed()) {
+                    next();
+                }
             }
         });
     }
@@ -253,6 +246,41 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         progressView.setProgress(progressTabStatus.getCurrentPage()+1);
         TextView progressText=(TextView)rowView.findViewById(R.id.dynamic_progress_text);
         progressText.setText(progressTabStatus.getStatusAsString());
+
+        //Options
+        GridLayout gridLayout=(GridLayout)rowView.findViewById(R.id.options_grid);
+        int typeQuestion=question.getAnswer().getOutput();
+        switch (typeQuestion){
+            case Constants.IMAGES_2:
+            case Constants.IMAGES_4:
+            case Constants.IMAGES_6:
+                List<Option> options = question.getAnswer().getOptions();
+                for(Option option:options){
+                    Button button=new Button(context);
+                    button.setText(option.getName());
+                    button.setTag(option);
+                    button.setOnClickListener(new View.OnClickListener() {
+                                                  @Override
+                                                  public void onClick(View v) {
+                                                        Option selectedOption=(Option)v.getTag();
+                                                        Question question=progressTabStatus.getCurrentQuestion();
+                                                        ReadWriteDB.saveValuesDDL(question, selectedOption);
+                                                        Value value = question.getValueBySession();
+                                                        if(isDone(value)){
+                                                            showDone();
+                                                            return;
+                                                        }
+                                                      next();
+                                                  }
+                                              }
+                    );
+
+                    gridLayout.addView(button);
+                }
+                break;
+            case Constants.PHONE:
+                break;
+        }
         return rowView;
     }
 
@@ -284,8 +312,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void showDone(){
         final Activity activity=(Activity)context;
         new AlertDialog.Builder((activity))
-                .setTitle(R.string.survey_title_exit)
-                .setMessage(R.string.survey_info_exit)
+                .setTitle(R.string.survey_title_completed)
+                .setMessage(R.string.survey_info_completed)
                 .setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         activity.finish();

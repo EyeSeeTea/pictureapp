@@ -127,9 +127,11 @@ public class SurveyActivity extends BaseActivity{
     @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed");
+        Survey survey=Session.getSurvey();
+        int infoMessage=survey.isSent()?R.string.survey_info_exit:R.string.survey_info_exit_delete;
         new AlertDialog.Builder(this)
                 .setTitle(R.string.survey_title_exit)
-                .setMessage(R.string.survey_info_exit)
+                .setMessage(infoMessage)
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
@@ -144,11 +146,11 @@ public class SurveyActivity extends BaseActivity{
     @Override
     public void onPause(){
         Survey survey=Session.getSurvey();
-
+        boolean sent=survey.isSent();
         //Exit from survey without finishing -> delete
-        if(isBackPressed && survey.isInProgress()){
+        if(isBackPressed && !sent){
             survey.delete();
-        }else if (!survey.isSent()){
+        }else{
             //Survey paused -> updateStatus
             survey.updateSurveyStatus();
         }

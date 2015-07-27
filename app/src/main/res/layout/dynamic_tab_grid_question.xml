@@ -29,12 +29,71 @@
                 app:tFontName="@string/condensed_font_name" />
 
             <!--Options as a N x 2 grid-->
-            <GridLayout
+            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:columnCount="2"
-                android:id="@+id/options_grid"
-                />
+                android:measureWithLargestChild="false"
+                android:id="@+id/options_table"
+                android:weightSum="1">
+                <!--<TableRow xmlns:android="http://schemas.android.com/apk/res/android"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_weight="1">-->
+                    <!--<org.eyeseetea.malariacare.views.EditCard-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_weight="0.6"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+                        <!--android:background="@drawable/background_textfield"-->
+                        <!--android:fontFamily="@string/normal_font" />-->
+                    <!--<Button-->
+                        <!--android:text="@string/ok"-->
+                        <!--android:padding="1dip"-->
+                        <!--android:layout_height="wrap_content" />-->
+                <!--</TableRow>-->
+                <!--<TableRow-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_weight="0.3">-->
+                    <!--<Button-->
+                        <!--android:text="@string/lorem_ipsum"-->
+                        <!--android:padding="1dip"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:textColor="@android:color/holo_blue_dark" />-->
+                    <!--<Button-->
+                        <!--android:text="@string/lorem_ipsum"-->
+                        <!--android:padding="1dip"-->
+                        <!--android:layout_height="match_parent" />-->
+                <!--</TableRow>-->
+
+                <!--<TableRow-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_weight="0.3">-->
+                    <!--<Button-->
+                        <!--android:text="@string/lorem_ipsum"-->
+                        <!--android:padding="1dip"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_width="match_parent" />-->
+                    <!--<Button-->
+                        <!--android:text="@string/lorem_ipsum"-->
+                        <!--android:padding="1dip"-->
+                        <!--android:layout_height="match_parent" />-->
+                <!--</TableRow>-->
+                <!--<TableRow-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_weight="0.3">-->
+                    <!--<Button-->
+                        <!--android:text="@string/lorem_ipsum"-->
+                        <!--android:padding="1dip"-->
+                        <!--android:layout_height="match_parent" />-->
+                    <!--<Button-->
+                        <!--android:text="@string/lorem_ipsum"-->
+                        <!--android:padding="1dip"-->
+                        <!--android:layout_height="match_parent" />-->
+                <!--</TableRow>-->
+            </TableLayout>
         </LinearLayout>
     <!--</ScrollView>-->
 

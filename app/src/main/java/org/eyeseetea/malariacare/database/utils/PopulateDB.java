@@ -80,6 +80,7 @@ public class PopulateDB {
                         option.setName(line[1]);
                         option.setFactor(Float.valueOf(line[2]));
                         option.setAnswer(answerList.get(Integer.valueOf(line[3])));
+                        option.setPath(line[4]);
                         optionList.put(Integer.valueOf(line[0]), option);
                         break;
                     case QUESTIONS_CSV:

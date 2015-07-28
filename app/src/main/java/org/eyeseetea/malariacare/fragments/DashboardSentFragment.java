@@ -56,7 +56,7 @@ import java.util.List;
 public class DashboardSentFragment extends ListFragment {
 
 
-    public static final String TAG = ".CompletedFragment";
+    public static final String TAG = ".SentFragment";
     private SurveyReceiver surveyReceiver;
     private List<Survey> surveys;
     protected IDashboardAdapter adapter;

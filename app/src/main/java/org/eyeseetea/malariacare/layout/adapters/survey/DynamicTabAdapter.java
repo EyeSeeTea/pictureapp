@@ -23,6 +23,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
@@ -36,6 +38,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -62,6 +66,8 @@ import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.UncheckeableRadioButton;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -250,14 +256,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.IMAGES_6:
                 List<Option> options = question.getAnswer().getOptions();
                 for(int i=0;i<options.size();i++){
-                    Button button=null;
                     int mod=i%2;
                     //First item per row requires a new row
                     if(mod==0){
                         tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row,tableLayout,false);
                         tableLayout.addView(tableRow);
                     }
-                    button = (Button) tableRow.getChildAt(mod);
+                    ImageButton button = (ImageButton) tableRow.getChildAt(mod);
 
                     initOptionButton(button, options.get(i), value);
                 }
@@ -266,13 +271,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.PHONE:
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                 tableLayout.addView(tableRow);
-                Button button=(Button)tableRow.getChildAt(1);
+                Button button=(Button)tableRow.findViewById(R.id.dynamic_phone_btn);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        TableRow parentRow=(TableRow)v.getParent();
-                        EditCard editCard=(EditCard)parentRow.getChildAt(0);
-                        String phoneValue=editCard.getText().toString();
+                        View parentView=(View)v.getParent();
+                        EditText editText=(EditText)parentView.findViewById(R.id.dynamic_phone_edit);
+                        String phoneValue=editText.getText().toString();
 
 //                        if (android.os.Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP) {
 //                            TelephonyManager tm = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE);
@@ -302,22 +307,28 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param button
      * @param option
      */
-    private void initOptionButton(Button button, Option option, Value value){
+    private void initOptionButton(ImageButton button, Option option, Value value){
         //Highlight button
         if(value!=null && value.getValue().equals(option.getName())){
             button.setPressed(true);
         }
-        button.setText(option.getName());
+        try {
+            InputStream inputStream = context.getAssets().open(option.getPath());
+            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+            button.setImageBitmap(bmp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         button.setTag(option);
         button.setOnClickListener(new View.OnClickListener() {
-                                      @Override
-                                      public void onClick(View v) {
-                                          Option selectedOption=(Option)v.getTag();
-                                          Question question=progressTabStatus.getCurrentQuestion();
-                                          ReadWriteDB.saveValuesDDL(question, selectedOption);
-                                          finishOrNext();
-                                      }
-                                  }
+              @Override
+              public void onClick(View v) {
+                  Option selectedOption=(Option)v.getTag();
+                  Question question=progressTabStatus.getCurrentQuestion();
+                  ReadWriteDB.saveValuesDDL(question, selectedOption);
+                  finishOrNext();
+              }
+            }
         );
     }
 

@@ -59,7 +59,7 @@ import java.util.List;
 public class DashboardUnsentFragment extends ListFragment {
 
 
-    public static final String TAG = ".DetailsFragment";
+    public static final String TAG = ".UnsentFragment";
     private SurveyReceiver surveyReceiver;
     private List<Survey> surveys;
     protected IDashboardAdapter adapter;

@@ -3,16 +3,26 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:layout_weight="1">
-    <org.eyeseetea.malariacare.views.EditCard
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.6"
-        android:phoneNumber="true"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:background="@drawable/background_textfield"
-        android:fontFamily="@string/normal_font" />
-    <Button
-        android:text="@string/ok"
-        android:padding="1dip"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        >
+        <EditText
+            android:id="@+id/dynamic_phone_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:phoneNumber="true"
+            android:layout_margin="10dp"/>
+        <Button
+            android:id="@+id/dynamic_phone_btn"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/ok"
+            android:layout_margin="10dp"
+             />
+    </LinearLayout>
+
 </TableRow>

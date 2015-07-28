@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_weight="1"
     >
-    <Button
-        android:padding="1dip"
+    <ImageButton
         android:layout_height="match_parent"
-        android:layout_weight="0.5"/>
-    <Button
-        android:padding="1dip"
+        android:layout_weight="0.5"
+        android:scaleType="centerInside" />
+    <ImageButton
         android:layout_height="match_parent"
-        android:layout_weight="0.5"/>
+        android:layout_weight="0.5"
+        android:scaleType="centerInside"/>
 </TableRow>

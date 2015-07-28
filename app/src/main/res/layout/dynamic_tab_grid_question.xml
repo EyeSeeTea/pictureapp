@@ -3,102 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <!-- Scrollable region-->
-    <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="15dip">
-
-            <!--Question-->
-            <org.eyeseetea.malariacare.views.TextCard
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/empty_string"
-                android:id="@+id/question"
-                android:textColor="@color/white"
-                android:typeface="sans"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:background="@drawable/background_header"
-                android:paddingLeft="10dip"
-                app:tDimension="@string/font_size_level2"
-                app:tFontName="@string/condensed_font_name" />
-
-            <!--Options as a N x 2 grid-->
-            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:measureWithLargestChild="false"
-                android:id="@+id/options_table"
-                android:weightSum="1">
-                <!--<TableRow xmlns:android="http://schemas.android.com/apk/res/android"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_weight="1">-->
-                    <!--<org.eyeseetea.malariacare.views.EditCard-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_weight="0.6"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-                        <!--android:background="@drawable/background_textfield"-->
-                        <!--android:fontFamily="@string/normal_font" />-->
-                    <!--<Button-->
-                        <!--android:text="@string/ok"-->
-                        <!--android:padding="1dip"-->
-                        <!--android:layout_height="wrap_content" />-->
-                <!--</TableRow>-->
-                <!--<TableRow-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_weight="0.3">-->
-                    <!--<Button-->
-                        <!--android:text="@string/lorem_ipsum"-->
-                        <!--android:padding="1dip"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:textColor="@android:color/holo_blue_dark" />-->
-                    <!--<Button-->
-                        <!--android:text="@string/lorem_ipsum"-->
-                        <!--android:padding="1dip"-->
-                        <!--android:layout_height="match_parent" />-->
-                <!--</TableRow>-->
-
-                <!--<TableRow-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_weight="0.3">-->
-                    <!--<Button-->
-                        <!--android:text="@string/lorem_ipsum"-->
-                        <!--android:padding="1dip"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_width="match_parent" />-->
-                    <!--<Button-->
-                        <!--android:text="@string/lorem_ipsum"-->
-                        <!--android:padding="1dip"-->
-                        <!--android:layout_height="match_parent" />-->
-                <!--</TableRow>-->
-                <!--<TableRow-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_weight="0.3">-->
-                    <!--<Button-->
-                        <!--android:text="@string/lorem_ipsum"-->
-                        <!--android:padding="1dip"-->
-                        <!--android:layout_height="match_parent" />-->
-                    <!--<Button-->
-                        <!--android:text="@string/lorem_ipsum"-->
-                        <!--android:padding="1dip"-->
-                        <!--android:layout_height="match_parent" />-->
-                <!--</TableRow>-->
-            </TableLayout>
-        </LinearLayout>
-    <!--</ScrollView>-->
 
     <!--Horizontal Progress bar + text-->
     <RelativeLayout
+        android:id="@+id/dynamic_footer"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_alignParentBottom="true"
@@ -125,6 +33,42 @@
             android:layout_alignParentRight="false" />
     </RelativeLayout>
 
+    <!-- Scrollable region-->
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/dynamic_footer"
+            android:paddingTop="15dip">
+
+            <!--Question-->
+            <org.eyeseetea.malariacare.views.TextCard
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_string"
+                android:id="@+id/question"
+                android:textColor="@color/white"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:background="@drawable/background_header"
+                android:paddingLeft="10dip"
+                app:tDimension="@string/font_size_level2"
+                app:tFontName="@string/condensed_font_name" />
+
+            <!--Options as a N x 2 grid-->
+            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:measureWithLargestChild="false"
+                android:id="@+id/options_table"
+                >
+            </TableLayout>
+        </LinearLayout>
+    <!--</ScrollView>-->
 
 </RelativeLayout>
 

@@ -23,6 +23,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
+import android.telephony.PhoneNumberUtils;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.GestureDetector;
@@ -222,6 +225,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rowView.requestLayout();
 
         Question question=this.progressTabStatus.getCurrentQuestion();
+        Value value=question.getValueBySession();
 
         //Question
         TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
@@ -236,6 +240,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Options
         TableLayout tableLayout=(TableLayout)rowView.findViewById(R.id.options_table);
+
+
         TableRow tableRow=null;
         int typeQuestion=question.getAnswer().getOutput();
         switch (typeQuestion){
@@ -251,8 +257,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row,tableLayout,false);
                         tableLayout.addView(tableRow);
                     }
-                    button=(Button)tableRow.getChildAt(mod);
-                    initOptionButton(button, options.get(i));
+                    button = (Button) tableRow.getChildAt(mod);
+
+                    initOptionButton(button, options.get(i), value);
                 }
 
                 break;
@@ -266,14 +273,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         TableRow parentRow=(TableRow)v.getParent();
                         EditCard editCard=(EditCard)parentRow.getChildAt(0);
                         String phoneValue=editCard.getText().toString();
+
+//                        if (android.os.Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP) {
+//                            TelephonyManager tm = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE);
+//                            String countryCode = tm.getNetworkCountryIso();
+//                            phoneValue = PhoneNumberUtils.formatNumber(phoneValue, countryCode);
+//                            if (phoneValue == null) {
+//                                editCard.setError(context.getString(R.string.dynamic_error_phone_format));
+//                                return;
+//                            } else {
+//                                editCard.setText(phoneValue);
+//                            }
+//                        }
+
                         Question question=progressTabStatus.getCurrentQuestion();
                         ReadWriteDB.saveValuesText(question,phoneValue);
-                        Value value = question.getValueBySession();
-                        if(isDone(value)){
-                            showDone();
-                            return;
-                        }
-                        next();
+                        finishOrNext();
                     }
                 });
                 break;
@@ -287,7 +302,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param button
      * @param option
      */
-    private void initOptionButton(Button button, Option option){
+    private void initOptionButton(Button button, Option option, Value value){
+        //Highlight button
+        if(value!=null && value.getValue().equals(option.getName())){
+            button.setPressed(true);
+        }
         button.setText(option.getName());
         button.setTag(option);
         button.setOnClickListener(new View.OnClickListener() {
@@ -296,15 +315,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                                           Option selectedOption=(Option)v.getTag();
                                           Question question=progressTabStatus.getCurrentQuestion();
                                           ReadWriteDB.saveValuesDDL(question, selectedOption);
-                                          Value value = question.getValueBySession();
-                                          if(isDone(value)){
-                                              showDone();
-                                              return;
-                                          }
-                                          next();
+                                          finishOrNext();
                                       }
                                   }
         );
+    }
+
+    /**
+     * Advance to the next question or finish survey according to question  and value.
+     */
+    private void finishOrNext(){
+        Question question=progressTabStatus.getCurrentQuestion();
+        Value value = question.getValueBySession();
+        if(isDone(value)){
+            showDone();
+            return;
+        }
+        next();
     }
 
 

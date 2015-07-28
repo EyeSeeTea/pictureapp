@@ -162,6 +162,9 @@
     <string name="reporting_info_monthly">Monthly \nReport</string>
     <string name="iqatab_info_supervisor_matches">Supervisor matches lab staff?</string>
 
+    <!-- dynamic -->
+    <string name="dynamic_error_phone_format">The given phone number has a bad format</string>
+
     <!-- score -->
     <string name="score_title_clinical_fever">Clinical\nfever\nevaluation</string>
     <string name="score_title_rdt">RDT</string>

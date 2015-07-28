@@ -94,6 +94,11 @@ public class SurveyActivity extends BaseActivity{
      */
     private LinearLayout content;
 
+    /**
+     * Flags required to decide if the survey must be deleted or not
+     */
+    private boolean isBackPressed=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,14 +127,17 @@ public class SurveyActivity extends BaseActivity{
     @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed");
+        Survey survey=Session.getSurvey();
+        int infoMessage=survey.isSent()?R.string.survey_info_exit:R.string.survey_info_exit_delete;
         new AlertDialog.Builder(this)
                 .setTitle(R.string.survey_title_exit)
-                .setMessage(R.string.survey_info_exit)
+                .setMessage(infoMessage)
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         ScoreRegister.clear();
                         unregisterReceiver();
+                        isBackPressed=true;
                         finishAndGo(DashboardActivity.class);
                     }
                 }).create().show();
@@ -137,7 +145,15 @@ public class SurveyActivity extends BaseActivity{
 
     @Override
     public void onPause(){
-        Session.getSurvey().updateSurveyStatus();
+        Survey survey=Session.getSurvey();
+        boolean sent=survey.isSent();
+        //Exit from survey without finishing -> delete
+        if(isBackPressed && !sent){
+            survey.delete();
+        }else{
+            //Survey paused -> updateStatus
+            survey.updateSurveyStatus();
+        }
         super.onPause();
     }
 
@@ -184,8 +200,11 @@ public class SurveyActivity extends BaseActivity{
                     tab.getType() == Constants.TAB_SCORE_SUMMARY) {
                 tabAdapter.initializeSubscore();
             }
-            ListView mQuestions = (ListView) SurveyActivity.this.findViewById(R.id.listView);
-            mQuestions.setAdapter((BaseAdapter)tabAdapter);
+            ListView listViewTab = (ListView) SurveyActivity.this.findViewById(R.id.listView);
+            if(tabAdapter instanceof DynamicTabAdapter ){
+                ((DynamicTabAdapter)tabAdapter).addOnSwipeListener(listViewTab);
+            }
+            listViewTab.setAdapter((BaseAdapter) tabAdapter);
             stopProgress();
         }
     }

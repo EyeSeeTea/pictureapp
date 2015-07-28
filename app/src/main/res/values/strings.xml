@@ -100,9 +100,13 @@
     <string name="analytics_title_header">Analytics</string>
 
     <!-- survey -->
-    <string name="survey_title_exit">"Really Exit?"</string>
-    <string name="survey_info_exit">"Are you sure you want to exit?"</string>
+    <string name="survey_title_exit">Really Exit?</string>
+    <string name="survey_info_exit">Are you sure you want to exit?</string>
+    <string name="survey_info_exit_delete">The survey in progress will be deleted</string>
     <string name="survey_info_select_tab">Select Tab: </string>
+    <string name="survey_title_completed">Survey completed</string>
+    <string name="survey_info_completed">The survey has been successfully completed</string>
+
 
     <!--widget-->
     <string name="widget_info_empty_statement">Question statement</string>

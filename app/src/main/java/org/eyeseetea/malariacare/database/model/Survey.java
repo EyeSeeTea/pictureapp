@@ -126,6 +126,22 @@ public class Survey extends SugarRecord<Survey> {
         return Constants.SURVEY_SENT==this.status;
     }
 
+    /**
+     * Checks if the survey has been completed or not
+     * @return true|false
+     */
+    public boolean isCompleted(){
+        return Constants.SURVEY_COMPLETED==this.status;
+    }
+
+    /**
+     * Checks if the survey is in progress
+     * @return true|false
+     */
+    public boolean isInProgress(){
+        return !isSent() && !isCompleted();
+    }
+
     public List<Value> getValues(){
         return Select.from(Value.class)
                 .where(Condition.prop("survey")

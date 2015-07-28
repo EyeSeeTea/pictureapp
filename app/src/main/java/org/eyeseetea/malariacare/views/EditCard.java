@@ -61,6 +61,9 @@ public class EditCard extends EditText implements IEyeSeeView{
 
 
     public void init(AttributeSet attrs, int defStyle) {
+        if(isInEditMode()){
+            return;
+        }
         // Load attributes
         if (attrs != null) {
             a = getContext().obtainStyledAttributes(attrs, R.styleable.TextCard, defStyle, 0);

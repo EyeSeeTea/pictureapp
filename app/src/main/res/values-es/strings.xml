@@ -91,9 +91,12 @@
     <string name="analytics_title_header">Estadísticas</string>
 
     <!-- survey -->
-    <string name="survey_title_exit">"¿Realmente salir?"</string>
-    <string name="survey_info_exit">"¿Esta seguro que quiere salir?"</string>
+    <string name="survey_title_exit">¿Realmente salir?</string>
+    <string name="survey_info_exit">¿Está seguro de que quiere salir?</string>
+    <string name="survey_info_exit_delete">The survey in progress will be deleted</string>
     <string name="survey_info_select_tab">Seleccione pestaña: </string>
+    <string name="survey_title_completed">Evaluacion finalizada</string>
+    <string name="survey_info_completed">La evaluacion ha sido completada correctamente</string>
 
     <!-- widget -->
     <string name="widget_info_empty_statement">Enunciado de cuestión</string>

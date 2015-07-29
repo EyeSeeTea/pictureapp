@@ -128,7 +128,7 @@ public class SurveyActivity extends BaseActivity{
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed");
         Survey survey=Session.getSurvey();
-        int infoMessage=survey.isSent()?R.string.survey_info_exit:R.string.survey_info_exit_delete;
+        int infoMessage=survey.isInProgress()?R.string.survey_info_exit_delete:R.string.survey_info_exit;
         new AlertDialog.Builder(this)
                 .setTitle(R.string.survey_title_exit)
                 .setMessage(infoMessage)
@@ -145,16 +145,26 @@ public class SurveyActivity extends BaseActivity{
 
     @Override
     public void onPause(){
+        beforeExit();
+        super.onPause();
+    }
+
+    private void beforeExit(){
         Survey survey=Session.getSurvey();
-        boolean sent=survey.isSent();
-        //Exit from survey without finishing -> delete
-        if(isBackPressed && !sent){
+        boolean isInProgress=survey.isInProgress();
+
+        //Exit + InProgress -> delete
+        if(isBackPressed && isInProgress){
             survey.delete();
-        }else{
-            //Survey paused -> updateStatus
+            return;
+        }
+
+        //InProgress -> update status
+        if(isInProgress){
             survey.updateSurveyStatus();
         }
-        super.onPause();
+
+        //Completed | Sent -> no action
     }
 
     @Override

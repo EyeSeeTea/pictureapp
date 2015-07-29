@@ -7,7 +7,8 @@
     <ImageButton
         android:layout_height="match_parent"
         android:layout_weight="0.5"
-        android:scaleType="centerInside" />
+        android:scaleType="centerInside"
+        />
     <ImageButton
         android:layout_height="match_parent"
         android:layout_weight="0.5"

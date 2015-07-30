@@ -25,7 +25,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -50,7 +52,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SurveyActivity;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
@@ -122,7 +126,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.items=initItems(tab);
         List<Question> questions= initHeaderAndQuestions();
         this.progressTabStatus=initProgress(questions);
-        this.readOnly = Session.getSurvey().isSent();
+        this.readOnly = !Session.getSurvey().isInProgress();
         this.isSwipeAdded=false;
     }
 
@@ -168,7 +172,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
 
             public void onSwipeLeft() {
-                if(progressTabStatus.isNextAllowed()) {
+                if(readOnly || progressTabStatus.isNextAllowed()) {
                     next();
                 }
             }
@@ -271,35 +275,52 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.PHONE:
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                 tableLayout.addView(tableRow);
-                Button button=(Button)tableRow.findViewById(R.id.dynamic_phone_btn);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        View parentView=(View)v.getParent();
-                        EditText editText=(EditText)parentView.findViewById(R.id.dynamic_phone_edit);
-                        String phoneValue=editText.getText().toString();
-
-//                        if (android.os.Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP) {
-//                            TelephonyManager tm = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE);
-//                            String countryCode = tm.getNetworkCountryIso();
-//                            phoneValue = PhoneNumberUtils.formatNumber(phoneValue, countryCode);
-//                            if (phoneValue == null) {
-//                                editCard.setError(context.getString(R.string.dynamic_error_phone_format));
-//                                return;
-//                            } else {
-//                                editCard.setText(phoneValue);
-//                            }
-//                        }
-
-                        Question question=progressTabStatus.getCurrentQuestion();
-                        ReadWriteDB.saveValuesText(question,phoneValue);
-                        finishOrNext();
-                    }
-                });
+                initPhoneValue(tableRow,value);
                 break;
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    /**
+     * Inits editText and button to view/edit the phone number
+     * @param tableRow
+     * @param value
+     */
+    private void initPhoneValue(TableRow tableRow, Value value){
+        Button button=(Button)tableRow.findViewById(R.id.dynamic_phone_btn);
+        EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_phone_edit);
+
+        //Has value? show it
+        if(value!=null){
+            editText.setText(value.getValue());
+        }
+
+        //Editable? add listener
+        if(!readOnly){
+            editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View parentView = (View) v.getParent();
+                    EditText editText = (EditText) parentView.findViewById(R.id.dynamic_phone_edit);
+                    String phoneValue = editText.getText().toString();
+
+                    //Required, empty values rejected
+                    if (phoneValue == null || "".equals(phoneValue)) {
+                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
+                        return;
+                    }
+
+                    Question question = progressTabStatus.getCurrentQuestion();
+                    ReadWriteDB.saveValuesText(question, phoneValue);
+                    finishOrNext();
+                }
+            });
+        }else{
+            editText.setEnabled(false);
+            button.setEnabled(false);
+        }
     }
 
     /**
@@ -310,8 +331,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void initOptionButton(ImageButton button, Option option, Value value){
         //Highlight button
         if(value!=null && value.getValue().equals(option.getName())){
-            button.setPressed(true);
+            Drawable selectedBackground=context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
+            if(android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
+                button.setBackground(selectedBackground);
+            }else {
+                button.setBackgroundDrawable(selectedBackground);
+            }
         }
+        //Put image
         try {
             InputStream inputStream = context.getAssets().open(option.getPath());
             Bitmap bmp = BitmapFactory.decodeStream(inputStream);
@@ -319,7 +346,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //Associate option
         button.setTag(option);
+
+        //Readonly (not clickable, enabled)
+        if(readOnly){
+            button.setEnabled(false);
+            return;
+        }
+
+        //Add listener
         button.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
@@ -377,7 +413,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 .setMessage(R.string.survey_info_completed)
                 .setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        activity.finish();
+                        ((SurveyActivity)activity).finishAndGo(DashboardActivity.class);
                     }
                 }).create().show();
     }

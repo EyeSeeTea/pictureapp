@@ -198,8 +198,6 @@ public abstract class BaseActivity extends ActionBarActivity {
         startActivity(targetActivityIntent);
     }
 
-
-
     /**
      * Shows an alert dialog with a big message inside based on a raw resource
      * @param titleId Id of the title resource

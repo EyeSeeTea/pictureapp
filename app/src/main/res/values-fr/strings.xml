@@ -212,8 +212,12 @@
     <string name="dialog_title_push_response">Réponse de charge</string>
     <string name="dialog_info_push_ok">Les données du sondage a été poussé avec succès au serveur DHIS</string>
     <string name="dialog_info_push_bad_credentials">Identification incorrectes pour la poussée</string>
+    <string name="dialog_error_push_no_org_unit">"Aucun code Organisation Unité a été fixé. S'il vous plaît vérifier les paramètres."</string>
     <string name="assessment_sent_title_state">État</string>
     <string name="assessment_sent_title_header">Evaluation Envoyée</string>
     <string name="assessment_sent_date">Date de remplissement</string>
 
+    <string name="pref_data">"Données"</string>
+    <string name="pref_server">Serveur</string>
+    <string name="pref_visual">Visuel</string>
 </resources>

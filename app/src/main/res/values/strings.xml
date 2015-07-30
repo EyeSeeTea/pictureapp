@@ -58,7 +58,7 @@
 
     <!-- create -->
     <string name="create_info_ok">Create assessment</string>
-    <string name="create_info_organization_unit">Organisation Unit</string>
+    <string name="create_info_organization_unit">Organization Unit</string>
     <string name="create_info_survey">Survey</string>
 
     <!-- assessment -->
@@ -226,11 +226,17 @@
     <string name="dialog_title_push_response">Push response</string>
     <string name="dialog_info_push_ok">Survey data has been successfully pushed to DHIS server</string>
     <string name="dialog_info_push_bad_credentials">Bad credentials for pushing</string>
+    <string name="dialog_error_push_no_org_unit">No Organization Unit code has been set. Please check settings to push.</string>
 
     <!-- Preference variable names -->
     <item name="show_num_dems" type="string" translatable="false">show_num_dems</item>
     <item name="customize_fonts" type="string" translatable="false">customize_fonts</item>
     <item name="font_sizes" type="string" translatable="false">font_sizes</item>
     <item name="dhis_url" type="string" translatable="false">dhis_url</item>
+    <item name="org_unit" type="string" translatable="false">org_unit</item>
+    <string name="pref_data">Data</string>
+    <string name="pref_server">Server</string>
+    <string name="pref_visual">Visual</string>
+
 
 </resources>

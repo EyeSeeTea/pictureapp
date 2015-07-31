@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -32,11 +33,14 @@ import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -168,10 +172,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         listView.setOnTouchListener(new OnSwipeTouchListener(context) {
             public void onSwipeRight() {
+                Log.d(TAG,"onSwipeRight(previous)");
                 previous();
             }
 
             public void onSwipeLeft() {
+                Log.d(TAG,"onSwipeLeft(next)");
                 if(readOnly || progressTabStatus.isNextAllowed()) {
                     next();
                 }
@@ -356,16 +362,37 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         //Add listener
-        button.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  Option selectedOption=(Option)v.getTag();
-                  Question question=progressTabStatus.getCurrentQuestion();
-                  ReadWriteDB.saveValuesDDL(question, selectedOption);
-                  finishOrNext();
-              }
+//        button.setOnClickListener(new View.OnClickListener() {
+//              @Override
+//              public void onClick(View v) {
+//                  Log.d(TAG, "onClick");
+//                  Option selectedOption=(Option)v.getTag();
+//                  Question question=progressTabStatus.getCurrentQuestion();
+//                  ReadWriteDB.saveValuesDDL(question, selectedOption);
+//                  finishOrNext();
+//              }
+//            }
+//        );
+        button.setOnTouchListener(new OnSwipeTouchListener(button,context) {
+
+            public void onClick(View view){
+                Log.d(TAG, "onClick");
+                Option selectedOption=(Option)view.getTag();
+                Question question=progressTabStatus.getCurrentQuestion();
+                ReadWriteDB.saveValuesDDL(question, selectedOption);
+                finishOrNext();
             }
-        );
+
+            public void onSwipeRight() {
+                previous();
+            }
+
+            public void onSwipeLeft() {
+                if (readOnly || progressTabStatus.isNextAllowed()) {
+                    next();
+                }
+            }
+        });
     }
 
     /**
@@ -617,7 +644,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             this.viewHolder = viewHolder;
         }
 
-
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             if(!group.isShown()){
@@ -637,8 +663,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         private final GestureDetector gestureDetector;
 
+        private final View view;
+
         public OnSwipeTouchListener (Context ctx){
             gestureDetector = new GestureDetector(ctx, new GestureListener());
+            view=null;
+        }
+
+        public OnSwipeTouchListener (View v, Context ctx){
+            gestureDetector = new GestureDetector(ctx, new GestureListener());
+            view=v;
         }
 
         @Override
@@ -648,11 +682,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
-            private static final int SWIPE_THRESHOLD = 100;
-            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+            private static final int SWIPE_THRESHOLD = 50;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 50;
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent event){
+                Log.d(TAG, "onSingleTapConfirmed");
+                onClick(view);
+                return true;
+            }
 
             @Override
             public boolean onDown(MotionEvent e) {
+                Log.d(TAG, "onDown: "+e.getX());
                 return true;
             }
 
@@ -660,23 +702,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 boolean result = false;
                 try {
-                    float diffY = e2.getY() - e1.getY();
-                    float diffX = e2.getX() - e1.getX();
-                    if (Math.abs(diffX) > Math.abs(diffY)) {
-                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                            if (diffX > 0) {
-                                onSwipeRight();
-                            } else {
-                                onSwipeLeft();
-                            }
-                        }
-                        result = true;
-                    }
-                    else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffY > 0) {
-                            onSwipeBottom();
+                    float diffX = e2.getX() - safeGetX(e1);
+                    Log.d(TAG, "onFling: diffX: "+diffX);
+                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffX > 0) {
+                            onSwipeRight();
                         } else {
-                            onSwipeTop();
+                            onSwipeLeft();
                         }
                     }
                     result = true;
@@ -688,13 +720,28 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         }
 
+        /**
+         * Sometimes event1 comes as NULL, this is a workaround to solve this
+         * @param event
+         * @return
+         */
+        private float safeGetX(MotionEvent event){
+            if(event==null){
+                WindowManager windowManager = (WindowManager) context
+                        .getSystemService(Context.WINDOW_SERVICE);
+                Display display = windowManager.getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                return (float)size.x;
+            }
+            return event.getX();
+        }
+
+        public void onClick(View view){}
+
         public void onSwipeRight(){}
 
         public void onSwipeLeft(){}
-
-        public void onSwipeTop(){}
-
-        public void onSwipeBottom(){}
     }
 
 }

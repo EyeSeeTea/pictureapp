@@ -37,6 +37,7 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -122,11 +123,28 @@ public class PushClient {
 
         JSONObject object=new JSONObject();
         object.put(TAG_PROGRAM, survey.getProgram().getUid());
-        object.put(TAG_ORG_UNIT, survey.getOrgUnit().getUid());
+        object.put(TAG_ORG_UNIT, prepareOrgUnit());
         object.put(TAG_EVENTDATE, android.text.format.DateFormat.format("yyyy-MM-dd", survey.getCompletionDate()));
-        object.put(TAG_STATUS,COMPLETED );
+        object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
         return object;
+    }
+
+    private String prepareOrgUnit() throws Exception{
+        String orgUnit=survey.getOrgUnit().getUid();
+
+        if(orgUnit==null || "".equals(orgUnit)){
+            //TODO take orgUnit code from sharedPreferences
+            String code=PreferencesState.getInstance().getOrgUnit();
+            if(code==null || "".equals(code)){
+                throw new Exception(activity.getString(R.string.dialog_error_push_no_org_unit));
+            }
+            //TODO pull UID from DHIS
+            //TODO update orgUnit in DB (for next pushes)
+        }
+
+
+        return orgUnit;
     }
 
 
@@ -213,13 +231,25 @@ public class PushClient {
         elementObject.put(TAG_VALUE, Utils.round(ScoreRegister.getCompositeScore(compositeScore)));
         return elementObject;
     }
+
+    /**
+     * Returns the URL that points to the DHIS server API according to preferences.
+     * @return
+     */
+    private String getDhisURL(){
+        String url= PreferencesState.getInstance().getDhisURL();
+        if(url==null || "".equals(url)){
+            url=DHIS_DEFAULT_SERVER;
+        }
+        return url+DHIS_PUSH_API;
+    }
     /**
      * Pushes data to DHIS Server
      * @param data
      */
     private JSONObject pushData(JSONObject data)throws Exception {
 
-        final String DHIS_URL=DHIS_DEFAULT_SERVER + DHIS_PUSH_API;
+        final String DHIS_URL=getDhisURL();
 
         OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 

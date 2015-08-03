@@ -208,6 +208,8 @@
     <string name="textcard_default_scale">system</string>
     <string name="textcard_default_dimension">medium</string>
     <string name="dashboard_info_sent">Enviado</string>
+    <string name="dialog_title_push">Enviando datos</string>
+    <string name="dialog_info_push_confirm">"Está seguro? No se puede deshacer esta acción"</string>
     <string name="dialog_title_push_response">Respuesta carga</string>
     <string name="dialog_info_push_ok">Datos subidos correctamente al servidor DHIS</string>
     <string name="dialog_info_push_bad_credentials">Credenciales incorrectas para el push</string>
@@ -216,6 +218,7 @@
     <string name="assessment_sent_title_header">Evaluación Enviada</string>
     <string name="assessment_sent_date">Fecha de llenado</string>
     <string name="assessment_title_date_completion">Fecha</string>
+    <string name="assessment_title_info">Info</string>
 
     <string name="pref_data">Datos</string>
     <string name="pref_server">Servidor</string>

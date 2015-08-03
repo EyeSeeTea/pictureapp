@@ -209,6 +209,8 @@
     <string name="textcard_default_scale">system</string>
     <string name="textcard_default_dimension">medium</string>
     <string name="dashboard_info_sent">Envoyé</string>
+    <string name="dialog_title_push">Envoi de données</string>
+    <string name="dialog_info_push_confirm">"Es-tu sûr? Vous ne pouvez pas annuler cette action"</string>
     <string name="dialog_title_push_response">Réponse de charge</string>
     <string name="dialog_info_push_ok">Les données du sondage a été poussé avec succès au serveur DHIS</string>
     <string name="dialog_info_push_bad_credentials">Identification incorrectes pour la poussée</string>
@@ -216,6 +218,7 @@
     <string name="assessment_sent_title_state">État</string>
     <string name="assessment_sent_title_header">Evaluation Envoyée</string>
     <string name="assessment_sent_date">Date de remplissement</string>
+    <string name="assessment_title_info">Info</string>
 
     <string name="pref_data">"Données"</string>
     <string name="pref_server">Serveur</string>

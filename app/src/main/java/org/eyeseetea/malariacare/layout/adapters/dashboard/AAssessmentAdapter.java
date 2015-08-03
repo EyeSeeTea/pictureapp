@@ -68,7 +68,8 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         //Completion Date
         TextCard completionDate = (TextCard) rowView.findViewById(R.id.completionDate);
         if(survey.getCompletionDate()!=null){
-            DateFormat formatter=DateFormat.getDateInstance(DateFormat.SHORT, Resources.getSystem().getConfiguration().locale);
+
+            DateFormat formatter=DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Resources.getSystem().getConfiguration().locale);
             completionDate.setText(formatter.format(survey.getCompletionDate()));
         }
 

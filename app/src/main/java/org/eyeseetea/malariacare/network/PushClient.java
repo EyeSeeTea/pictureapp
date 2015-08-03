@@ -132,22 +132,15 @@ public class PushClient {
     }
 
     private String prepareOrgUnit() throws Exception{
-        String orgUnit=survey.getOrgUnit().getUid();
-//
-//        if(orgUnit==null || "".equals(orgUnit)){
-            //TODO take orgUnit code from sharedPreferences
-            String code=PreferencesState.getInstance().getOrgUnit();
-            if(code==null || "".equals(code)){
-                throw new Exception(activity.getString(R.string.dialog_error_push_no_org_unit));
-            }
-            //pull UID from DHIS
-            orgUnit=pullOrgUnitUID(code);
+        String orgUnit;
 
-            //update orgUnit in DB (for next pushes)
-            survey.getOrgUnit().setUid(orgUnit);
-            survey.getOrgUnit().save();
-//        }
-
+        //take orgUnit code from sharedPreferences
+        String code=PreferencesState.getInstance().getOrgUnit();
+        if(code==null || "".equals(code)){
+            throw new Exception(activity.getString(R.string.dialog_error_push_no_org_unit));
+        }
+        //pull UID from DHIS
+        orgUnit=pullOrgUnitUID(code);
 
         return orgUnit;
     }

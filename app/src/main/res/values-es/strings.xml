@@ -214,6 +214,8 @@
     <string name="dialog_info_push_ok">Datos subidos correctamente al servidor DHIS</string>
     <string name="dialog_info_push_bad_credentials">Credenciales incorrectas para el push</string>
     <string name="dialog_error_push_no_org_unit">No hay configurado ningún codigo de Organización. Por favor, revise la configuracion.</string>
+    <string name="dialog_error_push_no_uid">No UID encontrado en el servidor para el código </string>
+
     <string name="assessment_sent_title_state">Estado</string>
     <string name="assessment_sent_title_header">Evaluación Enviada</string>
     <string name="assessment_sent_date">Fecha de llenado</string>

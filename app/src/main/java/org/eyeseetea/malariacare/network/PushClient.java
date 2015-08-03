@@ -61,6 +61,7 @@ public class PushClient {
     //FIXME This should change for a sharedpreferences url that is selected from the login screen
     private static String DHIS_DEFAULT_SERVER="https://malariacare.psi.org";
     private static String DHIS_PUSH_API="/api/events";
+    private static String DHIS_PULL_ORG_UNITS_API="/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:%s";
     private static String DHIS_USERNAME="testing";
     private static String DHIS_PASSWORD="Testing2015";
 
@@ -132,19 +133,52 @@ public class PushClient {
 
     private String prepareOrgUnit() throws Exception{
         String orgUnit=survey.getOrgUnit().getUid();
-
-        if(orgUnit==null || "".equals(orgUnit)){
+//
+//        if(orgUnit==null || "".equals(orgUnit)){
             //TODO take orgUnit code from sharedPreferences
             String code=PreferencesState.getInstance().getOrgUnit();
             if(code==null || "".equals(code)){
                 throw new Exception(activity.getString(R.string.dialog_error_push_no_org_unit));
             }
-            //TODO pull UID from DHIS
-            //TODO update orgUnit in DB (for next pushes)
-        }
+            //pull UID from DHIS
+            orgUnit=pullOrgUnitUID(code);
+
+            //update orgUnit in DB (for next pushes)
+            survey.getOrgUnit().setUid(orgUnit);
+            survey.getOrgUnit().save();
+//        }
 
 
         return orgUnit;
+    }
+
+    private String pullOrgUnitUID(String code) throws Exception{
+        //https://malariacare.psi.org/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:KH_Cambodia
+        final String DHIS_PULL_URL=getDhisOrgUnitURL(code);
+
+        OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+        BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
+
+        Request request = new Request.Builder()
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                .url(DHIS_PULL_URL)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if(!response.isSuccessful()){
+            Log.e(TAG, "pullOrgUnitUID (" + response.code()+"): "+response.body().string());
+            throw new IOException(response.message());
+        }
+
+        JSONObject responseJSON=parseResponse(response.body().string());
+        JSONArray responseArray=(JSONArray) responseJSON.get("organisationUnits");
+        if(responseArray.length()==0){
+            Log.e(TAG, "pullOrgUnitUID: No UID for code "+code);
+            throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
+        }
+        return responseArray.getJSONObject(0).getString("id");
     }
 
 
@@ -230,6 +264,19 @@ public class PushClient {
         elementObject.put(TAG_DATAELEMENT, compositeScore.getUid());
         elementObject.put(TAG_VALUE, Utils.round(ScoreRegister.getCompositeScore(compositeScore)));
         return elementObject;
+    }
+
+    /**
+     * Returns the URL that points to the DHIS server (Pull) API according to preferences.
+     * @return
+     */
+    private String getDhisOrgUnitURL(String code){
+        String url= PreferencesState.getInstance().getDhisURL();
+        if(url==null || "".equals(url)){
+            url=DHIS_DEFAULT_SERVER;
+        }
+
+        return url+String.format(DHIS_PULL_ORG_UNITS_API,code);
     }
 
     /**

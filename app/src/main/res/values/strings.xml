@@ -229,6 +229,8 @@
     <string name="dialog_info_push_ok">Survey data has been successfully pushed to DHIS server</string>
     <string name="dialog_info_push_bad_credentials">Bad credentials for pushing</string>
     <string name="dialog_error_push_no_org_unit">No Organization Unit code has been set. Please check settings to push.</string>
+    <string name="dialog_error_push_no_uid">No UID found in server for code </string>
+
 
     <!-- Preference variable names -->
     <item name="show_num_dems" type="string" translatable="false">show_num_dems</item>

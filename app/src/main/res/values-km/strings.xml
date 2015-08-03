@@ -229,6 +229,7 @@
     <string name="dialog_info_push_ok">ទិន្នន័យ​អ​្ក​ត​បាន​ជំរុញ​ឱ្យ​ទៅ​ម៉ាស៊ីន​បម្រើ </string>
     <string name="dialog_info_push_bad_credentials">លិខិត​សម្គាល់​អាក្រក់​សម្រាប់​ជំរុញ​ឱ្យ​មាន </string>
     <string name="dialog_error_push_no_org_unit">គ្មាន លេខកូដ អង្គភាព អង្គការ ត្រូវបាន កំណត់។ សូមពិនិត្យមើល ការកំណត់ដែលបាន ជំរុញឱ្យមាន ។</string>
+    <string name="dialog_error_push_no_uid">បាន​រក​ឃើញ​នៅ​ក្នុង​ម៉ាស៊ីន​បម្រើ​សម្រាប់​កូដ UID របស់​គ្មាន </string>
 
     <!-- Preference variable names -->
     <item name="show_num_dems" type="string" translatable="false">show_num_dems</item>

@@ -240,8 +240,8 @@ public class DashboardUnsentFragment extends ListFragment {
 
 
                 new AlertDialog.Builder(getActivity())
-                        .setTitle("Pushing data")
-                        .setMessage("Are you sure? You can not undo this action")
+                        .setTitle(R.string.dialog_title_push)
+                        .setMessage(R.string.dialog_info_push_confirm)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface arg0, int arg1) {
                                 final Survey survey = (Survey) adapter.getItem(position-1);

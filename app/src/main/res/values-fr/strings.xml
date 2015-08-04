@@ -212,10 +212,11 @@
     <string name="dialog_title_push">Envoi de données</string>
     <string name="dialog_info_push_confirm">"Es-tu sûr? Vous ne pouvez pas annuler cette action"</string>
     <string name="dialog_title_push_response">Réponse de charge</string>
-    <string name="dialog_info_push_ok">Les données du sondage a été poussé avec succès au serveur DHIS</string>
+    <string name="dialog_info_push_ok">"Les données du sondage a été poussé avec succès au serveur. Résultats: "</string>
     <string name="dialog_info_push_bad_credentials">Identification incorrectes pour la poussée</string>
     <string name="dialog_error_push_no_org_unit">"Aucun code Organisation Unité a été fixé. S'il vous plaît vérifier les paramètres."</string>
     <string name="dialog_error_push_no_uid">"Aucune UID trouvé dans le serveur pour le code "</string>
+    <string name="dialog_error_push_no_location">Aucun emplacement disponible</string>
 
     <string name="assessment_sent_title_state">État</string>
     <string name="assessment_sent_title_header">Evaluation Envoyée</string>

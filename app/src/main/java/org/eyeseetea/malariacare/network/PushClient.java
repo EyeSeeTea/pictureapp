@@ -21,6 +21,7 @@ package org.eyeseetea.malariacare.network;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
@@ -38,6 +39,7 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -75,6 +77,9 @@ public class PushClient {
     private static String TAG_EVENTDATE="eventDate";
     private static String TAG_STATUS="status";
     private static String TAG_STOREDBY="storedBy";
+    private static String TAG_COORDINATE="coordinate";
+    private static String TAG_COORDINATE_LAT="latitude";
+    private static String TAG_COORDINATE_LNG="longitude";
     private static String TAG_DATAVALUES="dataValues";
     private static String TAG_DATAELEMENT="dataElement";
     private static String TAG_VALUE="value";
@@ -128,7 +133,21 @@ public class PushClient {
         object.put(TAG_EVENTDATE, android.text.format.DateFormat.format("yyyy-MM-dd", survey.getCompletionDate()));
         object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
+        object.put(TAG_COORDINATE, prepareCoordinates());
+
+        Log.d(TAG, "prepareMetadata: " + object.toString());
         return object;
+    }
+
+    private JSONObject prepareCoordinates() throws Exception{
+        Location lastLocation= Session.getLocation();
+        if(lastLocation==null){
+            throw new Exception(activity.getString(R.string.dialog_error_push_no_location));
+        }
+        JSONObject coordinate=new JSONObject();
+        coordinate.put(TAG_COORDINATE_LAT,lastLocation.getLatitude());
+        coordinate.put(TAG_COORDINATE_LNG,lastLocation.getLongitude());
+        return coordinate;
     }
 
     private String prepareOrgUnit() throws Exception{

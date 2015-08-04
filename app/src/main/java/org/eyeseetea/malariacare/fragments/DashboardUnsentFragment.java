@@ -344,9 +344,9 @@ public class DashboardUnsentFragment extends ListFragment {
          * @param pushResult
          */
         private void showResponse(PushResult pushResult){
-            String msg="";
+            String msg;
             if(pushResult.isSuccessful()){
-                msg="Survey data pushed to server. Results: \n"+String.format("Imported: %s | Updated: %s | Ignored: %s",pushResult.getImported(),pushResult.getUpdated(),pushResult.getIgnored());
+                msg=getActivity().getResources().getString(R.string.dialog_info_push_ok)+" \n"+String.format("Imported: %s | Updated: %s | Ignored: %s",pushResult.getImported(),pushResult.getUpdated(),pushResult.getIgnored());
             }else{
                 msg=pushResult.getException().getMessage();
             }

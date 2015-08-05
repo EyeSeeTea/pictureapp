@@ -89,7 +89,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     /**
      * Hold the progress of completion
      */
-    private ProgressTabStatus progressTabStatus;
+    public ProgressTabStatus progressTabStatus;
 
     /**
      * Flag that indicates if the swipe listener has been already added to the listview container

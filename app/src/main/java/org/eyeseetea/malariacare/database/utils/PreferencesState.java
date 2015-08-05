@@ -204,6 +204,10 @@ public class PreferencesState {
         return orgUnit;
     }
 
+    public void setOrgUnit(String orgUnit){
+        this.orgUnit=orgUnit;
+    }
+
     public String getDhisURL(){
         return dhisURL;
     }

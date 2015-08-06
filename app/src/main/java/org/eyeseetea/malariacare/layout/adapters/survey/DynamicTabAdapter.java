@@ -318,6 +318,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         return;
                     }
 
+                    //TODO Use https://github.com/googlei18n/libphonenumber to check format
+                    //TODO Take current region : getResources().getConfiguration().locale
+//                    PhoneNumber phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, regionCode);
+//                    if(!phoneUtil.isValidNumber(phoneNumber)){
+//                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
+//                        return;
+//                    }
+
+
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, phoneValue);
                     finishOrNext();

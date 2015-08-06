@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:id="@+id/dynamic_progress"
             style="@android:style/Widget.ProgressBar.Horizontal"
-            android:progress="5"
+            android:progress="8"
             android:max="10" />
         <TextView
             android:layout_width="match_parent"

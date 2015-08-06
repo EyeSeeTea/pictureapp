@@ -25,7 +25,7 @@
         <EditTextPreference
             android:key="org_unit"
             android:title="@string/create_info_organization_unit"
-            android:defaultValue="@string/empty_string"
+            android:defaultValue="KH_Cambodia"
             android:selectAllOnFocus="true"
             android:inputType="text"
             android:singleLine="true"

@@ -226,4 +226,5 @@
     <string name="pref_data">"Données"</string>
     <string name="pref_server">Serveur</string>
     <string name="pref_visual">Visuel</string>
+    <string name="assessment_title_date_completion">Date</string>
 </resources>

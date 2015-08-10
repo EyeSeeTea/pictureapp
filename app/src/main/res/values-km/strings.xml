@@ -2,9 +2,7 @@
 <resources>
 
     <!-- # general -->
-    <string name="app_name" translatable="false">ករណីជំងឺគ្រុនចាញ់ តាមដាន</string>
     <string name="developers">EyeSeeTea LTD</string>
-    <string name="empty_string" translatable="false"></string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
@@ -69,7 +67,6 @@
     <string name="assessment_info_delete">Delete</string>
     <string name="assessment_title_header">ការវាយតំលៃ សកម្ម</string>
     <string name="assessment_sent_title_header">ការវាយតម្លៃ ដែលបានផ្ញើ</string>
-    <string name="assessment_title_rdt" translatable="false">RDT</string>
     <string name="assessment_title_info">ព</string>
 
 
@@ -202,12 +199,6 @@
 
     <string name="settings_array_values_font_sizes_def">@string/font_size_level2</string>
 
-    <string name="normal_font" translatable="false">Roboto-Medium.ttf</string>
-    <string name="light_font" translatable="false">Roboto-Light.ttf</string>
-    <string name="bold_font_name" translatable="false">Roboto-Bold.ttf</string>
-    <string name="medium_font_name" translatable="false">Roboto-Medium.ttf</string>
-    <string name="condensed_font_name" translatable="false">Roboto-Condensed.ttf</string>
-
     <string-array name="settings_array_values_font_sizes">
         <item>@string/font_size_level0</item>
         <item>@string/font_size_level1</item>
@@ -234,14 +225,10 @@
 
 
     <!-- Preference variable names -->
-    <item name="show_num_dems" type="string" translatable="false">show_num_dems</item>
-    <item name="customize_fonts" type="string" translatable="false">customize_fonts</item>
-    <item name="font_sizes" type="string" translatable="false">font_sizes</item>
-    <item name="dhis_url" type="string" translatable="false">dhis_url</item>
-    <item name="org_unit" type="string" translatable="false">org_unit</item>
     <string name="pref_data">Data</string>
     <string name="pref_server">Server</string>
     <string name="pref_visual">Visual</string>
+    <string name="assessment_title_date_completion">កាលបរិច្ឆេត</string>
 
 
 </resources>

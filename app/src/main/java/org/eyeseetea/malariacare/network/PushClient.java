@@ -66,6 +66,7 @@ public class PushClient {
     private static String DHIS_PULL_ORG_UNITS_API="/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:%s";
     private static String DHIS_USERNAME="testing";
     private static String DHIS_PASSWORD="Testing2015";
+    private static String DHIS_DEFAULT_CODE="KH_Cambodia";
 
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -156,7 +157,7 @@ public class PushClient {
         //take orgUnit code from sharedPreferences
         String code=PreferencesState.getInstance().getOrgUnit();
         if(code==null || "".equals(code)){
-            throw new Exception(activity.getString(R.string.dialog_error_push_no_org_unit));
+            code=DHIS_DEFAULT_CODE;
         }
         //pull UID from DHIS
         orgUnit=pullOrgUnitUID(code);

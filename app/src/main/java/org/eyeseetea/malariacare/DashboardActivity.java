@@ -107,7 +107,9 @@ public class DashboardActivity extends BaseActivity {
         if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             Log.d(TAG,"requestLocationUpdates via GPS");
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
-        }else if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+        }
+
+        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
             Log.d(TAG,"requestLocationUpdates via NETWORK");
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationListener);
         }else{

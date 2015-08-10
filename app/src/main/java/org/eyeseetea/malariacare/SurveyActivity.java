@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -40,6 +41,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import org.eyeseetea.malariacare.database.model.CompositeScore;
+import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
@@ -172,6 +174,33 @@ public class SurveyActivity extends BaseActivity{
         Log.d(TAG, "onStop");
         unregisterReceiver();
         super.onStop();
+    }
+
+    /**
+     * Finds the option from the current answer associated with the given text.
+     * Only for dynamicTabAdapter, required for automated testing.
+     * @param text
+     * @return
+     */
+    public Option findOptionByText(String text){
+        try {
+            //Find adapter
+            Tab tabZero=this.tabsList.get(0);
+            DynamicTabAdapter tabAdapter=(DynamicTabAdapter)this.tabAdaptersCache.findAdapter(tabZero);
+
+            //Get options from question
+            List<Option> options=tabAdapter.progressTabStatus.getCurrentQuestion().getAnswer().getOptions();
+
+            //Return proper option if possible
+            for(Option option:options){
+                if(option.getName().equals(text)){
+                    return option;
+                }
+            }
+        }catch(Exception ex){
+            return null;
+        }
+        return null;
     }
 
     public class AsyncChangeTab extends AsyncTask<Void, Integer, View> {

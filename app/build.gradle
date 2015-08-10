@@ -41,6 +41,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.0.0'
     compile 'com.google.guava:guava:18.0'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
+    compile 'com.googlecode.libphonenumber:libphonenumber:7.0.9'
 
     // Unit testing dependencies
     testCompile 'junit:junit:4.12'

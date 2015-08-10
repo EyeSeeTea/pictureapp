@@ -29,8 +29,6 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.telephony.PhoneNumberUtils;
-import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -56,6 +54,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SurveyActivity;
@@ -78,6 +80,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Jose on 21/04/2015.
@@ -318,14 +321,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         return;
                     }
 
-                    //TODO Use https://github.com/googlei18n/libphonenumber to check format
-                    //TODO Take current region : getResources().getConfiguration().locale
-//                    PhoneNumber phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, regionCode);
-//                    if(!phoneUtil.isValidNumber(phoneNumber)){
-//                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
-//                        return;
-//                    }
-
+                    // Check phone number format
+                    Phonenumber.PhoneNumber phoneNumber = null;
+                    try {
+                        Locale locale = context.getResources().getConfiguration().locale;
+                        phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, locale.getCountry());
+                    } catch (NumberParseException e) {
+                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
+                        return;
+                    }
+                    if(!PhoneNumberUtil.getInstance().isValidNumber(phoneNumber)){
+                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
+                        return;
+                    }
 
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, phoneValue);

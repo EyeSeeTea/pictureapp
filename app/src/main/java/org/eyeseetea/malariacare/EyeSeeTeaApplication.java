@@ -24,6 +24,13 @@ import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.eyeseetea.malariacare.database.model.CompositeScore;
+import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.database.model.Score;
+import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.model.Value;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -35,6 +42,18 @@ public class EyeSeeTeaApplication extends com.orm.SugarApp {
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
+        // Not previously populated tables
+        CompositeScore.saveInTx();
+        QuestionRelation.saveInTx();
+        Score.saveInTx();
+        Survey.saveInTx();
+        User.saveInTx();
+        Value.saveInTx();
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
     }
 
     @Override

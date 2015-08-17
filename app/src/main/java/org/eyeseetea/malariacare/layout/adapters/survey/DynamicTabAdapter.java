@@ -754,7 +754,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             return event.getX();
         }
 
-        public void onClick(View view){}
+        public void onClick(View view){
+            Log.e(".DynamicTabAdapter", "empty onclick");
+        }
 
         public void onSwipeRight(){}
 

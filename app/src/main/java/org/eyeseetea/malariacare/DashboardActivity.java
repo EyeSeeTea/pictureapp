@@ -30,14 +30,8 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
-import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -46,7 +40,6 @@ import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.io.IOException;
-import java.util.List;
 
 
 public class DashboardActivity extends BaseActivity {
@@ -58,7 +51,6 @@ public class DashboardActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.fragment_dashboard);
 
         if (savedInstanceState == null) {

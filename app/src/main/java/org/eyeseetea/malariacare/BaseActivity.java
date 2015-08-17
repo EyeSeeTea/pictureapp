@@ -171,7 +171,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         List<OrgUnit> firstOrgUnit=OrgUnit.find(OrgUnit.class,null,null,null,null,String.valueOf(1));
         List<Program> firstProgram=Program.find(Program.class,null,null,null,null,String.valueOf(1));
         // Put new survey in session
-        Survey survey = new Survey((OrgUnit)firstOrgUnit.get(0), (Program)firstProgram.get(0), Session.getUser());
+        Survey survey = new Survey(firstOrgUnit.get(0), firstProgram.get(0), Session.getUser());
         survey.save();
         Session.setSurvey(survey);
 

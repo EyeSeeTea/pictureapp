@@ -92,9 +92,12 @@
     <string name="analytics_title_header">Statistiques</string>
 
     <!-- survey -->
-    <string name="survey_title_exit">"Vraiment quitter?"</string>
+    <string name="survey_title_exit">Vraiment quitter?</string>
     <string name="survey_info_exit">"Êtes-vous sûr de vouloir quitter?"</string>
+    <string name="survey_info_exit_delete">"L'enquête en cours sera supprimé"</string>
     <string name="survey_info_select_tab">Choisissez onglet: </string>
+    <string name="survey_title_completed">Enquête terminée</string>
+    <string name="survey_info_completed">Le sondage a été effectué avec succès</string>
 
     <!-- widget -->
     <string name="widget_info_empty_statement">Question statement</string>
@@ -150,6 +153,9 @@
     <string name="reporting_info_monthly">Notification \nMensuel</string>
     <string name="iqatab_info_supervisor_matches">Supervisor matches lab staff?</string>
 
+    <!-- dynamic -->
+    <string name="dynamic_error_phone_format">"Le numéro de téléphone donné a un format incorrect"</string>
+
     <!-- score -->
     <string name="score_title_clinical_fever">Clinical\nfever\nevaluation</string>
     <string name="score_title_rdt">RDT</string>
@@ -203,11 +209,22 @@
     <string name="textcard_default_scale">system</string>
     <string name="textcard_default_dimension">medium</string>
     <string name="dashboard_info_sent">Envoyé</string>
+    <string name="dialog_title_push">Envoi de données</string>
+    <string name="dialog_info_push_confirm">"Es-tu sûr? Vous ne pouvez pas annuler cette action"</string>
     <string name="dialog_title_push_response">Réponse de charge</string>
-    <string name="dialog_info_push_ok">Les données du sondage a été poussé avec succès au serveur DHIS</string>
+    <string name="dialog_info_push_ok">"Les données du sondage a été poussé avec succès au serveur. Résultats: "</string>
     <string name="dialog_info_push_bad_credentials">Identification incorrectes pour la poussée</string>
+    <string name="dialog_error_push_no_org_unit">"Aucun code Organisation Unité a été fixé. S'il vous plaît vérifier les paramètres."</string>
+    <string name="dialog_error_push_no_uid">"Aucune UID trouvé dans le serveur pour le code "</string>
+    <string name="dialog_error_push_no_location">Aucun emplacement disponible</string>
+
     <string name="assessment_sent_title_state">État</string>
     <string name="assessment_sent_title_header">Evaluation Envoyée</string>
     <string name="assessment_sent_date">Date de remplissement</string>
+    <string name="assessment_title_info">Info</string>
 
+    <string name="pref_data">"Données"</string>
+    <string name="pref_server">Serveur</string>
+    <string name="pref_visual">Visuel</string>
+    <string name="assessment_title_date_completion">Date</string>
 </resources>

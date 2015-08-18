@@ -109,6 +109,14 @@ public class Tab extends SugarRecord<Tab> {
         return getType() == Constants.TAB_IQATAB;
     }
 
+    /**
+     * Checks if this tab is a dynamic tab (sort of a wizard)
+     * @return
+     */
+    public boolean isDynamicTab(){
+        return getType() == Constants.TAB_DYNAMIC_AUTOMATIC_TAB;
+    }
+
     @Override
     public String toString() {
         return "Tab{" +

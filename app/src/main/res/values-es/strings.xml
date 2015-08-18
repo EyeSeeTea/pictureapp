@@ -91,9 +91,12 @@
     <string name="analytics_title_header">Estadísticas</string>
 
     <!-- survey -->
-    <string name="survey_title_exit">"¿Realmente salir?"</string>
-    <string name="survey_info_exit">"¿Esta seguro que quiere salir?"</string>
+    <string name="survey_title_exit">¿Realmente salir?</string>
+    <string name="survey_info_exit">¿Está seguro de que quiere salir?</string>
+    <string name="survey_info_exit_delete">La evaluación en marcha será eliminada</string>
     <string name="survey_info_select_tab">Seleccione pestaña: </string>
+    <string name="survey_title_completed">Evaluacion finalizada</string>
+    <string name="survey_info_completed">La evaluacion ha sido completada correctamente</string>
 
     <!-- widget -->
     <string name="widget_info_empty_statement">Enunciado de cuestión</string>
@@ -149,6 +152,9 @@
     <string name="reporting_info_monthly">Informe\nMensual</string>
     <string name="iqatab_info_supervisor_matches">¿Coinciden supervisor y personal de laboratorio?</string>
 
+    <!-- dynamic -->
+    <string name="dynamic_error_phone_format">El télefono dado no esta bien formateado</string>
+
     <!-- score -->
     <string name="score_title_clinical_fever">Evaluación\nde fiebre\nclínica</string>
     <string name="score_title_rdt">RDT</string>
@@ -202,11 +208,23 @@
     <string name="textcard_default_scale">system</string>
     <string name="textcard_default_dimension">medium</string>
     <string name="dashboard_info_sent">Enviado</string>
+    <string name="dialog_title_push">Enviando datos</string>
+    <string name="dialog_info_push_confirm">"Está seguro? No se puede deshacer esta acción"</string>
     <string name="dialog_title_push_response">Respuesta carga</string>
-    <string name="dialog_info_push_ok">Datos subidos correctamente al servidor DHIS</string>
+    <string name="dialog_info_push_ok">Datos subidos correctamente al servidor. Resultados: </string>
     <string name="dialog_info_push_bad_credentials">Credenciales incorrectas para el push</string>
+    <string name="dialog_error_push_no_org_unit">No hay configurado ningún codigo de Organización. Por favor, revise la configuracion.</string>
+    <string name="dialog_error_push_no_uid">No UID encontrado en el servidor para el código </string>
+    <string name="dialog_error_push_no_location">Localización no disponible</string>
+
     <string name="assessment_sent_title_state">Estado</string>
     <string name="assessment_sent_title_header">Evaluación Enviada</string>
     <string name="assessment_sent_date">Fecha de llenado</string>
+    <string name="assessment_title_date_completion">Fecha</string>
+    <string name="assessment_title_info">Info</string>
+
+    <string name="pref_data">Datos</string>
+    <string name="pref_server">Servidor</string>
+    <string name="pref_visual">Visual</string>
 
 </resources>

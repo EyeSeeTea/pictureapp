@@ -61,7 +61,7 @@ public class MalariaEspressoTest {
     protected IntentServiceIdlingResource idlingResource;
     protected Resources res;
     public static final String DATABASE_NAME="malariacare.db";
-    public static final String DATABASE_FULL_PATH = "/data/data/org.eyeseetea.malariacare/databases/"+DATABASE_NAME;
+    public static final String DATABASE_FULL_PATH = "/data/data/org.eyeseetea.pictureapp/databases/"+DATABASE_NAME;
 
     public static void init(){
         cleanAll();

@@ -21,6 +21,7 @@ package org.eyeseetea.malariacare.network;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
@@ -37,6 +38,8 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -60,8 +63,10 @@ public class PushClient {
     //FIXME This should change for a sharedpreferences url that is selected from the login screen
     private static String DHIS_DEFAULT_SERVER="https://malariacare.psi.org";
     private static String DHIS_PUSH_API="/api/events";
+    private static String DHIS_PULL_ORG_UNITS_API="/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:%s";
     private static String DHIS_USERNAME="testing";
     private static String DHIS_PASSWORD="Testing2015";
+    private static String DHIS_DEFAULT_CODE="KH_Cambodia";
 
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -73,6 +78,9 @@ public class PushClient {
     private static String TAG_EVENTDATE="eventDate";
     private static String TAG_STATUS="status";
     private static String TAG_STOREDBY="storedBy";
+    private static String TAG_COORDINATE="coordinate";
+    private static String TAG_COORDINATE_LAT="latitude";
+    private static String TAG_COORDINATE_LNG="longitude";
     private static String TAG_DATAVALUES="dataValues";
     private static String TAG_DATAELEMENT="dataElement";
     private static String TAG_VALUE="value";
@@ -122,11 +130,68 @@ public class PushClient {
 
         JSONObject object=new JSONObject();
         object.put(TAG_PROGRAM, survey.getProgram().getUid());
-        object.put(TAG_ORG_UNIT, survey.getOrgUnit().getUid());
+        object.put(TAG_ORG_UNIT, prepareOrgUnit());
         object.put(TAG_EVENTDATE, android.text.format.DateFormat.format("yyyy-MM-dd", survey.getCompletionDate()));
-        object.put(TAG_STATUS,COMPLETED );
+        object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
+        object.put(TAG_COORDINATE, prepareCoordinates());
+
+        Log.d(TAG, "prepareMetadata: " + object.toString());
         return object;
+    }
+
+    private JSONObject prepareCoordinates() throws Exception{
+        Location lastLocation= Session.getLocation();
+        if(lastLocation==null){
+            throw new Exception(activity.getString(R.string.dialog_error_push_no_location));
+        }
+        JSONObject coordinate=new JSONObject();
+        coordinate.put(TAG_COORDINATE_LAT,lastLocation.getLatitude());
+        coordinate.put(TAG_COORDINATE_LNG,lastLocation.getLongitude());
+        return coordinate;
+    }
+
+    private String prepareOrgUnit() throws Exception{
+        String orgUnit;
+
+        //take orgUnit code from sharedPreferences
+        String code=PreferencesState.getInstance().getOrgUnit();
+        if(code==null || "".equals(code)){
+            code=DHIS_DEFAULT_CODE;
+        }
+        //pull UID from DHIS
+        orgUnit=pullOrgUnitUID(code);
+
+        return orgUnit;
+    }
+
+    private String pullOrgUnitUID(String code) throws Exception{
+        //https://malariacare.psi.org/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:KH_Cambodia
+        final String DHIS_PULL_URL=getDhisOrgUnitURL(code);
+
+        OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+        BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
+
+        Request request = new Request.Builder()
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                .url(DHIS_PULL_URL)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if(!response.isSuccessful()){
+            Log.e(TAG, "pullOrgUnitUID (" + response.code()+"): "+response.body().string());
+            throw new IOException(response.message());
+        }
+
+        JSONObject responseJSON=parseResponse(response.body().string());
+        JSONArray responseArray=(JSONArray) responseJSON.get("organisationUnits");
+        if(responseArray.length()==0){
+            Log.e(TAG, "pullOrgUnitUID: No UID for code "+code);
+            throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
+        }
+        return responseArray.getJSONObject(0).getString("id");
     }
 
 
@@ -213,13 +278,38 @@ public class PushClient {
         elementObject.put(TAG_VALUE, Utils.round(ScoreRegister.getCompositeScore(compositeScore)));
         return elementObject;
     }
+
+    /**
+     * Returns the URL that points to the DHIS server (Pull) API according to preferences.
+     * @return
+     */
+    private String getDhisOrgUnitURL(String code){
+        String url= PreferencesState.getInstance().getDhisURL();
+        if(url==null || "".equals(url)){
+            url=DHIS_DEFAULT_SERVER;
+        }
+
+        return url+String.format(DHIS_PULL_ORG_UNITS_API,code);
+    }
+
+    /**
+     * Returns the URL that points to the DHIS server API according to preferences.
+     * @return
+     */
+    private String getDhisURL(){
+        String url= PreferencesState.getInstance().getDhisURL();
+        if(url==null || "".equals(url)){
+            url=DHIS_DEFAULT_SERVER;
+        }
+        return url+DHIS_PUSH_API;
+    }
     /**
      * Pushes data to DHIS Server
      * @param data
      */
     private JSONObject pushData(JSONObject data)throws Exception {
 
-        final String DHIS_URL=DHIS_DEFAULT_SERVER + DHIS_PUSH_API;
+        final String DHIS_URL=getDhisURL();
 
         OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- # general -->
+    <string name="developers">EyeSeeTea LTD</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="score">Score</string>
+    <string name="number_zero">0</string>
+    <string name="number_zero_percentage">0 % </string>
+    <string name="title_id">ID</string>
+    <string name="title_name">Name</string>
+    <string name="good">Good</string>
+    <string name="fair">Fair</string>
+    <string name="poor">Poor</string>
+    <string name="plus">+</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet</string>
+
+    <!-- settings -->
+    <string name="settings_menu_about">អំពី </string>
+    <string name="settings_menu_configuration">ការ​កំណត់ </string>
+    <string name="settings_menu_licence">អាជ្ញា​ប​ណ្ណ </string>
+    <string name="settings_menu_update">Update questions (DHIS)</string>
+    <string name="settings_menu_logout">ចេញ </string>
+
+    <!-- login -->
+    <string name="login_info_username">User</string>
+    <string name="login_info_password">Password</string>
+    <string name="login_info_sign_in">Sign in</string>
+    <string name="login_error_bad_credentials">Your user/password are incorrect</string>
+
+    <!-- # dialogs -->
+    <string name="dialog_title_delete_survey">លុប​ការ​ស្ទង់​មតិ </string>
+    <string name="dialog_info_delete_survey">តើ​អ្នក​ប្រាកដ​ជា​ចង់​លុប​ទាំង​ស្រុង​ការ​ស្ទង់​មតិ​នេះ​ទេ​? </string>
+    <string name="dialog_title_error">Error</string>
+    <string name="dialog_error_denominator">Error, denominator = 0</string>
+    <string name="dialog_title_missing_selection">Missing selection</string>
+    <string name="dialog_content_missing_selection">Please select Org Unit and Survey</string>
+    <string name="dialog_title_existing_survey">Existing Survey</string>
+    <string name="dialog_content_existing_survey">There is already a not sent form in the system for that Org Unit/Survey</string>
+    <string name="dialog_content_logout_confirmation">If you exit the system, all the not sent data will be deleted. Do you still want to exit?</string>
+
+    <!-- dashboard -->
+    <string name="dashboard_info_feedback">Feedback</string>
+    <string name="dashboard_info_active_assessments">Active Assessments</string>
+    <string name="dashboard_info_new_assessment">New assessment</string>
+    <string name="dashboard_info_future_assessments">Future Assessments</string>
+    <string name="dashboard_info_performance">Performance Against Target</string>
+    <string name="dashboard_info_analytics">Analytics</string>
+    <string name="dashboard_button_new_survey">New Survey</string>
+    <string name="dashboard_button_see_all">See all</string>
+    <string name="dashboard_info_ready_to_upload">Ready to upload</string>
+    <string name="dashboard_info_sent">Sent</string>
+
+    <!-- create -->
+    <string name="create_info_ok">Create assessment</string>
+    <string name="create_info_organization_unit">Organization Unit</string>
+    <string name="create_info_survey">Survey</string>
+
+    <!-- assessment -->
+    <string name="assessment_title_facility_date">Facility / Survey</string>
+    <string name="assessment_title_state">% complete</string>
+    <string name="assessment_sent_title_state">Status</string>
+    <string name="assessment_sent_date">កាលបរិច្ឆេទបញ្ចប់</string>
+    <string name="assessment_info_delete">Delete</string>
+    <string name="assessment_title_header">ការវាយតំលៃ សកម្ម</string>
+    <string name="assessment_sent_title_header">ការវាយតម្លៃ ដែលបានផ្ញើ</string>
+    <string name="assessment_title_info">ព</string>
+
+
+    <!-- feedback -->
+    <!-- XXX Should it be replaced by 'assessment_title_facility_date'?-->
+    <string name="feedback_title_organization_unit_date">Org Unit / Date</string>
+    <string name="feedback_title_header">Feedback</string>
+
+    <!-- future -->
+    <string name="future_title_facility">Facility</string>
+    <string name="future_title_previous_date">Date Prev. Assess.</string>
+    <string name="future_title_due_date">Due date</string>
+    <string name="future_title_action">Action</string>
+    <string name="future_title_header">Future Assessments</string>
+
+    <!-- performance -->
+    <string name="performance_title_period">Period</string>
+    <string name="performance_title_target">Target</string>
+    <string name="performance_title_completed">Done</string>
+    <string name="performance_title_achievement">Achievement</string>
+    <string name="performance_title_header">Performance Against Target</string>
+
+    <!-- analytics -->
+    <string name="analytics_title_period">Period</string>
+    <string name="analytics_title_target">Target</string>
+    <string name="analytics_title_completed">Done</string>
+    <string name="analytics_title_achievement">Achievement</string>
+    <string name="analytics_title_header">Analytics</string>
+
+    <!-- survey -->
+    <string name="survey_title_exit">Really Exit?</string>
+    <string name="survey_info_exit">តើអ្នកពិត ជាចង់ចេញ ?</string>
+    <string name="survey_info_exit_delete">ការស្ទង់មតិមួយ ក្នុងការរីកចំរើន នេះ នឹងត្រូវបានលុប</string>
+    <string name="survey_info_select_tab">Select Tab: </string>
+    <string name="survey_title_completed">ការស្ទង់មតិ បានបញ្ចប់</string>
+    <string name="survey_info_completed">ការអង្កេតនេះ បានបញ្ចប់ដោយជោគជ័យ</string>
+
+
+    <!--widget-->
+    <string name="widget_info_empty_statement">Question statement</string>
+
+    <!-- custom -->
+    <string name="custom_title_tallies">TALLIES - Add up and enter the totals for the following indicators from the registers in column A.  In column B enter the total numbers from the monthly reporting sheet</string>
+    <string name="custom_info_tallies">TALLIES for the Month of</string>
+    <string name="custom_info_one">1</string>
+    <string name="custom_info_two">2</string>
+    <string name="custom_info_three">3</string>
+    <string name="custom_info_four">4</string>
+    <string name="custom_info_five">5</string>
+    <string name="custom_info_six">6</string>
+    <string name="custom_info_seven">7</string>
+    <string name="custom_info_eight">8</string>
+    <string name="custom_info_nine">9</string>
+    <string name="custom_info_ten">10</string>
+    <string name="custom_info_eleven">11</string>
+    <string name="custom_info_twelve">12</string>
+    <string name="custom_info_thirteen">13</string>
+    <string name="custom_info_fourteen">14</string>
+    <string name="custom_info_fifteen">15</string>
+    <string name="custom_info_sixteen">16</string>
+    <string name="custom_info_seventeen">17</string>
+    <string name="custom_info_eighteen">18</string>
+    <string name="custom_info_nineteen">19</string>
+    <string name="custom_info_twenty">20</string>
+
+    <!-- adherence -->
+    <string name="adherence_info_switchquestion">Are there pharmacy records of ACTs dispensed?</string>
+    <string name="adherence_title_explanation">Phamacy/clinical register v.s Lab records. Steps in Evaluation of Provider Adherence to Malaria Diagnostic Test Results</string>
+    <string name="adherence_info_pharmacy_register">Pharmacy Register</string>
+    <string name="adherence_title_gender">Gender</string>
+    <string name="adherence_title_age">Age</string>
+    <string name="adherence_title_test_results">Test results</string>
+    <string name="adherence_info_patient_id">Patient\nID</string>
+    <string name="adherence_info_prescribed">ACT\nPrescribed?</string>
+    <string name="adherence_info_rdt_positive">RDT Positive</string>
+    <string name="adherence_info_rdt_negative">RDT Negative</string>
+    <string name="adherence_info_microscopy_positive">Microscopy Positive</string>
+    <string name="adherence_info_microscopy_negative">Microscopy Negative</string>
+
+    <!-- iqa eqa -->
+    <string name="iqatab_info_supervisor">Supervisor</string>
+    <string name="iqatab_info_parasites">Parasites/uL</string>
+    <string name="iqatab_info_species">Species</string>
+    <string name="iqatab_info_labstaff">Lab Staff</string>
+
+    <!-- reporting -->
+    <string name="reporting_info_reporting">Reporting</string>
+    <string name="reporting_info_results">Results</string>
+    <string name="reporting_info_register">Register</string>
+    <string name="reporting_info_monthly">Monthly \nReport</string>
+    <string name="iqatab_info_supervisor_matches">Supervisor matches lab staff?</string>
+
+    <!-- dynamic -->
+    <string name="dynamic_error_phone_format">ទ្រង់ទ្រាយ មិនត្រឹមត្រូវសម្រាប់ លេខទូរស័ព្ទ</string>
+
+    <!-- score -->
+    <string name="score_title_clinical_fever">Clinical\nfever\nevaluation</string>
+    <string name="score_title_rdt">RDT</string>
+    <string name="score_title_avg">AVG</string>
+    <string name="score_title_environment">Environment</string>
+    <string name="score_title_profile">Profile</string>
+    <string name="score_title_percentage">%</string>
+    <string name="score_info_tab_score">Score for tab:</string>
+    <string name="score_info_overall">Overall</string>
+    <string name="score_info_zero_float">0.0</string>
+    <string name="score_info_accumulated">Tab num/dem</string>
+    <string name="score_info_case1">Case 1</string>
+    <string name="score_info_case2">Case 2</string>
+    <string name="score_info_case3">Case 3</string>
+    <string name="score_info_case4">Case 4</string>
+
+    <!-- composite score -->
+    <string name="compscore_title_score_percentage">Score (%)</string>
+
+    <!-- settings -->
+    <string name="title_activity_settings">Settings</string>
+    <string name="settings_checkbox_show_num_dems">Show num/dems</string>
+    <string name="settings_checkbox_description_show_num_dems">When activated, survey questions show their numerators and denominators, used to calc the survey score</string>
+    <string name="settings_checkbox_customize_fonts">ប្ដូរតាមបំណង ពុម្ពអក្សរ</string>
+    <string name="settings_list_font_sizes">ទំហំ ពុម្ពអក្សរ</string>
+    <string-array name="settings_array_titles_font_sizes">
+        <item>តូច បន្ថែម</item>
+        <item>តូច</item>
+        <item>មធ្យម</item>
+        <item>ដែលមានទំហំធំ</item>
+        <item>បន្ថែម ដែលមានទំហំធំ</item>
+    </string-array>
+    <string name="settings_text_dhis_server_url">DHIS Server URL</string>
+    <string name="pref_header_general">General</string>
+
+    <string name="settings_array_values_font_sizes_def">@string/font_size_level2</string>
+
+    <string-array name="settings_array_values_font_sizes">
+        <item>@string/font_size_level0</item>
+        <item>@string/font_size_level1</item>
+        <item>@string/font_size_level2</item>
+        <item>@string/font_size_level3</item>
+        <item>@string/font_size_level4</item>
+    </string-array>
+    <string name="font_size_level0">xsmall</string>
+    <string name="font_size_level1">small</string>
+    <string name="font_size_level2">medium</string>
+    <string name="font_size_level3">large</string>
+    <string name="font_size_level4">xlarge</string>
+
+    <string name="textcard_default_scale">system</string>
+    <string name="textcard_default_dimension">medium</string>
+    <string name="dialog_title_push">ទិន្នន័យដែលបាន ជំរុញឱ្យមាន</string>
+    <string name="dialog_info_push_confirm">តើអ្នកប្រាកដជា ចង់ ជំរុញឱ្យមាន ទិន្នន័យដែលបាន ? អ្នកមិន អាចមិនធ្វើ សកម្មភាពនេះ</string>
+    <string name="dialog_title_push_response">ជា​ការ​ឆ្លើយ​តប​រុញ </string>
+    <string name="dialog_info_push_ok">ទិន្នន័យ ការស្ទាបស្ទង់មតិ បានជំរុញ ទៅកាន់ម៉ាស៊ីនបម្រើ លទ្ធផល ។</string>
+    <string name="dialog_info_push_bad_credentials">លិខិត​សម្គាល់​អាក្រក់​សម្រាប់​ជំរុញ​ឱ្យ​មាន </string>
+    <string name="dialog_error_push_no_org_unit">គ្មាន លេខកូដ អង្គភាព អង្គការ ត្រូវបាន កំណត់។ សូមពិនិត្យមើល ការកំណត់ដែលបាន ជំរុញឱ្យមាន ។</string>
+    <string name="dialog_error_push_no_uid">បាន​រក​ឃើញ​នៅ​ក្នុង​ម៉ាស៊ីន​បម្រើ​សម្រាប់​កូដ UID របស់​គ្មាន </string>
+    <string name="dialog_error_push_no_location">ទីតាំង​ដែល​អាច​ប្រើ​បាន​គ្មាន</string>
+
+
+    <!-- Preference variable names -->
+    <string name="pref_data">Data</string>
+    <string name="pref_server">Server</string>
+    <string name="pref_visual">Visual</string>
+    <string name="assessment_title_date_completion">កាលបរិច្ឆេត</string>
+
+
+</resources>

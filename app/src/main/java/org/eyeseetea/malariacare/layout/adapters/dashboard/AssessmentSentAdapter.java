@@ -33,8 +33,8 @@ public class AssessmentSentAdapter extends AAssessmentAdapter implements IAssess
         this.items = items;
         this.context = context;
         this.lInflater = LayoutInflater.from(context);
-        this.headerLayout = R.layout.assessment_sent_header;
-        this.recordLayout = R.layout.assessment_sent_record;
+        this.headerLayout = R.layout.assessment_header;
+        this.recordLayout = R.layout.assessment_record;
         this.footerLayout = R.layout.assessment_sent_footer;
         this.title = context.getString(R.string.assessment_sent_title_header);
     }

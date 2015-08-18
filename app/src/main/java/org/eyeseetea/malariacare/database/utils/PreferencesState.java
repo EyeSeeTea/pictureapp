@@ -56,6 +56,16 @@ public class PreferencesState {
     private boolean showNumDen;
 
     /**
+     * Specified Organization Unit
+     */
+    private String orgUnit;
+
+    /**
+     * Specified DHIS2 Server
+     */
+    private String dhisURL;
+
+    /**
      * Map that holds the relationship between a scale and a set of dimensions
      */
     private Map<String, Map<String, Float>> scaleDimensionsMap;
@@ -68,7 +78,31 @@ public class PreferencesState {
     public void reloadPreferences(){
         scale= initScale();
         showNumDen=initShowNumDen();
-        Log.d(TAG,"reloadPreferences: scale:"+scale+" | showNumDen:"+showNumDen);
+        orgUnit=initOrgUnit();
+        dhisURL=initDhisURL();
+        Log.d(TAG, "reloadPreferences: "
+                + " orgUnit:" + orgUnit
+                + " dhisURL:" + dhisURL
+                + " |scale:" + scale
+                + " | showNumDen:" + showNumDen);
+    }
+
+    /**
+     * Returns 'org_unit' from sharedPreferences
+     * @return
+     */
+    private String initOrgUnit(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SugarApp.getSugarContext());
+        return sharedPreferences.getString(SugarApp.getSugarContext().getString(R.string.org_unit), "");
+    }
+
+    /**
+     * Returns 'org_unit' from sharedPreferences
+     * @return
+     */
+    private String initDhisURL(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SugarApp.getSugarContext());
+        return sharedPreferences.getString(SugarApp.getSugarContext().getString(R.string.dhis_url), "");
     }
 
     /**
@@ -164,5 +198,17 @@ public class PreferencesState {
 
     public Float getFontSize(String scale,String dimension){
         return scaleDimensionsMap.get(scale).get(dimension);
+    }
+
+    public String getOrgUnit(){
+        return orgUnit;
+    }
+
+    public void setOrgUnit(String orgUnit){
+        this.orgUnit=orgUnit;
+    }
+
+    public String getDhisURL(){
+        return dhisURL;
     }
 }

@@ -56,7 +56,7 @@ import java.util.List;
 public class DashboardSentFragment extends ListFragment {
 
 
-    public static final String TAG = ".CompletedFragment";
+    public static final String TAG = ".SentFragment";
     private SurveyReceiver surveyReceiver;
     private List<Survey> surveys;
     protected IDashboardAdapter adapter;
@@ -257,6 +257,7 @@ public class DashboardSentFragment extends ListFragment {
      * It really important to do this, otherwise each receiver will invoke its code.
      */
     public void  unregisterSurveysReceiver(){
+        Log.d(TAG, "unregisterSurveysReceiver");
         if(surveyReceiver!=null){
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
             surveyReceiver=null;

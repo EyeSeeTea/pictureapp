@@ -2,7 +2,7 @@
 <resources>
 
     <!-- # general -->
-    <string name="app_name" translatable="false">QA App</string>
+    <string name="app_name" translatable="false">Malaria Case Surveillance</string>
     <string name="developers">EyeSeeTea LTD</string>
     <string name="empty_string" translatable="false"></string>
     <string name="yes">Yes</string>
@@ -58,7 +58,7 @@
 
     <!-- create -->
     <string name="create_info_ok">Create assessment</string>
-    <string name="create_info_organization_unit">Organisation Unit</string>
+    <string name="create_info_organization_unit">Organization Unit</string>
     <string name="create_info_survey">Survey</string>
 
     <!-- assessment -->
@@ -69,6 +69,9 @@
     <string name="assessment_info_delete">Delete</string>
     <string name="assessment_title_header">Active Assessment</string>
     <string name="assessment_sent_title_header">Sent Assessment</string>
+    <string name="assessment_title_rdt" translatable="false">RDT</string>
+    <string name="assessment_title_info">Info</string>
+
 
     <!-- feedback -->
     <!-- XXX Should it be replaced by 'assessment_title_facility_date'?-->
@@ -97,9 +100,13 @@
     <string name="analytics_title_header">Analytics</string>
 
     <!-- survey -->
-    <string name="survey_title_exit">"Really Exit?"</string>
-    <string name="survey_info_exit">"Are you sure you want to exit?"</string>
+    <string name="survey_title_exit">Really Exit?</string>
+    <string name="survey_info_exit">Are you sure you want to exit?</string>
+    <string name="survey_info_exit_delete">The survey in progress will be deleted</string>
     <string name="survey_info_select_tab">Select Tab: </string>
+    <string name="survey_title_completed">Survey completed</string>
+    <string name="survey_info_completed">The survey has been successfully completed</string>
+
 
     <!--widget-->
     <string name="widget_info_empty_statement">Question statement</string>
@@ -154,6 +161,9 @@
     <string name="reporting_info_register">Register</string>
     <string name="reporting_info_monthly">Monthly \nReport</string>
     <string name="iqatab_info_supervisor_matches">Supervisor matches lab staff?</string>
+
+    <!-- dynamic -->
+    <string name="dynamic_error_phone_format">Invalid format for phone number</string>
 
     <!-- score -->
     <string name="score_title_clinical_fever">Clinical\nfever\nevaluation</string>
@@ -213,14 +223,25 @@
 
     <string name="textcard_default_scale">system</string>
     <string name="textcard_default_dimension">medium</string>
+    <string name="dialog_title_push">Pushing data</string>
+    <string name="dialog_info_push_confirm">Are you sure? You can not undo this action</string>
     <string name="dialog_title_push_response">Push response</string>
-    <string name="dialog_info_push_ok">Survey data has been successfully pushed to DHIS server</string>
+    <string name="dialog_info_push_ok">Survey data pushed to server. Results:</string>
     <string name="dialog_info_push_bad_credentials">Bad credentials for pushing</string>
+    <string name="dialog_error_push_no_org_unit">No Organization Unit code has been set. Please check settings to push.</string>
+    <string name="dialog_error_push_no_uid">No UID found in server for code </string>
+    <string name="dialog_error_push_no_location">No location available</string>
 
     <!-- Preference variable names -->
     <item name="show_num_dems" type="string" translatable="false">show_num_dems</item>
     <item name="customize_fonts" type="string" translatable="false">customize_fonts</item>
     <item name="font_sizes" type="string" translatable="false">font_sizes</item>
     <item name="dhis_url" type="string" translatable="false">dhis_url</item>
+    <item name="org_unit" type="string" translatable="false">org_unit</item>
+    <string name="pref_data">Data</string>
+    <string name="pref_server">Server</string>
+    <string name="pref_visual">Visual</string>
+    <string name="assessment_title_date_completion">Date</string>
+
 
 </resources>

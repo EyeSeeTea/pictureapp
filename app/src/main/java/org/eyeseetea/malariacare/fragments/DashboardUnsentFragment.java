@@ -59,7 +59,7 @@ import java.util.List;
 public class DashboardUnsentFragment extends ListFragment {
 
 
-    public static final String TAG = ".DetailsFragment";
+    public static final String TAG = ".UnsentFragment";
     private SurveyReceiver surveyReceiver;
     private List<Survey> surveys;
     protected IDashboardAdapter adapter;
@@ -240,8 +240,8 @@ public class DashboardUnsentFragment extends ListFragment {
 
 
                 new AlertDialog.Builder(getActivity())
-                        .setTitle("Pushing data")
-                        .setMessage("Are you sure? You can not undo this action")
+                        .setTitle(R.string.dialog_title_push)
+                        .setMessage(R.string.dialog_info_push_confirm)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface arg0, int arg1) {
                                 final Survey survey = (Survey) adapter.getItem(position-1);
@@ -279,6 +279,7 @@ public class DashboardUnsentFragment extends ListFragment {
      * It really important to do this, otherwise each receiver will invoke its code.
      */
     public void  unregisterSurveysReceiver(){
+        Log.d(TAG, "unregisterSurveysReceiver");
         if(surveyReceiver!=null){
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
             surveyReceiver=null;
@@ -343,9 +344,9 @@ public class DashboardUnsentFragment extends ListFragment {
          * @param pushResult
          */
         private void showResponse(PushResult pushResult){
-            String msg="";
+            String msg;
             if(pushResult.isSuccessful()){
-                msg="Survey data pushed to server. Results: \n"+String.format("Imported: %s | Updated: %s | Ignored: %s",pushResult.getImported(),pushResult.getUpdated(),pushResult.getIgnored());
+                msg=getActivity().getResources().getString(R.string.dialog_info_push_ok)+" \n"+String.format("Imported: %s | Updated: %s | Ignored: %s",pushResult.getImported(),pushResult.getUpdated(),pushResult.getIgnored());
             }else{
                 msg=pushResult.getException().getMessage();
             }

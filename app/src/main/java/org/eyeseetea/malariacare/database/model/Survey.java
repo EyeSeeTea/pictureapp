@@ -31,6 +31,7 @@ import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class Survey extends SugarRecord<Survey> {
@@ -51,6 +52,9 @@ public class Survey extends SugarRecord<Survey> {
 
     @Ignore
     SurveyAnsweredRatio _answeredQuestionRatio;
+
+    @Ignore
+    List<Value> _values;
 
     public Survey() {
     }
@@ -122,6 +126,22 @@ public class Survey extends SugarRecord<Survey> {
         return Constants.SURVEY_SENT==this.status;
     }
 
+    /**
+     * Checks if the survey has been completed or not
+     * @return true|false
+     */
+    public boolean isCompleted(){
+        return Constants.SURVEY_COMPLETED==this.status;
+    }
+
+    /**
+     * Checks if the survey is in progress
+     * @return true|false
+     */
+    public boolean isInProgress(){
+        return !isSent() && !isCompleted();
+    }
+
     public List<Value> getValues(){
         return Select.from(Value.class)
                 .where(Condition.prop("survey")
@@ -159,10 +179,9 @@ public class Survey extends SugarRecord<Survey> {
 
         int numRequired= Question.countRequiredByProgram(this.getProgram());
         int numOptional=0;
-        int numAnswered = 0;
+        int numAnswered = Value.countBySurvey(this);
 
         for (Value value : this.getValuesFromParentQuestions()) {
-            numAnswered++;
             if (value.isAYes()) {
                 //There might be children no answer questions that should be skipped
                 for(Question childQuestion:value.getQuestion().getQuestionChildren()){
@@ -286,6 +305,45 @@ public class Survey extends SugarRecord<Survey> {
                 .orderBy("event_date")
                 .orderBy("org_unit")
                 .list();
+    }
+
+    /**
+     * Checks if the answer to the first question is 'Yes'
+     * @return true|false
+     */
+    public boolean isRDT(){
+        if(_values==null){
+            _values=Value.listAllBySurvey(this);
+        }
+
+        if(_values.size()==0){
+            return false;
+        }
+
+        Value rdtValue=_values.get(0);
+
+        return rdtValue.isAYes();
+    }
+
+    /**
+     * Turns all values from a survey into a string with values separated by commas
+     * @return String
+     */
+    public String getValuesToString(){
+        if(_values==null || _values.size()==0){
+            return "";
+        }
+
+        String valuesStr="";
+        Iterator<Value> iterator=_values.iterator();
+        while(iterator.hasNext()){
+            valuesStr+=iterator.next().getValue();
+            if(iterator.hasNext()){
+                valuesStr+=", ";
+            }
+        }
+
+        return valuesStr;
     }
 
 

@@ -11,6 +11,7 @@ public class Option extends SugarRecord<Option> {
     String name;
     Float factor;
     Answer answer;
+    String path;
 
     public Option() {
     }
@@ -49,6 +50,14 @@ public class Option extends SugarRecord<Option> {
         this.answer = answer;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     /**
      * Checks if this option actives the children questions
      * @return true: Children questions should be shown, false: otherwise.
@@ -74,6 +83,7 @@ public class Option extends SugarRecord<Option> {
                 "name='" + name + '\'' +
                 ", factor=" + factor +
                 ", answer=" + answer +
+                ", path=" + path +
                 '}';
     }
 
@@ -87,6 +97,7 @@ public class Option extends SugarRecord<Option> {
         if (answer != null ? !answer.equals(option.answer) : option.answer != null) return false;
         if (factor != null ? !factor.equals(option.factor) : option.factor != null) return false;
         if (name != null ? !name.equals(option.name) : option.name != null) return false;
+        if (path != null ? !path.equals(option.path) : option.path != null) return false;
 
         return true;
     }
@@ -96,6 +107,7 @@ public class Option extends SugarRecord<Option> {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (factor != null ? factor.hashCode() : 0);
         result = 31 * result + (answer != null ? answer.hashCode() : 0);
+        result = 31 * result + (path != null ? path.hashCode() : 0);
         return result;
     }
 }

@@ -25,31 +25,22 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -65,16 +56,12 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.progress.ProgressTabStatus;
-import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
-import org.eyeseetea.malariacare.views.UncheckeableRadioButton;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,6 +86,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean isSwipeAdded;
 
+    /**
+     * Listener that detects taps on buttons & swipe
+     */
+    private OnSwipeTouchListener swipeTouchListener;
+
     //List of Headers and Questions. Each position contains an object to be showed in the listview
     List<Object> items;
     Tab tab;
@@ -113,17 +105,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Flag that indicates if the current survey in session is already sent or not (it affects readonly settings)
      */
     private boolean readOnly;
-
-    //Store the Views references for each row (to avoid many calls to getViewById)
-    static class ViewHolder {
-        //Label
-        public TextCard statement;
-
-        // Main component in the row: Spinner, EditText or RadioGroup
-        public View component;
-
-        public int type;
-    }
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
@@ -173,19 +154,39 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             return;
         }
 
-        listView.setOnTouchListener(new OnSwipeTouchListener(context) {
+        swipeTouchListener=new OnSwipeTouchListener(context) {
+            /**
+             * Click listener for image option
+             * @param view
+             */
+            public void onClick(View view) {
+                Log.d(TAG, "onClick");
+                Option selectedOption=(Option)view.getTag();
+                Question question=progressTabStatus.getCurrentQuestion();
+                ReadWriteDB.saveValuesDDL(question, selectedOption);
+                finishOrNext();
+            }
+
+            /**
+             * Swipe right listener moves to previous question
+             */
             public void onSwipeRight() {
                 Log.d(TAG,"onSwipeRight(previous)");
                 previous();
             }
 
+            /**
+             * Swipe left listener moves to next question
+             */
             public void onSwipeLeft() {
                 Log.d(TAG,"onSwipeLeft(next)");
                 if(readOnly || progressTabStatus.isNextAllowed()) {
                     next();
                 }
             }
-        });
+        };
+
+        listView.setOnTouchListener(swipeTouchListener);
     }
 
 
@@ -268,6 +269,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.IMAGES_4:
             case Constants.IMAGES_6:
                 List<Option> options = question.getAnswer().getOptions();
+                swipeTouchListener.clearClickableViews();
                 for(int i=0;i<options.size();i++){
                     int mod=i%2;
                     //First item per row requires a new row
@@ -275,9 +277,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row,tableLayout,false);
                         tableLayout.addView(tableRow);
                     }
-                    ImageButton button = (ImageButton) tableRow.getChildAt(mod);
-
-                    initOptionButton(button, options.get(i), value);
+                    ImageView imageButton = (ImageView) tableRow.getChildAt(mod);
+                    initOptionButton(imageButton, options.get(i),value);
                 }
 
                 break;
@@ -351,7 +352,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param button
      * @param option
      */
-    private void initOptionButton(ImageButton button, Option option, Value value){
+    private void initOptionButton(ImageView button, Option option, Value value){
         //Highlight button
         if(value!=null && value.getValue().equals(option.getName())){
             Drawable selectedBackground=context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
@@ -378,38 +379,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             return;
         }
 
-        //Add listener
-//        button.setOnClickListener(new View.OnClickListener() {
-//              @Override
-//              public void onClick(View v) {
-//                  Log.d(TAG, "onClick");
-//                  Option selectedOption=(Option)v.getTag();
-//                  Question question=progressTabStatus.getCurrentQuestion();
-//                  ReadWriteDB.saveValuesDDL(question, selectedOption);
-//                  finishOrNext();
-//              }
-//            }
-//        );
-        button.setOnTouchListener(new OnSwipeTouchListener(button,context) {
+        //Add button to listener
+        swipeTouchListener.addClickableView(button);
 
-            public void onClick(View view){
-                Log.d(TAG, "onClick");
-                Option selectedOption=(Option)view.getTag();
-                Question question=progressTabStatus.getCurrentQuestion();
-                ReadWriteDB.saveValuesDDL(question, selectedOption);
-                finishOrNext();
-            }
-
-            public void onSwipeRight() {
-                previous();
-            }
-
-            public void onSwipeLeft() {
-                if (readOnly || progressTabStatus.isNextAllowed()) {
-                    next();
-                }
-            }
-        });
     }
 
     /**
@@ -423,28 +395,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             return;
         }
         next();
-    }
-
-
-    /**
-     * Enables/Disables input view according to the state of the survey.
-     * Sent surveys cannot be modified.
-     *
-     * @param view
-     */
-    private void updateReadOnly(View view) {
-        if (view == null) {
-            return;
-        }
-
-        if (view instanceof RadioGroup) {
-            RadioGroup radioGroup = (RadioGroup) view;
-            for (int i = 0; i < radioGroup.getChildCount(); i++) {
-                radioGroup.getChildAt(i).setEnabled(!readOnly);
-            }
-        } else {
-            view.setEnabled(!readOnly);
-        }
     }
 
     /**
@@ -501,226 +451,119 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
-
-    public void setValues(ViewHolder viewHolder, Question question) {
-
-        switch (question.getAnswer().getOutput()) {
-            case Constants.DATE:
-            case Constants.SHORT_TEXT:
-            case Constants.INT:
-            case Constants.LONG_TEXT:
-            case Constants.POSITIVE_INT:
-            case Constants.PHONE:
-                ((EditCard) viewHolder.component).setText(ReadWriteDB.readValueQuestion(question));
-                break;
-            case Constants.DROPDOWN_LIST:
-            case Constants.IMAGES_2:
-            case Constants.IMAGES_4:
-            case Constants.IMAGES_6:
-                ((Spinner) viewHolder.component).setSelection(ReadWriteDB.readPositionOption(question));
-                break;
-            case Constants.RADIO_GROUP_HORIZONTAL:
-            case Constants.RADIO_GROUP_VERTICAL:
-                Value value = question.getValueBySession();
-                if (value != null) {
-                    ((UncheckeableRadioButton) viewHolder.component.findViewWithTag(value.getOption())).setChecked(true);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-
-    /**
-     * Do the logic after a DDL option change
-     * @param viewHolder private class that acts like a cache to quickly access the different views
-     * @param question the question that changes his value
-     * @param option the option that has been selected
-     */
-    private void itemSelected(ViewHolder viewHolder, Question question, Option option) {
-        // Write option to DB
-        ReadWriteDB.saveValuesDDL(question, option);
-    }
-
-    private View initialiseView(int resource, ViewGroup parent, Question question, ViewHolder viewHolder, int position) {
-        View rowView = lInflater.inflate(resource, parent, false);
-        if (question.hasChildren())
-            rowView.setBackgroundResource(R.drawable.background_parent);
-        else
-            rowView.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));
-
-        viewHolder.component = rowView.findViewById(R.id.answer);
-        viewHolder.statement = (TextCard) rowView.findViewById(R.id.statement);
-        viewHolder.statement.setText(question.getForm_name());
-
-        return rowView;
-    }
-
-    private void initialiseScorableComponent(View rowView, ViewHolder viewHolder) {
-        configureViewByPreference(viewHolder);
-    }
-
-    private void createRadioGroupComponent(Question question, ViewHolder viewHolder, int orientation) {
-        ((RadioGroup) viewHolder.component).setOrientation(orientation);
-
-        for (Option option : question.getAnswer().getOptions()) {
-            UncheckeableRadioButton button = (UncheckeableRadioButton) lInflater.inflate(R.layout.uncheckeable_radiobutton, null);
-            button.setOption(option);
-            button.updateProperties(PreferencesState.getInstance().getScale(), this.context.getString(R.string.font_size_level1), this.context.getString(R.string.medium_font_name));
-            ((RadioGroup) viewHolder.component).addView(button);
-        }
-
-        //Add Listener
-        ((RadioGroup) viewHolder.component).setOnCheckedChangeListener(new RadioGroupListener(question, viewHolder));
-    }
-
-    /**
-     * Set visibility of numerators and denominators depending on the user preference selected in the settings activity
-     *
-     * @param viewHolder view that holds the component to be more efficient
-     */
-    private void configureViewByPreference(ViewHolder viewHolder) {
-        float statementWeight = 0.65f;
-        float componentWeight = 0.35f;
-
-        if (PreferencesState.getInstance().isShowNumDen()) {
-            statementWeight = 0.45f;
-            componentWeight = 0.25f;
-        }
-
-        ((RelativeLayout) viewHolder.statement.getParent()).setLayoutParams(new LinearLayout.LayoutParams(0, RelativeLayout.LayoutParams.WRAP_CONTENT, statementWeight));
-        ((RelativeLayout) viewHolder.component.getParent().getParent()).setLayoutParams(new LinearLayout.LayoutParams(0, RelativeLayout.LayoutParams.WRAP_CONTENT, componentWeight));
-    }
-
-    //////////////////////////////////////
-    /////////// LISTENERS ////////////////
-    //////////////////////////////////////
-    private class TextViewListener implements TextWatcher {
-        private boolean viewCreated;
-        private Question question;
-
-        public TextViewListener(boolean viewCreated, Question question) {
-            this.viewCreated = viewCreated;
-            this.question = question;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (viewCreated) {
-                ReadWriteDB.saveValuesText(question, s.toString());
-            } else {
-                viewCreated = true;
-            }
-        }
-    }
-
-    private class SpinnerListener implements AdapterView.OnItemSelectedListener {
-
-        private boolean viewCreated;
-        private ViewHolder viewHolder;
-        private Question question;
-
-        public SpinnerListener(boolean viewCreated, Question question, ViewHolder viewHolder) {
-            this.viewCreated = viewCreated;
-            this.question = question;
-            this.viewHolder = viewHolder;
-        }
-
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-            if (viewCreated) {
-                itemSelected(viewHolder, question, (Option) ((Spinner) viewHolder.component).getItemAtPosition(pos));
-            } else {
-                viewCreated = true;
-            }
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-
-        }
-    }
-
-    public class RadioGroupListener implements RadioGroup.OnCheckedChangeListener {
-        private ViewHolder viewHolder;
-        private Question question;
-
-        public RadioGroupListener(Question question, ViewHolder viewHolder) {
-            this.question = question;
-            this.viewHolder = viewHolder;
-        }
-
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            if(!group.isShown()){
-                return;
-            }
-
-            Option option = new Option(Constants.DEFAULT_SELECT_OPTION);
-            if (checkedId != -1) {
-                UncheckeableRadioButton uncheckeableRadioButton = (UncheckeableRadioButton) (this.viewHolder.component).findViewById(checkedId);
-                option = (Option) uncheckeableRadioButton.getTag();
-            }
-            itemSelected(viewHolder, question, option);
-        }
-    }
-
     public class OnSwipeTouchListener implements View.OnTouchListener {
 
+        /**
+         * Custom gesture detector
+         */
         private final GestureDetector gestureDetector;
-
-        private final View view;
+        /**
+         * List of clickable items inside the swipable view (buttons)
+         */
+        private final List<View> clickableViews;
 
         public OnSwipeTouchListener (Context ctx){
             gestureDetector = new GestureDetector(ctx, new GestureListener());
-            view=null;
-        }
-
-        public OnSwipeTouchListener (View v, Context ctx){
-            gestureDetector = new GestureDetector(ctx, new GestureListener());
-            view=v;
+            clickableViews =new ArrayList<>();
         }
 
         @Override
+        /**
+         * Delegates any touch into the our custom gesture detector
+         */
         public boolean onTouch(View v, MotionEvent event) {
+//            Log.d(TAG, "onTouch: " + v.toString() + "\t (" + this.toString() + ")");
             return gestureDetector.onTouchEvent(event);
         }
 
+        /**
+         * Adds a clickable view
+         * @param view
+         */
+        public void addClickableView(View view){
+            clickableViews.add(view);
+        }
+
+        /**
+         * Clears the list of clickable items
+         */
+        public void clearClickableViews(){
+            clickableViews.clear();
+        }
+
+        /**
+         * Calculates de clickable view that has been 'clicked' in the given event
+         * @param event
+         * @return Returns de touched view or null otherwise
+         */
+        public View findViewByCoords(MotionEvent event){
+            float x=event.getRawX();
+            float y=event.getRawY();
+            for(View v: clickableViews){
+                Rect visibleRectangle = new Rect();
+                v.getGlobalVisibleRect(visibleRectangle);
+                //Image/Button clicked
+//                Log.d(TAG,String.format("findViewByCoords(%d,%d,%d,%d)",visibleRectangle.left,visibleRectangle.top,visibleRectangle.right, visibleRectangle.bottom));
+                if(x>=visibleRectangle.left && x<=visibleRectangle.right && y>=visibleRectangle.top && y<=visibleRectangle.bottom){
+                    return v;
+                }
+            }
+
+            return null;
+        }
+
+        public void onClick(View view){
+//            Log.e(".DynamicTabAdapter", "empty onclick");
+        }
+
+        public void onSwipeRight(){
+//            Log.e(TAG, "onSwipeRight(DEFAULT)");
+        }
+
+        public void onSwipeLeft(){
+//            Log.e(TAG, "onSwipeLeft(DEFAULT)");
+        }
+
+        /**
+         * Our own custom gesture detector that distinguishes between onFling and a SingleTap
+         */
         private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
             private static final int SWIPE_THRESHOLD = 50;
             private static final int SWIPE_VELOCITY_THRESHOLD = 50;
 
+            private float lastX;
+
             @Override
             public boolean onSingleTapConfirmed(MotionEvent event){
-                Log.d(TAG, "onSingleTapConfirmed");
-                onClick(view);
-                return true;
+//              Log.d(TAG, String.format("onSingleTapConfirmed: %f %f", event.getX(), event.getY()));
+
+                //Find the clicked button
+                View clickedView=findViewByCoords(event);
+
+                //If found
+                if(clickedView!=null) {
+                    //delegate onClick
+                    onClick(clickedView);
+                    return true;
+                }
+                
+                //Not found, not consumed
+                return false;
             }
 
             @Override
             public boolean onDown(MotionEvent e) {
-                Log.d(TAG, "onDown: "+e.getX());
+                lastX=e.getX();
+//                Log.d(TAG, "onDown: "+lastX);
                 return true;
             }
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                boolean result = false;
                 try {
-                    float diffX = e2.getX() - safeGetX(e1);
-                    Log.d(TAG, "onFling: diffX: "+diffX);
+                    float diffX = e2.getX()-((e1==null)?lastX:e1.getX());
+//                    Log.d(TAG, String.format("onFling (%f): diffX: %f, velocityX: %f",lastX, diffX, velocityX));
                     if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffX > 0) {
                             onSwipeRight();
@@ -728,39 +571,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             onSwipeLeft();
                         }
                     }
-                    result = true;
-
+                    return true;
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
-                return result;
+                return false;
             }
         }
 
-        /**
-         * Sometimes event1 comes as NULL, this is a workaround to solve this
-         * @param event
-         * @return
-         */
-        private float safeGetX(MotionEvent event){
-            if(event==null){
-                WindowManager windowManager = (WindowManager) context
-                        .getSystemService(Context.WINDOW_SERVICE);
-                Display display = windowManager.getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                return (float)size.x;
-            }
-            return event.getX();
-        }
-
-        public void onClick(View view){
-            Log.e(".DynamicTabAdapter", "empty onclick");
-        }
-
-        public void onSwipeRight(){}
-
-        public void onSwipeLeft(){}
     }
 
 }

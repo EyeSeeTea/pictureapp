@@ -55,6 +55,7 @@ public class DashboardActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
 
@@ -82,6 +83,7 @@ public class DashboardActivity extends BaseActivity {
 
     @Override
     public void onResume(){
+        Log.d(TAG, "onResume");
         super.onResume();
 
         prepareLocationListener();
@@ -91,6 +93,7 @@ public class DashboardActivity extends BaseActivity {
 
     @Override
     public void onPause(){
+        Log.d(TAG, "onPause");
         super.onPause();
 
         //No locationListener working no need to unregister

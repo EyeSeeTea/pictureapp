@@ -88,10 +88,8 @@ public class DashboardUnsentFragment extends ListFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
         Log.d(TAG, "onCreate");
-        registerSurveysReceiver();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -106,12 +104,19 @@ public class DashboardUnsentFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
-        Log.d(TAG, "onActivityCreated");
         initAdapter();
         initListView();
+    }
 
+
+    @Override
+    public void onResume(){
+        Log.d(TAG, "onResume");
+        registerSurveysReceiver();
+        super.onResume();
     }
 
     /**

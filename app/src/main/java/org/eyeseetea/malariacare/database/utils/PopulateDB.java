@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
@@ -27,18 +28,21 @@ public class PopulateDB {
     public static final String TABS_CSV = "Tabs.csv";
     public static final String HEADERS_CSV = "Headers.csv";
     public static final String ANSWERS_CSV = "Answers.csv";
+    public static final String OPTION_ATTRIBUTES_CSV = "OptionAttributes.csv";
     public static final String OPTIONS_CSV = "Options.csv";
     public static final String QUESTIONS_CSV = "Questions.csv";
     static Map<Integer, Program> programList = new LinkedHashMap<Integer, Program>();
     static Map<Integer, Tab> tabList = new LinkedHashMap<Integer, Tab>();
     static Map<Integer, Header> headerList = new LinkedHashMap<Integer, Header>();
     static Map<Integer, Question> questionList = new LinkedHashMap<Integer, Question>();
+    static Map<Integer, OptionAttribute> optionAttributeList = new LinkedHashMap<Integer, OptionAttribute>();
     static Map<Integer, Option> optionList = new LinkedHashMap<Integer, Option>();
     static Map<Integer, Answer> answerList = new LinkedHashMap<Integer, Answer>();
 
+
     public static void populateDB(AssetManager assetManager) throws IOException {
 
-        List<String> tables2populate = Arrays.asList(PROGRAMS_CSV, TABS_CSV, HEADERS_CSV, ANSWERS_CSV, OPTIONS_CSV, QUESTIONS_CSV);
+        List<String> tables2populate = Arrays.asList(PROGRAMS_CSV, TABS_CSV, HEADERS_CSV, ANSWERS_CSV, OPTION_ATTRIBUTES_CSV, OPTIONS_CSV, QUESTIONS_CSV);
 
         CSVReader reader = null;
         for (String table : tables2populate) {
@@ -75,12 +79,19 @@ public class PopulateDB {
                         answer.setOutput(Integer.valueOf(line[2]));
                         answerList.put(Integer.valueOf(line[0]), answer);
                         break;
+                    case OPTION_ATTRIBUTES_CSV:
+                        OptionAttribute optionAttribute = new OptionAttribute();
+                        optionAttribute.setBackground_colour(line[1]);
+                        optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
+                        break;
                     case OPTIONS_CSV:
                         Option option = new Option();
                         option.setName(line[1]);
                         option.setFactor(Float.valueOf(line[2]));
                         option.setAnswer(answerList.get(Integer.valueOf(line[3])));
                         option.setPath(line[4]);
+                        if (!line[5].equals(""))
+                            option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
                         optionList.put(Integer.valueOf(line[0]), option);
                         break;
                     case QUESTIONS_CSV:
@@ -110,6 +121,7 @@ public class PopulateDB {
         Tab.saveInTx(tabList.values());
         Header.saveInTx(headerList.values());
         Answer.saveInTx(answerList.values());
+        OptionAttribute.saveInTx(optionAttributeList.values());
         Option.saveInTx(optionList.values());
         Question.saveInTx(questionList.values());
     }

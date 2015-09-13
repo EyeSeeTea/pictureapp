@@ -370,6 +370,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 //                button.setImageAlpha(128);
                 button.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
                 button.setColorFilter(Color.parseColor("#805a595b"));
+
             }else {
 //                button.setAlpha(128);
                 //button.setBackgroundDrawable(selectedBackground);

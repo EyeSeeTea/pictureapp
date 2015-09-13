@@ -273,6 +273,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 List<Option> options = question.getAnswer().getOptions();
                 swipeTouchListener.clearClickableViews();
                 for(int i=0;i<options.size();i++){
+                    Option currentOption = options.get(i);
                     int mod=i%2;
                     //First item per row requires a new row
                     if(mod==0){
@@ -280,13 +281,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         tableLayout.addView(tableRow);
                     }
                     ImageView imageButton = (ImageView) tableRow.getChildAt(mod);
-                    if(mod==0) {
-                        imageButton.setBackgroundColor(Color.parseColor("#F0D100"));
+                    if (currentOption.getOptionAttribute() != null && currentOption.getOptionAttribute().getBackground_colour() != null) {
+                        imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getOptionAttribute().getBackground_colour()));
                     }
-                    else{
-                        imageButton.setBackgroundColor(Color.parseColor("#00FF65"));
-                    }
-                    initOptionButton(imageButton, options.get(i), value);
+                    initOptionButton(imageButton, currentOption, value, parent);
                 }
 
                 break;
@@ -360,33 +358,29 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param button
      * @param option
      */
-    private void initOptionButton(ImageView button, Option option, Value value){
-        //Highlight button
-        if(value!=null && value.getValue().equals(option.getName())){
-            Drawable selectedBackground=context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
-            if(android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
-                //button.setBackground(selectedBackground);
-                //button.setBackgroundColor(Color.parseColor("#80ff5a595b"));
-//                button.setImageAlpha(128);
-                button.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
-                button.setColorFilter(Color.parseColor("#805a595b"));
+    private void initOptionButton(ImageView button, Option option, Value value, ViewGroup parent){
 
-            }else {
-//                button.setAlpha(128);
-                //button.setBackgroundDrawable(selectedBackground);
-                button.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
-                button.setColorFilter(Color.parseColor("#805a595b"));
-            }
+        if (option.getOptionAttribute() != null && option.getOptionAttribute().getBackground_colour() != null) {
+            //Highlight button
+            if (value != null && value.getValue().equals(option.getName())) {
+
+                Drawable selectedBackground = context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
+                if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                    button.setBackground(selectedBackground);
+                } else {
+                    button.setBackgroundDrawable(selectedBackground);
+                }
 
 
-        }
-        else if (value != null){
-            Drawable selectedBackground=context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
+            } else if (value != null) {
+                if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                    button.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
+                    button.setColorFilter(Color.parseColor("#805a595b"));
 
-            if(android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
-               button.setBackground(selectedBackground);
-            }else {
-                button.setBackgroundDrawable(selectedBackground);
+                } else {
+                    button.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
+                    button.setColorFilter(Color.parseColor("#805a595b"));
+                }
             }
         }
         //Put image

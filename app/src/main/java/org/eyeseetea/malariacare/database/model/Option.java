@@ -8,6 +8,7 @@ public class Option extends SugarRecord<Option> {
     //FIXME A 'Yes' answer shows children questions, this should be configurable by some additional attribute in Option
     public static final String CHECKBOX_YES_OPTION="Yes";
 
+    String code;
     String name;
     Float factor;
     Answer answer;
@@ -16,10 +17,11 @@ public class Option extends SugarRecord<Option> {
     public Option() {
     }
 
-    public Option(String name, Float factor, Answer answer) {
+    public Option(String name, Float factor, Answer answer, String code) {
         this.name = name;
         this.factor = factor;
         this.answer = answer;
+        this.code = code;
     }
 
     public Option(String name) {
@@ -40,6 +42,14 @@ public class Option extends SugarRecord<Option> {
 
     public void setFactor(Float factor) {
         this.factor = factor;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Answer getAnswer() {
@@ -81,6 +91,7 @@ public class Option extends SugarRecord<Option> {
     public String toString() {
         return "Option{" +
                 "name='" + name + '\'' +
+                ", code=" + code +
                 ", factor=" + factor +
                 ", answer=" + answer +
                 ", path=" + path +
@@ -96,6 +107,7 @@ public class Option extends SugarRecord<Option> {
 
         if (answer != null ? !answer.equals(option.answer) : option.answer != null) return false;
         if (factor != null ? !factor.equals(option.factor) : option.factor != null) return false;
+        if (code != null ? !code.equals(option.code) : option.code != null) return false;
         if (name != null ? !name.equals(option.name) : option.name != null) return false;
         if (path != null ? !path.equals(option.path) : option.path != null) return false;
 
@@ -105,6 +117,7 @@ public class Option extends SugarRecord<Option> {
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (factor != null ? factor.hashCode() : 0);
         result = 31 * result + (answer != null ? answer.hashCode() : 0);
         result = 31 * result + (path != null ? path.hashCode() : 0);

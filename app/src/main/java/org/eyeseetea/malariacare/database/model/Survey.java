@@ -337,7 +337,8 @@ public class Survey extends SugarRecord<Survey> {
         String valuesStr="";
         Iterator<Value> iterator=_values.iterator();
         while(iterator.hasNext()){
-            valuesStr+=iterator.next().getValue();
+            Value currentValue = iterator.next();
+            valuesStr += (currentValue.getOption()!=null)?currentValue.getOption().getCode():currentValue.getValue();
             if(iterator.hasNext()){
                 valuesStr+=", ";
             }

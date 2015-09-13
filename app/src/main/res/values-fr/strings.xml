@@ -63,7 +63,7 @@
     <string name="assessment_title_facility_date">Centre de santé / Date</string>
     <string name="assessment_title_state">État</string>
     <string name="assessment_info_delete">Effacer</string>
-    <string name="assessment_title_header">Evaluation active</string>
+    <string name="assessment_title_header">Attendant Envoyer</string>
 
     <!-- feedback -->
     <!-- XXX Should it be replaced by 'assessment_title_facility_date'?-->
@@ -219,7 +219,7 @@
     <string name="dialog_error_push_no_location">Aucun emplacement disponible</string>
 
     <string name="assessment_sent_title_state">État</string>
-    <string name="assessment_sent_title_header">Evaluation Envoyée</string>
+    <string name="assessment_sent_title_header">Sondages Envoyée</string>
     <string name="assessment_sent_date">Date de remplissement</string>
     <string name="assessment_title_info">Info</string>
 

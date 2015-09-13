@@ -86,12 +86,13 @@ public class PopulateDB {
                         break;
                     case OPTIONS_CSV:
                         Option option = new Option();
-                        option.setName(line[1]);
-                        option.setFactor(Float.valueOf(line[2]));
-                        option.setAnswer(answerList.get(Integer.valueOf(line[3])));
-                        option.setPath(line[4]);
-                        if (!line[5].equals(""))
-                            option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
+                        option.setCode(line[1]);
+                        option.setName(line[2]);
+                        option.setFactor(Float.valueOf(line[3]));
+                        option.setAnswer(answerList.get(Integer.valueOf(line[4])));
+                        option.setPath(line[5]);
+                        if (!line[6].equals(""))
+                            option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[6])));
                         optionList.put(Integer.valueOf(line[0]), option);
                         break;
                     case QUESTIONS_CSV:

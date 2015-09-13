@@ -357,7 +357,7 @@ public class Survey extends SugarRecord<Survey> {
 
             if(questionCodeFilter.contains(qCode)) {
                 limitFilter++;
-                valuesStr += value.getValue();
+				valuesStr += (value.getOption()!=null)?value.getOption().getCode():value.getValue();
 
                 if (limitFilter < questionCodeFilter.size()) {
                     valuesStr += ", ";

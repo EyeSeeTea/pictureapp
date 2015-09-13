@@ -1,22 +1,22 @@
-1;'Yes';0.00;1;'question_images/rdt_yes.png';1
-2;'No';0.00;1;'question_images/rdt_no.png';2
-3;'Male';0.00;2;'question_images/sex_male.png';3
-4;'Female';0.00;2;'question_images/sex_female.png';4
-5;'0-12m';0.00;3;'question_images/age_0m_12m.png';5
-6;'1-5years';0.00;3;'question_images/age_1y_5y.png';6
-7;'6-15years';0.00;3;'question_images/age_5y_15y.png';7
-8;'16-25years';0.00;3;'question_images/age_16y_25y.png';8
-9;'26-45years';0.00;3;'question_images/age_26y_45y.png';9
-10;'46+years';0.00;3;'question_images/age_46y.png';10
-11;'Pf';0.00;4;'question_images/specie_pf.png';11
-12;'Pv';0.00;4;'question_images/specie_pv.png';12
-13;'Mix';0.00;4;'question_images/specie_mix.png';13
-14;'N/A';0.00;4;'question_images/specie_none.png';14
-15;'Child';0.00;5;'question_images/treatment_child.png';15
-16;'Adolescent';0.00;5;'question_images/treatment_adolescent.png';16
-17;'Adult';0.00;5;'question_images/treatment_adult.png';17
-18;'Referral';0.00;5;'question_images/treatment_referral.png';18
-19;'In the forest?';0.00;6;'question_images/risk_group_forest.png';19
-20;'In the plantation?';0.00;6;'question_images/risk_group_plantation.png';20
-21;'Another country?';0.00;6;'question_images/risk_group_another_country.png';21
-22;'N/A?';0.00;6;'question_images/risk_group_none.png';22
+1;'Yes';'Yes';0.00;1;'question_images/rdt_yes.png';1
+2;'No';'No';0.00;1;'question_images/rdt_no.png';2
+3;'ឈ្មោល';'Male';0.00;2;'question_images/sex_male.png';3
+4;'ជាស្ត្រី';'Female';0.00;2;'question_images/sex_female.png';4
+5;'0-12m';'0-12m';0.00;3;'question_images/age_0m_12m.png';5
+6;'1-5years';'1-5years';0.00;3;'question_images/age_1y_5y.png';6
+7;'6-15years';'6-15years';0.00;3;'question_images/age_5y_15y.png';7
+8;'16-25years';'16-25years';0.00;3;'question_images/age_16y_25y.png';8
+9;'26-45years';'26-45years';0.00;3;'question_images/age_26y_45y.png';9
+10;'46+years';'46+years';0.00;3;'question_images/age_46y.png';10
+11;'Pf';'Pf';0.00;4;'question_images/specie_pf.png';11
+12;'Pv';'Pv';0.00;4;'question_images/specie_pv.png';12
+13;'Mix';'Mix';0.00;4;'question_images/specie_mix.png';13
+14;'N/A';'N/A';0.00;4;'question_images/specie_none.png';14
+15;'Child';'Child';0.00;5;'question_images/treatment_child.png';15
+16;'Adolescent';'Adolescent';0.00;5;'question_images/treatment_adolescent.png';16
+17;'Adult';'Adult';0.00;5;'question_images/treatment_adult.png';17
+18;'Referral';'Referral';0.00;5;'question_images/treatment_referral.png';18
+19;'In the forest?';'In the forest?';0.00;6;'question_images/risk_group_forest.png';19
+20;'In the plantation?';'In the plantation?';0.00;6;'question_images/risk_group_plantation.png';20
+21;'Another country?';'Another country?';0.00;6;'question_images/risk_group_another_country.png';21
+22;'N/A?';'N/A?';0.00;6;'question_images/risk_group_none.png';22

@@ -67,8 +67,8 @@
     <string name="assessment_sent_title_state">Status</string>
     <string name="assessment_sent_date">Completion date</string>
     <string name="assessment_info_delete">Delete</string>
-    <string name="assessment_title_header">Active Assessment</string>
-    <string name="assessment_sent_title_header">Sent Assessment</string>
+    <string name="assessment_title_header">Pending Send</string>
+    <string name="assessment_sent_title_header">Sent Surveys</string>
     <string name="assessment_title_rdt" translatable="false">RDT</string>
     <string name="assessment_title_info">Info</string>
 

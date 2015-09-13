@@ -13,15 +13,17 @@ public class Option extends SugarRecord<Option> {
     Float factor;
     Answer answer;
     String path;
+    OptionAttribute optionAttribute;
 
     public Option() {
     }
 
-    public Option(String name, Float factor, Answer answer, String code) {
+    public Option(String name, Float factor, Answer answer, String code, OptionAttribute optionAttribute) {
         this.name = name;
         this.factor = factor;
         this.answer = answer;
         this.code = code;
+        this.optionAttribute = optionAttribute;
     }
 
     public Option(String name) {
@@ -68,6 +70,14 @@ public class Option extends SugarRecord<Option> {
         this.path = path;
     }
 
+    public OptionAttribute getOptionAttribute() {
+        return optionAttribute;
+    }
+
+    public void setOptionAttribute(OptionAttribute optionAttribute) {
+        this.optionAttribute = optionAttribute;
+    }
+
     /**
      * Checks if this option actives the children questions
      * @return true: Children questions should be shown, false: otherwise.
@@ -95,6 +105,7 @@ public class Option extends SugarRecord<Option> {
                 ", factor=" + factor +
                 ", answer=" + answer +
                 ", path=" + path +
+                ", optionAttribute=" + optionAttribute +
                 '}';
     }
 
@@ -110,6 +121,7 @@ public class Option extends SugarRecord<Option> {
         if (code != null ? !code.equals(option.code) : option.code != null) return false;
         if (name != null ? !name.equals(option.name) : option.name != null) return false;
         if (path != null ? !path.equals(option.path) : option.path != null) return false;
+        if (optionAttribute != null ? !optionAttribute.equals(option.optionAttribute) : option.optionAttribute != null) return false;
 
         return true;
     }
@@ -120,6 +132,7 @@ public class Option extends SugarRecord<Option> {
         result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (factor != null ? factor.hashCode() : 0);
         result = 31 * result + (answer != null ? answer.hashCode() : 0);
+        result = 31 * result + (optionAttribute != null ? optionAttribute.hashCode() : 0);
         result = 31 * result + (path != null ? path.hashCode() : 0);
         return result;
     }

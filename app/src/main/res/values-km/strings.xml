@@ -65,8 +65,8 @@
     <string name="assessment_sent_title_state">Status</string>
     <string name="assessment_sent_date">កាលបរិច្ឆេទបញ្ចប់</string>
     <string name="assessment_info_delete">Delete</string>
-    <string name="assessment_title_header">ការវាយតំលៃ សកម្ម</string>
-    <string name="assessment_sent_title_header">ការវាយតម្លៃ ដែលបានផ្ញើ</string>
+    <string name="assessment_title_header">ផ្ញើ មិនទាន់ធ្វើរួច</string>
+    <string name="assessment_sent_title_header">ការស្ទង់មតិ ដែលបានផ្ញើ</string>
     <string name="assessment_title_info">ព</string>
 
 

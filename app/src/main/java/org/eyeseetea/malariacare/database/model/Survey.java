@@ -30,6 +30,7 @@ import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.utils.Constants;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -336,11 +337,31 @@ public class Survey extends SugarRecord<Survey> {
 
         String valuesStr="";
         Iterator<Value> iterator=_values.iterator();
+
+        int limitFilter = 0;
+        //Define a filter to select which values will be turned into string (by question code or question id)
+        List<String> questionCodeFilter = new ArrayList<String>() {{
+            add("RDT");
+            add("Sex");
+            add("Age");
+        }};
+        List<Long> questionIdFilter = new ArrayList<Long>() {{
+            add(0l);
+            add(1l);
+            add(2l);
+        }};
+
         while(iterator.hasNext()){
-            Value currentValue = iterator.next();
-            valuesStr += (currentValue.getOption()!=null)?currentValue.getOption().getCode():currentValue.getValue();
-            if(iterator.hasNext()){
-                valuesStr+=", ";
+            Value value = iterator.next();
+            String qCode = value.getQuestion().getCode();
+
+            if(questionCodeFilter.contains(qCode)) {
+                limitFilter++;
+				valuesStr += (value.getOption()!=null)?value.getOption().getCode():value.getValue();
+
+                if (limitFilter < questionCodeFilter.size()) {
+                    valuesStr += ", ";
+                }
             }
         }
 

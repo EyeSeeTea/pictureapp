@@ -25,6 +25,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -278,14 +280,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         tableLayout.addView(tableRow);
                     }
                     ImageView imageButton = (ImageView) tableRow.getChildAt(mod);
-                    initOptionButton(imageButton, options.get(i),value);
+                    if(mod==0) {
+                        imageButton.setBackgroundColor(Color.parseColor("#F0D100"));
+                    }
+                    else{
+                        imageButton.setBackgroundColor(Color.parseColor("#00FF65"));
+                    }
+                    initOptionButton(imageButton, options.get(i), value);
                 }
 
                 break;
             case Constants.PHONE:
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                 tableLayout.addView(tableRow);
-                initPhoneValue(tableRow,value);
+                initPhoneValue(tableRow, value);
                 break;
         }
         rowView.requestLayout();
@@ -357,7 +365,25 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(value!=null && value.getValue().equals(option.getName())){
             Drawable selectedBackground=context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
             if(android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
-                button.setBackground(selectedBackground);
+                //button.setBackground(selectedBackground);
+                //button.setBackgroundColor(Color.parseColor("#80ff5a595b"));
+//                button.setImageAlpha(128);
+                button.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
+                button.setColorFilter(Color.parseColor("#805a595b"));
+            }else {
+//                button.setAlpha(128);
+                //button.setBackgroundDrawable(selectedBackground);
+                button.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
+                button.setColorFilter(Color.parseColor("#805a595b"));
+            }
+
+
+        }
+        else if (value != null){
+            Drawable selectedBackground=context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
+
+            if(android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
+               button.setBackground(selectedBackground);
             }else {
                 button.setBackgroundDrawable(selectedBackground);
             }

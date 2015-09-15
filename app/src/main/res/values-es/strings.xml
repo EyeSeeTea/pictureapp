@@ -7,6 +7,8 @@
     <string name="no">No</string>
     <string name="ok">Ok</string>
     <string name="cancel">Annuler</string>
+    <string name="review">Revisar</string>
+    <string name="send">Enviar</string>
     <string name="score">Puntuación</string>
     <string name="number_zero">0</string>
     <string name="number_zero_percentage">0 % </string>

@@ -426,11 +426,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         new AlertDialog.Builder((activity))
                 .setTitle(R.string.survey_title_completed)
                 .setMessage(R.string.survey_info_completed)
-                .setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ((SurveyActivity)activity).finishAndGo(DashboardActivity.class);
+                        ((SurveyActivity) activity).finishAndGo(DashboardActivity.class);
                     }
-                }).create().show();
+                })
+                .setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        review();
+                    }
+                })
+                .create().show();
     }
 
     /**
@@ -469,6 +475,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         progressTabStatus.getPreviousQuestion();
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Back to initial question to review questions
+     */
+    private void review(){
+
+        progressTabStatus.getFirstQuestion();
         notifyDataSetChanged();
     }
 

@@ -7,6 +7,8 @@
     <string name="no">No</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
+    <string name="review">ពិនិត្យឡើងវិញ</string>
+    <string name="send">ផ្ញើ</string>
     <string name="score">Score</string>
     <string name="number_zero">0</string>
     <string name="number_zero_percentage">0 % </string>

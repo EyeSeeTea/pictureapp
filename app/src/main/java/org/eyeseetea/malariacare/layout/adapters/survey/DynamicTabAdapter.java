@@ -323,24 +323,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     EditText editText = (EditText) parentView.findViewById(R.id.dynamic_phone_edit);
                     String phoneValue = editText.getText().toString();
 
-                    //Required, empty values rejected
+                    //Optional, empty values allowed
                     if (phoneValue == null || "".equals(phoneValue)) {
-                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
-                        return;
-                    }
-
-                    // Check phone number format
-                    Phonenumber.PhoneNumber phoneNumber = null;
-                    try {
-                        Locale locale = context.getResources().getConfiguration().locale;
-                        phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, locale.getCountry());
-                    } catch (NumberParseException e) {
-                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
-                        return;
-                    }
-                    if(!PhoneNumberUtil.getInstance().isValidNumber(phoneNumber)){
-                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
-                        return;
+                        phoneValue = "";
+                    }else {
+                        // Check phone number format
+                        Phonenumber.PhoneNumber phoneNumber = null;
+                        try {
+                            Locale locale = context.getResources().getConfiguration().locale;
+                            phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, locale.getCountry());
+                        } catch (NumberParseException e) {
+                            editText.setError(context.getString(R.string.dynamic_error_phone_format));
+                            return;
+                        }
+                        if(!PhoneNumberUtil.getInstance().isValidNumber(phoneNumber)){
+                            editText.setError(context.getString(R.string.dynamic_error_phone_format));
+                            return;
+                        }
                     }
 
                     Question question = progressTabStatus.getCurrentQuestion();

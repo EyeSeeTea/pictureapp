@@ -30,6 +30,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -406,16 +407,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Advance to the next question or finish survey according to question  and value.
+     * Advance to the next question with delay applied or finish survey according to question and value.
      */
     private void finishOrNext(){
-        Question question=progressTabStatus.getCurrentQuestion();
-        Value value = question.getValueBySession();
-        if(isDone(value)){
-            showDone();
-            return;
-        }
-        next();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Question question = progressTabStatus.getCurrentQuestion();
+                Value value = question.getValueBySession();
+                if (isDone(value)) {
+                    showDone();
+                    return;
+                }
+                next();
+            }
+        }, 1500);
     }
 
     /**

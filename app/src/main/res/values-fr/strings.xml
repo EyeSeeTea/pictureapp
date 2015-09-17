@@ -157,6 +157,7 @@
 
     <!-- dynamic -->
     <string name="dynamic_error_phone_format">"Le numéro de téléphone donné a un format incorrect"</string>
+    <string name="dynamic_required_field">Ce champ est obligatoire</string>
 
     <!-- score -->
     <string name="score_title_clinical_fever">Clinical\nfever\nevaluation</string>

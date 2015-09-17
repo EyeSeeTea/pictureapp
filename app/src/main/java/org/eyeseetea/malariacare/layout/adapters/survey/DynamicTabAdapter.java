@@ -32,6 +32,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -65,6 +68,7 @@ import org.eyeseetea.malariacare.layout.adapters.survey.progress.ProgressTabStat
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -287,16 +291,77 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     initOptionButton(imageButton, currentOption, value, parent);
                 }
-
                 break;
             case Constants.PHONE:
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                 tableLayout.addView(tableRow);
                 initPhoneValue(tableRow, value);
                 break;
+            case Constants.POSITIVE_INT:
+                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_positiveint_row, tableLayout, false);
+                tableLayout.addView(tableRow);
+                initPositiveIntValue(tableRow, value);
+                break;
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    /**
+     * Inits editText and button to view/edit a (positive) integer
+     * @param tableRow
+     * @param value
+     */
+    private void initPositiveIntValue(TableRow tableRow, Value value){
+        Button button=(Button)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
+        final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
+
+        //Has value? show it
+        if(value!=null){
+            editText.setText(value.getValue());
+        }
+
+        //Editable? add listener
+        if(!readOnly){
+
+            editText.setFilters(new InputFilter[]{
+                    new InputFilter.LengthFilter(Constants.MAX_INT_CHARS),
+                    new MinMaxInputFilter(1, null)
+            });
+
+            editText.addTextChangedListener(new TextWatcher(){
+                public void onTextChanged(CharSequence s, int start, int before, int count){
+                    // Not allowed zero at the beginning
+                    if (editText.getText().toString().matches("^0") ){
+                        editText.setText("");
+                    }
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                public void afterTextChanged(Editable s){}
+            });
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View parentView = (View) v.getParent();
+                    EditText editText = (EditText) parentView.findViewById(R.id.dynamic_positiveInt_edit);
+                    String positiveIntValue = editText.getText().toString();
+
+                    //Required, empty values rejected
+                    if (positiveIntValue == null || "".equals(positiveIntValue)) {
+                        editText.setError(context.getString(R.string.dynamic_required_field));
+                        return;
+                    }
+
+                    Question question = progressTabStatus.getCurrentQuestion();
+                    ReadWriteDB.saveValuesText(question, positiveIntValue);
+                    finishOrNext();
+                }
+            });
+        }else{
+            editText.setEnabled(false);
+            button.setEnabled(false);
+        }
     }
 
     /**
@@ -421,7 +486,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 next();
             }
-        }, 1500);
+        }, 1000);
     }
 
     /**

@@ -119,6 +119,19 @@ public class ProgressTabStatus {
     }
 
     /**
+     * Gets the first question in the list
+     * @return
+     */
+    public Question getFirstQuestion(){
+        if(getTotalPages()==0){
+            return null;
+        }
+
+        currentPage=0;
+        return questions.get(currentPage);
+    }
+
+    /**
      * Checks if the current question is the first one
      * @return true|false
      */

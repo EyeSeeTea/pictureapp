@@ -7,6 +7,8 @@
     <string name="no">No</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>
+    <string name="review">Réviser</string>
+    <string name="send">Envoyer</string>
     <string name="score">Score</string>
     <string name="number_zero">0</string>
     <string name="number_zero_percentage">0 % </string>
@@ -155,6 +157,7 @@
 
     <!-- dynamic -->
     <string name="dynamic_error_phone_format">"Le numéro de téléphone donné a un format incorrect"</string>
+    <string name="dynamic_required_field">Ce champ est obligatoire</string>
 
     <!-- score -->
     <string name="score_title_clinical_fever">Clinical\nfever\nevaluation</string>

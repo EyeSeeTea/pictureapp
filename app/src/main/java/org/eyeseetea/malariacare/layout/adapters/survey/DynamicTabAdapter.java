@@ -258,11 +258,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         progressView.setMax(progressTabStatus.getTotalPages());
         progressView.setProgress(progressTabStatus.getCurrentPage()+1);
         TextView progressText=(TextView)rowView.findViewById(R.id.dynamic_progress_text);
-        progressText.setText(progressTabStatus.getStatusAsString());
+        progressText.setText(getLocaleProgressStatus(progressView.getProgress(), progressView.getMax()));
 
         //Options
         TableLayout tableLayout=(TableLayout)rowView.findViewById(R.id.options_table);
-
 
         TableRow tableRow=null;
         int typeQuestion=question.getAnswer().getOutput();
@@ -286,7 +285,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     initOptionButton(imageButton, currentOption, value, parent);
                 }
-
                 break;
             case Constants.PHONE:
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
@@ -296,6 +294,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    /**
+     * Get status progress in locale strings
+     * @param currentPage
+     * @param totalPages
+     */
+    private String getLocaleProgressStatus(int currentPage, int totalPages){
+
+        String current = context.getResources().getString(context.getResources().getIdentifier("number_"+currentPage, "string", context.getPackageName()));
+        String total = context.getResources().getString(context.getResources().getIdentifier("number_"+totalPages, "string", context.getPackageName()));
+        return current.concat("/").concat(total);
     }
 
     /**

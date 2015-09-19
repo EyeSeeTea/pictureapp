@@ -304,10 +304,10 @@ public class LayoutUtils {
 
     // Used to setup the usual actionbar with the logo and the app name
     public static void setActionBarLogo(ActionBar actionBar){
-        actionBar.setLogo(R.drawable.qualityapp_logo);
+        actionBar.setLogo(R.drawable.pictureapp_logo);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setIcon(R.drawable.qualityapp_logo);
+        actionBar.setIcon(R.drawable.pictureapp_logo);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
     }
 

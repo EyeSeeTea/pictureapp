@@ -294,6 +294,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     initOptionButton(imageButton, currentOption, value, parent);
                 }
                 break;
+            case Constants.IMAGES_3:
+                List<Option> opts = question.getAnswer().getOptions();
+                swipeTouchListener.clearClickableViews();
+                for(int i=0;i<opts.size();i++){
+
+                    tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem,tableLayout,false);
+                    tableLayout.addView(tableRow);
+
+                    ImageView imageButton = (ImageView) tableRow.getChildAt(0);
+
+                    Option currentOption = opts.get(i);
+                    if (currentOption.getOptionAttribute() != null && currentOption.getOptionAttribute().getBackground_colour() != null) {
+                        imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getOptionAttribute().getBackground_colour()));
+                    }
+                    initOptionButton(imageButton, currentOption, value, parent);
+                }
+                break;
             case Constants.PHONE:
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                 tableLayout.addView(tableRow);

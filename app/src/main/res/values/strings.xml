@@ -246,5 +246,16 @@
     <string name="pref_visual">Visual</string>
     <string name="assessment_title_date_completion">Date</string>
 
+    <!-- numbers: hardcoded to khmer -->
+    <string name="number_0">០</string>
+    <string name="number_1">១</string>
+    <string name="number_2">២</string>
+    <string name="number_3">៣</string>
+    <string name="number_4">៤</string>
+    <string name="number_5">៥</string>
+    <string name="number_6">៦</string>
+    <string name="number_7">៧</string>
+    <string name="number_8">៨</string>
+    <string name="number_9">៩</string>
 
 </resources>

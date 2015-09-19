@@ -29,6 +29,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -171,6 +172,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Option selectedOption=(Option)view.getTag();
                 Question question=progressTabStatus.getCurrentQuestion();
                 ReadWriteDB.saveValuesDDL(question, selectedOption);
+                highlightSelect(view, selectedOption);
                 finishOrNext();
             }
 
@@ -263,7 +265,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         progressView.setMax(progressTabStatus.getTotalPages());
         progressView.setProgress(progressTabStatus.getCurrentPage()+1);
         TextView progressText=(TextView)rowView.findViewById(R.id.dynamic_progress_text);
-        progressText.setText(progressTabStatus.getStatusAsString());
+        progressText.setText(getLocaleProgressStatus(progressView.getProgress(), progressView.getMax()));
 
         //Options
         TableLayout tableLayout=(TableLayout)rowView.findViewById(R.id.options_table);
@@ -292,6 +294,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     initOptionButton(imageButton, currentOption, value, parent);
                 }
                 break;
+            case Constants.IMAGES_3:
+                List<Option> opts = question.getAnswer().getOptions();
+                swipeTouchListener.clearClickableViews();
+                for(int i=0;i<opts.size();i++){
+
+                    tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem,tableLayout,false);
+                    tableLayout.addView(tableRow);
+
+                    ImageView imageButton = (ImageView) tableRow.getChildAt(0);
+
+                    Option currentOption = opts.get(i);
+                    if (currentOption.getOptionAttribute() != null && currentOption.getOptionAttribute().getBackground_colour() != null) {
+                        imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getOptionAttribute().getBackground_colour()));
+                    }
+                    initOptionButton(imageButton, currentOption, value, parent);
+                }
+                break;
             case Constants.PHONE:
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                 tableLayout.addView(tableRow);
@@ -305,6 +324,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    /**
+     * Get status progress in locale strings
+     * @param currentPage
+     * @param totalPages
+     */
+    private String getLocaleProgressStatus(int currentPage, int totalPages){
+
+        String current = context.getResources().getString(context.getResources().getIdentifier("number_"+currentPage, "string", context.getPackageName()));
+        String total = context.getResources().getString(context.getResources().getIdentifier("number_"+totalPages, "string", context.getPackageName()));
+        return current.concat("/").concat(total);
     }
 
     /**
@@ -428,15 +459,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (option.getOptionAttribute() != null && option.getOptionAttribute().getBackground_colour() != null) {
             //Highlight button
             if (value != null && value.getValue().equals(option.getName())) {
-
-                Drawable selectedBackground = context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
-                if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                    button.setBackground(selectedBackground);
-                } else {
-                    button.setBackgroundDrawable(selectedBackground);
-                }
-
-
+                highlightSelect(button, option);
             } else if (value != null) {
                 if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                     button.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
@@ -468,6 +491,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Add button to listener
         swipeTouchListener.addClickableView(button);
 
+    }
+
+    /**
+     * @param view
+     * @param option
+     */
+    private void highlightSelect(View view, Option option){
+        Drawable selectedBackground = context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
+        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            view.setBackground(selectedBackground);
+        } else {
+            view.setBackgroundDrawable(selectedBackground);
+        }
+
+        GradientDrawable bgShape = (GradientDrawable)view.getBackground();
+        bgShape.setColor(Color.parseColor("#" + option.getOptionAttribute().getBackground_colour()));
     }
 
     /**

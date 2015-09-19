@@ -15,7 +15,8 @@ public class Constants {
             IMAGES_2 = 10,
             IMAGES_4 = 11,
             IMAGES_6 = 12,
-            PHONE = 13;
+            PHONE = 13,
+            IMAGES_3 = 14;
 
     public static final String DEFAULT_SELECT_OPTION = "";
 

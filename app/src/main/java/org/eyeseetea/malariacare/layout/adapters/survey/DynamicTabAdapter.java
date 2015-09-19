@@ -29,6 +29,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -171,6 +172,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Option selectedOption=(Option)view.getTag();
                 Question question=progressTabStatus.getCurrentQuestion();
                 ReadWriteDB.saveValuesDDL(question, selectedOption);
+                highlightSelect(view, selectedOption);
                 finishOrNext();
             }
 
@@ -440,15 +442,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (option.getOptionAttribute() != null && option.getOptionAttribute().getBackground_colour() != null) {
             //Highlight button
             if (value != null && value.getValue().equals(option.getName())) {
-
-                Drawable selectedBackground = context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
-                if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                    button.setBackground(selectedBackground);
-                } else {
-                    button.setBackgroundDrawable(selectedBackground);
-                }
-
-
+                highlightSelect(button, option);
             } else if (value != null) {
                 if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                     button.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
@@ -480,6 +474,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Add button to listener
         swipeTouchListener.addClickableView(button);
 
+    }
+
+    /**
+     * @param view
+     * @param option
+     */
+    private void highlightSelect(View view, Option option){
+        Drawable selectedBackground = context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
+        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            view.setBackground(selectedBackground);
+        } else {
+            view.setBackgroundDrawable(selectedBackground);
+        }
+
+        GradientDrawable bgShape = (GradientDrawable)view.getBackground();
+        bgShape.setColor(Color.parseColor("#" + option.getOptionAttribute().getBackground_colour()));
     }
 
     /**

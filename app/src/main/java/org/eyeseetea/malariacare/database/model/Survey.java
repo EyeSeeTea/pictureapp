@@ -327,6 +327,23 @@ public class Survey extends SugarRecord<Survey> {
     }
 
     /**
+     * Since there are three possible values first question (RDT):'Yes','No','Cancel'
+     * @return String
+     */
+    public String getRDT() {
+        String rdtValue = "";
+        if (_values == null) {
+            _values = Value.listAllBySurvey(this);
+        }
+
+        if (_values.size() > 0) {
+            Value firstValue = _values.get(0);
+            rdtValue = firstValue.getOption().getName();
+        }
+        return rdtValue;
+    }
+
+    /**
      * Turns all values from a survey into a string with values separated by commas
      * @return String
      */
@@ -335,7 +352,7 @@ public class Survey extends SugarRecord<Survey> {
             return "";
         }
 
-        String valuesStr="";
+        String valuesStr="", valuesRDT;
         Iterator<Value> iterator=_values.iterator();
 
         int limitFilter = 0;
@@ -345,11 +362,13 @@ public class Survey extends SugarRecord<Survey> {
             add("Sex");
             add("Age");
         }};
+        /*
         List<Long> questionIdFilter = new ArrayList<Long>() {{
             add(0l);
             add(1l);
             add(2l);
         }};
+        */
 
         while(iterator.hasNext()){
             Value value = iterator.next();
@@ -357,10 +376,21 @@ public class Survey extends SugarRecord<Survey> {
 
             if(questionCodeFilter.contains(qCode)) {
                 limitFilter++;
-				valuesStr += (value.getOption()!=null)?value.getOption().getCode():value.getValue();
 
-                if (limitFilter < questionCodeFilter.size()) {
-                    valuesStr += ", ";
+                valuesRDT = (value.getOption()!=null)?value.getOption().getCode():value.getValue();
+
+                if(questionCodeFilter.get(0).equals(qCode)){
+                    if(!value.isANo()) {
+                        valuesStr += valuesRDT;
+                        if (limitFilter < questionCodeFilter.size()) {
+                            valuesStr += ", ";
+                        }
+                    }
+                }else{
+                    valuesStr += valuesRDT;
+                    if (limitFilter < questionCodeFilter.size()) {
+                        valuesStr += ", ";
+                    }
                 }
             }
         }

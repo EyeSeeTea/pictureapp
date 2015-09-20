@@ -88,6 +88,14 @@ public class Value extends SugarRecord<Value> {
         return getOption() != null && getOption().getName().equals("Yes");
     }
 
+    /**
+     * The value is 'No' from a dropdown
+     * @return true|false
+     */
+    public boolean isANo() {
+        return getOption() != null && getOption().getName().equals("No");
+    }
+
     public static int countBySurvey(Survey survey){
         if(survey==null || survey.getId()==null){
             return 0;

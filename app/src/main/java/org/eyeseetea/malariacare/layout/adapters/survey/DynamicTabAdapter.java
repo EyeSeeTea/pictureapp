@@ -172,7 +172,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Option selectedOption=(Option)view.getTag();
                 Question question=progressTabStatus.getCurrentQuestion();
                 ReadWriteDB.saveValuesDDL(question, selectedOption);
-                highlightSelect(view, selectedOption);
+
+                ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
+                for (int rowPos = 0; rowPos < vgTable.getChildCount(); rowPos++) {
+                    ViewGroup vgRow = (ViewGroup) vgTable.getChildAt(rowPos);
+                    for (int itemPos = 0; itemPos < vgRow.getChildCount(); itemPos++) {
+                        View childItem = vgRow.getChildAt(itemPos);
+                        if (childItem instanceof ImageView) {
+                            Option otherOption=(Option)childItem.getTag();
+                            if(selectedOption.getId() != otherOption.getId()){
+                                overshadow((ImageView) childItem, otherOption);
+                            }
+                        }
+                    }
+                }
+
+                highlightSelection(view, selectedOption);
                 finishOrNext();
             }
 
@@ -269,7 +284,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Options
         TableLayout tableLayout=(TableLayout)rowView.findViewById(R.id.options_table);
-
 
         TableRow tableRow=null;
         int typeQuestion=question.getAnswer().getOutput();
@@ -459,16 +473,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (option.getOptionAttribute() != null && option.getOptionAttribute().getBackground_colour() != null) {
             //Highlight button
             if (value != null && value.getValue().equals(option.getName())) {
-                highlightSelect(button, option);
+                highlightSelection(button, option);
             } else if (value != null) {
-                if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                    button.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
-                    button.setColorFilter(Color.parseColor("#805a595b"));
-
-                } else {
-                    button.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
-                    button.setColorFilter(Color.parseColor("#805a595b"));
-                }
+                overshadow(button, option);
             }
         }
         //Put image
@@ -497,7 +504,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param view
      * @param option
      */
-    private void highlightSelect(View view, Option option){
+    private void highlightSelection(View view, Option option){
         Drawable selectedBackground = context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
         if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
             view.setBackground(selectedBackground);
@@ -507,6 +514,29 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         GradientDrawable bgShape = (GradientDrawable)view.getBackground();
         bgShape.setColor(Color.parseColor("#" + option.getOptionAttribute().getBackground_colour()));
+        bgShape.setStroke(3, Color.WHITE);
+
+        ImageView v = (ImageView) view;
+        v.clearColorFilter();
+    }
+
+    /**
+     * @param view
+     */
+    private void overshadow(ImageView view, Option option){
+        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
+            view.setColorFilter(Color.parseColor("#805a595b"));
+        } else {
+            view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
+            view.setColorFilter(Color.parseColor("#805a595b"));
+        }
+
+        Drawable bg = view.getBackground();
+        if(bg instanceof GradientDrawable) {
+            GradientDrawable bgShape = (GradientDrawable)bg;
+            bgShape.setStroke(0, 0);
+        }
     }
 
     /**
@@ -533,20 +563,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void showDone(){
         final Activity activity=(Activity)context;
-        new AlertDialog.Builder((activity))
+        AlertDialog.Builder msgConfirmation = new AlertDialog.Builder((activity))
                 .setTitle(R.string.survey_title_completed)
                 .setMessage(R.string.survey_info_completed)
                 .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         ((SurveyActivity) activity).finishAndGo(DashboardActivity.class);
                     }
-                })
-                .setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int arg1) {
-                        review();
-                    }
-                })
-                .create().show();
+                });
+        if(!progressTabStatus.isFirstQuestion()){
+            msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int arg1) {
+                    review();
+                }
+            });
+        }
+
+        msgConfirmation.create().show();
     }
 
     /**
@@ -555,8 +588,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @return
      */
     private boolean isDone(Value value){
-        //First question  + NO => true
-        if(progressTabStatus.isFirstQuestion() && !value.isAYes()){
+        //First question + NO => true
+        if(progressTabStatus.isFirstQuestion() && value.isANo()){
             return true;
         }
 

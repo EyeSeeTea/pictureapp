@@ -94,6 +94,10 @@ public class PushClient {
         this.activity = activity;
     }
 
+    public PushClient(Survey survey) {
+        this.survey = survey;
+    }
+
     public PushResult push() {
         try{
             JSONObject data = prepareMetadata();
@@ -101,6 +105,23 @@ public class PushClient {
             PushResult result = new PushResult(pushData(data));
             if(result.isSuccessful()){
                 updateSurveyState();
+            }
+            return result;
+        }catch(Exception ex){
+            Log.e(TAG, ex.getMessage());
+            return new PushResult(ex);
+        }
+    }
+
+    public PushResult pushBackground() {
+        try{
+            JSONObject data = prepareMetadata();
+            data = prepareDataElements(data);
+            PushResult result = new PushResult(pushData(data));
+            if(result.isSuccessful()){
+                //Change status
+                this.survey.setStatus(Constants.SURVEY_SENT);
+                this.survey.save();
             }
             return result;
         }catch(Exception ex){

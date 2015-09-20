@@ -19,6 +19,12 @@
     <string name="good">Good</string>
     <string name="fair">Fair</string>
     <string name="poor">Poor</string>
+    <string name="symbolPlus" translatable="false">+</string>
+    <string name="symbolMinus" translatable="false">-</string>
+    <string name="symbolCross" translatable="false">x</string>
+    <string name="rdtPositive" translatable="false">Yes</string>
+    <string name="rdtNegative" translatable="false">No</string>
+    <string name="rdtCancel" translatable="false">Cancel</string>
     <string name="plus">+</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet</string>
 
@@ -258,4 +264,5 @@
     <string name="number_8">៨</string>
     <string name="number_9">៩</string>
 
+    <string name="PUSH_PERIOD" translatable="false">10</string>
 </resources>

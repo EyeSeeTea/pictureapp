@@ -1,6 +1,6 @@
-1;'Yes';'Yes';0.00;1;'question_images/rdt_yes.png';1
-2;'No';'No';0.00;1;'question_images/rdt_no.png';2
-3;'Cancel';'Cancel';0.00;1;'question_images/rdt_cancel.png';3
+1;'បាទ';'Yes';0.00;1;'question_images/rdt_yes.png';1
+2;'គ្មាន';'No';0.00;1;'question_images/rdt_no.png';2
+3;'បោះបង់ការ';'Cancel';0.00;1;'question_images/rdt_cancel.png';3
 4;'ឈ្មោល';'Male';0.00;2;'question_images/sex_male.png';4
 5;'ជាស្ត្រី';'Female';0.00;2;'question_images/sex_female.png';5
 6;'Mix';'Mix';0.00;4;'question_images/specie_mix.png';6

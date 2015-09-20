@@ -96,6 +96,14 @@ public class Value extends SugarRecord<Value> {
         return getOption() != null && getOption().getName().equals("No");
     }
 
+    /**
+     * The value is 'Cancel' from a dropdown
+     * @return true|false
+     */
+    public boolean isACancel() {
+        return getOption() != null && getOption().getName().equals("Cancel");
+    }
+
     public static int countBySurvey(Survey survey){
         if(survey==null || survey.getId()==null){
             return 0;

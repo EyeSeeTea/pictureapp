@@ -370,14 +370,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(!readOnly){
 
             editText.setFilters(new InputFilter[]{
-                    new InputFilter.LengthFilter(Constants.MAX_INT_CHARS),
-                    new MinMaxInputFilter(1, null)
+                    new InputFilter.LengthFilter(Constants.MAX_INT_AGE),
+                    new MinMaxInputFilter(0, null)
             });
 
             editText.addTextChangedListener(new TextWatcher(){
                 public void onTextChanged(CharSequence s, int start, int before, int count){
-                    // Not allowed zero at the beginning
-                    if (editText.getText().toString().matches("^0") ){
+                    // Not allowed zero at the beginning for values greater than zero
+                    if (editText.getText().length()>1 && editText.getText().toString().matches("^0[0-9]") ){
                         editText.setText("");
                     }
                 }

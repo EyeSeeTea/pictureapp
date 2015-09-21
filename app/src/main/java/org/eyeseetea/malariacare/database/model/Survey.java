@@ -358,7 +358,7 @@ public class Survey extends SugarRecord<Survey> {
         int limitFilter = 0;
         //Define a filter to select which values will be turned into string (by question code or question id)
         List<String> questionCodeFilter = new ArrayList<String>() {{
-            add("RDT");
+            add("Specie");
             add("Sex");
             add("Age");
         }};

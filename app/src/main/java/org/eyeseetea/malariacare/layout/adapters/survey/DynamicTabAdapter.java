@@ -389,7 +389,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Has value? show it
         if(value!=null){
             editText.setText(value.getValue());
-            editText.setSelection(0);
         }
 
         //Editable? add listener

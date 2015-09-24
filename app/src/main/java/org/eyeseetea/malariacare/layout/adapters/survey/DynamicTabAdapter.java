@@ -201,8 +201,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 //Hide keypad
                 hideKeyboard(listView.getContext(), listView);
-                //InputMethodManager imm = (InputMethodManager) listView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                //imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
 
                 previous();
             }
@@ -216,8 +214,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     //Hide keypad
                     hideKeyboard(listView.getContext(), listView);
-                    //InputMethodManager imm = (InputMethodManager) listView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    //imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
 
                     next();
                 }
@@ -430,8 +426,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     //Hide keypad
                     hideKeyboard(ctx, v);
-                    //InputMethodManager imm = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    //imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, positiveIntValue);
@@ -452,9 +446,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         editText.postDelayed(new Runnable() {
            @Override
            public void run() {
+               //Show keypad
                showKeyboard(ctx, editText);
-               //InputMethodManager keyboard = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
-               //keyboard.showSoftInput(editText, 0);
            }
        }, 300); //use 300 to make it run when coming back from lock screen
     }
@@ -506,8 +499,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     //Hide keypad
                     hideKeyboard(ctx, v);
-                    //InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    //imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, phoneValue);
@@ -527,11 +518,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         editText.postDelayed(new Runnable() {
             @Override
             public void run() {
+                //Show keypad
                 showKeyboard(ctx, editText);
-                //InputMethodManager keyboard = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
-                //keyboard.showSoftInput(editText, 0);
             }
-        }, 300); //use 300 to make it run when coming back from lock screen
+        }, 300);
     }
 
     /**

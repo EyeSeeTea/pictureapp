@@ -81,7 +81,7 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
             rdtSymbol = getContext().getResources().getString(R.string.symbolPlus);
         }else if(rdtValue.equals(getContext().getResources().getString(R.string.rdtNegative))){
             rdtSymbol = getContext().getResources().getString(R.string.symbolMinus);
-        }else if(rdtValue.equals(getContext().getResources().getString(R.string.rdtCancel))){
+        }else if(rdtValue.equals(getContext().getResources().getString(R.string.rdtNotTested))){
             rdtSymbol = getContext().getResources().getString(R.string.symbolCross);
         }
         rdt.setText(rdtSymbol);

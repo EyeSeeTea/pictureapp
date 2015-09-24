@@ -362,13 +362,6 @@ public class Survey extends SugarRecord<Survey> {
             add("Sex");
             add("Age");
         }};
-        /*
-        List<Long> questionIdFilter = new ArrayList<Long>() {{
-            add(0l);
-            add(1l);
-            add(2l);
-        }};
-        */
 
         while(iterator.hasNext()){
             Value value = iterator.next();

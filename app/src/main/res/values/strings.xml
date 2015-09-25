@@ -21,9 +21,10 @@
     <string name="poor">Poor</string>
     <string name="symbolPlus" translatable="false">+</string>
     <string name="symbolMinus" translatable="false">-</string>
-    <string name="symbolCross" translatable="false">x</string>
+    <string name="symbolCross" translatable="false">X</string>
     <string name="rdtPositive" translatable="false">Yes</string>
     <string name="rdtNegative" translatable="false">No</string>
+    <string name="rdtNotTested" translatable="false">Not tested</string>
     <string name="rdtCancel" translatable="false">Cancel</string>
     <string name="plus">+</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet</string>
@@ -253,16 +254,16 @@
     <string name="assessment_title_date_completion">Date</string>
 
     <!-- numbers: hardcoded to khmer -->
-    <string name="number_0">០</string>
-    <string name="number_1">១</string>
-    <string name="number_2">២</string>
-    <string name="number_3">៣</string>
-    <string name="number_4">៤</string>
-    <string name="number_5">៥</string>
-    <string name="number_6">៦</string>
-    <string name="number_7">៧</string>
-    <string name="number_8">៨</string>
-    <string name="number_9">៩</string>
+    <string name="number_0">0</string>
+    <string name="number_1">1</string>
+    <string name="number_2">2</string>
+    <string name="number_3">3</string>
+    <string name="number_4">4</string>
+    <string name="number_5">5</string>
+    <string name="number_6">6</string>
+    <string name="number_7">7</string>
+    <string name="number_8">8</string>
+    <string name="number_9">9</string>
 
     <string name="PUSH_PERIOD" translatable="false">10</string>
 </resources>

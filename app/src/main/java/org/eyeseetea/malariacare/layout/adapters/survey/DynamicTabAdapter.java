@@ -42,6 +42,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -157,7 +159,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return new ProgressTabStatus(questions);
     }
 
-    public void addOnSwipeListener(ListView listView){
+    public void addOnSwipeListener(final ListView listView){
         if(isSwipeAdded){
             return;
         }
@@ -195,7 +197,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * Swipe right listener moves to previous question
              */
             public void onSwipeRight() {
-                Log.d(TAG,"onSwipeRight(previous)");
+                Log.d(TAG, "onSwipeRight(previous)");
+
+                //Hide keypad
+                hideKeyboard(listView.getContext(), listView);
+
                 previous();
             }
 
@@ -205,6 +211,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             public void onSwipeLeft() {
                 Log.d(TAG,"onSwipeLeft(next)");
                 if(readOnly || progressTabStatus.isNextAllowed()) {
+
+                    //Hide keypad
+                    hideKeyboard(listView.getContext(), listView);
+
                     next();
                 }
             }
@@ -239,7 +249,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     @Override
     public void initializeSubscore() {
     }
-
 
     @Override
     public String getName() {
@@ -326,11 +335,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 break;
             case Constants.PHONE:
+                swipeTouchListener.clearClickableViews();
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                 tableLayout.addView(tableRow);
                 initPhoneValue(tableRow, value);
                 break;
             case Constants.POSITIVE_INT:
+                swipeTouchListener.clearClickableViews();
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_positiveint_row, tableLayout, false);
                 tableLayout.addView(tableRow);
                 initPositiveIntValue(tableRow, value);
@@ -352,6 +363,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return current.concat("/").concat(total);
     }
 
+
+    private void showKeyboard(Context c, View v){
+        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyboard.showSoftInput(v, 0);
+
+    }
+
+    private void hideKeyboard(Context c, View v){
+        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
+
     /**
      * Inits editText and button to view/edit a (positive) integer
      * @param tableRow
@@ -360,6 +384,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void initPositiveIntValue(TableRow tableRow, Value value){
         Button button=(Button)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
         final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
+        final Context ctx = tableRow.getContext();
 
         //Has value? show it
         if(value!=null){
@@ -398,15 +423,32 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         return;
                     }
 
+                    //Hide keypad
+                    hideKeyboard(ctx, v);
+
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, positiveIntValue);
                     finishOrNext();
                 }
             });
+
         }else{
             editText.setEnabled(false);
             button.setEnabled(false);
         }
+
+        //Add button to listener
+        swipeTouchListener.addClickableView(button);
+
+        //Take focus to this view
+        editText.requestFocus();
+        editText.postDelayed(new Runnable() {
+           @Override
+           public void run() {
+               //Show keypad
+               showKeyboard(ctx, editText);
+           }
+       }, 300); //use 300 to make it run when coming back from lock screen
     }
 
     /**
@@ -416,7 +458,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void initPhoneValue(TableRow tableRow, Value value){
         Button button=(Button)tableRow.findViewById(R.id.dynamic_phone_btn);
-        EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_phone_edit);
+        final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_phone_edit);
+        final Context ctx = tableRow.getContext();
 
         //Has value? show it
         if(value!=null){
@@ -425,6 +468,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Editable? add listener
         if(!readOnly){
+
             editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -452,6 +496,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         }
                     }
 
+                    //Hide keypad
+                    hideKeyboard(ctx, v);
+
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, phoneValue);
                     finishOrNext();
@@ -461,6 +508,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             editText.setEnabled(false);
             button.setEnabled(false);
         }
+
+        //Add button to listener
+        swipeTouchListener.addClickableView(button);
+
+        //Take focus to this view
+        editText.requestFocus();
+        editText.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Show keypad
+                showKeyboard(ctx, editText);
+            }
+        }, 300);
     }
 
     /**
@@ -589,7 +649,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean isDone(Value value){
         //First question + NO => true
-        if(progressTabStatus.isFirstQuestion() && value.isANo()){
+        if(progressTabStatus.isFirstQuestion() && !value.isAYes()){
             return true;
         }
 
@@ -636,6 +696,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
          * Custom gesture detector
          */
         private final GestureDetector gestureDetector;
+
         /**
          * List of clickable items inside the swipable view (buttons)
          */

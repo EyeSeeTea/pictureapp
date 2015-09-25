@@ -23,7 +23,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
@@ -80,7 +79,7 @@ public class PushService extends IntentService {
     /**
      * Push all pending surveys
      */
-    private void pushAllPendingSurveys(){
+    private void pushAllPendingSurveys() {
         Log.d(TAG,"pushAllPendingSurveys (Thread:"+Thread.currentThread().getId()+")");
 
         //Select surveys from sql
@@ -92,12 +91,15 @@ public class PushService extends IntentService {
                 PushResult result = pushClient.pushBackground();
                 if(result.isSuccessful()){
                     Log.d(TAG, "Estado del push: OK");
+
+                    //Reload data using service
+                    Intent surveysIntent=new Intent(this, SurveyService.class);
+                    surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
+                    this.startService(surveysIntent);
                 }else{
                     Log.d(TAG, "Estado del push: ERROR");
                 }
-
             }
-
         }
 
     }

@@ -183,7 +183,7 @@ public class Survey extends SugarRecord<Survey> {
         int numAnswered = Value.countBySurvey(this);
 
         for (Value value : this.getValuesFromParentQuestions()) {
-            if (value.isAYes()) {
+            if (value.isAPositive()) {
                 //There might be children no answer questions that should be skipped
                 for(Question childQuestion:value.getQuestion().getQuestionChildren()){
                     numOptional+=(childQuestion.getAnswer().getOutput()==Constants.NO_ANSWER)?0:1;
@@ -323,11 +323,11 @@ public class Survey extends SugarRecord<Survey> {
 
         Value rdtValue=_values.get(0);
 
-        return rdtValue.isAYes();
+        return rdtValue.isAPositive();
     }
 
     /**
-     * Since there are three possible values first question (RDT):'Yes','No','Cancel'
+     * Since there are three possible values first question (RDT):'Positive','Negative','Not Tested'
      * @return String
      */
     public String getRDT() {
@@ -352,10 +352,12 @@ public class Survey extends SugarRecord<Survey> {
             return "";
         }
 
-        String valuesStr="", valuesRDT;
         Iterator<Value> iterator=_values.iterator();
 
+        String valuesStr="";
         int limitFilter = 0;
+        boolean valid = true;
+
         //Define a filter to select which values will be turned into string (by question code or question id)
         List<String> questionCodeFilter = new ArrayList<String>() {{
             add("Specie");
@@ -363,29 +365,25 @@ public class Survey extends SugarRecord<Survey> {
             add("Age");
         }};
 
-        while(iterator.hasNext()){
+        while(iterator.hasNext() && valid){
             Value value = iterator.next();
             String qCode = value.getQuestion().getCode();
 
-            if(questionCodeFilter.contains(qCode)) {
-                limitFilter++;
+            // RDT is the first field
+            if(qCode.equals("RDT") && !value.isAPositive()){
+                valid = false;
+            }
 
-                valuesRDT = (value.getOption()!=null)?value.getOption().getCode():value.getValue();
-
-                if(questionCodeFilter.get(0).equals(qCode)){
-                    if(!value.isANo()) {
-                        valuesStr += valuesRDT;
-                        if (limitFilter < questionCodeFilter.size()) {
-                            valuesStr += ", ";
-                        }
-                    }
-                }else{
-                    valuesStr += valuesRDT;
+            if(valid){
+                if(questionCodeFilter.contains(qCode)) {
+                    limitFilter++;
+                    valuesStr = (value.getOption()!=null)?value.getOption().getCode():value.getValue();
                     if (limitFilter < questionCodeFilter.size()) {
                         valuesStr += ", ";
                     }
                 }
             }
+
         }
 
         return valuesStr;

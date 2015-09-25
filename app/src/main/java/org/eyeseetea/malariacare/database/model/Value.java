@@ -81,27 +81,27 @@ public class Value extends SugarRecord<Value> {
     }
 
     /**
-     * The value is 'Yes' from a dropdown
+     * The value is 'Positive' from a dropdown
      * @return true|false
      */
-    public boolean isAYes() {
-        return getOption() != null && getOption().getName().equals("Yes");
+    public boolean isAPositive() {
+        return getOption() != null && getOption().getName().equals("Positive");
     }
 
     /**
-     * The value is 'No' from a dropdown
+     * The value is 'Negative' from a dropdown
      * @return true|false
      */
-    public boolean isANo() {
-        return getOption() != null && getOption().getName().equals("No");
+    public boolean isANegative() {
+        return getOption() != null && getOption().getName().equals("Negative");
     }
 
     /**
-     * The value is 'Cancel' from a dropdown
+     * The value is 'isANotTested' from a dropdown
      * @return true|false
      */
-    public boolean isACancel() {
-        return getOption() != null && getOption().getName().equals("Cancel");
+    public boolean isANotTested() {
+        return getOption() != null && getOption().getName().equals("Not Tested");
     }
 
     public static int countBySurvey(Survey survey){

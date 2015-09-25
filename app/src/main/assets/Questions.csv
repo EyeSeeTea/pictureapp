@@ -1,7 +1,7 @@
-1;'RDT';'Rapid Diagnostic Test - Malaria';;'RDT';'OEdLEjF6Z8p';1;0;0;1;1;
-2;'Sex';'Sex';;'យែនឌ័រ';'uuudizosfpU';2;0;0;1;2;1
-3;'Age';'Age';;'ដែលមានអាយុ';'JMM92njKuSc';3;0;0;1;3;1
-4;'Specie';'Specie';;'ប្រភេទ';'X6RFHreAu0L';4;0;0;1;4;1
-5;'Treatment';'Treatment';;'ការព្យាបាល';'fNpYtVaL7OV';5;0;0;1;5;1
-6;'Risk Group';'Risk Group';;'ក្រុមដែលមានហានិភ័យ';'IR2vkwx9D8H';6;0;0;1;6;1
-7;'Patient Phone Number';'Patient Phone Number';;'លេខទូរស័ព្ទ របស់អ្នកជម្ងឺ';'rDubghVv1L8';7;0;0;1;7;1
+1;'What is your patient's RDT result?';'What is your patient's RDT result?';;'តើលទ្ធផលតេស្តឈាមរបស់អ្នកជំងឺដោយប្រើ ឧបករណ៍ RDT បង្ហាញថាជាអ្វី?';'OEdLEjF6Z8p';1;0;0;1;1;
+2;'Male or Female?';'Male or Female?';;'ប្រុស ឬ ស្រី?';'uuudizosfpU';2;0;0;1;2;1
+3;'How old is your patient (years)?';'How old is your patient (years)?';;'តើអ្នកជំងឺរបស់អ្នកមានអាយុប៉ុន្មាន​(ឆ្នាំ)?';'JMM92njKuSc';3;0;0;1;3;1
+4;'What type of malaria does your patient have?';'What type of malaria does your patient have?';;'តើអ្នកជំងឺរបស់អ្នកមានមេរោគគ្រុនចាញ់ប្រភេទអ្វី?';'X6RFHreAu0L';4;0;0;1;4;1
+5;'What type of treatment did you provide?';'What type of treatment did you provide?';;'តើការព្យាបាលបែបណាដែលអ្នកផ្តល់ជូនអ្នកជំងឺ?';'fNpYtVaL7OV';5;0;0;1;5;1
+6;'Where did your patient get malaria?';'Where did your patient get malaria?';;'តើអ្នកជំងឺឆ្លងជំងឺគ្រុនចាញ់ពីកន្លែងណា?';'IR2vkwx9D8H';6;0;0;1;6;1
+7;'Please enter your patient’s phone number.';'Please enter your patient’s phone number.';;'សូមវាយបញ្ចូលលេខទូរស័ព្ទអ្នកជំងឺ';'rDubghVv1L8';7;0;0;1;7;1

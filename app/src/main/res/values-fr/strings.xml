@@ -158,6 +158,7 @@
     <!-- dynamic -->
     <string name="dynamic_error_phone_format">"Le numéro de téléphone donné a un format incorrect"</string>
     <string name="dynamic_required_field">Ce champ est obligatoire</string>
+    <string name="dynamic_error_age">âge invalide</string>
 
     <!-- score -->
     <string name="score_title_clinical_fever">Clinical\nfever\nevaluation</string>
@@ -242,5 +243,6 @@
     <string name="number_7">7</string>
     <string name="number_8">8</string>
     <string name="number_9">9</string>
+    <string name="assessment_title_rdt">RDT</string>
 
 </resources>

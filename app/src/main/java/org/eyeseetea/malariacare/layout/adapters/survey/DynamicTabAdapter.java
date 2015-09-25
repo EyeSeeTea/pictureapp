@@ -419,7 +419,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     //Required, empty values rejected
                     if (positiveIntValue == null || "".equals(positiveIntValue)) {
-                        editText.setError(context.getString(R.string.dynamic_required_field));
+                        editText.setError(context.getString(R.string.dynamic_error_age));
                         return;
                     }
 
@@ -649,7 +649,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean isDone(Value value){
         //First question + NO => true
-        if(progressTabStatus.isFirstQuestion() && !value.isAYes()){
+        if(progressTabStatus.isFirstQuestion() && !value.isAPositive()){
             return true;
         }
 

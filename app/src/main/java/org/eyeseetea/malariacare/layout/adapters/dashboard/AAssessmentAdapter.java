@@ -21,6 +21,7 @@ package org.eyeseetea.malariacare.layout.adapters.dashboard;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,10 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
 
         //INFO
         TextCard info = (TextCard) rowView.findViewById(R.id.info);
+        //Load a font which support Khmer character
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + "KhmerOS.ttf");
+        info.setTypeface(tf);
+
         info.setText(survey.getValuesToString());
 
         rowView.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));

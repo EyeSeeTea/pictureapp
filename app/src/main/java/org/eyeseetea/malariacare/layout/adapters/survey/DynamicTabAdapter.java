@@ -28,12 +28,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
+import android.text.Html;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -74,6 +76,7 @@ import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -281,6 +284,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Question
         TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
+        //Load a font which support Khmer character
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + "KhmerOS.ttf");
+        headerView.setTypeface(tf);
         headerView.setText(question.getForm_name());
 
         //Progress

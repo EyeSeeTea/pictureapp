@@ -123,7 +123,7 @@ public class PopulateDB {
         Tab.saveInTx(tabList.values());
         Header.saveInTx(headerList.values());
         Answer.saveInTx(answerList.values());
-        OptionAttribute.saveInTx(optionAttributeList.values());
+//        OptionAttribute.saveInTx(optionAttributeList.values());
         Option.saveInTx(optionList.values());
         Question.saveInTx(questionList.values());
     }

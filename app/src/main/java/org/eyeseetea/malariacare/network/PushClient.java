@@ -38,8 +38,8 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -155,20 +155,28 @@ public class PushClient {
         object.put(TAG_EVENTDATE, android.text.format.DateFormat.format("yyyy-MM-dd", survey.getCompletionDate()));
         object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
-        object.put(TAG_COORDINATE, prepareCoordinates());
+
+        Location lastLocation = LocationMemory.get(survey.getId());
+        //If there is no location (location is required) -> exception
+        if(lastLocation==null){
+            throw new Exception(activity.getString(R.string.dialog_error_push_no_location));
+        }
+        object.put(TAG_COORDINATE, prepareCoordinates(lastLocation));
 
         Log.d(TAG, "prepareMetadata: " + object.toString());
         return object;
     }
 
-    private JSONObject prepareCoordinates() throws Exception{
-        Location lastLocation= Session.getLocation();
-        if(lastLocation==null){
-            throw new Exception(activity.getString(R.string.dialog_error_push_no_location));
+    private JSONObject prepareCoordinates(Location location) throws Exception{
+        JSONObject coordinate = new JSONObject();
+
+        if (location == null) {
+            coordinate.put(TAG_COORDINATE_LAT, JSONObject.NULL);
+            coordinate.put(TAG_COORDINATE_LNG, JSONObject.NULL);
+        } else {
+            coordinate.put(TAG_COORDINATE_LAT, location.getLatitude());
+            coordinate.put(TAG_COORDINATE_LNG, location.getLongitude());
         }
-        JSONObject coordinate=new JSONObject();
-        coordinate.put(TAG_COORDINATE_LAT,lastLocation.getLatitude());
-        coordinate.put(TAG_COORDINATE_LNG,lastLocation.getLongitude());
         return coordinate;
     }
 

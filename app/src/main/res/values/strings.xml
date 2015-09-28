@@ -2,7 +2,7 @@
 <resources>
 
     <!-- # general -->
-    <string name="app_name" translatable="false">Malaria Case Surveillance</string>
+    <string name="app_name" translatable="false">Health System QIS</string>
     <string name="developers">EyeSeeTea LTD</string>
     <string name="empty_string" translatable="false"></string>
     <string name="yes">Yes</string>
@@ -265,5 +265,12 @@
     <string name="number_8">8</string>
     <string name="number_9">9</string>
 
+    <!-- async push -->
     <string name="PUSH_PERIOD" translatable="false">10</string>
+
+    <!-- gps location -->
+    <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
+    <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
+    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
+
 </resources>

@@ -20,9 +20,12 @@
 package org.eyeseetea.malariacare;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -34,7 +37,9 @@ import android.view.Window;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
 
@@ -48,6 +53,10 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Extra param to annotate the activity to return after settings
      */
     public static final String SETTINGS_CALLER_ACTIVITY = "SETTINGS_CALLER_ACTIVITY";
+
+    private static String TAG=".BaseActivity";
+
+    private SurveyLocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +83,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Customize transitions for these activities
      */
-    protected void initTransition(){
+    protected void initTransition() {
         this.overridePendingTransition(R.transition.anim_slide_in_left, R.transition.anim_slide_out_left);
     }
 
@@ -147,7 +156,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected void goSettings(){
         Intent intentSettings=new Intent(this,SettingsActivity.class);
-        intentSettings.putExtra(SETTINGS_CALLER_ACTIVITY,this.getClass());
+        intentSettings.putExtra(SETTINGS_CALLER_ACTIVITY, this.getClass());
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
@@ -175,8 +184,41 @@ public abstract class BaseActivity extends ActionBarActivity {
         survey.save();
         Session.setSurvey(survey);
 
+        //Look for coordinates
+        prepareLocationListener(survey);
+
         //Call Survey Activity
         finishAndGo(SurveyActivity.class);
+    }
+
+    private void prepareLocationListener(Survey survey){
+
+        locationListener = new SurveyLocationListener(survey.getId());
+        LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Log.d(TAG, "requestLocationUpdates via GPS");
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
+
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            Log.d(TAG, "requestLocationUpdates via NETWORK");
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        } else {
+            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if(lastLocation != null) {
+                Log.d(TAG, "location not available via GPS|NETWORK, last know: "+lastLocation);
+                locationListener.saveLocation(lastLocation);
+            }else{
+                String defaultLatitude  = getApplicationContext().getString(R.string.GPS_LATITUDE_DEFAULT);
+                String defaultLongitude = getApplicationContext().getString(R.string.GPS_LONGITUDE_DEFAULT);
+                Location defaultLocation = new Location(getApplicationContext().getString(R.string.GPS_PROVIDER_DEFAULT));
+                defaultLocation.setLatitude(Double.parseDouble(defaultLatitude));
+                defaultLocation.setLongitude(Double.parseDouble(defaultLongitude));
+                Log.d(TAG, "location not available via GPS|NETWORK, default: "+defaultLocation);
+                locationListener.saveLocation(defaultLocation);
+            }
+        }
     }
 
     /**

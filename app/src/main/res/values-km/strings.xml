@@ -3,10 +3,12 @@
 
     <!-- # general -->
     <string name="developers">EyeSeeTea LTD</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="ok">Ok</string>
-    <string name="cancel">Cancel</string>
+    <string name="yes">បាទ/ចាស</string>
+    <string name="no">ទេ</string>
+    <string name="ok">យល់ព្រម</string>
+    <string name="cancel">បោះបង់</string>
+    <string name="review">ពិនិត្យឡើងវិញ</string>
+    <string name="send">ផ្ញើ</string>
     <string name="score">Score</string>
     <string name="number_zero">0</string>
     <string name="number_zero_percentage">0 % </string>
@@ -21,9 +23,9 @@
     <!-- settings -->
     <string name="settings_menu_about">អំពី </string>
     <string name="settings_menu_configuration">ការ​កំណត់ </string>
-    <string name="settings_menu_licence">អាជ្ញា​ប​ណ្ណ </string>
+    <string name="settings_menu_licence">អាជ្ញាប័ណ្ណ</string>
     <string name="settings_menu_update">Update questions (DHIS)</string>
-    <string name="settings_menu_logout">ចេញ </string>
+    <string name="settings_menu_logout">ចាកចេញ</string>
 
     <!-- login -->
     <string name="login_info_username">User</string>
@@ -32,8 +34,8 @@
     <string name="login_error_bad_credentials">Your user/password are incorrect</string>
 
     <!-- # dialogs -->
-    <string name="dialog_title_delete_survey">លុប​ការ​ស្ទង់​មតិ </string>
-    <string name="dialog_info_delete_survey">តើ​អ្នក​ប្រាកដ​ជា​ចង់​លុប​ទាំង​ស្រុង​ការ​ស្ទង់​មតិ​នេះ​ទេ​? </string>
+    <string name="dialog_title_delete_survey">លុប​ចោលការស្ទង់មតិ</string>
+    <string name="dialog_info_delete_survey">តើ​អ្នក​ប្រាកដ​ជា​ចង់​លុបចោល​ទាំង​ស្រុង​ការស្ទង់មតិ​នេះ​?</string>
     <string name="dialog_title_error">Error</string>
     <string name="dialog_error_denominator">Error, denominator = 0</string>
     <string name="dialog_title_missing_selection">Missing selection</string>
@@ -65,9 +67,9 @@
     <string name="assessment_sent_title_state">Status</string>
     <string name="assessment_sent_date">កាលបរិច្ឆេទបញ្ចប់</string>
     <string name="assessment_info_delete">Delete</string>
-    <string name="assessment_title_header">ការវាយតំលៃ សកម្ម</string>
-    <string name="assessment_sent_title_header">ការវាយតម្លៃ ដែលបានផ្ញើ</string>
-    <string name="assessment_title_info">ព</string>
+    <string name="assessment_title_header">ការបញ្ជូនមិនទាន់សម្រេច</string>
+    <string name="assessment_sent_title_header">ការស្ទង់មតិ​ បានផ្ញើចេញ</string>
+    <string name="assessment_title_info">ព័ត៌មាន</string>
 
 
     <!-- feedback -->
@@ -99,10 +101,10 @@
     <!-- survey -->
     <string name="survey_title_exit">Really Exit?</string>
     <string name="survey_info_exit">តើអ្នកពិត ជាចង់ចេញ ?</string>
-    <string name="survey_info_exit_delete">ការស្ទង់មតិមួយ ក្នុងការរីកចំរើន នេះ នឹងត្រូវបានលុប</string>
+    <string name="survey_info_exit_delete">ការស្ទង់មតិកំពុងដំណើរការ​ ហើយនឹងត្រូវលុបចោល</string>
     <string name="survey_info_select_tab">Select Tab: </string>
-    <string name="survey_title_completed">ការស្ទង់មតិ បានបញ្ចប់</string>
-    <string name="survey_info_completed">ការអង្កេតនេះ បានបញ្ចប់ដោយជោគជ័យ</string>
+    <string name="survey_title_completed">ការស្ទង់មតិបានបញ្ចប់</string>
+    <string name="survey_info_completed">ការស្ទង់មតិបានបញ្ចប់ដោយជោគជ័យ</string>
 
 
     <!--widget-->
@@ -160,7 +162,9 @@
     <string name="iqatab_info_supervisor_matches">Supervisor matches lab staff?</string>
 
     <!-- dynamic -->
-    <string name="dynamic_error_phone_format">ទ្រង់ទ្រាយ មិនត្រឹមត្រូវសម្រាប់ លេខទូរស័ព្ទ</string>
+    <string name="dynamic_error_phone_format">បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ</string>
+    <string name="dynamic_required_field">វាលនេះគឺត្រូវបានទាមទារ</string>
+    <string name="dynamic_error_age">អាយុមិនត្រឹមត្រូវ</string>
 
     <!-- score -->
     <string name="score_title_clinical_fever">Clinical\nfever\nevaluation</string>
@@ -182,17 +186,17 @@
     <string name="compscore_title_score_percentage">Score (%)</string>
 
     <!-- settings -->
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_settings">ការកំនត់</string>
     <string name="settings_checkbox_show_num_dems">Show num/dems</string>
     <string name="settings_checkbox_description_show_num_dems">When activated, survey questions show their numerators and denominators, used to calc the survey score</string>
-    <string name="settings_checkbox_customize_fonts">ប្ដូរតាមបំណង ពុម្ពអក្សរ</string>
-    <string name="settings_list_font_sizes">ទំហំ ពុម្ពអក្សរ</string>
+    <string name="settings_checkbox_customize_fonts">ប្តូរពុម្ពអក្សរ?</string>
+    <string name="settings_list_font_sizes">ទំហំពុម្ពអក្សរ</string>
     <string-array name="settings_array_titles_font_sizes">
-        <item>តូច បន្ថែម</item>
+        <item>តូចបំផុត</item>
         <item>តូច</item>
         <item>មធ្យម</item>
-        <item>ដែលមានទំហំធំ</item>
-        <item>បន្ថែម ដែលមានទំហំធំ</item>
+        <item>ធំំ</item>
+        <item>ធំបំផុត</item>
     </string-array>
     <string name="settings_text_dhis_server_url">DHIS Server URL</string>
     <string name="pref_header_general">General</string>
@@ -228,7 +232,19 @@
     <string name="pref_data">Data</string>
     <string name="pref_server">Server</string>
     <string name="pref_visual">Visual</string>
-    <string name="assessment_title_date_completion">កាលបរិច្ឆេត</string>
+    <string name="assessment_title_date_completion">កាលបរិច្ឆេទ</string>
 
+    <!-- numbers -->
+    <string name="number_0">០</string>
+    <string name="number_1">១</string>
+    <string name="number_2">២</string>
+    <string name="number_3">៣</string>
+    <string name="number_4">៤</string>
+    <string name="number_5">៥</string>
+    <string name="number_6">៦</string>
+    <string name="number_7">៧</string>
+    <string name="number_8">៨</string>
+    <string name="number_9">៩</string>
+    <string name="assessment_title_rdt">អ.ឌី.ធី</string>
 
 </resources>

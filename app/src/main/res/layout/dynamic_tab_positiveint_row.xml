@@ -11,21 +11,23 @@
         android:gravity="center_vertical"
         >
         <EditText
-            android:id="@+id/dynamic_phone_edit"
+            android:id="@+id/dynamic_positiveInt_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:phoneNumber="true"
+            android:inputType="number"
+            android:digits="0123456789"
             android:background="#d3d3d3"
             android:imeOptions="actionDone"
             android:singleLine="true"
             android:layout_margin="10dp"/>
         <Button
-            android:id="@+id/dynamic_phone_btn"
+            android:id="@+id/dynamic_positiveInt_btn"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="@string/ok"
             android:layout_margin="10dp"
-             />
+            />
+
     </LinearLayout>
 
 </TableRow>

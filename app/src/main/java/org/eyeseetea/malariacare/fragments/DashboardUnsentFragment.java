@@ -45,9 +45,10 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentUnsentAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
-import org.eyeseetea.malariacare.network.PushResult;
-import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.network.PushClient;
+import org.eyeseetea.malariacare.network.PushResult;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.views.TextCard;
 
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ public class DashboardUnsentFragment extends ListFragment {
     private List<Survey> surveys;
     protected IDashboardAdapter adapter;
     private static int index = 0;
+    private AlarmPushReceiver alarmPush;
 
     public DashboardUnsentFragment(){
         this.adapter = Session.getAdapterUncompleted();
@@ -88,10 +90,9 @@ public class DashboardUnsentFragment extends ListFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
         Log.d(TAG, "onCreate");
-        registerSurveysReceiver();
+        alarmPush = new AlarmPushReceiver();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -106,12 +107,19 @@ public class DashboardUnsentFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
-        Log.d(TAG, "onActivityCreated");
         initAdapter();
         initListView();
+    }
 
+
+    @Override
+    public void onResume(){
+        Log.d(TAG, "onResume");
+        registerSurveysReceiver();
+        super.onResume();
     }
 
     /**
@@ -287,12 +295,25 @@ public class DashboardUnsentFragment extends ListFragment {
     }
 
     public void reloadSurveys(List<Survey> newListSurveys){
-        Log.d(TAG, "reloadSurveys (Thread: "+Thread.currentThread().getId()+"): " + newListSurveys.size());
+        Log.d(TAG, "reloadSurveys (Thread: " + Thread.currentThread().getId() + "): " + newListSurveys.size());
         this.surveys.clear();
         this.surveys.addAll(newListSurveys);
         this.adapter.notifyDataSetChanged();
         setListShown(true);
     }
+
+    public void manageSurveysAlarm(List<Survey> newListSurveys){
+        Log.d(TAG, "setSurveysAlarm (Thread: " + Thread.currentThread().getId() + "): " + newListSurveys.size());
+
+        // if survey list is not empty: run periodic task for survey push otherwise cancel active alarm
+        if(!newListSurveys.isEmpty()) {
+            alarmPush.setPushAlarm(getActivity());
+        }else{
+            alarmPush.cancelPushAlarm(getActivity());
+        }
+    }
+
+
     /**
      * Inner private class that receives the result from the service
      */
@@ -306,6 +327,7 @@ public class DashboardUnsentFragment extends ListFragment {
             if(SurveyService.ALL_UNSENT_SURVEYS_ACTION.equals(intent.getAction())) {
                 List<Survey> surveysUnsentFromService = (List<Survey>) Session.popServiceValue(SurveyService.ALL_UNSENT_SURVEYS_ACTION);
                 reloadSurveys(surveysUnsentFromService);
+                manageSurveysAlarm(surveysUnsentFromService);
             }
         }
     }

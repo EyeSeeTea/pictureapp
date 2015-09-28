@@ -6,7 +6,9 @@
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
-    <string name="cancel">Annuler</string>
+    <string name="cancel">Cancelar</string>
+    <string name="review">Revisar</string>
+    <string name="send">Enviar</string>
     <string name="score">Puntuación</string>
     <string name="number_zero">0</string>
     <string name="number_zero_percentage">0 % </string>
@@ -62,7 +64,7 @@
     <string name="assessment_title_facility_date">Centro de salud/ Fecha</string>
     <string name="assessment_title_state">Estado</string>
     <string name="assessment_info_delete">Eliminar</string>
-    <string name="assessment_title_header">Evaluación Activa</string>
+    <string name="assessment_title_header">Pendiente de enviar</string>
 
     <!-- feedback -->
     <!-- XXX Should it be replaced by 'assessment_title_facility_date'?-->
@@ -154,6 +156,8 @@
 
     <!-- dynamic -->
     <string name="dynamic_error_phone_format">El télefono dado no esta bien formateado</string>
+    <string name="dynamic_required_field">Este campo es obligatorio</string>
+    <string name="dynamic_error_age">La edad no es válida</string>
 
     <!-- score -->
     <string name="score_title_clinical_fever">Evaluación\nde fiebre\nclínica</string>
@@ -218,7 +222,7 @@
     <string name="dialog_error_push_no_location">Localización no disponible</string>
 
     <string name="assessment_sent_title_state">Estado</string>
-    <string name="assessment_sent_title_header">Evaluación Enviada</string>
+    <string name="assessment_sent_title_header">Encuestas Enviadas</string>
     <string name="assessment_sent_date">Fecha de llenado</string>
     <string name="assessment_title_date_completion">Fecha</string>
     <string name="assessment_title_info">Info</string>
@@ -226,5 +230,18 @@
     <string name="pref_data">Datos</string>
     <string name="pref_server">Servidor</string>
     <string name="pref_visual">Visual</string>
+
+    <!-- numbers: hardcoded to khmer -->
+    <string name="number_0">0</string>
+    <string name="number_1">1</string>
+    <string name="number_2">2</string>
+    <string name="number_3">3</string>
+    <string name="number_4">4</string>
+    <string name="number_5">5</string>
+    <string name="number_6">6</string>
+    <string name="number_7">7</string>
+    <string name="number_8">8</string>
+    <string name="number_9">9</string>
+    <string name="assessment_title_rdt">RDT</string>
 
 </resources>

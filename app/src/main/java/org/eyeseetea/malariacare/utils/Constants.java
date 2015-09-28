@@ -15,11 +15,14 @@ public class Constants {
             IMAGES_2 = 10,
             IMAGES_4 = 11,
             IMAGES_6 = 12,
-            PHONE = 13;
+            PHONE = 13,
+            IMAGES_3 = 14;
 
     public static final String DEFAULT_SELECT_OPTION = "";
 
     public static final int MAX_INT_CHARS = 5;
+
+    public static final int MAX_INT_AGE = 2;
 
     // ############# TAB TYPE ###############
     public static final int TAB_AUTOMATIC_SCORED = 0,

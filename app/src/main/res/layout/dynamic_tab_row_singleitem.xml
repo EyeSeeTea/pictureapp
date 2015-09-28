@@ -6,11 +6,7 @@
     >
     <ImageView
         android:layout_height="match_parent"
-        android:layout_weight="0.5"
+        android:layout_weight="1"
         android:scaleType="centerInside"
         />
-    <ImageView
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:scaleType="centerInside"/>
 </TableRow>

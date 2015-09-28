@@ -21,20 +21,17 @@ package org.eyeseetea.malariacare.layout.adapters.dashboard;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.views.TextCard;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public abstract class AAssessmentAdapter extends ADashboardAdapter implements IDashboardAdapter {
@@ -77,10 +74,25 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
 
         //RDT
         TextCard rdt = (TextCard) rowView.findViewById(R.id.rdt);
-        rdt.setText(survey.isRDT()?"+":"-");
+        //Since there are three possible values first question (RDT):'Yes','No','Cancel'
+        //rdt.setText(survey.isRDT()?"+":"-");
+        String rdtValue = survey.getRDT();
+        String rdtSymbol = rdtValue;
+        if(rdtValue.equals(getContext().getResources().getString(R.string.rdtPositive))){
+            rdtSymbol = getContext().getResources().getString(R.string.symbolPlus);
+        }else if(rdtValue.equals(getContext().getResources().getString(R.string.rdtNegative))){
+            rdtSymbol = getContext().getResources().getString(R.string.symbolMinus);
+        }else if(rdtValue.equals(getContext().getResources().getString(R.string.rdtNotTested))){
+            rdtSymbol = getContext().getResources().getString(R.string.symbolCross);
+        }
+        rdt.setText(rdtSymbol);
 
         //INFO
         TextCard info = (TextCard) rowView.findViewById(R.id.info);
+        //Load a font which support Khmer character
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + "KhmerOS.ttf");
+        info.setTypeface(tf);
+
         info.setText(survey.getValuesToString());
 
         rowView.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));

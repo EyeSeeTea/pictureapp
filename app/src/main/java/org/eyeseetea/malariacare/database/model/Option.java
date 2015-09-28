@@ -8,18 +8,24 @@ public class Option extends SugarRecord<Option> {
     //FIXME A 'Yes' answer shows children questions, this should be configurable by some additional attribute in Option
     public static final String CHECKBOX_YES_OPTION="Yes";
 
+    String code;
     String name;
     Float factor;
     Answer answer;
     String path;
+    OptionAttribute optionAttribute;
+    String background_colour;
 
     public Option() {
     }
 
-    public Option(String name, Float factor, Answer answer) {
+    public Option(String name, Float factor, Answer answer, String code, OptionAttribute optionAttribute, String background_colour) {
         this.name = name;
         this.factor = factor;
         this.answer = answer;
+        this.code = code;
+        this.optionAttribute = optionAttribute;
+        this.background_colour = background_colour;
     }
 
     public Option(String name) {
@@ -42,6 +48,14 @@ public class Option extends SugarRecord<Option> {
         this.factor = factor;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public Answer getAnswer() {
         return answer;
     }
@@ -56,6 +70,22 @@ public class Option extends SugarRecord<Option> {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public OptionAttribute getOptionAttribute() {
+        return optionAttribute;
+    }
+
+    public void setOptionAttribute(OptionAttribute optionAttribute) {
+        this.optionAttribute = optionAttribute;
+    }
+
+    public String getBackground_colour() {
+        return background_colour;
+    }
+
+    public void setBackground_colour(String background_colour) {
+        this.background_colour = background_colour;
     }
 
     /**
@@ -81,9 +111,12 @@ public class Option extends SugarRecord<Option> {
     public String toString() {
         return "Option{" +
                 "name='" + name + '\'' +
+                ", code=" + code +
                 ", factor=" + factor +
                 ", answer=" + answer +
                 ", path=" + path +
+                ", optionAttribute=" + optionAttribute +
+                ", background_colour=" + background_colour +
                 '}';
     }
 
@@ -96,8 +129,11 @@ public class Option extends SugarRecord<Option> {
 
         if (answer != null ? !answer.equals(option.answer) : option.answer != null) return false;
         if (factor != null ? !factor.equals(option.factor) : option.factor != null) return false;
+        if (code != null ? !code.equals(option.code) : option.code != null) return false;
         if (name != null ? !name.equals(option.name) : option.name != null) return false;
         if (path != null ? !path.equals(option.path) : option.path != null) return false;
+        if (optionAttribute != null ? !optionAttribute.equals(option.optionAttribute) : option.optionAttribute != null) return false;
+        if (background_colour != null ? !background_colour.equals(option.background_colour) : option.background_colour != null) return false;
 
         return true;
     }
@@ -105,9 +141,12 @@ public class Option extends SugarRecord<Option> {
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (factor != null ? factor.hashCode() : 0);
         result = 31 * result + (answer != null ? answer.hashCode() : 0);
+        result = 31 * result + (optionAttribute != null ? optionAttribute.hashCode() : 0);
         result = 31 * result + (path != null ? path.hashCode() : 0);
+        result = 31 * result + (background_colour != null ? background_colour.hashCode() : 0);
         return result;
     }
 }

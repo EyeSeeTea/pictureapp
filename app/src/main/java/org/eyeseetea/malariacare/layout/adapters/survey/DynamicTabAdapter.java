@@ -25,31 +25,32 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.os.Handler;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
+import android.text.Html;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AdapterView;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -65,19 +66,17 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.progress.ProgressTabStatus;
-import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
-import org.eyeseetea.malariacare.views.UncheckeableRadioButton;
+import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -99,6 +98,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean isSwipeAdded;
 
+    /**
+     * Listener that detects taps on buttons & swipe
+     */
+    private OnSwipeTouchListener swipeTouchListener;
+
     //List of Headers and Questions. Each position contains an object to be showed in the listview
     List<Object> items;
     Tab tab;
@@ -113,17 +117,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Flag that indicates if the current survey in session is already sent or not (it affects readonly settings)
      */
     private boolean readOnly;
-
-    //Store the Views references for each row (to avoid many calls to getViewById)
-    static class ViewHolder {
-        //Label
-        public TextCard statement;
-
-        // Main component in the row: Spinner, EditText or RadioGroup
-        public View component;
-
-        public int type;
-    }
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
@@ -168,24 +161,68 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return new ProgressTabStatus(questions);
     }
 
-    public void addOnSwipeListener(ListView listView){
+    public void addOnSwipeListener(final ListView listView){
         if(isSwipeAdded){
             return;
         }
 
-        listView.setOnTouchListener(new OnSwipeTouchListener(context) {
+        swipeTouchListener=new OnSwipeTouchListener(context) {
+            /**
+             * Click listener for image option
+             * @param view
+             */
+            public void onClick(View view) {
+                Log.d(TAG, "onClick");
+                Option selectedOption=(Option)view.getTag();
+                Question question=progressTabStatus.getCurrentQuestion();
+                ReadWriteDB.saveValuesDDL(question, selectedOption);
+
+                ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
+                for (int rowPos = 0; rowPos < vgTable.getChildCount(); rowPos++) {
+                    ViewGroup vgRow = (ViewGroup) vgTable.getChildAt(rowPos);
+                    for (int itemPos = 0; itemPos < vgRow.getChildCount(); itemPos++) {
+                        View childItem = vgRow.getChildAt(itemPos);
+                        if (childItem instanceof ImageView) {
+                            Option otherOption=(Option)childItem.getTag();
+                            if(selectedOption.getId() != otherOption.getId()){
+                                overshadow((ImageView) childItem, otherOption);
+                            }
+                        }
+                    }
+                }
+
+                highlightSelection(view, selectedOption);
+                finishOrNext();
+            }
+
+            /**
+             * Swipe right listener moves to previous question
+             */
             public void onSwipeRight() {
-                Log.d(TAG,"onSwipeRight(previous)");
+                Log.d(TAG, "onSwipeRight(previous)");
+
+                //Hide keypad
+                hideKeyboard(listView.getContext(), listView);
+
                 previous();
             }
 
+            /**
+             * Swipe left listener moves to next question
+             */
             public void onSwipeLeft() {
                 Log.d(TAG,"onSwipeLeft(next)");
                 if(readOnly || progressTabStatus.isNextAllowed()) {
+
+                    //Hide keypad
+                    hideKeyboard(listView.getContext(), listView);
+
                     next();
                 }
             }
-        });
+        };
+
+        listView.setOnTouchListener(swipeTouchListener);
     }
 
 
@@ -214,7 +251,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     @Override
     public void initializeSubscore() {
     }
-
 
     @Override
     public String getName() {
@@ -248,6 +284,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Question
         TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
+        //Load a font which support Khmer character
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + "KhmerOS.ttf");
+        headerView.setTypeface(tf);
         headerView.setText(question.getForm_name());
 
         //Progress
@@ -255,11 +294,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         progressView.setMax(progressTabStatus.getTotalPages());
         progressView.setProgress(progressTabStatus.getCurrentPage()+1);
         TextView progressText=(TextView)rowView.findViewById(R.id.dynamic_progress_text);
-        progressText.setText(progressTabStatus.getStatusAsString());
+        progressText.setText(getLocaleProgressStatus(progressView.getProgress(), progressView.getMax()));
 
         //Options
         TableLayout tableLayout=(TableLayout)rowView.findViewById(R.id.options_table);
-
 
         TableRow tableRow=null;
         int typeQuestion=question.getAnswer().getOutput();
@@ -268,27 +306,155 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.IMAGES_4:
             case Constants.IMAGES_6:
                 List<Option> options = question.getAnswer().getOptions();
+                swipeTouchListener.clearClickableViews();
                 for(int i=0;i<options.size();i++){
+                    Option currentOption = options.get(i);
                     int mod=i%2;
                     //First item per row requires a new row
                     if(mod==0){
                         tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row,tableLayout,false);
                         tableLayout.addView(tableRow);
                     }
-                    ImageButton button = (ImageButton) tableRow.getChildAt(mod);
+                    ImageView imageButton = (ImageView) tableRow.getChildAt(mod);
+                    String backGColor = currentOption.getOptionAttribute() != null ? currentOption.getOptionAttribute().getBackground_colour() : currentOption.getBackground_colour();
+                    imageButton.setBackgroundColor(Color.parseColor("#" + backGColor));
 
-                    initOptionButton(button, options.get(i), value);
+                    initOptionButton(imageButton, currentOption, value, parent);
                 }
+                break;
+            case Constants.IMAGES_3:
+                List<Option> opts = question.getAnswer().getOptions();
+                swipeTouchListener.clearClickableViews();
+                for(int i=0;i<opts.size();i++){
 
+                    tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem,tableLayout,false);
+                    tableLayout.addView(tableRow);
+
+                    ImageView imageButton = (ImageView) tableRow.getChildAt(0);
+
+                    Option currentOption = opts.get(i);
+
+                    String backGColor = currentOption.getOptionAttribute() != null ? currentOption.getOptionAttribute().getBackground_colour() : currentOption.getBackground_colour();
+                    imageButton.setBackgroundColor(Color.parseColor("#" + backGColor));
+
+                    initOptionButton(imageButton, currentOption, value, parent);
+                }
                 break;
             case Constants.PHONE:
+                swipeTouchListener.clearClickableViews();
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                 tableLayout.addView(tableRow);
-                initPhoneValue(tableRow,value);
+                initPhoneValue(tableRow, value);
+                break;
+            case Constants.POSITIVE_INT:
+                swipeTouchListener.clearClickableViews();
+                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_positiveint_row, tableLayout, false);
+                tableLayout.addView(tableRow);
+                initPositiveIntValue(tableRow, value);
                 break;
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    /**
+     * Get status progress in locale strings
+     * @param currentPage
+     * @param totalPages
+     */
+    private String getLocaleProgressStatus(int currentPage, int totalPages){
+
+        String current = context.getResources().getString(context.getResources().getIdentifier("number_"+currentPage, "string", context.getPackageName()));
+        String total = context.getResources().getString(context.getResources().getIdentifier("number_"+totalPages, "string", context.getPackageName()));
+        return current.concat("/").concat(total);
+    }
+
+
+    private void showKeyboard(Context c, View v){
+        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyboard.showSoftInput(v, 0);
+
+    }
+
+    private void hideKeyboard(Context c, View v){
+        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
+
+    /**
+     * Inits editText and button to view/edit a (positive) integer
+     * @param tableRow
+     * @param value
+     */
+    private void initPositiveIntValue(TableRow tableRow, Value value){
+        Button button=(Button)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
+        final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
+        final Context ctx = tableRow.getContext();
+
+        //Has value? show it
+        if(value!=null){
+            editText.setText(value.getValue());
+        }
+
+        //Editable? add listener
+        if(!readOnly){
+
+            editText.setFilters(new InputFilter[]{
+                    new InputFilter.LengthFilter(Constants.MAX_INT_AGE),
+                    new MinMaxInputFilter(0, null)
+            });
+
+            editText.addTextChangedListener(new TextWatcher(){
+                public void onTextChanged(CharSequence s, int start, int before, int count){
+                    // Not allowed zero at the beginning for values greater than zero
+                    if (editText.getText().length()>1 && editText.getText().toString().matches("^0[0-9]") ){
+                        editText.setText("");
+                    }
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+                public void afterTextChanged(Editable s){}
+            });
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View parentView = (View) v.getParent();
+                    EditText editText = (EditText) parentView.findViewById(R.id.dynamic_positiveInt_edit);
+                    String positiveIntValue = editText.getText().toString();
+
+                    //Required, empty values rejected
+                    if (positiveIntValue == null || "".equals(positiveIntValue)) {
+                        editText.setError(context.getString(R.string.dynamic_error_age));
+                        return;
+                    }
+
+                    //Hide keypad
+                    hideKeyboard(ctx, v);
+
+                    Question question = progressTabStatus.getCurrentQuestion();
+                    ReadWriteDB.saveValuesText(question, positiveIntValue);
+                    finishOrNext();
+                }
+            });
+
+        }else{
+            editText.setEnabled(false);
+            button.setEnabled(false);
+        }
+
+        //Add button to listener
+        swipeTouchListener.addClickableView(button);
+
+        //Take focus to this view
+        editText.requestFocus();
+        editText.postDelayed(new Runnable() {
+           @Override
+           public void run() {
+               //Show keypad
+               showKeyboard(ctx, editText);
+           }
+       }, 300); //use 300 to make it run when coming back from lock screen
     }
 
     /**
@@ -298,7 +464,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void initPhoneValue(TableRow tableRow, Value value){
         Button button=(Button)tableRow.findViewById(R.id.dynamic_phone_btn);
-        EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_phone_edit);
+        final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_phone_edit);
+        final Context ctx = tableRow.getContext();
 
         //Has value? show it
         if(value!=null){
@@ -307,6 +474,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Editable? add listener
         if(!readOnly){
+
             editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -315,25 +483,27 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     EditText editText = (EditText) parentView.findViewById(R.id.dynamic_phone_edit);
                     String phoneValue = editText.getText().toString();
 
-                    //Required, empty values rejected
+                    //Optional, empty values allowed
                     if (phoneValue == null || "".equals(phoneValue)) {
-                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
-                        return;
+                        phoneValue = "";
+                    }else {
+                        // Check phone number format
+                        Phonenumber.PhoneNumber phoneNumber = null;
+                        try {
+                            Locale locale = context.getResources().getConfiguration().locale;
+                            phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, locale.getCountry());
+                        } catch (NumberParseException e) {
+                            editText.setError(context.getString(R.string.dynamic_error_phone_format));
+                            return;
+                        }
+                        if(!PhoneNumberUtil.getInstance().isValidNumber(phoneNumber)){
+                            editText.setError(context.getString(R.string.dynamic_error_phone_format));
+                            return;
+                        }
                     }
 
-                    // Check phone number format
-                    Phonenumber.PhoneNumber phoneNumber = null;
-                    try {
-                        Locale locale = context.getResources().getConfiguration().locale;
-                        phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, locale.getCountry());
-                    } catch (NumberParseException e) {
-                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
-                        return;
-                    }
-                    if(!PhoneNumberUtil.getInstance().isValidNumber(phoneNumber)){
-                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
-                        return;
-                    }
+                    //Hide keypad
+                    hideKeyboard(ctx, v);
 
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, phoneValue);
@@ -344,6 +514,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             editText.setEnabled(false);
             button.setEnabled(false);
         }
+
+        //Add button to listener
+        swipeTouchListener.addClickableView(button);
+
+        //Take focus to this view
+        editText.requestFocus();
+        editText.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Show keypad
+                showKeyboard(ctx, editText);
+            }
+        }, 300);
     }
 
     /**
@@ -351,16 +534,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param button
      * @param option
      */
-    private void initOptionButton(ImageButton button, Option option, Value value){
+    private void initOptionButton(ImageView button, Option option, Value value, ViewGroup parent){
+
+        // value = null --> first time calling initOptionButton
         //Highlight button
-        if(value!=null && value.getValue().equals(option.getName())){
-            Drawable selectedBackground=context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
-            if(android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
-                button.setBackground(selectedBackground);
-            }else {
-                button.setBackgroundDrawable(selectedBackground);
-            }
+        if (value != null && value.getValue().equals(option.getName())) {
+            highlightSelection(button, option);
+        } else if (value != null) {
+            overshadow(button, option);
         }
+
         //Put image
         try {
             InputStream inputStream = context.getAssets().open(option.getPath());
@@ -378,73 +561,66 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             return;
         }
 
-        //Add listener
-//        button.setOnClickListener(new View.OnClickListener() {
-//              @Override
-//              public void onClick(View v) {
-//                  Log.d(TAG, "onClick");
-//                  Option selectedOption=(Option)v.getTag();
-//                  Question question=progressTabStatus.getCurrentQuestion();
-//                  ReadWriteDB.saveValuesDDL(question, selectedOption);
-//                  finishOrNext();
-//              }
-//            }
-//        );
-        button.setOnTouchListener(new OnSwipeTouchListener(button,context) {
+        //Add button to listener
+        swipeTouchListener.addClickableView(button);
 
-            public void onClick(View view){
-                Log.d(TAG, "onClick");
-                Option selectedOption=(Option)view.getTag();
-                Question question=progressTabStatus.getCurrentQuestion();
-                ReadWriteDB.saveValuesDDL(question, selectedOption);
-                finishOrNext();
-            }
-
-            public void onSwipeRight() {
-                previous();
-            }
-
-            public void onSwipeLeft() {
-                if (readOnly || progressTabStatus.isNextAllowed()) {
-                    next();
-                }
-            }
-        });
     }
 
     /**
-     * Advance to the next question or finish survey according to question  and value.
+     * @param view
+     * @param option
      */
-    private void finishOrNext(){
-        Question question=progressTabStatus.getCurrentQuestion();
-        Value value = question.getValueBySession();
-        if(isDone(value)){
-            showDone();
-            return;
+    private void highlightSelection(View view, Option option){
+        Drawable selectedBackground = context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
+        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {    //JELLY_BEAN=API16
+            view.setBackground(selectedBackground);
+        } else {
+            view.setBackgroundDrawable(selectedBackground);
         }
-        next();
+
+        GradientDrawable bgShape = (GradientDrawable)view.getBackground();
+        String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
+        bgShape.setColor(Color.parseColor("#" + backGColor));
+
+        bgShape.setStroke(3, Color.WHITE);
+
+        ImageView v = (ImageView) view;
+        v.clearColorFilter();
     }
 
-
     /**
-     * Enables/Disables input view according to the state of the survey.
-     * Sent surveys cannot be modified.
-     *
      * @param view
      */
-    private void updateReadOnly(View view) {
-        if (view == null) {
-            return;
-        }
+    private void overshadow(ImageView view, Option option){
 
-        if (view instanceof RadioGroup) {
-            RadioGroup radioGroup = (RadioGroup) view;
-            for (int i = 0; i < radioGroup.getChildCount(); i++) {
-                radioGroup.getChildAt(i).setEnabled(!readOnly);
-            }
-        } else {
-            view.setEnabled(!readOnly);
+        //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
+        view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
+        view.setColorFilter(Color.parseColor("#805a595b"));
+
+        Drawable bg = view.getBackground();
+        if(bg instanceof GradientDrawable) {
+            GradientDrawable bgShape = (GradientDrawable)bg;
+            bgShape.setStroke(0, 0);
         }
+    }
+
+    /**
+     * Advance to the next question with delay applied or finish survey according to question and value.
+     */
+    private void finishOrNext(){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Question question = progressTabStatus.getCurrentQuestion();
+                Value value = question.getValueBySession();
+                if (isDone(value)) {
+                    showDone();
+                    return;
+                }
+                next();
+            }
+        }, 1000);
     }
 
     /**
@@ -452,14 +628,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void showDone(){
         final Activity activity=(Activity)context;
-        new AlertDialog.Builder((activity))
+        AlertDialog.Builder msgConfirmation = new AlertDialog.Builder((activity))
                 .setTitle(R.string.survey_title_completed)
                 .setMessage(R.string.survey_info_completed)
-                .setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ((SurveyActivity)activity).finishAndGo(DashboardActivity.class);
+                        ((SurveyActivity) activity).finishAndGo(DashboardActivity.class);
                     }
-                }).create().show();
+                });
+        if(!progressTabStatus.isFirstQuestion()){
+            msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int arg1) {
+                    review();
+                }
+            });
+        }
+
+        msgConfirmation.create().show();
     }
 
     /**
@@ -468,8 +653,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @return
      */
     private boolean isDone(Value value){
-        //First question  + NO => true
-        if(progressTabStatus.isFirstQuestion() && !value.isAYes()){
+        //First question + NO => true
+        if(progressTabStatus.isFirstQuestion() && !value.isAPositive()){
             return true;
         }
 
@@ -501,226 +686,129 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
-
-    public void setValues(ViewHolder viewHolder, Question question) {
-
-        switch (question.getAnswer().getOutput()) {
-            case Constants.DATE:
-            case Constants.SHORT_TEXT:
-            case Constants.INT:
-            case Constants.LONG_TEXT:
-            case Constants.POSITIVE_INT:
-            case Constants.PHONE:
-                ((EditCard) viewHolder.component).setText(ReadWriteDB.readValueQuestion(question));
-                break;
-            case Constants.DROPDOWN_LIST:
-            case Constants.IMAGES_2:
-            case Constants.IMAGES_4:
-            case Constants.IMAGES_6:
-                ((Spinner) viewHolder.component).setSelection(ReadWriteDB.readPositionOption(question));
-                break;
-            case Constants.RADIO_GROUP_HORIZONTAL:
-            case Constants.RADIO_GROUP_VERTICAL:
-                Value value = question.getValueBySession();
-                if (value != null) {
-                    ((UncheckeableRadioButton) viewHolder.component.findViewWithTag(value.getOption())).setChecked(true);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-
     /**
-     * Do the logic after a DDL option change
-     * @param viewHolder private class that acts like a cache to quickly access the different views
-     * @param question the question that changes his value
-     * @param option the option that has been selected
+     * Back to initial question to review questions
      */
-    private void itemSelected(ViewHolder viewHolder, Question question, Option option) {
-        // Write option to DB
-        ReadWriteDB.saveValuesDDL(question, option);
-    }
+    private void review(){
 
-    private View initialiseView(int resource, ViewGroup parent, Question question, ViewHolder viewHolder, int position) {
-        View rowView = lInflater.inflate(resource, parent, false);
-        if (question.hasChildren())
-            rowView.setBackgroundResource(R.drawable.background_parent);
-        else
-            rowView.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));
-
-        viewHolder.component = rowView.findViewById(R.id.answer);
-        viewHolder.statement = (TextCard) rowView.findViewById(R.id.statement);
-        viewHolder.statement.setText(question.getForm_name());
-
-        return rowView;
-    }
-
-    private void initialiseScorableComponent(View rowView, ViewHolder viewHolder) {
-        configureViewByPreference(viewHolder);
-    }
-
-    private void createRadioGroupComponent(Question question, ViewHolder viewHolder, int orientation) {
-        ((RadioGroup) viewHolder.component).setOrientation(orientation);
-
-        for (Option option : question.getAnswer().getOptions()) {
-            UncheckeableRadioButton button = (UncheckeableRadioButton) lInflater.inflate(R.layout.uncheckeable_radiobutton, null);
-            button.setOption(option);
-            button.updateProperties(PreferencesState.getInstance().getScale(), this.context.getString(R.string.font_size_level1), this.context.getString(R.string.medium_font_name));
-            ((RadioGroup) viewHolder.component).addView(button);
-        }
-
-        //Add Listener
-        ((RadioGroup) viewHolder.component).setOnCheckedChangeListener(new RadioGroupListener(question, viewHolder));
-    }
-
-    /**
-     * Set visibility of numerators and denominators depending on the user preference selected in the settings activity
-     *
-     * @param viewHolder view that holds the component to be more efficient
-     */
-    private void configureViewByPreference(ViewHolder viewHolder) {
-        float statementWeight = 0.65f;
-        float componentWeight = 0.35f;
-
-        if (PreferencesState.getInstance().isShowNumDen()) {
-            statementWeight = 0.45f;
-            componentWeight = 0.25f;
-        }
-
-        ((RelativeLayout) viewHolder.statement.getParent()).setLayoutParams(new LinearLayout.LayoutParams(0, RelativeLayout.LayoutParams.WRAP_CONTENT, statementWeight));
-        ((RelativeLayout) viewHolder.component.getParent().getParent()).setLayoutParams(new LinearLayout.LayoutParams(0, RelativeLayout.LayoutParams.WRAP_CONTENT, componentWeight));
-    }
-
-    //////////////////////////////////////
-    /////////// LISTENERS ////////////////
-    //////////////////////////////////////
-    private class TextViewListener implements TextWatcher {
-        private boolean viewCreated;
-        private Question question;
-
-        public TextViewListener(boolean viewCreated, Question question) {
-            this.viewCreated = viewCreated;
-            this.question = question;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (viewCreated) {
-                ReadWriteDB.saveValuesText(question, s.toString());
-            } else {
-                viewCreated = true;
-            }
-        }
-    }
-
-    private class SpinnerListener implements AdapterView.OnItemSelectedListener {
-
-        private boolean viewCreated;
-        private ViewHolder viewHolder;
-        private Question question;
-
-        public SpinnerListener(boolean viewCreated, Question question, ViewHolder viewHolder) {
-            this.viewCreated = viewCreated;
-            this.question = question;
-            this.viewHolder = viewHolder;
-        }
-
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-            if (viewCreated) {
-                itemSelected(viewHolder, question, (Option) ((Spinner) viewHolder.component).getItemAtPosition(pos));
-            } else {
-                viewCreated = true;
-            }
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-
-        }
-    }
-
-    public class RadioGroupListener implements RadioGroup.OnCheckedChangeListener {
-        private ViewHolder viewHolder;
-        private Question question;
-
-        public RadioGroupListener(Question question, ViewHolder viewHolder) {
-            this.question = question;
-            this.viewHolder = viewHolder;
-        }
-
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            if(!group.isShown()){
-                return;
-            }
-
-            Option option = new Option(Constants.DEFAULT_SELECT_OPTION);
-            if (checkedId != -1) {
-                UncheckeableRadioButton uncheckeableRadioButton = (UncheckeableRadioButton) (this.viewHolder.component).findViewById(checkedId);
-                option = (Option) uncheckeableRadioButton.getTag();
-            }
-            itemSelected(viewHolder, question, option);
-        }
+        progressTabStatus.getFirstQuestion();
+        notifyDataSetChanged();
     }
 
     public class OnSwipeTouchListener implements View.OnTouchListener {
 
+        /**
+         * Custom gesture detector
+         */
         private final GestureDetector gestureDetector;
 
-        private final View view;
+        /**
+         * List of clickable items inside the swipable view (buttons)
+         */
+        private final List<View> clickableViews;
 
         public OnSwipeTouchListener (Context ctx){
             gestureDetector = new GestureDetector(ctx, new GestureListener());
-            view=null;
-        }
-
-        public OnSwipeTouchListener (View v, Context ctx){
-            gestureDetector = new GestureDetector(ctx, new GestureListener());
-            view=v;
+            clickableViews =new ArrayList<>();
         }
 
         @Override
+        /**
+         * Delegates any touch into the our custom gesture detector
+         */
         public boolean onTouch(View v, MotionEvent event) {
+//            Log.d(TAG, "onTouch: " + v.toString() + "\t (" + this.toString() + ")");
             return gestureDetector.onTouchEvent(event);
         }
 
+        /**
+         * Adds a clickable view
+         * @param view
+         */
+        public void addClickableView(View view){
+            clickableViews.add(view);
+        }
+
+        /**
+         * Clears the list of clickable items
+         */
+        public void clearClickableViews(){
+            clickableViews.clear();
+        }
+
+        /**
+         * Calculates de clickable view that has been 'clicked' in the given event
+         * @param event
+         * @return Returns de touched view or null otherwise
+         */
+        public View findViewByCoords(MotionEvent event){
+            float x=event.getRawX();
+            float y=event.getRawY();
+            for(View v: clickableViews){
+                Rect visibleRectangle = new Rect();
+                v.getGlobalVisibleRect(visibleRectangle);
+                //Image/Button clicked
+//                Log.d(TAG,String.format("findViewByCoords(%d,%d,%d,%d)",visibleRectangle.left,visibleRectangle.top,visibleRectangle.right, visibleRectangle.bottom));
+                if(x>=visibleRectangle.left && x<=visibleRectangle.right && y>=visibleRectangle.top && y<=visibleRectangle.bottom){
+                    return v;
+                }
+            }
+
+            return null;
+        }
+
+        public void onClick(View view){
+//            Log.e(".DynamicTabAdapter", "empty onclick");
+        }
+
+        public void onSwipeRight(){
+//            Log.e(TAG, "onSwipeRight(DEFAULT)");
+        }
+
+        public void onSwipeLeft(){
+//            Log.e(TAG, "onSwipeLeft(DEFAULT)");
+        }
+
+        /**
+         * Our own custom gesture detector that distinguishes between onFling and a SingleTap
+         */
         private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
             private static final int SWIPE_THRESHOLD = 50;
             private static final int SWIPE_VELOCITY_THRESHOLD = 50;
 
+            private float lastX;
+
             @Override
             public boolean onSingleTapConfirmed(MotionEvent event){
-                Log.d(TAG, "onSingleTapConfirmed");
-                onClick(view);
-                return true;
+//              Log.d(TAG, String.format("onSingleTapConfirmed: %f %f", event.getX(), event.getY()));
+
+                //Find the clicked button
+                View clickedView=findViewByCoords(event);
+
+                //If found
+                if(clickedView!=null) {
+                    //delegate onClick
+                    onClick(clickedView);
+                    return true;
+                }
+                
+                //Not found, not consumed
+                return false;
             }
 
             @Override
             public boolean onDown(MotionEvent e) {
-                Log.d(TAG, "onDown: "+e.getX());
+                lastX=e.getX();
+//                Log.d(TAG, "onDown: "+lastX);
                 return true;
             }
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                boolean result = false;
                 try {
-                    float diffX = e2.getX() - safeGetX(e1);
-                    Log.d(TAG, "onFling: diffX: "+diffX);
+                    float diffX = e2.getX()-((e1==null)?lastX:e1.getX());
+//                    Log.d(TAG, String.format("onFling (%f): diffX: %f, velocityX: %f",lastX, diffX, velocityX));
                     if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffX > 0) {
                             onSwipeRight();
@@ -728,39 +816,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             onSwipeLeft();
                         }
                     }
-                    result = true;
-
+                    return true;
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
-                return result;
+                return false;
             }
         }
 
-        /**
-         * Sometimes event1 comes as NULL, this is a workaround to solve this
-         * @param event
-         * @return
-         */
-        private float safeGetX(MotionEvent event){
-            if(event==null){
-                WindowManager windowManager = (WindowManager) context
-                        .getSystemService(Context.WINDOW_SERVICE);
-                Display display = windowManager.getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                return (float)size.x;
-            }
-            return event.getX();
-        }
-
-        public void onClick(View view){
-            Log.e(".DynamicTabAdapter", "empty onclick");
-        }
-
-        public void onSwipeRight(){}
-
-        public void onSwipeLeft(){}
     }
 
 }

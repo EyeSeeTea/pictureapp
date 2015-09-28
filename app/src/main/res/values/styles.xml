@@ -20,7 +20,7 @@
         <item name="colorPrimaryDark">@color/dark_navy_blue</item>
         <item name="android:windowBackground">@color/light_grey</item>
         <item name="displayOptions">useLogo|showHome|homeAsUp|showTitle</item>
-        <item name="logo">@drawable/qualityapp_logo</item>
+        <item name="logo">@drawable/pictureapp_logo</item>
         <item name="android:windowActionBarOverlay">true</item>
     </style>
 

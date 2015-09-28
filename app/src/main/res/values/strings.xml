@@ -2,13 +2,15 @@
 <resources>
 
     <!-- # general -->
-    <string name="app_name" translatable="false">Malaria Case Surveillance</string>
+    <string name="app_name" translatable="false">QIS Surveillance</string>
     <string name="developers">EyeSeeTea LTD</string>
     <string name="empty_string" translatable="false"></string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
+    <string name="review">Review</string>
+    <string name="send">Send</string>
     <string name="score">Score</string>
     <string name="number_zero">0</string>
     <string name="number_zero_percentage">0 % </string>
@@ -17,6 +19,13 @@
     <string name="good">Good</string>
     <string name="fair">Fair</string>
     <string name="poor">Poor</string>
+    <string name="symbolPlus" translatable="false">+</string>
+    <string name="symbolMinus" translatable="false">-</string>
+    <string name="symbolCross" translatable="false">X</string>
+    <string name="rdtPositive" translatable="false">Positive</string>
+    <string name="rdtNegative" translatable="false">Negative</string>
+    <string name="rdtNotTested" translatable="false">Not Tested</string>
+    <string name="rdtCancel" translatable="false">Cancel</string>
     <string name="plus">+</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet</string>
 
@@ -62,16 +71,15 @@
     <string name="create_info_survey">Survey</string>
 
     <!-- assessment -->
+    <string name="assessment_title_header">Pending Send</string>
+    <string name="assessment_title_rdt">RDT</string>
+    <string name="assessment_title_info">Info</string>
     <string name="assessment_title_facility_date">Facility / Survey</string>
     <string name="assessment_title_state">% complete</string>
+    <string name="assessment_sent_title_header">Sent Surveys</string>
     <string name="assessment_sent_title_state">Status</string>
-    <string name="assessment_sent_date">Completion date</string>
+    <string name="assessment_sent_date">Date</string>
     <string name="assessment_info_delete">Delete</string>
-    <string name="assessment_title_header">Active Assessment</string>
-    <string name="assessment_sent_title_header">Sent Assessment</string>
-    <string name="assessment_title_rdt" translatable="false">RDT</string>
-    <string name="assessment_title_info">Info</string>
-
 
     <!-- feedback -->
     <!-- XXX Should it be replaced by 'assessment_title_facility_date'?-->
@@ -164,6 +172,8 @@
 
     <!-- dynamic -->
     <string name="dynamic_error_phone_format">Invalid format for phone number</string>
+    <string name="dynamic_required_field">This field is required</string>
+    <string name="dynamic_error_age">Invalid age</string>
 
     <!-- score -->
     <string name="score_title_clinical_fever">Clinical\nfever\nevaluation</string>
@@ -243,5 +253,24 @@
     <string name="pref_visual">Visual</string>
     <string name="assessment_title_date_completion">Date</string>
 
+    <!-- numbers: hardcoded to khmer -->
+    <string name="number_0">0</string>
+    <string name="number_1">1</string>
+    <string name="number_2">2</string>
+    <string name="number_3">3</string>
+    <string name="number_4">4</string>
+    <string name="number_5">5</string>
+    <string name="number_6">6</string>
+    <string name="number_7">7</string>
+    <string name="number_8">8</string>
+    <string name="number_9">9</string>
+
+    <!-- async push -->
+    <string name="PUSH_PERIOD" translatable="false">10</string>
+
+    <!-- gps location -->
+    <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
+    <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
+    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
 
 </resources>

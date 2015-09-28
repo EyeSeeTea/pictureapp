@@ -92,7 +92,8 @@ public class PopulateDB {
                         option.setAnswer(answerList.get(Integer.valueOf(line[4])));
                         option.setPath(line[5]);
                         if (!line[6].equals(""))
-                            option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[6])));
+                        option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[6])));
+                        option.setBackground_colour(line[7]);
                         optionList.put(Integer.valueOf(line[0]), option);
                         break;
                     case QUESTIONS_CSV:

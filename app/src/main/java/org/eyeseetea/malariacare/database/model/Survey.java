@@ -32,8 +32,10 @@ import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class Survey extends SugarRecord<Survey> {
 
@@ -183,7 +185,7 @@ public class Survey extends SugarRecord<Survey> {
         int numAnswered = Value.countBySurvey(this);
 
         for (Value value : this.getValuesFromParentQuestions()) {
-            if (value.isAYes()) {
+            if (value.isAPositive()) {
                 //There might be children no answer questions that should be skipped
                 for(Question childQuestion:value.getQuestion().getQuestionChildren()){
                     numOptional+=(childQuestion.getAnswer().getOutput()==Constants.NO_ANSWER)?0:1;
@@ -323,11 +325,11 @@ public class Survey extends SugarRecord<Survey> {
 
         Value rdtValue=_values.get(0);
 
-        return rdtValue.isAYes();
+        return rdtValue.isAPositive();
     }
 
     /**
-     * Since there are three possible values first question (RDT):'Yes','No','Cancel'
+     * Since there are three possible values first question (RDT):'Positive','Negative','Not Tested'
      * @return String
      */
     public String getRDT() {
@@ -352,38 +354,40 @@ public class Survey extends SugarRecord<Survey> {
             return "";
         }
 
-        String valuesStr="", valuesRDT;
         Iterator<Value> iterator=_values.iterator();
 
-        int limitFilter = 0;
-        //Define a filter to select which values will be turned into string (by question code or question id)
-        List<String> questionCodeFilter = new ArrayList<String>() {{
-            add("Specie");
-            add("Sex");
-            add("Age");
+        String valuesStr="";
+        boolean valid = true;
+
+        //Define a filter to select which values will be turned into string by code_question
+        List<String> codeQuestionFilter = new ArrayList<String>() {{
+            add("Specie");  //4
+            add("Sex");     //2
+            add("Age");     //3
         }};
 
-        while(iterator.hasNext()){
+        Map mapa = new HashMap<String, String>();
+        while(iterator.hasNext() && valid){
             Value value = iterator.next();
             String qCode = value.getQuestion().getCode();
 
-            if(questionCodeFilter.contains(qCode)) {
-                limitFilter++;
+            // RDT is the first field: if it is not Positive no values are shown
+            if(("RDT").equals(qCode) && !value.isAPositive()){
+                valid = false;
+            }else{
+                if(codeQuestionFilter.contains(qCode)) {
+                    String val = (value.getOption()!=null)?value.getOption().getCode():value.getValue();
+                    mapa.put(qCode, val);
+                }
+            }
+        }
 
-                valuesRDT = (value.getOption()!=null)?value.getOption().getCode():value.getValue();
-
-                if(questionCodeFilter.get(0).equals(qCode)){
-                    if(!value.isANo()) {
-                        valuesStr += valuesRDT;
-                        if (limitFilter < questionCodeFilter.size()) {
-                            valuesStr += ", ";
-                        }
-                    }
-                }else{
-                    valuesStr += valuesRDT;
-                    if (limitFilter < questionCodeFilter.size()) {
-                        valuesStr += ", ";
-                    }
+        if(valid) {
+            //Sort values
+            for(int i=0; i<codeQuestionFilter.size(); i++){
+                valuesStr += mapa.get(codeQuestionFilter.get(i));
+                if (i < codeQuestionFilter.size()-1) {
+                    valuesStr += ", ";
                 }
             }
         }

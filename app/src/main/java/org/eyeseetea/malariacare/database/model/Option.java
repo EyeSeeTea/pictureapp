@@ -14,16 +14,18 @@ public class Option extends SugarRecord<Option> {
     Answer answer;
     String path;
     OptionAttribute optionAttribute;
+    String background_colour;
 
     public Option() {
     }
 
-    public Option(String name, Float factor, Answer answer, String code, OptionAttribute optionAttribute) {
+    public Option(String name, Float factor, Answer answer, String code, OptionAttribute optionAttribute, String background_colour) {
         this.name = name;
         this.factor = factor;
         this.answer = answer;
         this.code = code;
         this.optionAttribute = optionAttribute;
+        this.background_colour = background_colour;
     }
 
     public Option(String name) {
@@ -78,6 +80,14 @@ public class Option extends SugarRecord<Option> {
         this.optionAttribute = optionAttribute;
     }
 
+    public String getBackground_colour() {
+        return background_colour;
+    }
+
+    public void setBackground_colour(String background_colour) {
+        this.background_colour = background_colour;
+    }
+
     /**
      * Checks if this option actives the children questions
      * @return true: Children questions should be shown, false: otherwise.
@@ -106,6 +116,7 @@ public class Option extends SugarRecord<Option> {
                 ", answer=" + answer +
                 ", path=" + path +
                 ", optionAttribute=" + optionAttribute +
+                ", background_colour=" + background_colour +
                 '}';
     }
 
@@ -122,6 +133,7 @@ public class Option extends SugarRecord<Option> {
         if (name != null ? !name.equals(option.name) : option.name != null) return false;
         if (path != null ? !path.equals(option.path) : option.path != null) return false;
         if (optionAttribute != null ? !optionAttribute.equals(option.optionAttribute) : option.optionAttribute != null) return false;
+        if (background_colour != null ? !background_colour.equals(option.background_colour) : option.background_colour != null) return false;
 
         return true;
     }
@@ -134,6 +146,7 @@ public class Option extends SugarRecord<Option> {
         result = 31 * result + (answer != null ? answer.hashCode() : 0);
         result = 31 * result + (optionAttribute != null ? optionAttribute.hashCode() : 0);
         result = 31 * result + (path != null ? path.hashCode() : 0);
+        result = 31 * result + (background_colour != null ? background_colour.hashCode() : 0);
         return result;
     }
 }

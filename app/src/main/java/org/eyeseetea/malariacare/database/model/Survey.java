@@ -32,8 +32,10 @@ import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class Survey extends SugarRecord<Survey> {
 
@@ -355,35 +357,39 @@ public class Survey extends SugarRecord<Survey> {
         Iterator<Value> iterator=_values.iterator();
 
         String valuesStr="";
-        int limitFilter = 0;
         boolean valid = true;
 
-        //Define a filter to select which values will be turned into string (by question code or question id)
-        List<String> questionCodeFilter = new ArrayList<String>() {{
-            add("Specie");
-            add("Sex");
-            add("Age");
+        //Define a filter to select which values will be turned into string by code_question
+        List<String> codeQuestionFilter = new ArrayList<String>() {{
+            add("Specie");  //4
+            add("Sex");     //2
+            add("Age");     //3
         }};
 
+        Map mapa = new HashMap<String, String>();
         while(iterator.hasNext() && valid){
             Value value = iterator.next();
             String qCode = value.getQuestion().getCode();
 
-            // RDT is the first field
-            if(qCode.equals("RDT") && !value.isAPositive()){
+            // RDT is the first field: if it is not Positive no values are shown
+            if(("RDT").equals(qCode) && !value.isAPositive()){
                 valid = false;
-            }
-
-            if(valid){
-                if(questionCodeFilter.contains(qCode)) {
-                    limitFilter++;
-                    valuesStr = (value.getOption()!=null)?value.getOption().getCode():value.getValue();
-                    if (limitFilter < questionCodeFilter.size()) {
-                        valuesStr += ", ";
-                    }
+            }else{
+                if(codeQuestionFilter.contains(qCode)) {
+                    String val = (value.getOption()!=null)?value.getOption().getCode():value.getValue();
+                    mapa.put(qCode, val);
                 }
             }
+        }
 
+        if(valid) {
+            //Sort values
+            for(int i=0; i<codeQuestionFilter.size(); i++){
+                valuesStr += mapa.get(codeQuestionFilter.get(i));
+                if (i < codeQuestionFilter.size()-1) {
+                    valuesStr += ", ";
+                }
+            }
         }
 
         return valuesStr;

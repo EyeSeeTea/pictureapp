@@ -42,7 +42,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -311,9 +310,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         tableLayout.addView(tableRow);
                     }
                     ImageView imageButton = (ImageView) tableRow.getChildAt(mod);
-                    if (currentOption.getOptionAttribute() != null && currentOption.getOptionAttribute().getBackground_colour() != null) {
-                        imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getOptionAttribute().getBackground_colour()));
-                    }
+                    String backGColor = currentOption.getOptionAttribute() != null ? currentOption.getOptionAttribute().getBackground_colour() : currentOption.getBackground_colour();
+                    imageButton.setBackgroundColor(Color.parseColor("#" + backGColor));
+
                     initOptionButton(imageButton, currentOption, value, parent);
                 }
                 break;
@@ -328,9 +327,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     ImageView imageButton = (ImageView) tableRow.getChildAt(0);
 
                     Option currentOption = opts.get(i);
-                    if (currentOption.getOptionAttribute() != null && currentOption.getOptionAttribute().getBackground_colour() != null) {
-                        imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getOptionAttribute().getBackground_colour()));
-                    }
+
+                    String backGColor = currentOption.getOptionAttribute() != null ? currentOption.getOptionAttribute().getBackground_colour() : currentOption.getBackground_colour();
+                    imageButton.setBackgroundColor(Color.parseColor("#" + backGColor));
+
                     initOptionButton(imageButton, currentOption, value, parent);
                 }
                 break;
@@ -530,14 +530,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void initOptionButton(ImageView button, Option option, Value value, ViewGroup parent){
 
-        if (option.getOptionAttribute() != null && option.getOptionAttribute().getBackground_colour() != null) {
-            //Highlight button
-            if (value != null && value.getValue().equals(option.getName())) {
-                highlightSelection(button, option);
-            } else if (value != null) {
-                overshadow(button, option);
-            }
+        // value = null --> first time calling initOptionButton
+        //Highlight button
+        if (value != null && value.getValue().equals(option.getName())) {
+            highlightSelection(button, option);
+        } else if (value != null) {
+            overshadow(button, option);
         }
+
         //Put image
         try {
             InputStream inputStream = context.getAssets().open(option.getPath());
@@ -566,14 +566,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void highlightSelection(View view, Option option){
         Drawable selectedBackground = context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
-        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {    //JELLY_BEAN=API16
             view.setBackground(selectedBackground);
         } else {
             view.setBackgroundDrawable(selectedBackground);
         }
 
         GradientDrawable bgShape = (GradientDrawable)view.getBackground();
-        bgShape.setColor(Color.parseColor("#" + option.getOptionAttribute().getBackground_colour()));
+        String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
+        bgShape.setColor(Color.parseColor("#" + backGColor));
+
         bgShape.setStroke(3, Color.WHITE);
 
         ImageView v = (ImageView) view;
@@ -584,13 +586,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param view
      */
     private void overshadow(ImageView view, Option option){
-        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-            view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
-            view.setColorFilter(Color.parseColor("#805a595b"));
-        } else {
-            view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
-            view.setColorFilter(Color.parseColor("#805a595b"));
-        }
+
+        //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
+        view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
+        view.setColorFilter(Color.parseColor("#805a595b"));
 
         Drawable bg = view.getBackground();
         if(bg instanceof GradientDrawable) {

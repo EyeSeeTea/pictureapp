@@ -64,6 +64,11 @@ public class SurveyService extends IntentService {
     public static final String ALL_SENT_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.SurveyService.ALL_SENT_SURVEYS_ACTION";
 
     /**
+     * Name of 'remove list completed' action
+     */
+    public static final String REMOVE_SENT_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.SurveyService.REMOVE_SENT_SURVEYS_ACTION";
+
+    /**
      * Name of 'reload' action which returns both lists (unsent, sent)
      */
     public static final String RELOAD_DASHBOARD_ACTION ="org.eyeseetea.malariacare.services.SurveyService.RELOAD_DASHBOARD_ACTION";
@@ -118,6 +123,9 @@ public class SurveyService extends IntentService {
                 break;
             case ALL_SENT_SURVEYS_ACTION:
                 getAllSentSurveys();
+                break;
+            case REMOVE_SENT_SURVEYS_ACTION:
+                removeAllSentSurveys();
                 break;
             case RELOAD_DASHBOARD_ACTION:
                 reloadDashboard();
@@ -188,6 +196,18 @@ public class SurveyService extends IntentService {
         //Returning result to anyone listening
         Intent resultIntent= new Intent(ALL_SENT_SURVEYS_ACTION);
         LocalBroadcastManager.getInstance(this).sendBroadcast(resultIntent);
+    }
+    /**
+     * Remove all sent surveys from database
+     */
+    private void removeAllSentSurveys(){
+        Log.d(TAG,"removeAllSentSurveys (Thread:"+Thread.currentThread().getId()+")");
+
+        //Select surveys from sql
+        List<Survey> surveys = Survey.getAllSentSurveys();
+        for(int i=0;i<surveys.size();i++){
+            surveys.get(i).delete();
+        }
     }
 
     private void getAllUncompletedSurveys(){

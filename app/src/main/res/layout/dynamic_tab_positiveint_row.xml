@@ -10,15 +10,11 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         >
-        <EditText
+        <NumberPicker
             android:id="@+id/dynamic_positiveInt_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:digits="0123456789"
             android:background="#d3d3d3"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
             android:layout_margin="10dp"/>
         <Button
             android:id="@+id/dynamic_positiveInt_btn"

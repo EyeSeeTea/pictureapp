@@ -22,7 +22,7 @@ public class Constants {
 
     public static final int MAX_INT_CHARS = 5;
 
-    public static final int MAX_INT_AGE = 2;
+    public static final int MAX_INT_AGE = 99;
 
     // ############# TAB TYPE ###############
     public static final int TAB_AUTOMATIC_SCORED = 0,

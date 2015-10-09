@@ -185,7 +185,7 @@ public class SurveyService extends IntentService {
      * Selects all sent surveys from database
      */
     private void getAllSentSurveys(){
-        Log.d(TAG,"getAllUnsentSurveys (Thread:"+Thread.currentThread().getId()+")");
+        Log.d(TAG,"getAllSentSurveys (Thread:"+Thread.currentThread().getId()+")");
 
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllSentSurveys();
@@ -203,7 +203,7 @@ public class SurveyService extends IntentService {
     private void removeAllSentSurveys(){
         Log.d(TAG,"removeAllSentSurveys (Thread:"+Thread.currentThread().getId()+")");
 
-        //Select surveys from sql
+        //Select all sent surveys from sql and delete.
         List<Survey> surveys = Survey.getAllSentSurveys();
         for(int i=0;i<surveys.size();i++){
             surveys.get(i).delete();
@@ -211,7 +211,7 @@ public class SurveyService extends IntentService {
     }
 
     private void getAllUncompletedSurveys(){
-        Log.d(TAG,"getAllUnsentSurveys (Thread:"+Thread.currentThread().getId()+")");
+        Log.d(TAG,"getAllUncompletedSurveys (Thread:"+Thread.currentThread().getId()+")");
 
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllUncompletedSurveys();
@@ -230,7 +230,7 @@ public class SurveyService extends IntentService {
     }
 
     private void getAllCompletedSurveys(){
-        Log.d(TAG,"getAllUnsentSurveys (Thread:"+Thread.currentThread().getId()+")");
+        Log.d(TAG,"getAllCompletedSurveys (Thread:"+Thread.currentThread().getId()+")");
 
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllCompletedSurveys();

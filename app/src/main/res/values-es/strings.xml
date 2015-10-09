@@ -23,6 +23,7 @@
     <!-- settings -->
     <string name="settings_menu_about">Acerca de</string>
     <string name="settings_menu_configuration">Configuración</string>
+    <string name="settings_menu_delete">Borrar todas las encuestas enviadas</string>
     <string name="settings_menu_licence">Licencia</string>
     <string name="settings_menu_update">Actualizar preguntas (DHIS)</string>
     <string name="settings_menu_logout">Desconectar</string>
@@ -34,6 +35,7 @@
     <string name="login_error_bad_credentials">El usuario/contraseña es incorrecto</string>
 
     <!-- # dialogs -->
+    <string name="dialog_title_delete_surveys">¿Está seguro de querer borrar todas las encuestas enviadas?</string>
     <string name="dialog_title_delete_survey">Borrar evaluación</string>
     <string name="dialog_info_delete_survey">¿Seguro que desea borrar la evaluación?</string>
     <string name="dialog_title_error">Error</string>

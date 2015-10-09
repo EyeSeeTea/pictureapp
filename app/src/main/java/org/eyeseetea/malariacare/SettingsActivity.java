@@ -38,6 +38,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.util.List;
 
@@ -130,8 +131,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     private void removeSentSurveys() {
-
-
+        Intent surveysIntent=new Intent(this, SurveyService.class);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.REMOVE_SENT_SURVEYS_ACTION);
+        this.startService(surveysIntent);
     }
 
 

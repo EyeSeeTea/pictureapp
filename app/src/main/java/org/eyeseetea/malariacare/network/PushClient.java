@@ -20,8 +20,10 @@
 package org.eyeseetea.malariacare.network;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
@@ -60,7 +62,8 @@ public class PushClient {
 
     private static String TAG=".PushClient";
 
-    //FIXME This should change for a sharedpreferences url that is selected from the login screen
+    //This change for a sharedpreferences url that is selected from the settings screen
+
     private static String DHIS_DEFAULT_SERVER="https://malariacare.psi.org";
     private static String DHIS_PUSH_API="/api/events";
     private static String DHIS_PULL_ORG_UNITS_API="/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:%s";
@@ -68,6 +71,8 @@ public class PushClient {
     private static String DHIS_PASSWORD="Testing2015";
     private static String DHIS_DEFAULT_CODE="KH_Cambodia";
 
+    private static String PHONE_IMEI="";
+    private static String PHONE_NUMBER="";
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -84,6 +89,8 @@ public class PushClient {
     private static String TAG_DATAVALUES="dataValues";
     private static String TAG_DATAELEMENT="dataElement";
     private static String TAG_VALUE="value";
+    private static String TAG_IMEI="imei";
+    private static String TAG_PHONE="phone";
 
 
     Survey survey;
@@ -96,6 +103,18 @@ public class PushClient {
 
     public PushClient(Survey survey) {
         this.survey = survey;
+    }
+
+    public void setUrlPreferentShared(String url) {
+        DHIS_DEFAULT_SERVER=url;
+    }
+
+    public void setPhone(String phone) {
+        PHONE_IMEI=phone;
+    }
+
+    public void setImei(String imei) {
+        PHONE_IMEI=imei;
     }
 
     public PushResult push() {
@@ -147,7 +166,7 @@ public class PushClient {
      * @throws Exception
      */
     private JSONObject prepareMetadata() throws Exception{
-        Log.d(TAG,"prepareMetadata for survey: "+survey.getId());
+        Log.d(TAG, "prepareMetadata for survey: " + survey.getId());
 
         JSONObject object=new JSONObject();
         object.put(TAG_PROGRAM, survey.getProgram().getUid());
@@ -155,7 +174,9 @@ public class PushClient {
         object.put(TAG_EVENTDATE, android.text.format.DateFormat.format("yyyy-MM-dd", survey.getCompletionDate()));
         object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
-
+        //TODO: put it in the object.
+        Log.d(TAG_IMEI, "numero imei" + PHONE_IMEI);
+        Log.d(TAG_PHONE, "numero telefono" + PHONE_NUMBER);
         Location lastLocation = LocationMemory.get(survey.getId());
         //If there is no location (location is required) -> exception
         if(lastLocation==null){

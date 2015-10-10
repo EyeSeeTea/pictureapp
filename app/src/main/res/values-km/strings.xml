@@ -23,6 +23,7 @@
     <!-- settings -->
     <string name="settings_menu_about">អំពី </string>
     <string name="settings_menu_configuration">ការ​កំណត់ </string>
+    <string name="settings_menu_delete">ការស្ទង់មតិ ដែលបានផ្ញើ ទាំងអស់ យក</string>
     <string name="settings_menu_licence">អាជ្ញាប័ណ្ណ</string>
     <string name="settings_menu_update">Update questions (DHIS)</string>
     <string name="settings_menu_logout">ចាកចេញ</string>
@@ -34,6 +35,7 @@
     <string name="login_error_bad_credentials">Your user/password are incorrect</string>
 
     <!-- # dialogs -->
+    <string name="dialog_title_delete_surveys">តើអ្នកប្រាកដថា អ្នកចង់យក ការស្ទង់មតិ ដែលបានផ្ញើ ទាំងអស់?</string>
     <string name="dialog_title_delete_survey">លុប​ចោលការស្ទង់មតិ</string>
     <string name="dialog_info_delete_survey">តើ​អ្នក​ប្រាកដ​ជា​ចង់​លុបចោល​ទាំង​ស្រុង​ការស្ទង់មតិ​នេះ​?</string>
     <string name="dialog_title_error">Error</string>

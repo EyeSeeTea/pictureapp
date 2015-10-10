@@ -50,6 +50,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -383,55 +384,29 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
 
     /**
-     * Inits editText and button to view/edit a (positive) integer
+     * Inits NumberPicker and button to view/edit a integer between 0 and Constants.MAX_INT_AGE
      * @param tableRow
      * @param value
      */
     private void initPositiveIntValue(TableRow tableRow, Value value){
         Button button=(Button)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
-        final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
-        final Context ctx = tableRow.getContext();
+        final NumberPicker numberPicker=(NumberPicker)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
+
+        //Without setMinValue, setMaxValue, setValue in this order, the setValue is not displayed in the screen.
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(Constants.MAX_INT_AGE);
 
         //Has value? show it
         if(value!=null){
-            editText.setText(value.getValue());
+            numberPicker.setValue(Integer.parseInt(value.getValue()));
         }
 
-        //Editable? add listener
-        if(!readOnly){
-
-            editText.setFilters(new InputFilter[]{
-                    new InputFilter.LengthFilter(Constants.MAX_INT_AGE),
-                    new MinMaxInputFilter(0, null)
-            });
-
-            editText.addTextChangedListener(new TextWatcher(){
-                public void onTextChanged(CharSequence s, int start, int before, int count){
-                    // Not allowed zero at the beginning for values greater than zero
-                    if (editText.getText().length()>1 && editText.getText().toString().matches("^0[0-9]") ){
-                        editText.setText("");
-                    }
-                }
-                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-                public void afterTextChanged(Editable s){}
-            });
-
+        if (!readOnly) {
+            //Save the numberpicker value in the DB, and continue to the next screen.
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    View parentView = (View) v.getParent();
-                    EditText editText = (EditText) parentView.findViewById(R.id.dynamic_positiveInt_edit);
-                    String positiveIntValue = editText.getText().toString();
-
-                    //Required, empty values rejected
-                    if (positiveIntValue == null || "".equals(positiveIntValue)) {
-                        editText.setError(context.getString(R.string.dynamic_error_age));
-                        return;
-                    }
-
-                    //Hide keypad
-                    hideKeyboard(ctx, v);
-
+                    String positiveIntValue = String.valueOf(numberPicker.getValue());
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, positiveIntValue);
                     finishOrNext();
@@ -439,7 +414,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             });
 
         }else{
-            editText.setEnabled(false);
+            numberPicker.setEnabled(false);
             button.setEnabled(false);
         }
 
@@ -447,14 +422,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         swipeTouchListener.addClickableView(button);
 
         //Take focus to this view
-        editText.requestFocus();
-        editText.postDelayed(new Runnable() {
-           @Override
-           public void run() {
-               //Show keypad
-               showKeyboard(ctx, editText);
-           }
-       }, 300); //use 300 to make it run when coming back from lock screen
+        numberPicker.requestFocus();
     }
 
     /**

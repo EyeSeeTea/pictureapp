@@ -99,8 +99,10 @@ public class PushService extends IntentService {
                 TelephonyManager phoneMetaData=(TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
                 String imei = phoneMetaData.getDeviceId();
                 String phone = phoneMetaData.getLine1Number();
+                String serial = phoneMetaData.getSimSerialNumber();
                 pushClient.setImei(imei);
                 pushClient.setPhone(phone);
+                pushClient.setSerial(serial);
 
                 //Send the shared preferents to the PushClient.
 

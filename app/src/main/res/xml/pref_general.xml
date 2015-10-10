@@ -22,12 +22,18 @@
     <PreferenceCategory
         android:title="@string/pref_data"
         android:key="pref_data">
-        <EditTextPreference
-            android:key="org_unit"
+        <org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference
+            android:key="@string/org_unit"
             android:title="@string/create_info_organization_unit"
             android:defaultValue="KH_Cambodia"
             android:selectAllOnFocus="true"
             android:inputType="text"
+            android:singleLine="true"
+            android:maxLines="1" />
+        <Preference
+            android:key="remove_sent_surveys"
+            android:title="@string/settings_menu_delete"
+            android:selectAllOnFocus="true"
             android:singleLine="true"
             android:maxLines="1" />
 

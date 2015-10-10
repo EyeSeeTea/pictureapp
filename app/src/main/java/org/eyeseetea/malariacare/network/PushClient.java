@@ -73,6 +73,7 @@ public class PushClient {
 
     private static String PHONE_IMEI="";
     private static String PHONE_NUMBER="";
+    private static String PHONE_SERIAL="";
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -115,6 +116,10 @@ public class PushClient {
 
     public void setImei(String imei) {
         PHONE_IMEI=imei;
+    }
+
+    public void setSerial(String serial) {
+        PHONE_SERIAL = serial;
     }
 
     public PushResult push() {
@@ -175,8 +180,10 @@ public class PushClient {
         object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
         //TODO: put it in the object.
-        Log.d(TAG_IMEI, "numero imei" + PHONE_IMEI);
-        Log.d(TAG_PHONE, "numero telefono" + PHONE_NUMBER);
+        Log.d(TAG_IMEI, "imei number" + PHONE_IMEI);
+        Log.d(TAG_PHONE, "phone number" + PHONE_NUMBER);
+        Log.d(TAG_PHONE, "serie number" + PHONE_SERIAL);
+
         Location lastLocation = LocationMemory.get(survey.getId());
         //If there is no location (location is required) -> exception
         if(lastLocation==null){
@@ -292,7 +299,7 @@ public class PushClient {
         ScoreRegister.registerCompositeScores(compositeScoreList);
 
         //Initialize scores x question
-        ScoreRegister.initScoresForQuestions(Question.listAllByProgram(survey.getProgram()),survey);
+        ScoreRegister.initScoresForQuestions(Question.listAllByProgram(survey.getProgram()), survey);
 
         //1 CompositeScore -> 1 dataValue
         for(CompositeScore compositeScore:compositeScoreList){
@@ -390,6 +397,8 @@ public class PushClient {
             throw new Exception(activity.getString(R.string.dialog_info_push_bad_credentials));
         }
     }
+
+
 
     /**
      * Basic

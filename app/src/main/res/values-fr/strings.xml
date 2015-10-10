@@ -23,6 +23,7 @@
     <!-- settings -->
     <string name="settings_menu_about">A propos de cette app</string>
     <string name="settings_menu_configuration">Paramètres</string>
+    <string name="settings_menu_delete">Retirez tous les sondages envoyés</string>
     <string name="settings_menu_licence">License</string>
     <string name="settings_menu_update">Mise à jour des questions (DHIS)</string>
     <string name="settings_menu_logout">Se deconnecter</string>
@@ -35,8 +36,9 @@
 
 
     <!-- # dialogs -->
-    <string name="dialog_title_delete_survey">Delete Survey</string>
-    <string name="dialog_info_delete_survey">Are you sure you want to completely delete this survey?</string>
+    <string name="dialog_title_delete_surveys">Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?</string>
+    <string name="dialog_title_delete_survey">Supprimer envoyés</string>
+    <string name="dialog_info_delete_survey">Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?</string>
     <string name="dialog_title_error">Erreur</string>
     <string name="dialog_error_denominator">Erreur, denominateur = 0</string>
     <string name="dialog_title_missing_selection">selection manquant</string>

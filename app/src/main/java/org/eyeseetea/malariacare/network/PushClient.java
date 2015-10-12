@@ -44,7 +44,9 @@ import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
+import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -73,9 +75,6 @@ public class PushClient {
     private static String DHIS_PASSWORD="Testing2015";
     private static String DHIS_DEFAULT_CODE="KH_Cambodia";
 
-    private static String PHONE_IMEI="";
-    private static String PHONE_NUMBER="";
-    private static String PHONE_SERIAL="";
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -94,6 +93,7 @@ public class PushClient {
     private static String TAG_VALUE="value";
     private static String TAG_IMEI="imei";
     private static String TAG_PHONE="phone";
+    private static String TAG_PHONE_SERIAL="serial";
 
 
     Survey survey;
@@ -110,18 +110,6 @@ public class PushClient {
 
     public void setUrlPreferentShared(String url) {
         DHIS_DEFAULT_SERVER=url;
-    }
-
-    public void setPhone(String phone) {
-        PHONE_IMEI=phone;
-    }
-
-    public void setImei(String imei) {
-        PHONE_IMEI=imei;
-    }
-
-    public void setSerial(String serial) {
-        PHONE_SERIAL = serial;
     }
 
     public PushResult push() {
@@ -182,9 +170,10 @@ public class PushClient {
         object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
         //TODO: put it in the object.
-        Log.d(TAG_IMEI, "imei number" + PHONE_IMEI);
-        Log.d(TAG_PHONE, "phone number" + PHONE_NUMBER);
-        Log.d(TAG_PHONE, "serie number" + PHONE_SERIAL);
+        PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
+        Log.d(TAG_IMEI, "imei number" + phoneMetaData.getImei());
+        Log.d(TAG_PHONE, "phone number" + phoneMetaData.getPhone_number());
+        Log.d(TAG_PHONE_SERIAL, "serie number" + phoneMetaData.getPhone_serial());
         Location lastLocation = LocationMemory.get(survey.getId());
         //If there is no location (location is required) -> exception
         if(lastLocation==null){

@@ -22,7 +22,9 @@ package org.eyeseetea.malariacare.network;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -183,7 +185,6 @@ public class PushClient {
         Log.d(TAG_IMEI, "imei number" + PHONE_IMEI);
         Log.d(TAG_PHONE, "phone number" + PHONE_NUMBER);
         Log.d(TAG_PHONE, "serie number" + PHONE_SERIAL);
-
         Location lastLocation = LocationMemory.get(survey.getId());
         //If there is no location (location is required) -> exception
         if(lastLocation==null){

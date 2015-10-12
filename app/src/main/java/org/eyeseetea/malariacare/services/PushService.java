@@ -96,13 +96,7 @@ public class PushService extends IntentService {
 
                 //In a PushClient you dont have access to the activity. And i send the values of the phone from this IntentService.
 
-                TelephonyManager phoneMetaData=(TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-                String imei = phoneMetaData.getDeviceId();
-                String phone = phoneMetaData.getLine1Number();
-                String serial = phoneMetaData.getSimSerialNumber();
-                pushClient.setImei(imei);
-                pushClient.setPhone(phone);
-                pushClient.setSerial(serial);
+
 
                 //Send the shared preferents to the PushClient.
 

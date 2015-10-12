@@ -94,10 +94,6 @@ public class PushService extends IntentService {
             for(Survey survey : surveys){
                 PushClient pushClient=new PushClient(survey);
 
-                //In a PushClient you dont have access to the activity. And i send the values of the phone from this IntentService.
-
-
-
                 //Send the shared preferents to the PushClient.
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

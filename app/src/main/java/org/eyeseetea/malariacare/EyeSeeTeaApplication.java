@@ -21,6 +21,7 @@ package org.eyeseetea.malariacare;
 
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.telephony.TelephonyManager;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -31,6 +32,8 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -44,6 +47,10 @@ public class EyeSeeTeaApplication extends com.orm.SugarApp {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         LocationMemory.getInstance().init(getApplicationContext());
+        //Set the Phone metadata
+        PhoneMetaData phoneMetaData=this.getPhoneMetadata();
+        Session.setPhoneMetaData(phoneMetaData);
+
         // Not previously populated tables
         CompositeScore.saveInTx();
         QuestionRelation.saveInTx();
@@ -51,6 +58,18 @@ public class EyeSeeTeaApplication extends com.orm.SugarApp {
         Survey.saveInTx();
         User.saveInTx();
         Value.saveInTx();
+    }
+
+    PhoneMetaData getPhoneMetadata(){
+        PhoneMetaData phoneMetaData=new PhoneMetaData();
+        TelephonyManager phoneManagerMetaData=(TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        String imei = phoneManagerMetaData.getDeviceId();
+        String phone = phoneManagerMetaData.getLine1Number();
+        String serial = phoneManagerMetaData.getSimSerialNumber();
+        phoneMetaData.setImei(imei);
+        phoneMetaData.setPhone_number(phone);
+        phoneMetaData.setPhone_serial(serial);
+        return phoneMetaData;
     }
 
     @Override

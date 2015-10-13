@@ -26,7 +26,6 @@ import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.network.GetResponse;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.network.UnsafeOkHttpsClientFactory;

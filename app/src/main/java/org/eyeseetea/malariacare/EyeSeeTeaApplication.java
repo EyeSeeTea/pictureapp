@@ -31,6 +31,7 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.database.utils.Session;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -45,6 +46,7 @@ public class EyeSeeTeaApplication extends com.orm.SugarApp {
         Fabric.with(this, new Crashlytics());
         LocationMemory.getInstance().init(getApplicationContext());
         // Not previously populated tables
+        Session.setUIDPROGRAM(getResources().getString(R.string.UID_PROGRAM));
         CompositeScore.saveInTx();
         QuestionRelation.saveInTx();
         Score.saveInTx();

@@ -21,7 +21,10 @@ package org.eyeseetea.malariacare.network;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
@@ -40,16 +43,21 @@ import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.Proxy;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jose on 20/06/2015.
@@ -60,7 +68,8 @@ public class PushClient {
 
     private static String TAG=".PushClient";
 
-    //FIXME This should change for a sharedpreferences url that is selected from the login screen
+    //This change for a sharedpreferences url that is selected from the settings screen
+
     private static String DHIS_DEFAULT_SERVER="https://malariacare.psi.org";
     private static String DHIS_PUSH_API="/api/events";
     private static String DHIS_PULL_ORG_UNITS_API="/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:%s";
@@ -84,6 +93,9 @@ public class PushClient {
     private static String TAG_DATAVALUES="dataValues";
     private static String TAG_DATAELEMENT="dataElement";
     private static String TAG_VALUE="value";
+    private static String TAG_IMEI="imei";
+    private static String TAG_PHONE="phone";
+    private static String TAG_PHONE_SERIAL="serial";
 
 
     Survey survey;
@@ -96,6 +108,10 @@ public class PushClient {
 
     public PushClient(Survey survey) {
         this.survey = survey;
+    }
+
+    public void setUrlPreferentShared(String url) {
+        DHIS_DEFAULT_SERVER=url;
     }
 
     public PushResult push() {
@@ -147,7 +163,7 @@ public class PushClient {
      * @throws Exception
      */
     private JSONObject prepareMetadata() throws Exception{
-        Log.d(TAG,"prepareMetadata for survey: "+survey.getId());
+        Log.d(TAG, "prepareMetadata for survey: " + survey.getId());
 
         JSONObject object=new JSONObject();
         object.put(TAG_PROGRAM, survey.getProgram().getUid());
@@ -155,6 +171,7 @@ public class PushClient {
         object.put(TAG_EVENTDATE, android.text.format.DateFormat.format("yyyy-MM-dd", survey.getCompletionDate()));
         object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
+        //TODO: put it in the object.
 
         Location lastLocation = LocationMemory.get(survey.getId());
         //If there is no location (location is required) -> exception
@@ -271,7 +288,7 @@ public class PushClient {
         ScoreRegister.registerCompositeScores(compositeScoreList);
 
         //Initialize scores x question
-        ScoreRegister.initScoresForQuestions(Question.listAllByProgram(survey.getProgram()),survey);
+        ScoreRegister.initScoresForQuestions(Question.listAllByProgram(survey.getProgram()), survey);
 
         //1 CompositeScore -> 1 dataValue
         for(CompositeScore compositeScore:compositeScoreList){
@@ -369,6 +386,8 @@ public class PushClient {
             throw new Exception(activity.getString(R.string.dialog_info_push_bad_credentials));
         }
     }
+
+
 
     /**
      * Basic

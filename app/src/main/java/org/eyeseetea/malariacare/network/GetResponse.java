@@ -140,6 +140,7 @@ public class GetResponse{
          * @return Array of Strings with the organitation units
          * @throws Exception
          */
+
         public String[] getOrganization_units() throws Exception{
             //Get control data elements for existing surveys
             Response response = executeCall(null, url, method);
@@ -152,10 +153,6 @@ public class GetResponse{
             JSONArray jsonOrgUnits = responseBody.getJSONArray(TAG_ORGUNIT);
 
             String[] org_units=jsonArrayToStringArray(jsonOrgUnits, TAG_ORGUNITVALUE);
-            Log.d(TAG,"getOrganzation_units for AutoCompleteEditText3: " + org_units);
-            for(String unit:org_units){
-                Log.d(TAG,"getOrganzation_units for Strings: " + unit);
-            }
             return org_units;
         }
 
@@ -167,8 +164,6 @@ public class GetResponse{
         private Response executeCall(JSONObject data, String url, String method) throws IOException {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
             final String DHIS_URL= DHIS_DEFAULT_SERVER+ url;
-
-            Log.d(TAG, "getOrganzation_units for AutoCompleteEditText FINAL: " + DHIS_URL);
 
             OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 

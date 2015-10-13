@@ -55,6 +55,11 @@ public class Session {
     private static Location location;
 
     /**
+     * The current uidprogram
+     */
+    private static String UIDPROGRAM;
+
+    /**
      * Map that holds non serializable results from services
      */
     private static Map<String,Object> serviceValues=new HashMap<>();
@@ -144,5 +149,13 @@ public class Session {
 
     public static void setLocation(Location location) {
         Session.location = location;
+    }
+
+    public static String getUIDPROGRAM() {
+        return UIDPROGRAM;
+    }
+
+    public static void setUIDPROGRAM(String UIDPROGRAM) {
+        Session.UIDPROGRAM = UIDPROGRAM;
     }
 }

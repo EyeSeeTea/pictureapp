@@ -3,7 +3,11 @@ package org.eyeseetea.malariacare.views;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.EditTextPreference;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +21,7 @@ import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
@@ -25,11 +30,14 @@ import org.eyeseetea.malariacare.network.GetResponse;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.network.UnsafeOkHttpsClientFactory;
+import org.eyeseetea.malariacare.services.SurveyService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * The EditTextPreference has not the funcionality of autocomplete.
@@ -39,7 +47,6 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
 
     private AutoCompleteTextView mEditText = null;
-    private String[] values;
     public AutoCompleteEditTextPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         mEditText = new AutoCompleteTextView(context, attrs);
@@ -47,32 +54,24 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
         // Gets autocomplete values for 'org_unit' key preference
         if (getKey().equals(context.getString(R.string.org_unit))) {
-                    values= getOrgantiationUnitOptions();
-            if(values==null)
-                values=new String[]{"h"};
+
+            ArrayList<String> opcionesGet = new ArrayList<String>();
+            String[]  orgUnits= null;
+            try {
+                orgUnits = new getBackground().execute(opcionesGet).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            //If the call to the server fails, suggest the default code
+            if(orgUnits==null)
+                orgUnits=new String[]{"KH_Cambodia"};
             ArrayAdapter<String> adapter = new ArrayAdapter(this.getContext(),
-                    android.R.layout.simple_dropdown_item_1line,values);
+                    android.R.layout.simple_dropdown_item_1line,orgUnits);
             mEditText.setAdapter(adapter);
         }
     }
-
-    //Get from the server the organitation unit options
-    private String[] getOrgantiationUnitOptions() {
-        //https://malariacare.psi.org/api/programs/IrppF3qERB7.json?fields=organisationUnits
-
-        GetResponse getResponse=new GetResponse((Activity)this.getContext());
-        String[] organitationUnits = new String[0];
-        try {
-            organitationUnits = getResponse.getOrganization_units();
-        } catch (Exception e) {
-            e.printStackTrace();
-            organitationUnits=  new String[]{
-                    "KH_Cambodia"
-            };
-        }
-        return organitationUnits;
-    }
-
 
     @Override
     protected void onBindDialogView(View view) {
@@ -96,5 +95,28 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                 setText(value);
             }
         }
+    }
+
+    class getBackground extends AsyncTask<ArrayList<String>, Void, String[]> {
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        protected String[] doInBackground(ArrayList<String>... passing) {
+            String[] result = null;
+            try {
+                PushClient pushClient=new PushClient(null);
+                result = pushClient.pullOrgUnitsCodes();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return result; //return result
+        }
+
+        protected void onPostExecute(Response result) {
+        }
+
     }
 }

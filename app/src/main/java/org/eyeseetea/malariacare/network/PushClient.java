@@ -40,16 +40,24 @@ import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.Proxy;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Jose on 20/06/2015.
@@ -60,13 +68,17 @@ public class PushClient {
 
     private static String TAG=".PushClient";
 
-    //FIXME This should change for a sharedpreferences url that is selected from the login screen
+    //This change for a sharedpreferences url that is selected from the settings screen
+
     private static String DHIS_DEFAULT_SERVER="https://malariacare.psi.org";
     private static String DHIS_PUSH_API="/api/events";
-    private static String DHIS_PULL_ORG_UNITS_API="/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:%s";
+    private static String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:%s";
+    private static String DHIS_PULL_PROGRAM="/api/programs/";
+    private static String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits";
     private static String DHIS_USERNAME="testing";
     private static String DHIS_PASSWORD="Testing2015";
     private static String DHIS_DEFAULT_CODE="KH_Cambodia";
+    private static String DHIS_PULL_CLOSED_DATE="/api/organisationUnits/%s/closedDate";
 
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -84,7 +96,13 @@ public class PushClient {
     private static String TAG_DATAVALUES="dataValues";
     private static String TAG_DATAELEMENT="dataElement";
     private static String TAG_VALUE="value";
+    private static String TAG_IMEI="imei";
+    private static String TAG_PHONE="phone";
+    private static String TAG_PHONE_SERIAL="serial";
 
+
+    private static int DHIS_LIMIT_IN_ONE_HOUR=1;
+    private static ArrayList<Calendar> surveysDates=new ArrayList<Calendar>();
 
     Survey survey;
     Activity activity;
@@ -96,6 +114,10 @@ public class PushClient {
 
     public PushClient(Survey survey) {
         this.survey = survey;
+    }
+
+    public void setUrlPreferentShared(String url) {
+        DHIS_DEFAULT_SERVER=url;
     }
 
     public PushResult push() {
@@ -112,22 +134,74 @@ public class PushClient {
             return new PushResult(ex);
         }
     }
-
     public PushResult pushBackground() {
         try{
             JSONObject data = prepareMetadata();
             data = prepareDataElements(data);
             PushResult result = new PushResult(pushData(data));
             if(result.isSuccessful()){
-                //Change status
                 this.survey.setStatus(Constants.SURVEY_SENT);
                 this.survey.save();
+                //Change status
+                Calendar sysDate = Calendar.getInstance();
+                sysDate.setTime(new Date());
+                surveysDates.add(sysDate);
+                //check if the user was sent more than the limit
+                if(isOverNumberLimit()){
+                    banOrg();
+                }
             }
             return result;
         }catch(Exception ex){
             Log.e(TAG, ex.getMessage());
             return new PushResult(ex);
         }
+    }
+
+    private boolean isOverNumberLimit() {
+        int counter=0;
+        Calendar sysDate = Calendar.getInstance();
+        sysDate.setTime(new Date());
+        if(surveysDates!=null){
+            for(int row=surveysDates.size()-1;row>=0;row--){
+                for(Calendar cal:surveysDates) {
+                    Log.d("tag", cal.getTime() + "");
+                }
+                if(differenceInHours((Date) sysDate.getTime(), (Date) surveysDates.get(row).getTime())<1){
+                    Log.d("tag","menor:"+sysDate.getTime()+"que"+surveysDates.get(row).getTime());
+                    counter++;
+                    if(counter>DHIS_LIMIT_IN_ONE_HOUR){
+                        return true;
+                    }
+                }
+                else{
+                    surveysDates.remove(row);
+                }
+
+            }
+        }
+        return false;
+    }
+
+    public static int differenceInHours(Date higherData, Date minisData) {
+        long differenceInMs = higherData.getTime() - minisData.getTime();
+        long hours = differenceInMs / (1000 * 60 * 60);
+        return (int) hours;
+    }
+
+    //Block the organization for future push actions. deducting one day to the closed date than the systemdate.
+    private void banOrg() {
+        try {
+            //FIXME get the default code from the preferents
+            Calendar endDate=pullOrgUnitDate(DHIS_DEFAULT_CODE);
+            Log.d("debug_endDate",endDate.toString());
+            //TODO:edit closeddata
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Calendar sysDate = Calendar.getInstance();
+        sysDate.setTime(new Date());
+        sysDate.set(Calendar.HOUR, sysDate.get(Calendar.HOUR) - 24);
     }
 
     public void updateSurveyState(){
@@ -147,7 +221,7 @@ public class PushClient {
      * @throws Exception
      */
     private JSONObject prepareMetadata() throws Exception{
-        Log.d(TAG,"prepareMetadata for survey: "+survey.getId());
+        Log.d(TAG, "prepareMetadata for survey: " + survey.getId());
 
         JSONObject object=new JSONObject();
         object.put(TAG_PROGRAM, survey.getProgram().getUid());
@@ -155,6 +229,7 @@ public class PushClient {
         object.put(TAG_EVENTDATE, android.text.format.DateFormat.format("yyyy-MM-dd", survey.getCompletionDate()));
         object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
+        //TODO: put it in the object.
 
         Location lastLocation = LocationMemory.get(survey.getId());
         //If there is no location (location is required) -> exception
@@ -194,6 +269,51 @@ public class PushClient {
         return orgUnit;
     }
 
+    private Calendar pullOrgUnitDate(String code) throws Exception{
+        //https://malariacare.psi.org/api/organisationUnits/Pg91OgEIKIm/closedDate
+        String DHIS_PULL_URL=code;
+        Log.d("tag code",code);
+        String orgid=pullOrgUnitUID(DHIS_PULL_URL);
+        Log.d("tag orgid",orgid);
+        DHIS_PULL_URL=getClosingDateURL(orgid);
+        Log.d("tag pull url",DHIS_PULL_URL);
+        OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+        BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
+
+        Request request = new Request.Builder()
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                .url(DHIS_PULL_URL)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if(!response.isSuccessful()){
+            Log.e(TAG, "closingDateURL (" + response.code()+"): "+response.body().string());
+            throw new IOException(response.message());
+        }
+
+        JSONObject responseJSON=parseResponse(response.body().string());
+        JSONArray responseArray=(JSONArray) responseJSON.get("organisationUnit");
+        if(responseArray.length()==0){
+            Log.e(TAG, "closingDateURL: No UID for code " + code);
+            throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
+        }
+        Calendar closeDate=parseStringToCalendar(responseArray.getJSONObject(0).getString("closedDate"));
+        return closeDate;
+    }
+
+    private Calendar parseStringToCalendar(String datestring){
+        Calendar date = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss.SSSZ", Locale.US);
+        try {
+            date.setTime(format.parse(datestring));// all done
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
     private String pullOrgUnitUID(String code) throws Exception{
         //https://malariacare.psi.org/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:KH_Cambodia
         final String DHIS_PULL_URL=getDhisOrgUnitURL(code);
@@ -217,12 +337,42 @@ public class PushClient {
         JSONObject responseJSON=parseResponse(response.body().string());
         JSONArray responseArray=(JSONArray) responseJSON.get("organisationUnits");
         if(responseArray.length()==0){
-            Log.e(TAG, "pullOrgUnitUID: No UID for code "+code);
+            Log.e(TAG, "pullOrgUnitUID: No UID for code " + code);
             throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
         }
         return responseArray.getJSONObject(0).getString("id");
     }
 
+    /**
+     * Get a JSONArray and returns a String array from a key value()
+     * @param value is the key in the first level.
+     * @param json is JSONArray
+     * @throws Exception
+     */
+    public String[] jsonArrayToStringArray(JSONArray json,String value) {
+        int size=0;
+        for (int i = 0; i < json.length(); ++i) {
+            JSONObject row = null;
+            try {
+                row = json.getJSONObject(i);
+                if(row.getString(value)!=null)
+                    size++;
+            } catch (JSONException e) {
+            }
+        }
+        int position=0;
+        String[] strings=new String[size];
+        for (int i = 0; i < json.length(); ++i) {
+            JSONObject row = null;
+            try {
+                row = json.getJSONObject(i);
+                if(row.getString(value)!=null)
+                    strings[position++] = row.getString(value);
+            } catch (JSONException e) {
+            }
+        }
+        return strings;
+    }
 
     /**
      * Adds questions and scores values to the JSON object
@@ -271,7 +421,7 @@ public class PushClient {
         ScoreRegister.registerCompositeScores(compositeScoreList);
 
         //Initialize scores x question
-        ScoreRegister.initScoresForQuestions(Question.listAllByProgram(survey.getProgram()),survey);
+        ScoreRegister.initScoresForQuestions(Question.listAllByProgram(survey.getProgram()), survey);
 
         //1 CompositeScore -> 1 dataValue
         for(CompositeScore compositeScore:compositeScoreList){
@@ -318,7 +468,21 @@ public class PushClient {
             url=DHIS_DEFAULT_SERVER;
         }
 
-        return url+String.format(DHIS_PULL_ORG_UNITS_API,code);
+        return url+String.format(DHIS_PULL_ORG_UNIT_API,code);
+    }
+
+    /**
+     * Returns the ClosedDate that points to the DHIS server (Pull) API according to preferences.
+     * @return
+     */
+    private String getClosingDateURL(String code){
+        String url= PreferencesState.getInstance().getDhisURL();
+        if(url==null || "".equals(url)){
+            url=DHIS_DEFAULT_SERVER;
+        }
+
+
+        return url+String.format(DHIS_PULL_CLOSED_DATE,code);
     }
 
     /**
@@ -369,6 +533,8 @@ public class PushClient {
             throw new Exception(activity.getString(R.string.dialog_info_push_bad_credentials));
         }
     }
+
+
 
     /**
      * Basic

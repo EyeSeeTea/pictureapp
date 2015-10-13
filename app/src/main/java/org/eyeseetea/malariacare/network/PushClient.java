@@ -21,10 +21,7 @@ package org.eyeseetea.malariacare.network;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.location.Location;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
@@ -54,10 +51,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.Proxy;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Jose on 20/06/2015.
@@ -72,7 +66,9 @@ public class PushClient {
 
     private static String DHIS_DEFAULT_SERVER="https://malariacare.psi.org";
     private static String DHIS_PUSH_API="/api/events";
-    private static String DHIS_PULL_ORG_UNITS_API="/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:%s";
+    private static String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:%s";
+    private static String DHIS_PULL_PROGRAM="/api/programs/";
+    private static String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits";
     private static String DHIS_USERNAME="testing";
     private static String DHIS_PASSWORD="Testing2015";
     private static String DHIS_DEFAULT_CODE="KH_Cambodia";
@@ -234,12 +230,76 @@ public class PushClient {
         JSONObject responseJSON=parseResponse(response.body().string());
         JSONArray responseArray=(JSONArray) responseJSON.get("organisationUnits");
         if(responseArray.length()==0){
-            Log.e(TAG, "pullOrgUnitUID: No UID for code "+code);
+            Log.e(TAG, "pullOrgUnitUID: No UID for code " + code);
             throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
         }
         return responseArray.getJSONObject(0).getString("id");
     }
 
+    /**
+     * This method returns a String[] whit the Organitation codes
+     * @throws Exception
+     */
+    public String[] pullOrgUnitsCodes() throws Exception{
+        //https://malariacare.psi.org/api/programs/IrppF3qERB7.json?fields=organisationUnits
+        final String DHIS_PULL_URL=getDhisOrgUnitsURL();
+
+        OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+        BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
+
+        Log.e(TAG, "pullOrgUnitUID URL (" + DHIS_PULL_URL);
+        Request request = new Request.Builder()
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                .url(DHIS_PULL_URL)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if(!response.isSuccessful()){
+            Log.e(TAG, "pullOrgUnitUID (" + response.code()+"): "+response.body().string());
+            throw new IOException(response.message());
+        }
+
+        JSONObject responseJSON=parseResponse(response.body().string());
+        JSONArray responseArray=(JSONArray) responseJSON.get("organisationUnits");
+        if(responseArray.length()==0){
+            Log.e(TAG, "pullOrgUnitUID: No org_unit ");
+            throw new IOException(activity.getString(R.string.dialog_error_push_no_uid));
+        }
+        return jsonArrayToStringArray(responseArray,"code");
+    }
+
+    /**
+     * Get a JSONArray and returns a String array from a key value()
+     * @param value is the key in the first level.
+     * @param json is JSONArray
+     * @throws Exception
+     */
+    public String[] jsonArrayToStringArray(JSONArray json,String value) {
+        int size=0;
+        for (int i = 0; i < json.length(); ++i) {
+            JSONObject row = null;
+            try {
+                row = json.getJSONObject(i);
+                if(row.getString(value)!=null)
+                    size++;
+            } catch (JSONException e) {
+            }
+        }
+        int position=0;
+        String[] strings=new String[size];
+        for (int i = 0; i < json.length(); ++i) {
+            JSONObject row = null;
+            try {
+                row = json.getJSONObject(i);
+                if(row.getString(value)!=null)
+                    strings[position++] = row.getString(value);
+            } catch (JSONException e) {
+            }
+        }
+        return strings;
+    }
 
     /**
      * Adds questions and scores values to the JSON object
@@ -335,9 +395,22 @@ public class PushClient {
             url=DHIS_DEFAULT_SERVER;
         }
 
-        return url+String.format(DHIS_PULL_ORG_UNITS_API,code);
+        return url+String.format(DHIS_PULL_ORG_UNIT_API,code);
     }
 
+    /**
+     * Returns the URL that points to the DHIS server (Pull) API according to preferences.
+     * @return
+     */
+    private String getDhisOrgUnitsURL(){
+        String url= PreferencesState.getInstance().getDhisURL();
+        if(url==null || "".equals(url)){
+            url=DHIS_DEFAULT_SERVER;
+        }
+
+        url=DHIS_DEFAULT_SERVER+DHIS_PULL_PROGRAM+ Session.getUIDPROGRAM()+DHIS_PULL_ORG_UNITS_API;
+        return url;
+    }
     /**
      * Returns the URL that points to the DHIS server API according to preferences.
      * @return

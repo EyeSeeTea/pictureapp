@@ -96,9 +96,7 @@ public class PushClient {
     private static String TAG_DATAVALUES="dataValues";
     private static String TAG_DATAELEMENT="dataElement";
     private static String TAG_VALUE="value";
-    private static String TAG_IMEI="imei";
-    private static String TAG_PHONE="phone";
-    private static String TAG_PHONE_SERIAL="serial";
+    private static String TAG_CloseData="closedDate";
 
 
     private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=1;
@@ -121,65 +119,116 @@ public class PushClient {
     }
 
     public PushResult push() {
-        try{
-            JSONObject data = prepareMetadata();
-            data = prepareDataElements(data);
-            PushResult result = new PushResult(pushData(data));
-            if(result.isSuccessful()){
-                updateSurveyState();
+        //Check the organization closed data for check if the survey can be sent
+        if(isOrganizationClosed()) {
+            try {
+                JSONObject data = prepareMetadata();
+                data = prepareDataElements(data);
+                PushResult result = new PushResult(pushData(data));
+                if (result.isSuccessful()) {
+                    updateSurveyState();
+                }
+                return result;
+            } catch (Exception ex) {
+                Log.e(TAG, ex.getMessage());
+                return new PushResult(ex);
             }
-            return result;
-        }catch(Exception ex){
-            Log.e(TAG, ex.getMessage());
-            return new PushResult(ex);
         }
+        JSONObject banned= null;
+        try {
+            banned = new JSONObject("{\"Simulate_response\":\"Org_unitBanned\"}");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new PushResult(banned);
     }
+
     public PushResult pushBackground() {
-        try{
-            JSONObject data = prepareMetadata();
-            data = prepareDataElements(data);
-            PushResult result = new PushResult(pushData(data));
-            if(result.isSuccessful()){
-                this.survey.setStatus(Constants.SURVEY_SENT);
-                this.survey.save();
-                //Change status
-                //check if the user was sent more than the limit
-                List<Survey> sentSurveys=Survey.getAllHideAndSentSurveys();
-                int countDates=0;
-                for(int i=sentSurveys.size()-1;i>=0;i--) {
-                    Log.d("Estado:",sentSurveys.get(i).getStatus()+"");
-                    //If isDateOverLimit is TRUE the survey is out of the limit control
-                    if (!Utils.isDateOverLimit(Utils.DateToCalendar(sentSurveys.get(i).getEventDate()),DHIS_LIMIT_HOURS)) {
-                        countDates++;
+        //Check the organization closed data for check if the survey can be sent
+        if(isOrganizationClosed()) {
+            try {
+                JSONObject data = prepareMetadata();
+                data = prepareDataElements(data);
+                PushResult result = new PushResult(pushData(data));
+                if (result.isSuccessful()) {
+                    this.survey.setStatus(Constants.SURVEY_SENT);
+                    this.survey.save();
+                    //Change status
+                    //check if the user was sent more than the limit
+                    List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys();
+                    int countDates = 0;
+                    for (int i = sentSurveys.size() - 1; i >= 0; i--) {
+                        //If isDateOverLimit is TRUE the survey is out of the limit control
+                        if (!Utils.isDateOverLimit(Utils.DateToCalendar(sentSurveys.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
+                            countDates++;
+                        }
+                    }
+                    if (countDates > DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
+                        this.banOrg(DHIS_DEFAULT_CODE);
                     }
                 }
-                Log.d("Date not over limit:",countDates+"");
-                if(countDates>DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-                    this.banOrg();
-                }
+                return result;
+            } catch (Exception ex) {
+                Log.e(TAG, ex.getMessage());
+                return new PushResult(ex);
             }
-            return result;
-        }catch(Exception ex) {
-            Log.e("DateError", ex.getMessage());
-            return new PushResult(ex);
         }
+        JSONObject banned= null;
+        try {
+            banned = new JSONObject("{\"Simulate_response\":\"Org_unitBanned\"}");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new PushResult(banned);
+    }
+
+    //Get the url for the closed data
+    private String getPatchClosedDateUrl(String dhis_default_code){
+        //Get the org_ID
+        String DHIS_PULL_URL=dhis_default_code;
+        try {
+        String orgid= null;
+            orgid = pullOrgUnitUID(DHIS_PULL_URL);
+        //Get the url with the org_Id
+        DHIS_PULL_URL=getClosingDateURL(orgid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return DHIS_PULL_URL;
     }
 
     //Block the organization for future push actions. deducting one day to the closed date than the systemdate.
-    private void banOrg() {
+    private void banOrg(String code) {
         try {
-            //FIXME get the default code from the preferents
-            Calendar endDate=pullOrgUnitDate(DHIS_DEFAULT_CODE);
-            Log.d("debug_endDate",endDate.toString());
+            //https://malariacare.psi.org/api/organisationUnits/Pg91OgEIKIm/closedDate
+            String DHIS_PULL_URL=getPatchClosedDateUrl(code);
+
+            JSONObject data =prepareClosingDateValue();
+            Response response=executeCall(data, DHIS_PULL_URL, "PATCH");
+
+            if(!response.isSuccessful()){
+                Log.e(TAG, "closingDateURL (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+
+            JSONObject responseJSON = parseResponse(response.body().string());
             //TODO:edit closeddata
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private JSONObject prepareClosingDateValue() throws Exception{
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
         sysDate.set(Calendar.HOUR, sysDate.get(Calendar.HOUR) - 24);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String dateFormatted = format.format(sysDate.getTime());
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_CloseData, dateFormatted);
+        Log.d(TAG,"closingDateURL:EndDate:"+ dateFormatted);
+        return elementObject;
     }
-
     public void updateSurveyState(){
         //Change status
         this.survey.setStatus(Constants.SURVEY_SENT);
@@ -245,42 +294,6 @@ public class PushClient {
         return orgUnit;
     }
 
-    private Calendar pullOrgUnitDate(String code) throws Exception{
-        //https://malariacare.psi.org/api/organisationUnits/Pg91OgEIKIm/closedDate
-        String DHIS_PULL_URL=code;
-        Log.d("tag code",code);
-        String orgid=pullOrgUnitUID(DHIS_PULL_URL);
-        Log.d("tag orgid",orgid);
-        DHIS_PULL_URL=getClosingDateURL(orgid);
-        Log.d("tag pull url",DHIS_PULL_URL);
-        OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
-
-        BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
-        client.setAuthenticator(basicAuthenticator);
-
-        Request request = new Request.Builder()
-                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
-                .url(DHIS_PULL_URL)
-                .build();
-
-        Response response = client.newCall(request).execute();
-        if(!response.isSuccessful()){
-            Log.e(TAG, "closingDateURL (" + response.code()+"): "+response.body().string());
-            throw new IOException(response.message());
-        }
-
-        JSONObject responseJSON=parseResponse(response.body().string());
-        JSONArray responseArray=(JSONArray) responseJSON.get("organisationUnit");
-        if(responseArray.length()==0){
-            Log.e(TAG, "closingDateURL: No UID for code " + code);
-            throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
-        }
-        Calendar closeDate=Utils.parseStringToCalendar(responseArray.getJSONObject(0).getString("closedDate"));
-        return closeDate;
-    }
-
-
-
     private String pullOrgUnitUID(String code) throws Exception{
         //https://malariacare.psi.org/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:KH_Cambodia
         final String DHIS_PULL_URL=getDhisOrgUnitURL(code);
@@ -308,6 +321,49 @@ public class PushClient {
             throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
         }
         return responseArray.getJSONObject(0).getString("id");
+    }
+
+
+    /**
+     * Get the closedData
+     * @param code is the organitation unit
+     * @throws Exception
+     */
+    private Calendar getOrgUnitClosedDate(String code) throws Exception{
+        //https://malariacare.psi.org/api/organisationUnits/Pg91OgEIKIm/closedDate
+        String DHIS_PULL_URL=getPatchClosedDateUrl(code);
+        Log.d(TAG,"orgunticlos"+DHIS_PULL_URL);
+        OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+        BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
+
+        Request request = new Request.Builder()
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                .url(DHIS_PULL_URL)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if(!response.isSuccessful()){
+            Log.e(TAG, "closingDateURL (" + response.code()+"): "+response.body().string());
+            throw new IOException(response.message());
+        }
+        String jsonData = response.body().string();
+        Log.d(TAG,"Response"+jsonData);
+        JSONObject responseObject=new JSONObject(jsonData);
+        if(responseObject.length()==0){
+            Log.e(TAG, "closingDateURL: No UID for code " + code);
+            throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
+        }
+        Log.d(TAG,"data:"+responseObject.getString("closedDate"));
+        Calendar closeDate;
+        try {
+            closeDate = Utils.parseStringToCalendar(responseObject.getString("closedDate"));
+        }
+        catch(Exception e){
+            closeDate=null;
+        }
+        return closeDate;
     }
 
     /**
@@ -460,6 +516,44 @@ public class PushClient {
         return parseResponse(response.body().string());
     }
 
+    /**
+     * Call to DHIS Server
+     * @param data
+     * @param url
+     */
+    private Response executeCall(JSONObject data, String url, String method) throws IOException {
+        final String DHIS_URL=url;
+
+        OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+        BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
+
+        Request.Builder builder = new Request.Builder()
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                .url(DHIS_URL);
+
+        switch (method) {
+            case "POST":
+                RequestBody postBody = RequestBody.create(JSON, data.toString());
+                builder.post(postBody);
+                break;
+            case "PUT":
+                RequestBody putBody = RequestBody.create(JSON, data.toString());
+                builder.put(putBody);
+                break;
+            case "PATCH":
+                RequestBody patchBody = RequestBody.create(JSON, data.toString());
+                builder.patch(patchBody);
+                break;
+            case "GET":
+                builder.get();
+                break;
+        }
+
+        Request request = builder.build();
+        return client.newCall(request).execute();
+    }
     private JSONObject parseResponse(String responseData)throws Exception{
         try{
             JSONObject jsonResponse=new JSONObject(responseData);
@@ -470,6 +564,28 @@ public class PushClient {
         }
     }
 
+    public boolean isOrganizationClosed() {
+        try {
+            Calendar closedData=getOrgUnitClosedDate(DHIS_DEFAULT_CODE);
+            if(closedData==null){
+                Log.d(TAG, "The organitation closeData is null.");
+            }
+            if(closedData!=null) {
+                Calendar sysDate = Calendar.getInstance();
+                sysDate.setTime(new Date());
+
+                if (sysDate.after(closedData)) {
+                    Log.d(TAG, "The organitation unit has been banned.");
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, "The organitation unit is open.");
+        return false;
+    }
 
 
     /**

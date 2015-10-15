@@ -130,7 +130,7 @@ public class Utils {
 
 
     /**
-     * Get a JSONArray and returns a String array from a key value()
+     * returns the system data and the event data difference in hours
      * @param limit is the time in hours
      * @param date is the Date to compare with system Date
      * @return if the difference is up than the time in hours
@@ -139,10 +139,7 @@ public class Utils {
     public static boolean isDateOverLimit(Calendar date,int limit) {
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
-        Log.d("Date:Sysdate:", sysDate.getTime() + "");
-        Log.d("Date:Surveydate:", date.getTime() + "");
         if(differenceInHours((Date) sysDate.getTime(), (Date) date.getTime())<1){
-            Log.d("Date:", "menor:" + sysDate.getTime() + "mayor:" + date.getTime());
             return false;
         }
         else
@@ -152,13 +149,12 @@ public class Utils {
     public static int differenceInHours(Date higherData, Date minisData) {
         long differenceInMs = higherData.getTime() - minisData.getTime();
         long hours = differenceInMs / (1000 * 60 * 60);
-        Log.d("Date:HoursDifference:", hours + "");
         return (int) hours;
     }
 
     public static Calendar parseStringToCalendar(String datestring){
         Calendar date = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss.SSSZ", Locale.US);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         try {
             date.setTime(format.parse(datestring));// all done
         } catch (ParseException e) {

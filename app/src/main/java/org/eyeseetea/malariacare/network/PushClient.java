@@ -297,23 +297,13 @@ public class PushClient {
 
         //put in values the phonemetadata for be sent in the survey
         PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
-        //activity is always null here
-        if(activity==null) {
+        //Activity is always null here, this is the reason for not use R.String_Phoneimei_uid..
             values.put(preparePhoneValue(TAG_IMEI, phoneMetaData.getImei()));
             //Check if the phonenumber is null, some SIMCards/Operators not give this field.
             if (phoneMetaData.getPhone_number() != null)
                 values.put(preparePhoneValue(TAG_PHONE, phoneMetaData.getPhone_number()));
             values.put(preparePhoneValue(TAG_PHONE_SERIAL, phoneMetaData.getPhone_serial()));
             Log.d("activity", "null");
-        }
-        else{
-            Log.d("activity","ok");
-            values.put(preparePhoneValue(activity.getResources().getString(R.string.PHONEIMEI_UID), phoneMetaData.getImei()));
-            //Check if the phonenumber is null, some SIMCards/Operators not give this field.
-            if (phoneMetaData.getPhone_number() != null)
-                values.put(preparePhoneValue(activity.getResources().getString(R.string.PHONENUMBER_UID), phoneMetaData.getPhone_number()));
-            values.put(preparePhoneValue(activity.getResources().getString(R.string.PHONESERIAL_UID), phoneMetaData.getPhone_serial()));
-        }
         return values;
     }
 

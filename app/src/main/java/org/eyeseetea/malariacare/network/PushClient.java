@@ -51,6 +51,7 @@ import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -91,9 +92,9 @@ public class PushClient {
     private static String TAG_DATAVALUES="dataValues";
     private static String TAG_DATAELEMENT="dataElement";
     private static String TAG_VALUE="value";
-    private static String TAG_IMEI="imei";
-    private static String TAG_PHONE="phone";
-    private static String TAG_PHONE_SERIAL="serial";
+    private static String TAG_IMEI="RuNZUhiAmlv";
+    private static String TAG_PHONE="UkGuMlmNtJH";
+    private static String TAG_PHONE_SERIAL="zZ1LFI0FplS";
 
 
     Survey survey;
@@ -170,10 +171,6 @@ public class PushClient {
         object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
         //TODO: put it in the object.
-        PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
-        Log.d(TAG_IMEI, "imei number" + phoneMetaData.getImei());
-        Log.d(TAG_PHONE, "phone number" + phoneMetaData.getPhone_number());
-        Log.d(TAG_PHONE_SERIAL, "serie number" + phoneMetaData.getPhone_serial());
         Location lastLocation = LocationMemory.get(survey.getId());
         //If there is no location (location is required) -> exception
         if(lastLocation==null){
@@ -295,6 +292,14 @@ public class PushClient {
         for(CompositeScore compositeScore:compositeScoreList){
             values.put(prepareValue(compositeScore));
         }
+
+        //put in values the phonemetadata for be sent in the survey
+        PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
+        values.put(preparePhoneValue(TAG_IMEI,phoneMetaData.getImei()));
+        //Check if the phonenumber is null, some SIMCards/Operators not give this field.
+        if(phoneMetaData.getPhone_number()!=null)
+            values.put(preparePhoneValue(TAG_PHONE, phoneMetaData.getPhone_number()));
+        values.put(preparePhoneValue(TAG_PHONE_SERIAL, phoneMetaData.getPhone_serial()));
         return values;
     }
 
@@ -312,6 +317,19 @@ public class PushClient {
         return elementObject;
     }
 
+    /**
+     * Adds a pair dataElement|value according to the passed value.
+     * Format: {dataValues: [{dataElement:'234567',value:'34'}, ...]}
+     * @param value
+     * @return
+     * @throws Exception
+     */
+    private JSONObject preparePhoneValue(String uid, String value) throws Exception{
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_DATAELEMENT, uid);
+        elementObject.put(TAG_VALUE, value);
+        return elementObject;
+    }
     /**
      * Adds a pair dataElement|value according to the 'compositeScore' of the value.
      * Format: {dataValues: [{dataElement:'234567',value:'34'}, ...]}
@@ -345,8 +363,8 @@ public class PushClient {
      */
     private String getDhisURL(){
         String url= PreferencesState.getInstance().getDhisURL();
-        if(url==null || "".equals(url)){
-            url=DHIS_DEFAULT_SERVER;
+        if(url==null || "".equals(url)) {
+            url = DHIS_DEFAULT_SERVER;
         }
         return url+DHIS_PUSH_API;
     }
@@ -365,7 +383,7 @@ public class PushClient {
 
         RequestBody body = RequestBody.create(JSON, data.toString());
         Request request = new Request.Builder()
-                .header(basicAuthenticator.AUTHORIZATION_HEADER,basicAuthenticator.getCredentials())
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
                 .url(DHIS_URL)
                 .post(body)
                 .build();
@@ -387,8 +405,6 @@ public class PushClient {
             throw new Exception(activity.getString(R.string.dialog_info_push_bad_credentials));
         }
     }
-
-
 
     /**
      * Basic

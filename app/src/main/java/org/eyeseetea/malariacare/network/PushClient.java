@@ -408,7 +408,7 @@ public class PushClient {
             url=DHIS_DEFAULT_SERVER;
         }
 
-        url=DHIS_DEFAULT_SERVER+DHIS_PULL_PROGRAM+ Session.getUIDPROGRAM()+DHIS_PULL_ORG_UNITS_API;
+        url=DHIS_DEFAULT_SERVER+DHIS_PULL_PROGRAM+ activity.getResources().getString(R.string.UID_PROGRAM)+DHIS_PULL_ORG_UNITS_API;
         return url;
     }
     /**

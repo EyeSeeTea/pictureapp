@@ -64,8 +64,10 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                 e.printStackTrace();
             }
             //If the call to the server fails, suggest the default code
-            if(orgUnits==null)
-                orgUnits=new String[]{"KH_Cambodia"};
+            if(orgUnits==null) {
+                //Fixme bad smell (this value is the same of the DHIS_DEFAULT_CODE of PushClient, but in PushClient you can´t acces to strings.xml sometimes.
+                orgUnits = new String[]{"KH_Cambodia"};
+            }
             ArrayAdapter<String> adapter = new ArrayAdapter(this.getContext(),
                     android.R.layout.simple_dropdown_item_1line,orgUnits);
             mEditText.setAdapter(adapter);
@@ -105,7 +107,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         protected String[] doInBackground(ArrayList<String>... passing) {
             String[] result = null;
             try {
-                PushClient pushClient=new PushClient(null);
+                PushClient pushClient=new PushClient(null,(Activity)getContext());
                 result = pushClient.pullOrgUnitsCodes();
             } catch (Exception e) {
                 e.printStackTrace();

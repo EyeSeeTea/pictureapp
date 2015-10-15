@@ -33,6 +33,7 @@ import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,10 +143,11 @@ public class SurveyService extends IntentService {
         List<Survey> unsentSurveys=new ArrayList<Survey>();
         List<Survey> sentSurveys=new ArrayList<Survey>();
         for(Survey survey:surveys){
-            if(!survey.isSent()){
+            if(!survey.isSent() && !survey.isHide() ){
                 unsentSurveys.add(survey);
                 survey.getAnsweredQuestionRatio();
-            }else{
+            }else if (survey.isSent() && !survey.isHide()){
+                Log.d("SurveyStatusreload", survey.getStatus() + "");
                 sentSurveys.add(survey);
             }
         }
@@ -193,6 +195,11 @@ public class SurveyService extends IntentService {
         //Since intents does NOT admit NON serializable as values we use Session instead
         Session.putServiceValue(ALL_SENT_SURVEYS_ACTION,surveys);
 
+        for(Survey survey:surveys){
+            Log.d("SurveyStatusget",survey.getStatus()+"");
+
+        }
+
         //Returning result to anyone listening
         Intent resultIntent= new Intent(ALL_SENT_SURVEYS_ACTION);
         LocalBroadcastManager.getInstance(this).sendBroadcast(resultIntent);
@@ -205,8 +212,16 @@ public class SurveyService extends IntentService {
 
         //Select all sent surveys from sql and delete.
         List<Survey> surveys = Survey.getAllSentSurveys();
-        for(int i=0;i<surveys.size();i++){
-            surveys.get(i).delete();
+        for(int i=surveys.size()-1;i>=0;i--){
+            //If is over limit the survey be delete, if is in the limit the survey change the state to STATE_HIDE
+            if (Utils.isDateOverLimit(Utils.DateToCalendar(surveys.get(i).getEventDate()), 1)) {
+                surveys.get(i).delete();
+            }
+            else{
+                surveys.get(i).setStatus(Constants.SURVEY_HIDE);
+                Log.d("SurveyStatusremove", surveys.get(i).getStatus() + "");
+                surveys.get(i).save();
+            }
         }
     }
 

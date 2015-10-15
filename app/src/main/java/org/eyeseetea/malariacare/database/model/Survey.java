@@ -126,7 +126,19 @@ public class Survey extends SugarRecord<Survey> {
      * @return true|false
      */
     public boolean isSent(){
-        return Constants.SURVEY_SENT==this.status;
+        if(Constants.SURVEY_SENT==this.status)
+            return true;
+        return false;
+    }
+
+    /**
+     * Checks if the survey has been hidden or not
+     * @return true|false
+     */
+    public boolean isHide(){
+        if(Constants.SURVEY_HIDE==this.status)
+            return true;
+        return false;
     }
 
     /**
@@ -229,6 +241,7 @@ public class Survey extends SugarRecord<Survey> {
                 .where(com.orm.query.Condition.prop("org_unit").eq(orgUnit.getId()))
                 .and(com.orm.query.Condition.prop("program").eq(program.getId()))
                 .and(com.orm.query.Condition.prop("status").notEq(Constants.SURVEY_SENT))
+                .and(com.orm.query.Condition.prop("status").notEq(Constants.SURVEY_HIDE))
                 .orderBy("event_date")
                 .orderBy("org_unit")
                 .list();
@@ -238,6 +251,7 @@ public class Survey extends SugarRecord<Survey> {
     public static List<Survey> getAllUnsentSurveys() {
         return Select.from(Survey.class)
                 .where(com.orm.query.Condition.prop("status").notEq(Constants.SURVEY_SENT))
+                .and(com.orm.query.Condition.prop("status").notEq(Constants.SURVEY_HIDE))
                 .orderBy("event_date")
                 .orderBy("org_unit")
                 .list();
@@ -247,6 +261,7 @@ public class Survey extends SugarRecord<Survey> {
     public static List<Survey> getUnsentSurveys(int limit) {
         return Select.from(Survey.class)
                 .where(com.orm.query.Condition.prop("status").notEq(Constants.SURVEY_SENT))
+                .and(com.orm.query.Condition.prop("status").notEq(Constants.SURVEY_HIDE))
                 .limit(String.valueOf(limit))
                 .orderBy("event_date")
                 .orderBy("org_unit")
@@ -262,6 +277,15 @@ public class Survey extends SugarRecord<Survey> {
                 .list();
     }
 
+    // Returns all the surveys with status put to "Hide"
+    public static List<Survey> getAllHideAndSentSurveys() {
+        return Select.from(Survey.class)
+                .where(com.orm.query.Condition.prop("status").eq(Constants.SURVEY_SENT))
+                .or(com.orm.query.Condition.prop("status").eq(Constants.SURVEY_HIDE))
+                .orderBy("event_date")
+                .orderBy("org_unit")
+                .list();
+    }
     // Returns the last surveys (by date) with status put to "Sent"
     public static List<Survey> getSentSurveys(int limit) {
         return Select.from(Survey.class)

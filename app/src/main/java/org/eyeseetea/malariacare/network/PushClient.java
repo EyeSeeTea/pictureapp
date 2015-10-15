@@ -92,6 +92,8 @@ public class PushClient {
     private static String TAG_DATAVALUES="dataValues";
     private static String TAG_DATAELEMENT="dataElement";
     private static String TAG_VALUE="value";
+    //When PushClient is sending the event, the activity is null, becouse PushClient is called in a InstanceService without activity.
+    //I can´t access to the activity or context for get the r.string values.
     private static String TAG_IMEI="RuNZUhiAmlv";
     private static String TAG_PHONE="UkGuMlmNtJH";
     private static String TAG_PHONE_SERIAL="zZ1LFI0FplS";
@@ -295,11 +297,23 @@ public class PushClient {
 
         //put in values the phonemetadata for be sent in the survey
         PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
-        values.put(preparePhoneValue(TAG_IMEI,phoneMetaData.getImei()));
-        //Check if the phonenumber is null, some SIMCards/Operators not give this field.
-        if(phoneMetaData.getPhone_number()!=null)
-            values.put(preparePhoneValue(TAG_PHONE, phoneMetaData.getPhone_number()));
-        values.put(preparePhoneValue(TAG_PHONE_SERIAL, phoneMetaData.getPhone_serial()));
+        //activity is always null here
+        if(activity==null) {
+            values.put(preparePhoneValue(TAG_IMEI, phoneMetaData.getImei()));
+            //Check if the phonenumber is null, some SIMCards/Operators not give this field.
+            if (phoneMetaData.getPhone_number() != null)
+                values.put(preparePhoneValue(TAG_PHONE, phoneMetaData.getPhone_number()));
+            values.put(preparePhoneValue(TAG_PHONE_SERIAL, phoneMetaData.getPhone_serial()));
+            Log.d("activity", "null");
+        }
+        else{
+            Log.d("activity","ok");
+            values.put(preparePhoneValue(activity.getResources().getString(R.string.PHONEIMEI_UID), phoneMetaData.getImei()));
+            //Check if the phonenumber is null, some SIMCards/Operators not give this field.
+            if (phoneMetaData.getPhone_number() != null)
+                values.put(preparePhoneValue(activity.getResources().getString(R.string.PHONENUMBER_UID), phoneMetaData.getPhone_number()));
+            values.put(preparePhoneValue(activity.getResources().getString(R.string.PHONESERIAL_UID), phoneMetaData.getPhone_serial()));
+        }
         return values;
     }
 

@@ -45,8 +45,7 @@ public class EyeSeeTeaApplication extends com.orm.SugarApp {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         LocationMemory.getInstance().init(getApplicationContext());
-        // Not previously populated tables
-        Session.setUIDPROGRAM(getResources().getString(R.string.UID_PROGRAM));
+        // Not previously populated tables 
         CompositeScore.saveInTx();
         QuestionRelation.saveInTx();
         Score.saveInTx();

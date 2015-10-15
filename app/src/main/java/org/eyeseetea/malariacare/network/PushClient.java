@@ -83,6 +83,8 @@ public class PushClient {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
+    private static Boolean BANNED=false;
+
     private static String COMPLETED="COMPLETED";
 
     private static String TAG_PROGRAM="program";
@@ -97,6 +99,7 @@ public class PushClient {
     private static String TAG_DATAELEMENT="dataElement";
     private static String TAG_VALUE="value";
     private static String TAG_CloseData="closedDate";
+
 
 
     private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=1;
@@ -119,7 +122,8 @@ public class PushClient {
     }
 
     public PushResult push() {
-        //Check the organization closed data for check if the survey can be sent
+        //Check the organization is banned, if not, check if closeddate for check if the survey can be sent
+        if(!BANNED)
         if(isOrganizationClosed()) {
             try {
                 JSONObject data = prepareMetadata();
@@ -134,6 +138,7 @@ public class PushClient {
                 return new PushResult(ex);
             }
         }
+        BANNED=true;
         JSONObject banned= null;
         try {
             banned = new JSONObject("{\"Simulate_response\":\"Org_unitBanned\"}");
@@ -144,7 +149,8 @@ public class PushClient {
     }
 
     public PushResult pushBackground() {
-        //Check the organization closed data for check if the survey can be sent
+        //Check the organization is banned, if not, check if closeddate for check if the survey can be sent
+        if(!BANNED)
         if(isOrganizationClosed()) {
             try {
                 JSONObject data = prepareMetadata();
@@ -173,6 +179,7 @@ public class PushClient {
                 return new PushResult(ex);
             }
         }
+        BANNED=true;
         JSONObject banned= null;
         try {
             banned = new JSONObject("{\"Simulate_response\":\"Org_unitBanned\"}");

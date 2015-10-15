@@ -101,8 +101,8 @@ public class PushClient {
     private static String TAG_PHONE_SERIAL="serial";
 
 
-    private static int DHIS_LIMIT_IN_ONE_HOUR=1;
-    private static ArrayList<Calendar> surveysDates=new ArrayList<Calendar>();
+    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=1;
+    private static int DHIS_LIMIT_HOURS=1;
 
     Survey survey;
     Activity activity;
@@ -143,50 +143,26 @@ public class PushClient {
                 this.survey.setStatus(Constants.SURVEY_SENT);
                 this.survey.save();
                 //Change status
-                Calendar sysDate = Calendar.getInstance();
-                sysDate.setTime(new Date());
-                surveysDates.add(sysDate);
                 //check if the user was sent more than the limit
-                if(isOverNumberLimit()){
-                    banOrg();
+                List<Survey> sentSurveys=Survey.getAllHideAndSentSurveys();
+                int countDates=0;
+                for(int i=sentSurveys.size()-1;i>=0;i--) {
+                    Log.d("Estado:",sentSurveys.get(i).getStatus()+"");
+                    //If isDateOverLimit is TRUE the survey is out of the limit control
+                    if (!Utils.isDateOverLimit(Utils.DateToCalendar(sentSurveys.get(i).getEventDate()),DHIS_LIMIT_HOURS)) {
+                        countDates++;
+                    }
+                }
+                Log.d("Date not over limit:",countDates+"");
+                if(countDates>DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
+                    this.banOrg();
                 }
             }
             return result;
-        }catch(Exception ex){
-            Log.e(TAG, ex.getMessage());
+        }catch(Exception ex) {
+            Log.e("DateError", ex.getMessage());
             return new PushResult(ex);
         }
-    }
-
-    private boolean isOverNumberLimit() {
-        int counter=0;
-        Calendar sysDate = Calendar.getInstance();
-        sysDate.setTime(new Date());
-        if(surveysDates!=null){
-            for(int row=surveysDates.size()-1;row>=0;row--){
-                for(Calendar cal:surveysDates) {
-                    Log.d("tag", cal.getTime() + "");
-                }
-                if(differenceInHours((Date) sysDate.getTime(), (Date) surveysDates.get(row).getTime())<1){
-                    Log.d("tag","menor:"+sysDate.getTime()+"que"+surveysDates.get(row).getTime());
-                    counter++;
-                    if(counter>DHIS_LIMIT_IN_ONE_HOUR){
-                        return true;
-                    }
-                }
-                else{
-                    surveysDates.remove(row);
-                }
-
-            }
-        }
-        return false;
-    }
-
-    public static int differenceInHours(Date higherData, Date minisData) {
-        long differenceInMs = higherData.getTime() - minisData.getTime();
-        long hours = differenceInMs / (1000 * 60 * 60);
-        return (int) hours;
     }
 
     //Block the organization for future push actions. deducting one day to the closed date than the systemdate.
@@ -299,20 +275,11 @@ public class PushClient {
             Log.e(TAG, "closingDateURL: No UID for code " + code);
             throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
         }
-        Calendar closeDate=parseStringToCalendar(responseArray.getJSONObject(0).getString("closedDate"));
+        Calendar closeDate=Utils.parseStringToCalendar(responseArray.getJSONObject(0).getString("closedDate"));
         return closeDate;
     }
 
-    private Calendar parseStringToCalendar(String datestring){
-        Calendar date = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss.SSSZ", Locale.US);
-        try {
-            date.setTime(format.parse(datestring));// all done
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
+
 
     private String pullOrgUnitUID(String code) throws Exception{
         //https://malariacare.psi.org/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:KH_Cambodia
@@ -341,37 +308,6 @@ public class PushClient {
             throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
         }
         return responseArray.getJSONObject(0).getString("id");
-    }
-
-    /**
-     * Get a JSONArray and returns a String array from a key value()
-     * @param value is the key in the first level.
-     * @param json is JSONArray
-     * @throws Exception
-     */
-    public String[] jsonArrayToStringArray(JSONArray json,String value) {
-        int size=0;
-        for (int i = 0; i < json.length(); ++i) {
-            JSONObject row = null;
-            try {
-                row = json.getJSONObject(i);
-                if(row.getString(value)!=null)
-                    size++;
-            } catch (JSONException e) {
-            }
-        }
-        int position=0;
-        String[] strings=new String[size];
-        for (int i = 0; i < json.length(); ++i) {
-            JSONObject row = null;
-            try {
-                row = json.getJSONObject(i);
-                if(row.getString(value)!=null)
-                    strings[position++] = row.getString(value);
-            } catch (JSONException e) {
-            }
-        }
-        return strings;
     }
 
     /**

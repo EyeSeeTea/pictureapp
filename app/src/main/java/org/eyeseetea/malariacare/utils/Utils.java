@@ -19,17 +19,27 @@
 
 package org.eyeseetea.malariacare.utils;
 
+import android.util.Log;
+
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Utils {
 
@@ -87,7 +97,79 @@ public class Utils {
 
         return stringBuilder;
     }
+    /**
+     * Get a JSONArray and returns a String array from a key value()
+     * @param value is the key in the first level.
+     * @param json is JSONArray
+     * @throws Exception
+     */
+    public static String[] jsonArrayToStringArray(JSONArray json,String value) {
+        int size=0;
+        for (int i = 0; i < json.length(); ++i) {
+            JSONObject row = null;
+            try {
+                row = json.getJSONObject(i);
+                if(row.getString(value)!=null)
+                    size++;
+            } catch (JSONException e) {
+            }
+        }
+        int position=0;
+        String[] strings=new String[size];
+        for (int i = 0; i < json.length(); ++i) {
+            JSONObject row = null;
+            try {
+                row = json.getJSONObject(i);
+                if(row.getString(value)!=null)
+                    strings[position++] = row.getString(value);
+            } catch (JSONException e) {
+            }
+        }
+        return strings;
+    }
 
 
+    /**
+     * Get a JSONArray and returns a String array from a key value()
+     * @param limit is the time in hours
+     * @param date is the Date to compare with system Date
+     * @return if the difference is up than the time in hours
+     * @throws Exception
+     */
+    public static boolean isDateOverLimit(Calendar date,int limit) {
+        Calendar sysDate = Calendar.getInstance();
+        sysDate.setTime(new Date());
+        Log.d("Date:Sysdate:", sysDate.getTime() + "");
+        Log.d("Date:Surveydate:", date.getTime() + "");
+        if(differenceInHours((Date) sysDate.getTime(), (Date) date.getTime())<1){
+            Log.d("Date:", "menor:" + sysDate.getTime() + "mayor:" + date.getTime());
+            return false;
+        }
+        else
+        return true;
+    }
 
+    public static int differenceInHours(Date higherData, Date minisData) {
+        long differenceInMs = higherData.getTime() - minisData.getTime();
+        long hours = differenceInMs / (1000 * 60 * 60);
+        Log.d("Date:HoursDifference:", hours + "");
+        return (int) hours;
+    }
+
+    public static Calendar parseStringToCalendar(String datestring){
+        Calendar date = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss.SSSZ", Locale.US);
+        try {
+            date.setTime(format.parse(datestring));// all done
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public static Calendar DateToCalendar(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
+    }
 }

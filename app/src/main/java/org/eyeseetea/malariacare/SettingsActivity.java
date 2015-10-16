@@ -20,6 +20,7 @@
 package org.eyeseetea.malariacare;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -103,6 +104,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                Log.d("prueba","click");
                 askRemoveSentSurveys();
                 return true;
             }
@@ -116,16 +118,17 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
+                        Log.d("prueba","yes");
                         removeSentSurveys();
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
+                        Log.d("prueba","no");
                         break;
                 }
             }
         };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.getListView().getContext());
+        AlertDialog.Builder builder =  new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_title_delete_surveys).setPositiveButton(R.string.yes, dialogClickListener)
                 .setNegativeButton(R.string.no, dialogClickListener).show();
     }
@@ -252,7 +255,48 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference(getString(R.string.font_sizes)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
-        }
+
+            Preference button = (Preference)findPreference("remove_sent_surveys");
+            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Log.d("prueba", "click");
+                    askRemoveSentSurveys(getActivity());
+                    return true;
+                }
+            });
+
+
+    }
+    }
+
+    //ask if the Sent Surveys
+    private static void askRemoveSentSurveys(final Activity activity) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        Log.d("prueba", "yes");
+                        removeSentSurveys(activity);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        Log.d("prueba","no");
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder =  new AlertDialog.Builder(activity);
+        builder.setMessage(R.string.dialog_title_delete_surveys).setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener).show();
+    }
+
+
+    private static void removeSentSurveys(Activity activity) {
+        Intent surveysIntent=new Intent(activity, SurveyService.class);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.REMOVE_SENT_SURVEYS_ACTION);
+        activity.startService(surveysIntent);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)

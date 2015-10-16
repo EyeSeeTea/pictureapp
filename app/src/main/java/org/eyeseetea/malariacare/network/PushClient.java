@@ -20,8 +20,12 @@
 package org.eyeseetea.malariacare.network;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
@@ -42,6 +46,7 @@ import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
+import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -89,9 +94,12 @@ public class PushClient {
     private static String TAG_DATAVALUES="dataValues";
     private static String TAG_DATAELEMENT="dataElement";
     private static String TAG_VALUE="value";
-    private static String TAG_IMEI="imei";
-    private static String TAG_PHONE="phone";
-    private static String TAG_PHONE_SERIAL="serial";
+
+    //When PushClient is sending the event, the activity is null, becouse PushClient is called in a InstanceService without activity.
+    //I can´t access to the activity or context for get the r.string values.
+    private static String TAG_IMEI="RuNZUhiAmlv";
+    private static String TAG_PHONE="UkGuMlmNtJH";
+    private static String TAG_PHONE_SERIAL="zZ1LFI0FplS";
 
 
     Survey survey;
@@ -354,6 +362,15 @@ public class PushClient {
         for(CompositeScore compositeScore:compositeScoreList){
             values.put(prepareValue(compositeScore));
         }
+
+        //put in values the phonemetadata for be sent in the survey
+        PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
+        //Activity is always null here, this is the reason for not use R.String_Phoneimei_uid..
+            values.put(preparePhoneValue(TAG_IMEI, phoneMetaData.getImei()));
+            //Check if the phonenumber is null, some SIMCards/Operators not give this field.
+            if (phoneMetaData.getPhone_number() != null)
+                values.put(preparePhoneValue(TAG_PHONE, phoneMetaData.getPhone_number()));
+            values.put(preparePhoneValue(TAG_PHONE_SERIAL, phoneMetaData.getPhone_serial()));
         return values;
     }
 
@@ -371,6 +388,19 @@ public class PushClient {
         return elementObject;
     }
 
+    /**
+     * Adds a pair dataElement|value according to the passed value.
+     * Format: {dataValues: [{dataElement:'234567',value:'34'}, ...]}
+     * @param value
+     * @return
+     * @throws Exception
+     */
+    private JSONObject preparePhoneValue(String uid, String value) throws Exception{
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_DATAELEMENT, uid);
+        elementObject.put(TAG_VALUE, value);
+        return elementObject;
+    }
     /**
      * Adds a pair dataElement|value according to the 'compositeScore' of the value.
      * Format: {dataValues: [{dataElement:'234567',value:'34'}, ...]}
@@ -417,8 +447,8 @@ public class PushClient {
      */
     private String getDhisURL(){
         String url= PreferencesState.getInstance().getDhisURL();
-        if(url==null || "".equals(url)){
-            url=DHIS_DEFAULT_SERVER;
+        if(url==null || "".equals(url)) {
+            url = DHIS_DEFAULT_SERVER;
         }
         return url+DHIS_PUSH_API;
     }
@@ -437,7 +467,7 @@ public class PushClient {
 
         RequestBody body = RequestBody.create(JSON, data.toString());
         Request request = new Request.Builder()
-                .header(basicAuthenticator.AUTHORIZATION_HEADER,basicAuthenticator.getCredentials())
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
                 .url(DHIS_URL)
                 .post(body)
                 .build();

@@ -45,6 +45,11 @@ public class Survey extends SugarRecord<Survey> {
             " where v.survey=?"+
             " and q.question=0"+
             " and v.value is not null and v.value<>''";
+    private static final String DELETE_SURVEY_IN_PROGRESS ="delete from value v"+
+            " left join question q on v.question=q.id"+
+            " where v.survey=?"+
+            " and q.question=0"+
+            " and v.value is not null and v.value<>''";
 
     OrgUnit orgUnit;
     Program program;
@@ -438,5 +443,13 @@ public class Survey extends SugarRecord<Survey> {
                 ", completionDate=" + completionDate +
                 ", status=" + status +
                 '}';
+    }
+
+    public static void removeInProgress() {
+        List<Survey> inProgressSurvey= Select.from(Survey.class)
+                .where(com.orm.query.Condition.prop("status").eq(Constants.SURVEY_IN_PROGRESS)).list();
+        for(int i=0;i<inProgressSurvey.size();i++){
+            inProgressSurvey.get(i).delete();
+        }
     }
 }

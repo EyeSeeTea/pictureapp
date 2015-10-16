@@ -151,9 +151,11 @@ public class Session {
         Session.location = location;
     }
 
+
     public static PhoneMetaData getPhoneMetaData(){return phoneMetaData;}
 
     public static void setPhoneMetaData(PhoneMetaData phoneMetaData) {
         Session.phoneMetaData = phoneMetaData;
     }
+
 }

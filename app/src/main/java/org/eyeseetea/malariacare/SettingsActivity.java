@@ -104,7 +104,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Log.d("prueba","click");
                 askRemoveSentSurveys();
                 return true;
             }
@@ -118,12 +117,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        Log.d("prueba","yes");
                         removeSentSurveys();
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
-                        Log.d("prueba","no");
                         break;
                 }
             }

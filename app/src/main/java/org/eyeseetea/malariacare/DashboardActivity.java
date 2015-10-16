@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.database.model.Program;
+import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -79,6 +80,14 @@ public class DashboardActivity extends BaseActivity {
         AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
         asyncPopulateDB.execute((Void) null);
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart");
+        Survey.removeInProgress();
+    }
+
 
     @Override
     public void onPause(){

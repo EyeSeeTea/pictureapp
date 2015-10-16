@@ -275,4 +275,7 @@
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
 
+    <!-- UID program-->
+    <string name="UID_PROGRAM" translatable="false">IrppF3qERB7</string>
+
 </resources>

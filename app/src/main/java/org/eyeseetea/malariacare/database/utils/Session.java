@@ -145,4 +145,5 @@ public class Session {
     public static void setLocation(Location location) {
         Session.location = location;
     }
+
 }

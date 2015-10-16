@@ -79,6 +79,7 @@ public class DashboardActivity extends BaseActivity {
 
         AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
         asyncPopulateDB.execute((Void) null);
+        Survey.removeInProgress();
     }
 
     @Override

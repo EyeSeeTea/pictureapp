@@ -371,7 +371,6 @@ public class PushClient {
             if (phoneMetaData.getPhone_number() != null)
                 values.put(preparePhoneValue(TAG_PHONE, phoneMetaData.getPhone_number()));
             values.put(preparePhoneValue(TAG_PHONE_SERIAL, phoneMetaData.getPhone_serial()));
-            Log.d("activity", "null");
         return values;
     }
 

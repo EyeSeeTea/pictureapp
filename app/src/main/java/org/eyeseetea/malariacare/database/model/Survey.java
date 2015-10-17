@@ -126,9 +126,7 @@ public class Survey extends SugarRecord<Survey> {
      * @return true|false
      */
     public boolean isSent(){
-        if(Constants.SURVEY_SENT==this.status)
-            return true;
-        return false;
+        return Constants.SURVEY_SENT==this.status;
     }
 
     /**
@@ -136,9 +134,7 @@ public class Survey extends SugarRecord<Survey> {
      * @return true|false
      */
     public boolean isHide(){
-        if(Constants.SURVEY_HIDE==this.status)
-            return true;
-        return false;
+        return Constants.SURVEY_HIDE==this.status;
     }
 
     /**

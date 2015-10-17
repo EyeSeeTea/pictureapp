@@ -123,8 +123,7 @@ public class PushClient {
 
     public PushResult push() {
         //Check the organization is banned, if not, check if closeddate for check if the survey can be sent
-        if(!BANNED)
-        if(isOrganizationClosed()) {
+        if(!BANNED && isOrganizationClosed()) {
             try {
                 JSONObject data = prepareMetadata();
                 data = prepareDataElements(data);
@@ -150,8 +149,7 @@ public class PushClient {
 
     public PushResult pushBackground() {
         //Check the organization is banned, if not, check if closeddate for check if the survey can be sent
-        if(!BANNED)
-        if(isOrganizationClosed()) {
+        if(!BANNED && isOrganizationClosed()) {
             try {
                 JSONObject data = prepareMetadata();
                 data = prepareDataElements(data);

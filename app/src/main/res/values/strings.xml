@@ -275,4 +275,14 @@
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
 
+
+    <!-- PhoneMetadata UIDS -->
+    <string name="PHONENUMBER_UID" translatable="false">UkGuMlmNtJH</string>
+    <string name="PHONEIMEI_UID" translatable="false">RuNZUhiAmlv</string>
+    <string name="PHONESERIAL_UID" translatable="false">zZ1LFI0FplS</string>
+
+    <!-- UID program-->
+    <string name="UID_PROGRAM" translatable="false">IrppF3qERB7</string>
+
+
 </resources>

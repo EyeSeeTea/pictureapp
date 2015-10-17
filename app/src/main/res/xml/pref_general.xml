@@ -22,8 +22,8 @@
     <PreferenceCategory
         android:title="@string/pref_data"
         android:key="pref_data">
-        <EditTextPreference
-            android:key="org_unit"
+        <org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference
+            android:key="@string/org_unit"
             android:title="@string/create_info_organization_unit"
             android:defaultValue="KH_Cambodia"
             android:selectAllOnFocus="true"

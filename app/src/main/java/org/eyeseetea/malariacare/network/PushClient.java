@@ -20,8 +20,12 @@
 package org.eyeseetea.malariacare.network;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
@@ -42,6 +46,7 @@ import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
+import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -100,6 +105,12 @@ public class PushClient {
     private static String TAG_VALUE="value";
     private static String TAG_CloseData="closedDate";
 
+
+    //When PushClient is sending the event, the activity is null, becouse PushClient is called in a InstanceService without activity.
+    //I can´t access to the activity or context for get the r.string values.
+    private static String TAG_IMEI="RuNZUhiAmlv";
+    private static String TAG_PHONE="UkGuMlmNtJH";
+    private static String TAG_PHONE_SERIAL="zZ1LFI0FplS";
 
 
     private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
@@ -328,6 +339,70 @@ public class PushClient {
         return responseArray.getJSONObject(0).getString("id");
     }
 
+    /**
+     * This method returns a String[] whit the Organitation codes
+     * @throws Exception
+     */
+    public String[] pullOrgUnitsCodes() throws Exception{
+        //https://malariacare.psi.org/api/programs/IrppF3qERB7.json?fields=organisationUnits
+        final String DHIS_PULL_URL=getDhisOrgUnitsURL();
+
+        OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+        BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
+
+        Log.e(TAG, "pullOrgUnitUID URL (" + DHIS_PULL_URL);
+        Request request = new Request.Builder()
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                .url(DHIS_PULL_URL)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if(!response.isSuccessful()){
+            Log.e(TAG, "pullOrgUnitUID (" + response.code()+"): "+response.body().string());
+            throw new IOException(response.message());
+        }
+
+        JSONObject responseJSON=parseResponse(response.body().string());
+        JSONArray responseArray=(JSONArray) responseJSON.get("organisationUnits");
+        if(responseArray.length()==0){
+            Log.e(TAG, "pullOrgUnitUID: No org_unit ");
+            throw new IOException(activity.getString(R.string.dialog_error_push_no_uid));
+        }
+        return jsonArrayToStringArray(responseArray,"code");
+    }
+
+    /**
+     * Get a JSONArray and returns a String array from a key value()
+     * @param value is the key in the first level.
+     * @param json is JSONArray
+     * @throws Exception
+     */
+    public String[] jsonArrayToStringArray(JSONArray json,String value) {
+        int size=0;
+        for (int i = 0; i < json.length(); ++i) {
+            JSONObject row = null;
+            try {
+                row = json.getJSONObject(i);
+                if(row.getString(value)!=null)
+                    size++;
+            } catch (JSONException e) {
+            }
+        }
+        int position=0;
+        String[] strings=new String[size];
+        for (int i = 0; i < json.length(); ++i) {
+            JSONObject row = null;
+            try {
+                row = json.getJSONObject(i);
+                if(row.getString(value)!=null)
+                    strings[position++] = row.getString(value);
+            } catch (JSONException e) {
+            }
+        }
+        return strings;
+    }
 
     /**
      * Get the closedData
@@ -424,6 +499,15 @@ public class PushClient {
         for(CompositeScore compositeScore:compositeScoreList){
             values.put(prepareValue(compositeScore));
         }
+
+        //put in values the phonemetadata for be sent in the survey
+        PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
+        //Activity is always null here, this is the reason for not use R.String_Phoneimei_uid..
+            values.put(preparePhoneValue(TAG_IMEI, phoneMetaData.getImei()));
+            //Check if the phonenumber is null, some SIMCards/Operators not give this field.
+            if (phoneMetaData.getPhone_number() != null)
+                values.put(preparePhoneValue(TAG_PHONE, phoneMetaData.getPhone_number()));
+            values.put(preparePhoneValue(TAG_PHONE_SERIAL, phoneMetaData.getPhone_serial()));
         return values;
     }
 
@@ -441,6 +525,19 @@ public class PushClient {
         return elementObject;
     }
 
+    /**
+     * Adds a pair dataElement|value according to the passed value.
+     * Format: {dataValues: [{dataElement:'234567',value:'34'}, ...]}
+     * @param value
+     * @return
+     * @throws Exception
+     */
+    private JSONObject preparePhoneValue(String uid, String value) throws Exception{
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_DATAELEMENT, uid);
+        elementObject.put(TAG_VALUE, value);
+        return elementObject;
+    }
     /**
      * Adds a pair dataElement|value according to the 'compositeScore' of the value.
      * Format: {dataValues: [{dataElement:'234567',value:'34'}, ...]}
@@ -483,13 +580,26 @@ public class PushClient {
     }
 
     /**
+     * Returns the URL that points to the DHIS server (Pull) API according to preferences.
+     * @return
+     */
+    private String getDhisOrgUnitsURL(){
+        String url= PreferencesState.getInstance().getDhisURL();
+        if(url==null || "".equals(url)){
+            url=DHIS_DEFAULT_SERVER;
+        }
+
+        url=DHIS_DEFAULT_SERVER+DHIS_PULL_PROGRAM+ activity.getResources().getString(R.string.UID_PROGRAM)+DHIS_PULL_ORG_UNITS_API;
+        return url;
+    }
+    /**
      * Returns the URL that points to the DHIS server API according to preferences.
      * @return
      */
     private String getDhisURL(){
         String url= PreferencesState.getInstance().getDhisURL();
-        if(url==null || "".equals(url)){
-            url=DHIS_DEFAULT_SERVER;
+        if(url==null || "".equals(url)) {
+            url = DHIS_DEFAULT_SERVER;
         }
         return url+DHIS_PUSH_API;
     }
@@ -508,7 +618,7 @@ public class PushClient {
 
         RequestBody body = RequestBody.create(JSON, data.toString());
         Request request = new Request.Builder()
-                .header(basicAuthenticator.AUTHORIZATION_HEADER,basicAuthenticator.getCredentials())
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
                 .url(DHIS_URL)
                 .post(body)
                 .build();

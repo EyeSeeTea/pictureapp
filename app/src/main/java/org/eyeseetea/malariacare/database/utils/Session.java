@@ -25,6 +25,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
+import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +55,10 @@ public class Session {
      */
     private static Location location;
 
+    /**
+     * The current phone metadata
+     */
+    private static PhoneMetaData phoneMetaData;
     /**
      * Map that holds non serializable results from services
      */
@@ -116,8 +121,8 @@ public class Session {
      * @param value
      */
     public static void putServiceValue(String key, Object value){
-        Log.i(TAG,"putServiceValue("+key+", "+value.toString()+")");
-        serviceValues.put(key,value);
+        Log.i(TAG, "putServiceValue(" + key + ", " + value.toString() + ")");
+        serviceValues.put(key, value);
     }
 
     /**
@@ -145,4 +150,12 @@ public class Session {
     public static void setLocation(Location location) {
         Session.location = location;
     }
+
+
+    public static PhoneMetaData getPhoneMetaData(){return phoneMetaData;}
+
+    public static void setPhoneMetaData(PhoneMetaData phoneMetaData) {
+        Session.phoneMetaData = phoneMetaData;
+    }
+
 }

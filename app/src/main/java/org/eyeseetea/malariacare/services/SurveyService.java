@@ -195,11 +195,6 @@ public class SurveyService extends IntentService {
         //Since intents does NOT admit NON serializable as values we use Session instead
         Session.putServiceValue(ALL_SENT_SURVEYS_ACTION,surveys);
 
-        for(Survey survey:surveys){
-            Log.d("SurveyStatusget",survey.getStatus()+"");
-
-        }
-
         //Returning result to anyone listening
         Intent resultIntent= new Intent(ALL_SENT_SURVEYS_ACTION);
         LocalBroadcastManager.getInstance(this).sendBroadcast(resultIntent);
@@ -219,7 +214,6 @@ public class SurveyService extends IntentService {
             }
             else{
                 surveys.get(i).setStatus(Constants.SURVEY_HIDE);
-                Log.d("SurveyStatusremove", surveys.get(i).getStatus() + "");
                 surveys.get(i).save();
             }
         }

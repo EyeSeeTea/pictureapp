@@ -42,7 +42,7 @@
         android:title="@string/pref_server"
         android:key="pref_server">
         <EditTextPreference
-            android:key="dhis_url"
+            android:key="@string/dhis_url"
             android:title="@string/settings_text_dhis_server_url"
             android:defaultValue="https://malariacare.psi.org"
             android:selectAllOnFocus="true"

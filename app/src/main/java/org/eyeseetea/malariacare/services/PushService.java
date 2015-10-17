@@ -28,7 +28,9 @@
         import android.telephony.TelephonyManager;
         import android.util.Log;
 
+        import org.eyeseetea.malariacare.DashboardActivity;
         import org.eyeseetea.malariacare.database.model.Survey;
+        import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
         import org.eyeseetea.malariacare.network.PushClient;
         import org.eyeseetea.malariacare.network.PushResult;
 
@@ -85,20 +87,14 @@ public class PushService extends IntentService {
      * Push all pending surveys
      */
     private void pushAllPendingSurveys() {
-        Log.d(TAG,"pushAllPendingSurveys (Thread:"+Thread.currentThread().getId()+")");
+        Log.d(TAG, "pushAllPendingSurveys (Thread:" + Thread.currentThread().getId() + ")");
 
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllUnsentSurveys();
 
         if(surveys!=null && !surveys.isEmpty()){
             for(Survey survey : surveys){
-                PushClient pushClient=new PushClient(survey);
-
-                //Send the shared preferents to the PushClient.
-
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                String DHIS_DEFAULT_SERVER= prefs.getString("dhis_url", "https://malariacare.psi.org");
-                pushClient.setUrlPreferentShared(DHIS_DEFAULT_SERVER);
+                PushClient pushClient=new PushClient(survey, getApplicationContext());
 
                 //Push  data
 

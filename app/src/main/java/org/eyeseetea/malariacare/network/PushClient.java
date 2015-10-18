@@ -173,9 +173,11 @@ public class PushClient {
                             //If isDateOverLimit is TRUE the survey is out of the limit control
                             if (!Utils.isDateOverLimit(Utils.DateToCalendar(sentSurveys.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
                                 countDates++;
+                                Log.d(TAG,"Surveys sents in one hour:"+countDates);
                             }
                         }
                         if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
+                            Log.d(TAG,"Surveys sents:"+countDates+" will be banned");
                             this.banOrg(DHIS_ORG_NAME);
                         }
                     }
@@ -477,7 +479,6 @@ public class PushClient {
     private Calendar getOrgUnitClosedDate(String orgName) throws Exception{
         //https://malariacare.psi.org/api/organisationUnits/Pg91OgEIKIm/closedDate
         String DHIS_PULL_URL=getPatchClosedDateUrl(orgName);
-        Log.d(TAG,"orgunticlos"+DHIS_PULL_URL);
         OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 
         BasicAuthenticator basicAuthenticator=new BasicAuthenticator();

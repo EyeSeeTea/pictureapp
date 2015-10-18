@@ -76,7 +76,6 @@ public class DashboardActivity extends BaseActivity {
     public void onResume(){
         Log.d(TAG, "onResume");
         super.onResume();
-
         AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
         asyncPopulateDB.execute((Void) null);
         Survey.removeInProgress();

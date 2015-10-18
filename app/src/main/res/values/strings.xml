@@ -117,6 +117,10 @@
     <string name="survey_title_completed">Survey completed</string>
     <string name="survey_info_completed">The survey has been successfully completed</string>
 
+    <!-- exceptions -->
+    <string name="exception_org_unit_not_valid">Outlet Code is not valid. Contact PSI at 123456789</string>
+    <string name="exception_org_unit_banned">Outlet Is Closed. Contact PSI at 123456789</string>
+
 
     <!--widget-->
     <string name="widget_info_empty_statement">Question statement</string>

@@ -43,6 +43,10 @@ public class PushResult {
         this.exception = exception;
     }
 
+    public PushResult() {
+
+    }
+
     public boolean isSuccessful(){
         return exception==null && jsonObject!=null;
     }

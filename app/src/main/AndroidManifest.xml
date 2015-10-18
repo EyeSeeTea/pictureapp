@@ -65,6 +65,17 @@
                 android:value=".DashboardActivity" />
         </activity>
         <activity
+            android:name="org.eyeseetea.malariacare.views.Dialog"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/app_name"
+            android:parentActivityName=".DashboardActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DashboardActivity" />
+        </activity>
+        <activity
             android:name="org.eyeseetea.malariacare.SurveyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:finishOnTaskLaunch="true"

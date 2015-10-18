@@ -33,6 +33,7 @@ import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,11 +143,16 @@ public class SurveyService extends IntentService {
         List<Survey> unsentSurveys=new ArrayList<Survey>();
         List<Survey> sentSurveys=new ArrayList<Survey>();
         for(Survey survey:surveys){
-            if(!survey.isSent()){
+            if(!survey.isSent() && !survey.isHide() ){
+                Log.d(TAG,"SurveyStatusUnSent:"+survey.getStatus() + "");
                 unsentSurveys.add(survey);
                 survey.getAnsweredQuestionRatio();
-            }else{
+            }else if (survey.isSent() && !survey.isHide()){
+                Log.d(TAG,"SurveyStatusSentNotHide:"+survey.getStatus() + "");
                 sentSurveys.add(survey);
+            }
+            else{
+                Log.d(TAG,"SurveyStatusSentHide:"+ survey.getStatus() + "");
             }
         }
 
@@ -205,8 +211,15 @@ public class SurveyService extends IntentService {
 
         //Select all sent surveys from sql and delete.
         List<Survey> surveys = Survey.getAllSentSurveys();
-        for(int i=0;i<surveys.size();i++){
-            surveys.get(i).delete();
+        for(int i=surveys.size()-1;i>=0;i--){
+            //If is over limit the survey be delete, if is in the limit the survey change the state to STATE_HIDE
+            if (Utils.isDateOverLimit(Utils.DateToCalendar(surveys.get(i).getEventDate()), 1)) {
+                surveys.get(i).delete();
+            }
+            else{
+                surveys.get(i).setStatus(Constants.SURVEY_HIDE);
+                surveys.get(i).save();
+            }
         }
     }
 

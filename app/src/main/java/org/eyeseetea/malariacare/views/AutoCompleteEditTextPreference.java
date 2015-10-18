@@ -107,7 +107,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         protected String[] doInBackground(ArrayList<String>... passing) {
             String[] result = null;
             try {
-                PushClient pushClient=new PushClient(null,(Activity)getContext());
+                PushClient pushClient=new PushClient((Activity)getContext());
                 result = pushClient.pullOrgUnitsCodes();
             } catch (Exception e) {
                 e.printStackTrace();

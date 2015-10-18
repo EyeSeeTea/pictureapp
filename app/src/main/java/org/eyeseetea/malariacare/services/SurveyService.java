@@ -152,7 +152,7 @@ public class SurveyService extends IntentService {
                 sentSurveys.add(survey);
             }
             else{
-                Log.d(TAG,"SurveyStatusNotsentNothide:"+ survey.getStatus() + "");
+                Log.d(TAG,"SurveyStatusSentHide:"+ survey.getStatus() + "");
             }
         }
 

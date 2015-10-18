@@ -144,11 +144,15 @@ public class SurveyService extends IntentService {
         List<Survey> sentSurveys=new ArrayList<Survey>();
         for(Survey survey:surveys){
             if(!survey.isSent() && !survey.isHide() ){
+                Log.d(TAG,"SurveyStatusUnSent:"+survey.getStatus() + "");
                 unsentSurveys.add(survey);
                 survey.getAnsweredQuestionRatio();
             }else if (survey.isSent() && !survey.isHide()){
-                Log.d("SurveyStatusreload", survey.getStatus() + "");
+                Log.d(TAG,"SurveyStatusSentNotHide:"+survey.getStatus() + "");
                 sentSurveys.add(survey);
+            }
+            else{
+                Log.d(TAG,"SurveyStatusNotsentNothide:"+ survey.getStatus() + "");
             }
         }
 

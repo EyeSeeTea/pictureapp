@@ -32,6 +32,7 @@
     <!-- settings -->
     <string name="settings_menu_about">About</string>
     <string name="settings_menu_configuration">Settings</string>
+    <string name="settings_menu_delete">Remove all sent Surveys</string>
     <string name="settings_menu_licence">License</string>
     <string name="settings_menu_update">Update questions (DHIS)</string>
     <string name="settings_menu_logout">Logout</string>
@@ -43,6 +44,7 @@
     <string name="login_error_bad_credentials">Your user/password are incorrect</string>
 
     <!-- # dialogs -->
+    <string name="dialog_title_delete_surveys">Are you sure that you want to remove all sent surveys?</string>
     <string name="dialog_title_delete_survey">Delete Survey</string>
     <string name="dialog_info_delete_survey">Are you sure you want to completely delete this survey?</string>
     <string name="dialog_title_error">Error</string>
@@ -114,6 +116,10 @@
     <string name="survey_info_select_tab">Select Tab: </string>
     <string name="survey_title_completed">Survey completed</string>
     <string name="survey_info_completed">The survey has been successfully completed</string>
+
+    <!-- exceptions -->
+    <string name="exception_org_unit_not_valid">Outlet Code is not active for program. Contact PSI at 123456789</string>
+    <string name="exception_org_unit_banned">Outlet is closed or blocked. Contact PSI at 123456789</string>
 
 
     <!--widget-->
@@ -272,5 +278,15 @@
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
+
+
+    <!-- PhoneMetadata UIDS -->
+    <string name="PHONENUMBER_UID" translatable="false">UkGuMlmNtJH</string>
+    <string name="PHONEIMEI_UID" translatable="false">RuNZUhiAmlv</string>
+    <string name="PHONESERIAL_UID" translatable="false">zZ1LFI0FplS</string>
+
+    <!-- UID program-->
+    <string name="UID_PROGRAM" translatable="false">IrppF3qERB7</string>
+
 
 </resources>

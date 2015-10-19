@@ -22,7 +22,7 @@ public class Constants {
 
     public static final int MAX_INT_CHARS = 5;
 
-    public static final int MAX_INT_AGE = 2;
+    public static final int MAX_INT_AGE = 99;
 
     // ############# TAB TYPE ###############
     public static final int TAB_AUTOMATIC_SCORED = 0,
@@ -41,7 +41,8 @@ public class Constants {
     // ############# SURVEY STATUS ###############
     public static final int SURVEY_IN_PROGRESS = 0,
             SURVEY_COMPLETED = 1,
-            SURVEY_SENT = 2;
+            SURVEY_SENT = 2,
+            SURVEY_HIDE = 3;
 
     //############# OPERATION TYPE ##############
     public static final int OPERATION_TYPE_MATCH = 0,

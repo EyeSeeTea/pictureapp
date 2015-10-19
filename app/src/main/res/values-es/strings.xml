@@ -23,6 +23,7 @@
     <!-- settings -->
     <string name="settings_menu_about">Acerca de</string>
     <string name="settings_menu_configuration">Configuración</string>
+    <string name="settings_menu_delete">Borrar todas las encuestas enviadas</string>
     <string name="settings_menu_licence">Licencia</string>
     <string name="settings_menu_update">Actualizar preguntas (DHIS)</string>
     <string name="settings_menu_logout">Desconectar</string>
@@ -34,6 +35,7 @@
     <string name="login_error_bad_credentials">El usuario/contraseña es incorrecto</string>
 
     <!-- # dialogs -->
+    <string name="dialog_title_delete_surveys">¿Está seguro de querer borrar todas las encuestas enviadas?</string>
     <string name="dialog_title_delete_survey">Borrar evaluación</string>
     <string name="dialog_info_delete_survey">¿Seguro que desea borrar la evaluación?</string>
     <string name="dialog_title_error">Error</string>
@@ -99,6 +101,11 @@
     <string name="survey_info_select_tab">Seleccione pestaña: </string>
     <string name="survey_title_completed">Evaluacion finalizada</string>
     <string name="survey_info_completed">La evaluacion ha sido completada correctamente</string>
+
+    <!-- exceptions -->
+    <string name="exception_org_unit_not_valid">El código de salida no está activo para el programa . Contacto PSI en el 123456789</string>
+    <string name="exception_org_unit_banned">El código está cerrado o bloqueado . Contacto PSI en el 123456789</string>
+
 
     <!-- widget -->
     <string name="widget_info_empty_statement">Enunciado de cuestión</string>

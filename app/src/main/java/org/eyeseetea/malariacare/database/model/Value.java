@@ -1,21 +1,21 @@
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
-import com.orm.query.Select;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
-public class Value extends SugarRecord<Value> {
+public class Value extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -127,36 +127,20 @@ public class Value extends SugarRecord<Value> {
     }
 
     public static int countBySurvey(Survey survey){
-        return 0;
-        //TODO
-//        if(survey==null || survey.getId_survey()==null){
-//            return 0;
-//        }
-//        return (int) new Select().count()
-//                .from(Value.class)
-//                .where(Condition.column(Value$Table.SURVEY_ID_SURVEY).eq(survey.getId_survey())).count();
+        if(survey==null || survey.getId_survey()==null){
+            return 0;
+        }
+        return (int) new Select().count()
+                .from(Value.class)
+                .where(Condition.column(Value$Table.SURVEY_ID_SURVEY).eq(survey.getId_survey())).count();
     }
 
     public static List<Value> listAllBySurvey(Survey survey){
-        return null;
-        //TODO
-//        if(survey==null || survey.getId_survey()==null){
-//            return new ArrayList<Value>();
-//        }
-//        return Select.from(Value.class)
-//                .where(com.orm.query.Condition.prop("survey").eq(survey.getId_survey()))
-//                .orderBy("id")
-//                .list();
-    }
+        if(survey==null || survey.getId_survey()==null){
+            return new ArrayList<>();
+        }
+        return new Select().from(Value.class).where(Condition.column(Survey$Table.ID_SURVEY).eq(survey.getId_survey())).queryList();
 
-    @Override
-    public String toString() {
-        return "Value{" +
-                "option=" + option +
-                ", question=" + question +
-                ", value='" + value + '\'' +
-                ", survey=" + survey +
-                '}';
     }
 
     @Override
@@ -166,21 +150,33 @@ public class Value extends SugarRecord<Value> {
 
         Value value1 = (Value) o;
 
-        if (!option.equals(value1.option)) return false;
+        if (id_value != value1.id_value) return false;
+        if (!value.equals(value1.value)) return false;
         if (!question.equals(value1.question)) return false;
         if (!survey.equals(value1.survey)) return false;
-        if (!value.equals(value1.value)) return false;
+        return !(option != null ? !option.equals(value1.option) : value1.option != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = option.hashCode();
-        result = 31 * result + question.hashCode();
+        int result = (int) (id_value ^ (id_value >>> 32));
         result = 31 * result + value.hashCode();
+        result = 31 * result + question.hashCode();
         result = 31 * result + survey.hashCode();
+        result = 31 * result + (option != null ? option.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Value{" +
+                "id=" + id_value +
+                ", value='" + value + '\'' +
+                ", question=" + question +
+                ", survey=" + survey +
+                ", option=" + option +
+                '}';
     }
 
 }

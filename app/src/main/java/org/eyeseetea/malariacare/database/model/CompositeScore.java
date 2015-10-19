@@ -111,7 +111,6 @@ public class CompositeScore extends BaseModel {
     }
 
     public List<CompositeScore> getCompositeScoreChildren() {
-        return null;
         if (this.compositeScoreChildren == null){
             this.compositeScoreChildren = new Select()
                     .from(CompositeScore.class)

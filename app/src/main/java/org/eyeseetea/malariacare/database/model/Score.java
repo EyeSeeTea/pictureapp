@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;

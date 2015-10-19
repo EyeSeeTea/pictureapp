@@ -163,7 +163,7 @@ public class Utils {
         return date;
     }
 
-    public static String getStringSystemData(String format){
+    public static String getClosingDataString(String format){
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
         sysDate.set(Calendar.HOUR, sysDate.get(Calendar.HOUR) - 24);

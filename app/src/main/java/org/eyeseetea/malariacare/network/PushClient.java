@@ -78,6 +78,7 @@ public class PushClient {
     private static String DHIS_USERNAME="testing";
     private static String DHIS_PASSWORD="Testing2015";
     private static String DHIS_ORG_NAME ="KH_Cambodia";
+    private static String DHIS_ORG_UID ="";
     private static String DHIS_PATCH_URL_CLOSED_DATE ="/api/organisationUnits/%s/closedDate";
     private static String DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE="/api/organisationUnits/%s/description";
     private static String DHIS_PATCH_DESCRIPTIONCLOSED_DATE ="Android Surveillance App set the closing date to %s because over 30 surveys were pushed within 1 hour.";
@@ -163,7 +164,7 @@ public class PushClient {
         //If DHIS_UNEXISTENT_ORG_UNIT!=DHIS_ORG_NAME is the same, the UID not exist, and it was be checked.
         //hasOrgUnitValidCode check the code the program and the closedDate
         //This if is evaluating every push from SurveyService.
-        if ((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME))) && hasOrgUnitValidCode(DHIS_ORG_NAME) && !BANNED) {
+        if ((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED && checkAll() ) {
                 try {
                     JSONObject data = prepareMetadata();
                     data = prepareDataElements(data);
@@ -245,7 +246,7 @@ public class PushClient {
         }
         String orgid = null;
         try {
-            orgid = getUIDCheckProgramClosedDate(orgName);
+            orgid = DHIS_ORG_UID;
             patchClosedDate(getPatchClosedDateUrl(url, orgid));
             patchDescriptionClosedDate(getPatchClosedDescriptionUrl(url, orgid));
         } catch (Exception e) {
@@ -333,7 +334,7 @@ public class PushClient {
 
         JSONObject object=new JSONObject();
         object.put(TAG_PROGRAM, survey.getProgram().getUid());
-        object.put(TAG_ORG_UNIT, prepareOrgUnit());
+        object.put(TAG_ORG_UNIT, DHIS_ORG_UID);
         object.put(TAG_EVENTDATE, android.text.format.DateFormat.format("yyyy-MM-dd", survey.getCompletionDate()));
         object.put(TAG_STATUS, COMPLETED);
         object.put(TAG_STOREDBY, survey.getUser().getName());
@@ -363,25 +364,12 @@ public class PushClient {
         return coordinate;
     }
 
-    private String prepareOrgUnit() throws Exception{
-        String orgUnit;
 
-        //take orgUnit code from sharedPreferences
-        String code=PreferencesState.getInstance().getOrgUnit();
-        if(code==null || "".equals(code)){
-            code= DHIS_ORG_NAME;
-        }
-        //pull UID from org_name from DHIS
-        orgUnit= getUIDCheckProgramClosedDate(code);
-        return orgUnit;
-    }
-
-    private boolean hasOrgUnitValidCode(String code){
-        String orgUnit;
+    private boolean checkAll(){
         try {
-            orgUnit= getUIDCheckProgramClosedDate(code);
-            Log.d("ORGUNITNULL", orgUnit);
-            if(!orgUnit.equals("null")){
+            DHIS_ORG_UID= getUIDCheckProgramClosedDate(DHIS_ORG_NAME);
+            Log.d("ORGUNITNULL", DHIS_ORG_UID);
+            if(!DHIS_ORG_UID.equals("null")){
                 return true;
             }
             else{
@@ -440,7 +428,10 @@ public class PushClient {
             // throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
             return "null";
         }
-        if(!Utils.isDateOverSystemDate(Utils.parseStringToCalendar(responseArray.getJSONObject(0).getString(TAG_CLOSEDATA)))){
+        String date=responseArray.getJSONObject(0).getString(TAG_CLOSEDATA);
+        Calendar calendarDate=Utils.parseStringToCalendar(date);
+
+        if(!Utils.isDateOverSystemDate(calendarDate)){
             if(BANNED==false) {
                 BANNED = true;
                 try {
@@ -527,105 +518,6 @@ public class PushClient {
         return description;
     }
 
-    /**
-     * Get the closedDate
-     * @param orgName is the organitation unit
-     * @throws Exception
-     */
-    private Calendar getOrgUnitClosedDate(String orgName) throws Exception{
-        //https://malariacare.psi.org/api/organisationUnits/Pg91OgEIKIm/closedDate
-        String DHIS_PULL_URL=getPatchClosedDateUrl(orgName);
-        OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
-
-        BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
-        client.setAuthenticator(basicAuthenticator);
-
-        Request request = new Request.Builder()
-                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
-                .url(DHIS_PULL_URL)
-                .build();
-
-        Response response = client.newCall(request).execute();
-        if(!response.isSuccessful()){
-            Log.e(TAG, "closingDateURL (" + response.code()+"): "+response.body().string());
-            throw new IOException(response.message());
-        }
-        String jsonData = response.body().string();
-        Log.d(TAG,"Response"+jsonData);
-        Calendar closeDate=null;
-        JSONObject responseObject=new JSONObject(jsonData);
-        if(responseObject.length()==0){
-            Log.e(TAG, "closingDateURL: No UID for code " + orgName);
-//            throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
-            return closeDate;
-        }
-        Log.d(TAG, "data:" + responseObject.getString("closedDate"));
-        try {
-            closeDate = Utils.parseStringToCalendar(responseObject.getString("closedDate"));
-        }
-        catch(Exception e){
-            closeDate=null;
-            return closeDate;
-        }
-        return closeDate;
-    }
-
-
-    /**
-     * Returns the ClosedDate that points to the DHIS server (Pull) API according to preferences.
-     * @return
-     */
-    private String getPatchClosedDateUrl(String dhis_code){
-        //Get the org_ID
-        String DHIS_PULL_URL=dhis_code;
-        String orgid="null";
-        String url="";
-        try {
-            orgid = getUIDCheckProgramClosedDate(DHIS_PULL_URL);
-            if(orgid.equals("null")) {
-                throw new  Exception();
-            }
-            url= PreferencesState.getInstance().getDhisURL();
-            if(url==null || "".equals(url)){
-                url= DHIS_SERVER;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return url+String.format(DHIS_PATCH_URL_CLOSED_DATE,orgid);
-    }
-
-    //Get the orgUnitUid from the server
-    private String pullOrgUnitUID(String code) throws Exception{
-        //https://malariacare.psi.org/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:KH_Cambodia
-        final String DHIS_PULL_URL=getDhisOrgUnitURL(code);
-
-        OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
-
-        BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
-        client.setAuthenticator(basicAuthenticator);
-
-        Request request = new Request.Builder()
-                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
-                .url(DHIS_PULL_URL)
-                .build();
-
-        Response response = client.newCall(request).execute();
-        if(!response.isSuccessful()){
-            Log.e(TAG, "pullOrgUnitUID (" + response.code()+"): "+response.body().string());
-            throw new IOException(response.message());
-        }
-
-        JSONObject responseJSON=parseResponse(response.body().string());
-        JSONArray responseArray=(JSONArray) responseJSON.get(TAG_ORGANISATIONUNIT);
-        if(responseArray.length()==0){
-            Log.e(TAG, "pullOrgUnitUID: No UID for code " + code);
-            //Assign the used org_unit to the unexistent_org_unit for not make new pulls.
-            // throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
-            return "null";
-        }
-        return responseArray.getJSONObject(0).getString("id");
-    }
     /**
      * Adds questions and scores values to the JSON object
      * Format: {dataValues: [{dataElement:'234567',value:'34'}, ...]}
@@ -833,29 +725,6 @@ public class PushClient {
         }catch(Exception ex){
             throw new Exception(activity.getString(R.string.dialog_info_push_bad_credentials));
         }
-    }
-
-    public boolean isOrganizationClosed() {
-        try {
-            Calendar closedDate=getOrgUnitClosedDate(DHIS_ORG_NAME);
-            if(closedDate==null){
-                Log.d(TAG, "The organitation closeData is null.");
-            }
-            if(closedDate!=null) {
-                Calendar sysDate = Calendar.getInstance();
-                sysDate.setTime(new Date());
-
-                if (sysDate.after(closedDate)) {
-                    Log.d(TAG, "The organitation unit has been banned.");
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Log.d(TAG, "The organitation unit is open.");
-        return false;
     }
 
     /**

@@ -295,8 +295,8 @@ public class PushClient {
         String description=String.format(DHIS_PATCH_DESCRIPTIONCLOSED_DATE, dateFormatted);
         StringBuilder sb = new StringBuilder();
         sb.append(actualDescription);
-        sb.append("\\n");
-        sb.append("\\n");
+        sb.append("");//next line
+        sb.append("");//next line
         sb.append(description);
         description=sb.toString();
         sb=null;

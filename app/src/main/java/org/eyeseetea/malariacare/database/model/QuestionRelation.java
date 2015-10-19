@@ -38,16 +38,16 @@ public class QuestionRelation extends BaseModel {
     long id_question_relation;
 
     @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_master",
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "master",
             columnType = Long.class,
-            foreignColumnName = "id_master")},
+            foreignColumnName = "id_question")},
             saveForeignKeyModel = false)
     Question master;
 
     @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_relative",
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "relative",
             columnType = Long.class,
-            foreignColumnName = "id_relative")},
+            foreignColumnName = "id_question")},
             saveForeignKeyModel = false)
     Question relative;
 
@@ -92,5 +92,34 @@ public class QuestionRelation extends BaseModel {
 
     public void setOperation(int operation) {
         this.operation = operation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof QuestionRelation)) return false;
+        QuestionRelation that = (QuestionRelation) o;
+        if (id_question_relation != that.id_question_relation) return false;
+        if (!master.equals(that.master)) return false;
+        return relative.equals(that.relative);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id_question_relation ^ (id_question_relation >>> 32));
+        result = 31 * result + master.hashCode();
+        result = 31 * result + relative.hashCode();
+        result = 31 * result + operation;
+        return result;
+    }
+
+         @Override
+    public String toString() {
+         return "QuestionRelation{" +
+                "id=" + id_question_relation +
+                ", master=" + master +
+                ", relative=" + relative +
+                ", operation=" + operation +
+                '}';
     }
 }

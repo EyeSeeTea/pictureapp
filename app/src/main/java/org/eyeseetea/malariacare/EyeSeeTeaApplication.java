@@ -19,11 +19,13 @@
 
 package org.eyeseetea.malariacare;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.telephony.TelephonyManager;
 
 import com.crashlytics.android.Crashlytics;
+import com.raizlabs.android.dbflow.config.FlowManager;
 
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
@@ -42,7 +44,7 @@ import io.fabric.sdk.android.Fabric;
 /**
  * Created by nacho on 04/08/15.
  */
-public class EyeSeeTeaApplication extends com.orm.SugarApp {
+public class EyeSeeTeaApplication extends Application {
 
     @Override
     public void onCreate() {
@@ -54,15 +56,7 @@ public class EyeSeeTeaApplication extends com.orm.SugarApp {
         PhoneMetaData phoneMetaData=this.getPhoneMetadata();
         Session.setPhoneMetaData(phoneMetaData);
 
-
-        // Not previously populated tables
-
-        CompositeScore.saveInTx();
-        QuestionRelation.saveInTx();
-        Score.saveInTx();
-        Survey.saveInTx();
-        User.saveInTx();
-        Value.saveInTx();
+        FlowManager.init(this);
     }
 
     PhoneMetaData getPhoneMetadata(){

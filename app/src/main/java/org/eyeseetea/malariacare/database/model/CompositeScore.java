@@ -4,12 +4,20 @@ import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.query.Condition;
 import com.orm.query.Select;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.eyeseetea.malariacare.database.AppDatabase;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Table(databaseName = AppDatabase.NAME)
 public class CompositeScore extends SugarRecord<CompositeScore> {
 
     private static final String LIST_BY_PROGRAM_SQL="select distinct cs.* from composite_score cs left join question q on q.composite_score=cs.id "+
@@ -17,9 +25,24 @@ public class CompositeScore extends SugarRecord<CompositeScore> {
             "left join tab t on h.tab=t.id "+
             "left join program p on t.program=p.id where p.id=?";
 
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_composite_score;
+
+    @Column
     String code;
+
+    @Column
     String label;
+
+    @Column
     String uid;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_parent",
+            columnType = Long.class,
+            foreignColumnName = "id_composite_score")},
+            saveForeignKeyModel = false)
     CompositeScore compositeScore;
 
     @Ignore
@@ -44,6 +67,14 @@ public class CompositeScore extends SugarRecord<CompositeScore> {
         this.compositeScore = compositeScore;
     }
 
+
+    public long getId_composite_score() {
+        return id_composite_score;
+    }
+
+    public void setId_composite_score(long id_composite_score) {
+        this.id_composite_score = id_composite_score;
+    }
 
     public String getCode() { return code; }
 
@@ -78,19 +109,31 @@ public class CompositeScore extends SugarRecord<CompositeScore> {
     }
 
     public List<CompositeScore> getCompositeScoreChildren() {
-        if (this._compositeScoreChildren == null){
-            this._compositeScoreChildren = CompositeScore.find(CompositeScore.class, "composite_score = ?", String.valueOf(this.getId()));
-        }
-        return this._compositeScoreChildren;
+        return null;
+        //TODO
+//        if (this._compositeScoreChildren == null){
+//            this._compositeScoreChildren = new Select()
+//                    .from(CompositeScore.class)
+//                    .where(Condition.column(CompositeScore$Table.COMPOSITESCORE_ID_PARENT).eq(this.getId_composite_score()))
+//                    .orderBy(CompositeScore$Table.ORDER_POS)
+//                    .queryList();
+//            //this.compositeScoreChildren = CompositeScore.find(CompositeScore.class, "composite_score = ?", String.valueOf(this.getId()));
+//        }
+//        return this._compositeScoreChildren;
     }
 
+
     public List<Question> getQuestions(){
-        if (_questions == null) {
-            _questions = Select.from(Question.class)
-                    .where(Condition.prop("composite_score")
-                    .eq(String.valueOf(this.getId()))).list();
-        }
-        return _questions;
+        return null;
+        //TODO
+//        //if (questions == null) {
+//        _questions = new Select()
+//                .from(Question.class)
+//                .where(Condition.column(Question$Table.COMPOSITESCORE_ID_COMPOSITE_SCORE).eq(this.getId_composite_score()))
+//                .orderBy(true, Question$Table.ORDER_POS)
+//                .queryList();
+//        //}
+//        return _questions;
     }
 
     /**
@@ -99,21 +142,11 @@ public class CompositeScore extends SugarRecord<CompositeScore> {
      * @return
      */
     public static List<CompositeScore> listAllByProgram(Program program){
-        if(program==null || program.getId()==null){
+        if(program==null || program.getId_program()==null){
             return new ArrayList<>();
         }
-        //Take scores associated to questions of the program ('leaves')
-        List<CompositeScore> compositeScoresByProgram = CompositeScore.findWithQuery(CompositeScore.class, LIST_BY_PROGRAM_SQL, program.getId().toString());
-
-        //Find parent scores from 'leaves'
-        Set<CompositeScore> parentCompositeScores = new HashSet<CompositeScore>();
-        for(CompositeScore compositeScore: compositeScoresByProgram){
-            parentCompositeScores.addAll(listParentCompositeScores(compositeScore));
-        }
-        compositeScoresByProgram.addAll(parentCompositeScores);
-
-        //return all scores
-        return compositeScoresByProgram;
+        return null;
+        //TODO
     }
 
     public static List<CompositeScore> listParentCompositeScores(CompositeScore compositeScore){
@@ -136,8 +169,10 @@ public class CompositeScore extends SugarRecord<CompositeScore> {
     @Override
     public String toString() {
         return "CompositeScore{" +
-                "code='" + code + '\'' +
-                ",label='" + label + '\'' +
+                "id_composite_score=" + id_composite_score +
+                ", code='" + code + '\'' +
+                ", label='" + label + '\'' +
+                ", uid='" + uid + '\'' +
                 ", compositeScore=" + compositeScore +
                 '}';
     }
@@ -149,18 +184,20 @@ public class CompositeScore extends SugarRecord<CompositeScore> {
 
         CompositeScore that = (CompositeScore) o;
 
+        if (id_composite_score != that.id_composite_score) return false;
         if (code != null ? !code.equals(that.code) : that.code != null) return false;
-        if (compositeScore != null ? !compositeScore.equals(that.compositeScore) : that.compositeScore != null)
-            return false;
         if (label != null ? !label.equals(that.label) : that.label != null) return false;
+        if (uid != null ? !uid.equals(that.uid) : that.uid != null) return false;
+        return !(compositeScore != null ? !compositeScore.equals(that.compositeScore) : that.compositeScore != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = code != null ? code.hashCode() : 0;
+        int result = (int) (id_composite_score ^ (id_composite_score >>> 32));
+        result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (label != null ? label.hashCode() : 0);
+        result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (compositeScore != null ? compositeScore.hashCode() : 0);
         return result;
     }

@@ -1,19 +1,47 @@
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.database.AppDatabase;
 
-public class Option extends SugarRecord<Option> {
+@Table(databaseName = AppDatabase.NAME)
+public class Option extends BaseModel {
 
     //FIXME A 'Yes' answer shows children questions, this should be configurable by some additional attribute in Option
     public static final String CHECKBOX_YES_OPTION="Yes";
 
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_option;
+
+    @Column
     String code;
+
+    @Column
     String name;
+
+    @Column
     Float factor;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_answer",
+            columnType = Long.class,
+            foreignColumnName = "id_answer")},
+            saveForeignKeyModel = false)
     Answer answer;
+
+    @Column
     String path;
+
+    @Column
     OptionAttribute optionAttribute;
+
+    @Column
     String background_colour;
 
     public Option() {
@@ -30,6 +58,14 @@ public class Option extends SugarRecord<Option> {
 
     public Option(String name) {
         this.name = name;
+    }
+
+    public long getId_option() {
+        return id_option;
+    }
+
+    public void setId_option(long id_option) {
+        this.id_option = id_option;
     }
 
     public String getName() {

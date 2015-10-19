@@ -24,8 +24,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.orm.query.Select;
-
+import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
@@ -135,10 +134,11 @@ public class SurveyService extends IntentService {
     }
 
     private void reloadDashboard(){
-        List<Survey> surveys=Select.from(Survey.class)
-                .orderBy("event_date")
-                .orderBy("org_unit")
-                .list();
+        List<Survey> surveys = new ArrayList<>();
+        //TODO
+//        List<Survey> surveys=new Select().all().from(Survey.class)
+//                .orderBy(Survey$Table.EVENTDATE)
+//                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
 
         List<Survey> unsentSurveys=new ArrayList<Survey>();
         List<Survey> sentSurveys=new ArrayList<Survey>();

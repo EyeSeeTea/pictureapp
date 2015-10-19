@@ -19,11 +19,27 @@
 
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
 
-public class User extends SugarRecord<User> {
+import com.orm.query.Select;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.database.AppDatabase;
+
+import java.util.List;
+
+@Table(databaseName = AppDatabase.NAME)
+public class User extends BaseModel {
+
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_user;
+    @Column
     String uid;
+    @Column
     String name;
 
     public User() {
@@ -32,6 +48,14 @@ public class User extends SugarRecord<User> {
     public User(String uid, String name) {
         this.uid = uid;
         this.name = name;
+    }
+
+    public Long getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(Long id_user) {
+        this.id_user = id_user;
     }
 
     public String getUid() {
@@ -48,6 +72,13 @@ public class User extends SugarRecord<User> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Survey> getSurveys(){
+        return null;
+        //TODO
+//        return new Select().from(Survey.class)
+//                .where(Condition.column(Survey$Table.USER_ID_USER).eq(this.getId_user())).queryList();
     }
 
     @Override

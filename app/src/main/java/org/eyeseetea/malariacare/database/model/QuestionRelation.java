@@ -19,14 +19,39 @@
 
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
+import org.eyeseetea.malariacare.database.AppDatabase;
 
 /**
  * Created by Jose on 25/05/2015.
  */
-public class QuestionRelation extends SugarRecord<QuestionRelation> {
+@Table(databaseName = AppDatabase.NAME)
+public class QuestionRelation extends BaseModel {
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_question_relation;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_master",
+            columnType = Long.class,
+            foreignColumnName = "id_master")},
+            saveForeignKeyModel = false)
     Question master;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_relative",
+            columnType = Long.class,
+            foreignColumnName = "id_relative")},
+            saveForeignKeyModel = false)
     Question relative;
+
+    @Column
     int operation;
 
     public QuestionRelation(){};
@@ -35,6 +60,14 @@ public class QuestionRelation extends SugarRecord<QuestionRelation> {
         this.master = master;
         this.relative = relative;
         this.operation = operation;
+    }
+
+    public long getId_question_relation() {
+        return id_question_relation;
+    }
+
+    public void setId_question_relation(long id_question_relation) {
+        this.id_question_relation = id_question_relation;
     }
 
     public Question getMaster() {

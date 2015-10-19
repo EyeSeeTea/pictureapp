@@ -4,7 +4,14 @@ import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.query.Condition;
 import com.orm.query.Select;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -14,42 +21,86 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class Question extends SugarRecord<Question>{
+@Table(databaseName = AppDatabase.NAME)
+public class Question extends BaseModel{
 
-    /**
-     * Sql query that counts required questions in a program (required for % stats)
-     */
-    private static final String LIST_REQUIRED_BY_PROGRAM ="select q.* from question q"+
-            " left join answer a on q.answer=a.id"+
-            " left join header h on q.header=h.id"+
-            " left join tab t on h.tab=t.id"+
-            " left join program p on t.program=p.id"+
-            " where q.question=0"+
-            " and a.output<>"+ Constants.NO_ANSWER+
-            " and p.id=?";
+//    /**
+//     * Sql query that counts required questions in a program (required for % stats)
+//     */
+//    private static final String LIST_REQUIRED_BY_PROGRAM ="select q.* from question q"+
+//            " left join answer a on q.answer=a.id"+
+//            " left join header h on q.header=h.id"+
+//            " left join tab t on h.tab=t.id"+
+//            " left join program p on t.program=p.id"+
+//            " where q.question=0"+
+//            " and a.output<>"+ Constants.NO_ANSWER+
+//            " and p.id=?";
+//
+//    private static final String LIST_ALL_BY_PROGRAM ="select q.* from question q"+
+//            " left join header h on q.header=h.id"+
+//            " left join tab t on h.tab=t.id"+
+//            " left join program p on t.program=p.id"+
+//            " and p.id=? order by t.orderpos, q.orderpos";
+//
+//    private static final String LIST_ALL_BY_TABS ="select q.* from question q"+
+//            " left join header h on q.header=h.id"+
+//            " left join tab t on h.tab=t.id"+
+//            " and t.id in (?) order by t.orderpos, q.orderpos";
 
-    private static final String LIST_ALL_BY_PROGRAM ="select q.* from question q"+
-            " left join header h on q.header=h.id"+
-            " left join tab t on h.tab=t.id"+
-            " left join program p on t.program=p.id"+
-            " and p.id=? order by t.orderpos, q.orderpos";
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_question;
 
-    private static final String LIST_ALL_BY_TABS ="select q.* from question q"+
-            " left join header h on q.header=h.id"+
-            " left join tab t on h.tab=t.id"+
-            " and t.id in (?) order by t.orderpos, q.orderpos";
-
+    @Column
     String code;
+
+    @Column
     String de_name;
+
+    @Column
     String short_name;
+
+    @Column
     String form_name;
+
+    @Column
     String uid;
+
+    @Column
     Integer order_pos;
+
+    @Column
     Float numerator_w;
+
+    @Column
     Float denominator_w;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_header",
+            columnType = Long.class,
+            foreignColumnName = "id_header")},
+            saveForeignKeyModel = false)
     Header header;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_answer",
+            columnType = Long.class,
+            foreignColumnName = "id_answer")},
+            saveForeignKeyModel = false)
     Answer answer;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_parent",
+            columnType = Long.class,
+            foreignColumnName = "id_question")},
+            saveForeignKeyModel = false)
     Question question;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_composite_score",
+            columnType = Long.class,
+            foreignColumnName = "id_composite_score")},
+            saveForeignKeyModel = false)
     CompositeScore compositeScore;
 
     @Ignore
@@ -77,6 +128,14 @@ public class Question extends SugarRecord<Question>{
         this.answer = answer;
         this.question = question;
         this.compositeScore = compositeScore;
+    }
+
+    public Long getId_question() {
+        return id_question;
+    }
+
+    public void setId_question(Long id_question) {
+        this.id_question = id_question;
     }
 
     public String getCode() {
@@ -176,34 +235,27 @@ public class Question extends SugarRecord<Question>{
     }
 
     public List<Question> getQuestionChildren() {
-        if (this._questionChildren == null){
-            this._questionChildren = Select.from(Question.class)
-                    .where(Condition.prop("question")
-                            .eq(String.valueOf(this.getId())))
-                    .orderBy("orderpos").list();
-        }
-        return this._questionChildren;
+        return null;
+        //TODO
+//        if (this._questionChildren == null){
+//            this._questionChildren = Select.from(Question.class)
+//                    .where(Condition.prop("question")
+//                            .eq(String.valueOf(this.getId())))
+//                    .orderBy("orderpos").list();
+//        }
+//        return this._questionChildren;
     }
 
     public List<Question> getRelatives() {
-        if (this._relatives == null) {
-
-            this._relatives = Question.findWithQuery(Question.class, "Select * from Question" +
-                    " where id in (Select relative from Question_Relation where master =" + this.getId() + ")");
-       }
-        return this._relatives;
+        return null;
+        //TODO
+//        if (this._relatives == null) {
+//
+//            this._relatives = Question.findWithQuery(Question.class, "Select * from Question" +
+//                    " where id in (Select relative from Question_Relation where master =" + this.getId() + ")");
+//       }
+//        return this._relatives;
     }
-
-    public List<Question> getMasters() {
-        if (this._master == null) {
-
-            this._master = Question.findWithQuery(Question.class, "Select * from Question" +
-                    " where id in (Select master from Question_Relation where relative =" + this.getId() + ")");
-        }
-        return this._master;
-    }
-
-    public boolean belongsToMasterQuestions() {return !getMasters().isEmpty();}
 
     public boolean hasRelatives() {return !getRelatives().isEmpty(); }
 
@@ -212,7 +264,9 @@ public class Question extends SugarRecord<Question>{
     }
 
     public List<Value> getValues(){
-        return Value.find(Value.class, "question = ?", String.valueOf(this.getId()));
+        return null;
+        //TODO
+//        return new Select().from(Value.class).where(Condition.column(Value$Table.QUESTION_ID_QUESTION).eq(this.getId_question())).queryList();
     }
 
     /**
@@ -229,19 +283,20 @@ public class Question extends SugarRecord<Question>{
      * @return
      */
     public Value getValueBySurvey(Survey survey){
-        if(survey==null){
+        if (survey == null) {
             return null;
         }
-        String surveyId = String.valueOf(survey.getId());
-        String questionId = String.valueOf(this.getId());
-        List<Value> returnValues = Select.from(Value.class).
-                where(Condition.prop("question").eq(questionId), Condition.prop("survey").eq(surveyId)).list();
-
-        if (returnValues.size() == 0){
-            return null;
-        }else{
-            return returnValues.get(0);
-        }
+        return null;
+        //TODO
+//        List<Value> returnValues = new Select().from(Value.class)
+//                .where(Condition.column(Value$Table.QUESTION_ID_QUESTION).eq(this.getId_question()))
+//                .and(Condition.column(Value$Table.SURVEY_ID_SURVEY).eq(survey.getId_survey())).queryList();
+//
+//        if (returnValues.size() == 0) {
+//            return null;
+//        } else {
+//            return returnValues.get(0);
+//        }
     }
 
     /**
@@ -306,12 +361,14 @@ public class Question extends SugarRecord<Question>{
      * @return
      */
     public static int countRequiredByProgram(Program program){
-        if(program==null || program.getId()==null){
+        if(program==null || program.getId_program()==null){
             return 0;
         }
 
-        List<Question> questionsByProgram = Question.findWithQuery(Question.class, LIST_REQUIRED_BY_PROGRAM, program.getId().toString());
-        return questionsByProgram.size();
+        return 0;
+        //TODO
+//        List<Question> questionsByProgram = Question.findWithQuery(Question.class, LIST_REQUIRED_BY_PROGRAM, program.getId().toString());
+//        return questionsByProgram.size();
     }
 
     /**
@@ -320,27 +377,31 @@ public class Question extends SugarRecord<Question>{
      * @return
      */
     public static List<Question> listAllByProgram(Program program){
-        if(program==null || program.getId()==null){
-            return new ArrayList<Question>();
-        }
-
-        return Question.findWithQuery(Question.class, LIST_ALL_BY_PROGRAM, program.getId().toString());
+        return null;
+        //TODO
+//        if(program==null || program.getId()==null){
+//            return new ArrayList<Question>();
+//        }
+//
+//        return Question.findWithQuery(Question.class, LIST_ALL_BY_PROGRAM, program.getId().toString());
     }
 
     public static List<Question> listAllByTabs(List<Tab> tabs){
 
-        if(tabs==null || tabs.size()==0){
-            return new ArrayList<Question>();
-        }
-        String tabsAsString="";
-        Iterator<Tab> iterator=tabs.iterator();
-        while(iterator.hasNext()){
-            tabsAsString+="'"+iterator.next().getId().toString()+"'";
-            if(iterator.hasNext()){
-                tabsAsString+=",";
-            }
-        }
-        return Question.findWithQuery(Question.class,LIST_ALL_BY_TABS, tabsAsString);
+        return null;
+        //TODO
+//        if(tabs==null || tabs.size()==0){
+//            return new ArrayList<Question>();
+//        }
+//        String tabsAsString="";
+//        Iterator<Tab> iterator=tabs.iterator();
+//        while(iterator.hasNext()){
+//            tabsAsString+="'"+iterator.next().getId().toString()+"'";
+//            if(iterator.hasNext()){
+//                tabsAsString+=",";
+//            }
+//        }
+//        return Question.findWithQuery(Question.class,LIST_ALL_BY_TABS, tabsAsString);
 
     }
 
@@ -365,7 +426,7 @@ public class Question extends SugarRecord<Question>{
     @Override
     public String toString() {
         return "Question{" +
-                "id='" + id + '\'' +
+                "id='" + id_question + '\'' +
                 ", code='" + code + '\'' +
                 ", de_name='" + de_name + '\'' +
                 ", short_name='" + short_name + '\'' +

@@ -19,15 +19,26 @@
 
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
-import com.orm.query.Condition;
-import com.orm.query.Select;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
+import org.eyeseetea.malariacare.database.AppDatabase;
 
 import java.util.List;
 
-public class Program extends SugarRecord<Program> {
+@Table(databaseName = AppDatabase.NAME)
+public class Program extends BaseModel {
 
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_program;
+
+    @Column
     String uid;
+
+    @Column
     String name;
 
     public Program() {
@@ -40,6 +51,14 @@ public class Program extends SugarRecord<Program> {
     public Program(String uid, String name) {
         this.uid = uid;
         this.name = name;
+    }
+
+    public Long getId_program() {
+        return id_program;
+    }
+
+    public void setId_program(Long id_program) {
+        this.id_program = id_program;
     }
 
     public String getUid() {
@@ -59,10 +78,12 @@ public class Program extends SugarRecord<Program> {
     }
 
     public List<Tab> getTabs(){
-        return Select.from(Tab.class)
-                .where(Condition.prop("program")
-                        .eq(String.valueOf(this.getId())))
-                .orderBy("orderpos").list();
+        return null;
+        //TODO
+//        return Select.from(Tab.class)
+//                .where(Condition.prop("program")
+//                        .eq(String.valueOf(this.getId())))
+//                .orderBy("orderpos").list();
     }
 
     @Override

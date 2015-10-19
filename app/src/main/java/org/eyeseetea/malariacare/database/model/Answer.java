@@ -19,13 +19,28 @@
 
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
+import org.eyeseetea.malariacare.database.AppDatabase;
 
 import java.util.List;
 
-public class Answer extends SugarRecord<Answer> {
+@Table(databaseName = AppDatabase.NAME)
+public class Answer extends BaseModel {
 
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_answer;
+
+    @Column
     String name;
+
+    @Column
     Integer output;
 
     public Answer() {
@@ -34,6 +49,14 @@ public class Answer extends SugarRecord<Answer> {
     public Answer(String name, Integer output) {
         this.name = name;
         this.output = output;
+    }
+
+    public Long getId_answer() {
+        return id_answer;
+    }
+
+    public void setId_answer(Long id_answer) {
+        this.id_answer = id_answer;
     }
 
     public String getName() {
@@ -53,13 +76,15 @@ public class Answer extends SugarRecord<Answer> {
     }
 
     public List<Option> getOptions(){
-        return Option.find(Option.class, "answer = ?", String.valueOf(this.getId()));
+        return null;
+        //TODO
+//        return new Select().from(Option.class).where(Condition.column(Option$Table.ANSWER_ID_ANSWER).eq(this.getId_answer())).queryList();
     }
 
     @Override
     public String toString() {
         return "Answer{" +
-                "id='" + id + '\'' +
+                "id='" + id_answer + '\'' +
                 ", name='" + name + '\'' +
                 ", output=" + output +
                 '}';

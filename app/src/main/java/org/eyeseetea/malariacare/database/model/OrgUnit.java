@@ -20,10 +20,24 @@
 package org.eyeseetea.malariacare.database.model;
 
 import com.orm.SugarRecord;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.eyeseetea.malariacare.database.AppDatabase;
+
+@Table(databaseName = AppDatabase.NAME)
 public class OrgUnit extends SugarRecord<OrgUnit> {
 
+
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_org_unit;
+
+    @Column
     String uid;
+
+    @Column
     String name;
 
     public OrgUnit() {
@@ -37,6 +51,14 @@ public class OrgUnit extends SugarRecord<OrgUnit> {
     public OrgUnit(String uid, String name) {
         this.uid = uid;
         this.name = name;
+    }
+
+    public Long getId_org_unit() {
+        return id_org_unit;
+    }
+
+    public void setId_org_unit(Long id_org_unit) {
+        this.id_org_unit = id_org_unit;
     }
 
     public String getUid() {

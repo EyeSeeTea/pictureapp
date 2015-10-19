@@ -143,6 +143,15 @@ public class Utils {
             return false;
         }
         else
+            return true;
+    }
+
+    //Check if the provided date is under the system data.
+    public static boolean isDateOverSystemDate(Calendar closedData) {
+        Calendar sysDate = Calendar.getInstance();
+        sysDate.setTime(new Date());
+        if(sysDate.after(closedData))
+            return false;
         return true;
     }
 

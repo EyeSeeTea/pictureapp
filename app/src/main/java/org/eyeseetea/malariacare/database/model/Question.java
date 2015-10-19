@@ -212,7 +212,7 @@ public class Question extends BaseModel {
     public List<Question> getQuestionChildren() {
         if (this.children == null){
             this.children = new Select().from(Question.class)
-                    .where(Condition.column(Question$Table.QUESTION)
+                    .where(Condition.column(Question$Table.ID_QUESTION)
                             .eq(this.getId_question()))
                     .orderBy(true, Question$Table.ORDER_POS).queryList();
         }
@@ -349,19 +349,19 @@ public class Question extends BaseModel {
         List<Question> questionsByProgram = new Select().all().from(Question.class).as("q")
                 .join(Answer.class, Join.JoinType.LEFT).as("a")
                 .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ANSWER_ID_ANSWER))
-                         .eq(ColumnAlias.columnWithTable("a", Answer$Table.ID)))
+                         .eq(ColumnAlias.columnWithTable("a", Answer$Table.ID_ANSWER)))
                 .join(Header.class, Join.JoinType.LEFT).as("h")
                 .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.HEADER_ID_HEADER))
-                         .eq(ColumnAlias.columnWithTable("h", Header$Table.ID)))
+                         .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
                 .join(Tab.class, Join.JoinType.LEFT).as("t")
                  .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.TAB_ID_TAB))
-                         .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID)))
+                         .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
                 .join(Program.class, Join.JoinType.LEFT).as("p")
                 .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.PROGRAM_ID_PROGRAM))
-                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID)))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
                 .where(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.QUESTION_ID_PARENT)).is(0))
                 .and(Condition.column(ColumnAlias.columnWithTable("a", Answer$Table.OUTPUT)).isNot(Constants.NO_ANSWER))
-                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.ID)).is(program.getId())).queryList();
+                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)).is(program.getId_program())).queryList();
 
         return questionsByProgram.size();
     }
@@ -399,7 +399,7 @@ public class Question extends BaseModel {
         String tabsAsString="";
         Iterator<Tab> iterator=tabs.iterator();
         while(iterator.hasNext()){
-            tabsAsString+="'"+iterator.next().getId().toString()+"'";
+            tabsAsString+="'"+iterator.next().getId_tab().toString()+"'";
             if(iterator.hasNext()){
                 tabsAsString+=",";
             }

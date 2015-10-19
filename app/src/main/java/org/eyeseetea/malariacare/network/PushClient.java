@@ -435,10 +435,16 @@ public class PushClient {
         JSONObject JsonProgram = responseArray.getJSONObject(0);
         JSONArray responseProgram=(JSONArray) JsonProgram.get(TAG_PROGRAMS);
         //check if the id of the program is correct
-        if(!responseProgram.getJSONObject(0).getString("id").equals(DHIS_UID_PROGRAM)){
+        boolean programExist=false;
+        for(int i=0;i<responseProgram.length();i++) {
+            if (responseProgram.getJSONObject(i).getString("id").equals(DHIS_UID_PROGRAM)) {
+                programExist=true;
+            }
+        }
+        if(!programExist) {
+            Log.e(TAG, "pullOrgUnitUID: Not in our program " + code);
             return "null";
         }
-
         if(responseArray.length()==0){
             Log.e(TAG, "pullOrgUnitUID: No UID for code " + code);
             //Assign the used org_unit to the unexistent_org_unit for not make new pulls.

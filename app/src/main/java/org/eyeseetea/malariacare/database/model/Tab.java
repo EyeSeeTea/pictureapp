@@ -1,11 +1,14 @@
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
-import com.orm.query.Condition;
-import com.orm.query.Select;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -14,7 +17,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
-public class Tab extends SugarRecord<Tab> {
+public class Tab extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -83,18 +86,14 @@ public class Tab extends SugarRecord<Tab> {
     }
 
     public List<Header> getHeaders(){
-        return null;
-        //TODO
-//        return new Select().from(Header.class)
-//                .where(Condition.column(Header$Table.TAB_ID_TAB).eq(this.getId_tab()))
-//                .orderBy(Header$Table.ORDER_POS).queryList();
+        return new Select().from(Header.class)
+                .where(Condition.column(Header$Table.TAB_ID_TAB).eq(this.getId_tab()))
+                .orderBy(Header$Table.ORDER_POS).queryList();
     }
 
     public List<Score> getScores(){
-        return null;
-        //TODO
-//        return new Select().from(Score.class)
-//                .where(Condition.column(Score$Table.TAB_ID_TAB).eq(this.getId_tab())).queryList();
+        return new Select().from(Score.class)
+                .where(Condition.column(Score$Table.TAB_ID_TAB).eq(this.getId_tab())).queryList();
     }
 
     /*

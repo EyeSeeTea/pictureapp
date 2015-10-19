@@ -54,6 +54,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.Proxy;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -115,7 +116,7 @@ public class PushClient {
     private static String TAG_PHONE="UkGuMlmNtJH";
     private static String TAG_PHONE_SERIAL="zZ1LFI0FplS";
 
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
+    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=1;
     private static int DHIS_LIMIT_HOURS=1;
 
     Survey survey;
@@ -309,7 +310,7 @@ public class PushClient {
         String dateFormatted=Utils.getClosingDataString("yyyy-MM-dd");
         JSONObject elementObject = new JSONObject();
         elementObject.put(TAG_CLOSEDATA, dateFormatted);
-        Log.d(TAG, "closingDateURL:EndDate:" + dateFormatted);
+        Log.d("closingDateURL", "closingDateURL:EndDate:" + dateFormatted);
         return elementObject;
     }
 
@@ -428,8 +429,9 @@ public class PushClient {
             // throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
             return "null";
         }
-        String date=responseArray.getJSONObject(0).getString(TAG_CLOSEDATA);
-        Calendar calendarDate=Utils.parseStringToCalendar(date);
+try {
+    String date = responseArray.getJSONObject(0).getString(TAG_CLOSEDATA);
+    Calendar calendarDate = Utils.parseStringToCalendar(date);
 
         if(!Utils.isDateOverSystemDate(calendarDate)){
             if(BANNED==false) {
@@ -441,6 +443,9 @@ public class PushClient {
                 }
             }
         }
+}catch(Exception e){
+    //if the date is null is not need check
+}
         //Return the org_unit id
         return responseArray.getJSONObject(0).getString("id");
     }

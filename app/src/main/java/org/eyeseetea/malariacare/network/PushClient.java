@@ -160,7 +160,6 @@ public class PushClient {
         //If DHIS_UNEXISTENT_ORG_UNIT!=DHIS_ORG_NAME is the same, the UID not exist, and it was be checked.
         //Check the organization is banned, if not, check if closeddate for check if the survey can be sent
         //This if is evaluating every push from SurveyService.
-        banOrg(DHIS_ORG_NAME);
         if ((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME))) && !BANNED && hasOrgUnitValidCode(DHIS_ORG_NAME)) {
             if (!isOrganizationClosed()) {
                 try {

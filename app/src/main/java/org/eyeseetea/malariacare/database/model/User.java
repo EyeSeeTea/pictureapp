@@ -20,11 +20,13 @@
 package org.eyeseetea.malariacare.database.model;
 
 
-import com.orm.query.Select;
+
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
@@ -74,13 +76,6 @@ public class User extends BaseModel {
         this.name = name;
     }
 
-    public List<Survey> getSurveys(){
-        return null;
-        //TODO
-//        return new Select().from(Survey.class)
-//                .where(Condition.column(Survey$Table.USER_ID_USER).eq(this.getId_user())).queryList();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -88,15 +83,16 @@ public class User extends BaseModel {
 
         User user = (User) o;
 
-        if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        if (!uid.equals(user.uid)) return false;
+        if (id_user != user.id_user) return false;
+        if (uid != null ? !uid.equals(user.uid) : user.uid != null) return false;
+        return !(name != null ? !name.equals(user.name) : user.name != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = uid.hashCode();
+        int result = (int) (id_user ^ (id_user >>> 32));
+        result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
@@ -104,7 +100,8 @@ public class User extends BaseModel {
     @Override
     public String toString() {
         return "User{" +
-                "uid='" + uid + '\'' +
+                "id=" + id_user +
+                ", uid='" + uid + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

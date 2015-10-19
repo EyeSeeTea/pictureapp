@@ -7,6 +7,8 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.builder.Condition.In;
+import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
+import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -15,35 +17,13 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
 public class Question extends BaseModel {
-
-//    /**
-//     * Sql query that counts required questions in a program (required for % stats)
-//     */
-//    private static final String LIST_REQUIRED_BY_PROGRAM ="select q.* from question q"+
-//            " left join answer a on q.answer=a.id"+
-//            " left join header h on q.header=h.id"+
-//            " left join tab t on h.tab=t.id"+
-//            " left join program p on t.program=p.id"+
-//            " where q.question=0"+
-//            " and a.output<>"+ Constants.NO_ANSWER+
-//            " and p.id=?";
-//
-//    private static final String LIST_ALL_BY_PROGRAM ="select q.* from question q"+
-//            " left join header h on q.header=h.id"+
-//            " left join tab t on h.tab=t.id"+
-//            " left join program p on t.program=p.id"+
-//            " and p.id=? order by t.orderpos, q.orderpos";
-//
-//    private static final String LIST_ALL_BY_TABS ="select q.* from question q"+
-//            " left join header h on q.header=h.id"+
-//            " left join tab t on h.tab=t.id"+
-//            " and t.id in (?) order by t.orderpos, q.orderpos";
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -363,9 +343,26 @@ public class Question extends BaseModel {
             return 0;
         }
 
-        return 0;
-        //TODO
-        List<Question> questionsByProgram = Question.findWithQuery(Question.class, LIST_REQUIRED_BY_PROGRAM, program.getId().toString());
+        /**
+         * Sql query that counts required questions in a program (required for % stats)
+         */
+        List<Question> questionsByProgram = new Select().all().from(Question.class).as("q")
+                .join(Answer.class, Join.JoinType.LEFT).as("a")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ANSWER_ID_ANSWER))
+                         .eq(ColumnAlias.columnWithTable("a", Answer$Table.ID)))
+                .join(Header.class, Join.JoinType.LEFT).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.HEADER_ID_HEADER))
+                         .eq(ColumnAlias.columnWithTable("h", Header$Table.ID)))
+                .join(Tab.class, Join.JoinType.LEFT).as("t")
+                 .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.TAB_ID_TAB))
+                         .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID)))
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.PROGRAM_ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID)))
+                .where(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.QUESTION_ID_PARENT)).is(0))
+                .and(Condition.column(ColumnAlias.columnWithTable("a", Answer$Table.OUTPUT)).isNot(Constants.NO_ANSWER))
+                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.ID)).is(program.getId())).queryList();
+
         return questionsByProgram.size();
     }
 
@@ -375,31 +372,49 @@ public class Question extends BaseModel {
      * @return
      */
     public static List<Question> listAllByProgram(Program program){
-        return null;
-        //TODO
-//        if(program==null || program.getId()==null){
-//            return new ArrayList<Question>();
-//        }
-//
-//        return Question.findWithQuery(Question.class, LIST_ALL_BY_PROGRAM, program.getId().toString());
+        if(program==null || program.getId_program()==null){
+            return new ArrayList();
+        }
+
+        return new Select().all().from(Question.class).as("q")
+                .join(Header.class, Join.JoinType.LEFT).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.HEADER_ID_HEADER))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                .join(Tab.class, Join.JoinType.LEFT).as("t")
+                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.TAB_ID_TAB))
+                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.PROGRAM_ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM))
+                        .eq(program.getId_program()))
+                .orderBy(Tab$Table.ORDER_POS)
+                .orderBy(Question$Table.ORDER_POS).queryList();
     }
 
     public static List<Question> listAllByTabs(List<Tab> tabs){
-
-        return null;
-        //TODO
-//        if(tabs==null || tabs.size()==0){
-//            return new ArrayList<Question>();
-//        }
-//        String tabsAsString="";
-//        Iterator<Tab> iterator=tabs.iterator();
-//        while(iterator.hasNext()){
-//            tabsAsString+="'"+iterator.next().getId().toString()+"'";
-//            if(iterator.hasNext()){
-//                tabsAsString+=",";
-//            }
-//        }
-//        return Question.findWithQuery(Question.class,LIST_ALL_BY_TABS, tabsAsString);
+        if(tabs==null || tabs.size()==0){
+            return new ArrayList<Question>();
+        }
+        String tabsAsString="";
+        Iterator<Tab> iterator=tabs.iterator();
+        while(iterator.hasNext()){
+            tabsAsString+="'"+iterator.next().getId().toString()+"'";
+            if(iterator.hasNext()){
+                tabsAsString+=",";
+            }
+        }
+        return new Select().all().from(Question.class).as("q")
+                .join(Header.class, Join.JoinType.LEFT).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.HEADER_ID_HEADER))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                .join(Tab.class, Join.JoinType.LEFT).as("t")
+                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.TAB_ID_TAB))
+                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                .where(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB))
+                .in(tabs))
+                .orderBy(Tab$Table.ORDER_POS)
+                .orderBy(Question$Table.ORDER_POS).queryList();
 
     }
 

@@ -21,15 +21,16 @@ package org.eyeseetea.malariacare.database.model;
 
 import android.util.Log;
 
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
-import com.orm.query.Condition;
-import com.orm.query.Select;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
+import com.raizlabs.android.dbflow.sql.language.Join;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
@@ -47,8 +48,8 @@ import java.util.Map;
 @Table(databaseName = AppDatabase.NAME)
 public class Survey extends BaseModel {
 
-    public static final float MAX_AMBER = 80f;
-    public static final float MAX_RED = 50f;
+//    public static final float MAX_AMBER = 80f;
+//    public static final float MAX_RED = 50f;
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -191,10 +192,8 @@ public class Survey extends BaseModel {
     }
 
     public List<Value> getValues(){
-        return null;
-        //TODO
-//        return new Select().from(Value.class)
-//                .where(Condition.column(Value$Table.SURVEY_ID_SURVEY).eq(this.getId_survey())).queryList();
+        return new Select().from(Value.class)
+                .where(Condition.column(Value$Table.SURVEY_ID_SURVEY).eq(this.getId_survey())).queryList();
     }
 
     /**
@@ -334,16 +333,7 @@ public class Survey extends BaseModel {
 //                .orderBy("org_unit")
 //                .list();
     }
-    // Returns the last surveys (by date) with status put to "Sent"
-    public static List<Survey> getSentSurveys(int limit) {
-        return null;
-        //TODO
-//        return new Select().from(Survey.class)
-//                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
-//                .limit(String.valueOf(limit))
-//                .orderBy(Survey$Table.EVENTDATE)
-//                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
-    }
+
 
     // Returns all the surveys with status put to "Completed"
     public static List<Survey> getAllCompletedSurveys() {
@@ -355,16 +345,7 @@ public class Survey extends BaseModel {
 //                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
     }
 
-    // Returns the last surveys (by date) with status put to "Completed"
-    public static List<Survey> getCompletedSurveys(int limit) {
-        return null;
-        //TODO
-//        return new Select().from(Survey.class)
-//                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_COMPLETED))
-//                .limit(String.valueOf(limit))
-//                .orderBy(Survey$Table.EVENTDATE)
-//                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
-    }
+
 
     // Returns all the surveys with status put to "In progress"
     public static List<Survey> getAllUncompletedSurveys() {
@@ -376,16 +357,6 @@ public class Survey extends BaseModel {
 //                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
     }
 
-    // Returns the last surveys (by date) with status put to "In progress"
-    public static List<Survey> getUncompletedSurveys(int limit) {
-        return null;
-        //TODO
-//        return new Select().from(Survey.class)
-//                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_IN_PROGRESS))
-//                .limit(String.valueOf(limit))
-//                .orderBy(Survey$Table.EVENTDATE)
-//                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
-    }
 
     /**
      * Checks if the answer to the first question is 'Yes'
@@ -437,13 +408,13 @@ public class Survey extends BaseModel {
         boolean valid = true;
 
         //Define a filter to select which values will be turned into string by code_question
-        List<String> codeQuestionFilter = new ArrayList<String>() {{
+        List<String> codeQuestionFilter = new ArrayList<>() {{
             add("Specie");  //4
             add("Sex");     //2
             add("Age");     //3
         }};
 
-        Map mapa = new HashMap<String, String>();
+        Map mapa = new HashMap();
         while(iterator.hasNext() && valid){
             Value value = iterator.next();
             String qCode = value.getQuestion().getCode();
@@ -518,11 +489,10 @@ public class Survey extends BaseModel {
     }
 
     public static void removeInProgress() {
-        //TODO
-//        List<Survey> inProgressSurvey= Select.from(Survey.class)
-//                .where(com.orm.query.Condition.prop("status").eq(Constants.SURVEY_IN_PROGRESS)).list();
-//        for(int i=inProgressSurvey.size()-1;i>=0;i--){
-//            inProgressSurvey.get(i).delete();
-//        }
+        List<Survey> inProgressSurvey= new Select().from(Survey.class)
+            .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_IN_PROGRESS)).queryList();
+        for(int i=inProgressSurvey.size()-1;i>=0;i--){
+            inProgressSurvey.get(i).delete();
+        }
     }
 }

@@ -459,4 +459,12 @@ public class Survey extends SugarRecord<Survey> {
                 ", status=" + status +
                 '}';
     }
+
+    public static void removeInProgress() {
+        List<Survey> inProgressSurvey= Select.from(Survey.class)
+                .where(com.orm.query.Condition.prop("status").eq(Constants.SURVEY_IN_PROGRESS)).list();
+        for(int i=inProgressSurvey.size()-1;i>=0;i--){
+            inProgressSurvey.get(i).delete();
+        }
+    }
 }

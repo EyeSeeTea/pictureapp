@@ -106,6 +106,8 @@ public class PushClient {
     private static String TAG_VALUE="value";
     private static String TAG_CLOSEDATA="closedDate";
     private static String TAG_DESCRIPTIONCLOSEDATA="description";
+    private static String TAG_ORGANISATIONUNIT="organisationUnits";
+    private static String TAG_PROGRAMS="programs";
 
 
     //When PushClient is sending the event, the activity is null, becouse PushClient is called in a InstanceService without activity.
@@ -262,6 +264,7 @@ public class PushClient {
         }
     }
 
+    //Patch the closedData data in the server
     private void patchClosedData(String url){
         //https://malariacare.psi.org/api/organisationUnits/u5jlxuod8xQ/closedDate
         try {
@@ -427,10 +430,10 @@ public class PushClient {
         }
 
         JSONObject responseJSON=parseResponse(response.body().string());
-        JSONArray responseArray=(JSONArray) responseJSON.get("organisationUnits");
+        JSONArray responseArray=(JSONArray) responseJSON.get(TAG_ORGANISATIONUNIT);
 
         JSONObject JsonProgram = responseArray.getJSONObject(0);
-        JSONArray responseProgram=(JSONArray) JsonProgram.get("programs");
+        JSONArray responseProgram=(JSONArray) JsonProgram.get(TAG_PROGRAMS);
         //check if the id of the program is correct
         if(!responseProgram.getJSONObject(0).getString("id").equals(DHIS_UID_PROGRAM)){
             return "null";
@@ -472,7 +475,7 @@ public class PushClient {
         }
 
         JSONObject responseJSON=parseResponse(response.body().string());
-        JSONArray responseArray=(JSONArray) responseJSON.get("organisationUnits");
+        JSONArray responseArray=(JSONArray) responseJSON.get(TAG_ORGANISATIONUNIT);
         if(responseArray.length()==0){
             Log.e(TAG, "pullOrgUnitUID: No org_unit ");
             throw new IOException(activity.getString(R.string.dialog_error_push_no_uid));
@@ -610,6 +613,8 @@ public class PushClient {
         }
         return url+String.format(DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE,orgid);
     }
+
+    //Get the orgUnitUid from the server
     private String pullOrgUnitUID(String code) throws Exception{
         //https://malariacare.psi.org/api/organisationUnits.json?paging=false&fields=id&filter=code:eq:KH_Cambodia
         final String DHIS_PULL_URL=getDhisOrgUnitURL(code);
@@ -631,7 +636,7 @@ public class PushClient {
         }
 
         JSONObject responseJSON=parseResponse(response.body().string());
-        JSONArray responseArray=(JSONArray) responseJSON.get("organisationUnits");
+        JSONArray responseArray=(JSONArray) responseJSON.get(TAG_ORGANISATIONUNIT);
         if(responseArray.length()==0){
             Log.e(TAG, "pullOrgUnitUID: No UID for code " + code);
             //Assign the used org_unit to the unexistent_org_unit for not make new pulls.

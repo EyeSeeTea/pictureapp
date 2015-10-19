@@ -116,7 +116,7 @@ public class PushClient {
     private static String TAG_PHONE="UkGuMlmNtJH";
     private static String TAG_PHONE_SERIAL="zZ1LFI0FplS";
 
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=1;
+    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
     private static int DHIS_LIMIT_HOURS=1;
 
     Survey survey;
@@ -165,7 +165,7 @@ public class PushClient {
         //If DHIS_UNEXISTENT_ORG_UNIT!=DHIS_ORG_NAME is the same, the UID not exist, and it was be checked.
         //hasOrgUnitValidCode check the code the program and the closedDate
         //This if is evaluating every push from SurveyService.
-        if ((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED && checkAll() ) {
+        if ((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED && checkAll() && !BANNED  ) {
                 try {
                     JSONObject data = prepareMetadata();
                     data = prepareDataElements(data);

@@ -1,14 +1,13 @@
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
-import com.orm.query.Condition;
-import com.orm.query.Select;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
@@ -16,7 +15,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
-public class Header extends BaseModel{
+public class Header extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -89,15 +88,15 @@ public class Header extends BaseModel{
         this.tab = tab;
     }
 
+    //TODO: to enable lazy loading, here we need to set Method.SAVE and Method.DELETE and use the .toModel() to specify when do we want to load the models
+    @OneToMany(methods = {OneToMany.Method.SAVE, OneToMany.Method.DELETE}, variableName = "questions")
     public List<Question> getQuestions(){
-        return null;
-        //TODO
-//        if (this.questions == null){
-//            this.questions = new Select().from(Question.class)
-//                    .where(Condition.column(Question$Table.HEADER_ID_HEADER).eq(this.getId_header()))
-//                    .orderBy(Question$Table.ORDER_POS).queryList();
-//        }
-//        return questions;
+        if (this.questions == null){
+            this.questions = new Select().from(Question.class)
+                    .where(Condition.column(Question$Table.HEADER_ID_HEADER).eq(this.getId_header()))
+                    .orderBy(Question$Table.ORDER_POS).queryList();
+        }
+        return questions;
     }
 
     /**
@@ -105,11 +104,9 @@ public class Header extends BaseModel{
      * @return
      */
     public long getNumberOfQuestionParents() {
-        return 0;
-        //TODO
-//        return new Select().count().from(Question.class)
-//                .where(Condition.column(Question$Table.HEADER_ID_HEADER).eq(getId_header()))
-//                .and(Condition.column(Question$Table.QUESTION_ID_PARENT).isNull()).count();
+        return new Select().count().from(Question.class)
+                .where(Condition.column(Question$Table.HEADER_ID_HEADER).eq(getId_header()))
+                .and(Condition.column(Question$Table.QUESTION_ID_PARENT).isNull()).count();
     }
 
     //FIXME We need to add the new release of sugar orm as it adds supports for null
@@ -122,17 +119,6 @@ public class Header extends BaseModel{
 //        }
 //        return _parentQuestions;
 //    }
-
-    @Override
-    public String toString() {
-        return "Header{" +
-                "id='" + id_header + '\'' +
-                ", short_name='" + short_name + '\'' +
-                ", name='" + name + '\'' +
-                ", order_pos=" + order_pos +
-                ", tab=" + tab +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -158,5 +144,16 @@ public class Header extends BaseModel{
         result = 31 * result + (order_pos != null ? order_pos.hashCode() : 0);
         result = 31 * result + (tab != null ? tab.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Header{" +
+                "id='" + id_header + '\'' +
+                ", short_name='" + short_name + '\'' +
+                ", name='" + name + '\'' +
+                ", order_pos=" + order_pos +
+                ", tab=" + tab +
+                '}';
     }
 }

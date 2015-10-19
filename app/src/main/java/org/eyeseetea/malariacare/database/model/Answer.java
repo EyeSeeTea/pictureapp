@@ -20,6 +20,7 @@
 package org.eyeseetea.malariacare.database.model;
 
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
@@ -42,6 +43,10 @@ public class Answer extends BaseModel {
 
     @Column
     Integer output;
+
+    List<Option> options;
+
+    List<Question> questions;
 
     public Answer() {
     }
@@ -75,10 +80,16 @@ public class Answer extends BaseModel {
         this.output = output;
     }
 
+    //TODO: to enable lazy loading, here we need to set Method.SAVE and Method.DELETE and use the .toModel() to specify when do we want to load the models
+    @OneToMany(methods = {OneToMany.Method.SAVE, OneToMany.Method.DELETE}, variableName = "options")
     public List<Option> getOptions(){
-        return null;
-        //TODO
-//        return new Select().from(Option.class).where(Condition.column(Option$Table.ANSWER_ID_ANSWER).eq(this.getId_answer())).queryList();
+        return new Select().from(Option.class).where(Condition.column(Option$Table.ANSWER_ID_ANSWER).eq(this.getId_answer())).queryList();
+    }
+
+    //TODO: to enable lazy loading, here we need to set Method.SAVE and Method.DELETE and use the .toModel() to specify when do we want to load the models
+    @OneToMany(methods = {OneToMany.Method.SAVE, OneToMany.Method.DELETE}, variableName = "questions")
+    public List<Question> getQuestions(){
+        return new Select().from(Question.class).where(Condition.column(Question$Table.ANSWER_ID_ANSWER).eq(this.getId_answer())).queryList();
     }
 
     @Override

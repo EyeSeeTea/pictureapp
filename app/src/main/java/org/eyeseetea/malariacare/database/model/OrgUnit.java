@@ -19,15 +19,20 @@
 
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 
+import java.util.List;
+
 @Table(databaseName = AppDatabase.NAME)
-public class OrgUnit extends SugarRecord<OrgUnit> {
+public class OrgUnit extends BaseModel {
 
 
     @Column
@@ -39,6 +44,8 @@ public class OrgUnit extends SugarRecord<OrgUnit> {
 
     @Column
     String name;
+
+    List<Survey> surveys;
 
     public OrgUnit() {
     }
@@ -75,6 +82,15 @@ public class OrgUnit extends SugarRecord<OrgUnit> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @OneToMany(methods = {OneToMany.Method.SAVE, OneToMany.Method.DELETE}, variableName = "surveys")
+    public List<Survey> getSurveys(){
+        //if(this.surveys == null){
+        this.surveys = new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.ORGUNIT_ID_ORG_UNIT).eq(this.getId_org_unit())).queryList();
+        //}
+        return surveys;
     }
 
     @Override

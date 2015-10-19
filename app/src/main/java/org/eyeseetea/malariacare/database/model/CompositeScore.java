@@ -1,29 +1,33 @@
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
-import com.orm.query.Condition;
-import com.orm.query.Select;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
+import com.raizlabs.android.dbflow.sql.language.Join;
+import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Table(databaseName = AppDatabase.NAME)
-public class CompositeScore extends SugarRecord<CompositeScore> {
+public class CompositeScore extends BaseModel {
 
-    private static final String LIST_BY_PROGRAM_SQL="select distinct cs.* from composite_score cs left join question q on q.composite_score=cs.id "+
+    /*private static final String LIST_BY_PROGRAM_SQL="select distinct cs.* from composite_score cs left join question q on q.composite_score=cs.id "+
             "left join header h on q.header=h.id "+
             "left join tab t on h.tab=t.id "+
-            "left join program p on t.program=p.id where p.id=?";
+            "left join program p on t.program=p.id where p.id=?";*/
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -45,11 +49,9 @@ public class CompositeScore extends SugarRecord<CompositeScore> {
             saveForeignKeyModel = false)
     CompositeScore compositeScore;
 
-    @Ignore
-    List<CompositeScore> _compositeScoreChildren;
+    List<CompositeScore> compositeScoreChildren;
 
-    @Ignore
-    List<Question> _questions;
+    List<Question> questions;
 
     public CompositeScore() {
     }
@@ -110,30 +112,25 @@ public class CompositeScore extends SugarRecord<CompositeScore> {
 
     public List<CompositeScore> getCompositeScoreChildren() {
         return null;
-        //TODO
-//        if (this._compositeScoreChildren == null){
-//            this._compositeScoreChildren = new Select()
-//                    .from(CompositeScore.class)
-//                    .where(Condition.column(CompositeScore$Table.COMPOSITESCORE_ID_PARENT).eq(this.getId_composite_score()))
-//                    .orderBy(CompositeScore$Table.ORDER_POS)
-//                    .queryList();
-//            //this.compositeScoreChildren = CompositeScore.find(CompositeScore.class, "composite_score = ?", String.valueOf(this.getId()));
-//        }
-//        return this._compositeScoreChildren;
+        if (this.compositeScoreChildren == null){
+            this.compositeScoreChildren = new Select()
+                    .from(CompositeScore.class)
+                    .where(Condition.column(CompositeScore$Table.COMPOSITESCORE_ID_PARENT).eq(this.getId_composite_score()))
+                    .queryList();
+        }
+        return this.compositeScoreChildren;
     }
 
 
+    //TODO: to enable lazy loading, here we need to set Method.SAVE and Method.DELETE and use the .toModel() to specify when do we want to load the models
+    @OneToMany(methods = {OneToMany.Method.SAVE, OneToMany.Method.DELETE}, variableName = "questions")
     public List<Question> getQuestions(){
-        return null;
-        //TODO
-//        //if (questions == null) {
-//        _questions = new Select()
-//                .from(Question.class)
-//                .where(Condition.column(Question$Table.COMPOSITESCORE_ID_COMPOSITE_SCORE).eq(this.getId_composite_score()))
-//                .orderBy(true, Question$Table.ORDER_POS)
-//                .queryList();
-//        //}
-//        return _questions;
+        questions = new Select()
+                .from(Question.class)
+                .where(Condition.column(Question$Table.COMPOSITESCORE_ID_COMPOSITE_SCORE).eq(this.getId_composite_score()))
+                .orderBy(true, Question$Table.ORDER_POS)
+                .queryList();
+        return questions;
     }
 
     /**
@@ -145,8 +142,43 @@ public class CompositeScore extends SugarRecord<CompositeScore> {
         if(program==null || program.getId_program()==null){
             return new ArrayList<>();
         }
-        return null;
-        //TODO
+        //FIXME: Apparently there is a bug in DBFlow joins that affects here. Question has a column 'uid', and so do CompositeScore, so results are having Questions one, and should keep CompositeScore one. To solve it, we've introduced a last join with CompositeScore again and a HashSet to remove resulting duplicates
+        //Take scores associated to questions of the program ('leaves')
+        List<CompositeScore> compositeScoresByProgram = new Select().distinct().from(CompositeScore.class).as("cs")
+                .join(Question.class, Join.JoinType.LEFT).as("q")
+                .on(Condition.column(ColumnAlias.columnWithTable("cs", CompositeScore$Table.ID_COMPOSITE_SCORE))
+                        .eq(ColumnAlias.columnWithTable("q", Question$Table.COMPOSITESCORE_ID_COMPOSITE_SCORE)))
+                .join(Header.class, Join.JoinType.LEFT).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.HEADER_ID_HEADER))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                .join(Tab.class, Join.JoinType.LEFT).as("t")
+                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.TAB_ID_TAB))
+                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.PROGRAM_ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .join(CompositeScore.class, Join.JoinType.LEFT).as("cs2")
+                .on(Condition.column(ColumnAlias.columnWithTable("cs", CompositeScore$Table.ID_COMPOSITE_SCORE))
+                        .eq(ColumnAlias.columnWithTable("cs2", CompositeScore$Table.ID_COMPOSITE_SCORE)))
+                .where(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM))
+                        .eq(program.getId_program()))
+                .queryList();
+
+        // remove duplicates
+        Set<CompositeScore> uniqueCompositeScoresByProgram = new HashSet<>();
+        uniqueCompositeScoresByProgram.addAll(compositeScoresByProgram);
+        compositeScoresByProgram.clear();
+        compositeScoresByProgram.addAll(uniqueCompositeScoresByProgram);
+
+        //Find parent scores from 'leaves'
+        Set<CompositeScore> parentCompositeScores = new HashSet<>();
+        for(CompositeScore compositeScore: compositeScoresByProgram){
+            parentCompositeScores.addAll(listParentCompositeScores(compositeScore));
+        }
+        compositeScoresByProgram.addAll(parentCompositeScores);
+
+        //return all scores
+        return compositeScoresByProgram;
     }
 
     public static List<CompositeScore> listParentCompositeScores(CompositeScore compositeScore){
@@ -164,17 +196,6 @@ public class CompositeScore extends SugarRecord<CompositeScore> {
 
     public boolean hasChildren(){
         return !getCompositeScoreChildren().isEmpty();
-    }
-
-    @Override
-    public String toString() {
-        return "CompositeScore{" +
-                "id_composite_score=" + id_composite_score +
-                ", code='" + code + '\'' +
-                ", label='" + label + '\'' +
-                ", uid='" + uid + '\'' +
-                ", compositeScore=" + compositeScore +
-                '}';
     }
 
     @Override
@@ -200,5 +221,16 @@ public class CompositeScore extends SugarRecord<CompositeScore> {
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (compositeScore != null ? compositeScore.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "CompositeScore{" +
+                "id_composite_score=" + id_composite_score +
+                ", code='" + code + '\'' +
+                ", label='" + label + '\'' +
+                ", uid='" + uid + '\'' +
+                ", compositeScore=" + compositeScore +
+                '}';
     }
 }

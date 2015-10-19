@@ -3,11 +3,16 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+
+import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
 public class Option extends BaseModel {
@@ -39,6 +44,10 @@ public class Option extends BaseModel {
     String path;
 
     @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_option_attribute",
+            columnType = Long.class,
+            foreignColumnName = "id_option_attribute")},
+            saveForeignKeyModel = false)
     OptionAttribute optionAttribute;
 
     @Column
@@ -141,19 +150,11 @@ public class Option extends BaseModel {
         return given.equals(name);
     }
 
-
-
-    @Override
-    public String toString() {
-        return "Option{" +
-                "name='" + name + '\'' +
-                ", code=" + code +
-                ", factor=" + factor +
-                ", answer=" + answer +
-                ", path=" + path +
-                ", optionAttribute=" + optionAttribute +
-                ", background_colour=" + background_colour +
-                '}';
+    //TODO: to enable lazy loading, here we need to set Method.SAVE and Method.DELETE and use the .toModel() to specify when do we want to load the models
+    @OneToMany(methods = {OneToMany.Method.SAVE, OneToMany.Method.DELETE}, variableName = "values")
+    public List<Value> getValues() {
+        return new Select().from(Value.class)
+                .where(Condition.column(Value$Table.OPTION_ID_OPTION).eq(this.getId_option())).queryList();
     }
 
     @Override
@@ -184,5 +185,18 @@ public class Option extends BaseModel {
         result = 31 * result + (path != null ? path.hashCode() : 0);
         result = 31 * result + (background_colour != null ? background_colour.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Option{" +
+                "name='" + name + '\'' +
+                ", code=" + code +
+                ", factor=" + factor +
+                ", answer=" + answer +
+                ", path=" + path +
+                ", optionAttribute=" + optionAttribute +
+                ", background_colour=" + background_colour +
+                '}';
     }
 }

@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -78,12 +80,10 @@ public class Program extends BaseModel {
     }
 
     public List<Tab> getTabs(){
-        return null;
-        //TODO
-//        return Select.from(Tab.class)
-//                .where(Condition.prop("program")
-//                        .eq(String.valueOf(this.getId())))
-//                .orderBy("orderpos").list();
+        return new Select().from(Tab.class)
+                .where(Condition.column(Tab$Table.TAB_ID_TAB)
+                        .eq(String.valueOf(this.getId_program())))
+                .orderBy(Tab$Table.ORDER_POS).queryList();
     }
 
     @Override

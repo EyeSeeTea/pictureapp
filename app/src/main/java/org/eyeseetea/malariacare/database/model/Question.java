@@ -1,14 +1,13 @@
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
-import com.orm.query.Condition;
-import com.orm.query.Select;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.builder.Condition.In;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
@@ -16,13 +15,12 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
-public class Question extends BaseModel{
+public class Question extends BaseModel {
 
 //    /**
 //     * Sql query that counts required questions in a program (required for % stats)
@@ -103,14 +101,11 @@ public class Question extends BaseModel{
             saveForeignKeyModel = false)
     CompositeScore compositeScore;
 
-    @Ignore
-    List<Question> _questionChildren;
+    List<Question> children;
 
-    @Ignore
-    List<Question> _relatives;
+    List<Question> relatives;
 
-    @Ignore
-    List<Question> _master;
+    List<Question> master;
 
     public Question() {
     }
@@ -235,26 +230,31 @@ public class Question extends BaseModel{
     }
 
     public List<Question> getQuestionChildren() {
-        return null;
-        //TODO
-//        if (this._questionChildren == null){
-//            this._questionChildren = Select.from(Question.class)
-//                    .where(Condition.prop("question")
-//                            .eq(String.valueOf(this.getId())))
-//                    .orderBy("orderpos").list();
-//        }
-//        return this._questionChildren;
+        if (this.children == null){
+            this.children = new Select().from(Question.class)
+                    .where(Condition.column(Question$Table.QUESTION)
+                            .eq(this.getId_question()))
+                    .orderBy(true, Question$Table.ORDER_POS).queryList();
+        }
+        return this.children;
     }
 
     public List<Question> getRelatives() {
-        return null;
-        //TODO
-//        if (this._relatives == null) {
-//
-//            this._relatives = Question.findWithQuery(Question.class, "Select * from Question" +
-//                    " where id in (Select relative from Question_Relation where master =" + this.getId() + ")");
-//       }
-//        return this._relatives;
+        if (this.relatives == null) {
+            List<QuestionRelation> questionRelations = new Select().from(QuestionRelation.class)
+                    .where(Condition.column(QuestionRelation$Table.MASTER))
+                    .eq(this.getId_question()).queryList();
+            if (questionRelations.size() == 0) return null;
+            Iterator<QuestionRelation> iterator = questionRelations.iterator();
+            In in = Condition.column(Question$Table.ID_QUESTION).in(Long.toString(iterator.next().getId_question_relation()));
+            while(iterator.hasNext()){
+                in.and(Long.toString(iterator.next().getId_question_relation()));
+            }
+
+            this.relatives = new Select().from(Question.class)
+                    .where(in).queryList();
+       }
+        return this.relatives;
     }
 
     public boolean hasRelatives() {return !getRelatives().isEmpty(); }
@@ -264,9 +264,9 @@ public class Question extends BaseModel{
     }
 
     public List<Value> getValues(){
-        return null;
-        //TODO
-//        return new Select().from(Value.class).where(Condition.column(Value$Table.QUESTION_ID_QUESTION).eq(this.getId_question())).queryList();
+        return new Select().from(Value.class)
+                .where(Condition.column(Value$Table.QUESTION_ID_QUESTION)
+                        .eq(this.getId_question())).queryList();
     }
 
     /**
@@ -286,17 +286,15 @@ public class Question extends BaseModel{
         if (survey == null) {
             return null;
         }
-        return null;
-        //TODO
-//        List<Value> returnValues = new Select().from(Value.class)
-//                .where(Condition.column(Value$Table.QUESTION_ID_QUESTION).eq(this.getId_question()))
-//                .and(Condition.column(Value$Table.SURVEY_ID_SURVEY).eq(survey.getId_survey())).queryList();
-//
-//        if (returnValues.size() == 0) {
-//            return null;
-//        } else {
-//            return returnValues.get(0);
-//        }
+        List<Value> returnValues = new Select().from(Value.class)
+                .where(Condition.column(Value$Table.QUESTION_ID_QUESTION).eq(this.getId_question()))
+                .and(Condition.column(Value$Table.SURVEY_ID_SURVEY).eq(survey.getId_survey())).queryList();
+
+        if (returnValues.size() == 0) {
+            return null;
+        } else {
+            return returnValues.get(0);
+        }
     }
 
     /**
@@ -367,8 +365,8 @@ public class Question extends BaseModel{
 
         return 0;
         //TODO
-//        List<Question> questionsByProgram = Question.findWithQuery(Question.class, LIST_REQUIRED_BY_PROGRAM, program.getId().toString());
-//        return questionsByProgram.size();
+        List<Question> questionsByProgram = Question.findWithQuery(Question.class, LIST_REQUIRED_BY_PROGRAM, program.getId().toString());
+        return questionsByProgram.size();
     }
 
     /**

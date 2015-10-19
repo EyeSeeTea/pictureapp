@@ -147,11 +147,14 @@ public class Utils {
     }
 
     //Check if the provided date is under the system data.
-    public static boolean isDateOverSystemDate(Calendar closedData) {
-        Calendar sysDate = Calendar.getInstance();
-        sysDate.setTime(new Date());
-        if(sysDate.after(closedData))
-            return false;
+    public static boolean isDateOverSystemDate(Calendar closedDate) {
+        if(closedDate!=null) {
+            Calendar sysDate = Calendar.getInstance();
+            sysDate.setTime(new Date());
+            if (sysDate.after(closedDate)) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -167,6 +170,7 @@ public class Utils {
         try {
             date.setTime(format.parse(datestring));// all done
         } catch (ParseException e) {
+            date=null;
             e.printStackTrace();
         }
         return date;

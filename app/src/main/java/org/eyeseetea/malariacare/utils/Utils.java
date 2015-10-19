@@ -163,6 +163,15 @@ public class Utils {
         return date;
     }
 
+    public static String getStringSystemData(String format){
+        Calendar sysDate = Calendar.getInstance();
+        sysDate.setTime(new Date());
+        sysDate.set(Calendar.HOUR, sysDate.get(Calendar.HOUR) - 24);
+        SimpleDateFormat formated = new SimpleDateFormat(format);
+        String dateFormatted = formated.format(sysDate.getTime());
+        return dateFormatted;
+    }
+
     public static Calendar DateToCalendar(Date date){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

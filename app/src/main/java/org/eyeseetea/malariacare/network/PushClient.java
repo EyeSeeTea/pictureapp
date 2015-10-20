@@ -165,7 +165,7 @@ public class PushClient {
         //If DHIS_UNEXISTENT_ORG_UNIT!=DHIS_ORG_NAME is the same, the UID not exist, and it was be checked.
         //hasOrgUnitValidCode check the code the program and the closedDate
         //This if is evaluating every push from SurveyService.
-        if ((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED && checkAll() && !BANNED  ) {
+        if (isValid() && checkAll() && !BANNED  ) {
             try {
                 JSONObject data = prepareMetadata();
                 data = prepareDataElements(data);
@@ -198,6 +198,9 @@ public class PushClient {
         return new PushResult();
     }
 
+    public static boolean isValid() {
+        return ((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED);
+    }
     /**
      * Pushes data to DHIS Server
      * @param data
@@ -754,6 +757,7 @@ public class PushClient {
 
         return resultado;
     }
+
 
     /**
      * Basic

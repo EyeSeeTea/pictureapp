@@ -30,6 +30,10 @@ public class Tab extends BaseModel {
     Integer order_pos;
 
     @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_program",
+            columnType = Long.class,
+            foreignColumnName = "id_program")},
+            saveForeignKeyModel = false)
     Program program;
 
     @Column
@@ -99,12 +103,10 @@ public class Tab extends BaseModel {
     /*
      * Return tabs filter by program and order by orderpos field
      */
-    public static List<Tab> getTabsBySession(){
-        return null;
-        //TODO
-//        return new Select().from(Tab.class)
-//                .where(Condition.column(Tab$Table.TABGROUP_ID_TAB_GROUP).eq(Session.getSurvey().getTabGroup().getId_tab_group()))
-//                .orderBy(Tab$Table.ORDER_POS).queryList();
+    public static List<Tab> getTabsBySession() {
+        return new Select().from(Tab.class)
+                .where(Condition.column(Tab$Table.PROGRAM_ID_PROGRAM).eq(Session.getSurvey().getProgram().getId_program()))
+                .orderBy(Tab$Table.ORDER_POS).queryList();
     }
 
     /**

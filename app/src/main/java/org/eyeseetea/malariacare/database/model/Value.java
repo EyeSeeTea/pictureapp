@@ -24,6 +24,7 @@ public class Value extends BaseModel {
     @Column
     String value;
 
+    @Column
     @ForeignKey(references = {@ForeignKeyReference(columnName = "id_question",
             columnType = Long.class,
             foreignColumnName = "id_question")},

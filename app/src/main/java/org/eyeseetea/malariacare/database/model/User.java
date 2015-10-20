@@ -30,6 +30,7 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
@@ -104,5 +105,21 @@ public class User extends BaseModel {
                 ", uid='" + uid + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+    public static List<Survey> getAllUnsentSurveys() {
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
+                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_HIDE))
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
+    }
+    //if the user exist, return the user, else, return null.
+    public static User existUser(User user) {
+        List<User> userdb= new Select().from(User.class).queryList();
+        for(int i=userdb.size()-1;i>=0;i--){
+            if((userdb.get(i).getUid().equals(user.getUid()))&&(userdb.get(i).getName().equals(user.getName())))
+                return userdb.get(i);
+        }
+        return null;
     }
 }

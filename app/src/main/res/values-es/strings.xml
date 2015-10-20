@@ -103,9 +103,8 @@
     <string name="survey_info_completed">La evaluacion ha sido completada correctamente</string>
 
     <!-- exceptions -->
-    <string name="exception_org_unit_not_valid">El distribuidor no es válido. Contacta PSI al 123456789</string>
-    <string name="exception_org_unit_banned">El distribuidor está cerrado. Contacta PSI al 123456789</string>
-
+    <string name="exception_org_unit_not_valid">El código de salida no está activo para el programa . Contacto PSI en el 123456789</string>
+    <string name="exception_org_unit_banned">El código está cerrado o bloqueado . Contacto PSI en el 123456789</string>
 
     <!-- widget -->
     <string name="widget_info_empty_statement">Enunciado de cuestión</string>

@@ -55,6 +55,7 @@ public class PreferencesState {
      */
     private boolean showNumDen;
 
+
     /**
      * Specified Organization Unit
      */
@@ -70,9 +71,18 @@ public class PreferencesState {
      */
     private Map<String, Map<String, Float>> scaleDimensionsMap;
 
-    private PreferencesState(){
+    static Context context;
+
+    private PreferencesState(){ }
+
+    public void init(Context context){
+        this.context=context;
         scaleDimensionsMap=initScaleDimensionsMap();
         reloadPreferences();
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     public void reloadPreferences(){
@@ -92,7 +102,7 @@ public class PreferencesState {
      * @return
      */
     private String initOrgUnit(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SugarApp.getSugarContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
         return sharedPreferences.getString(SugarApp.getSugarContext().getString(R.string.org_unit), "");
     }
 
@@ -101,7 +111,7 @@ public class PreferencesState {
      * @return
      */
     private String initDhisURL(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SugarApp.getSugarContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
         return sharedPreferences.getString(SugarApp.getSugarContext().getString(R.string.dhis_url), "");
     }
 
@@ -110,7 +120,7 @@ public class PreferencesState {
      * @return
      */
     private String initScale(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SugarApp.getSugarContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
         if (sharedPreferences.getBoolean(SugarApp.getSugarContext().getString(R.string.customize_fonts), false)) {
             return sharedPreferences.getString(SugarApp.getSugarContext().getString(R.string.font_sizes), Constants.FONTS_SYSTEM);
         }
@@ -123,7 +133,7 @@ public class PreferencesState {
      * @return
      */
     private boolean initShowNumDen(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SugarApp.getSugarContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
         return sharedPreferences.getBoolean(SugarApp.getSugarContext().getString(R.string.show_num_dems), false);
     }
 

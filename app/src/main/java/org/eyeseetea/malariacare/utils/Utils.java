@@ -143,18 +143,6 @@ public class Utils {
             return false;
         }
         else
-            return true;
-    }
-
-    //Check if the provided date is under the system data.
-    public static boolean isDateOverSystemDate(Calendar closedDate) {
-        if(closedDate!=null) {
-            Calendar sysDate = Calendar.getInstance();
-            sysDate.setTime(new Date());
-            if (sysDate.after(closedDate)) {
-                return false;
-            }
-        }
         return true;
     }
 
@@ -170,19 +158,9 @@ public class Utils {
         try {
             date.setTime(format.parse(datestring));// all done
         } catch (ParseException e) {
-            date=null;
             e.printStackTrace();
         }
         return date;
-    }
-
-    public static String getClosingDataString(String format){
-        Calendar sysDate = Calendar.getInstance();
-        sysDate.setTime(new Date());
-        sysDate.set(Calendar.HOUR, sysDate.get(Calendar.HOUR) - 24);
-        SimpleDateFormat formated = new SimpleDateFormat(format);
-        String dateFormatted = formated.format(sysDate.getTime());
-        return dateFormatted;
     }
 
     public static Calendar DateToCalendar(Date date){

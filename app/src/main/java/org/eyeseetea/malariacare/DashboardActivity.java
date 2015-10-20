@@ -80,14 +80,14 @@ public class DashboardActivity extends BaseActivity {
         super.onResume();
         AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
         asyncPopulateDB.execute((Void) null);
-        Survey.removeInProgress();
+        //Survey.removeInProgress();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart");
-        Survey.removeInProgress();
+        //Survey.removeInProgress();
     }
 
 

@@ -201,19 +201,18 @@ public class Survey extends BaseModel {
      * @return
      */
     public List<Value> getValuesFromParentQuestions(){
-        return null;
-        //TODO
-//        List<Value> values = new Select().all().from(Value.class).as("v")
-//                .join(Question.class, Join.JoinType.LEFT).as("q")
-//                .on(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.QUESTION_ID_QUESTION))
-//                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)))
-//                .where(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.SURVEY_ID_SURVEY))
-//                        .eq(this.getId_survey()))
-//                .and(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.QUESTION_ID_PARENT)).isNull())
-//                .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.VALUE)).isNotNull())
-//                .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.VALUE)).isNot("")).queryList();
-//        //List<Value> values = Value.findWithQuery(Value.class, LIST_VALUES_PARENT_QUESTION, this.getId().toString());
-//        return values;
+
+        List<Value> values = new Select().all().from(Value.class).as("v")
+                .join(Question.class, Join.JoinType.LEFT).as("q")
+                .on(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.QUESTION_ID_QUESTION))
+                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)))
+                .where(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.SURVEY_ID_SURVEY))
+                        .eq(this.getId_survey()))
+                .and(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.QUESTION_ID_PARENT)).isNull())
+                .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.VALUE)).isNotNull())
+                .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.VALUE)).isNot("")).queryList();
+        //List<Value> values = Value.findWithQuery(Value.class, LIST_VALUES_PARENT_QUESTION, this.getId().toString());
+        return values;
     }
 
     /**
@@ -281,80 +280,69 @@ public class Survey extends BaseModel {
 
     // Returns a concrete survey, if it exists
     public static List<Survey> getUnsentSurveys(OrgUnit orgUnit, Program program) {
-        return null;
-        //TODO
-//        return new Select().from(Survey.class)
-//                .where(Condition.column(Survey$Table.ORGUNIT_ID_ORG_UNIT).eq(orgUnit.getId_org_unit()))
-//                .and(Condition.column(Survey$Table.TABGROUP_ID_TAB_GROUP).eq(tabGroup.getId_tab_group()))
-//                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
-//                .orderBy(Survey$Table.EVENTDATE)
-//                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.ORGUNIT_ID_ORG_UNIT).eq(orgUnit.getId_org_unit()))
+                .and(Condition.column(Survey$Table.PROGRAM_ID_PROGRAM).eq(program.getId_program()))
+                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
+                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_HIDE))
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
     }
 
     // Returns all the surveys with status yet not put to "Sent"
     public static List<Survey> getAllUnsentSurveys() {
-        return null;
-        //TODO
-//        return new Select().from(Survey.class)
-//                .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
-//                .orderBy(Survey$Table.EVENTDATE)
-//                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
+                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_HIDE))
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
     }
 
     // Returns the last surveys (by date) with status yet not put to "Sent"
     public static List<Survey> getUnsentSurveys(int limit) {
-        return null;
-        //TODO
-//        return new Select().from(Survey.class)
-//                .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
-//                .limit(String.valueOf(limit))
-//                .orderBy(Survey$Table.EVENTDATE)
-//                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
+                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_HIDE))
+                .limit(String.valueOf(limit))
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
     }
 
     // Returns all the surveys with status put to "Sent"
     public static List<Survey> getAllSentSurveys() {
-        return null;
-        //TODO
-//        return new Select().from(Survey.class)
-//                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
-//                .orderBy(Survey$Table.EVENTDATE)
-//                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
     }
 
     // Returns all the surveys with status put to "Hide"
     public static List<Survey> getAllHideAndSentSurveys() {
-        return null;
-        //TODO
-//        return Select.from(Survey.class)
-//                .where(com.orm.query.Condition.prop("status").eq(Constants.SURVEY_SENT))
-//                .or(com.orm.query.Condition.prop("status").eq(Constants.SURVEY_HIDE))
-//                .orderBy("event_date")
-//                .orderBy("org_unit")
-//                .list();
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
+                .or(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_HIDE))
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT)
+                .queryList();
     }
 
 
     // Returns all the surveys with status put to "Completed"
     public static List<Survey> getAllCompletedSurveys() {
-        return null;
-        //TODO
-//        return new Select().from(Survey.class)
-//                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_COMPLETED))
-//                .orderBy(Survey$Table.EVENTDATE)
-//                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_COMPLETED))
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
     }
 
 
 
     // Returns all the surveys with status put to "In progress"
     public static List<Survey> getAllUncompletedSurveys() {
-        return null;
-        //TODO
-//        return new Select().from(Survey.class)
-//                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_IN_PROGRESS))
-//                .orderBy(Survey$Table.EVENTDATE)
-//                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_IN_PROGRESS))
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
     }
 
 

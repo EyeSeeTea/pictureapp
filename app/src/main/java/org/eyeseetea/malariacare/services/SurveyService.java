@@ -28,6 +28,7 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.Survey$Table;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
@@ -134,11 +135,10 @@ public class SurveyService extends IntentService {
     }
 
     private void reloadDashboard(){
-        List<Survey> surveys = new ArrayList<>();
-        //TODO
-//        List<Survey> surveys=new Select().all().from(Survey.class)
-//                .orderBy(Survey$Table.EVENTDATE)
-//                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
+
+        List<Survey> surveys=new Select().all().from(Survey.class)
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
 
         List<Survey> unsentSurveys=new ArrayList<Survey>();
         List<Survey> sentSurveys=new ArrayList<Survey>();

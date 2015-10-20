@@ -109,8 +109,8 @@
     <string name="survey_info_completed">ការស្ទង់មតិបានបញ្ចប់ដោយជោគជ័យ</string>
 
     <!-- exceptions -->
-    <string name="exception_org_unit_not_valid">ក្រម ព្រី គឺជាការមិន សកម្មសម្រាប់ កម្មវិធី។ អង្គការ PSI ទំនាក់ទំនង 123456789</string>
-    <string name="exception_org_unit_banned">ព្រី ត្រូវបានបិទ ឬរារាំង។ អង្គការ PSI ទំនាក់ទំនង 123456789</string>
+    <string name="exception_org_unit_not_valid">ព្រី ក្រម មិនត្រឹមត្រូវ។ អង្គការ PSI ទំនាក់ទំនង 123456789</string>
+    <string name="exception_org_unit_banned">ព្រី ជិត។ អង្គការ PSI ទំនាក់ទំនង 123456789</string>
 
     <!--widget-->
     <string name="widget_info_empty_statement">Question statement</string>

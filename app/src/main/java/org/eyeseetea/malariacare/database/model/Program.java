@@ -81,7 +81,7 @@ public class Program extends BaseModel {
 
     public List<Tab> getTabs(){
         return new Select().from(Tab.class)
-                .where(Condition.column(Tab$Table.TAB_ID_TAB)
+                .where(Condition.column(Tab$Table.PROGRAM_ID_PROGRAM)
                         .eq(String.valueOf(this.getId_program())))
                 .orderBy(Tab$Table.ORDER_POS).queryList();
     }

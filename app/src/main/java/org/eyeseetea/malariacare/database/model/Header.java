@@ -124,33 +124,33 @@ public class Header extends BaseModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Header)) return false;
 
         Header header = (Header) o;
 
-        if (name != null ? !name.equals(header.name) : header.name != null) return false;
-        if (order_pos != null ? !order_pos.equals(header.order_pos) : header.order_pos != null)
-            return false;
+        if (id_header != header.id_header) return false;
         if (short_name != null ? !short_name.equals(header.short_name) : header.short_name != null)
             return false;
-        if (tab != null ? !tab.equals(header.tab) : header.tab != null) return false;
+        if (name != null ? !name.equals(header.name) : header.name != null) return false;
+        if (!order_pos.equals(header.order_pos)) return false;
+        return tab.equals(header.tab);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = short_name != null ? short_name.hashCode() : 0;
+        int result = (int) (id_header ^ (id_header >>> 32));
+        result = 31 * result + (short_name != null ? short_name.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (order_pos != null ? order_pos.hashCode() : 0);
-        result = 31 * result + (tab != null ? tab.hashCode() : 0);
+        result = 31 * result + order_pos.hashCode();
+        result = 31 * result + tab.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
         return "Header{" +
-                "id='" + id_header + '\'' +
+                "id=" + id_header +
                 ", short_name='" + short_name + '\'' +
                 ", name='" + name + '\'' +
                 ", order_pos=" + order_pos +

@@ -51,7 +51,7 @@ public class DashboardActivity extends BaseActivity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
-
+        Survey.removeInProgress();
         if (savedInstanceState == null) {
             DashboardUnsentFragment detailsFragment = new DashboardUnsentFragment();
             detailsFragment.setArguments(getIntent().getExtras());
@@ -80,14 +80,14 @@ public class DashboardActivity extends BaseActivity {
         super.onResume();
         AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
         asyncPopulateDB.execute((Void) null);
-        //Survey.removeInProgress();
+        Survey.removeInProgress();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart");
-        //Survey.removeInProgress();
+        Survey.removeInProgress();
     }
 
 
@@ -175,6 +175,10 @@ public class DashboardActivity extends BaseActivity {
          */
         private void initUser(){
             user=new User(DUMMY_USER,DUMMY_USER);
+            User userdb=User.existUser(user);
+            if(userdb!=null)
+            user=userdb;
+            else
             user.save();
         }
 

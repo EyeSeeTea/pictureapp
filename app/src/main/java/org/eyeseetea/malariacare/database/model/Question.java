@@ -222,8 +222,8 @@ public class Question extends BaseModel {
     public List<Question> getRelatives() {
         if (this.relatives == null) {
             List<QuestionRelation> questionRelations = new Select().from(QuestionRelation.class)
-                    .where(Condition.column(QuestionRelation$Table.MASTER))
-                    .eq(this.getId_question()).queryList();
+                    .where(Condition.column(QuestionRelation$Table.MASTER_MASTER)
+                    .eq(this.getId_question())).queryList();
             if (questionRelations.size() == 0) return null;
             Iterator<QuestionRelation> iterator = questionRelations.iterator();
             In in = Condition.column(Question$Table.ID_QUESTION).in(Long.toString(iterator.next().getId_question_relation()));

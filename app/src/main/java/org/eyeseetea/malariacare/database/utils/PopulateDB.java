@@ -124,7 +124,7 @@ public class PopulateDB {
         TransactionManager.getInstance().saveOnSaveQueue(tabList.values());
         TransactionManager.getInstance().saveOnSaveQueue(headerList.values());
         TransactionManager.getInstance().saveOnSaveQueue(answerList.values());
-//        OptionAttribute.saveInTx(optionAttributeList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(optionAttributeList.values());
         TransactionManager.getInstance().saveOnSaveQueue(optionList.values());
         TransactionManager.getInstance().saveOnSaveQueue(questionList.values());
     }

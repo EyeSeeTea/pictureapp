@@ -15,7 +15,6 @@ public class OptionAttribute extends BaseModel {
     long id_option_attribute;
 
     @Column
-
     String background_colour;
 
     public OptionAttribute() {

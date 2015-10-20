@@ -1,19 +1,42 @@
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
-import com.orm.query.Condition;
-import com.orm.query.Select;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
-public class Tab extends SugarRecord<Tab> {
+@Table(databaseName = AppDatabase.NAME)
+public class Tab extends BaseModel {
 
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_tab;
+
+    @Column
     String name;
+
+    @Column
     Integer order_pos;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_program",
+            columnType = Long.class,
+            foreignColumnName = "id_program")},
+            saveForeignKeyModel = false)
     Program program;
+
+    @Column
     Integer type;
 
     public Tab() {
@@ -24,6 +47,14 @@ public class Tab extends SugarRecord<Tab> {
         this.order_pos = order_pos;
         this.program = program;
         this.type = type;
+    }
+
+    public Long getId_tab() {
+        return id_tab;
+    }
+
+    public void setId_tab(Long id_tab) {
+        this.id_tab = id_tab;
     }
 
     public String getName() {
@@ -59,22 +90,23 @@ public class Tab extends SugarRecord<Tab> {
     }
 
     public List<Header> getHeaders(){
-        return Select.from(Header.class)
-                .where(Condition.prop("tab")
-                        .eq(String.valueOf(this.getId())))
-                .orderBy("orderpos").list();
+        return new Select().from(Header.class)
+                .where(Condition.column(Header$Table.TAB_ID_TAB).eq(this.getId_tab()))
+                .orderBy(Header$Table.ORDER_POS).queryList();
     }
 
     public List<Score> getScores(){
-        return Score.find(Score.class, "tab = ?", String.valueOf(this.getId()));
+        return new Select().from(Score.class)
+                .where(Condition.column(Score$Table.TAB_ID_TAB).eq(this.getId_tab())).queryList();
     }
 
     /*
      * Return tabs filter by program and order by orderpos field
      */
-    public static List<Tab> getTabsBySession(){
-        return Select.from(Tab.class).where(Condition.prop("program")
-                .eq(String.valueOf(Session.getSurvey().getProgram().getId()))).orderBy("orderpos").list();
+    public static List<Tab> getTabsBySession() {
+        return new Select().from(Tab.class)
+                .where(Condition.column(Tab$Table.PROGRAM_ID_PROGRAM).eq(Session.getSurvey().getProgram().getId_program()))
+                .orderBy(Tab$Table.ORDER_POS).queryList();
     }
 
     /**

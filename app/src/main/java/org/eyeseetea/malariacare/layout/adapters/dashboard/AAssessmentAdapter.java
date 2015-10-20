@@ -60,7 +60,7 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         // Get the row layout
         View rowView = this.lInflater.inflate(getRecordLayout(), parent, false);
         //To ease testing
-        rowView.setTag(survey.getId());
+        rowView.setTag(survey.getId_survey());
         rowView.setPadding(paddingDp, paddingDp, paddingDp, paddingDp);
 
 

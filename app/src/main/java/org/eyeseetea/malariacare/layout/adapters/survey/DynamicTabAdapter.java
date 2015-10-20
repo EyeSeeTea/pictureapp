@@ -185,7 +185,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         View childItem = vgRow.getChildAt(itemPos);
                         if (childItem instanceof ImageView) {
                             Option otherOption=(Option)childItem.getTag();
-                            if(selectedOption.getId() != otherOption.getId()){
+                            if(selectedOption.getId_option() != otherOption.getId_option()){
                                 overshadow((ImageView) childItem, otherOption);
                             }
                         }

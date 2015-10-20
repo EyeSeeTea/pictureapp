@@ -19,14 +19,39 @@
 
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
+import org.eyeseetea.malariacare.database.AppDatabase;
 
 /**
  * Created by Jose on 25/05/2015.
  */
-public class QuestionRelation extends SugarRecord<QuestionRelation> {
+@Table(databaseName = AppDatabase.NAME)
+public class QuestionRelation extends BaseModel {
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_question_relation;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "master",
+            columnType = Long.class,
+            foreignColumnName = "id_question")},
+            saveForeignKeyModel = false)
     Question master;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "relative",
+            columnType = Long.class,
+            foreignColumnName = "id_question")},
+            saveForeignKeyModel = false)
     Question relative;
+
+    @Column
     int operation;
 
     public QuestionRelation(){};
@@ -35,6 +60,14 @@ public class QuestionRelation extends SugarRecord<QuestionRelation> {
         this.master = master;
         this.relative = relative;
         this.operation = operation;
+    }
+
+    public long getId_question_relation() {
+        return id_question_relation;
+    }
+
+    public void setId_question_relation(long id_question_relation) {
+        this.id_question_relation = id_question_relation;
     }
 
     public Question getMaster() {
@@ -59,5 +92,34 @@ public class QuestionRelation extends SugarRecord<QuestionRelation> {
 
     public void setOperation(int operation) {
         this.operation = operation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof QuestionRelation)) return false;
+        QuestionRelation that = (QuestionRelation) o;
+        if (id_question_relation != that.id_question_relation) return false;
+        if (!master.equals(that.master)) return false;
+        return relative.equals(that.relative);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id_question_relation ^ (id_question_relation >>> 32));
+        result = 31 * result + master.hashCode();
+        result = 31 * result + relative.hashCode();
+        result = 31 * result + operation;
+        return result;
+    }
+
+         @Override
+    public String toString() {
+         return "QuestionRelation{" +
+                "id=" + id_question_relation +
+                ", master=" + master +
+                ", relative=" + relative +
+                ", operation=" + operation +
+                '}';
     }
 }

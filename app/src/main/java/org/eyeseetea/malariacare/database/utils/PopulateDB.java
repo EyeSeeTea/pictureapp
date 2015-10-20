@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.database.utils;
 import android.content.res.AssetManager;
 
 import com.opencsv.CSVReader;
+import com.raizlabs.android.dbflow.runtime.TransactionManager;
 
 import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
@@ -119,13 +120,13 @@ public class PopulateDB {
             reader.close();
         }
 
-        Program.saveInTx(programList.values());
-        Tab.saveInTx(tabList.values());
-        Header.saveInTx(headerList.values());
-        Answer.saveInTx(answerList.values());
-//        OptionAttribute.saveInTx(optionAttributeList.values());
-        Option.saveInTx(optionList.values());
-        Question.saveInTx(questionList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(programList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(tabList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(headerList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(answerList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(optionAttributeList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(optionList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(questionList.values());
     }
 
     public static void populateDummyData(){

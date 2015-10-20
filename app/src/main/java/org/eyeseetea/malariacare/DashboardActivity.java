@@ -27,8 +27,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.database.model.Program;
+import com.raizlabs.android.dbflow.sql.language.Select;
+
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -78,14 +80,14 @@ public class DashboardActivity extends BaseActivity {
         super.onResume();
         AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
         asyncPopulateDB.execute((Void) null);
-        Survey.removeInProgress();
+        //Survey.removeInProgress();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart");
-        Survey.removeInProgress();
+        //Survey.removeInProgress();
     }
 
 
@@ -177,7 +179,7 @@ public class DashboardActivity extends BaseActivity {
         }
 
         private void initDataIfRequired() throws IOException {
-            if (Program.count(Program.class, null, null)!=0) {
+            if (new Select().count().from(Tab.class).count()!=0) {
                 Log.i(TAG, "DB Already loaded, showing surveys...");
                 return;
             }

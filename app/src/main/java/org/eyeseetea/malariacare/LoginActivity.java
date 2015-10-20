@@ -46,6 +46,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.raizlabs.android.dbflow.sql.language.Select;
+
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
@@ -95,7 +97,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         super.onCreate(savedInstanceState);
 
         //User already logged in --> dashboard
-        Iterator<User> users = User.findAll(User.class);
+        Iterator<User> users = new Select().all().from(User.class).queryList().iterator();
         if (users.hasNext()) {
             goDashBoard(users.next());
             return;
@@ -363,7 +365,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
 
         private void initDataIfRequired() throws IOException {
-            if (Tab.count(Tab.class, null, null)!=0) {
+            if (new Select().count().from(Tab.class).count()!=0) {
                 return;
             }
 

@@ -1,19 +1,56 @@
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.database.AppDatabase;
 
-public class Option extends SugarRecord<Option> {
+import java.util.List;
+
+@Table(databaseName = AppDatabase.NAME)
+public class Option extends BaseModel {
 
     //FIXME A 'Yes' answer shows children questions, this should be configurable by some additional attribute in Option
     public static final String CHECKBOX_YES_OPTION="Yes";
 
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_option;
+
+    @Column
     String code;
+
+    @Column
     String name;
+
+    @Column
     Float factor;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_answer",
+            columnType = Long.class,
+            foreignColumnName = "id_answer")},
+            saveForeignKeyModel = false)
     Answer answer;
+
+    @Column
     String path;
+
+    @Column
+    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_option_attribute",
+            columnType = Long.class,
+            foreignColumnName = "id_option_attribute")},
+            saveForeignKeyModel = false)
     OptionAttribute optionAttribute;
+
+    @Column
     String background_colour;
 
     public Option() {
@@ -30,6 +67,14 @@ public class Option extends SugarRecord<Option> {
 
     public Option(String name) {
         this.name = name;
+    }
+
+    public long getId_option() {
+        return id_option;
+    }
+
+    public void setId_option(long id_option) {
+        this.id_option = id_option;
     }
 
     public String getName() {
@@ -105,21 +150,6 @@ public class Option extends SugarRecord<Option> {
         return given.equals(name);
     }
 
-
-
-    @Override
-    public String toString() {
-        return "Option{" +
-                "name='" + name + '\'' +
-                ", code=" + code +
-                ", factor=" + factor +
-                ", answer=" + answer +
-                ", path=" + path +
-                ", optionAttribute=" + optionAttribute +
-                ", background_colour=" + background_colour +
-                '}';
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -148,5 +178,18 @@ public class Option extends SugarRecord<Option> {
         result = 31 * result + (path != null ? path.hashCode() : 0);
         result = 31 * result + (background_colour != null ? background_colour.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Option{" +
+                "name='" + name + '\'' +
+                ", code=" + code +
+                ", factor=" + factor +
+                ", answer=" + answer +
+                ", path=" + path +
+                ", optionAttribute=" + optionAttribute +
+                ", background_colour=" + background_colour +
+                '}';
     }
 }

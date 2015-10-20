@@ -289,7 +289,7 @@ public class PushClient {
      * @throws Exception
      */
     private JSONObject prepareMetadata() throws Exception{
-        Log.d(TAG, "prepareMetadata for survey: " + survey.getId());
+        Log.d(TAG, "prepareMetadata for survey: " + survey.getId_survey());
 
         JSONObject object=new JSONObject();
         object.put(TAG_PROGRAM, survey.getProgram().getUid());
@@ -299,7 +299,7 @@ public class PushClient {
         object.put(TAG_STOREDBY, survey.getUser().getName());
         //TODO: put it in the object.
 
-        Location lastLocation = LocationMemory.get(survey.getId());
+        Location lastLocation = LocationMemory.get(survey.getId_survey());
         //If there is no location (location is required) -> exception
         if(lastLocation==null){
             throw new Exception(activity.getString(R.string.dialog_error_push_no_location));
@@ -521,7 +521,7 @@ public class PushClient {
      * @throws Exception
      */
     private JSONObject prepareDataElements(JSONObject data)throws Exception{
-        Log.d(TAG, "prepareDataElements for survey: " + survey.getId());
+        Log.d(TAG, "prepareDataElements for survey: " + survey.getId_survey());
 
         //Add dataElement per values
         JSONArray values=prepareValues(new JSONArray());

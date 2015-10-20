@@ -34,8 +34,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
+
 import org.eyeseetea.malariacare.database.model.OrgUnit;
+import org.eyeseetea.malariacare.database.model.OrgUnit$Table;
 import org.eyeseetea.malariacare.database.model.Program;
+import org.eyeseetea.malariacare.database.model.Program$Table;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -177,8 +182,8 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     public void newSurvey(View v){
-        List<OrgUnit> firstOrgUnit=OrgUnit.find(OrgUnit.class,null,null,null,null,String.valueOf(1));
-        List<Program> firstProgram=Program.find(Program.class,null,null,null,null,String.valueOf(1));
+        List<OrgUnit> firstOrgUnit = new Select().from(OrgUnit.class).where(Condition.column(OrgUnit$Table.ID_ORG_UNIT).eq(1)).queryList();
+        List<Program> firstProgram = new Select().from(Program.class).where(Condition.column(Program$Table.ID_PROGRAM).eq(1)).queryList();
         // Put new survey in session
         Survey survey = new Survey(firstOrgUnit.get(0), firstProgram.get(0), Session.getUser());
         survey.save();
@@ -193,7 +198,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     private void prepareLocationListener(Survey survey){
 
-        locationListener = new SurveyLocationListener(survey.getId());
+        locationListener = new SurveyLocationListener(survey.getId_survey());
         LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Log.d(TAG, "requestLocationUpdates via GPS");

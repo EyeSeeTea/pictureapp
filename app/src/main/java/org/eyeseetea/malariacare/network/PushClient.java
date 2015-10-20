@@ -88,7 +88,7 @@ public class PushClient {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    private static Boolean BANNED=false;
+    public static Boolean BANNED=false;
     private static String DHIS_UNEXISTENT_ORG_UNIT="";
 
     private static String COMPLETED="COMPLETED";
@@ -116,7 +116,7 @@ public class PushClient {
     private static String TAG_PHONE="UkGuMlmNtJH";
     private static String TAG_PHONE_SERIAL="zZ1LFI0FplS";
 
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
+    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=10;
     private static int DHIS_LIMIT_HOURS=1;
 
     Survey survey;
@@ -262,7 +262,7 @@ public class PushClient {
             String DHIS_PATCH_URL=url;
             JSONObject data =prepareClosingDateValue();
             Response response=executeCall(data, DHIS_PATCH_URL, "PATCH");
-
+            Log.e(TAG, "closingDatePatch (" + response.code() + "): " + response.body().string());
             if(!response.isSuccessful()){
                 Log.e(TAG, "closingDatePatch (" + response.code() + "): " + response.body().string());
                 throw new IOException(response.message());
@@ -387,10 +387,16 @@ public class PushClient {
         return false;
     }
 
+    //this method should be synchronized becouse without sync can change the Banned value in the middle of a survey check.
+    public static synchronized  void setUnbanned(){
+        BANNED=false;
+    }
+
+    //return "null" for a not program for this org_unit, or not UID or not UID valid
     private String getUIDCheckProgramClosedDate(String code) throws Exception{
         //https://malariacare.psi.org/api/organisationUnits.json?paging=false&fields=id,name,openingDate,closedDate,programs&filter=code:eq:KH_Cambodia
-        final String DHIS_PULL_URL=getDhisOrgUnitURL(code);
-
+        String DHIS_PULL_URL=getDhisOrgUnitURL(code);
+        JSONArray responseArray=null;
         OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 
         BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
@@ -408,44 +414,48 @@ public class PushClient {
         }
 
         JSONObject responseJSON=parseResponse(response.body().string());
-        JSONArray responseArray=(JSONArray) responseJSON.get(TAG_ORGANISATIONUNIT);
+        try {
+            responseArray = (JSONArray) responseJSON.get(TAG_ORGANISATIONUNIT);
 
-        JSONObject JsonProgram = responseArray.getJSONObject(0);
-        JSONArray responseProgram=(JSONArray) JsonProgram.get(TAG_PROGRAMS);
-        //check if the id of the program is correct
-        boolean programExist=false;
-        for(int i=0;i<responseProgram.length();i++) {
-            if (responseProgram.getJSONObject(i).getString("id").equals(DHIS_UID_PROGRAM)) {
-                programExist=true;
-            }
-        }
-        if(!programExist) {
-            Log.e(TAG, "pullOrgUnitUID: Not in our program " + code);
-            return "null";
-        }
-        if(responseArray.length()==0){
-            Log.e(TAG, "pullOrgUnitUID: No UID for code " + code);
-            //Assign the used org_unit to the unexistent_org_unit for not make new pulls.
-            // throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
-            return "null";
-        }
-try {
-    String date = responseArray.getJSONObject(0).getString(TAG_CLOSEDATA);
-    Calendar calendarDate = Utils.parseStringToCalendar(date);
-
-        if(!Utils.isDateOverSystemDate(calendarDate)){
-            if(BANNED==false) {
-                BANNED = true;
-                try {
-                    throw new ShowException(applicationContext.getString(R.string.exception_org_unit_banned), applicationContext);
-                } catch (ShowException e) {
-                    e.printStackTrace();
+            JSONObject JsonProgram = responseArray.getJSONObject(0);
+            JSONArray responseProgram = (JSONArray) JsonProgram.get(TAG_PROGRAMS);
+            //check if the id of the program is correct
+            boolean programExist = false;
+            for (int i = 0; i < responseProgram.length(); i++) {
+                if (responseProgram.getJSONObject(i).getString("id").equals(DHIS_UID_PROGRAM)) {
+                    programExist = true;
                 }
             }
+            if (!programExist) {
+                Log.e(TAG, "pullOrgUnitUID: Not in our program " + code);
+                return "null";
+            }
+            if (responseArray.length() == 0) {
+                Log.e(TAG, "pullOrgUnitUID: No UID for code " + code);
+                //Assign the used org_unit to the unexistent_org_unit for not make new pulls.
+                // throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
+                return "null";
+            }
+            try {
+                String date = responseArray.getJSONObject(0).getString(TAG_CLOSEDATA);
+                Calendar calendarDate = Utils.parseStringToCalendar(date);
+
+                if(!Utils.isDateOverSystemDate(calendarDate)){
+                    if(BANNED==false) {
+                        BANNED = true;
+                        try {
+                            throw new ShowException(applicationContext.getString(R.string.exception_org_unit_banned), applicationContext);
+                        } catch (ShowException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }catch(Exception e){
+                //if the date is null is not need check
+            }
+        }catch(Exception e){
+            return "null";
         }
-}catch(Exception e){
-    //if the date is null is not need check
-}
         //Return the org_unit id
         return responseArray.getJSONObject(0).getString("id");
     }
@@ -730,6 +740,19 @@ try {
         }catch(Exception ex){
             throw new Exception(activity.getString(R.string.dialog_info_push_bad_credentials));
         }
+    }
+
+    public boolean checkOrgUnit(String orgUnit) {
+        boolean resultado=false;
+        try {
+            if(getUIDCheckProgramClosedDate(orgUnit)!="null")
+            resultado=true;
+        } catch (Exception e) {
+            resultado=false;
+            e.printStackTrace();
+        }
+
+        return resultado;
     }
 
     /**

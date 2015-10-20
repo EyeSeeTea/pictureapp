@@ -396,7 +396,7 @@ public class Survey extends BaseModel {
         boolean valid = true;
 
         //Define a filter to select which values will be turned into string by code_question
-        List<String> codeQuestionFilter = new ArrayList<>() {{
+        List<String> codeQuestionFilter = new ArrayList<String>() {{
             add("Specie");  //4
             add("Sex");     //2
             add("Age");     //3

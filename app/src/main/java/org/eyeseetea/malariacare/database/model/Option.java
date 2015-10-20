@@ -150,13 +150,6 @@ public class Option extends BaseModel {
         return given.equals(name);
     }
 
-    //TODO: to enable lazy loading, here we need to set Method.SAVE and Method.DELETE and use the .toModel() to specify when do we want to load the models
-    @OneToMany(methods = {OneToMany.Method.SAVE, OneToMany.Method.DELETE}, variableName = "values")
-    public List<Value> getValues() {
-        return new Select().from(Value.class)
-                .where(Condition.column(Value$Table.OPTION_ID_OPTION).eq(this.getId_option())).queryList();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

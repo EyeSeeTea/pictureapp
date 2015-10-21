@@ -41,4 +41,12 @@ public class PhoneMetaData {
     public void setPhone_serial(String phone_serial) {
         this.phone_serial = phone_serial;
     }
+
+    public String getPhone_metaData() {
+        if(phone_number.length()>0){
+            return "Phone number:"+phone_number +" Imei:"+imei+" "+" Phone Serial:"+phone_serial;
+        }
+        else
+            return "Imei:"+imei+" "+" Phone Serial:"+phone_serial;
+    }
 }

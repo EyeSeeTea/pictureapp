@@ -3,9 +3,13 @@ package org.eyeseetea.malariacare.views;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.preference.EditTextPreference;
+import android.preference.Preference;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -15,6 +19,7 @@ import android.widget.AutoCompleteTextView;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.network.PushClient;
 
 import java.util.ArrayList;
@@ -54,6 +59,8 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                     android.R.layout.simple_dropdown_item_1line,orgUnits);
             mEditText.setAdapter(adapter);
 
+            EditTextPreference org_name = this;
+            PushClient.setUnbanAndNewOrgName();
         }
     }
 
@@ -71,6 +78,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         }
     }
 
+
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
@@ -87,7 +95,14 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                             e.printStackTrace();
                         }
                         //If the orgUnit change, maybe is it unbanned..
-                        PushClient.setUnbanAndNewOrgName(value);
+                        PushClient.DHIS_ORG_NAME=value;
+                        PushClient.BANNED=false;
+                        PushClient.DHIS_UNEXISTENT_ORG_UNIT="";
+                        Log.d("cambio", PushClient.DHIS_ORG_NAME);
+                        Log.d("cambio", PushClient.BANNED+"");
+                        Log.d("cambio", PushClient.DHIS_UNEXISTENT_ORG_UNIT);
+
+                        //Since intents does NOT admit NON serializable as values we use Session instead
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

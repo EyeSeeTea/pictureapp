@@ -359,9 +359,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         /**
          * Add user to table and session
          */
-        private void initUser(){
-            this.user = new User(mUser, mUser);
-            this.user.save();
+        private void initUser() {
+            // In case no user was previously set in the database we create one. Otherwise we update it
+            List<User> users = new Select().all().from(User.class).queryList();
+            if (users.size() == 0) {
+                this.user = new User(mUser, mUser);
+                this.user.save();
+            } else {
+                this.user = users.get(0);
+                this.user.setName(mUser);
+                this.user.setUid(mUser);
+                this.user.update();
+            }
         }
 
         private void initDataIfRequired() throws IOException {

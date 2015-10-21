@@ -54,9 +54,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.Proxy;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -113,8 +111,8 @@ public class PushClient {
     //When PushClient is sending the event, the activity is null, becouse PushClient is called in a InstanceService without activity.
     //I can´t access to the activity or context for get the r.string values.
     private static String TAG_IMEI="RuNZUhiAmlv";
-    private static String TAG_PHONE="UkGuMlmNtJH";
-    private static String TAG_PHONE_SERIAL="zZ1LFI0FplS";
+    //private static String TAG_PHONE="UkGuMlmNtJH";
+    //private static String TAG_PHONE_SERIAL="zZ1LFI0FplS";
 
     private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
     private static int DHIS_LIMIT_HOURS=1;
@@ -230,7 +228,9 @@ public class PushClient {
         return  parseResponse(response.body().string());
     }
 
-    //Get the user vaules if exist.
+    /**
+     * Get the user settings values from the shared Preferences
+     */
     public void getPreferenceValues(Context context){
         SharedPreferences preferences = applicationContext.getSharedPreferences("org.eyeseetea.pictureapp_preferences", applicationContext.MODE_PRIVATE);
         String key=applicationContext.getResources().getString(R.string.org_unit);
@@ -242,7 +242,10 @@ public class PushClient {
     }
 
 
-    //Block the organization for future push actions. deducting one day to the closed date than the systemdate.
+    /**
+     * Bans the organization for future requests , reducing one day the system date and keeping closedate on the server.
+     */
+
     private void banOrg(String orgName) {
         String url= PreferencesState.getInstance().getDhisURL();
         if(url==null || "".equals(url)){
@@ -275,6 +278,11 @@ public class PushClient {
         }
     }
 
+    /**
+     * Patch in the server the new description in a closed organisation
+     * @param url the patch url
+     */
+
     private void patchDescriptionClosedDate(String url) throws Exception{
         //https://malariacare.psi.org/api/organisationUnits/Pg91OgEIKIm/description
         try {
@@ -292,8 +300,13 @@ public class PushClient {
     }
 
 
+    /**
+     * Pull the current description and adds new closed organization description.
+     * @url url for pull the current description
+     * @return new description.
+     */
     private JSONObject prepareClosingDescriptionValue(String url) throws Exception{
-        String actualDescription= getActualDescription(url);
+        String actualDescription= getCurrentDescription(url);
         String dateFormatted=Utils.getClosingDataString("dd-MM-yyyy");
         String description=String.format(DHIS_PATCH_DESCRIPTIONCLOSED_DATE, dateFormatted);
         StringBuilder sb = new StringBuilder();
@@ -309,6 +322,10 @@ public class PushClient {
         return elementObject;
     }
 
+    /**
+     * Prepare the closing value.
+     * @return Closing value as Json.
+     */
     private JSONObject prepareClosingDateValue() throws Exception{
         String dateFormatted=Utils.getClosingDataString("yyyy-MM-dd");
         JSONObject elementObject = new JSONObject();
@@ -369,6 +386,10 @@ public class PushClient {
     }
 
 
+    /**
+     * This method check the org_unit is valid and if the org unit is banned.
+     * @return return true if all is correct.
+     */
     private boolean checkAll(){
         try {
             DHIS_ORG_UID= getUIDCheckProgramClosedDate(DHIS_ORG_NAME);
@@ -390,13 +411,22 @@ public class PushClient {
         return false;
     }
 
-    //this method should be synchronized becouse without sync can change the Banned value in the middle of a survey check.
+    /**
+     * This method must be synchronized to not work in the middle of a call.
+     * This method resets the unit checks for invalid and baned orgization
+     * @orgName is the DHIS_ORG_NAME
+     */
     public static synchronized  void setUnbanAndNewOrgName(String orgName){
         DHIS_ORG_NAME=orgName;
         BANNED=false;
     }
 
-    //return "null" for a not program for this org_unit, or not UID or not UID valid
+    //
+
+    /**
+     * @code is the DHIS_ORG_NAME
+     * @return If org_unit not valid or have no UID Returns null, else the UID
+     */
     private String getUIDCheckProgramClosedDate(String code) throws Exception{
         //https://malariacare.psi.org/api/organisationUnits.json?paging=false&fields=id,name,openingDate,closedDate,programs&filter=code:eq:KH_Cambodia
         String DHIS_PULL_URL=getDhisOrgUnitURL(code);
@@ -499,7 +529,11 @@ public class PushClient {
     }
 
 
-    public String getActualDescription(String url)  throws Exception{
+    /**
+     * Get the current description for a org_unit from the server
+     * @return return the description or "".
+     */
+    public String getCurrentDescription(String url)  throws Exception{
         //https://malariacare.psi.org/api/organisationUnits/Pg91OgEIKIm/description
         String DHIS_PULL_URL=url;
         OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
@@ -591,14 +625,8 @@ public class PushClient {
             values.put(prepareValue(compositeScore));
         }
 
-        //put in values the phonemetadata for be sent in the survey
         PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
-        //Activity is always null here, this is the reason for not use R.String_Phoneimei_uid..
-        values.put(preparePhoneValue(TAG_IMEI, phoneMetaData.getImei()));
-        //Check if the phonenumber is null, some SIMCards/Operators not give this field.
-        if (phoneMetaData.getPhone_number() != null)
-            values.put(preparePhoneValue(TAG_PHONE, phoneMetaData.getPhone_number()));
-        values.put(preparePhoneValue(TAG_PHONE_SERIAL, phoneMetaData.getPhone_serial()));
+        values.put(preparePhoneValue(TAG_IMEI, phoneMetaData.getPhone_metaData()));
         return values;
     }
 
@@ -746,17 +774,22 @@ public class PushClient {
         }
     }
 
+    /**
+     * Only checks the orgUnit
+     * @param orgUnit the organization unit
+     * @return true if is correct.
+     */
     public boolean checkOrgUnit(String orgUnit) {
-        boolean resultado=false;
+        boolean result=false;
         try {
             if(getUIDCheckProgramClosedDate(orgUnit)!="null")
-                resultado=true;
+                result=true;
         } catch (Exception e) {
-            resultado=false;
+            result=false;
             e.printStackTrace();
         }
 
-        return resultado;
+        return result;
     }
 
 

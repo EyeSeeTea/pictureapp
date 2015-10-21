@@ -186,7 +186,7 @@ public class Survey extends BaseModel {
      * @return true|false
      */
     public boolean isInProgress(){
-        return !isSent() && !isCompleted();
+        return !isSent() && !isCompleted()&& !isHide();
     }
 
 

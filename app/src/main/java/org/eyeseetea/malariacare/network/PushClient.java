@@ -76,7 +76,7 @@ public class PushClient {
     private static String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits";
     private static String DHIS_USERNAME="testing";
     private static String DHIS_PASSWORD="Testing2015";
-    private static String DHIS_ORG_NAME ="KH_Cambodia";
+    public static String DHIS_ORG_NAME ="KH_Cambodia";
     private static String DHIS_ORG_UID ="";
     private static String DHIS_PATCH_URL_CLOSED_DATE ="/api/organisationUnits/%s/closedDate";
     private static String DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE="/api/organisationUnits/%s/description";
@@ -87,7 +87,7 @@ public class PushClient {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     public static Boolean BANNED=false;
-    private static String DHIS_UNEXISTENT_ORG_UNIT="";
+    public static String DHIS_UNEXISTENT_ORG_UNIT="";
 
     private static String COMPLETED="COMPLETED";
 
@@ -197,7 +197,8 @@ public class PushClient {
     }
 
     public static boolean isValid() {
-        return ((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED);
+        boolean result=((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED);
+        return result;
     }
     /**
      * Pushes data to DHIS Server
@@ -412,13 +413,12 @@ public class PushClient {
     }
 
     /**
-     * This method must be synchronized to not work in the middle of a call.
      * This method resets the unit checks for invalid and baned orgization
      * @orgName is the DHIS_ORG_NAME
      */
-    public static synchronized  void setUnbanAndNewOrgName(String orgName){
-        DHIS_ORG_NAME=orgName;
+    public static void setUnbanAndNewOrgName(){
         BANNED=false;
+        DHIS_UNEXISTENT_ORG_UNIT="";
     }
 
     //

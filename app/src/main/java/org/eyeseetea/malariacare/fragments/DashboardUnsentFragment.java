@@ -305,8 +305,9 @@ public class DashboardUnsentFragment extends ListFragment {
     public void manageSurveysAlarm(List<Survey> newListSurveys){
         Log.d(TAG, "setSurveysAlarm (Thread: " + Thread.currentThread().getId() + "): " + newListSurveys.size());
 
-        // if survey list is not empty: run periodic task for survey push otherwise cancel active alarm
-        if(!newListSurveys.isEmpty()) {
+        // if survey list is not empty: run periodic task for survey push otherwise cancel active alarm.
+        // Checks if the org_unit was changed, if is not valid. And it checks if the org_unit is not banned.
+        if(!newListSurveys.isEmpty()  && PushClient.isValid()) {
             alarmPush.setPushAlarm(getActivity());
         }else{
             alarmPush.cancelPushAlarm(getActivity());

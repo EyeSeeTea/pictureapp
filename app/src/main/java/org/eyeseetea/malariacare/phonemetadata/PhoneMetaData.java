@@ -44,9 +44,9 @@ public class PhoneMetaData {
 
     public String getPhone_metaData() {
         if(phone_number.length()>0){
-            return "Phone number:"+phone_number +" Imei:"+imei+" "+" Phone Serial:"+phone_serial;
+            return phone_number +"###"+imei+"###"+phone_serial;
         }
         else
-            return "Imei:"+imei+" "+" Phone Serial:"+phone_serial;
+            return "######"+imei+"###"+phone_serial;
     }
 }

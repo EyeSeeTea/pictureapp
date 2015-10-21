@@ -275,10 +275,11 @@ public class Survey extends BaseModel {
         SurveyAnsweredRatio answeredRatio=this.reloadSurveyAnsweredRatio();
 
         //Update status & completionDate
-        if(answeredRatio.isCompleted()) {
+        //Temporal fix- If the survey is negative, it is interpreted that it was false .:
+        if(answeredRatio.isCompleted() || answeredRatio.getAnswered()==1) {
             this.setStatus(Constants.SURVEY_COMPLETED);
             this.setCompletionDate(new Date());
-        }else{
+        }else {
             this.setStatus(Constants.SURVEY_IN_PROGRESS);
             this.setCompletionDate(this.eventDate);
         }

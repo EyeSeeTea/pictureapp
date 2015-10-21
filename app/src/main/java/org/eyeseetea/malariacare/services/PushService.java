@@ -92,7 +92,7 @@ public class PushService extends IntentService {
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllUnsentSurveys();
 
-        if(surveys!=null && !surveys.isEmpty() && PushClient.isValid()){
+        if(surveys!=null && !surveys.isEmpty()){
             for(Survey survey : surveys){
                 PushClient pushClient=new PushClient(survey, getApplicationContext());
 

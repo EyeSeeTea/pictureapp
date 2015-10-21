@@ -87,7 +87,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                             e.printStackTrace();
                         }
                         //If the orgUnit change, maybe is it unbanned..
-                        PushClient.setUnbanned();
+                        PushClient.setUnbanAndNewOrgName(value);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

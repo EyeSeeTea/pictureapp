@@ -65,7 +65,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * shown on tablets.
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
-    private static String new_org_name="";
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }

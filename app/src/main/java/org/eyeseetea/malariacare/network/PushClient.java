@@ -71,7 +71,7 @@ public class PushClient {
     private static String DHIS_SERVER ="https://malariacare.psi.org";
     private static String DHIS_PUSH_API="/api/events";
     private static String DHIS_UID_PROGRAM="";
-    private static String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id,name,openingDate,closedDate,programs&filter=code:eq:%s";
+    private static String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id,closedDate&filter=code:eq:%s&filter:programs:id:eq:%s";
     private static String DHIS_PULL_PROGRAM="/api/programs/";
     private static String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits";
     private static String DHIS_USERNAME="testing";
@@ -122,12 +122,21 @@ public class PushClient {
 
     public PushClient(Activity activity) {
         this.activity = activity;
+        this.applicationContext=activity.getApplicationContext();
+        getPreferenceValues(applicationContext);
+        DHIS_UID_PROGRAM=applicationContext.getResources().getString(R.string.UID_PROGRAM);
     }
 
+    public PushClient(Context applicationContext) {
+        this.applicationContext = applicationContext;
+        getPreferenceValues(applicationContext);
+        DHIS_UID_PROGRAM=applicationContext.getResources().getString(R.string.UID_PROGRAM);
+    }
     public PushClient(Survey survey, Activity activity) {
         this.survey = survey;
         this.activity = activity;
-        getPreferenceValues(applicationContext.getApplicationContext());
+        this.applicationContext=activity.getApplicationContext();
+        getPreferenceValues(applicationContext);
         DHIS_UID_PROGRAM=applicationContext.getResources().getString(R.string.UID_PROGRAM);
     }
 
@@ -431,35 +440,29 @@ public class PushClient {
 
         BasicAuthenticator basicAuthenticator=new BasicAuthenticator();
         client.setAuthenticator(basicAuthenticator);
+        Log.d("URL",DHIS_PULL_URL);
+        Response response=null;
+            Request request= new Request.Builder()
+                    .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                    .url(DHIS_PULL_URL)
+                    .build();
+            try {
+                response = client.newCall(request).execute();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+                return "null";
+            }
 
-        Request request = new Request.Builder()
-                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
-                .url(DHIS_PULL_URL)
-                .build();
-
-        Response response = client.newCall(request).execute();
+        try {
         if(!response.isSuccessful()){
             Log.e(TAG, "pullOrgUnitUID (" + response.code()+"): "+response.body().string());
             throw new IOException(response.message());
         }
 
         JSONObject responseJSON=parseResponse(response.body().string());
-        try {
             responseArray = (JSONArray) responseJSON.get(TAG_ORGANISATIONUNIT);
 
-            JSONObject JsonProgram = responseArray.getJSONObject(0);
-            JSONArray responseProgram = (JSONArray) JsonProgram.get(TAG_PROGRAMS);
-            //check if the id of the program is correct
-            boolean programExist = false;
-            for (int i = 0; i < responseProgram.length(); i++) {
-                if (responseProgram.getJSONObject(i).getString("id").equals(DHIS_UID_PROGRAM)) {
-                    programExist = true;
-                }
-            }
-            if (!programExist) {
-                Log.e(TAG, "pullOrgUnitUID: Not in our program " + code);
-                return "null";
-            }
             if (responseArray.length() == 0) {
                 Log.e(TAG, "pullOrgUnitUID: No UID for code " + code);
                 //Assign the used org_unit to the unexistent_org_unit for not make new pulls.
@@ -673,11 +676,13 @@ public class PushClient {
      */
     private String getDhisOrgUnitURL(String code){
         String url= PreferencesState.getInstance().getDhisURL();
+        getPreferenceValues(applicationContext);
         if(url==null || "".equals(url)){
             url= DHIS_SERVER;
         }
-
-        return url+String.format(DHIS_PULL_ORG_UNIT_API,code);
+        Log.d("uid",DHIS_UID_PROGRAM);
+        url=url+String.format(DHIS_PULL_ORG_UNIT_API,code,DHIS_UID_PROGRAM);
+        return url.replace(" ","%20");
     }
 
     /**
@@ -686,7 +691,8 @@ public class PushClient {
      */
     private String getPatchClosedDateUrl(String url, String orguid){
         //Get the org_ID
-        return url+String.format(DHIS_PATCH_URL_CLOSED_DATE,orguid);
+        url=url+String.format(DHIS_PATCH_URL_CLOSED_DATE,orguid);
+        return url.replace(" ","%20");
     }
 
     /**
@@ -694,7 +700,8 @@ public class PushClient {
      * @return
      */
     private String getPatchClosedDescriptionUrl(String url, String orguid){
-        return url+String.format(DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE,orguid);
+        url=url+String.format(DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE,orguid);
+        return url.replace(" ","%20");
     }
 
     /**
@@ -707,8 +714,9 @@ public class PushClient {
             url= DHIS_SERVER;
         }
 
-        url= DHIS_SERVER +DHIS_PULL_PROGRAM+ activity.getResources().getString(R.string.UID_PROGRAM)+DHIS_PULL_ORG_UNITS_API;
-        return url;
+        url= DHIS_SERVER +DHIS_PULL_PROGRAM+ applicationContext.getResources().getString(R.string.UID_PROGRAM)+DHIS_PULL_ORG_UNITS_API;
+
+        return url.replace(" ","%20");
     }
     /**
      * Returns the URL that points to the DHIS server API according to preferences.
@@ -719,7 +727,8 @@ public class PushClient {
         if(url==null || "".equals(url)) {
             url = DHIS_SERVER;
         }
-        return url+DHIS_PUSH_API;
+        url= url+DHIS_PUSH_API;
+        return url.replace(" ","%20");
     }
 
     /**
@@ -778,7 +787,7 @@ public class PushClient {
     public boolean checkOrgUnit(String orgUnit) {
         boolean result=false;
         try {
-            if(getUIDCheckProgramClosedDate(orgUnit)!="null")
+            if(!(getUIDCheckProgramClosedDate(orgUnit).equals("null")))
                 result=true;
         } catch (Exception e) {
             result=false;

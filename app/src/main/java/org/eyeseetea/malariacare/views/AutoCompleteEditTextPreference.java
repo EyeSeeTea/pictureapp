@@ -114,15 +114,6 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                         } catch (ShowException e) {
                             e.printStackTrace();
                         }
-                        //If the orgUnit change, maybe is it unbanned..
-                        PushClient.DHIS_ORG_NAME=value;
-                        PushClient.BANNED=false;
-                        PushClient.DHIS_UNEXISTENT_ORG_UNIT="";
-                        Log.d("cambio", PushClient.DHIS_ORG_NAME);
-                        Log.d("cambio", PushClient.BANNED+"");
-                        Log.d("cambio", PushClient.DHIS_UNEXISTENT_ORG_UNIT);
-
-                        //Since intents does NOT admit NON serializable as values we use Session instead
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

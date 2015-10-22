@@ -108,11 +108,7 @@ public class PushClient {
     private static String TAG_PROGRAMS="programs";
 
 
-    //When PushClient is sending the event, the activity is null, becouse PushClient is called in a InstanceService without activity.
-    //I can´t access to the activity or context for get the r.string values.
-    private static String TAG_IMEI="RuNZUhiAmlv";
-    //private static String TAG_PHONE="UkGuMlmNtJH";
-    //private static String TAG_PHONE_SERIAL="zZ1LFI0FplS";
+    private static String TAG_PHONEMETADA="RuNZUhiAmlv";
 
     private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
     private static int DHIS_LIMIT_HOURS=1;
@@ -626,7 +622,7 @@ public class PushClient {
         }
 
         PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
-        values.put(preparePhoneValue(TAG_IMEI, phoneMetaData.getPhone_metaData()));
+        values.put(preparePhoneValue(TAG_PHONEMETADA, phoneMetaData.getPhone_metaData()));
         return values;
     }
 

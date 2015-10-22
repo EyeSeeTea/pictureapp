@@ -64,7 +64,8 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
             ArrayList<String> opcionesGet = new ArrayList<String>();
             String[]  orgUnits= null;
             try {
-                orgUnits = new GetOrgUnitsAsync().execute(opcionesGet).get();
+                GetOrgUnitsAsync getOrgUnitsAsynctask = new GetOrgUnitsAsync(context);
+                orgUnits = getOrgUnitsAsynctask.execute(opcionesGet).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -106,7 +107,9 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
             if (callChangeListener(value)) {
                 setText(value);
                 try {
-                    boolean orgUnits = new CheckCodeAsync().execute(value).get();
+
+                    CheckCodeAsync checkCodeAsync = new CheckCodeAsync(mEditText.getContext());
+                    boolean orgUnits = checkCodeAsync.execute(value).get();
                     if(!orgUnits)
                     {
                         try {
@@ -127,6 +130,11 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     class GetOrgUnitsAsync extends AsyncTask<ArrayList<String>, Void, String[]> {
 
+        Context context;
+        public GetOrgUnitsAsync(Context context) {
+            this.context = context;
+        }
+
         @Override
         protected void onPreExecute() {
         }
@@ -134,7 +142,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         protected String[] doInBackground(ArrayList<String>... passing) {
             String[] result = null;
             try {
-                PushClient pushClient=new PushClient((Activity)getContext());
+                PushClient pushClient=new PushClient(null,context);
                 result = pushClient.pullOrgUnitsCodes();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -150,6 +158,11 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     class CheckCodeAsync extends AsyncTask<String, Void, Boolean> {
 
+        Context context;
+        public CheckCodeAsync(Context context) {
+            this.context=context;
+        }
+
         @Override
         protected void onPreExecute() {
         }
@@ -159,7 +172,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
             String orgUnit = param[0];
             try {
-                PushClient pushClient=new PushClient((Activity)getContext());
+                PushClient pushClient=new PushClient(context);
                 result = pushClient.checkOrgUnit(orgUnit);
             } catch (Exception e) {
                 e.printStackTrace();

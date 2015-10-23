@@ -76,7 +76,7 @@ public class PushClient {
     private static String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits";
     private static String DHIS_USERNAME="testing";
     private static String DHIS_PASSWORD="Testing2015";
-    public static String DHIS_ORG_NAME ="KH_Cambodia";
+    private static String DHIS_ORG_NAME ="KH_Cambodia";
     private static String DHIS_ORG_UID ="";
     private static String DHIS_PATCH_URL_CLOSED_DATE ="/api/organisationUnits/%s/closedDate";
     private static String DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE="/api/organisationUnits/%s/description";
@@ -213,12 +213,12 @@ public class PushClient {
 
         OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 
-        BasicAuthenticator2 basicAuthenticator2 = new BasicAuthenticator2();
-        client.setAuthenticator(basicAuthenticator2);
+        BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
 
         RequestBody body = RequestBody.create(JSON, data.toString());
         Request request = new Request.Builder()
-                .header(basicAuthenticator2.AUTHORIZATION_HEADER, basicAuthenticator2.getCredentials())
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
                 .url(DHIS_URL)
                 .post(body)
                 .build();
@@ -436,12 +436,12 @@ public class PushClient {
         JSONArray responseArray=null;
         OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 
-        BasicAuthenticator2 basicAuthenticator2=new BasicAuthenticator2();
-        client.setAuthenticator(basicAuthenticator2);
+        BasicAuthenticator basicAuthenticator =new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
         Log.d("URL",DHIS_PULL_URL);
         Response response=null;
             Request request= new Request.Builder()
-                    .header(basicAuthenticator2.AUTHORIZATION_HEADER, basicAuthenticator2.getCredentials())
+                    .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
                     .url(DHIS_PULL_URL)
                     .build();
             try {
@@ -501,12 +501,12 @@ public class PushClient {
 
         OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 
-        BasicAuthenticator2 basicAuthenticator2=new BasicAuthenticator2();
-        client.setAuthenticator(basicAuthenticator2);
+        BasicAuthenticator basicAuthenticator =new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
 
         Log.e(TAG, "pullOrgUnitUID URL (" + DHIS_PULL_URL);
         Request request = new Request.Builder()
-                .header(basicAuthenticator2.AUTHORIZATION_HEADER, basicAuthenticator2.getCredentials())
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
                 .url(DHIS_PULL_URL)
                 .build();
 
@@ -535,11 +535,11 @@ public class PushClient {
         String DHIS_PULL_URL=url;
         OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 
-        BasicAuthenticator2 basicAuthenticator2=new BasicAuthenticator2();
-        client.setAuthenticator(basicAuthenticator2);
+        BasicAuthenticator basicAuthenticator =new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
 
         Request request = new Request.Builder()
-                .header(basicAuthenticator2.AUTHORIZATION_HEADER, basicAuthenticator2.getCredentials())
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
                 .url(DHIS_PULL_URL)
                 .build();
 
@@ -739,11 +739,11 @@ public class PushClient {
 
         OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 
-        BasicAuthenticator2 basicAuthenticator2=new BasicAuthenticator2();
-        client.setAuthenticator(basicAuthenticator2);
+        BasicAuthenticator basicAuthenticator =new BasicAuthenticator();
+        client.setAuthenticator(basicAuthenticator);
 
         Request.Builder builder = new Request.Builder()
-                .header(basicAuthenticator2.AUTHORIZATION_HEADER, basicAuthenticator2.getCredentials())
+                .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
                 .url(DHIS_URL);
 
         switch (method) {
@@ -823,36 +823,4 @@ public class PushClient {
         }
     }
 
-    /**
-     * Basic
-     */
-    class BasicAuthenticator2 implements  Authenticator{
-
-        public final String AUTHORIZATION_HEADER="Authorization";
-        private String credentials;
-        private int mCounter = 0;
-
-        BasicAuthenticator2(){
-            credentials = Credentials.basic("user", "user");
-        }
-
-        @Override
-        public Request authenticate(Proxy proxy, Response response) throws IOException {
-
-            if (mCounter++ > 0) {
-                throw new IOException(response.message());
-            }
-            return response.request().newBuilder().header(AUTHORIZATION_HEADER, credentials).build();
-        }
-
-        @Override
-        public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-            return null;
-        }
-
-        public String getCredentials(){
-            return credentials;
-        }
-
-    }
 }

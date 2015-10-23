@@ -63,10 +63,21 @@ public class PhoneMetaData {
     }
 
     public String getPhone_metaData() {
+        String phonemetadata="";
+        phonemetadata= "###";
         if(phone_number.length()>0){
-            return phone_number +"###"+imei+"###"+phone_serial;
+            phonemetadata=phonemetadata+phone_number;
         }
-        else
-            return "######"+imei+"###"+phone_serial;
+
+        phonemetadata= phonemetadata+"###";
+        if(imei.length()>0){
+            phonemetadata=phonemetadata+imei;
+        }
+
+        phonemetadata= phonemetadata+"###";
+        if(phone_serial.length()>0){
+            phonemetadata=phonemetadata+phone_serial;
+        }
+        return phonemetadata;
     }
 }

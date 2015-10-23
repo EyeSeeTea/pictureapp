@@ -218,6 +218,17 @@ public class PushClient {
         }
         return  parseResponse(response.body().string());
     }
+
+    /**
+     * Check if the organization is valid in the local data.
+     * Check if the organization is banned in the local data.
+     * @return returns true if local data are valid
+     */
+    public static boolean isValid() {
+        boolean result=((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED);
+        return result;
+    }
+
     /**
      * compares the dates of the surveys and checks if the dates are over the limit
      * @param surveyInit the survey to check.
@@ -236,11 +247,6 @@ public class PushClient {
                 }
         }
         return false;
-    }
-
-    public static boolean isValid() {
-        boolean result=((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED);
-        return result;
     }
 
     /**
@@ -846,5 +852,5 @@ public class PushClient {
             return credentials;
         }
     }
-    
+
 }

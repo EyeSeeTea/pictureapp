@@ -1,22 +1,21 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Facility QA Tool App.
+ * This file is part of QIS Survelliance App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.eyeseetea.malariacare;
 
 import android.animation.Animator;
@@ -359,9 +358,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         /**
          * Add user to table and session
          */
-        private void initUser(){
-            this.user = new User(mUser, mUser);
-            this.user.save();
+        private void initUser() {
+            // In case no user was previously set in the database we create one. Otherwise we update it
+            List<User> users = new Select().all().from(User.class).queryList();
+            if (users.size() == 0) {
+                this.user = new User(mUser, mUser);
+                this.user.save();
+            } else {
+                this.user = users.get(0);
+                this.user.setName(mUser);
+                this.user.setUid(mUser);
+                this.user.update();
+            }
         }
 
         private void initDataIfRequired() throws IOException {

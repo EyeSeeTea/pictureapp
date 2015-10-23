@@ -1,11 +1,35 @@
+/*
+ * Copyright (c) 2015.
+ *
+ * This file is part of QIS Survelliance App.
+ *
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 package org.eyeseetea.malariacare.views;
 
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.preference.EditTextPreference;
+import android.preference.Preference;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -15,6 +39,7 @@ import android.widget.AutoCompleteTextView;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.network.PushClient;
 
 import java.util.ArrayList;
@@ -39,7 +64,8 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
             ArrayList<String> opcionesGet = new ArrayList<String>();
             String[]  orgUnits= null;
             try {
-                orgUnits = new GetOrgUnitsAsync().execute(opcionesGet).get();
+                GetOrgUnitsAsync getOrgUnitsAsynctask = new GetOrgUnitsAsync(context);
+                orgUnits = getOrgUnitsAsynctask.execute(opcionesGet).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -54,6 +80,8 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                     android.R.layout.simple_dropdown_item_1line,orgUnits);
             mEditText.setAdapter(adapter);
 
+            EditTextPreference org_name = this;
+            PushClient.setUnbanAndNewOrgName();
         }
     }
 
@@ -71,6 +99,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         }
     }
 
+
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
@@ -78,7 +107,9 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
             if (callChangeListener(value)) {
                 setText(value);
                 try {
-                    boolean orgUnits = new CheckCodeAsync().execute(value).get();
+
+                    CheckCodeAsync checkCodeAsync = new CheckCodeAsync(mEditText.getContext());
+                    boolean orgUnits = checkCodeAsync.execute(value).get();
                     if(!orgUnits)
                     {
                         try {
@@ -86,8 +117,6 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                         } catch (ShowException e) {
                             e.printStackTrace();
                         }
-                        //If the orgUnit change, maybe is it unbanned..
-                        PushClient.setUnbanned();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -101,6 +130,11 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     class GetOrgUnitsAsync extends AsyncTask<ArrayList<String>, Void, String[]> {
 
+        Context context;
+        public GetOrgUnitsAsync(Context context) {
+            this.context = context;
+        }
+
         @Override
         protected void onPreExecute() {
         }
@@ -108,7 +142,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         protected String[] doInBackground(ArrayList<String>... passing) {
             String[] result = null;
             try {
-                PushClient pushClient=new PushClient((Activity)getContext());
+                PushClient pushClient=new PushClient(null,context);
                 result = pushClient.pullOrgUnitsCodes();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -124,6 +158,11 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     class CheckCodeAsync extends AsyncTask<String, Void, Boolean> {
 
+        Context context;
+        public CheckCodeAsync(Context context) {
+            this.context=context;
+        }
+
         @Override
         protected void onPreExecute() {
         }
@@ -133,7 +172,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
             String orgUnit = param[0];
             try {
-                PushClient pushClient=new PushClient((Activity)getContext());
+                PushClient pushClient=new PushClient(context);
                 result = pushClient.checkOrgUnit(orgUnit);
             } catch (Exception e) {
                 e.printStackTrace();

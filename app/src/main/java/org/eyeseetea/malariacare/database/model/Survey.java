@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Facility QA Tool App.
+ * This file is part of QIS Survelliance App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.database.model;
@@ -23,6 +23,7 @@ import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -54,40 +55,37 @@ public class Survey extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_survey;
-
     @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_org_unit",
+    @ForeignKey(
+            references = {@ForeignKeyReference(columnName = "id_org_unit",
             columnType = Long.class,
             foreignColumnName = "id_org_unit")},
             saveForeignKeyModel = false)
     OrgUnit orgUnit;
-
     @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_program",
+    @ForeignKey(
+            references = {@ForeignKeyReference(columnName = "id_program",
             columnType = Long.class,
             foreignColumnName = "id_program")},
             saveForeignKeyModel = false)
     Program program;
-
     @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_user",
+    @ForeignKey(
+            references = {@ForeignKeyReference(columnName = "id_user",
             columnType = Long.class,
             foreignColumnName = "id_user")},
             saveForeignKeyModel = false)
     User user;
-
     @Column
     Date eventDate;
-
     @Column
     Date completionDate;
-
     @Column
     Integer status;
 
-    SurveyAnsweredRatio _answeredQuestionRatio;
+    SurveyAnsweredRatio answeredQuestionRatio;
 
-    List<Value> _values;
+    List<Value> values;
 
     public Survey() {
     }
@@ -188,13 +186,24 @@ public class Survey extends BaseModel {
      * @return true|false
      */
     public boolean isInProgress(){
-        return !isSent() && !isCompleted();
+        return !isSent() && !isCompleted()&& !isHide();
     }
 
+
+    /**
+     * Returns the list of answered values from this survey
+     * @return
+     */
+    @OneToMany(methods = {OneToMany.Method.SAVE, OneToMany.Method.DELETE}, variableName = "values")
     public List<Value> getValues(){
         return new Select().from(Value.class)
                 .where(Condition.column(Value$Table.SURVEY_ID_SURVEY).eq(this.getId_survey())).queryList();
     }
+
+    //public List<Value> getValues(){
+    //    return new Select().from(Value.class)
+    //           .where(Condition.column(Value$Table.SURVEY_ID_SURVEY).eq(this.getId_survey())).queryList();
+    //}
 
     /**
      * Returns the list of answered values from this survey that belong to a parent question
@@ -211,22 +220,22 @@ public class Survey extends BaseModel {
                 .and(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.QUESTION_ID_PARENT)).isNull())
                 .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.VALUE)).isNotNull())
                 .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.VALUE)).isNot("")).queryList();
-        //List<Value> values = Value.findWithQuery(Value.class, LIST_VALUES_PARENT_QUESTION, this.getId().toString());
+        //List<Value> values = Value.findWithQuery(Value.class, LISTvalues_PARENT_QUESTION, this.getId().toString());
         return values;
     }
 
     /**
-     * Ratio of completion is cached into _answeredQuestionRatio in order to speed up loading
+     * Ratio of completion is cached into answeredQuestionRatio in order to speed up loading
      * @return
      */
     public SurveyAnsweredRatio getAnsweredQuestionRatio(){
-        if (_answeredQuestionRatio == null) {
-            _answeredQuestionRatio=SurveyAnsweredRatioCache.get(this.getId_survey());
-            if(_answeredQuestionRatio == null) {
-                _answeredQuestionRatio = reloadSurveyAnsweredRatio();
+        if (answeredQuestionRatio == null) {
+            answeredQuestionRatio=SurveyAnsweredRatioCache.get(this.getId_survey());
+            if(answeredQuestionRatio == null) {
+                answeredQuestionRatio = reloadSurveyAnsweredRatio();
             }
         }
-        return _answeredQuestionRatio;
+        return answeredQuestionRatio;
     }
 
     /**
@@ -266,10 +275,11 @@ public class Survey extends BaseModel {
         SurveyAnsweredRatio answeredRatio=this.reloadSurveyAnsweredRatio();
 
         //Update status & completionDate
-        if(answeredRatio.isCompleted()) {
+        //Temporal fix- If the survey is negative, it is interpreted that it was false .:
+        if(answeredRatio.isCompleted() || answeredRatio.getAnswered()==1) {
             this.setStatus(Constants.SURVEY_COMPLETED);
             this.setCompletionDate(new Date());
-        }else{
+        }else {
             this.setStatus(Constants.SURVEY_IN_PROGRESS);
             this.setCompletionDate(this.eventDate);
         }
@@ -351,15 +361,15 @@ public class Survey extends BaseModel {
      * @return true|false
      */
     public boolean isRDT(){
-        if(_values==null){
-            _values=Value.listAllBySurvey(this);
+        if(values==null){
+            values=Value.listAllBySurvey(this);
         }
 
-        if(_values.size()==0){
+        if(values.size()==0){
             return false;
         }
 
-        Value rdtValue=_values.get(0);
+        Value rdtValue=values.get(0);
 
         return rdtValue.isAPositive();
     }
@@ -370,12 +380,12 @@ public class Survey extends BaseModel {
      */
     public String getRDT() {
         String rdtValue = "";
-        if (_values == null) {
-            _values = Value.listAllBySurvey(this);
+        if (values == null) {
+            values = Value.listAllBySurvey(this);
         }
 
-        if (_values.size() > 0) {
-            Value firstValue = _values.get(0);
+        if (values.size() > 0) {
+            Value firstValue = values.get(0);
             rdtValue = firstValue.getOption().getName();
         }
         return rdtValue;
@@ -386,11 +396,11 @@ public class Survey extends BaseModel {
      * @return String
      */
     public String getValuesToString(){
-        if(_values==null || _values.size()==0){
+        if(values==null || values.size()==0){
             return "";
         }
 
-        Iterator<Value> iterator=_values.iterator();
+        Iterator<Value> iterator=values.iterator();
 
         String valuesStr="";
         boolean valid = true;
@@ -440,7 +450,7 @@ public class Survey extends BaseModel {
 
         Survey survey = (Survey) o;
 
-        if (_answeredQuestionRatio != null ? !_answeredQuestionRatio.equals(survey._answeredQuestionRatio) : survey._answeredQuestionRatio != null)
+        if (answeredQuestionRatio != null ? !answeredQuestionRatio.equals(survey.answeredQuestionRatio) : survey.answeredQuestionRatio != null)
             return false;
         if (!eventDate.equals(survey.eventDate)) return false;
         if (!completionDate.equals(survey.completionDate)) return false;
@@ -460,7 +470,7 @@ public class Survey extends BaseModel {
         result = 31 * result + eventDate.hashCode();
         result = 31 * result + completionDate.hashCode();
         result = 31 * result + status.hashCode();
-        result = 31 * result + (_answeredQuestionRatio != null ? _answeredQuestionRatio.hashCode() : 0);
+        result = 31 * result + (answeredQuestionRatio != null ? answeredQuestionRatio.hashCode() : 0);
         return result;
     }
 
@@ -477,8 +487,7 @@ public class Survey extends BaseModel {
     }
 
     public static void removeInProgress() {
-        List<Survey> inProgressSurvey= new Select().from(Survey.class)
-            .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_IN_PROGRESS)).queryList();
+        List<Survey> inProgressSurvey= getAllUncompletedSurveys();
         for(int i=inProgressSurvey.size()-1;i>=0;i--){
             inProgressSurvey.get(i).delete();
         }

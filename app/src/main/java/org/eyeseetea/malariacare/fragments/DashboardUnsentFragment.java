@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Facility QA Tool App.
+ * This file is part of QIS Survelliance App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.fragments;
@@ -119,6 +119,7 @@ public class DashboardUnsentFragment extends ListFragment {
     public void onResume(){
         Log.d(TAG, "onResume");
         registerSurveysReceiver();
+
         super.onResume();
     }
 
@@ -305,10 +306,16 @@ public class DashboardUnsentFragment extends ListFragment {
     public void manageSurveysAlarm(List<Survey> newListSurveys){
         Log.d(TAG, "setSurveysAlarm (Thread: " + Thread.currentThread().getId() + "): " + newListSurveys.size());
 
-        // if survey list is not empty: run periodic task for survey push otherwise cancel active alarm
-        if(!newListSurveys.isEmpty()) {
+        // if survey list is not empty: run periodic task for survey push otherwise cancel active alarm.
+        // Checks if the org_unit was changed, if is not valid. And it checks if the org_unit is not banned.
+        if(!newListSurveys.isEmpty()  && PushClient.isValid()) {
+            Log.d(TAG,"newListSurveys"+newListSurveys.isEmpty());
+            Log.d(TAG,"Isvalid?"+PushClient.isValid());
+            Survey.removeInProgress();
             alarmPush.setPushAlarm(getActivity());
         }else{
+            Log.d(TAG,"newListSurveys"+newListSurveys.isEmpty());
+            Log.d(TAG,"Isvalid?"+PushClient.isValid());
             alarmPush.cancelPushAlarm(getActivity());
         }
     }

@@ -109,7 +109,7 @@ public class PushClient {
 
     private static String TAG_PHONEMETADA="RuNZUhiAmlv";
 
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=10;
+    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
     private static int DHIS_LIMIT_HOURS=1;
 
     Survey survey;
@@ -226,13 +226,7 @@ public class PushClient {
      */
     private boolean isSurveyOverLimit(Survey surveyInit, List<Survey> surveyList){
         int countDates=0;
-        boolean position=false;
         for (int i = 0; i < surveyList.size(); i++) {
-            if (surveyList.get(i).equals(surveyInit)) {
-                countDates++;
-                position = true;
-            }
-            if (position) {
                 if (!Utils.isDateOverLimit(Utils.DateToCalendar(surveyInit.getEventDate()), Utils.DateToCalendar(surveyList.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
                     countDates++;
                     Log.d(TAG, "Surveys sents in one hour:" + countDates);
@@ -240,7 +234,6 @@ public class PushClient {
                         return true;
                     }
                 }
-            }
         }
         return false;
     }

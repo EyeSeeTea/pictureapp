@@ -109,7 +109,7 @@ public class PushClient {
 
     private static String TAG_PHONEMETADA="RuNZUhiAmlv";
 
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
+    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=10;
     private static int DHIS_LIMIT_HOURS=1;
 
     Survey survey;
@@ -190,31 +190,6 @@ public class PushClient {
         return new PushResult();
     }
 
-    private boolean checkSurveysLimit(Survey surveyInit, List<Survey> surveyList){
-        int countDates=0;
-        boolean position=false;
-        for (int i = 0; i < surveyList.size(); i++) {
-            if (surveyList.get(i).equals(surveyInit)) {
-                countDates++;
-                position = true;
-            }
-            if (position) {
-                if (!Utils.isDateOverLimit(Utils.DateToCalendar(surveyInit.getEventDate()), Utils.DateToCalendar(surveyList.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
-                    countDates++;
-                    Log.d(TAG, "Surveys sents in one hour:" + countDates);
-                    if(countDates>=DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR){
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    public static boolean isValid() {
-        boolean result=((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED);
-        return result;
-    }
     /**
      * Pushes data to DHIS Server
      * @param data
@@ -242,6 +217,32 @@ public class PushClient {
             throw new IOException(response.message());
         }
         return  parseResponse(response.body().string());
+    }
+
+    private boolean checkSurveysLimit(Survey surveyInit, List<Survey> surveyList){
+        int countDates=0;
+        boolean position=false;
+        for (int i = 0; i < surveyList.size(); i++) {
+            if (surveyList.get(i).equals(surveyInit)) {
+                countDates++;
+                position = true;
+            }
+            if (position) {
+                if (!Utils.isDateOverLimit(Utils.DateToCalendar(surveyInit.getEventDate()), Utils.DateToCalendar(surveyList.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
+                    countDates++;
+                    Log.d(TAG, "Surveys sents in one hour:" + countDates);
+                    if(countDates>=DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isValid() {
+        boolean result=((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED);
+        return result;
     }
 
     /**

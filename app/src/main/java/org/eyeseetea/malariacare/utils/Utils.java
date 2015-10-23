@@ -127,7 +127,22 @@ public class Utils {
         }
         return strings;
     }
-
+    /**
+     * returns the system data and the event data difference in hours
+     * @param limit is the time in hours
+     * @param date is the Date to compare with system Date
+     * @return if the difference is up than the time in hours
+     * @throws Exception
+     */
+    public static boolean isDateOverLimit(Calendar date,int limit) {
+        Calendar sysDate = Calendar.getInstance();
+        sysDate.setTime(new Date());
+        if(differenceInHours((Date) sysDate.getTime(), (Date) date.getTime())<limit){
+            return false;
+        }
+        else
+            return true;
+    }
     /**
      * returns the system data and the event data difference in hours
      * @param limit is the time in hours
@@ -139,7 +154,7 @@ public class Utils {
     public static boolean isDateOverLimit(Calendar surveyDate,Calendar nextDate,int limit) {
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
-        if(differenceInHours((Date) nextDate.getTime(), (Date) surveyDate.getTime())<1){
+        if(differenceInHours((Date) nextDate.getTime(), (Date) surveyDate.getTime())<limit){
             return false;
         }
         else

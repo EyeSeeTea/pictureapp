@@ -111,6 +111,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
+        Preference button2 = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
+        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                PreferencesState.getInstance().reloadPreferences();
+                return true;
+            }
+        });
 
     }
 
@@ -265,6 +273,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                     return true;
                 }
             });
+            Preference button2 = (Preference)findPreference(getActivity().getResources().getString(R.string.dhis_url));
+            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    PreferencesState.getInstance().reloadPreferences();
+                    return true;
+                }
+            });
 
     }
     }
@@ -320,6 +336,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     public void onBackPressed() {
+        PreferencesState.getInstance().reloadPreferences();
         PushClient.setUnbanAndNewOrgName();
         Class callerActivityClass=getCallerActivity();
         Intent returnIntent=new Intent(this,callerActivityClass);

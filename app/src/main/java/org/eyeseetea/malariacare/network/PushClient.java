@@ -76,7 +76,7 @@ public class PushClient {
     private static String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits";
     private static String DHIS_USERNAME="testing";
     private static String DHIS_PASSWORD="Testing2015";
-    public static String DHIS_ORG_NAME ="KH_Cambodia";
+    private static String DHIS_ORG_NAME ="KH_Cambodia";
     private static String DHIS_ORG_UID ="";
     private static String DHIS_PATCH_URL_CLOSED_DATE ="/api/organisationUnits/%s/closedDate";
     private static String DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE="/api/organisationUnits/%s/description";
@@ -176,16 +176,8 @@ public class PushClient {
                     //Change status
                     //check if the user was sent more than the limit
                     List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys();
-                    int countDates = 0;
-                    for (int i = sentSurveys.size() - 1; i >= 0; i--) {
-                        //If isDateOverLimit is TRUE the survey is out of the limit control
-                        if (!Utils.isDateOverLimit(Utils.DateToCalendar(sentSurveys.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
-                            countDates++;
-                            Log.d(TAG,"Surveys sents in one hour:"+countDates);
-                        }
-                    }
-                    if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-                        Log.d(TAG,"Surveys sents:"+countDates+" will be banned");
+                    if(checkSurveysLimit(survey,sentSurveys))
+                    {
                         banOrg(DHIS_ORG_NAME);
                     }
                 }
@@ -196,6 +188,27 @@ public class PushClient {
             }
         }
         return new PushResult();
+    }
+
+    private boolean checkSurveysLimit(Survey surveyInit, List<Survey> surveyList){
+        int countDates=0;
+        boolean position=false;
+        for (int i = 0; i < surveyList.size(); i++) {
+            if (surveyList.get(i).equals(surveyInit)) {
+                countDates++;
+                position = true;
+            }
+            if (position) {
+                if (!Utils.isDateOverLimit(Utils.DateToCalendar(surveyInit.getEventDate()), Utils.DateToCalendar(surveyList.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
+                    countDates++;
+                    Log.d(TAG, "Surveys sents in one hour:" + countDates);
+                    if(countDates>=DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public static boolean isValid() {
@@ -799,12 +812,12 @@ public class PushClient {
     /**
      * Basic
      */
-    class BasicAuthenticator implements  Authenticator{
+    class BasicAuthenticator2 implements  Authenticator{
 
         public final String AUTHORIZATION_HEADER="Authorization";
         private String credentials;
 
-        BasicAuthenticator(){
+        BasicAuthenticator2(){
             credentials = Credentials.basic(DHIS_USERNAME, DHIS_PASSWORD);
         }
 
@@ -826,14 +839,14 @@ public class PushClient {
     /**
      * Basic
      */
-    class BasicAuthenticator2 implements  Authenticator{
+    class BasicAuthenticator implements  Authenticator{
 
         public final String AUTHORIZATION_HEADER="Authorization";
         private String credentials;
         private int mCounter = 0;
 
-        BasicAuthenticator2(){
-            credentials = Credentials.basic("user", "user");
+        BasicAuthenticator(){
+            credentials = Credentials.basic("idelcano", "Idelcano2015");
         }
 
         @Override

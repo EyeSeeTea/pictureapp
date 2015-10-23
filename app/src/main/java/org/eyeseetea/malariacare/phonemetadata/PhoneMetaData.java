@@ -14,7 +14,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -63,10 +63,21 @@ public class PhoneMetaData {
     }
 
     public String getPhone_metaData() {
+        String phonemetadata="";
+        phonemetadata= "###";
         if(phone_number.length()>0){
-            return phone_number +"###"+imei+"###"+phone_serial;
+            phonemetadata=phonemetadata+phone_number;
         }
-        else
-            return "######"+imei+"###"+phone_serial;
+
+        phonemetadata= phonemetadata+"###";
+        if(imei.length()>0){
+            phonemetadata=phonemetadata+imei;
+        }
+
+        phonemetadata= phonemetadata+"###";
+        if(phone_serial.length()>0){
+            phonemetadata=phonemetadata+phone_serial;
+        }
+        return phonemetadata;
     }
 }

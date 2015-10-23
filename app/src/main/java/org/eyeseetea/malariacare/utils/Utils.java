@@ -14,7 +14,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.utils;
@@ -176,7 +176,7 @@ public class Utils {
         return date;
     }
 
-    public static String getClosingDataString(String format){
+    public static String getClosingDateString(String format){
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
         sysDate.set(Calendar.HOUR, sysDate.get(Calendar.HOUR) - 24);
@@ -185,6 +185,13 @@ public class Utils {
         return dateFormatted;
     }
 
+    public static String geTodayDataString(String format){
+        Calendar sysDate = Calendar.getInstance();
+        sysDate.setTime(new Date());
+        SimpleDateFormat formated = new SimpleDateFormat(format);
+        String dateFormatted = formated.format(sysDate.getTime());
+        return dateFormatted;
+    }
     public static Calendar DateToCalendar(Date date){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

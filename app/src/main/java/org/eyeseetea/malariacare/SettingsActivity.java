@@ -14,7 +14,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare;
@@ -112,7 +112,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         });
 
         Preference button2 = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
-        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        button2.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 PreferencesState.getInstance().reloadPreferences();
@@ -274,7 +274,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 }
             });
             Preference button2 = (Preference)findPreference(getActivity().getResources().getString(R.string.dhis_url));
-            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            button2.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     PreferencesState.getInstance().reloadPreferences();

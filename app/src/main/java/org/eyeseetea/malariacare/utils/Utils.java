@@ -176,7 +176,7 @@ public class Utils {
         return date;
     }
 
-    public static String getClosingDataString(String format){
+    public static String getClosingDateString(String format){
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
         sysDate.set(Calendar.HOUR, sysDate.get(Calendar.HOUR) - 24);
@@ -185,6 +185,13 @@ public class Utils {
         return dateFormatted;
     }
 
+    public static String geTodayDataString(String format){
+        Calendar sysDate = Calendar.getInstance();
+        sysDate.setTime(new Date());
+        SimpleDateFormat formated = new SimpleDateFormat(format);
+        String dateFormatted = formated.format(sysDate.getTime());
+        return dateFormatted;
+    }
     public static Calendar DateToCalendar(Date date){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

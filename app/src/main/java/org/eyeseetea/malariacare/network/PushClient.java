@@ -176,7 +176,7 @@ public class PushClient {
                     //Change status
                     //check if the user was sent more than the limit
                     List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys();
-                    if(checkSurveysLimit(survey,sentSurveys))
+                    if(isSurveyOverLimit(survey,sentSurveys))
                     {
                         banOrg(DHIS_ORG_NAME);
                     }
@@ -218,8 +218,13 @@ public class PushClient {
         }
         return  parseResponse(response.body().string());
     }
-
-    private boolean checkSurveysLimit(Survey surveyInit, List<Survey> surveyList){
+    /**
+     * compares the dates of the surveys and checks if the dates are over the limit
+     * @param surveyInit the survey to check.
+     * @param surveyList all the sent surveys
+     * @return true if the surveys are over the limit
+     */
+    private boolean isSurveyOverLimit(Survey surveyInit, List<Survey> surveyList){
         int countDates=0;
         boolean position=false;
         for (int i = 0; i < surveyList.size(); i++) {

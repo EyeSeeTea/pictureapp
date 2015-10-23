@@ -270,7 +270,7 @@ public class PushClient {
         //https://malariacare.psi.org/api/organisationUnits/u5jlxuod8xQ/closedDate
         try {
             String DHIS_PATCH_URL=url;
-            JSONObject data =prepareClosingDateValue();
+            JSONObject data =prepareTodayDateValue();
             Response response=executeCall(data, DHIS_PATCH_URL, "PATCH");
             Log.e(TAG, "closingDatePatch (" + response.code() + "): " + response.body().string());
             if(!response.isSuccessful()){
@@ -311,7 +311,7 @@ public class PushClient {
      */
     private JSONObject prepareClosingDescriptionValue(String url) throws Exception{
         String actualDescription= getCurrentDescription(url);
-        String dateFormatted=Utils.getClosingDataString("dd-MM-yyyy");
+        String dateFormatted=Utils.getClosingDateString("dd-MM-yyyy");
         String description=String.format(DHIS_PATCH_DESCRIPTIONCLOSED_DATE, dateFormatted);
         StringBuilder sb = new StringBuilder();
         sb.append(actualDescription);
@@ -331,7 +331,19 @@ public class PushClient {
      * @return Closing value as Json.
      */
     private JSONObject prepareClosingDateValue() throws Exception{
-        String dateFormatted=Utils.getClosingDataString("yyyy-MM-dd");
+        String dateFormatted=Utils.getClosingDateString("yyyy-MM-dd");
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_CLOSEDATA, dateFormatted);
+        Log.d("closingDateURL", "closingDateURL:EndDate:" + dateFormatted);
+        return elementObject;
+    }
+
+    /**
+     * Prepare the closing value.
+     * @return Closing value as Json.
+     */
+    private JSONObject prepareTodayDateValue() throws Exception{
+        String dateFormatted=Utils.geTodayDataString("yyyy-MM-dd");
         JSONObject elementObject = new JSONObject();
         elementObject.put(TAG_CLOSEDATA, dateFormatted);
         Log.d("closingDateURL", "closingDateURL:EndDate:" + dateFormatted);

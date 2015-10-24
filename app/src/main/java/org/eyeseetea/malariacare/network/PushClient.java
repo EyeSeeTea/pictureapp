@@ -239,13 +239,11 @@ public class PushClient {
         if(surveyList.size()>=DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
             int countDates = 0;
             for (int i = 0; i < surveyList.size(); i++) {
-                if (surveyInit.getId_survey() != surveyList.get(i).getId_survey()) {
-                   if (!Utils.isDateOverLimit(Utils.DateToCalendar(surveyInit.getEventDate()), Utils.DateToCalendar(surveyList.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
-                        countDates++;
-                        Log.d(TAG, "Surveys sents in one hour:" + countDates);
-                        if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-                            return true;
-                        }
+                if (!Utils.isDateOverLimit(Utils.DateToCalendar(surveyInit.getEventDate()), Utils.DateToCalendar(surveyList.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
+                    countDates++;
+                    Log.d(TAG, "Surveys sents in one hour:" + countDates);
+                    if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
+                        return true;
                     }
                 }
             }

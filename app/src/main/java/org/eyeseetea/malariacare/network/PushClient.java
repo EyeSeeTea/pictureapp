@@ -80,10 +80,16 @@ public class PushClient {
 
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    //The boolean BANNED and INVALID_SERVER control if the org unit is banned or the server is invalid
     private static Boolean BANNED=false;
     private static Boolean INVALID_SERVER=false;
+
+    //The strings DHIS_INVALID_URL DHIS_UNEXISTENT_ORG_UNIT stored the last bad url and org unit.
+    //They are used as a control to avoid requests to the server if no new values ​​for the url or to the organization.
     private static String DHIS_INVALID_URL="";
     private static String DHIS_UNEXISTENT_ORG_UNIT="";
+
     private static String DHIS_UID_PROGRAM="";
     private static String DHIS_USERNAME="testing";
     private static String DHIS_PASSWORD="Testing2015";
@@ -421,6 +427,8 @@ public class PushClient {
                 }
             }
         } catch (Exception e) {
+            //isValidServer only was checked here, if the getUIDCheckProgramClosedDate return exception, and if change the url in settingsActivity.java.
+            //it turns the INVALID_SERVER value to true.
             isValidServer();
        }
         return false;
@@ -596,11 +604,11 @@ public class PushClient {
             return value;
         }
     }
+
     /**
-     * This method returns a String[] whit the Organitation codes
+     * This method checks the UID_PROGRAM uid is in the server( and throws exception is not)
      * @throws Exception
      */
-
     public boolean isValidProgram() throws Exception{
         //https://malariacare.psi.org/api/programs/IrppF3qERB7.json?fields=organisationUnits
         final String DHIS_PULL_URL=getIsValidProgramUrl();
@@ -822,8 +830,11 @@ public class PushClient {
         return url.replace(" ","%20");
     }
 
-
-
+    /**
+     *
+     * This method returns the valid url for check the program
+     * @return url for ask if the program uid exist with the UID_PROGRAM value.
+     */
     public String getIsValidProgramUrl() {
         String url= PreferencesState.getInstance().getDhisURL();
         if(url==null || "".equals(url)){
@@ -834,6 +845,7 @@ public class PushClient {
         Log.d(TAG,"validprogramurl"+url);
         return url.replace(" ","%20");
     }
+
     /**
      * Returns the URL that points to the DHIS server API according to preferences.
      * @return

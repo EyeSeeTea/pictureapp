@@ -36,8 +36,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
@@ -65,6 +63,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * shown on tablets.
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
+    private AutoCompleteEditTextPreference autoCompleteEditTextPreference;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -102,7 +101,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         // Set the ClickListener to the android:key"remove_sent_surveys" preference.
 
-        Preference button = (Preference)findPreference("remove_sent_surveys");
+        autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
+        Preference button = (Preference)findPreference(getApplicationContext().getString(R.string.remove_sent_surveys));
         button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -112,14 +112,21 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         });
 
         Preference button2 = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
-        button2.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        button2.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+                prefEditor.putString(getResources().getString(R.string.dhis_url), newValue.toString()); // set your default value here (could be empty as well)
+                prefEditor.commit(); // finally save changes
+                // Now, manually update it's value to next value
+                preference.setSummary(newValue.toString()); // Now, if you click on the item, you'll see the value you've just set here
                 PreferencesState.getInstance().reloadPreferences();
+                PushClient.newOrgUnitOrServer();
+                autoCompleteEditTextPreference.pullOrgUnits();
                 return true;
             }
         });
-
     }
 
     //ask if the Sent Surveys
@@ -252,6 +259,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
+
+        private AutoCompleteEditTextPreference autoCompleteEditTextPreference;
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -265,7 +274,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
 
-            Preference button = (Preference)findPreference("remove_sent_surveys");
+
+            autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
+
+            Preference button = (Preference)findPreference(getString(R.string.remove_sent_surveys));
             button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
@@ -273,11 +285,20 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                     return true;
                 }
             });
-            Preference button2 = (Preference)findPreference(getActivity().getResources().getString(R.string.dhis_url));
-            button2.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+            Preference button2 = (Preference)findPreference(getResources().getString(R.string.dhis_url));
+
+            button2.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
-                public boolean onPreferenceClick(Preference preference) {
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+                    SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+                    prefEditor.putString(getResources().getString(R.string.dhis_url), newValue.toString()); // set your default value here (could be empty as well)
+                    prefEditor.commit(); // finally save changes
+                    preference.setSummary(newValue.toString()); // Now, if you click on the item, you'll see the value you've just set here
                     PreferencesState.getInstance().reloadPreferences();
+                    PushClient.newOrgUnitOrServer();
+                    autoCompleteEditTextPreference.pullOrgUnits();
                     return true;
                 }
             });
@@ -337,7 +358,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Override
     public void onBackPressed() {
         PreferencesState.getInstance().reloadPreferences();
-        PushClient.setUnbanAndNewOrgName();
+        PushClient.newOrgUnitOrServer();
         Class callerActivityClass=getCallerActivity();
         Intent returnIntent=new Intent(this,callerActivityClass);
         startActivity(returnIntent);

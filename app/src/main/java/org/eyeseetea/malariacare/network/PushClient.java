@@ -176,7 +176,7 @@ public class PushClient {
         //If DHIS_UNEXISTENT_ORG_UNIT!=DHIS_ORG_NAME is the same, the UID not exist, and it was be checked.
         //hasOrgUnitValidCode check the code the program and the closedDate
         //This if is evaluating every push from SurveyService.
-        if (isConnected() && !INVALID_SERVER && isValidOrgUnit() &&  checkAll() && !BANNED  ) {
+        if (isNetworkAvailable() && !INVALID_SERVER && isValidOrgUnit() &&  checkAll() && !BANNED  ) {
             try {
                 JSONObject data = prepareMetadata();
                 data = prepareDataElements(data);
@@ -440,7 +440,7 @@ public class PushClient {
      * This method check the org_unit not is invalid, and is not banned, and later check if the server is valid.
      * @return return true if all is correct.
      */
-    public boolean isConnected(){
+    public boolean isNetworkAvailable(){
         ConnectivityManager conMgr = (ConnectivityManager) applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo i = conMgr.getActiveNetworkInfo();
         if (i == null)
@@ -474,7 +474,7 @@ public class PushClient {
      * @return return true if all is correct.
      */
     public boolean isValidServer() {
-        if(isConnected()) {
+        if(isNetworkAvailable()) {
             Log.d(TAG, "check server valid?");
             String url = "";
             if (!INVALID_SERVER) {

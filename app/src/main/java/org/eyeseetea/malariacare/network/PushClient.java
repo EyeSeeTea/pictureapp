@@ -74,8 +74,10 @@ public class PushClient {
     private static String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id,closedDate&filter=code:eq:%s&filter:programs:id:eq:%s";
     private static String DHIS_PULL_PROGRAM="/api/programs/";
     private static String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits";
-    private static String DHIS_USERNAME="testing";
-    private static String DHIS_PASSWORD="Testing2015";
+    //private static String DHIS_USERNAME="testing";
+    //private static String DHIS_PASSWORD="Testing2015";
+    private static String DHIS_USERNAME="idelcano";
+    private static String DHIS_PASSWORD="Idelcano2015";
     private static String DHIS_ORG_NAME ="KH_Cambodia";
     private static String DHIS_ORG_UID ="";
     private static String DHIS_PATCH_URL_CLOSED_DATE ="/api/organisationUnits/%s/closedDate";

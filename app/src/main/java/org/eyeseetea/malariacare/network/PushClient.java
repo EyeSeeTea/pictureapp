@@ -476,28 +476,28 @@ public class PushClient {
      * @return return true if all is correct.
      */
     public boolean isValidServer() {
-        if(isNetworkAvailable()) {
-            Log.d(TAG, "check server valid?");
-            String url = "";
-            if (!INVALID_SERVER) {
-                url = PreferencesState.getInstance().getDhisURL();
-                getPreferenceValues(applicationContext);
-                if (url == null || "".equals(url)) {
-                    url = DHIS_SERVER;
-                }
-                if (!DHIS_INVALID_URL.equals(url)) {
+        Log.d(TAG, "check server valid?");
+        String url = "";
+        if (!INVALID_SERVER) {
+            url = PreferencesState.getInstance().getDhisURL();
+            getPreferenceValues(applicationContext);
+            if (url == null || "".equals(url)) {
+                url = DHIS_SERVER;
+            }
+            if (!DHIS_INVALID_URL.equals(url)) {
+                if(isNetworkAvailable()) {
                     try {
                         if (isValidProgram()) {
                             return true;
                         }
                     } catch (Exception e) {
-                        INVALID_SERVER = true;
-                        DHIS_INVALID_URL = url;
-                        return false;
                     }
                     INVALID_SERVER = true;
                     DHIS_INVALID_URL = url;
                     return false;
+                }
+                else{
+                    DHIS_INVALID_URL="";
                 }
             }
         }

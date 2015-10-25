@@ -24,6 +24,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
@@ -174,7 +176,7 @@ public class PushClient {
         //If DHIS_UNEXISTENT_ORG_UNIT!=DHIS_ORG_NAME is the same, the UID not exist, and it was be checked.
         //hasOrgUnitValidCode check the code the program and the closedDate
         //This if is evaluating every push from SurveyService.
-        if (!INVALID_SERVER && isValidOrgUnit() &&  checkAll() && !BANNED  ) {
+        if (isConnected() && !INVALID_SERVER && isValidOrgUnit() &&  checkAll() && !BANNED  ) {
             try {
                 JSONObject data = prepareMetadata();
                 data = prepareDataElements(data);
@@ -438,6 +440,22 @@ public class PushClient {
      * This method check the org_unit not is invalid, and is not banned, and later check if the server is valid.
      * @return return true if all is correct.
      */
+    public boolean isConnected(){
+        ConnectivityManager conMgr = (ConnectivityManager) applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo i = conMgr.getActiveNetworkInfo();
+        if (i == null)
+            return false;
+        if (!i.isConnected())
+            return false;
+        if (!i.isAvailable())
+            return false;
+        return true;
+    }
+
+    /**
+     * This method check the org_unit not is invalid, and is not banned, and later check if the server is valid.
+     * @return return true if all is correct.
+     */
     public boolean isValidOrgUnit() {
         boolean result=((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED);
         if(result) {
@@ -456,27 +474,29 @@ public class PushClient {
      * @return return true if all is correct.
      */
     public boolean isValidServer() {
-        Log.d(TAG,"check server valid?");
-        String url="";
-        if(!INVALID_SERVER) {
-            url= PreferencesState.getInstance().getDhisURL();
-            getPreferenceValues(applicationContext);
-            if(url==null || "".equals(url)){
-                url= DHIS_SERVER;
-            }
-            if (!DHIS_INVALID_URL.equals(url)) {
-                try {
-                    if (isValidProgram()) {
-                        return true;
+        if(isConnected()) {
+            Log.d(TAG, "check server valid?");
+            String url = "";
+            if (!INVALID_SERVER) {
+                url = PreferencesState.getInstance().getDhisURL();
+                getPreferenceValues(applicationContext);
+                if (url == null || "".equals(url)) {
+                    url = DHIS_SERVER;
+                }
+                if (!DHIS_INVALID_URL.equals(url)) {
+                    try {
+                        if (isValidProgram()) {
+                            return true;
+                        }
+                    } catch (Exception e) {
+                        INVALID_SERVER = true;
+                        DHIS_INVALID_URL = url;
+                        return false;
                     }
-                } catch (Exception e) {
-                    INVALID_SERVER=true;
-                    DHIS_INVALID_URL=url;
+                    INVALID_SERVER = true;
+                    DHIS_INVALID_URL = url;
                     return false;
                 }
-                INVALID_SERVER=true;
-                DHIS_INVALID_URL=url;
-                return false;
             }
         }
         return false;

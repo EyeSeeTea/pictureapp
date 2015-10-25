@@ -21,13 +21,12 @@
 package org.eyeseetea.malariacare.views;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.support.v4.content.LocalBroadcastManager;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -39,7 +38,7 @@ import android.widget.AutoCompleteTextView;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
 
 import java.util.ArrayList;
@@ -51,45 +50,71 @@ import java.util.concurrent.ExecutionException;
  */
 public class AutoCompleteEditTextPreference extends EditTextPreference {
 
-
+    private Context context;
     private AutoCompleteTextView mEditText = null;
-    public AutoCompleteEditTextPreference(Context context, AttributeSet attrs) {
+
+    public AutoCompleteEditTextPreference(final Context context, AttributeSet attrs) {
         super(context, attrs);
         mEditText = new AutoCompleteTextView(context, attrs);
         mEditText.setThreshold(0);
-
+        this.context = context;
         // Gets autocomplete values for 'org_unit' key preference
         if (getKey().equals(context.getString(R.string.org_unit))) {
-
-            ArrayList<String> opcionesGet = new ArrayList<String>();
-            String[]  orgUnits= null;
-            try {
-                GetOrgUnitsAsync getOrgUnitsAsynctask = new GetOrgUnitsAsync(context);
-                orgUnits = getOrgUnitsAsynctask.execute(opcionesGet).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            //If the call to the server fails, suggest the default code
-            if(orgUnits==null) {
-                //Fixme bad smell (this value is the same of the DHIS_DEFAULT_CODE of PushClient, but in PushClient you can´t acces to strings.xml sometimes.
-                orgUnits = new String[]{"KH_Cambodia"};
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter(this.getContext(),
-                    android.R.layout.simple_dropdown_item_1line,orgUnits);
-            mEditText.setAdapter(adapter);
-
-            EditTextPreference org_name = this;
-            PushClient.setUnbanAndNewOrgName();
+            pullOrgUnits();
         }
+
+    }
+
+    @Override
+    public void setOnPreferenceChangeListener(OnPreferenceChangeListener onPreferenceChangeListener) {
+        super.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+                SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+                prefEditor.putString(getContext().getString(R.string.org_unit), newValue.toString()); // set your default value here (could be empty as well)
+                prefEditor.commit(); // finally save changes
+                preference.setSummary(newValue.toString());
+                mEditText.setText(newValue.toString());
+                PreferencesState.getInstance().reloadPreferences();
+                PushClient.newOrgUnitOrServer();
+                return true;
+            }
+        });
+
+    }
+
+    public void pullOrgUnits() {
+        PreferencesState.getInstance().reloadPreferences();
+        ArrayList<String> opcionesGet = new ArrayList<String>();
+        String[]  orgUnits= null;
+        try {
+            GetOrgUnitsAsync getOrgUnitsAsynctask = new GetOrgUnitsAsync(context);
+            orgUnits = getOrgUnitsAsynctask.execute(opcionesGet).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        //If the call to the server fails, suggest the default code
+        if(orgUnits==null) {
+            //Fixme bad smell (this value is the same of the DHIS_DEFAULT_CODE of PushClient, but in PushClient you can´t acces to strings.xml sometimes.
+            orgUnits = new String[]{"KH_Cambodia"};
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(this.getContext(),
+                android.R.layout.simple_dropdown_item_1line,orgUnits);
+        mEditText.setAdapter(adapter);
+        PushClient.newOrgUnitOrServer();
     }
 
     @Override
     protected void onBindDialogView(View view) {
         AutoCompleteTextView editText = mEditText;
-        editText.setText(getText());
-
+        SharedPreferences preferences = view.getContext().getSharedPreferences("org.eyeseetea.pictureapp_preferences", view.getContext().MODE_PRIVATE);
+        String key=view.getContext().getResources().getString(R.string.org_unit);
+        String value=preferences.getString(key, "");
+        editText.setText(value);
         ViewParent oldParent = editText.getParent();
         if (oldParent != view) {
             if (oldParent != null) {
@@ -105,7 +130,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         if (positiveResult) {
             String value = mEditText.getText().toString();
             if (callChangeListener(value)) {
-                setText(value);
+                mEditText.setText(value);
                 try {
 
                     CheckCodeAsync checkCodeAsync = new CheckCodeAsync(mEditText.getContext());
@@ -140,10 +165,15 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         }
 
         protected String[] doInBackground(ArrayList<String>... passing) {
+            boolean validServer=false;
             String[] result = null;
             try {
                 PushClient pushClient=new PushClient(null,context);
-                result = pushClient.pullOrgUnitsCodes();
+                validServer=pushClient.isValidServer();
+                if(validServer)
+                    result = pushClient.pullOrgUnitsCodes();
+                else
+                    result[0] = "";
             } catch (Exception e) {
                 e.printStackTrace();
             }

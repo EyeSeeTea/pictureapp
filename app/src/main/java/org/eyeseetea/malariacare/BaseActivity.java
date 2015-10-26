@@ -116,10 +116,10 @@ public abstract class BaseActivity extends ActionBarActivity {
                 debugMessage("User asked for about");
                 showAlertWithMessage(R.string.settings_menu_about, R.raw.about);
                 break;
-            case R.id.action_logout:
+            /*case R.id.action_logout:
                 debugMessage("User asked for logout");
                 logout();
-                break;
+                break;*/
             case android.R.id.home:
                 debugMessage("Go back");
                 onBackPressed();

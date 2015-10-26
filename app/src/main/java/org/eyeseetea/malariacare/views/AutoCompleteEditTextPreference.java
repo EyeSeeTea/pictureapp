@@ -185,7 +185,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                 if(validServer)
                     result = pushClient.pullOrgUnitsCodes();
                 else
-                    result = new String[0];
+                    result = new String[1];
                     result[0]="";
             } catch (Exception e) {
                 e.printStackTrace();

@@ -24,6 +24,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
@@ -69,42 +71,53 @@ public class PushClient {
     //This change for a sharedpreferences url that is selected from the settings screen
 
     private static String DHIS_SERVER ="https://malariacare.psi.org";
-    private static String DHIS_PUSH_API="/api/events";
-    private static String DHIS_UID_PROGRAM="";
-    private static String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id,closedDate&filter=code:eq:%s&filter:programs:id:eq:%s";
-    private static String DHIS_PULL_PROGRAM="/api/programs/";
-    private static String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits";
-    private static String DHIS_USERNAME="testing";
-    private static String DHIS_PASSWORD="Testing2015";
-    private static String DHIS_ORG_NAME ="KH_Cambodia";
-    private static String DHIS_ORG_UID ="";
-    private static String DHIS_PATCH_URL_CLOSED_DATE ="/api/organisationUnits/%s/closedDate";
-    private static String DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE="/api/organisationUnits/%s/description";
-    private static String DHIS_PATCH_DESCRIPTIONCLOSED_DATE ="Android Surveillance App set the closing date to %s because over 30 surveys were pushed within 1 hour.";
-
+    private static final String DHIS_PUSH_API="/api/events";
+    private static final String DHIS_PULL_PROGRAM="/api/programs/";
+    private static final String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id,closedDate&filter=code:eq:%s&filter:programs:id:eq:%s";
+    private static final String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits";
+    private static final String DHIS_EXIST_PROGRAM=".json?fields=id";
+    private static final String DHIS_PATCH_URL_CLOSED_DATE ="/api/organisationUnits/%s/closedDate";
+    private static final String DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE="/api/organisationUnits/%s/description";
+    private static final String DHIS_PATCH_DESCRIPTIONCLOSED_DATE ="Android Surveillance App set the closing date to %s because over 30 surveys were pushed within 1 hour.";
 
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    public static Boolean BANNED=false;
-    public static String DHIS_UNEXISTENT_ORG_UNIT="";
+    //The boolean BANNED and INVALID_SERVER control if the org unit is banned or the server is invalid
+    private static Boolean BANNED=false;
+    private static Boolean INVALID_SERVER=false;
 
-    private static String COMPLETED="COMPLETED";
+    //The strings DHIS_INVALID_URL DHIS_UNEXISTENT_ORG_UNIT stored the last bad url and org unit.
+    //They are used as a control to avoid requests to the server if no new values ​​for the url or to the organization.
+    private static String DHIS_INVALID_URL="";
+    private static String DHIS_UNEXISTENT_ORG_UNIT="";
 
-    private static String TAG_PROGRAM="program";
-    private static String TAG_ORG_UNIT="orgUnit";
-    private static String TAG_EVENTDATE="eventDate";
-    private static String TAG_STATUS="status";
-    private static String TAG_STOREDBY="storedBy";
-    private static String TAG_COORDINATE="coordinate";
-    private static String TAG_COORDINATE_LAT="latitude";
-    private static String TAG_COORDINATE_LNG="longitude";
-    private static String TAG_DATAVALUES="dataValues";
-    private static String TAG_DATAELEMENT="dataElement";
-    private static String TAG_VALUE="value";
-    private static String TAG_CLOSEDATA="closedDate";
-    private static String TAG_DESCRIPTIONCLOSEDATA="description";
-    private static String TAG_ORGANISATIONUNIT="organisationUnits";
+    private static String DHIS_UID_PROGRAM="";
+    //private static String DHIS_USERNAME="testing";
+    //private static String DHIS_PASSWORD="Testing2015";
+    private static String DHIS_USERNAME="idelcano";
+    private static String DHIS_PASSWORD="Idelcano2015";
+    private static String DHIS_ORG_NAME ="KH_Cambodia";
+    private static String DHIS_ORG_UID ="";
+
+
+    private static final String COMPLETED="COMPLETED";
+
+    private static final String TAG_PROGRAM="program";
+    private static final String TAG_ORG_UNIT="orgUnit";
+    private static final String TAG_EVENTDATE="eventDate";
+    private static final String TAG_STATUS="status";
+    private static final String TAG_STOREDBY="storedBy";
+    private static final String TAG_COORDINATE="coordinate";
+    private static final String TAG_COORDINATE_LAT="latitude";
+    private static final String TAG_COORDINATE_LNG="longitude";
+    private static final String TAG_DATAVALUES="dataValues";
+    private static final String TAG_DATAELEMENT="dataElement";
+    private static final String TAG_VALUE="value";
+    private static final String TAG_CLOSEDATA="closedDate";
+    private static final String TAG_DESCRIPTIONCLOSEDATA="description";
+    private static final String TAG_ORGANISATIONUNIT="organisationUnits";
+    private static final String TAG_ID = "id";
 
 
     private static String TAG_PHONEMETADA="RuNZUhiAmlv";
@@ -176,8 +189,16 @@ public class PushClient {
                     //Change status
                     //check if the user was sent more than the limit
                     List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys();
-                    if(isSurveyOverLimit(survey,sentSurveys))
-                    {
+                    int countDates = 0;
+                    for (int i = sentSurveys.size() - 1; i >= 0; i--) {
+                        //If isDateOverLimit is TRUE the survey is out of the limit control
+                        if (!Utils.isDateOverLimit(Utils.DateToCalendar(sentSurveys.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
+                            countDates++;
+                            Log.d(TAG,"Surveys sents in one hour:"+countDates);
+                        }
+                    }
+                    if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
+                        Log.d(TAG,"Surveys sents:"+countDates+" will be banned");
                         banOrg(DHIS_ORG_NAME);
                     }
                 }
@@ -189,6 +210,7 @@ public class PushClient {
         }
         return new PushResult();
     }
+
 
     /**
      * Pushes data to DHIS Server
@@ -217,38 +239,6 @@ public class PushClient {
             throw new IOException(response.message());
         }
         return  parseResponse(response.body().string());
-    }
-
-    /**
-     * Check if the organization is valid in the local data.
-     * Check if the organization is banned in the local data.
-     * @return returns true if local data are valid
-     */
-    public static boolean isValid() {
-        boolean result=((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED);
-        return result;
-    }
-
-    /**
-     * compares the dates of the surveys and checks if the dates are over the limit
-     * @param surveyInit the survey to check.
-     * @param surveyList all the sent surveys
-     * @return true if the surveys are over the limit
-     */
-    private boolean isSurveyOverLimit(Survey surveyInit, List<Survey> surveyList){
-        if(surveyList.size()>=DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-            int countDates = 0;
-            for (int i = 0; i < surveyList.size(); i++) {
-                if (!Utils.isDateOverLimit(Utils.DateToCalendar(surveyInit.getEventDate()), Utils.DateToCalendar(surveyList.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
-                    countDates++;
-                    Log.d(TAG, "Surveys sents in one hour:" + countDates);
-                    if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     /**
@@ -310,7 +300,7 @@ public class PushClient {
     private void patchDescriptionClosedDate(String url) throws Exception{
         //https://malariacare.psi.org/api/organisationUnits/Pg91OgEIKIm/description
         try {
-            String DHIS_PATCH_URL=url;
+            String DHIS_PATCH_URL = url;
             JSONObject data =prepareClosingDescriptionValue(url);
 
             Response response=executeCall(data, DHIS_PATCH_URL, "PATCH");
@@ -350,7 +340,7 @@ public class PushClient {
      * Prepare the closing value.
      * @return Closing value as Json.
      */
-    private JSONObject prepareClosingDateValue() throws Exception{
+    private JSONObject prepareClosingDateValue() throws Exception {
         String dateFormatted=Utils.getClosingDateString("yyyy-MM-dd");
         JSONObject elementObject = new JSONObject();
         elementObject.put(TAG_CLOSEDATA, dateFormatted);
@@ -362,7 +352,7 @@ public class PushClient {
      * Prepare the closing value.
      * @return Closing value as Json.
      */
-    private JSONObject prepareTodayDateValue() throws Exception{
+    private JSONObject prepareTodayDateValue() throws Exception {
         String dateFormatted=Utils.geTodayDataString("yyyy-MM-dd");
         JSONObject elementObject = new JSONObject();
         elementObject.put(TAG_CLOSEDATA, dateFormatted);
@@ -428,12 +418,11 @@ public class PushClient {
      */
     private boolean checkAll(){
         try {
-            DHIS_ORG_UID= getUIDCheckProgramClosedDate(DHIS_ORG_NAME);
+            DHIS_ORG_UID = getUIDCheckProgramClosedDate(DHIS_ORG_NAME);
             Log.d("ORGUNITNULL", DHIS_ORG_UID);
-            if(!DHIS_ORG_UID.equals("null")){
+            if (!DHIS_ORG_UID.equals("null")) {
                 return true;
-            }
-            else{
+            } else {
                 DHIS_UNEXISTENT_ORG_UNIT = DHIS_ORG_NAME;
                 try {
                     throw new ShowException(applicationContext.getString(R.string.exception_org_unit_not_valid), applicationContext);
@@ -442,18 +431,91 @@ public class PushClient {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+            //isValidServer only was checked here, if the getUIDCheckProgramClosedDate return exception, and if change the url in settingsActivity.java.
+            //it turns the INVALID_SERVER value to true.
+            isValidServer();
+       }
         return false;
     }
 
     /**
-     * This method resets the unit checks for invalid and baned orgization
+     * This method check the org_unit not is invalid, and is not banned, and later check if the server is valid.
+     * @return return true if all is correct.
+     */
+    public boolean isNetworkAvailable(){
+        ConnectivityManager conMgr = (ConnectivityManager) applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo i = conMgr.getActiveNetworkInfo();
+        if (i == null)
+            return false;
+        if (!i.isConnected())
+            return false;
+        if (!i.isAvailable())
+            return false;
+        return true;
+    }
+
+    /**
+     * This method check the org_unit not is invalid, and is not banned, and later check if the server is valid.
+     * @return return true if all is correct.
+     */
+    public boolean isValidOrgUnit() {
+        boolean result=((!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED);
+        if(result) {
+            if (INVALID_SERVER) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * checks if the server is valid, checking the UID PROGRAM.
+     * @return return true if all is correct.
+     */
+    public boolean isValidServer() {
+        Log.d(TAG, "check server valid?");
+        String url = "";
+        if (!INVALID_SERVER) {
+            url = PreferencesState.getInstance().getDhisURL();
+            getPreferenceValues(applicationContext);
+            if (url == null || "".equals(url)) {
+                url = DHIS_SERVER;
+            }
+            if (!DHIS_INVALID_URL.equals(url)) {
+                if(isNetworkAvailable()) {
+                    try {
+                        if (isValidProgram()) {
+                            return true;
+                        }
+                    } catch (Exception e) {
+                    }
+                    INVALID_SERVER = true;
+                    DHIS_INVALID_URL = url;
+                    return false;
+                }
+                else{
+                    DHIS_INVALID_URL="";
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean getIsInvalidServer(){
+        return INVALID_SERVER;
+    }
+    /**
+     * This method resets the unit checks for invalid, the invalid_server, and banned organization.
      * @orgName is the DHIS_ORG_NAME
      */
-    public static void setUnbanAndNewOrgName(){
+    public static void newOrgUnitOrServer(){
         BANNED=false;
         DHIS_UNEXISTENT_ORG_UNIT="";
+        DHIS_INVALID_URL="";
+        INVALID_SERVER=false;
     }
 
     //
@@ -528,8 +590,50 @@ public class PushClient {
      * @throws Exception
      */
     public String[] pullOrgUnitsCodes() throws Exception{
+        if(!INVALID_SERVER) {
+            //https://malariacare.psi.org/api/programs/IrppF3qERB7.json?fields=organisationUnits
+            final String DHIS_PULL_URL = getDhisOrgUnitsURL();
+
+            OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+            BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
+            client.setAuthenticator(basicAuthenticator);
+
+            Log.e(TAG, "pullOrgUnitUID URL (" + DHIS_PULL_URL);
+            Request request = new Request.Builder()
+                    .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                    .url(DHIS_PULL_URL)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "pullOrgUnitUID (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+
+            JSONObject responseJSON = parseResponse(response.body().string());
+            JSONArray responseArray = (JSONArray) responseJSON.get(TAG_ORGANISATIONUNIT);
+            if (responseArray.length() == 0) {
+                Log.e(TAG, "pullOrgUnitUID: No org_unit ");
+                throw new IOException(activity.getString(R.string.dialog_error_push_no_uid));
+            }
+            return Utils.jsonArrayToStringArray(responseArray, "code");
+        }
+        else {
+            INVALID_SERVER=true;
+            String[] value = new String[1];
+            value[0] = "";
+            return value;
+        }
+    }
+
+    /**
+     * This method checks the UID_PROGRAM uid is in the server( and throws exception is not)
+     * @throws Exception
+     */
+    public boolean isValidProgram() throws Exception{
         //https://malariacare.psi.org/api/programs/IrppF3qERB7.json?fields=organisationUnits
-        final String DHIS_PULL_URL=getDhisOrgUnitsURL();
+        final String DHIS_PULL_URL=getIsValidProgramUrl();
 
         OkHttpClient client= UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 
@@ -541,22 +645,21 @@ public class PushClient {
                 .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
                 .url(DHIS_PULL_URL)
                 .build();
-
-        Response response = client.newCall(request).execute();
+        Response response =null;
+        response = client.newCall(request).execute();
         if(!response.isSuccessful()){
             Log.e(TAG, "pullOrgUnitUID (" + response.code()+"): "+response.body().string());
             throw new IOException(response.message());
         }
 
-        JSONObject responseJSON = parseResponse(response.body().string());
-        JSONArray responseArray=(JSONArray) responseJSON.get(TAG_ORGANISATIONUNIT);
-        if(responseArray.length()==0){
+        JSONObject responseJSON=parseResponse(response.body().string());
+        String id = String.valueOf(responseJSON.get(TAG_ID));
+        if(id.length()==0){
             Log.e(TAG, "pullOrgUnitUID: No org_unit ");
             throw new IOException(activity.getString(R.string.dialog_error_push_no_uid));
         }
-        return Utils.jsonArrayToStringArray(responseArray, "code");
+        return DHIS_UID_PROGRAM.equals(id);
     }
-
 
     /**
      * Get the current description for a org_unit from the server
@@ -748,6 +851,23 @@ public class PushClient {
 
         return url.replace(" ","%20");
     }
+
+    /**
+     *
+     * This method returns the valid url for check the program
+     * @return url for ask if the program uid exist with the UID_PROGRAM value.
+     */
+    public String getIsValidProgramUrl() {
+        String url= PreferencesState.getInstance().getDhisURL();
+        if(url==null || "".equals(url)){
+            url= DHIS_SERVER;
+        }
+
+        url= DHIS_SERVER +DHIS_PULL_PROGRAM+applicationContext.getResources().getString(R.string.UID_PROGRAM)+DHIS_EXIST_PROGRAM;
+        Log.d(TAG,"validprogramurl"+url);
+        return url.replace(" ","%20");
+    }
+
     /**
      * Returns the URL that points to the DHIS server API according to preferences.
      * @return
@@ -758,7 +878,7 @@ public class PushClient {
             url = DHIS_SERVER;
         }
         url= url+DHIS_PUSH_API;
-        return url.replace(" ","%20");
+        return url.replace(" ", "%20");
     }
 
     /**

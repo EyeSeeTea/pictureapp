@@ -154,7 +154,8 @@ public class Utils {
     public static boolean isDateOverLimit(Calendar surveyDate,Calendar nextDate,int limit) {
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
-        if(differenceInHours((Date) nextDate.getTime(), (Date) surveyDate.getTime())<limit){
+        int difference=differenceInHours((Date) nextDate.getTime(), (Date) surveyDate.getTime());
+        if(difference>=0 && difference<limit){
             return false;
         }
         else

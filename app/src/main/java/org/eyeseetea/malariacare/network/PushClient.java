@@ -122,7 +122,7 @@ public class PushClient {
 
     private static String TAG_PHONEMETADA="RuNZUhiAmlv";
 
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=10;
+    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
     private static int DHIS_LIMIT_HOURS=1;
 
     Survey survey;

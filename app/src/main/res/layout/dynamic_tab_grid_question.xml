@@ -57,7 +57,8 @@
                 android:background="@drawable/background_header"
                 android:paddingLeft="10dip"
                 app:tDimension="@string/font_size_level2"
-                app:tFontName="@string/condensed_font_name" />
+                app:tFontName="@string/condensed_font_name"
+                android:gravity="center" />
 
             <!--Options as a N x 2 grid-->
             <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"

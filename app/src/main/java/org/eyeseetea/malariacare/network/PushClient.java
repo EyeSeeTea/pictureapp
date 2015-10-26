@@ -91,7 +91,7 @@ public class PushClient {
     //The strings DHIS_INVALID_URL DHIS_UNEXISTENT_ORG_UNIT stored the last bad url and org unit.
     //They are used as a control to avoid requests to the server if no new values ​​for the url or to the organization.
     private static String DHIS_INVALID_URL="";
-    private static String DHIS_UNEXISTENT_ORG_UNIT="";
+    private static String DHIS_UNEXISTENT_ORG_UNIT="null";
 
     private static String DHIS_UID_PROGRAM="";
     //private static String DHIS_USERNAME="testing";
@@ -514,7 +514,7 @@ public class PushClient {
      */
     public static void newOrgUnitOrServer(){
         BANNED=false;
-        DHIS_UNEXISTENT_ORG_UNIT="";
+        DHIS_UNEXISTENT_ORG_UNIT="null";
         DHIS_INVALID_URL="";
         INVALID_SERVER=false;
     }

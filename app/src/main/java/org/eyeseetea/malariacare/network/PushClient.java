@@ -122,7 +122,7 @@ public class PushClient {
 
     private static String TAG_PHONEMETADA="RuNZUhiAmlv";
 
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
+    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=10;
     private static int DHIS_LIMIT_HOURS=1;
 
     Survey survey;
@@ -178,7 +178,7 @@ public class PushClient {
         //If DHIS_UNEXISTENT_ORG_UNIT!=DHIS_ORG_NAME is the same, the UID not exist, and it was be checked.
         //hasOrgUnitValidCode check the code the program and the closedDate
         //This if is evaluating every push from SurveyService.
-        if (isValid() && checkAll() && !BANNED  ) {
+        if (isNetworkAvailable() && !INVALID_SERVER && isValidOrgUnit() &&  checkAll() && !BANNED  ) {
             try {
                 JSONObject data = prepareMetadata();
                 data = prepareDataElements(data);
@@ -189,16 +189,8 @@ public class PushClient {
                     //Change status
                     //check if the user was sent more than the limit
                     List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys();
-                    int countDates = 0;
-                    for (int i = sentSurveys.size() - 1; i >= 0; i--) {
-                        //If isDateOverLimit is TRUE the survey is out of the limit control
-                        if (!Utils.isDateOverLimit(Utils.DateToCalendar(sentSurveys.get(i).getEventDate()), DHIS_LIMIT_HOURS)) {
-                            countDates++;
-                            Log.d(TAG,"Surveys sents in one hour:"+countDates);
-                        }
-                    }
-                    if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-                        Log.d(TAG,"Surveys sents:"+countDates+" will be banned");
+                    if(isSurveyOverLimit(sentSurveys))
+                    {
                         banOrg(DHIS_ORG_NAME);
                     }
                 }
@@ -239,6 +231,33 @@ public class PushClient {
             throw new IOException(response.message());
         }
         return  parseResponse(response.body().string());
+    }
+
+    /**
+     * compares the dates of the surveys and checks if the dates are over the limit
+     * @param surveyList all the sent surveys
+     * @return true if the surveys are over the limit
+     */
+    private boolean isSurveyOverLimit(List<Survey> surveyList){
+        if(surveyList.size()>=DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
+            for (int i = 0; i < surveyList.size(); i++) {
+                int countDates = 0;
+                Calendar actualSurvey=Utils.DateToCalendar(surveyList.get(i).getEventDate());
+                for (int d = 0; d < surveyList.size(); d++) {
+                    Calendar nextSurvey=Utils.DateToCalendar(surveyList.get(d).getEventDate());
+                    if (actualSurvey.before(nextSurvey)) {
+                        if (!Utils.isDateOverLimit(actualSurvey, nextSurvey, DHIS_LIMIT_HOURS)) {
+                            countDates++;
+                            Log.d(TAG, "Surveys sents in one hour:" + countDates);
+                            if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**

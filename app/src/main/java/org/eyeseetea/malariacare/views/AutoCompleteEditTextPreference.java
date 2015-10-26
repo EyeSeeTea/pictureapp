@@ -28,7 +28,6 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -40,6 +39,7 @@ import com.squareup.okhttp.Response;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
+import org.eyeseetea.malariacare.views.filters.AutocompleteAdapterFilter;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -52,6 +52,8 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     private Context context;
     private AutoCompleteTextView mEditText = null;
+    private static String[] org_units;
+    private ArrayAdapter arrayadapter;
 
     public AutoCompleteEditTextPreference(final Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -65,6 +67,17 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     }
 
+
+
+    public void afterTextChanged(AutoCompleteTextView mEditText) {
+        for(String org_unit:org_units)
+        if(!org_unit.contains(mEditText.getText()))
+        mEditText.setText("");
+        else
+        {
+            mEditText.setText(org_unit);
+        }
+    }
     @Override
     public void setOnPreferenceChangeListener(OnPreferenceChangeListener onPreferenceChangeListener) {
         super.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -98,11 +111,10 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         }
         //If the call to the server fails, suggest the default code
         if(orgUnits==null) {
-            //Fixme bad smell (this value is the same of the DHIS_DEFAULT_CODE of PushClient, but in PushClient you can´t acces to strings.xml sometimes.
-            orgUnits = new String[]{"KH_Cambodia"};
+            orgUnits = new String[]{""};
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter(this.getContext(),
+        AutocompleteAdapterFilter<String> adapter = new AutocompleteAdapterFilter(this.getContext(),
                 android.R.layout.simple_dropdown_item_1line,orgUnits);
         mEditText.setAdapter(adapter);
         PushClient.newOrgUnitOrServer();

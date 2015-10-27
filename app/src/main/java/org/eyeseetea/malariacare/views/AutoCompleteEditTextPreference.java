@@ -215,8 +215,10 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
             String orgUnit = param[0];
             try {
-                PushClient pushClient=new PushClient(context);
-                result = pushClient.checkOrgUnit(orgUnit);
+                if(!orgUnit.equals("")){
+                    PushClient pushClient = new PushClient(context);
+                    result = pushClient.checkOrgUnit(orgUnit);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

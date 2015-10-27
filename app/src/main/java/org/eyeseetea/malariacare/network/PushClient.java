@@ -479,15 +479,20 @@ public class PushClient {
      * @return return true if all is correct.
      */
     public boolean isValidOrgUnit() {
-        boolean result=((DHIS_UNEXISTENT_ORG_UNIT!=null && !(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))&& !BANNED);
-        if(result) {
-            if (INVALID_SERVER) {
-                return false;
-            } else {
-                return true;
-            }
+        boolean result=false;
+        if(DHIS_UNEXISTENT_ORG_UNIT!=null) {
+            if (!DHIS_ORG_NAME.equals(""))
+                if (!(DHIS_UNEXISTENT_ORG_UNIT.equals(DHIS_ORG_NAME)))
+                    if (!BANNED)
+                        if (!INVALID_SERVER)
+                            result = true;
         }
-        return false;
+        else if(!DHIS_ORG_NAME.equals(""))
+                if(!BANNED)
+                    if(!INVALID_SERVER)
+                        result= true;
+
+        return result;
     }
 
 

@@ -233,6 +233,7 @@ public class Survey extends BaseModel {
             answeredQuestionRatio=SurveyAnsweredRatioCache.get(this.getId_survey());
             if(answeredQuestionRatio == null) {
                 answeredQuestionRatio = reloadSurveyAnsweredRatio();
+
             }
         }
         return answeredQuestionRatio;
@@ -268,7 +269,7 @@ public class Survey extends BaseModel {
     public void updateSurveyStatus(){
 
         //Sent surveys are not updated
-        if(this.isSent()){
+        if(this.isSent() || this.isHide()){
             return;
         }
 
@@ -276,14 +277,17 @@ public class Survey extends BaseModel {
 
         //Update status & completionDate
         //Temporal fix- If the survey is negative, it is interpreted that it was false .:
-        if(answeredRatio.isCompleted() || answeredRatio.getAnswered()==1) {
+        //if(answeredRatio.isCompleted()) {
+        //    this.setStatus(Constants.SURVEY_COMPLETED);
+        //    this.setCompletionDate(new Date());
+        //}
+        if((answeredRatio.getAnswered()==7) || (answeredRatio.getTotal()==0 && answeredRatio.getAnswered()==1)) {
             this.setStatus(Constants.SURVEY_COMPLETED);
             this.setCompletionDate(new Date());
         }else {
             this.setStatus(Constants.SURVEY_IN_PROGRESS);
             this.setCompletionDate(this.eventDate);
         }
-
         //Saves new status & completionDate
         this.save();
     }

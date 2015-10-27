@@ -67,8 +67,9 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         //Completion Date
         TextCard completionDate = (TextCard) rowView.findViewById(R.id.completionDate);
         if(survey.getCompletionDate()!=null){
-
+            //it show dd/mm/yy in europe, mm/dd/yy in america, etc.
             DateFormat formatter=DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Resources.getSystem().getConfiguration().locale);
+
             completionDate.setText(formatter.format(survey.getCompletionDate()));
         }
 

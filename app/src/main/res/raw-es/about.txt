@@ -1,12 +1,30 @@
-Esta aplicación ha sido desarrollada por EyeSeeTea LTD (http://eyeseetea.com) y financiada por la ong Population Services International (http://psi.org).
+<p>
+Esta aplicación fue desarrollada por la PSI y es liberada bajo la GNU General Public License.
+Para obtener más información acerca de esta licencia, por favor visite la sección de "licencia" de la aplicación en el
+menú de configuración.</p>
 
+<p>Para más información sobre esta aplicación, por favor escriba a <a href="mailto:mis@psi.org">mis@psi.org</a></p>
 
-EyeSeeTea LTD es una compañía con sede en Londres dedicada a:
-* Desarrollo de software para ONGs
-* Instalaciones TIC
-* Visualización y análisis de datos
+<p><b><u>Organizaciones colaboradoras</u></b></p>
 
-Para más información contacte en hello@eyeseetea.com
+<p><b><i>Population Services International</i></b></p>
 
----------------
-EyeSeeTea LTD | 20-22 Wenlock Road | London | N1 7GU | United Kingdom
+<p><i>Dirección conceptual de desarrollo e implementación</i></p>
+
+<p>PSI hace que sea más fácil para las personas en el mundo en desarrollo planificar y llevar una vida más saludable mediante la comercialización de productos y servicios asequibles</p>
+
+<p><a href="http://www.psi.org">www.psi.org</a></p>
+
+<p><b><i>EyeSeeTea LTD</i></b></p>
+
+<p><i>Dirección técnica de desarrollo</i></p>
+
+<p>EyeSeeTea LTD se centra en:<br/>
+- Desarrollo de software ONG<br/>
+- El desarrollo TIC<br/>
+- Análisis de datos y presentación<br/></p>
+
+<p><a href="http://www.eyeseetea.com">www.eyeseetea.com</a></p>
+
+<p><b><i>KnowTechTure</i></b></p>
+<p><a href="http://www.knowtechture.com" target="_blank">www.knowtechture.com</a></p>

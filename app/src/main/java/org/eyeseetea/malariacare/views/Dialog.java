@@ -42,6 +42,7 @@ public class Dialog extends Activity{
         alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("");
         alertDialog.setMessage(message);
+        alertDialog.setCancelable(false);
         alertDialog.setTitle(title);
         alertDialog.setPositiveButton(R.string.accept,new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

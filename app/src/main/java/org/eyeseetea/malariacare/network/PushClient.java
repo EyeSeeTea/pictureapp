@@ -94,10 +94,9 @@ public class PushClient {
     private static String DHIS_UNEXISTENT_ORG_UNIT=null;
 
     private static String DHIS_UID_PROGRAM="";
-    //private static String DHIS_USERNAME="testing";
-    //private static String DHIS_PASSWORD="Testing2015";
-    private static String DHIS_USERNAME="idelcano";
-    private static String DHIS_PASSWORD="Idelcano2015";
+    private static String DHIS_USERNAME="KHMCS";
+    //Todo: introduce final password
+    private static String DHIS_PASSWORD="";
     private static String DHIS_ORG_NAME ="";
     private static String DHIS_ORG_UID ="";
 

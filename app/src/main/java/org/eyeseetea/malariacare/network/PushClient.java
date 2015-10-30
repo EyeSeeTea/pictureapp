@@ -71,7 +71,7 @@ public class PushClient {
     //This change for a sharedpreferences url that is selected from the settings screen
 
     //private static String DHIS_SERVER ="https://www.psi-mis.org";
-    private static String DHIS_SERVER ="https://malariacare.psi.org";
+    private static String DHIS_SERVER ="https://dev.psi-mis.org";
     private static final String DHIS_PUSH_API="/api/events";
     private static final String DHIS_PULL_PROGRAM="/api/programs/";
     private static final String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id,closedDate&filter=code:eq:%s&filter:programs:id:eq:%s";

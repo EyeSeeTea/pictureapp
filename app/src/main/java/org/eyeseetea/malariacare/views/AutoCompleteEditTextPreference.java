@@ -180,7 +180,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
             boolean validServer=false;
             String[] result = null;
             try {
-                PushClient pushClient=new PushClient(null,context);
+                PushClient pushClient=new PushClient(context);
                 validServer=pushClient.isValidServer();
                 if(validServer)
                     result = pushClient.pullOrgUnitsCodes();

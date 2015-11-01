@@ -133,30 +133,44 @@ public class PushClient {
     public PushClient(Activity activity) {
         this.activity = activity;
         this.applicationContext=activity.getApplicationContext();
-        getPreferenceValues(applicationContext);
-        DHIS_UID_PROGRAM=applicationContext.getResources().getString(R.string.UID_PROGRAM);
+        DHIS_UID_PROGRAM =applicationContext.getString(R.string.UID_PROGRAM);
+        getPreferenceValues();
     }
 
     public PushClient(Context applicationContext) {
         this.applicationContext = applicationContext;
-        getPreferenceValues(applicationContext);
-        DHIS_UID_PROGRAM=applicationContext.getResources().getString(R.string.UID_PROGRAM);
+        DHIS_UID_PROGRAM =applicationContext.getString(R.string.UID_PROGRAM);
+        getPreferenceValues();
     }
     public PushClient(Survey survey, Activity activity) {
         this.survey = survey;
         this.activity = activity;
         this.applicationContext=activity.getApplicationContext();
-        getPreferenceValues(applicationContext);
-        DHIS_UID_PROGRAM=applicationContext.getResources().getString(R.string.UID_PROGRAM);
+        DHIS_UID_PROGRAM =applicationContext.getString(R.string.UID_PROGRAM);
+        getPreferenceValues();
     }
 
     public PushClient(Survey survey, Context applicationContext) {
         this.survey = survey;
         this.applicationContext = applicationContext;
-        getPreferenceValues(applicationContext);
-        DHIS_UID_PROGRAM=applicationContext.getResources().getString(R.string.UID_PROGRAM);
+        DHIS_UID_PROGRAM =applicationContext.getString(R.string.UID_PROGRAM);
+        getPreferenceValues();
     }
 
+    /**
+     * Get the user settings values from the shared Preferences
+     */
+    public void getPreferenceValues(){
+        PreferencesState.getInstance().reloadPreferences();
+        String orgUnit = PreferencesState.getInstance().getOrgUnit();
+        if(orgUnit!=null || !("".equals(orgUnit))) {
+            DHIS_ORG_NAME = orgUnit;
+        }
+        String url= PreferencesState.getInstance().getDhisURL();
+        if(url!=null || !("".equals(url))){
+            DHIS_SERVER=url;
+        }
+    }
 
     public PushResult push() {
         try {
@@ -260,30 +274,15 @@ public class PushClient {
         return false;
     }
 
-    /**
-     * Get the user settings values from the shared Preferences
-     */
-    public void getPreferenceValues(Context context){
-        SharedPreferences preferences = applicationContext.getSharedPreferences("org.eyeseetea.pictureapp_preferences", applicationContext.MODE_PRIVATE);
-        String key=applicationContext.getResources().getString(R.string.org_unit);
-        String value=preferences.getString(key, DHIS_ORG_NAME);
-        DHIS_ORG_NAME =value;
-        key=applicationContext.getResources().getString(R.string.dhis_url);
-        value= preferences.getString(key, DHIS_SERVER);
-        DHIS_SERVER =value;
-        PreferencesState.getInstance().reloadPreferences();
-    }
-
 
     /**
      * Bans the organization for future requests , reducing one day the system date and keeping closedate on the server.
      */
 
     private void banOrg(String orgName) {
-        String url= PreferencesState.getInstance().getDhisURL();
-        if(url==null || "".equals(url)){
-            url= DHIS_SERVER;
-        }
+
+        String url= DHIS_SERVER;
+
         String orgid = null;
         try {
             orgid = DHIS_ORG_UID;
@@ -436,10 +435,9 @@ public class PushClient {
      * @return return true if all is correct.
      */
     private boolean checkAll(){
-        try {
+        try{
             DHIS_ORG_UID = getUIDCheckProgramClosedDate(DHIS_ORG_NAME);
-            Log.d("ORGUNITNULL", DHIS_ORG_UID);
-            if (!DHIS_ORG_UID.equals("null")) {
+            if (DHIS_ORG_UID!=null) {
                 return true;
             } else {
                 DHIS_UNEXISTENT_ORG_UNIT = DHIS_ORG_NAME;
@@ -504,10 +502,6 @@ public class PushClient {
         String url = "";
         if (!INVALID_SERVER) {
             url = PreferencesState.getInstance().getDhisURL();
-            getPreferenceValues(applicationContext);
-            if (url == null || "".equals(url)) {
-                url = DHIS_SERVER;
-            }
             if (!DHIS_INVALID_URL.equals(url)) {
                 if(isNetworkAvailable()) {
                     try {
@@ -567,7 +561,7 @@ public class PushClient {
             }
             catch(Exception e){
                 e.printStackTrace();
-                return "null";
+                return null;
             }
 
         try {
@@ -583,7 +577,7 @@ public class PushClient {
                 Log.e(TAG, "pullOrgUnitUID: No UID for code " + code);
                 //Assign the used org_unit to the unexistent_org_unit for not make new pulls.
                 // throw new IOException(activity.getString(R.string.dialog_error_push_no_uid)+" "+code);
-                return "null";
+                return null;
             }
             try {
                 String date = responseArray.getJSONObject(0).getString(TAG_CLOSEDATA);
@@ -603,7 +597,7 @@ public class PushClient {
                 //if the date is null is not need check
             }
         }catch(Exception e){
-            return "null";
+            return null;
         }
         //Return the org_unit id
         return responseArray.getJSONObject(0).getString("id");
@@ -832,11 +826,7 @@ public class PushClient {
      * @return
      */
     private String getDhisOrgUnitURL(String code){
-        String url= PreferencesState.getInstance().getDhisURL();
-        getPreferenceValues(applicationContext);
-        if(url==null || "".equals(url)){
-            url= DHIS_SERVER;
-        }
+        String url= DHIS_SERVER;
         Log.d("uid", DHIS_UID_PROGRAM);
         url=url+String.format(DHIS_PULL_ORG_UNIT_API,code,DHIS_UID_PROGRAM);
         return url.replace(" ","%20");
@@ -866,13 +856,7 @@ public class PushClient {
      * @return
      */
     private String getDhisOrgUnitsURL(){
-        String url= PreferencesState.getInstance().getDhisURL();
-        if(url==null || "".equals(url)){
-            url= DHIS_SERVER;
-        }
-
-        url= DHIS_SERVER +DHIS_PULL_PROGRAM+ applicationContext.getResources().getString(R.string.UID_PROGRAM)+DHIS_PULL_ORG_UNITS_API;
-
+        String url= DHIS_SERVER +DHIS_PULL_PROGRAM+ applicationContext.getResources().getString(R.string.UID_PROGRAM)+DHIS_PULL_ORG_UNITS_API;
         return url.replace(" ","%20");
     }
 
@@ -882,12 +866,7 @@ public class PushClient {
      * @return url for ask if the program uid exist with the UID_PROGRAM value.
      */
     public String getIsValidProgramUrl() {
-        String url= PreferencesState.getInstance().getDhisURL();
-        if(url==null || "".equals(url)){
-            url= DHIS_SERVER;
-        }
-
-        url= DHIS_SERVER +DHIS_PULL_PROGRAM+applicationContext.getResources().getString(R.string.UID_PROGRAM)+DHIS_EXIST_PROGRAM;
+        String url = DHIS_SERVER +DHIS_PULL_PROGRAM+applicationContext.getResources().getString(R.string.UID_PROGRAM)+DHIS_EXIST_PROGRAM;
         Log.d(TAG,"validprogramurl"+url);
         return url.replace(" ","%20");
     }
@@ -897,10 +876,7 @@ public class PushClient {
      * @return
      */
     private String getDhisURL(){
-        String url= PreferencesState.getInstance().getDhisURL();
-        if(url==null || "".equals(url)) {
-            url = DHIS_SERVER;
-        }
+        String url= DHIS_SERVER;
         url= url+DHIS_PUSH_API;
         return url.replace(" ", "%20");
     }
@@ -961,7 +937,7 @@ public class PushClient {
     public boolean checkOrgUnit(String orgUnit) {
         boolean result=false;
         try {
-            if(!(getUIDCheckProgramClosedDate(orgUnit).equals("null")))
+            if((getUIDCheckProgramClosedDate(orgUnit)!=null))
                 result=true;
         } catch (Exception e) {
             result=false;

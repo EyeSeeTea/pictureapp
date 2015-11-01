@@ -522,6 +522,24 @@ public class PushClient {
         return false;
     }
 
+    /**
+     * Only checks the orgUnit
+     * @param orgUnit the organization unit
+     * @return true if is correct.
+     */
+    public boolean checkOrgUnit(String orgUnit) {
+        boolean result=false;
+        try {
+            if((getUIDCheckProgramClosedDate(orgUnit)!=null))
+                result=true;
+        } catch (Exception e) {
+            result=false;
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     public boolean getIsInvalidServer(){
         return INVALID_SERVER;
     }
@@ -928,25 +946,6 @@ public class PushClient {
             throw new Exception(activity.getString(R.string.dialog_info_push_bad_credentials));
         }
     }
-
-    /**
-     * Only checks the orgUnit
-     * @param orgUnit the organization unit
-     * @return true if is correct.
-     */
-    public boolean checkOrgUnit(String orgUnit) {
-        boolean result=false;
-        try {
-            if((getUIDCheckProgramClosedDate(orgUnit)!=null))
-                result=true;
-        } catch (Exception e) {
-            result=false;
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
 
     /**
      * Basic

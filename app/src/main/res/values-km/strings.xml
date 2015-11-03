@@ -21,7 +21,7 @@
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet</string>
 
     <!-- settings -->
-    <string name="settings_menu_about">អំពី </string>
+    <string name="settings_menu_about">អំពី</string>
     <string name="settings_menu_configuration">ការ​កំណត់ </string>
     <string name="settings_menu_delete">ការស្ទង់មតិ ដែលបានផ្ញើ ទាំងអស់ យក</string>
     <string name="settings_menu_licence">អាជ្ញាប័ណ្ណ</string>
@@ -35,8 +35,8 @@
     <string name="login_error_bad_credentials">Your user/password are incorrect</string>
 
     <!-- # dialogs -->
-    <string name="dialog_title_delete_surveys">តើអ្នកប្រាកដថា អ្នកចង់យក ការស្ទង់មតិ ដែលបានផ្ញើ ទាំងអស់?</string>
-    <string name="dialog_title_delete_survey">លុប​ចោលការស្ទង់មតិ</string>
+    <string name="dialog_title_delete_surveys">តើអ្នកប្រាកដទេថា អ្នកចង់លុបព័ត៌មានស្ទង់មតិដែលបានផ្ញើរចេញទាំងអស់?</string>
+    <string name="dialog_title_delete_survey">លុបលទ្ធផលដែលបានផ្ញើរចេញ</string>
     <string name="dialog_info_delete_survey">តើ​អ្នក​ប្រាកដ​ជា​ចង់​លុបចោល​ទាំង​ស្រុង​ការស្ទង់មតិ​នេះ​?</string>
     <string name="dialog_title_error">Error</string>
     <string name="dialog_error_denominator">Error, denominator = 0</string>
@@ -67,7 +67,7 @@
     <string name="assessment_title_facility_date">Facility / Survey</string>
     <string name="assessment_title_state">% complete</string>
     <string name="assessment_sent_title_state">Status</string>
-    <string name="assessment_sent_date">កាលបរិច្ឆេទបញ្ចប់</string>
+    <string name="assessment_sent_date">កាលបរិច្ឆេទ</string>
     <string name="assessment_info_delete">Delete</string>
     <string name="assessment_title_header">ការបញ្ជូនមិនទាន់សម្រេច</string>
     <string name="assessment_sent_title_header">ការស្ទង់មតិ​ បានផ្ញើចេញ</string>
@@ -102,15 +102,17 @@
 
     <!-- survey -->
     <string name="survey_title_exit">Really Exit?</string>
-    <string name="survey_info_exit">តើអ្នកពិត ជាចង់ចេញ ?</string>
+    <string name="survey_info_exit">តើអ្នកពិតជាចង់ចាកចេញមែនទេ?</string>
     <string name="survey_info_exit_delete">ការស្ទង់មតិកំពុងដំណើរការ​ ហើយនឹងត្រូវលុបចោល</string>
     <string name="survey_info_select_tab">Select Tab: </string>
-    <string name="survey_title_completed">ការស្ទង់មតិបានបញ្ចប់</string>
+    <string name="survey_title_completed">ការស្ទង់មតិបានបញ្ចប់់</string>
     <string name="survey_info_completed">ការស្ទង់មតិបានបញ្ចប់ដោយជោគជ័យ</string>
 
     <!-- exceptions -->
-    <string name="exception_org_unit_not_valid">ក្រម ព្រី គឺជាការមិន សកម្មសម្រាប់ កម្មវិធី។ អង្គការ PSI ទំនាក់ទំនង 123456789</string>
-    <string name="exception_org_unit_banned">ព្រី ត្រូវបានបិទ ឬរារាំង។ អង្គការ PSI ទំនាក់ទំនង 123456789</string>
+    <string name="exception_org_unit_not_valid">លេខកូដកន្លែងផ្តល់សេវាមិនត្រឹមត្រូវទេ។
+ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈលេខ១២៣៤៥៦៧៨៩</string>
+    <string name="exception_org_unit_banned">កន្លែងផ្តល់សេវាត្រូវបានបិទ។
+ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈលេខ១២៣៤៥៦៧៨៩</string>
 
     <!--widget-->
     <string name="widget_info_empty_statement">Question statement</string>
@@ -145,7 +147,7 @@
     <string name="adherence_info_pharmacy_register">Pharmacy Register</string>
     <string name="adherence_title_gender">Gender</string>
     <string name="adherence_title_age">Age</string>
-    <string name="adherence_title_test_results">Test results</string>
+    <string name="adherence_title_test_results">លទ្ធផលតេស្ត</string>
     <string name="adherence_info_patient_id">Patient\nID</string>
     <string name="adherence_info_prescribed">ACT\nPrescribed?</string>
     <string name="adherence_info_rdt_positive">RDT Positive</string>
@@ -200,7 +202,7 @@
         <item>តូចបំផុត</item>
         <item>តូច</item>
         <item>មធ្យម</item>
-        <item>ធំំ</item>
+        <item>ធំ</item>
         <item>ធំបំផុត</item>
     </string-array>
     <string name="settings_text_dhis_server_url">DHIS Server URL</string>

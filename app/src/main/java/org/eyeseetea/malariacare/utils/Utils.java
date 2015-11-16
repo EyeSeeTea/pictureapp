@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -201,6 +202,13 @@ public class Utils {
         return dateFormatted;
     }
 
+    public static Timestamp getClosingDateTimestamp(String format){
+        Calendar sysDate = Calendar.getInstance();
+        sysDate.setTime(new Date());
+        sysDate.set(Calendar.HOUR, sysDate.get(Calendar.HOUR) - 24);
+        Timestamp timestamp=new Timestamp(sysDate.getTime().getTime());
+        return timestamp;
+    }
     public static String geTodayDataString(String format){
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());

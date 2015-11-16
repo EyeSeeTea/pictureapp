@@ -110,7 +110,7 @@ public class PreferencesState {
      */
     private String initDhisURL(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
-        return sharedPreferences.getString(instance.getContext().getString(R.string.dhis_url), "");
+        return sharedPreferences.getString(instance.getContext().getString(R.string.dhis_url), instance.getContext().getString(R.string.DHIS_DEFAULT_SERVER));
     }
 
     /**

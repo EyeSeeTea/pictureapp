@@ -70,8 +70,7 @@ public class PushClient {
 
     //This change for a sharedpreferences url that is selected from the settings screen
 
-    //private static String DHIS_SERVER ="https://www.psi-mis.org";
-    private static String DHIS_SERVER ="https://dev.psi-mis.org";
+    private static String DHIS_SERVER ="https://www.psi-mis.org";
     private static final String DHIS_PUSH_API="/api/events";
     private static final String DHIS_PULL_PROGRAM="/api/programs/";
     private static final String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id,closedDate&filter=code:eq:%s&filter:programs:id:eq:%s";
@@ -79,7 +78,7 @@ public class PushClient {
     private static final String DHIS_EXIST_PROGRAM=".json?fields=id";
     private static final String DHIS_PATCH_URL_CLOSED_DATE ="/api/organisationUnits/%s/closedDate";
     private static final String DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE="/api/organisationUnits/%s/description";
-    private static final String DHIS_PATCH_DESCRIPTIONCLOSED_DATE ="Android Surveillance App set the closing date to %s because over 30 surveys were pushed within 1 hour.";
+    private static final String DHIS_PATCH_DESCRIPTIONCLOSED_DATE ="[%s] - Android Surveillance App set the closing date to %s because over 30 surveys were pushed within 1 hour.";
 
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -94,9 +93,11 @@ public class PushClient {
     private static String DHIS_UNEXISTENT_ORG_UNIT=null;
 
     private static String DHIS_UID_PROGRAM="";
+
     private static String DHIS_USERNAME="KHMCS";
     //Todo: introduce final password
     private static String DHIS_PASSWORD="";
+
     private static String DHIS_ORG_NAME ="";
     private static String DHIS_ORG_UID ="";
 
@@ -340,7 +341,8 @@ public class PushClient {
     private JSONObject prepareClosingDescriptionValue(String url) throws Exception{
         String actualDescription= getCurrentDescription(url);
         String dateFormatted=Utils.getClosingDateString("dd-MM-yyyy");
-        String description=String.format(DHIS_PATCH_DESCRIPTIONCLOSED_DATE, dateFormatted);
+        String dateTimestamp=Utils.getClosingDateTimestamp(Utils.getClosingDateString("dd-MM-yyyy")).getTime()+"";
+        String description=String.format(DHIS_PATCH_DESCRIPTIONCLOSED_DATE,dateTimestamp, dateFormatted);
         StringBuilder sb = new StringBuilder();
         sb.append(actualDescription);
         sb.append("");//next line

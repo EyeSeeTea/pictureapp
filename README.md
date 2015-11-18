@@ -4,7 +4,7 @@ The QIS Malaria Case Surveillance application is a simple and elegant open-sourc
 
 This application is intended to be used by healthcare providers in the field after they have conducted an mRDT test. Once the application is downloaded, no internet connection is needed to access or enter data. A healthcare provider can open the application, complete a simple and highly visual 7 question survey and upload data to DHIS2 once an internet connection is established. 
 
-The application is based on the current QoC application which allows to issue automatic generated surveys and retrieve and push information to a wide range of platform such as DHIS2 servers.
+The application is based on the [QoC application](https://github.com/EyeSeeTea/malariapp) which allows to issue automatic generated surveys and retrieve and push information to a wide range of platform such as DHIS2 servers.
 
 ## Feedback
 

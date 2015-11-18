@@ -1,33 +1,41 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Health Network QIS App.
+ * This file is part of QIS Survelliance App.
  *
- *  Health Network QIS App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Health Network QIS App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.services;
 
-import android.app.IntentService;
-import android.content.Intent;
-import android.util.Log;
+        package org.eyeseetea.malariacare.services;
 
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.network.PushClient;
-import org.eyeseetea.malariacare.network.PushResult;
+        import android.app.Activity;
+        import android.app.IntentService;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.content.SharedPreferences;
+        import android.preference.PreferenceManager;
+        import android.telephony.TelephonyManager;
+        import android.util.Log;
 
-import java.util.List;
+        import org.eyeseetea.malariacare.DashboardActivity;
+        import org.eyeseetea.malariacare.database.model.Survey;
+        import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
+        import org.eyeseetea.malariacare.network.PushClient;
+        import org.eyeseetea.malariacare.network.PushResult;
+
+        import java.util.List;
 
 /**
  * A service that runs pushing process for pending surveys.
@@ -80,17 +88,21 @@ public class PushService extends IntentService {
      * Push all pending surveys
      */
     private void pushAllPendingSurveys() {
-        Log.d(TAG,"pushAllPendingSurveys (Thread:"+Thread.currentThread().getId()+")");
+        Log.d(TAG, "pushAllPendingSurveys (Thread:" + Thread.currentThread().getId() + ")");
 
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllUnsentSurveys();
 
         if(surveys!=null && !surveys.isEmpty()){
             for(Survey survey : surveys){
-                PushClient pushClient=new PushClient(survey);
+                PushClient pushClient=new PushClient(survey, getApplicationContext());
+
+                //Push  data
+
                 PushResult result = pushClient.pushBackground();
                 if(result.isSuccessful()){
                     Log.d(TAG, "Estado del push: OK");
+
 
                     //Reload data using service
                     Intent surveysIntent=new Intent(this, SurveyService.class);

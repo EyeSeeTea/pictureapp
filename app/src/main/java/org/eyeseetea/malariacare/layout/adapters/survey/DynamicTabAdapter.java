@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Facility QA Tool App.
+ * This file is part of QIS Survelliance App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.layout.adapters.survey;
@@ -50,6 +50,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -184,7 +185,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         View childItem = vgRow.getChildAt(itemPos);
                         if (childItem instanceof ImageView) {
                             Option otherOption=(Option)childItem.getTag();
-                            if(selectedOption.getId() != otherOption.getId()){
+                            if(selectedOption.getId_option() != otherOption.getId_option()){
                                 overshadow((ImageView) childItem, otherOption);
                             }
                         }
@@ -383,55 +384,29 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
 
     /**
-     * Inits editText and button to view/edit a (positive) integer
+     * Inits NumberPicker and button to view/edit a integer between 0 and Constants.MAX_INT_AGE
      * @param tableRow
      * @param value
      */
     private void initPositiveIntValue(TableRow tableRow, Value value){
         Button button=(Button)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
-        final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
-        final Context ctx = tableRow.getContext();
+        final NumberPicker numberPicker=(NumberPicker)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
+
+        //Without setMinValue, setMaxValue, setValue in this order, the setValue is not displayed in the screen.
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(Constants.MAX_INT_AGE);
 
         //Has value? show it
         if(value!=null){
-            editText.setText(value.getValue());
+            numberPicker.setValue(Integer.parseInt(value.getValue()));
         }
 
-        //Editable? add listener
-        if(!readOnly){
-
-            editText.setFilters(new InputFilter[]{
-                    new InputFilter.LengthFilter(Constants.MAX_INT_AGE),
-                    new MinMaxInputFilter(0, null)
-            });
-
-            editText.addTextChangedListener(new TextWatcher(){
-                public void onTextChanged(CharSequence s, int start, int before, int count){
-                    // Not allowed zero at the beginning for values greater than zero
-                    if (editText.getText().length()>1 && editText.getText().toString().matches("^0[0-9]") ){
-                        editText.setText("");
-                    }
-                }
-                public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-                public void afterTextChanged(Editable s){}
-            });
-
+        if (!readOnly) {
+            //Save the numberpicker value in the DB, and continue to the next screen.
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    View parentView = (View) v.getParent();
-                    EditText editText = (EditText) parentView.findViewById(R.id.dynamic_positiveInt_edit);
-                    String positiveIntValue = editText.getText().toString();
-
-                    //Required, empty values rejected
-                    if (positiveIntValue == null || "".equals(positiveIntValue)) {
-                        editText.setError(context.getString(R.string.dynamic_error_age));
-                        return;
-                    }
-
-                    //Hide keypad
-                    hideKeyboard(ctx, v);
-
+                    String positiveIntValue = String.valueOf(numberPicker.getValue());
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, positiveIntValue);
                     finishOrNext();
@@ -439,7 +414,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             });
 
         }else{
-            editText.setEnabled(false);
+            numberPicker.setEnabled(false);
             button.setEnabled(false);
         }
 
@@ -447,14 +422,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         swipeTouchListener.addClickableView(button);
 
         //Take focus to this view
-        editText.requestFocus();
-        editText.postDelayed(new Runnable() {
-           @Override
-           public void run() {
-               //Show keypad
-               showKeyboard(ctx, editText);
-           }
-       }, 300); //use 300 to make it run when coming back from lock screen
+        numberPicker.requestFocus();
     }
 
     /**

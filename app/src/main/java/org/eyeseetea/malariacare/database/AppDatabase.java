@@ -17,15 +17,16 @@
  *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.layout.score;
+package org.eyeseetea.malariacare.database;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.raizlabs.android.dbflow.annotation.Database;
 
-public class TabNumDenRecord extends ANumDenRecord{
-
-    public List<Float> calculateTotal(){
-        return this.calculateNumDenTotal(new ArrayList<Float>(Arrays.asList(0F, 0F)));
-    }
+/**
+ * Created by arrizabalaga on 19/10/15.
+ */
+@Database(name = AppDatabase.NAME, version = AppDatabase.VERSION, foreignKeysSupported = true)
+public class AppDatabase {
+    public static final String NAME = "EyeSeeTeaDB";
+    public static final int VERSION = 1;
 }
+

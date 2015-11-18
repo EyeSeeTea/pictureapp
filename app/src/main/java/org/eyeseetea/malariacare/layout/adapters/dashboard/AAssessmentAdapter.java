@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Health Network QIS App.
+ * This file is part of QIS Survelliance App.
  *
- *  Health Network QIS App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Health Network QIS App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.layout.adapters.dashboard;
@@ -60,15 +60,16 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         // Get the row layout
         View rowView = this.lInflater.inflate(getRecordLayout(), parent, false);
         //To ease testing
-        rowView.setTag(survey.getId());
+        rowView.setTag(survey.getId_survey());
         rowView.setPadding(paddingDp, paddingDp, paddingDp, paddingDp);
 
 
         //Completion Date
         TextCard completionDate = (TextCard) rowView.findViewById(R.id.completionDate);
         if(survey.getCompletionDate()!=null){
-
+            //it show dd/mm/yy in europe, mm/dd/yy in america, etc.
             DateFormat formatter=DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Resources.getSystem().getConfiguration().locale);
+
             completionDate.setText(formatter.format(survey.getCompletionDate()));
         }
 

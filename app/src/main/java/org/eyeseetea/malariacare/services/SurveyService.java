@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Health Network QIS App.
+ * This file is part of QIS Survelliance App.
  *
- *  Health Network QIS App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Health Network QIS App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.services;
@@ -24,15 +24,16 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.orm.query.Select;
-
+import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.Survey$Table;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,11 @@ public class SurveyService extends IntentService {
      * Name of 'list completed' action
      */
     public static final String ALL_SENT_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.SurveyService.ALL_SENT_SURVEYS_ACTION";
+
+    /**
+     * Name of 'remove list completed' action
+     */
+    public static final String REMOVE_SENT_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.SurveyService.REMOVE_SENT_SURVEYS_ACTION";
 
     /**
      * Name of 'reload' action which returns both lists (unsent, sent)
@@ -119,6 +125,9 @@ public class SurveyService extends IntentService {
             case ALL_SENT_SURVEYS_ACTION:
                 getAllSentSurveys();
                 break;
+            case REMOVE_SENT_SURVEYS_ACTION:
+                removeAllSentSurveys();
+                break;
             case RELOAD_DASHBOARD_ACTION:
                 reloadDashboard();
                 break;
@@ -126,19 +135,24 @@ public class SurveyService extends IntentService {
     }
 
     private void reloadDashboard(){
-        List<Survey> surveys=Select.from(Survey.class)
-                .orderBy("event_date")
-                .orderBy("org_unit")
-                .list();
+
+        List<Survey> surveys=new Select().all().from(Survey.class)
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
 
         List<Survey> unsentSurveys=new ArrayList<Survey>();
         List<Survey> sentSurveys=new ArrayList<Survey>();
         for(Survey survey:surveys){
-            if(!survey.isSent()){
+            if(!survey.isSent() && !survey.isHide() ){
+                Log.d(TAG,"SurveyStatusUnSent:"+survey.getStatus() + "");
                 unsentSurveys.add(survey);
                 survey.getAnsweredQuestionRatio();
-            }else{
+            }else if (survey.isSent() && !survey.isHide()){
+                Log.d(TAG,"SurveyStatusSentNotHide:"+survey.getStatus() + "");
                 sentSurveys.add(survey);
+            }
+            else{
+                Log.d(TAG,"SurveyStatusSentHide:"+ survey.getStatus() + "");
             }
         }
 
@@ -177,7 +191,7 @@ public class SurveyService extends IntentService {
      * Selects all sent surveys from database
      */
     private void getAllSentSurveys(){
-        Log.d(TAG,"getAllUnsentSurveys (Thread:"+Thread.currentThread().getId()+")");
+        Log.d(TAG,"getAllSentSurveys (Thread:"+Thread.currentThread().getId()+")");
 
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllSentSurveys();
@@ -189,9 +203,28 @@ public class SurveyService extends IntentService {
         Intent resultIntent= new Intent(ALL_SENT_SURVEYS_ACTION);
         LocalBroadcastManager.getInstance(this).sendBroadcast(resultIntent);
     }
+    /**
+     * Remove all sent surveys from database
+     */
+    private void removeAllSentSurveys(){
+        Log.d(TAG,"removeAllSentSurveys (Thread:"+Thread.currentThread().getId()+")");
+
+        //Select all sent surveys from sql and delete.
+        List<Survey> surveys = Survey.getAllSentSurveys();
+        for(int i=surveys.size()-1;i>=0;i--){
+            //If is over limit the survey be delete, if is in the limit the survey change the state to STATE_HIDE
+            if (Utils.isDateOverLimit(Utils.DateToCalendar(surveys.get(i).getEventDate()), 1)) {
+                surveys.get(i).delete();
+            }
+            else{
+                surveys.get(i).setStatus(Constants.SURVEY_HIDE);
+                surveys.get(i).save();
+            }
+        }
+    }
 
     private void getAllUncompletedSurveys(){
-        Log.d(TAG,"getAllUnsentSurveys (Thread:"+Thread.currentThread().getId()+")");
+        Log.d(TAG,"getAllUncompletedSurveys (Thread:"+Thread.currentThread().getId()+")");
 
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllUncompletedSurveys();
@@ -210,7 +243,7 @@ public class SurveyService extends IntentService {
     }
 
     private void getAllCompletedSurveys(){
-        Log.d(TAG,"getAllUnsentSurveys (Thread:"+Thread.currentThread().getId()+")");
+        Log.d(TAG,"getAllCompletedSurveys (Thread:"+Thread.currentThread().getId()+")");
 
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllCompletedSurveys();

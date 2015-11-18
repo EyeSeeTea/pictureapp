@@ -1,30 +1,51 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Facility QA Tool App.
+ * This file is part of QIS Survelliance App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
-public class OrgUnit extends SugarRecord<OrgUnit> {
+import org.eyeseetea.malariacare.database.AppDatabase;
 
+import java.util.List;
+
+@Table(databaseName = AppDatabase.NAME)
+public class OrgUnit extends BaseModel {
+
+
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_org_unit;
+
+    @Column
     String uid;
+
+    @Column
     String name;
+
+    List<Survey> surveys;
 
     public OrgUnit() {
     }
@@ -37,6 +58,14 @@ public class OrgUnit extends SugarRecord<OrgUnit> {
     public OrgUnit(String uid, String name) {
         this.uid = uid;
         this.name = name;
+    }
+
+    public Long getId_org_unit() {
+        return id_org_unit;
+    }
+
+    public void setId_org_unit(Long id_org_unit) {
+        this.id_org_unit = id_org_unit;
     }
 
     public String getUid() {
@@ -53,6 +82,15 @@ public class OrgUnit extends SugarRecord<OrgUnit> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @OneToMany(methods = {OneToMany.Method.SAVE, OneToMany.Method.DELETE}, variableName = "surveys")
+    public List<Survey> getSurveys(){
+        //if(this.surveys == null){
+        this.surveys = new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.ORGUNIT_ID_ORG_UNIT).eq(this.getId_org_unit())).queryList();
+        //}
+        return surveys;
     }
 
     @Override

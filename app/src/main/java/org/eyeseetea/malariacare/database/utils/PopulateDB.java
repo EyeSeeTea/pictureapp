@@ -1,8 +1,29 @@
+/*
+ * Copyright (c) 2015.
+ *
+ * This file is part of QIS Survelliance App.
+ *
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 package org.eyeseetea.malariacare.database.utils;
 
 import android.content.res.AssetManager;
 
 import com.opencsv.CSVReader;
+import com.raizlabs.android.dbflow.runtime.TransactionManager;
 
 import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
@@ -119,13 +140,13 @@ public class PopulateDB {
             reader.close();
         }
 
-        Program.saveInTx(programList.values());
-        Tab.saveInTx(tabList.values());
-        Header.saveInTx(headerList.values());
-        Answer.saveInTx(answerList.values());
-//        OptionAttribute.saveInTx(optionAttributeList.values());
-        Option.saveInTx(optionList.values());
-        Question.saveInTx(questionList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(programList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(tabList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(headerList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(answerList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(optionAttributeList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(optionList.values());
+        TransactionManager.getInstance().saveOnSaveQueue(questionList.values());
     }
 
     public static void populateDummyData(){

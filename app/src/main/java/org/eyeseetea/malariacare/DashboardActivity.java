@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Facility QA Tool App.
+ * This file is part of QIS Survelliance App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare;
@@ -27,7 +27,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.database.model.Program;
+import com.raizlabs.android.dbflow.sql.language.Select;
+
+import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -48,7 +51,6 @@ public class DashboardActivity extends BaseActivity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
-
         if (savedInstanceState == null) {
             DashboardUnsentFragment detailsFragment = new DashboardUnsentFragment();
             detailsFragment.setArguments(getIntent().getExtras());
@@ -64,6 +66,7 @@ public class DashboardActivity extends BaseActivity {
             ftr.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ftr.commit();
         }
+        Survey.removeInProgress();
     }
 
     @Override
@@ -75,10 +78,18 @@ public class DashboardActivity extends BaseActivity {
     public void onResume(){
         Log.d(TAG, "onResume");
         super.onResume();
-
         AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
         asyncPopulateDB.execute((Void) null);
+        Survey.removeInProgress();
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart");
+        Survey.removeInProgress();
+    }
+
 
     @Override
     public void onPause(){
@@ -164,11 +175,15 @@ public class DashboardActivity extends BaseActivity {
          */
         private void initUser(){
             user=new User(DUMMY_USER,DUMMY_USER);
+            User userdb=User.existUser(user);
+            if(userdb!=null)
+            user=userdb;
+            else
             user.save();
         }
 
         private void initDataIfRequired() throws IOException {
-            if (Program.count(Program.class, null, null)!=0) {
+            if (new Select().count().from(Tab.class).count()!=0) {
                 Log.i(TAG, "DB Already loaded, showing surveys...");
                 return;
             }

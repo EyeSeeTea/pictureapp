@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Facility QA Tool App.
+ * This file is part of QIS Survelliance App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.database.utils;
@@ -25,6 +25,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
+import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +55,10 @@ public class Session {
      */
     private static Location location;
 
+    /**
+     * The current phone metadata
+     */
+    private static PhoneMetaData phoneMetaData;
     /**
      * Map that holds non serializable results from services
      */
@@ -116,8 +121,8 @@ public class Session {
      * @param value
      */
     public static void putServiceValue(String key, Object value){
-        Log.i(TAG,"putServiceValue("+key+", "+value.toString()+")");
-        serviceValues.put(key,value);
+        Log.i(TAG, "putServiceValue(" + key + ", " + value.toString() + ")");
+        serviceValues.put(key, value);
     }
 
     /**
@@ -145,4 +150,12 @@ public class Session {
     public static void setLocation(Location location) {
         Session.location = location;
     }
+
+
+    public static PhoneMetaData getPhoneMetaData(){return phoneMetaData;}
+
+    public static void setPhoneMetaData(PhoneMetaData phoneMetaData) {
+        Session.phoneMetaData = phoneMetaData;
+    }
+
 }

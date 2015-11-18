@@ -1,38 +1,46 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Facility QA Tool App.
+ * This file is part of QIS Survelliance App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.network.PushClient;
+import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
 
 import java.util.List;
 
@@ -55,7 +63,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * shown on tablets.
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
-
+    private AutoCompleteEditTextPreference autoCompleteEditTextPreference;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -90,7 +98,63 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.font_sizes)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.dhis_url)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
+
+        // Set the ClickListener to the android:key"remove_sent_surveys" preference.
+
+        autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
+        Preference button = (Preference)findPreference(getApplicationContext().getString(R.string.remove_sent_surveys));
+        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                askRemoveSentSurveys();
+                return true;
+            }
+        });
+
+        Preference button2 = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
+        button2.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+                prefEditor.putString(getResources().getString(R.string.dhis_url), newValue.toString()); // set your default value here (could be empty as well)
+                prefEditor.commit(); // finally save changes
+                // Now, manually update it's value to next value
+                preference.setSummary(newValue.toString()); // Now, if you click on the item, you'll see the value you've just set here
+                PreferencesState.getInstance().reloadPreferences();
+                PushClient.newOrgUnitOrServer();
+                autoCompleteEditTextPreference.pullOrgUnits();
+                return true;
+            }
+        });
     }
+
+    //ask if the Sent Surveys
+    private void askRemoveSentSurveys() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        removeSentSurveys();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder =  new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialog_title_delete_surveys).setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener).show();
+    }
+
+    private void removeSentSurveys() {
+        Intent surveysIntent=new Intent(this, SurveyService.class);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.REMOVE_SENT_SURVEYS_ACTION);
+        this.startService(surveysIntent);
+    }
+
 
     /**
      * {@inheritDoc}
@@ -174,7 +238,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      */
     private static void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
-         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
+        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
         // Trigger the listener immediately with the preference's
         // current value.
@@ -195,6 +259,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
+
+        private AutoCompleteEditTextPreference autoCompleteEditTextPreference;
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -207,7 +273,64 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference(getString(R.string.font_sizes)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
-        }
+
+
+            autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
+
+            Preference button = (Preference)findPreference(getString(R.string.remove_sent_surveys));
+            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    askRemoveSentSurveys(getActivity());
+                    return true;
+                }
+            });
+
+            Preference button2 = (Preference)findPreference(getResources().getString(R.string.dhis_url));
+
+            button2.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+                    SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+                    prefEditor.putString(getResources().getString(R.string.dhis_url), newValue.toString()); // set your default value here (could be empty as well)
+                    prefEditor.commit(); // finally save changes
+                    preference.setSummary(newValue.toString()); // Now, if you click on the item, you'll see the value you've just set here
+                    PreferencesState.getInstance().reloadPreferences();
+                    PushClient.newOrgUnitOrServer();
+                    autoCompleteEditTextPreference.pullOrgUnits();
+                    return true;
+                }
+            });
+
+    }
+    }
+
+    //asks the user whether to delete the surveys sent
+    private static void askRemoveSentSurveys(final Activity activity) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        removeSentSurveys(activity);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder =  new AlertDialog.Builder(activity);
+        builder.setMessage(R.string.dialog_title_delete_surveys).setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener).show();
+    }
+
+
+    private static void removeSentSurveys(Activity activity) {
+        Intent surveysIntent=new Intent(activity, SurveyService.class);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.REMOVE_SENT_SURVEYS_ACTION);
+        activity.startService(surveysIntent);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -234,6 +357,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     public void onBackPressed() {
+        PreferencesState.getInstance().reloadPreferences();
+        PushClient.newOrgUnitOrServer();
         Class callerActivityClass=getCallerActivity();
         Intent returnIntent=new Intent(this,callerActivityClass);
         startActivity(returnIntent);

@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Facility QA Tool App.
+ * This file is part of QIS Survelliance App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.layout.adapters.survey;
@@ -354,7 +354,7 @@ public class AutoTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 ReadWriteDB.deleteValue(child); // when we hide a question, we remove its value
                 // little cache to avoid double checking same
-                if(cachedQuestion == null || (cachedQuestion.getHeader().getId() != child.getHeader().getId()))
+                if(cachedQuestion == null || (cachedQuestion.getHeader().getId_header() != child.getHeader().getId_header()))
                     elementInvisibility.put(childHeader, hideHeader(childHeader));
             } else {
                 Float denum = ScoreRegister.calcDenum(child);

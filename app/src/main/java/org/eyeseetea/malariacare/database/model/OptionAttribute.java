@@ -1,11 +1,39 @@
+/*
+ * Copyright (c) 2015.
+ *
+ * This file is part of QIS Survelliance App.
+ *
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.eyeseetea.malariacare.database.model;
 
-import com.orm.SugarRecord;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.database.AppDatabase;
 
-public class OptionAttribute extends SugarRecord<OptionAttribute> {
+@Table(databaseName = AppDatabase.NAME)
+public class OptionAttribute extends BaseModel {
 
+    @Column
+    @PrimaryKey(autoincrement = true)
+    long id_option_attribute;
 
+    @Column
     String background_colour;
 
     public OptionAttribute() {
@@ -13,6 +41,14 @@ public class OptionAttribute extends SugarRecord<OptionAttribute> {
 
     public OptionAttribute(String background_colour) {
         this.background_colour = background_colour;
+    }
+
+    public long getId_option_attribute() {
+        return id_option_attribute;
+    }
+
+    public void setId_option_attribute(long id_option_attribute) {
+        this.id_option_attribute = id_option_attribute;
     }
 
     public String getBackground_colour() {
@@ -26,7 +62,8 @@ public class OptionAttribute extends SugarRecord<OptionAttribute> {
     @Override
     public String toString() {
         return "OptionAttribute{" +
-                "background_colour='" + background_colour + '\'' +
+                "id_option_attribute=" + id_option_attribute +
+                ", background_colour='" + background_colour + '\'' +
                 '}';
     }
 
@@ -37,12 +74,15 @@ public class OptionAttribute extends SugarRecord<OptionAttribute> {
 
         OptionAttribute that = (OptionAttribute) o;
 
+        if (id_option_attribute != that.id_option_attribute) return false;
         return !(background_colour != null ? !background_colour.equals(that.background_colour) : that.background_colour != null);
 
     }
 
     @Override
     public int hashCode() {
-        return background_colour != null ? background_colour.hashCode() : 0;
+        int result = (int) (id_option_attribute ^ (id_option_attribute >>> 32));
+        result = 31 * result + (background_colour != null ? background_colour.hashCode() : 0);
+        return result;
     }
 }

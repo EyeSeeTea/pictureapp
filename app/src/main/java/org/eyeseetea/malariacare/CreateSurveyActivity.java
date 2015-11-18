@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Facility QA Tool App.
+ * This file is part of QIS Survelliance App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare;
@@ -25,9 +25,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Spinner;
 
+import com.raizlabs.android.dbflow.sql.language.Select;
+
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.general.OrgUnitArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.general.ProgramArrayAdapter;
@@ -60,13 +63,13 @@ public class CreateSurveyActivity extends BaseActivity {
         this.programDefaultOption = new Program(Constants.DEFAULT_SELECT_OPTION);
 
         //Populate Organization Unit DDL
-        List<OrgUnit> orgUnitList = OrgUnit.listAll(OrgUnit.class);
+        List<OrgUnit> orgUnitList = new Select().all().from(OrgUnit.class).queryList();
         orgUnitList.add(0, orgUnitDefaultOption);
         orgUnitView = (Spinner) findViewById(R.id.org_unit);
         orgUnitView.setAdapter(new OrgUnitArrayAdapter(this, orgUnitList));
 
         //Populate Program View DDL
-        List<Program> programList = OrgUnit.listAll(Program.class);
+        List<Program> programList = new Select().all().from(Program.class).queryList();
         programList.add(0, programDefaultOption);
         programView = (Spinner) findViewById(R.id.program);
         programView.setAdapter(new ProgramArrayAdapter(this, programList));

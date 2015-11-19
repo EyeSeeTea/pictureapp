@@ -189,7 +189,7 @@ public class DashboardActivity extends BaseActivity {
             }
 
             Log.i(TAG, "DB empty, loading data ...");
-            PopulateDB.populateDummyData();
+            //PopulateDB.populateDummyData();
             try {
                 PopulateDB.populateDB(getAssets());
             } catch (IOException e) {

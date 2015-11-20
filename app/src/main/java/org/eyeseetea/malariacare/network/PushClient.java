@@ -96,7 +96,7 @@ public class PushClient {
 
     private static String DHIS_USERNAME="KHMCS";
     //Todo: introduce final password
-    private static String DHIS_PASSWORD="";
+    private static String DHIS_PASSWORD="KHMCSadmin1";
 
     private static String DHIS_ORG_NAME ="";
     private static String DHIS_ORG_UID ="";
@@ -183,7 +183,6 @@ public class PushClient {
             }
             return result;
         } catch (Exception ex) {
-            Log.e(TAG, ex.getMessage());
             return new PushResult(ex);
         }
     }
@@ -211,7 +210,7 @@ public class PushClient {
                 }
                 return result;
             } catch (Exception ex) {
-                Log.e(TAG, ex.getMessage());
+                //Log.e(TAG, ex.getMessage());
                 return new PushResult(ex);
             }
         }

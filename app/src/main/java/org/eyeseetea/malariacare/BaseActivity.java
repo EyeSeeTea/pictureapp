@@ -48,6 +48,7 @@ import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Program$Table;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -187,10 +188,10 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     public void newSurvey(View v){
-        List<OrgUnit> firstOrgUnit = new Select().from(OrgUnit.class).where(Condition.column(OrgUnit$Table.ID_ORG_UNIT).eq(1)).queryList();
+        //Get Programs from database
         List<Program> firstProgram = new Select().from(Program.class).where(Condition.column(Program$Table.ID_PROGRAM).eq(1)).queryList();
         // Put new survey in session
-        Survey survey = new Survey(firstOrgUnit.get(0), firstProgram.get(0), Session.getUser());
+        Survey survey = new Survey(null, firstProgram.get(0), Session.getUser());
         survey.save();
         Session.setSurvey(survey);
 

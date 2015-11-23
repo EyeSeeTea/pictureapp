@@ -45,6 +45,7 @@ import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.general.TabArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.AutoTabAdapter;
@@ -258,7 +259,7 @@ public class SurveyActivity extends BaseActivity{
 
         android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
         LayoutUtils.setActionBarLogo(actionBar);
-        LayoutUtils.setActionBarText(actionBar, survey.getOrgUnit().getName(), program.getName());
+        LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), program.getName());
     }
 
 

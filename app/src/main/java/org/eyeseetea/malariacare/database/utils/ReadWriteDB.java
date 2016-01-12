@@ -92,7 +92,7 @@ public class ReadWriteDB {
         if (value == null) {
             value = new Value(answer, question, Session.getSurvey());
         } else {
-            value.setOption(null);
+            value.setOption((Long)null);
             value.setValue(answer);
         }
         value.save();

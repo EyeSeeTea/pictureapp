@@ -181,9 +181,9 @@ public class CustomReportingAdapter extends BaseAdapter implements ITabAdapter {
 
         RowValues rowValues = new RowValues();
 
-        rowValues.statement = question.getQuestionChildren().get(0).getForm_name();
-        rowValues.register = ReadWriteDB.readValueQuestion(question.getQuestionChildren().get(1));
-        rowValues.report = ReadWriteDB.readValueQuestion(question.getQuestionChildren().get(2));
+        rowValues.statement = question.getChildren().get(0).getForm_name();
+        rowValues.register = ReadWriteDB.readValueQuestion(question.getChildren().get(1));
+        rowValues.report = ReadWriteDB.readValueQuestion(question.getChildren().get(2));
         rowValues.score = areEquals(rowValues.register, rowValues.report);
 
         if (rowValues.score == 1)
@@ -240,8 +240,8 @@ public class CustomReportingAdapter extends BaseAdapter implements ITabAdapter {
             viewHolder.register = (EditCard) rowView.findViewById(R.id.register);
             viewHolder.score = (TextCard) rowView.findViewById(R.id.scoreValue);
 
-            register = ((Question)item).getQuestionChildren().get(1);
-            report = ((Question)item).getQuestionChildren().get(2);
+            register = ((Question)item).getChildren().get(1);
+            report = ((Question)item).getChildren().get(2);
 
             rowView.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));
 

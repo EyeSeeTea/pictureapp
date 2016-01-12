@@ -138,7 +138,7 @@ public class SurveyService extends IntentService {
 
         List<Survey> surveys=new Select().all().from(Survey.class)
                 .orderBy(Survey$Table.EVENTDATE)
-                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
+                .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
 
         List<Survey> unsentSurveys=new ArrayList<Survey>();
         List<Survey> sentSurveys=new ArrayList<Survey>();
@@ -271,7 +271,7 @@ public class SurveyService extends IntentService {
         Program program=survey.getProgram();
 
         //Get composite scores for current program & register them (scores)
-        List<CompositeScore> compositeScores = CompositeScore.listAllByProgram(program);
+        List<CompositeScore> compositeScores = new Select().all().from(CompositeScore.class).queryList();
         ScoreRegister.registerCompositeScores(compositeScores);
 
         //Get tabs for current program & register them (scores)

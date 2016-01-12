@@ -778,16 +778,8 @@ public class PushClient {
         //Cleans score
         ScoreRegister.clear();
 
-        //Register scores for tabs
-        List<Tab> tabs=survey.getProgram().getTabs();
-        ScoreRegister.registerTabScores(tabs);
-
-        //Register scores for composites
-        List<CompositeScore> compositeScoreList=CompositeScore.listAllByProgram(survey.getProgram());
-        ScoreRegister.registerCompositeScores(compositeScoreList);
-
-        //Initialize scores x question
-        ScoreRegister.initScoresForQuestions(Question.listAllByProgram(survey.getProgram()), survey);
+        //Prepare scores info
+        List<CompositeScore> compositeScoreList=ScoreRegister.loadCompositeScores(survey);
 
         //1 CompositeScore -> 1 dataValue
         for(CompositeScore compositeScore:compositeScoreList){

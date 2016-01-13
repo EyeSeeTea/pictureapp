@@ -390,15 +390,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void initPositiveIntValue(TableRow tableRow, Value value){
         Button button=(Button)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
-        final NumberPicker numberPicker=(NumberPicker)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
+
+        final EditText numberPicker = (EditText)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
 
         //Without setMinValue, setMaxValue, setValue in this order, the setValue is not displayed in the screen.
-        numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(Constants.MAX_INT_AGE);
+        numberPicker.setFilters(new InputFilter[]{
+                new InputFilter.LengthFilter(Constants.MAX_INT_CHARS),
+                new MinMaxInputFilter(0, 99)
+        });
 
         //Has value? show it
         if(value!=null){
-            numberPicker.setValue(Integer.parseInt(value.getValue()));
+            numberPicker.setText(value.getValue());
         }
 
         if (!readOnly) {
@@ -406,7 +409,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String positiveIntValue = String.valueOf(numberPicker.getValue());
+                    String positiveIntValue = String.valueOf(numberPicker.getText());
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, positiveIntValue);
                     finishOrNext();

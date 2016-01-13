@@ -10,11 +10,18 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         >
-        <NumberPicker
+        <!--<NumberPicker-->
+            <!--android:id="@+id/dynamic_positiveInt_edit"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="#d3d3d3"-->
+            <!--android:layout_margin="10dp"/>-->
+        <EditText
             android:id="@+id/dynamic_positiveInt_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#d3d3d3"
+            android:inputType="number"
             android:layout_margin="10dp"/>
         <Button
             android:id="@+id/dynamic_positiveInt_btn"

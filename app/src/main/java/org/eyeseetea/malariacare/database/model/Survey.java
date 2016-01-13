@@ -302,6 +302,9 @@ public class Survey extends BaseModel{
         if(score!=null){
             score.delete();
         }
+        for(Value value:getValues()){
+            value.delete();
+        }
         super.delete();
     }
 

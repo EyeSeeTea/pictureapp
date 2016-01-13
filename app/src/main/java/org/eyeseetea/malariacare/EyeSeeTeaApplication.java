@@ -21,6 +21,7 @@ package org.eyeseetea.malariacare;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.support.multidex.MultiDex;
 import android.telephony.TelephonyManager;
 
@@ -28,6 +29,7 @@ import com.crashlytics.android.Crashlytics;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.index.Index;
 
+import org.eyeseetea.malariacare.database.migrations.Migration2Database;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Match$Table;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
@@ -62,6 +64,7 @@ public class EyeSeeTeaApplication extends Application {
 
         FlowManager.init(this);
         createDBIndexes();
+        Migration2Database.postMigrate();
     }
 
     private void createDBIndexes(){
@@ -96,4 +99,7 @@ public class EyeSeeTeaApplication extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
+
+
 }

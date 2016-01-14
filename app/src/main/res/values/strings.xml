@@ -177,7 +177,7 @@
     <string name="iqatab_info_supervisor_matches">Supervisor matches lab staff?</string>
 
     <!-- dynamic -->
-    <string name="dynamic_error_phone_format">Invalid format for phone number</string>
+    <string name="dynamic_error_phone_format">Invalid format for phone number ( 0NN NNN NNN{N} )</string>
     <string name="dynamic_required_field">This field is required</string>
     <string name="dynamic_error_age">Invalid age</string>
 

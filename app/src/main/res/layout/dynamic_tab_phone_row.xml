@@ -15,7 +15,7 @@
             android:layout_width="0dp"
             android:layout_weight="0.8"
             android:layout_height="wrap_content"
-            android:phoneNumber="true"
+            android:inputType="phone"
             android:background="#d3d3d3"
             android:imeOptions="actionDone"
             android:singleLine="true"

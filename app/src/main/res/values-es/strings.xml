@@ -161,7 +161,7 @@
     <string name="iqatab_info_supervisor_matches">¿Coinciden supervisor y personal de laboratorio?</string>
 
     <!-- dynamic -->
-    <string name="dynamic_error_phone_format">El télefono dado no esta bien formateado</string>
+    <string name="dynamic_error_phone_format">El télefono dado no esta bien formateado ( 0NN NNN NNN{N} )</string>
     <string name="dynamic_required_field">Este campo es obligatorio</string>
     <string name="dynamic_error_age">La edad no es válida</string>
 

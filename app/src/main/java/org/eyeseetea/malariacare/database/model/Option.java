@@ -56,17 +56,12 @@ public class Option extends BaseModel {
     Answer answer;
 
     @Column
-    String path;
+    long id_option_attribute;
 
-    @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_option_attribute",
-            columnType = Long.class,
-            foreignColumnName = "id_option_attribute")},
-            saveForeignKeyModel = false)
+    /**
+     * Reference to extended option attributes (loaded lazily)
+     */
     OptionAttribute optionAttribute;
-
-    @Column
-    String background_colour;
 
     /**
      * List of values that has choosen this option
@@ -138,28 +133,43 @@ public class Option extends BaseModel {
         this.id_answer = (answer!=null)?answer.getId_answer():null;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public OptionAttribute getOptionAttribute() {
+        if(optionAttribute==null){
+            optionAttribute = new Select().from(OptionAttribute.class)
+                    .where(Condition.column(OptionAttribute$Table.ID_OPTION_ATTRIBUTE).eq(id_option_attribute)).querySingle();
+        }
         return optionAttribute;
     }
 
     public void setOptionAttribute(OptionAttribute optionAttribute) {
         this.optionAttribute = optionAttribute;
+        this.id_option_attribute = (optionAttribute!=null)?optionAttribute.getId_option_attribute():null;
     }
 
+    /**
+     * Getter for extended option attribute 'path'
+     * @return
+     */
+    public String getPath() {
+        OptionAttribute optionAttribute = this.getOptionAttribute();
+        if(optionAttribute==null){
+            return null;
+        }
+
+        return optionAttribute.getPath();
+    }
+
+    /**
+     * Getter for extended option attribute 'backgroundColor'
+     * @return
+     */
     public String getBackground_colour() {
-        return background_colour;
-    }
+        OptionAttribute optionAttribute = this.getOptionAttribute();
+        if(optionAttribute==null){
+            return null;
+        }
 
-    public void setBackground_colour(String background_colour) {
-        this.background_colour = background_colour;
+        return optionAttribute.getBackground_colour();
     }
 
     /**
@@ -195,13 +205,11 @@ public class Option extends BaseModel {
         Option option = (Option) o;
 
         if (id_option != option.id_option) return false;
+        if (id_option_attribute != option.id_option_attribute) return false;
         if (code != null ? !code.equals(option.code) : option.code != null) return false;
         if (name != null ? !name.equals(option.name) : option.name != null) return false;
         if (factor != null ? !factor.equals(option.factor) : option.factor != null) return false;
-        if (id_answer != null ? !id_answer.equals(option.id_answer) : option.id_answer != null)
-            return false;
-        if (path != null ? !path.equals(option.path) : option.path != null) return false;
-        return !(background_colour != null ? !background_colour.equals(option.background_colour) : option.background_colour != null);
+        return !(id_answer != null ? !id_answer.equals(option.id_answer) : option.id_answer != null);
 
     }
 
@@ -212,8 +220,7 @@ public class Option extends BaseModel {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (factor != null ? factor.hashCode() : 0);
         result = 31 * result + (id_answer != null ? id_answer.hashCode() : 0);
-        result = 31 * result + (path != null ? path.hashCode() : 0);
-        result = 31 * result + (background_colour != null ? background_colour.hashCode() : 0);
+        result = 31 * result + (int) (id_option_attribute ^ (id_option_attribute >>> 32));
         return result;
     }
 
@@ -225,8 +232,7 @@ public class Option extends BaseModel {
                 ", name='" + name + '\'' +
                 ", factor=" + factor +
                 ", id_answer=" + id_answer +
-                ", path='" + path + '\'' +
-                ", background_colour='" + background_colour + '\'' +
+                ", id_option_attribute=" + id_option_attribute +
                 '}';
     }
 }

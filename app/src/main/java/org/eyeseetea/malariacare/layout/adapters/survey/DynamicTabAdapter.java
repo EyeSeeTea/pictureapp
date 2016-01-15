@@ -323,8 +323,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         tableLayout.addView(tableRow);
                     }
                     ImageView imageButton = (ImageView) tableRow.getChildAt(mod);
-                    String backGColor = currentOption.getOptionAttribute() != null ? currentOption.getOptionAttribute().getBackground_colour() : currentOption.getBackground_colour();
-                    imageButton.setBackgroundColor(Color.parseColor("#" + backGColor));
+                    imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
                     initOptionButton(imageButton, currentOption, value, parent);
                 }
@@ -340,9 +339,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     ImageView imageButton = (ImageView) tableRow.getChildAt(0);
 
                     Option currentOption = opts.get(i);
-
-                    String backGColor = currentOption.getOptionAttribute() != null ? currentOption.getOptionAttribute().getBackground_colour() : currentOption.getBackground_colour();
-                    imageButton.setBackgroundColor(Color.parseColor("#" + backGColor));
+                    imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
                     initOptionButton(imageButton, currentOption, value, parent);
                 }

@@ -36,11 +36,15 @@ public class OptionAttribute extends BaseModel {
     @Column
     String background_colour;
 
+    @Column
+    String path;
+
     public OptionAttribute() {
     }
 
-    public OptionAttribute(String background_colour) {
+    public OptionAttribute(String background_colour, String path) {
         this.background_colour = background_colour;
+        this.path = path;
     }
 
     public long getId_option_attribute() {
@@ -59,12 +63,12 @@ public class OptionAttribute extends BaseModel {
         this.background_colour = background_colour;
     }
 
-    @Override
-    public String toString() {
-        return "OptionAttribute{" +
-                "id_option_attribute=" + id_option_attribute +
-                ", background_colour='" + background_colour + '\'' +
-                '}';
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     @Override
@@ -75,7 +79,9 @@ public class OptionAttribute extends BaseModel {
         OptionAttribute that = (OptionAttribute) o;
 
         if (id_option_attribute != that.id_option_attribute) return false;
-        return !(background_colour != null ? !background_colour.equals(that.background_colour) : that.background_colour != null);
+        if (background_colour != null ? !background_colour.equals(that.background_colour) : that.background_colour != null)
+            return false;
+        return !(path != null ? !path.equals(that.path) : that.path != null);
 
     }
 
@@ -83,6 +89,16 @@ public class OptionAttribute extends BaseModel {
     public int hashCode() {
         int result = (int) (id_option_attribute ^ (id_option_attribute >>> 32));
         result = 31 * result + (background_colour != null ? background_colour.hashCode() : 0);
+        result = 31 * result + (path != null ? path.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "OptionAttribute{" +
+                "id_option_attribute=" + id_option_attribute +
+                ", background_colour='" + background_colour + '\'' +
+                ", path='" + path + '\'' +
+                '}';
     }
 }

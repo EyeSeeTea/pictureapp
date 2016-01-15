@@ -116,6 +116,7 @@ public class PopulateDB {
                     case OPTION_ATTRIBUTES_CSV:
                         OptionAttribute optionAttribute = new OptionAttribute();
                         optionAttribute.setBackground_colour(line[1]);
+                        optionAttribute.setPath(line[2]);
                         optionAttribute.save();
                         optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
                         break;
@@ -125,10 +126,8 @@ public class PopulateDB {
                         option.setName(line[2]);
                         option.setFactor(Float.valueOf(line[3]));
                         option.setAnswer(answerList.get(Integer.valueOf(line[4])));
-                        option.setPath(line[5]);
-                        if (!line[6].equals(""))
-                        option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[6])));
-                        option.setBackground_colour(line[7]);
+                        if (!line[5].equals(""))
+                        option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
                         option.save();
                         optionList.put(Integer.valueOf(line[0]), option);
                         break;

@@ -38,6 +38,7 @@ import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.OrgUnitLevel;
 import org.eyeseetea.malariacare.database.model.Program;
@@ -107,6 +108,8 @@ public class Migration2Database extends BaseMigration {
 
         addColumn(database, Question.class, "feedback", "text");
         addColumn(database, Question.class, "output", "integer");
+
+        addColumn(database, OptionAttribute.class, "path", "text");
 
         addColumn(database,QuestionRelation.class, "id_question","integer");
 

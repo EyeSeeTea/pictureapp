@@ -28,6 +28,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.MediaType;
@@ -38,6 +39,7 @@ import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
+import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
@@ -131,31 +133,30 @@ public class PushClient {
     Context applicationContext;
 
 
-    public PushClient(Activity activity) {
-        this.activity = activity;
-        this.applicationContext=activity.getApplicationContext();
-        DHIS_UID_PROGRAM =applicationContext.getString(R.string.UID_PROGRAM);
+    public PushClient(Context applicationContext) {
+        this.applicationContext = applicationContext;
+        DHIS_UID_PROGRAM =getDhisUidProgram();
         getPreferenceValues();
     }
 
-    public PushClient(Context applicationContext) {
-        this.applicationContext = applicationContext;
-        DHIS_UID_PROGRAM =applicationContext.getString(R.string.UID_PROGRAM);
-        getPreferenceValues();
-    }
-    public PushClient(Survey survey, Activity activity) {
-        this.survey = survey;
+    public PushClient(Activity activity) {
+        this((Context)activity);
         this.activity = activity;
-        this.applicationContext=activity.getApplicationContext();
-        DHIS_UID_PROGRAM =applicationContext.getString(R.string.UID_PROGRAM);
-        getPreferenceValues();
+    }
+
+    public PushClient(Survey survey, Activity activity) {
+        this((Activity)activity);
+        this.survey = survey;
     }
 
     public PushClient(Survey survey, Context applicationContext) {
+        this((Context)applicationContext);
         this.survey = survey;
-        this.applicationContext = applicationContext;
-        DHIS_UID_PROGRAM =applicationContext.getString(R.string.UID_PROGRAM);
-        getPreferenceValues();
+    }
+
+    private String getDhisUidProgram(){
+        Program program = new Select().from(Program.class).querySingle();
+        return program.getUid();
     }
 
     /**
@@ -867,7 +868,7 @@ public class PushClient {
      * @return
      */
     private String getDhisOrgUnitsURL(){
-        String url= DHIS_SERVER +DHIS_PULL_PROGRAM+ applicationContext.getResources().getString(R.string.UID_PROGRAM)+DHIS_PULL_ORG_UNITS_API;
+        String url= DHIS_SERVER +DHIS_PULL_PROGRAM+DHIS_UID_PROGRAM+DHIS_PULL_ORG_UNITS_API;
         return url.replace(" ","%20");
     }
 
@@ -877,7 +878,7 @@ public class PushClient {
      * @return url for ask if the program uid exist with the UID_PROGRAM value.
      */
     public String getIsValidProgramUrl() {
-        String url = DHIS_SERVER +DHIS_PULL_PROGRAM+applicationContext.getResources().getString(R.string.UID_PROGRAM)+DHIS_EXIST_PROGRAM;
+        String url = DHIS_SERVER +DHIS_PULL_PROGRAM+DHIS_UID_PROGRAM+DHIS_EXIST_PROGRAM;
         Log.d(TAG,"validprogramurl"+url);
         return url.replace(" ","%20");
     }

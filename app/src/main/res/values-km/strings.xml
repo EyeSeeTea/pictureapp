@@ -253,5 +253,14 @@
     <string name="number_8">៨</string>
     <string name="number_9">៩</string>
     <string name="assessment_title_rdt">អ.ឌី.ធី</string>
+    <string name="progress_pull_downloading" >ទិន្នន័យមេតាឱ្យស្រស់ (នេះអាចយកពីរបីនាទី)</string>
+    <string name="progress_pull_preparing_orgs">កំពុងផ្ទុកអង្គការ ...</string>
+    <string name="progress_pull_surveys">កំពុងផ្ទុកការស្ទង់មតិ ...</string>
+    <string name="progress_pull_connecting">តភ្ជាប់ទៅម៉ាស៊ីនបម្រើនេះ ...</string>
+    <string name="progress_pull_done">រួចរាល់</string>
+    <string name="progress_push_no_survey">គ្មានការស្ទង់មតិរកឃើញថាសម្រាប់ការរុញ</string>
+    <string name="progress_push_posting_survey">ជំរុញឱ្យមានទិន្នន័យដែលបានស្ទង់មតិដែលទៅម៉ាស៊ីនបម្រើ ...</string>
+    <string name="progress_push_preparing_survey">កំពុងរៀបចំការស្ទង់មតិមួយសម្រាប់ជំរុញឱ្យមានការ ...</string>
+    <string name="progress_push_updating_survey">បង្ដើតបានជំរុញឱ្យតួលេខអង្កេត ...</string>
 
 </resources>

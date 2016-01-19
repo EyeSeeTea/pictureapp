@@ -74,6 +74,7 @@ dependencies {
     apt project(':DBFlowORM:DBFlow-Compiler')
     compile project(':DBFlowORM:DBFlow-Core')
     compile project(':DBFlowORM:DBFlow')
+    compile project(':sdk:app')
     
     compile('com.crashlytics.sdk.android:crashlytics:2.5.1@aar') {
         transitive = true;

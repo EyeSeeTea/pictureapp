@@ -62,7 +62,7 @@ public class EyeSeeTeaApplication extends Application {
         PhoneMetaData phoneMetaData=this.getPhoneMetadata();
         Session.setPhoneMetaData(phoneMetaData);
 
-        FlowManager.init(this);
+        FlowManager.init(this, "_EyeSeeTeaDB");
         createDBIndexes();
         Migration2Database.postMigrate();
     }

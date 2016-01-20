@@ -15,4 +15,5 @@
     <color name="parentColor">#DAF2FF</color>
     <color name="textFieldColor">#BEBEBE</color>
     <color name="formFooter">#429470</color>
+    <color name="custom_blue_light">#1f70c3</color>
 </resources>

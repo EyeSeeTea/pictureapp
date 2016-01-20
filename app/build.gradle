@@ -41,7 +41,14 @@ android {
     }
     //TODO This config is related to a known issue: http://stackoverflow.com/questions/20827885/android-studio-0-4-duplicate-files-copied-in-apk-meta-inf-license-txt
     packagingOptions {
-        exclude  'LICENSE.txt'
+        // gradle requires to exclude these files both
+        // with .txt extension and without.
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+
+        // without .txt
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
     }
     productFlavors {
     }

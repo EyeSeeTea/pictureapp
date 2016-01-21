@@ -65,6 +65,11 @@ public class PreferencesState {
     private String dhisURL;
 
     /**
+     * DHIS2 Server version
+     */
+    private String dhisVersion;
+
+    /**
      * Map that holds the relationship between a scale and a set of dimensions
      */
     private Map<String, Map<String, Float>> scaleDimensionsMap;
@@ -88,9 +93,11 @@ public class PreferencesState {
         showNumDen=initShowNumDen();
         orgUnit=initOrgUnit();
         dhisURL=initDhisURL();
+        dhisVersion=initDhisVersion();
         Log.d(TAG, "reloadPreferences: "
                 + " orgUnit:" + orgUnit
-                + " dhisURL:" + dhisURL
+                + " |dhisURL:" + dhisURL
+                + " |dhisVersion:" + dhisVersion
                 + " |scale:" + scale
                 + " | showNumDen:" + showNumDen);
     }
@@ -111,6 +118,15 @@ public class PreferencesState {
     private String initDhisURL(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
         return sharedPreferences.getString(instance.getContext().getString(R.string.dhis_url), instance.getContext().getString(R.string.DHIS_DEFAULT_SERVER));
+    }
+
+    /**
+     * Returns 'org_unit' from sharedPreferences
+     * @return
+     */
+    private String initDhisVersion(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
+        return sharedPreferences.getString(instance.getContext().getString(R.string.server_version), instance.getContext().getString(R.string.DHIS_DEFAULT_VERSION));
     }
 
     /**
@@ -223,5 +239,21 @@ public class PreferencesState {
 
     public String getDhisURL(){
         return dhisURL;
+    }
+
+    public String getDhisVersion(){
+        return dhisVersion;
+    }
+
+    /**
+     * Saves a value into a preference
+     * @param namePreference
+     * @param value
+     */
+    public void saveStringPreference(int namePreference,String value){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putString(context.getResources().getString(namePreference), value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
     }
 }

@@ -155,8 +155,7 @@ public class Migration2Database extends BaseMigration {
      * @return
      */
     private boolean hasData() {
-        Program program = new Select().from(Program.class).querySingle();
-        return program!=null;
+        return Program.getFirstProgram()!=null;
     }
 
     /**
@@ -164,8 +163,7 @@ public class Migration2Database extends BaseMigration {
      */
     private void addTabGroup() {
         Log.d(TAG,"adding default tabgroup...");
-        Program program = new Select().from(Program.class).querySingle();
-        TabGroup tabGroup = new TabGroup("Health System QIS TabGroup",program);
+        TabGroup tabGroup = new TabGroup("Health System QIS TabGroup",Program.getFirstProgram());
         tabGroup.save();
     }
 

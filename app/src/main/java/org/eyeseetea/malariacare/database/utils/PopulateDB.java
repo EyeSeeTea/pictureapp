@@ -24,18 +24,26 @@ import android.content.res.AssetManager;
 
 import com.opencsv.CSVReader;
 import com.raizlabs.android.dbflow.runtime.TransactionManager;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Header;
+import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
+import org.eyeseetea.malariacare.database.model.OrgUnitLevel;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.database.model.Score;
+import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.TabGroup;
+import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.model.Value;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -161,6 +169,20 @@ public class PopulateDB {
      * Used for testing purposes
      */
     public static void populateDummyData(){
+    }
+
+    /**
+     * Deletes all data from the app database
+     */
+    public static void wipeDatabase() {
+        Delete.tables(
+                Value.class,
+                Score.class,
+                Survey.class,
+                OrgUnit.class,
+                OrgUnitLevel.class,
+                User.class
+        );
     }
 
 }

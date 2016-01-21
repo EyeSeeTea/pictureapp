@@ -27,6 +27,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -37,11 +38,22 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.Response;
+import com.squareup.otto.Subscribe;
+
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
+import org.eyeseetea.malariacare.network.ServerInfo;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
+import org.hisp.dhis.android.sdk.controllers.DhisService;
+import org.hisp.dhis.android.sdk.job.NetworkJob;
+import org.hisp.dhis.android.sdk.network.Credentials;
+import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
+import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,9 +75,21 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * shown on tablets.
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
+    private static final String TAG = ".Settings";
     private AutoCompleteEditTextPreference autoCompleteEditTextPreference;
+
+
     protected void onCreate(Bundle savedInstanceState) {
+        Dhis2Application.bus.register(this);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStop(){
+        try {
+            Dhis2Application.bus.unregister(this);
+        }catch(Exception e){}
+        super.onStop();
     }
 
 
@@ -85,9 +109,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         if (!isSimplePreferences(this)) {
             return;
         }
-
-        // In the simplified UI, fragments are not used at all and we instead
-        // use the older PreferenceActivity APIs.
 
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
@@ -115,18 +136,93 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         button2.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
-                prefEditor.putString(getResources().getString(R.string.dhis_url), newValue.toString()); // set your default value here (could be empty as well)
-                prefEditor.commit(); // finally save changes
+
+                //Save preference new value
+                PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, newValue.toString());
+
                 // Now, manually update it's value to next value
-                preference.setSummary(newValue.toString()); // Now, if you click on the item, you'll see the value you've just set here
+                // Now, if you click on the item, you'll see the value you've just set here
+                preference.setSummary(newValue.toString());
+
+                //Reload preference in memory
                 PreferencesState.getInstance().reloadPreferences();
-                PushClient.newOrgUnitOrServer();
-                autoCompleteEditTextPreference.pullOrgUnits();
+
+                //Reload orgunits according to server version
+                initReloadAccordingToServerVersion(newValue.toString());
+
                 return true;
+
             }
         });
+    }
+
+    /**
+     * Launches an async task that resolved the current server version.
+     * @param url
+     */
+    private void initReloadAccordingToServerVersion(String url){
+        CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this);
+        serverVersionAsync.execute(url);
+    }
+
+    /**
+     * Reloads organisationUnits according to the server version:
+     *  - 2.20: Manually via API
+     *  - 2.21|2.22: Via sdk (which requires a login to initialize DHIS sdk)
+     *  - Else: Error
+     */
+    private void callbackReloadAccordingToServerVersion(ServerInfo serverInfo) {
+        Log.d(TAG, "callbackReloadAccordingToServerVersion " + serverInfo.getVersion());
+        PreferencesState.getInstance().saveStringPreference(R.string.server_version, serverInfo.getVersion());
+        switch (serverInfo.getVersion()){
+            case "2.20":
+                PushClient.newOrgUnitOrServer();
+                autoCompleteEditTextPreference.pullOrgUnits();
+                break;
+            case "2.21":
+            case "2.22":
+                //Pull from sdk
+                initLoginPrePull(serverInfo);
+                break;
+            default:
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.dhis_url_error)
+                        .setMessage(R.string.dhis_url_error_bad_version)
+                        .setNeutralButton(android.R.string.yes, null)
+                        .create()
+                        .show();
+        }
+    }
+
+    /**
+     * Logins programatically into new server to initialize sdk api
+     * @param serverInfo
+     */
+    private void initLoginPrePull(ServerInfo serverInfo){
+        HttpUrl serverUri = HttpUrl.parse(serverInfo.getUrl());
+        DhisService.logInUser(serverUri, PushClient.getSDKCredentials());
+    }
+
+    @Subscribe
+    public void callbackLoginPrePull(NetworkJob.NetworkJobResult<ResourceType> result) {
+        //Nothing to check
+        if(result==null || !result.getResourceType().equals(ResourceType.USERS)){
+            return;
+        }
+
+        //Login failed
+        if(result.getResponseHolder().getApiException()!=null){
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.dhis_url_error)
+                    .setMessage(R.string.dhis_url_error_bad_credentials)
+                    .setNeutralButton(android.R.string.yes, null)
+                    .create()
+                    .show();
+        }
+
+        //Login successful start reload
+        finish();
+        startActivity(new Intent(this, ProgressActivity.class));
     }
 
     //ask if the Sent Surveys
@@ -265,6 +361,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
+            addPreferencesFromResource(R.xml.pref_general);
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
@@ -291,18 +388,22 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             button2.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-                    SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
-                    prefEditor.putString(getResources().getString(R.string.dhis_url), newValue.toString()); // set your default value here (could be empty as well)
-                    prefEditor.commit(); // finally save changes
-                    preference.setSummary(newValue.toString()); // Now, if you click on the item, you'll see the value you've just set here
+                    //Save preference new value
+                    PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, newValue.toString());
+
+                    // Now, manually update it's value to next value
+                    // Now, if you click on the item, you'll see the value you've just set here
+                    preference.setSummary(newValue.toString());
+
+                    //Reload preference in memory
                     PreferencesState.getInstance().reloadPreferences();
-                    PushClient.newOrgUnitOrServer();
-                    autoCompleteEditTextPreference.pullOrgUnits();
+
+                    //Reload orgunits according to server version
+                    ((SettingsActivity)getActivity()).initReloadAccordingToServerVersion(newValue.toString());
+
                     return true;
                 }
             });
-
     }
     }
 
@@ -376,6 +477,38 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
 
         return callerActivity;
+    }
+
+    /**
+     * AsyncTask that resolves the server version before pulling orgunits from it
+     */
+    class CheckServerVersionAsync extends AsyncTask<String, Void, ServerInfo> {
+
+        Context context;
+        ServerInfo serverInfo;
+
+        public CheckServerVersionAsync(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {}
+
+        protected ServerInfo doInBackground(String... params) {
+            serverInfo = new ServerInfo(params[0]);
+
+            PushClient pushClient=new PushClient(context);
+            String serverVersion=pushClient.getServerVersion(serverInfo.getUrl());
+
+            serverInfo.setVersion(serverVersion);
+            return serverInfo;
+        }
+
+        @Override
+        protected void onPostExecute(ServerInfo serverInfo) {
+            callbackReloadAccordingToServerVersion(serverInfo);
+        }
+
     }
 
 }

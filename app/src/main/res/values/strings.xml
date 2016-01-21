@@ -236,6 +236,7 @@
     <string name="font_size_level2">medium</string>
     <string name="font_size_level3">large</string>
     <string name="font_size_level4">xlarge</string>
+    <string name="font_size_system" translatable="false">system</string>
 
     <string name="textcard_default_scale">system</string>
     <string name="textcard_default_dimension">medium</string>
@@ -254,6 +255,7 @@
     <item name="font_sizes" type="string" translatable="false">font_sizes</item>
     <item name="dhis_url" type="string" translatable="false">dhis_url</item>
     <item name="org_unit" type="string" translatable="false">org_unit</item>
+    <item name="server_version" type="string" translatable="false">server_version</item>
     <string name="remove_sent_surveys" translatable="false">remove_sent_surveys</string>
     <string name="pref_data">Data</string>
     <string name="pref_server">Server</string>
@@ -288,6 +290,7 @@
 
     <!-- UID program-->
     <string name="DHIS_DEFAULT_SERVER" translatable="false">https://www.psi-mis.org</string>
+    <string name="DHIS_DEFAULT_VERSION" translatable="false">2.20</string>
     <string name="progress_pull_downloading" >Refreshing metadata (this might take a few minutes) </string>
     <string name="progress_pull_preparing_orgs">Loading organisations ...</string>
     <string name="progress_pull_surveys">Loading surveys ...</string>
@@ -297,5 +300,15 @@
     <string name="progress_push_posting_survey">Pushing survey data to server ...</string>
     <string name="progress_push_preparing_survey">Preparing survey for pushing ...</string>
     <string name="progress_push_updating_survey">Updating pushed survey data ...</string>
+    <string name="cancellingPull">The process will be stopped in a few seconds</string>
+    <string name="dialog_title_pull_response">Pull status</string>
+    <string name="dialog_pull_success">Dhis metadata successfully pulled from server</string>
+    <string name="dialog_push_before_pull_success">Surveys successfully pushed to dhis server, starting to pull metadata</string>
+    <string name="dialog_push_success">Survey successfully pushed to dhis server</string>
+    <string name="dialog_pull_error">Error while trying to pull metadata from dhis server</string>
+    <string name="create_info_zone">Zone</string>
+    <string name="dhis_url_error">DHIS URL Error</string>
+    <string name="dhis_url_error_bad_version">Dhis server not compatible (only 2.20, 2.21, 2.22 allowed)</string>
+    <string name="dhis_url_error_bad_credentials">This app is not authorized in the given server</string>
 
 </resources>

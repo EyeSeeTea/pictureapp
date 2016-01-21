@@ -95,6 +95,10 @@ public class Program extends BaseModel {
         return new Select().all().from(Program.class).queryList();
     }
 
+    public static Program getFirstProgram(){
+        return new Select().from(Program.class).querySingle();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

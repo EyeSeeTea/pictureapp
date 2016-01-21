@@ -40,6 +40,8 @@ public class Constants {
     //FIXME So far the special sub type of composite scores is treated by name
     public static final String COMPOSITE_SCORE_TAB_NAME="Composite Scores";
 
+    public static final String LABEL="Label";
+
     // ############# SURVEY STATUS ###############
     public static final int SURVEY_IN_PROGRESS = 0,
             SURVEY_COMPLETED = 1,

@@ -73,6 +73,7 @@ public class PushClient {
     //This change for a sharedpreferences url that is selected from the settings screen
 
     private static String DHIS_SERVER ="https://www.psi-mis.org";
+    private static final String DHIS_SERVER_INFO="/api/system/info";
     private static final String DHIS_PUSH_API="/api/events";
     private static final String DHIS_PULL_PROGRAM="/api/programs/";
     private static final String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id,closedDate&filter=code:eq:%s&filter:programs:id:eq:%s";
@@ -128,6 +129,8 @@ public class PushClient {
     private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
     private static int DHIS_LIMIT_HOURS=1;
 
+
+
     Survey survey;
     Activity activity;
     Context applicationContext;
@@ -155,8 +158,7 @@ public class PushClient {
     }
 
     private String getDhisUidProgram(){
-        Program program = new Select().from(Program.class).querySingle();
-        return program.getUid();
+        return Program.getFirstProgram().getUid();
     }
 
     /**
@@ -556,8 +558,6 @@ public class PushClient {
         INVALID_SERVER=false;
     }
 
-    //
-
     /**
      * @code is the DHIS_ORG_NAME
      * @return If org_unit not valid or have no UID Returns null, else the UID
@@ -834,6 +834,35 @@ public class PushClient {
     }
 
     /**
+     * Returns the version of the given server or null if something went wrong
+     * @param url
+     * @return
+     * @throws Exception
+     */
+    public String getServerVersion(String url){
+        String serverVersion;
+        try {
+            String urlServerInfo = url+DHIS_SERVER_INFO;
+            Response response=executeCall(null, urlServerInfo, "GET");
+
+            //Error -> null
+            if(!response.isSuccessful()){
+                Log.e(TAG, "getServerVersion (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+
+            JSONObject data=parseResponse(response.body().string());
+            serverVersion= data.getString("version");
+        } catch (Exception ex) {
+            Log.e(TAG,"getServerVersion: "+ex.toString());
+            serverVersion="";
+        }
+        Log.e(TAG, String.format("getServerVersion(%s) -> %s", url, serverVersion));
+        return serverVersion;
+    }
+
+
+    /**
      * Returns the URL that points to the DHIS server (Pull) API according to preferences.
      * @return
      */
@@ -939,6 +968,14 @@ public class PushClient {
         }catch(Exception ex){
             throw new Exception(activity.getString(R.string.dialog_info_push_bad_credentials));
         }
+    }
+
+    /**
+     * Returns hardcoded credentials for its use in sdk
+     * @return
+     */
+    public static org.hisp.dhis.android.sdk.network.Credentials getSDKCredentials(){
+        return new org.hisp.dhis.android.sdk.network.Credentials(DHIS_USERNAME,DHIS_PASSWORD);
     }
 
     /**

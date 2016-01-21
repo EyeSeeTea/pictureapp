@@ -29,6 +29,8 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKVisitor;
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -41,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 @Table(databaseName = AppDatabase.NAME)
-public class Survey extends BaseModel{
+public class Survey extends BaseModel  implements VisitableToSDK {
     public static final float MAX_AMBER = 80f;
     public static final float MAX_RED = 50f;
 
@@ -732,6 +734,10 @@ public class Survey extends BaseModel{
         return valuesStr;
     }
 
+    @Override
+    public void accept(IConvertToSDKVisitor IConvertToSDKVisitor) throws Exception{
+        IConvertToSDKVisitor.visit(this);
+    }
 
     @Override
     public boolean equals(Object o) {

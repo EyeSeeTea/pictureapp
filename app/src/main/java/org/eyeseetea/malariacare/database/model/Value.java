@@ -27,12 +27,14 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKVisitor;
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
-public class Value extends BaseModel{
+public class Value extends BaseModel  implements VisitableToSDK {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -206,6 +208,12 @@ public class Value extends BaseModel{
         }
         return new Select().from(Value.class).where(Condition.column(Survey$Table.ID_SURVEY).eq(survey.getId_survey())).queryList();
 
+    }
+
+
+    @Override
+    public void accept(IConvertToSDKVisitor IConvertToSDKVisitor) {
+        IConvertToSDKVisitor.visit(this);
     }
 
     @Override

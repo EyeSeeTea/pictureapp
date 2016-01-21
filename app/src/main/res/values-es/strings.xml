@@ -258,5 +258,15 @@
     <string name="progress_push_posting_survey">Subiendo datos al servidor...</string>
     <string name="progress_push_preparing_survey">Preparando datos para la subida ...</string>
     <string name="progress_push_updating_survey">Actualizando datos encuesta subida ...</string>
+    <string name="cancellingPull">El proceso se cancelara en unos segundos</string>
+    <string name="dialog_title_pull_response">Pull status</string>
+    <string name="dialog_pull_success">Metadatos Dhis obtenidos del servidor con éxito</string>
+    <string name="dialog_push_before_pull_success">Encuestas correctamente subidas al servidor Dhis, inicializando actualización de metadatos</string>
+    <string name="dialog_push_success">Encuestra correctamente subida al servidor Dhis</string>
+    <string name="dialog_pull_error">Error obteniendo metadatos del servidor dhis</string>
+    <string name="create_info_zone">Zona</string>
+    <string name="dhis_url_error">DHIS URL Error</string>
+    <string name="dhis_url_error_bad_version">Servidor DHIS no compatible (soportados 2.20, 2.21, 2.22 )</string>
+    <string name="dhis_url_error_bad_credentials">Esta app no esta autorizada en el servidor indicado</string>
 
 </resources>

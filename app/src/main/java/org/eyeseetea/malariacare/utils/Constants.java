@@ -73,5 +73,9 @@ public class Constants {
         MATCH_IDX="Match_id_question_relation",
         VALUE_IDX="Value_id_survey";
 
+    public static final String DHIS_API_SERVER="2.20",
+            DHIS_SDK_221_SERVER="2.21",
+            DHIS_SDK_222_SERVER="2.22";
+
 
 }

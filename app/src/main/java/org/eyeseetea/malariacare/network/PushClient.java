@@ -77,6 +77,7 @@ public class PushClient {
     private static final String DHIS_PUSH_API="/api/events";
     private static final String DHIS_PULL_PROGRAM="/api/programs/";
     private static final String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id,closedDate&filter=code:eq:%s&filter:programs:id:eq:%s";
+    private static final String DHIS_PULL_ORG_UNIT_API_BY_NAME ="/api/organisationUnits.json?paging=false&fields=id,closedDate&filter=name:eq:%s&filter:programs:id:eq:%s";
     private static final String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits";
     private static final String DHIS_EXIST_PROGRAM=".json?fields=id";
     private static final String DHIS_PATCH_URL_CLOSED_DATE ="/api/organisationUnits/%s/closedDate";
@@ -124,12 +125,13 @@ public class PushClient {
     private static final String TAG_ID = "id";
 
 
-    private static String TAG_PHONEMETADA="RuNZUhiAmlv";
+    public static String TAG_PHONEMETADA="RuNZUhiAmlv";
 
     private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
     private static int DHIS_LIMIT_HOURS=1;
 
 
+    String serverVersion;
 
     Survey survey;
     Activity activity;
@@ -140,20 +142,36 @@ public class PushClient {
         this.applicationContext = applicationContext;
         DHIS_UID_PROGRAM =getDhisUidProgram();
         getPreferenceValues();
+        this.serverVersion=Constants.DHIS_API_SERVER;
+    }
+
+    public PushClient(Context applicationContext, String serverVersion) {
+        this.applicationContext = applicationContext;
+        DHIS_UID_PROGRAM =getDhisUidProgram();
+        getPreferenceValues();
+        this.serverVersion=serverVersion;
     }
 
     public PushClient(Activity activity) {
-        this((Context)activity);
+        this((Context) activity);
         this.activity = activity;
     }
 
     public PushClient(Survey survey, Activity activity) {
-        this((Activity)activity);
+        this((Activity) activity);
         this.survey = survey;
     }
 
     public PushClient(Survey survey, Context applicationContext) {
         this((Context)applicationContext);
+        this.survey = survey;
+    }
+
+    public void updateServerVersion(){
+        this.serverVersion=this.getServerVersion(PreferencesState.getInstance().getDhisURL());
+    }
+
+    public void setSurvey(Survey survey) {
         this.survey = survey;
     }
 
@@ -532,16 +550,11 @@ public class PushClient {
      * @return true if is correct.
      */
     public boolean checkOrgUnit(String orgUnit) {
-        boolean result=false;
         try {
-            if((getUIDCheckProgramClosedDate(orgUnit)!=null))
-                result=true;
+            return (getUIDCheckProgramClosedDate(orgUnit)!=null);
         } catch (Exception e) {
-            result=false;
-            e.printStackTrace();
+            return false;
         }
-
-        return result;
     }
 
     public boolean getIsInvalidServer(){
@@ -869,7 +882,12 @@ public class PushClient {
     private String getDhisOrgUnitURL(String code){
         String url= DHIS_SERVER;
         Log.d("uid", DHIS_UID_PROGRAM);
-        url=url+String.format(DHIS_PULL_ORG_UNIT_API,code,DHIS_UID_PROGRAM);
+        if(Constants.DHIS_API_SERVER.equals(serverVersion)){
+            url=url+String.format(DHIS_PULL_ORG_UNIT_API,code,DHIS_UID_PROGRAM);
+        }else{
+            url=url+String.format(DHIS_PULL_ORG_UNIT_API_BY_NAME,code,DHIS_UID_PROGRAM);
+        }
+
         return url.replace(" ","%20");
     }
 

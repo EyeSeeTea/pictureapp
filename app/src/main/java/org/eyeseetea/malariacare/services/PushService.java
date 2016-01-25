@@ -31,6 +31,7 @@
 
         import org.eyeseetea.malariacare.DashboardActivity;
         import org.eyeseetea.malariacare.database.model.Survey;
+        import org.eyeseetea.malariacare.database.utils.PreferencesState;
         import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
         import org.eyeseetea.malariacare.network.PushClient;
         import org.eyeseetea.malariacare.network.PushResult;
@@ -93,10 +94,14 @@ public class PushService extends IntentService {
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllUnsentSurveys();
 
+        //Check push version is required before
+
+        PushClient pushClient=new PushClient(getApplicationContext());
+        pushClient.updateServerVersion();
         if(surveys!=null && !surveys.isEmpty()){
             for(Survey survey : surveys){
-                PushClient pushClient=new PushClient(survey, getApplicationContext());
 
+                pushClient.setSurvey(survey);
                 //Push  data
 
                 PushResult result = pushClient.pushBackground();

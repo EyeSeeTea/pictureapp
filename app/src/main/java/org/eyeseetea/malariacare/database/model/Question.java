@@ -27,6 +27,7 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.builder.Condition.In;
+import com.raizlabs.android.dbflow.sql.builder.ConditionQueryBuilder;
 import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -704,6 +705,18 @@ public class Question extends BaseModel {
                 output == Constants.DROPDOWN_LIST_DISABLED ||
                 output == Constants.RADIO_GROUP_HORIZONTAL ||
                 output == Constants.RADIO_GROUP_VERTICAL;
+    }
+
+    /**
+     * Finds a question by its UID
+     * @param uid
+     * @return
+     */
+    public static Question findByUID(String uid){
+        return new Select()
+                .from(Question.class)
+                .where(Condition.column(Question$Table.UID).is(uid))
+                .querySingle();
     }
 
     @Override

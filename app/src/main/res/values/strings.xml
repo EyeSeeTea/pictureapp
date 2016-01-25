@@ -255,7 +255,6 @@
     <item name="font_sizes" type="string" translatable="false">font_sizes</item>
     <item name="dhis_url" type="string" translatable="false">dhis_url</item>
     <item name="org_unit" type="string" translatable="false">org_unit</item>
-    <item name="server_version" type="string" translatable="false">server_version</item>
     <string name="remove_sent_surveys" translatable="false">remove_sent_surveys</string>
     <string name="pref_data">Data</string>
     <string name="pref_server">Server</string>
@@ -281,12 +280,6 @@
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
-
-
-    <!-- PhoneMetadata UIDS -->
-    <string name="PHONENUMBER_UID" translatable="false">UkGuMlmNtJH</string>
-    <string name="PHONEIMEI_UID" translatable="false">RuNZUhiAmlv</string>
-    <string name="PHONESERIAL_UID" translatable="false">zZ1LFI0FplS</string>
 
     <!-- UID program-->
     <string name="DHIS_DEFAULT_SERVER" translatable="false">https://www.psi-mis.org</string>

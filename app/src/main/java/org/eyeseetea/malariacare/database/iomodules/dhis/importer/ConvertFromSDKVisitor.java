@@ -33,6 +33,7 @@ import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.Event;
@@ -146,13 +147,20 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
         DataValue dataValue=sdkDataValueExtended.getDataValue();
         Survey survey=(Survey)appMapObjects.get(dataValue.getEvent());
-        //Data value is a value from compositeScore
-        if(appMapObjects.get(dataValue.getDataElement()) instanceof CompositeScore){
+        String questionUID=dataValue.getDataElement();
+
+        //Data value is a value from compositeScore -> ignore
+        if(appMapObjects.get(questionUID) instanceof CompositeScore){
+            return;
+        }
+
+        //Phone metadata -> ignore
+        if(PushClient.TAG_PHONEMETADA.equals(questionUID)){
             return;
         }
 
         //Datavalue is a value from a question
-        Question question=(Question)appMapObjects.get(dataValue.getDataElement());
+        Question question=Question.findByUID(questionUID);
 
         Value value=new Value();
         value.setQuestion(question);

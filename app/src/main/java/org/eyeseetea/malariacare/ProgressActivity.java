@@ -141,12 +141,19 @@ public class ProgressActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        try {
-            Dhis2Application.bus.unregister(this);}catch(Exception e){e.printStackTrace();}
-        if(PULL_CANCEL==true)
+        unregisterBus();
+        //TODO this is not expected in pictureapp
+        if(PULL_CANCEL==true) {
             finishAndGo(LoginActivity.class);
-        else
-            finishAndGo(DashboardActivity.class);
+        }
+    }
+
+    private void unregisterBus(){
+        try {
+            Dhis2Application.bus.unregister(this);
+        }catch(Exception e){
+            Log.e(TAG,e.getMessage());
+        }
     }
 
     private void prepareUI(){
@@ -250,7 +257,7 @@ public class ProgressActivity extends Activity {
      *
      */
     private void showAndMoveOn() {
-        boolean isAPush=isAPush();
+        final boolean isAPush=isAPush();
 
         //Annotate pull is done
         if(!isAPush) {
@@ -280,15 +287,23 @@ public class ProgressActivity extends Activity {
                 .setMessage(msg)
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
-                        if ( !isAPush() || !hasAPullAfterPush()) {
-                            finishAndGo(DashboardActivity.class);
-                            return;
-                        } else {
-                            //Start pull after push
-                            pullAfterPushInProgress = true;
-                            launchPull();
+                        //Pull -> Settings
+                        if (!isAPush()) {
+                            finishAndGo(SettingsActivity.class);
                             return;
                         }
+
+                        //Push before pull -> Dashboard
+                        if (!hasAPullAfterPush()) {
+                            finishAndGo(DashboardActivity.class);
+                            return;
+                        }
+
+                        //Start pull after push
+                        pullAfterPushInProgress = true;
+                        launchPull();
+                        return;
+
                     }
                 }).create().show();
 

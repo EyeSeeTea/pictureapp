@@ -163,8 +163,25 @@ public class OrgUnit extends BaseModel {
         return surveys;
     }
 
+    /**
+     * Returns all the orgunits from the db
+     * @return
+     */
     public static List<OrgUnit> getAllOrgUnit() {
-        return new Select().all().from(OrgUnit.class).queryList();
+        return new Select().all().from(OrgUnit.class).orderBy(OrgUnit$Table.NAME).queryList();
+    }
+
+    /**
+     * Returns the list of org units from the database
+     * @return
+     */
+    public static String[] listAllNames(){
+        List<OrgUnit> orgUnits = getAllOrgUnit();
+        String[] orgUnitNames = new String[orgUnits.size()];
+        for(int i=0;i<orgUnits.size();i++){
+            orgUnitNames[i]=orgUnits.get(i).getName();
+        }
+        return orgUnitNames;
     }
 
     @Override

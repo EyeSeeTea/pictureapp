@@ -28,6 +28,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -37,8 +38,10 @@ import android.widget.AutoCompleteTextView;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.filters.AutocompleteAdapterFilter;
 
 import java.util.ArrayList;
@@ -50,34 +53,22 @@ import java.util.concurrent.ExecutionException;
  */
 public class AutoCompleteEditTextPreference extends EditTextPreference {
 
+    private static final String TAG = ".AutoPreference";
     private Context context;
     private AutoCompleteTextView mEditText = null;
-    private static String[] org_units;
-    private ArrayAdapter arrayadapter;
+
+    /**
+     * Current server version, required to check permissions after change according to this
+     */
+    private String serverVersion;
 
     public AutoCompleteEditTextPreference(final Context context, AttributeSet attrs) {
         super(context, attrs);
         mEditText = new AutoCompleteTextView(context, attrs);
         mEditText.setThreshold(0);
         this.context = context;
-        // Gets autocomplete values for 'org_unit' key preference
-        if (getKey().equals(context.getString(R.string.org_unit))) {
-            pullOrgUnits();
-        }
-
     }
 
-
-
-    public void afterTextChanged(AutoCompleteTextView mEditText) {
-        for(String org_unit:org_units)
-        if(!org_unit.contains(mEditText.getText()))
-        mEditText.setText("");
-        else
-        {
-            mEditText.setText(org_unit);
-        }
-    }
     @Override
     public void setOnPreferenceChangeListener(OnPreferenceChangeListener onPreferenceChangeListener) {
         super.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -97,27 +88,39 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     }
 
-    public void pullOrgUnits() {
-        PreferencesState.getInstance().reloadPreferences();
-        ArrayList<String> opcionesGet = new ArrayList<String>();
-        String[]  orgUnits= null;
-        try {
-            GetOrgUnitsAsync getOrgUnitsAsynctask = new GetOrgUnitsAsync(context);
-            orgUnits = getOrgUnitsAsynctask.execute(opcionesGet).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        //If the call to the server fails, suggest the default code
-        if(orgUnits==null) {
-            orgUnits = new String[]{""};
+    public void pullOrgUnits(String serverVersion) {
+
+        //Annotate new version
+        this.serverVersion = serverVersion;
+
+        //Reload options
+        String[]  orgUnits;
+        if(Constants.DHIS_API_SERVER.equals(serverVersion)){
+            orgUnits=findOrgUnitsFromServer();
+        }else{
+            orgUnits=findOrgUnitsFromDB();
         }
 
         AutocompleteAdapterFilter<String> adapter = new AutocompleteAdapterFilter(this.getContext(),
                 android.R.layout.simple_dropdown_item_1line,orgUnits);
         mEditText.setAdapter(adapter);
         PushClient.newOrgUnitOrServer();
+    }
+
+    private String[] findOrgUnitsFromServer(){
+        String[]  orgUnits;
+        try {
+            GetOrgUnitsAsync getOrgUnitsAsynctask = new GetOrgUnitsAsync(context);
+            orgUnits = getOrgUnitsAsynctask.execute(new ArrayList<String>()).get();
+        } catch (Exception ex) {
+            Log.e(TAG, "Cannot findOrgUnitsFromServer: " + ex.getMessage());
+            orgUnits = new String[]{""};
+        }
+        return orgUnits;
+    }
+
+    private String[] findOrgUnitsFromDB(){
+        return OrgUnit.listAllNames();
     }
 
     @Override
@@ -155,9 +158,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                             e.printStackTrace();
                         }
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -179,6 +180,10 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         protected String[] doInBackground(ArrayList<String>... passing) {
             boolean validServer=false;
             String[] result = null;
+            //Reload preferences to ensure asking right server
+            PreferencesState.getInstance().reloadPreferences();
+
+            //Ask server via API
             try {
                 PushClient pushClient=new PushClient(context);
                 validServer=pushClient.isValidServer();
@@ -217,7 +222,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
             String orgUnit = param[0];
             try {
                 if(!orgUnit.equals("")){
-                    PushClient pushClient = new PushClient(context);
+                    PushClient pushClient = new PushClient(context,serverVersion);
                     result = pushClient.checkOrgUnit(orgUnit);
                 }
             } catch (Exception e) {

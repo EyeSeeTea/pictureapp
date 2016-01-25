@@ -71,14 +71,15 @@ public class DataValueExtended implements VisitableFromSDK {
         List<Option> options=answer.getOptions();
         List<String> optionCodes=new ArrayList<>();
         for(Option option:options){
-            optionCodes.add(option.getCode());
-            if(option.getCode()==null){
+            String optionName=option.getName();
+            optionCodes.add(optionName);
+            if(optionName==null){
                 continue;
             }
-            String optionCleaned=extractValue(option.getCode());
+            String optionCleaned=extractValue(optionName);
             String valueCleaned=extractValue(dataValue.getValue());
             //Yes[1]==Yes || Yes==Yes || Yes==Yes[1]
-            if(option.getCode().equals(dataValue.getValue()) || optionCleaned.equals(dataValue.getValue()) || option.getCode().equals(valueCleaned)){
+            if(optionName.equals(dataValue.getValue()) || optionCleaned.equals(dataValue.getValue()) || optionName.equals(valueCleaned)){
                 return option;
             }
         }

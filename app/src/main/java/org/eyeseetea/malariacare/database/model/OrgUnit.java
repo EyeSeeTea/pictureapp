@@ -28,6 +28,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
@@ -65,6 +66,11 @@ public class OrgUnit extends BaseModel {
      * List of orgUnits that belong to this one
      */
     List<OrgUnit> children;
+
+    /**
+     * List of program authorized for this orgunit
+     */
+    List<Program> programs;
 
     public OrgUnit() {
     }
@@ -163,8 +169,35 @@ public class OrgUnit extends BaseModel {
         return surveys;
     }
 
+    public List<Program> getPrograms(){
+        if(programs==null){
+            List<OrgUnitProgramRelation> orgUnitProgramRelations = new Select().from(OrgUnitProgramRelation.class)
+                    .where(Condition.column(OrgUnitProgramRelation$Table.ID_ORG_UNIT).eq(this.getId_org_unit()))
+                    .queryList();
+            this.programs= new ArrayList<>();
+            for(OrgUnitProgramRelation programRelation:orgUnitProgramRelations){
+                programs.add(programRelation.getProgram());
+            }
+        }
+        return programs;
+    }
+
     public static List<OrgUnit> getAllOrgUnit() {
         return new Select().all().from(OrgUnit.class).queryList();
+    }
+
+    public void addProgram(Program program){
+        //Null -> nothing
+        if(program==null){
+            return;
+        }
+
+        //Save a new relationship
+        OrgUnitProgramRelation orgUnitProgramRelation = new OrgUnitProgramRelation(this,program);
+        orgUnitProgramRelation.save();
+
+        //Clear cache to enable reloading
+        programs=null;
     }
 
     @Override

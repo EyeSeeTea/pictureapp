@@ -91,6 +91,11 @@ public class Survey extends BaseModel{
     List<Value> values;
 
     /**
+     * List of historic previous schedules
+     */
+    List<SurveySchedule> surveySchedules;
+
+    /**
      * Calculated answered ratio for this survey according to its values
      */
     SurveyAnsweredRatio answeredQuestionRatio;
@@ -351,6 +356,20 @@ public class Survey extends BaseModel{
                             .eq(this.getId_survey())).queryList();
         }
         return values;
+    }
+
+    /**
+     * Returns the list of previous schedules for this survey
+     * @return
+     */
+    public List<SurveySchedule> getSurveySchedules(){
+        if(surveySchedules==null){
+            surveySchedules = new Select()
+                    .from(SurveySchedule.class)
+                    .where(Condition.column(SurveySchedule$Table.ID_SURVEY)
+                            .eq(this.getId_survey())).queryList();
+        }
+        return surveySchedules;
     }
 
     /**
@@ -660,6 +679,26 @@ public class Survey extends BaseModel{
                 .queryList();
     }
 
+    /**
+     * Moves the schedule date for this survey to a new given date due to a given reason (comment)
+     * @param newScheduledDate
+     * @param comment
+     */
+    public void reschedule(Date newScheduledDate, String comment) {
+        //Take currentDate
+        Date currentScheduleDate=this.getScheduledDate();
+
+        //Add a history
+        SurveySchedule previousSchedule=new SurveySchedule(this,currentScheduleDate,comment);
+        previousSchedule.save();
+
+        //Clean inner lazy schedulelist
+        surveySchedules=null;
+
+        //Move scheduledate and save
+        this.scheduledDate=newScheduledDate;
+        this.save();
+    }
 
     public void prepareSurveyCompletionDate() {
         if (!isSent()) {

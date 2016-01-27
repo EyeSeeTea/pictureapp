@@ -516,7 +516,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         //Already formatted -> done
-        if(phoneValue.matches(FORMATTED_PHONENUMBER_MASK)){
+        if(phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK)){
             return phoneValue;
         }
 
@@ -557,10 +557,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private boolean checkPhoneNumberByMask(String phoneValue){
 
         //Empty  is ok
-        if (phoneValue == null || "".equals(phoneValue)) {
+        if (phoneValue == null) {
             phoneValue = "";
         }
-        return phoneValue.matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.matches(PLAIN_PHONENUMBER_MASK);
+        return phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.matches(PLAIN_PHONENUMBER_MASK);
     }
     /**
      * Attach an option with its button in view, adding the listener

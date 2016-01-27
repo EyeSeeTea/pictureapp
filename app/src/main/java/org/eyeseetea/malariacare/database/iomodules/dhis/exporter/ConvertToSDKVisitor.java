@@ -26,12 +26,15 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
+import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
+import org.eyeseetea.malariacare.network.PushClient;
+import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
@@ -100,8 +103,26 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             value.accept(this);
         }
 
+        //Add phoneMetaData as a value
+        addPhoneMetaData();
+
         //Annotate both objects to update its state once the process is over
         annotateSurveyAndEvent();
+    }
+
+    /**
+     * Adds phonemetaData as a value
+     */
+    private void addPhoneMetaData() {
+        PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
+        DataValue dataValue=new DataValue();
+        dataValue.setDataElement(PushClient.TAG_PHONEMETADA);
+        dataValue.setLocalEventId(currentEvent.getLocalId());
+        dataValue.setEvent(currentEvent.getEvent());
+        dataValue.setProvidedElsewhere(false);
+        dataValue.setStoredBy(Session.getUser().getName());
+        dataValue.setValue(phoneMetaData.getPhone_metaData());
+        dataValue.save();
     }
 
     @Override
@@ -124,11 +145,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         dataValue.setEvent(currentEvent.getEvent());
         dataValue.setProvidedElsewhere(false);
         dataValue.setStoredBy(Session.getUser().getName());
-        if(value.getOption()!=null){
-            dataValue.setValue(value.getOption().getCode());
-        }else{
-            dataValue.setValue(value.getValue());
-        }
+        //XXX In pictureapp always value since option.code is Khmer value
+        dataValue.setValue(value.getValue());
         dataValue.save();
     }
 
@@ -141,7 +159,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
         currentEvent.setStatus(Event.STATUS_COMPLETED);
         currentEvent.setFromServer(false);
-        currentEvent.setOrganisationUnitId(currentSurvey.getOrgUnit().getUid());
+        currentEvent.setOrganisationUnitId(getSafeOrgUnitUID(currentSurvey));
         currentEvent.setProgramId(currentSurvey.getTabGroup().getProgram().getUid());
         currentEvent.setProgramStageId(currentSurvey.getTabGroup().getUid());
         updateEventLocation();
@@ -149,6 +167,16 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         Log.d(TAG, "Saving event " + currentEvent.toString());
         currentEvent.save();
         return currentEvent;
+    }
+
+    private String getSafeOrgUnitUID(Survey survey){
+        OrgUnit orgUnit=survey.getOrgUnit();
+        if(orgUnit!=null){
+            return orgUnit.getUid();
+        }
+
+        //A survey might be created with a 2.20 (no orgunit) but push into a 2.22
+        return OrgUnit.findUIDByName(PreferencesState.getInstance().getOrgUnit());
     }
 
     /**
@@ -159,21 +187,10 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         //Sent date 'now' (this change will be saves after successful push)
         currentSurvey.setEventDate(new Date());
 
-        currentEvent.setCreated(EventExtended.format(currentSurvey.getCreationDate()));
+        //Creation date is null because it is used by sdk to POST|PUT we always POST a new survey
         currentEvent.setLastUpdated(EventExtended.format(currentSurvey.getCompletionDate()));
         currentEvent.setEventDate(EventExtended.format(currentSurvey.getEventDate()));
         currentEvent.setDueDate(EventExtended.format(currentSurvey.getScheduledDate()));
-    }
-
-    private void buildAndSaveDataValue(String UID, String value){
-        DataValue dataValue=new DataValue();
-        dataValue.setDataElement(UID);
-        dataValue.setLocalEventId(currentEvent.getLocalId());
-        dataValue.setEvent(currentEvent.getEvent());
-        dataValue.setProvidedElsewhere(false);
-        dataValue.setStoredBy(Session.getUser().getName());
-        dataValue.setValue(value);
-        dataValue.save();
     }
 
     /**

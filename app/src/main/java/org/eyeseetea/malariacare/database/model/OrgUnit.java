@@ -184,6 +184,19 @@ public class OrgUnit extends BaseModel {
         return orgUnitNames;
     }
 
+    /**
+     * Returns the UID of an orgUnit with the given name
+     * @param name Name of the orgunit
+     * @return
+     */
+    public static String findUIDByName(String name) {
+        OrgUnit orgUnit=new Select().from(OrgUnit.class).where(Condition.column(OrgUnit$Table.NAME).eq(name)).querySingle();
+        if(orgUnit==null){
+            return null;
+        }
+        return orgUnit.getUid();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -220,4 +233,5 @@ public class OrgUnit extends BaseModel {
                 ", id_org_unit_level=" + id_org_unit_level +
                 '}';
     }
+
 }

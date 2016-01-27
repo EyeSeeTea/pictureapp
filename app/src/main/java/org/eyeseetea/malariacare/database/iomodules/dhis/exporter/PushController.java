@@ -27,6 +27,7 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.network.PushClient;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.network.ResponseHolder;
@@ -57,6 +58,11 @@ public class PushController {
     ConvertToSDKVisitor converter;
 
     /**
+     * Helper required to ban server if too many surveys are pushed in too short time
+     */
+    PushClient pushClient;
+
+    /**
      * Constructs and register this pull controller to the event bus
      */
     PushController(){
@@ -70,6 +76,7 @@ public class PushController {
      * Unregister pull controller from bus events
      */
     private void unregister(){
+        this.pushClient=null;
         Dhis2Application.bus.unregister(this);
     }
 
@@ -85,10 +92,18 @@ public class PushController {
     }
 
     /**
-     * Launches the pull process:
-     *  - Loads metadata from dhis2 server
-     *  - Wipes app database
-     *  - Turns SDK into APP data
+     * Launches the push process (it will ban server at the end if required)
+     * @param ctx
+     * @param surveys
+     * @param pushClient
+     */
+    public void push(Context ctx,List<Survey> surveys,PushClient pushClient){
+        this.pushClient=pushClient;
+        this.push(ctx,surveys);
+    }
+
+    /**
+     * Launches the push process
      * @param ctx
      */
     public void push(Context ctx,List<Survey> surveys){
@@ -139,10 +154,16 @@ public class PushController {
                         postException(new Exception(context.getString(R.string.dialog_pull_error)));
                         return;
                     }
-                    //Ok: Updates
+                    //Ok: Updates + check ban server
                     postProgress(context.getString(R.string.progress_push_updating_survey));
                     Log.d(TAG, "Updating pushed survey data...");
                     converter.saveSurveyStatus(getImportSummaryMap(result));
+
+                    Log.d(TAG, "Checking if server must be closed...");
+                    if(pushClient!=null){
+                        pushClient.banOrgUnitIfRequired();
+                    }
+
                     Log.d(TAG, "PUSH process...OK");
                 }catch (Exception ex){
                     Log.e(TAG,"onSendDataFinished: "+ex.getLocalizedMessage());
@@ -213,6 +234,7 @@ public class PushController {
      */
     private void postFinish(){
         try {
+            Log.i(TAG,"postFinish");
             Dhis2Application.getEventBus().post(new SyncProgressStatus());
         }
         catch(Exception e){

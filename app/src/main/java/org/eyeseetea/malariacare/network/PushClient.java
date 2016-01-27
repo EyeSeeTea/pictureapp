@@ -171,6 +171,14 @@ public class PushClient {
         this.serverVersion=this.getServerVersion(PreferencesState.getInstance().getDhisURL());
     }
 
+    public String getServerVersion(){
+        return this.serverVersion;
+    }
+
+    public String getDhisServer(){
+        return DHIS_SERVER;
+    }
+
     public void setSurvey(Survey survey) {
         this.survey = survey;
     }
@@ -209,35 +217,45 @@ public class PushClient {
     }
 
     public PushResult pushBackground() {
-        //Check if the static DHIS_UNEXISTENT_ORG_UNIT is the same than the used DHIS_ORG_NAME.
-        //If DHIS_UNEXISTENT_ORG_UNIT!=DHIS_ORG_NAME is the same, the UID not exist, and it was be checked.
-        //hasOrgUnitValidCode check the code the program and the closedDate
-        //This if is evaluating every push from SurveyService.
-        if (isNetworkAvailable() && !INVALID_SERVER && isValidOrgUnit() &&  checkAll() && !BANNED  ) {
-            try {
-                JSONObject data = prepareMetadata();
-                data = prepareDataElements(data);
-                PushResult result = new PushResult(pushData(data));
-                if (result.isSuccessful()) {
-                    this.survey.setStatus(Constants.SURVEY_SENT);
-                    this.survey.save();
-                    //Change status
-                    //check if the user was sent more than the limit
-                    List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys();
-                    if(isSurveyOverLimit(sentSurveys))
-                    {
-                        banOrg(DHIS_ORG_NAME);
-                    }
-                }
-                return result;
-            } catch (Exception ex) {
-                //Log.e(TAG, ex.getMessage());
-                return new PushResult(ex);
+        try {
+            JSONObject data = prepareMetadata();
+            data = prepareDataElements(data);
+            PushResult result = new PushResult(pushData(data));
+            if (result.isSuccessful()) {
+                this.survey.setStatus(Constants.SURVEY_SENT);
+                this.survey.save();
+                //Change status
+                //check if the user was sent more than the limit
+                this.banOrgUnitIfRequired();
             }
+            return result;
+        } catch (Exception ex) {
+            //Log.e(TAG, ex.getMessage());
+            return new PushResult(ex);
         }
-        return new PushResult();
     }
 
+    /**
+     * Tells if a push is enabled or not according to:
+     *  - network,
+     *  - current Org Unit
+     *  - status of the endpoin (banned, ..)
+     *
+     * @return
+     */
+    public boolean isPushReady(){
+        return isNetworkAvailable() && isValidOrgUnit() &&  checkAll() && !INVALID_SERVER && !BANNED;
+    }
+
+    /**
+     * Closes server if too many surveys have been pushed
+     */
+    public void banOrgUnitIfRequired(){
+        List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys();
+        if(isSurveyOverLimit(sentSurveys)){
+            banOrg(DHIS_ORG_NAME);
+        }
+    }
 
     /**
      * Pushes data to DHIS Server
@@ -691,7 +709,7 @@ public class PushClient {
         BasicAuthenticator basicAuthenticator =new BasicAuthenticator();
         client.setAuthenticator(basicAuthenticator);
 
-        Log.e(TAG, "pullOrgUnitUID URL (" + DHIS_PULL_URL);
+        Log.d(TAG, "pullOrgUnitUID URL (" + DHIS_PULL_URL);
         Request request = new Request.Builder()
                 .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
                 .url(DHIS_PULL_URL)
@@ -870,7 +888,7 @@ public class PushClient {
             Log.e(TAG,"getServerVersion: "+ex.toString());
             serverVersion="";
         }
-        Log.e(TAG, String.format("getServerVersion(%s) -> %s", url, serverVersion));
+        Log.i(TAG, String.format("getServerVersion(%s) -> %s", url, serverVersion));
         return serverVersion;
     }
 

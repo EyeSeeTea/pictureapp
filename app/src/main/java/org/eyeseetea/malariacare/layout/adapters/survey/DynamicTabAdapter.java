@@ -494,14 +494,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         swipeTouchListener.addClickableView(button);
 
         //Take focus to this view
-        editText.requestFocus();
-        editText.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Show keypad
-                showKeyboard(ctx, editText);
-            }
-        }, 300);
+        if(!readOnly) {
+            editText.requestFocus();
+            editText.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //Show keypad
+                    showKeyboard(ctx, editText);
+                }
+            }, 300);
+        }
     }
 
     /**

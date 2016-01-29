@@ -28,8 +28,10 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
+import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
@@ -53,12 +55,6 @@ public class PushService extends IntentService {
      * Name of 'push all pending surveys' action
      */
     public static final String PENDING_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.PushService.PENDING_SURVEYS_ACTION";
-
-
-    /**
-     * Helper to push surveys to server via API
-     */
-    PushClient pushClient;
 
     /**
      * List of surveys that are going to be pushed
@@ -123,17 +119,13 @@ public class PushService extends IntentService {
             return;
         }
 
-        //Check push version is required before
-        pushClient=new PushClient(getApplicationContext());
-        pushClient.updateServerVersion();
-
-        //Server blocked, no network, ...-> done
-        if(!pushClient.isPushReady()){
-            Log.d(TAG, "pushAllPendingSurveys push is NOT ready");
+        //Server is not ready for push -> move on
+        if(!ServerAPIController.isReadyForPush()){
             return;
         }
 
-        if(Constants.DHIS_API_SERVER.equals(pushClient.getServerVersion())){
+        //Push according to current server version
+        if(ServerAPIController.isAPIServer()){
             pushByAPI();
         }else{
             pushBySDK();
@@ -146,6 +138,7 @@ public class PushService extends IntentService {
      */
     private void pushByAPI(){
         Log.i(TAG, "pushByAPI");
+        PushClient pushClient=new PushClient(getApplicationContext());
         for(Survey survey : surveys){
             //Prepare for sending current survey
             pushClient.setSurvey(survey);
@@ -171,8 +164,7 @@ public class PushService extends IntentService {
         startProgress();
 
         //Init sdk login
-        HttpUrl serverUri = HttpUrl.parse(pushClient.getDhisServer());
-        DhisService.logInUser(serverUri, PushClient.getSDKCredentials());
+        DhisService.logInUser(HttpUrl.parse(ServerAPIController.getServerUrl()), ServerAPIController.getSDKCredentials());
     }
 
     @Subscribe
@@ -195,7 +187,7 @@ public class PushService extends IntentService {
 
     private void callPushBySDK(){
         //Login successful start reload
-        PushController.getInstance().push(getApplicationContext(), surveys, pushClient);
+        PushController.getInstance().push(getApplicationContext(), surveys);
     }
 
     /**

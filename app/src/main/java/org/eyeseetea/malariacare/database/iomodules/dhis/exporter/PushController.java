@@ -28,6 +28,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.network.PushClient;
+import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.network.ResponseHolder;
@@ -58,11 +59,6 @@ public class PushController {
     ConvertToSDKVisitor converter;
 
     /**
-     * Helper required to ban server if too many surveys are pushed in too short time
-     */
-    PushClient pushClient;
-
-    /**
      * Constructs and register this pull controller to the event bus
      */
     PushController(){
@@ -76,7 +72,6 @@ public class PushController {
      * Unregister pull controller from bus events
      */
     private void unregister(){
-        this.pushClient=null;
         Dhis2Application.bus.unregister(this);
     }
 
@@ -89,17 +84,6 @@ public class PushController {
             instance=new PushController();
         }
         return instance;
-    }
-
-    /**
-     * Launches the push process (it will ban server at the end if required)
-     * @param ctx
-     * @param surveys
-     * @param pushClient
-     */
-    public void push(Context ctx,List<Survey> surveys,PushClient pushClient){
-        this.pushClient=pushClient;
-        this.push(ctx,surveys);
     }
 
     /**
@@ -160,9 +144,7 @@ public class PushController {
                     converter.saveSurveyStatus(getImportSummaryMap(result));
 
                     Log.d(TAG, "Checking if server must be closed...");
-                    if(pushClient!=null){
-                        pushClient.banOrgUnitIfRequired();
-                    }
+                    ServerAPIController.banOrgUnitIfRequired();
 
                     Log.d(TAG, "PUSH process...OK");
                 }catch (Exception ex){

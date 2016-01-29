@@ -29,6 +29,7 @@ import android.view.WindowManager;
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 
 /**
@@ -52,10 +53,22 @@ public class ShowException extends Exception{
         {
             super(message);
             this.message = message;
+            showError(message,context);
+        }
+
+        public static void showError(int messageId){
+            Context context = PreferencesState.getInstance().getContext();
+            String message=context.getString(messageId);
+            showError(message,context);
+        }
+
+        public static void showError(String message,Context context){
             Intent intent = new Intent(context, Dialog.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("message", message);
             intent.putExtra("title","");
             context.getApplicationContext().startActivity(intent);
         }
+
+
 }

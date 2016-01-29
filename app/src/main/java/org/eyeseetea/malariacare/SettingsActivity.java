@@ -43,6 +43,7 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
+import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.network.ServerInfo;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -162,7 +163,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * Checks server version after creating activity (in order to repopulate options in orgunits editor)
      * @param url
      */
-    private void initPopulateOrgUnitsByServerVersion(String url){
+    public void initPopulateOrgUnitsByServerVersion(String url){
         CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this);
         serverVersionAsync.execute(url);
     }
@@ -193,10 +194,13 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         //After changing to a new server survey data is always removed
         PopulateDB.wipeSurveys();
 
+        //And the orgUnit too
+        PreferencesState.getInstance().saveStringPreference(R.string.org_unit,"");
+
         String serverVersion=serverInfo.getVersion();
 
         //2.20 -> reload orgunits from server via api
-        if(Constants.DHIS_API_SERVER.equals(serverVersion)){
+        if(ServerAPIController.isAPIVersion(serverVersion)){
             autoCompleteEditTextPreference.pullOrgUnits(Constants.DHIS_API_SERVER);
             return;
         }
@@ -222,7 +226,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      */
     private void initLoginPrePull(ServerInfo serverInfo){
         HttpUrl serverUri = HttpUrl.parse(serverInfo.getUrl());
-        DhisService.logInUser(serverUri, PushClient.getSDKCredentials());
+        DhisService.logInUser(serverUri, ServerAPIController.getSDKCredentials());
     }
 
     @Subscribe
@@ -426,6 +430,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                     return true;
                 }
             });
+            ((SettingsActivity)getActivity()).initPopulateOrgUnitsByServerVersion(PreferencesState.getInstance().getDhisURL());
     }
     }
 
@@ -481,7 +486,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Override
     public void onBackPressed() {
         PreferencesState.getInstance().reloadPreferences();
-        PushClient.newOrgUnitOrServer();
         Class callerActivityClass=getCallerActivity();
         Intent returnIntent=new Intent(this,callerActivityClass);
         startActivity(returnIntent);
@@ -531,7 +535,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             serverInfo = new ServerInfo(params[0]);
 
             PushClient pushClient=new PushClient(context);
-            String serverVersion=pushClient.getServerVersion(serverInfo.getUrl());
+            String serverVersion= ServerAPIController.getServerVersion(serverInfo.getUrl());
 
             serverInfo.setVersion(serverVersion);
             return serverInfo;

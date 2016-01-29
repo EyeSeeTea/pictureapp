@@ -182,15 +182,15 @@ public class Utils {
     }
 
     public static Calendar parseStringToCalendar(String datestring){
-        Calendar date = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         try {
-            date.setTime(format.parse(datestring));// all done
+            calendar.setTime(format.parse(datestring));// all done
         } catch (ParseException e) {
-            date=null;
+            calendar=null;
             e.printStackTrace();
         }
-        return date;
+        return calendar;
     }
 
     public static String getClosingDateString(String format){

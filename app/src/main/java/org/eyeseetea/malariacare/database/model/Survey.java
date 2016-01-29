@@ -3,18 +3,18 @@
  *
  * This file is part of QA App.
  *
- *  Health Network QIS App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Health Network QIS App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.database.model;
@@ -91,6 +91,11 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      * List of values for this survey
      */
     List<Value> values;
+
+    /**
+     * List of historic previous schedules
+     */
+    List<SurveySchedule> surveySchedules;
 
     /**
      * Calculated answered ratio for this survey according to its values
@@ -353,6 +358,20 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                             .eq(this.getId_survey())).queryList();
         }
         return values;
+    }
+
+    /**
+     * Returns the list of previous schedules for this survey
+     * @return
+     */
+    public List<SurveySchedule> getSurveySchedules(){
+        if(surveySchedules==null){
+            surveySchedules = new Select()
+                    .from(SurveySchedule.class)
+                    .where(Condition.column(SurveySchedule$Table.ID_SURVEY)
+                            .eq(this.getId_survey())).queryList();
+        }
+        return surveySchedules;
     }
 
     /**
@@ -662,6 +681,26 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 .queryList();
     }
 
+    /**
+     * Moves the schedule date for this survey to a new given date due to a given reason (comment)
+     * @param newScheduledDate
+     * @param comment
+     */
+    public void reschedule(Date newScheduledDate, String comment) {
+        //Take currentDate
+        Date currentScheduleDate=this.getScheduledDate();
+
+        //Add a history
+        SurveySchedule previousSchedule=new SurveySchedule(this,currentScheduleDate,comment);
+        previousSchedule.save();
+
+        //Clean inner lazy schedulelist
+        surveySchedules=null;
+
+        //Move scheduledate and save
+        this.scheduledDate=newScheduledDate;
+        this.save();
+    }
 
     public void prepareSurveyCompletionDate() {
         if (!isSent()) {

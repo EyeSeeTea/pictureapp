@@ -41,6 +41,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
+import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.filters.AutocompleteAdapterFilter;
 
@@ -74,14 +75,10 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         super.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-                SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
-                prefEditor.putString(getContext().getString(R.string.org_unit), newValue.toString()); // set your default value here (could be empty as well)
-                prefEditor.commit(); // finally save changes
+                PreferencesState.getInstance().saveStringPreference(R.string.org_unit,newValue.toString());
                 preference.setSummary(newValue.toString());
                 mEditText.setText(newValue.toString());
                 PreferencesState.getInstance().reloadPreferences();
-                PushClient.newOrgUnitOrServer();
                 return true;
             }
         });
@@ -104,7 +101,6 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         AutocompleteAdapterFilter<String> adapter = new AutocompleteAdapterFilter(this.getContext(),
                 android.R.layout.simple_dropdown_item_1line,orgUnits);
         mEditText.setAdapter(adapter);
-        PushClient.newOrgUnitOrServer();
     }
 
     private String[] findOrgUnitsFromServer(){
@@ -125,6 +121,9 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     @Override
     protected void onBindDialogView(View view) {
+        //XXX Hack to avoid having a default edittext instead of our custom autocomplete
+        //super.onBindDialogView(view);
+
         AutoCompleteTextView editText = mEditText;
         SharedPreferences preferences = view.getContext().getSharedPreferences("org.eyeseetea.pictureapp_preferences", view.getContext().MODE_PRIVATE);
         String key=view.getContext().getResources().getString(R.string.org_unit);
@@ -146,20 +145,14 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
             String value = mEditText.getText().toString();
             if (callChangeListener(value)) {
                 mEditText.setText(value);
+                CheckCodeAsync checkCodeAsync = new CheckCodeAsync(mEditText.getContext());
                 try {
-
-                    CheckCodeAsync checkCodeAsync = new CheckCodeAsync(mEditText.getContext());
                     boolean orgUnits = checkCodeAsync.execute(value).get();
-                    if(!orgUnits)
-                    {
-                        try {
-                            throw new ShowException(this.getContext().getString(R.string.exception_org_unit_not_valid), this.getContext());
-                        } catch (ShowException e) {
-                            e.printStackTrace();
-                        }
+                    if (!orgUnits) {
+                        ShowException.showError(R.string.exception_org_unit_not_valid);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                }catch(Exception ex){
+                    Log.e(TAG,"onDialogClosed: "+ex.getMessage());
                 }
 
             }
@@ -179,28 +172,18 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
         protected String[] doInBackground(ArrayList<String>... passing) {
             boolean validServer=false;
-            String[] result = null;
+            String[] result = {""};
             //Reload preferences to ensure asking right server
             PreferencesState.getInstance().reloadPreferences();
-
+            String serverUrl=PreferencesState.getInstance().getDhisURL();
             //Ask server via API
-            try {
-                PushClient pushClient=new PushClient(context);
-                validServer=pushClient.isValidServer();
-                if(validServer)
-                    result = pushClient.pullOrgUnitsCodes();
-                else {
-                    result = new String[1];
-                    result[0] = "";
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(ServerAPIController.isValidProgram(serverUrl))
+                result = ServerAPIController.pullOrgUnitsCodes(serverUrl);
+            else {
+                ShowException.showError(R.string.dialog_error_push_no_uid);
             }
 
             return result; //return result
-        }
-
-        protected void onPostExecute(Response result) {
         }
 
     }
@@ -220,21 +203,11 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
             boolean result = false;
 
             String orgUnit = param[0];
-            try {
-                if(!orgUnit.equals("")){
-                    PushClient pushClient = new PushClient(context,serverVersion);
-                    result = pushClient.checkOrgUnit(orgUnit);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(orgUnit==null || orgUnit.isEmpty()){
+                return false;
             }
-            if(result)
-                return Boolean.TRUE;
-            else
-                return Boolean.FALSE;
-        }
-
-        protected void onPostExecute(Response result) {
+            String serverUrl=PreferencesState.getInstance().getDhisURL();
+            return ServerAPIController.isValidOrgUnit(serverUrl,orgUnit);
         }
 
     }

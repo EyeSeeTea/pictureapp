@@ -3,18 +3,18 @@
  *
  * This file is part of QA App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.database.model;
@@ -28,6 +28,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
@@ -65,6 +66,11 @@ public class OrgUnit extends BaseModel {
      * List of orgUnits that belong to this one
      */
     List<OrgUnit> children;
+
+    /**
+     * List of program authorized for this orgunit
+     */
+    List<Program> programs;
 
     public OrgUnit() {
     }
@@ -163,6 +169,19 @@ public class OrgUnit extends BaseModel {
         return surveys;
     }
 
+    public List<Program> getPrograms(){
+        if(programs==null){
+            List<OrgUnitProgramRelation> orgUnitProgramRelations = new Select().from(OrgUnitProgramRelation.class)
+                    .where(Condition.column(OrgUnitProgramRelation$Table.ID_ORG_UNIT).eq(this.getId_org_unit()))
+                    .queryList();
+            this.programs= new ArrayList<>();
+            for(OrgUnitProgramRelation programRelation:orgUnitProgramRelations){
+                programs.add(programRelation.getProgram());
+            }
+        }
+        return programs;
+    }
+
     /**
      * Returns all the orgunits from the db
      * @return
@@ -195,6 +214,20 @@ public class OrgUnit extends BaseModel {
             return null;
         }
         return orgUnit.getUid();
+    }
+
+    public void addProgram(Program program){
+        //Null -> nothing
+        if(program==null){
+            return;
+        }
+
+        //Save a new relationship
+        OrgUnitProgramRelation orgUnitProgramRelation = new OrgUnitProgramRelation(this,program);
+        orgUnitProgramRelation.save();
+
+        //Clear cache to enable reloading
+        programs=null;
     }
 
     @Override

@@ -99,6 +99,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         setupSimplePreferencesScreen();
     }
 
+    void setAutoCompleteEditTextPreference(AutoCompleteEditTextPreference autoCompleteEditTextPreference){
+        this.autoCompleteEditTextPreference=autoCompleteEditTextPreference;
+    }
+
     /**
      * Shows the simplified settings UI if the device configuration if the
      * device configuration dictates that a simplified, single-pane UI should be
@@ -382,7 +386,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
 
-        private AutoCompleteEditTextPreference autoCompleteEditTextPreference;
+//        private AutoCompleteEditTextPreference autoCompleteEditTextPreference;
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -397,8 +401,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
 
-
-            autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
+//            autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
+            ((SettingsActivity)getActivity()).setAutoCompleteEditTextPreference((AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit)));
 
             Preference button = (Preference)findPreference(getString(R.string.remove_sent_surveys));
             button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

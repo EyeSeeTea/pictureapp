@@ -21,16 +21,28 @@ package org.eyeseetea.malariacare;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.support.multidex.MultiDex;
 import android.telephony.TelephonyManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.index.Index;
 
+import org.eyeseetea.malariacare.database.migrations.Migration2Database;
+import org.eyeseetea.malariacare.database.model.Match;
+import org.eyeseetea.malariacare.database.model.Match$Table;
+import org.eyeseetea.malariacare.database.model.QuestionOption;
+import org.eyeseetea.malariacare.database.model.QuestionOption$Table;
+import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.database.model.QuestionRelation$Table;
+import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.model.Value$Table;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -51,7 +63,19 @@ public class EyeSeeTeaApplication extends Application {
         Session.setPhoneMetaData(phoneMetaData);
 
         FlowManager.init(this);
+        createDBIndexes();
+        Migration2Database.postMigrate();
     }
+
+    private void createDBIndexes(){
+        new Index<QuestionOption>(Constants.QUESTION_OPTION_IDX).on(QuestionOption.class, QuestionOption$Table.ID_QUESTION).enable();
+        new Index<QuestionRelation>(Constants.QUESTION_RELATION_IDX).on(QuestionRelation.class, QuestionRelation$Table.OPERATION).enable();
+        //XXX This should be reviewed
+        new Index<QuestionRelation>(Constants.QUESTION_RELATION_IDX).on(QuestionRelation.class, QuestionRelation$Table.ID_QUESTION).enable();
+        new Index<Match>(Constants.MATCH_IDX).on(Match.class, Match$Table.ID_QUESTION_RELATION).enable();
+        new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
+    }
+
 
     PhoneMetaData getPhoneMetadata(){
         PhoneMetaData phoneMetaData=new PhoneMetaData();
@@ -75,4 +99,7 @@ public class EyeSeeTeaApplication extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
+
+
 }

@@ -162,7 +162,7 @@
     <string name="iqatab_info_supervisor_matches">Supervisor matches lab staff?</string>
 
     <!-- dynamic -->
-    <string name="dynamic_error_phone_format">"Le numéro de téléphone donné a un format incorrect"</string>
+    <string name="dynamic_error_phone_format">"Le numéro de téléphone donné a un format incorrect ( 0NN NNN NNN{N} )"</string>
     <string name="dynamic_required_field">Ce champ est obligatoire</string>
     <string name="dynamic_error_age">âge invalide</string>
 

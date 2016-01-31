@@ -109,7 +109,7 @@ public class CompositeScoreAdapter extends BaseAdapter implements ITabAdapter {
 
         rowView = lInflater.inflate(R.layout.composite_scores_record, parent, false);
 
-        ((TextCard)rowView.findViewById(R.id.code)).setText(item.getCode());
+        ((TextCard)rowView.findViewById(R.id.code)).setText(item.getHierarchical_code());
         ((TextCard)rowView.findViewById(R.id.label)).setText(item.getLabel());
 
         Float compositeScoreValue = ScoreRegister.getCompositeScore(item);

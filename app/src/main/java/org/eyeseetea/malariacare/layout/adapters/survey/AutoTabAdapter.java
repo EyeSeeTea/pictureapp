@@ -231,7 +231,7 @@ public class AutoTabAdapter extends BaseAdapter implements ITabAdapter {
             for (int i = 0; i < number_items; i++) {
                 if (items.get(i) instanceof Question && !elementInvisibility.get(items.get(i))) {
                     Question question = (Question) items.get(i);
-                    if (question.getAnswer().getOutput() == Constants.DROPDOWN_LIST)
+                    if (question.getOutput() == Constants.DROPDOWN_LIST)
                         result = result + ScoreRegister.calcDenum((Question) items.get(i));
                 }
 
@@ -248,8 +248,8 @@ public class AutoTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void initScoreQuestion(Question question) {
 
-        if (question.getAnswer().getOutput() == Constants.DROPDOWN_LIST || question.getAnswer().getOutput() == Constants.RADIO_GROUP_HORIZONTAL
-                || question.getAnswer().getOutput() == Constants.RADIO_GROUP_VERTICAL) {
+        if (question.getOutput() == Constants.DROPDOWN_LIST || question.getOutput() == Constants.RADIO_GROUP_HORIZONTAL
+                || question.getOutput() == Constants.RADIO_GROUP_VERTICAL) {
 
             Float num = ScoreRegister.calcNum(question);
             Float denum = ScoreRegister.calcDenum(question);
@@ -338,38 +338,39 @@ public class AutoTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void
     toggleChildrenVisibility(Question question, boolean visible) {
-        List<Question> children = question.getQuestionChildren();
-        Question cachedQuestion = null;
-
-        for (Question child : children) {
-            Header childHeader = child.getHeader();
-            elementInvisibility.put(child, !visible);
-            if (!visible) {
-                List<Float> numdenum = ScoreRegister.getNumDenum(child);
-                if (numdenum != null) {
-                    // update scores
-                    totalDenum = totalDenum - numdenum.get(1);
-                    totalNum = totalNum - numdenum.get(0);
-                    ScoreRegister.deleteRecord(child);
-                }
-                ReadWriteDB.deleteValue(child); // when we hide a question, we remove its value
-                // little cache to avoid double checking same
-                if(cachedQuestion == null || (cachedQuestion.getHeader().getId_header() != child.getHeader().getId_header()))
-                    elementInvisibility.put(childHeader, hideHeader(childHeader));
-            } else {
-                Float denum = ScoreRegister.calcDenum(child);
-                totalDenum = totalDenum + denum;
-                ScoreRegister.addRecord(child, 0F, denum);
-                elementInvisibility.put(childHeader, false);
-            }
-            cachedQuestion = question;
-        }
-        notifyDataSetChanged();
+        //FIXME Relationships not fully ready in pictureapp
+//        List<Question> children = question.getQuestionChildren();
+//        Question cachedQuestion = null;
+//
+//        for (Question child : children) {
+//            Header childHeader = child.getHeader();
+//            elementInvisibility.put(child, !visible);
+//            if (!visible) {
+//                List<Float> numdenum = ScoreRegister.getNumDenum(child);
+//                if (numdenum != null) {
+//                    // update scores
+//                    totalDenum = totalDenum - numdenum.get(1);
+//                    totalNum = totalNum - numdenum.get(0);
+//                    ScoreRegister.deleteRecord(child);
+//                }
+//                ReadWriteDB.deleteValue(child); // when we hide a question, we remove its value
+//                // little cache to avoid double checking same
+//                if(cachedQuestion == null || (cachedQuestion.getHeader().getId_header() != child.getHeader().getId_header()))
+//                    elementInvisibility.put(childHeader, hideHeader(childHeader));
+//            } else {
+//                Float denum = ScoreRegister.calcDenum(child);
+//                totalDenum = totalDenum + denum;
+//                ScoreRegister.addRecord(child, 0F, denum);
+//                elementInvisibility.put(childHeader, false);
+//            }
+//            cachedQuestion = question;
+//        }
+//        notifyDataSetChanged();
     }
 
     public void setValues(ViewHolder viewHolder, Question question) {
 
-        switch (question.getAnswer().getOutput()) {
+        switch (question.getOutput()) {
             case Constants.DATE:
             case Constants.SHORT_TEXT:
             case Constants.INT:
@@ -438,27 +439,27 @@ public class AutoTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private boolean checkMatches(Question question) {
+        // FIXME Relationships not fully ready in pictureapp
         boolean match = true;
+//        List<Question> relatives = question.getRelatives();
+//
+//        if (relatives.size() > 0) {
+//
+//            Option option = ReadWriteDB.readOptionAnswered(relatives.get(0));
+//
+//            if (option == null) match = false;
+//
+//            for (int i = 1; i < relatives.size() && match; i++) {
+//                Option currentOption = ReadWriteDB.readOptionAnswered(relatives.get(i));
+//
+//                if (currentOption == null) match = false;
+//                else
+//                    match = match && (Float.compare(option.getFactor(), currentOption.getFactor()) == 0);
+//            }
+//
+//        }
 
-        List<Question> relatives = question.getRelatives();
-
-        if (relatives.size() > 0) {
-
-            Option option = ReadWriteDB.readOptionAnswered(relatives.get(0));
-
-            if (option == null) match = false;
-
-            for (int i = 1; i < relatives.size() && match; i++) {
-                Option currentOption = ReadWriteDB.readOptionAnswered(relatives.get(i));
-
-                if (currentOption == null) match = false;
-                else
-                    match = match && (Float.compare(option.getFactor(), currentOption.getFactor()) == 0);
-            }
-
-        }
-
-        return match;
+        return true;
     }
 
     private void autoFillAnswer(ViewHolder viewHolder, Question question) {
@@ -524,7 +525,7 @@ public class AutoTabAdapter extends BaseAdapter implements ITabAdapter {
             question = (Question) item;
 
             //FIXME This should be moved into its own class (Ex: ViewHolderFactory.getView(item))
-            switch (question.getAnswer().getOutput()) {
+            switch (question.getOutput()) {
 
                 case Constants.LONG_TEXT:
                     rowView = initialiseView(R.layout.longtext, parent, question, viewHolder, position);
@@ -583,11 +584,11 @@ public class AutoTabAdapter extends BaseAdapter implements ITabAdapter {
                     Spinner spinner = (Spinner) viewHolder.component;
                     spinner.setAdapter(new OptionArrayAdapter(context, optionList));
 
-                    //Add Listener
-                    if (!question.hasRelatives())
-                        ((Spinner) viewHolder.component).setOnItemSelectedListener(new SpinnerListener(false, question, viewHolder));
-                    else
-                        autoFillAnswer(viewHolder, question);
+                    //FIXME Relationships not fully ready in pictureapp
+//                    if (!question.hasRelatives())
+//                        ((Spinner) viewHolder.component).setOnItemSelectedListener(new SpinnerListener(false, question, viewHolder));
+//                    else
+                    autoFillAnswer(viewHolder, question);
                     break;
                 case Constants.RADIO_GROUP_HORIZONTAL:
                     rowView = initialiseView(R.layout.radio, parent, question, viewHolder, position);

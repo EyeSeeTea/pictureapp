@@ -169,7 +169,7 @@
     <string name="iqatab_info_supervisor_matches">Supervisor matches lab staff?</string>
 
     <!-- dynamic -->
-    <string name="dynamic_error_phone_format">បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ</string>
+    <string name="dynamic_error_phone_format">បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ ( 0NN NNN NNN{N} )</string>
     <string name="dynamic_required_field">វាលនេះគឺត្រូវបានទាមទារ</string>
     <string name="dynamic_error_age">អាយុមិនត្រឹមត្រូវ</string>
 

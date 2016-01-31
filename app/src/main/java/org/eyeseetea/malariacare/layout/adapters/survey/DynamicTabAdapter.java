@@ -33,24 +33,21 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Handler;
-import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.text.Editable;
-import android.text.Html;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -77,7 +74,6 @@ import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -88,6 +84,16 @@ import java.util.Locale;
 public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private final static String TAG=".DynamicTabAdapter";
+
+    /**
+     * Formatted telephone mask: 0NN NNN NNN{N}
+     */
+    public static final String FORMATTED_PHONENUMBER_MASK = "0\\d{2} \\d{3} \\d{3,4}";
+
+    /**
+     * Formatted telephone mask: 0NN NNN NNN{N}
+     */
+    public static final String PLAIN_PHONENUMBER_MASK = "0\\d{8,9}";
 
     /**
      * Hold the progress of completion
@@ -301,7 +307,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         TableLayout tableLayout=(TableLayout)rowView.findViewById(R.id.options_table);
 
         TableRow tableRow=null;
-        int typeQuestion=question.getAnswer().getOutput();
+        int typeQuestion=question.getOutput();
         switch (typeQuestion){
             case Constants.IMAGES_2:
             case Constants.IMAGES_4:
@@ -317,8 +323,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         tableLayout.addView(tableRow);
                     }
                     ImageView imageButton = (ImageView) tableRow.getChildAt(mod);
-                    String backGColor = currentOption.getOptionAttribute() != null ? currentOption.getOptionAttribute().getBackground_colour() : currentOption.getBackground_colour();
-                    imageButton.setBackgroundColor(Color.parseColor("#" + backGColor));
+                    imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
                     initOptionButton(imageButton, currentOption, value, parent);
                 }
@@ -334,9 +339,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     ImageView imageButton = (ImageView) tableRow.getChildAt(0);
 
                     Option currentOption = opts.get(i);
-
-                    String backGColor = currentOption.getOptionAttribute() != null ? currentOption.getOptionAttribute().getBackground_colour() : currentOption.getBackground_colour();
-                    imageButton.setBackgroundColor(Color.parseColor("#" + backGColor));
+                    imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
                     initOptionButton(imageButton, currentOption, value, parent);
                 }
@@ -390,15 +393,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void initPositiveIntValue(TableRow tableRow, Value value){
         Button button=(Button)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
-        final NumberPicker numberPicker=(NumberPicker)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
+
+        final EditText numberPicker = (EditText)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
 
         //Without setMinValue, setMaxValue, setValue in this order, the setValue is not displayed in the screen.
-        numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(Constants.MAX_INT_AGE);
+        numberPicker.setFilters(new InputFilter[]{
+                new InputFilter.LengthFilter(Constants.MAX_INT_CHARS),
+                new MinMaxInputFilter(0, 99)
+        });
 
         //Has value? show it
         if(value!=null){
-            numberPicker.setValue(Integer.parseInt(value.getValue()));
+            numberPicker.setText(value.getValue());
         }
 
         if (!readOnly) {
@@ -406,7 +412,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String positiveIntValue = String.valueOf(numberPicker.getValue());
+                    String positiveIntValue = String.valueOf(numberPicker.getText());
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, positiveIntValue);
                     finishOrNext();
@@ -443,7 +449,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Editable? add listener
         if(!readOnly){
 
-            editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+            //Try to format on done
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        String phoneValue = editText.getText().toString();
+                        if (checkPhoneNumberByMask(phoneValue)) {
+                            editText.setText(formatPhoneNumber(phoneValue));
+                        }
+                    }
+                    return false;
+                }
+            });
+
+            //Validate format on button click
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -451,23 +471,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     EditText editText = (EditText) parentView.findViewById(R.id.dynamic_phone_edit);
                     String phoneValue = editText.getText().toString();
 
-                    //Optional, empty values allowed
-                    if (phoneValue == null || "".equals(phoneValue)) {
-                        phoneValue = "";
-                    }else {
-                        // Check phone number format
-                        Phonenumber.PhoneNumber phoneNumber = null;
-                        try {
-                            Locale locale = context.getResources().getConfiguration().locale;
-                            phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, locale.getCountry());
-                        } catch (NumberParseException e) {
-                            editText.setError(context.getString(R.string.dynamic_error_phone_format));
-                            return;
-                        }
-                        if(!PhoneNumberUtil.getInstance().isValidNumber(phoneNumber)){
-                            editText.setError(context.getString(R.string.dynamic_error_phone_format));
-                            return;
-                        }
+                    //Check phone ok
+                    if(!checkPhoneNumberByMask(phoneValue)){
+                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
+                        return;
                     }
 
                     //Hide keypad
@@ -497,6 +504,64 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }, 300);
     }
 
+    /**
+     * Formats number according to mask 0NN NNN NNN{N}
+     * @param phoneValue
+     * @return
+     */
+    private String formatPhoneNumber(String phoneValue) {
+        //Empty -> nothing to format
+        if (phoneValue == null || "".equals(phoneValue)) {
+            phoneValue = "";
+        }
+
+        //Already formatted -> done
+        if(phoneValue.matches(FORMATTED_PHONENUMBER_MASK)){
+            return phoneValue;
+        }
+
+        //0NNNNNNNN{N} -> 0NN NNN NNN{N}
+        String formattedNumber=phoneValue.substring(0,3)+" "+phoneValue.substring(3,6)+" "+phoneValue.substring(6,phoneValue.length());
+        return  formattedNumber;
+    }
+
+    /**
+     * Checks if the given string corresponds a correct phone number for the current country (by locale)
+     * @param phoneValue
+     * @return true|false
+     */
+    private boolean checkPhoneNumberByCountry(String phoneValue){
+
+        //Empty  is ok
+        if (phoneValue == null || "".equals(phoneValue)) {
+            phoneValue = "";
+        }
+
+        Phonenumber.PhoneNumber phoneNumber = null;
+        try {
+            Locale locale = context.getResources().getConfiguration().locale;
+            phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, locale.getCountry());
+        } catch (NumberParseException e) {
+            return false;
+        }
+        return PhoneNumberUtil.getInstance().isValidNumber(phoneNumber);
+    }
+
+
+    /**
+     * Checks if the given string corresponds a correct phone number according to mask:
+     *  0NN NNN NNN{N}
+     * @param phoneValue
+     * @return true|false
+     */
+    private boolean checkPhoneNumberByMask(String phoneValue){
+
+        //Empty  is ok
+        if (phoneValue == null || "".equals(phoneValue)) {
+            phoneValue = "";
+        }
+        return phoneValue.matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.matches(PLAIN_PHONENUMBER_MASK);
+    }
     /**
      * Attach an option with its button in view, adding the listener
      * @param button
@@ -760,7 +825,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     onClick(clickedView);
                     return true;
                 }
-                
+
                 //Not found, not consumed
                 return false;
             }

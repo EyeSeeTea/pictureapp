@@ -3,12 +3,12 @@
  *
  * This file is part of QA App.
  *
- *  QIS Survelliance App App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -28,15 +28,17 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 
+import java.util.Date;
+
 /**
- * Created by adrian on 14/02/15.
+ * Created by ivan.arrizabalaga on 14/02/15.
  */
 @Table(databaseName = AppDatabase.NAME)
-public class Score extends BaseModel {
+public class SurveySchedule extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
-    long id_score;
+    long id_survey_schedule;
 
     @Column
     Long id_survey;
@@ -46,26 +48,42 @@ public class Score extends BaseModel {
     Survey survey;
 
     @Column
-    String uid;
+    String comment;
 
     @Column
-    Float score;
+    Date previous_date;
 
-    public Score() {
+    public SurveySchedule() {
     }
 
-    public Score(Survey survey, String uid, Float score) {
-        this.uid = uid;
-        this.score = score;
+    public SurveySchedule(Survey survey, Date previous_date, String comment) {
+        this.previous_date = previous_date;
+        this.comment = comment;
         this.setSurvey(survey);
     }
 
-    public Long getId_score() {
-        return id_score;
+    public long getId_survey_schedule() {
+        return id_survey_schedule;
     }
 
-    public void setId_score(Long id_score) {
-        this.id_score = id_score;
+    public void setId_survey_schedule(long id_survey_schedule) {
+        this.id_survey_schedule = id_survey_schedule;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Date getPrevious_date() {
+        return previous_date;
+    }
+
+    public void setPrevious_date(Date previous_date) {
+        this.previous_date = previous_date;
     }
 
     public Survey getSurvey() {
@@ -89,53 +107,38 @@ public class Score extends BaseModel {
         this.survey = null;
     }
 
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public Float getScore() {
-        return score;
-    }
-
-    public void setScore(Float score) {
-        this.score = score;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Score score1 = (Score) o;
+        SurveySchedule that = (SurveySchedule) o;
 
-        if (id_score != score1.id_score) return false;
-        if (id_survey != null ? !id_survey.equals(score1.id_survey) : score1.id_survey != null)
+        if (id_survey_schedule != that.id_survey_schedule) return false;
+        if (id_survey != null ? !id_survey.equals(that.id_survey) : that.id_survey != null)
             return false;
-        if (uid != null ? !uid.equals(score1.uid) : score1.uid != null) return false;
-        return !(score != null ? !score.equals(score1.score) : score1.score != null);
+        if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
+        return !(previous_date != null ? !previous_date.equals(that.previous_date) : that.previous_date != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id_score ^ (id_score >>> 32));
+        int result = (int) (id_survey_schedule ^ (id_survey_schedule >>> 32));
         result = 31 * result + (id_survey != null ? id_survey.hashCode() : 0);
-        result = 31 * result + (uid != null ? uid.hashCode() : 0);
-        result = 31 * result + (score != null ? score.hashCode() : 0);
+        result = 31 * result + (comment != null ? comment.hashCode() : 0);
+        result = 31 * result + (previous_date != null ? previous_date.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "Score{" +
-                "id_score=" + id_score +
+        return "SurveySchedule{" +
+                "id_survey_schedule=" + id_survey_schedule +
                 ", id_survey=" + id_survey +
-                ", uid='" + uid + '\'' +
-                ", score=" + score +
+                ", comment='" + comment + '\'' +
+                ", previous_date=" + previous_date +
                 '}';
     }
 }
+

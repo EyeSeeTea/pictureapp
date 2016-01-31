@@ -20,6 +20,7 @@
 package org.eyeseetea.malariacare.database.model;
 
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
@@ -31,42 +32,35 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
-public class Answer extends BaseModel {
-
-    /**
-     * Default mock answer.output value
-     */
-    public static final Integer DEFAULT_ANSWER_OUTPUT = -1;
+public class OrgUnitLevel extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
-    long id_answer;
+    long id_org_unit_level;
     @Column
     String name;
 
-    /**
-     * List of options that belongs to this answer type
-     */
-    List<Option> options;
 
-    /**
-     * List of options that have this answer type
-     */
-    List<Question> questions;
+    List<OrgUnit> orgUnits;
 
-    public Answer() {
+    public OrgUnitLevel() {
     }
 
-    public Answer(String name) {
+    public OrgUnitLevel(String name) {
         this.name = name;
     }
 
-    public Long getId_answer() {
-        return id_answer;
+
+    public OrgUnitLevel(String uid, String name) {
+        this.name = name;
     }
 
-    public void setId_answer(Long id_answer) {
-        this.id_answer = id_answer;
+    public Long getId_org_unit_level() {
+        return id_org_unit_level;
+    }
+
+    public void setId_org_unit_level(Long id_org_unit_level) {
+        this.id_org_unit_level = id_org_unit_level;
     }
 
     public String getName() {
@@ -78,24 +72,11 @@ public class Answer extends BaseModel {
     }
 
 
-    public List<Option> getOptions(){
-        if(options==null){
-            options = new Select()
-                    .from(Option.class)
-                    .where(Condition.column(Option$Table.ID_ANSWER)
-                            .eq(this.getId_answer())).queryList();
-        }
-        return options;
-    }
-
-    public List<Question> getQuestions(){
-        if(questions==null){
-            questions = new Select()
-                    .from(Question.class)
-                    .where(Condition.column(Question$Table.ID_ANSWER)
-                            .eq(this.getId_answer())).queryList();
-        }
-        return questions;
+    @OneToMany(methods = {OneToMany.Method.SAVE, OneToMany.Method.DELETE}, variableName = "orgUnits")
+    public List<OrgUnit> getOrgUnits(){
+        this.orgUnits = new Select().from(OrgUnit.class)
+                .where(Condition.column(OrgUnit$Table.ID_PARENT).eq(this.getId_org_unit_level())).queryList();
+        return orgUnits;
     }
 
     @Override
@@ -103,24 +84,24 @@ public class Answer extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Answer answer = (Answer) o;
+        OrgUnitLevel that = (OrgUnitLevel) o;
 
-        if (id_answer != answer.id_answer) return false;
-        return !(name != null ? !name.equals(answer.name) : answer.name != null);
+        if (id_org_unit_level != that.id_org_unit_level) return false;
+        return !(name != null ? !name.equals(that.name) : that.name != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id_answer ^ (id_answer >>> 32));
+        int result = (int) (id_org_unit_level ^ (id_org_unit_level >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "Answer{" +
-                "id_answer=" + id_answer +
+        return "OrgUnit{" +
+                "id=" + id_org_unit_level +
                 ", name='" + name + '\'' +
                 '}';
     }

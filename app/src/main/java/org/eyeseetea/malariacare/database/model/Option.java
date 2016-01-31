@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QA App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -22,7 +22,6 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
-import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
@@ -42,59 +41,65 @@ public class Option extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_option;
-
     @Column
     String code;
-
     @Column
     String name;
-
     @Column
     Float factor;
-
     @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_answer",
-            columnType = Long.class,
-            foreignColumnName = "id_answer")},
-            saveForeignKeyModel = false)
+    Long id_answer;
+
+    /**
+     * Reference to parent answer (loaded lazily)
+     */
     Answer answer;
 
     @Column
-    String path;
+    long id_option_attribute;
 
-    @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_option_attribute",
-            columnType = Long.class,
-            foreignColumnName = "id_option_attribute")},
-            saveForeignKeyModel = false)
+    /**
+     * Reference to extended option attributes (loaded lazily)
+     */
     OptionAttribute optionAttribute;
 
-    @Column
-    String background_colour;
+    /**
+     * List of values that has choosen this option
+     */
+    List<Value> values;
 
     public Option() {
     }
 
-    public Option(String name, Float factor, Answer answer, String code, OptionAttribute optionAttribute, String background_colour) {
+    public Option(String name, Float factor, Answer answer) {
         this.name = name;
         this.factor = factor;
-        this.answer = answer;
-        this.code = code;
-        this.optionAttribute = optionAttribute;
-        this.background_colour = background_colour;
+        this.setAnswer(answer);
     }
+
+    public Option(String code, String name, Float factor, Answer answer) {
+        this.name = name;
+        this.factor = factor;
+        this.code = code;
+        this.setAnswer(answer);
+    }
+
 
     public Option(String name) {
         this.name = name;
     }
 
-    public long getId_option() {
+    public Long getId_option() {
         return id_option;
     }
 
-    public void setId_option(long id_option) {
+    public void setId_option(Long id_option) {
         this.id_option = id_option;
     }
+
+    public String getCode() {return code;}
+
+    public void setCode(String code) {this.code = code;}
 
     public String getName() {
         return name;
@@ -112,44 +117,59 @@ public class Option extends BaseModel {
         this.factor = factor;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public Answer getAnswer() {
+        if(answer==null){
+            if(id_answer==null) return null;
+            answer = new Select()
+                    .from(Answer.class)
+                    .where(Condition.column(Answer$Table.ID_ANSWER)
+                            .is(id_answer)).querySingle();
+        }
         return answer;
     }
 
     public void setAnswer(Answer answer) {
         this.answer = answer;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
+        this.id_answer = (answer!=null)?answer.getId_answer():null;
     }
 
     public OptionAttribute getOptionAttribute() {
+        if(optionAttribute==null){
+            optionAttribute = new Select().from(OptionAttribute.class)
+                    .where(Condition.column(OptionAttribute$Table.ID_OPTION_ATTRIBUTE).eq(id_option_attribute)).querySingle();
+        }
         return optionAttribute;
     }
 
     public void setOptionAttribute(OptionAttribute optionAttribute) {
         this.optionAttribute = optionAttribute;
+        this.id_option_attribute = (optionAttribute!=null)?optionAttribute.getId_option_attribute():null;
     }
 
+    /**
+     * Getter for extended option attribute 'path'
+     * @return
+     */
+    public String getPath() {
+        OptionAttribute optionAttribute = this.getOptionAttribute();
+        if(optionAttribute==null){
+            return null;
+        }
+
+        return optionAttribute.getPath();
+    }
+
+    /**
+     * Getter for extended option attribute 'backgroundColor'
+     * @return
+     */
     public String getBackground_colour() {
-        return background_colour;
-    }
+        OptionAttribute optionAttribute = this.getOptionAttribute();
+        if(optionAttribute==null){
+            return null;
+        }
 
-    public void setBackground_colour(String background_colour) {
-        this.background_colour = background_colour;
+        return optionAttribute.getBackground_colour();
     }
 
     /**
@@ -169,6 +189,14 @@ public class Option extends BaseModel {
         return given.equals(name);
     }
 
+    public List<Value> getValues(){
+        if(values==null){
+            values = new Select().from(Value.class)
+                    .where(Condition.column(Value$Table.ID_OPTION).eq(this.getId_option())).queryList();
+        }
+        return values;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -176,39 +204,35 @@ public class Option extends BaseModel {
 
         Option option = (Option) o;
 
-        if (answer != null ? !answer.equals(option.answer) : option.answer != null) return false;
-        if (factor != null ? !factor.equals(option.factor) : option.factor != null) return false;
+        if (id_option != option.id_option) return false;
+        if (id_option_attribute != option.id_option_attribute) return false;
         if (code != null ? !code.equals(option.code) : option.code != null) return false;
         if (name != null ? !name.equals(option.name) : option.name != null) return false;
-        if (path != null ? !path.equals(option.path) : option.path != null) return false;
-        if (optionAttribute != null ? !optionAttribute.equals(option.optionAttribute) : option.optionAttribute != null) return false;
-        if (background_colour != null ? !background_colour.equals(option.background_colour) : option.background_colour != null) return false;
+        if (factor != null ? !factor.equals(option.factor) : option.factor != null) return false;
+        return !(id_answer != null ? !id_answer.equals(option.id_answer) : option.id_answer != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result = (int) (id_option ^ (id_option >>> 32));
         result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (factor != null ? factor.hashCode() : 0);
-        result = 31 * result + (answer != null ? answer.hashCode() : 0);
-        result = 31 * result + (optionAttribute != null ? optionAttribute.hashCode() : 0);
-        result = 31 * result + (path != null ? path.hashCode() : 0);
-        result = 31 * result + (background_colour != null ? background_colour.hashCode() : 0);
+        result = 31 * result + (id_answer != null ? id_answer.hashCode() : 0);
+        result = 31 * result + (int) (id_option_attribute ^ (id_option_attribute >>> 32));
         return result;
     }
 
     @Override
     public String toString() {
         return "Option{" +
-                "name='" + name + '\'' +
-                ", code=" + code +
+                "id_option=" + id_option +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
                 ", factor=" + factor +
-                ", answer=" + answer +
-                ", path=" + path +
-                ", optionAttribute=" + optionAttribute +
-                ", background_colour=" + background_colour +
+                ", id_answer=" + id_answer +
+                ", id_option_attribute=" + id_option_attribute +
                 '}';
     }
 }

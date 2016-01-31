@@ -40,6 +40,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import java.util.List;
 
 
+//TODO This whole file should be removed from pictureapp
 public class CreateSurveyActivity extends BaseActivity {
 
     // UI references.
@@ -85,43 +86,46 @@ public class CreateSurveyActivity extends BaseActivity {
     }
 
     public boolean checkSurveyDoesntExist() {
-        // Read Selected Items
-        OrgUnit orgUnit = (OrgUnit) orgUnitView.getSelectedItem();
-        Program program = (Program) programView.getSelectedItem();
-
-        List<Survey> existing = Survey.getUnsentSurveys(orgUnit, program);
-        return (existing == null || existing.size() == 0);
+        return true;
+        //FIXME Commented since pictureapp does not create surveys from this activity
+//        // Read Selected Items
+//        OrgUnit orgUnit = (OrgUnit) orgUnitView.getSelectedItem();
+//        Program program = (Program) programView.getSelectedItem();
+//
+//        List<Survey> existing = Survey.getUnsentSurveys(orgUnit, program);
+//        return (existing == null || existing.size() == 0);
     }
 
     /**
      * Called when the user clicks the Send button
      */
     public void createSurvey(View view) {
-        Log.i(".CreateSurveyActivity", "Saving survey and saving in session");
-
-        // Read Selected Items
-        OrgUnit orgUnit = (OrgUnit) orgUnitView.getSelectedItem();
-        Program program = (Program) programView.getSelectedItem();
-
-        if (!checkEverythingFilled()) {
-            new AlertDialog.Builder(this)
-                    .setTitle(getApplicationContext().getString(R.string.dialog_title_missing_selection))
-                    .setMessage(getApplicationContext().getString(R.string.dialog_content_missing_selection))
-                    .setPositiveButton(android.R.string.ok, null).create().show();
-        } else if (!checkSurveyDoesntExist()) {
-            new AlertDialog.Builder(this)
-                    .setTitle(getApplicationContext().getString(R.string.dialog_title_existing_survey))
-                    .setMessage(getApplicationContext().getString(R.string.dialog_content_existing_survey))
-                    .setPositiveButton(android.R.string.ok, null).create().show();
-        } else {
-            // Put new survey in session
-            Survey survey = new Survey(orgUnit, program, Session.getUser());
-            survey.save();
-            Session.setSurvey(survey);
-
-            //Call Survey Activity
-            finishAndGo(SurveyActivity.class);
-        }
+        //FIXME Commented since pictureapp does not create surveys from this activity
+//        Log.i(".CreateSurveyActivity", "Saving survey and saving in session");
+//
+//        // Read Selected Items
+//        OrgUnit orgUnit = (OrgUnit) orgUnitView.getSelectedItem();
+//        Program program = (Program) programView.getSelectedItem();
+//
+//        if (!checkEverythingFilled()) {
+//            new AlertDialog.Builder(this)
+//                    .setTitle(getApplicationContext().getString(R.string.dialog_title_missing_selection))
+//                    .setMessage(getApplicationContext().getString(R.string.dialog_content_missing_selection))
+//                    .setPositiveButton(android.R.string.ok, null).create().show();
+//        } else if (!checkSurveyDoesntExist()) {
+//            new AlertDialog.Builder(this)
+//                    .setTitle(getApplicationContext().getString(R.string.dialog_title_existing_survey))
+//                    .setMessage(getApplicationContext().getString(R.string.dialog_content_existing_survey))
+//                    .setPositiveButton(android.R.string.ok, null).create().show();
+//        } else {
+//            // Put new survey in session
+//            Survey survey = new Survey(orgUnit, program, Session.getUser());
+//            survey.save();
+//            Session.setSurvey(survey);
+//
+//            //Call Survey Activity
+//            finishAndGo(SurveyActivity.class);
+//        }
     }
 
 

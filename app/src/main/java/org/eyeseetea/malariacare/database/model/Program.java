@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QA App.
  *
  *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,15 +19,16 @@
 
 package org.eyeseetea.malariacare.database.model;
 
-import com.raizlabs.android.dbflow.sql.builder.Condition;
-import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
@@ -36,12 +37,20 @@ public class Program extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_program;
-
     @Column
     String uid;
-
     @Column
     String name;
+
+    /**
+     * List of tabgroups for this program
+     */
+    List<TabGroup> tabGroups;
+
+    /**
+     * List of orgUnit authorized for this program
+     */
+    List<OrgUnit> orgUnits;
 
     public Program() {
     }
@@ -79,11 +88,44 @@ public class Program extends BaseModel {
         this.name = name;
     }
 
-    public List<Tab> getTabs(){
-        return new Select().from(Tab.class)
-                .where(Condition.column(Tab$Table.PROGRAM_ID_PROGRAM)
-                        .eq(String.valueOf(this.getId_program())))
-                .orderBy(Tab$Table.ORDER_POS).queryList();
+    public List<TabGroup> getTabGroups(){
+        if(tabGroups==null){
+            this.tabGroups = new Select().from(TabGroup.class)
+                    .where(Condition.column(TabGroup$Table.ID_PROGRAM).eq(this.getId_program()))
+                    .queryList();
+        }
+        return this.tabGroups;
+    }
+
+    public static List<Program> getAllPrograms(){
+        return new Select().all().from(Program.class).queryList();
+    }
+
+    public List<OrgUnit> getOrgUnits(){
+        if(orgUnits==null){
+            List<OrgUnitProgramRelation> orgUnitProgramRelations = new Select().from(OrgUnitProgramRelation.class)
+                    .where(Condition.column(OrgUnitProgramRelation$Table.ID_PROGRAM).eq(this.getId_program()))
+                    .queryList();
+            this.orgUnits = new ArrayList<>();
+            for(OrgUnitProgramRelation programRelation:orgUnitProgramRelations){
+                orgUnits.add(programRelation.getOrgUnit());
+            }
+        }
+        return orgUnits;
+    }
+
+    public void addOrgUnit(OrgUnit orgUnit){
+        //Null -> nothing
+        if(orgUnit==null){
+            return;
+        }
+
+        //Save a new relationship
+        OrgUnitProgramRelation orgUnitProgramRelation = new OrgUnitProgramRelation(orgUnit,this);
+        orgUnitProgramRelation.save();
+
+        //Clear cache to enable reloading
+        orgUnits=null;
     }
 
     @Override
@@ -93,23 +135,25 @@ public class Program extends BaseModel {
 
         Program program = (Program) o;
 
-        if (name != null ? !name.equals(program.name) : program.name != null) return false;
-        if (!uid.equals(program.uid)) return false;
+        if (id_program != program.id_program) return false;
+        if (uid != null ? !uid.equals(program.uid) : program.uid != null) return false;
+        return name.equals(program.name);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = uid.hashCode();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        int result = (int) (id_program ^ (id_program >>> 32));
+        result = 31 * result + (uid != null ? uid.hashCode() : 0);
+        result = 31 * result + name.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
         return "Program{" +
-                "uid='" + uid + '\'' +
+                "id=" + id_program +
+                ", uid='" + uid + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

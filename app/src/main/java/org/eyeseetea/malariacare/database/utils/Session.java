@@ -60,19 +60,6 @@ public class Session {
      */
     private static PhoneMetaData phoneMetaData;
 
-    public static String getCurrentServerVersion() {
-        return currentServerVersion;
-    }
-
-    public static void setCurrentServerVersion(String currentServerVersion) {
-        Session.currentServerVersion = currentServerVersion;
-    }
-
-    /**
-     * Current server version
-     */
-    private static String currentServerVersion;
-
     /**
      * Map that holds non serializable results from services
      */

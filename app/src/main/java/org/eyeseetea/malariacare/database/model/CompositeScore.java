@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Set;
 
 @Table(databaseName = AppDatabase.NAME)
-public class CompositeScore extends BaseModel{
+public class CompositeScore extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -95,9 +95,13 @@ public class CompositeScore extends BaseModel{
         this.id_composite_score = id_composite_score;
     }
 
-    public String getHierarchical_code() { return hierarchical_code; }
+    public String getHierarchical_code() {
+        return hierarchical_code;
+    }
 
-    public void setHierarchical_code(String hierarchical_code) { this.hierarchical_code = hierarchical_code; }
+    public void setHierarchical_code(String hierarchical_code) {
+        this.hierarchical_code = hierarchical_code;
+    }
 
     public String getLabel() {
         return label;
@@ -108,8 +112,8 @@ public class CompositeScore extends BaseModel{
     }
 
     public CompositeScore getComposite_score() {
-        if(compositeScore==null){
-            if (id_parent==null) return null;
+        if (compositeScore == null) {
+            if (id_parent == null) return null;
             compositeScore = new Select()
                     .from(CompositeScore.class)
                     .where(Condition.column(CompositeScore$Table.ID_COMPOSITE_SCORE)
@@ -120,10 +124,10 @@ public class CompositeScore extends BaseModel{
 
     public void setCompositeScore(CompositeScore compositeScore) {
         this.compositeScore = compositeScore;
-        this.id_parent = (compositeScore!=null)?compositeScore.getId_composite_score():null;
+        this.id_parent = (compositeScore != null) ? compositeScore.getId_composite_score() : null;
     }
 
-    public void setCompositeScore(Long id_parent){
+    public void setCompositeScore(Long id_parent) {
         this.id_parent = id_parent;
         this.compositeScore = null;
     }
@@ -144,12 +148,12 @@ public class CompositeScore extends BaseModel{
         this.order_pos = order_pos;
     }
 
-    public boolean hasParent(){
+    public boolean hasParent() {
         return getComposite_score() != null;
     }
 
     public List<CompositeScore> getCompositeScoreChildren() {
-        if (this.compositeScoreChildren == null){
+        if (this.compositeScoreChildren == null) {
             this.compositeScoreChildren = new Select()
                     .from(CompositeScore.class)
                     .where(Condition.column(CompositeScore$Table.ID_PARENT).eq(this.getId_composite_score()))
@@ -159,8 +163,8 @@ public class CompositeScore extends BaseModel{
         return this.compositeScoreChildren;
     }
 
-    public List<Question> getQuestions(){
-        if(questions==null){
+    public List<Question> getQuestions() {
+        if (questions == null) {
             questions = new Select()
                     .from(Question.class)
                     .where(Condition.column(Question$Table.ID_COMPOSITE_SCORE).eq(this.getId_composite_score()))
@@ -172,11 +176,12 @@ public class CompositeScore extends BaseModel{
 
     /**
      * Select all composite score that belongs to a program
+     *
      * @param tabGroup Program whose composite scores are searched.
      * @return
      */
-    public static List<CompositeScore> listByTabGroup(TabGroup tabGroup){
-        if(tabGroup==null || tabGroup.getId_tab_group()==null){
+    public static List<CompositeScore> listByTabGroup(TabGroup tabGroup) {
+        if (tabGroup == null || tabGroup.getId_tab_group() == null) {
             return new ArrayList<>();
         }
 
@@ -212,7 +217,7 @@ public class CompositeScore extends BaseModel{
 
         //Find parent scores from 'leaves'
         Set<CompositeScore> parentCompositeScores = new HashSet<>();
-        for(CompositeScore compositeScore: compositeScoresByProgram){
+        for (CompositeScore compositeScore : compositeScoresByProgram) {
             parentCompositeScores.addAll(listParentCompositeScores(compositeScore));
         }
         compositeScoresByProgram.addAll(parentCompositeScores);
@@ -231,25 +236,24 @@ public class CompositeScore extends BaseModel{
         });
 
 
-
         //return all scores
         return compositeScoresByProgram;
     }
 
-    public static List<CompositeScore> listParentCompositeScores(CompositeScore compositeScore){
-        ArrayList<CompositeScore> parentScores= new ArrayList<>();
-        if(compositeScore==null || !compositeScore.hasParent()){
+    public static List<CompositeScore> listParentCompositeScores(CompositeScore compositeScore) {
+        List<CompositeScore> parentScores = new ArrayList<>();
+        if (compositeScore == null || !compositeScore.hasParent()) {
             return parentScores;
         }
-        CompositeScore currentScore=compositeScore;
-        while(currentScore!=null && currentScore.hasParent()){
-            currentScore=currentScore.getComposite_score();
+        CompositeScore currentScore = compositeScore;
+        while (currentScore != null && currentScore.hasParent()) {
+            currentScore = currentScore.getComposite_score();
             parentScores.add(currentScore);
         }
         return parentScores;
     }
 
-    public boolean hasChildren(){
+    public boolean hasChildren() {
         return !getCompositeScoreChildren().isEmpty();
     }
 

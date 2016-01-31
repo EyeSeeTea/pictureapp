@@ -72,6 +72,12 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         serverText.setText(ServerAPIController.getServerUrl());
         //Readonly
         serverText.setEnabled(false);
+
+        //Username, Password blanks to force real login
+        EditText usernameEditText = (EditText) findViewById(R.id.username);
+        usernameEditText.setText("");
+        EditText passwordEditText = (EditText) findViewById(R.id.password);
+        passwordEditText.setText("");
     }
 
     @Override

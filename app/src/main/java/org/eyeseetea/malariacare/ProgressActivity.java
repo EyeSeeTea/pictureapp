@@ -289,19 +289,26 @@ public class ProgressActivity extends Activity {
                     public void onClick(DialogInterface arg0, int arg1) {
                         //Pull -> Settings
                         if (!isAPush()) {
-                            finishAndGo(SettingsActivity.class);
+                            //Move back to setting with extras
+                            Intent intent = new Intent(ProgressActivity.this,SettingsActivity.class);
+                            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER, true);
+                            intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE, true);
+                            finish();
+                            startActivity(intent);
                             return;
                         }
 
                         //Push before pull -> Dashboard
-                        if (!hasAPullAfterPush()) {
+                        if (!hasAPullAfterPush()){
                             finishAndGo(DashboardActivity.class);
                             return;
                         }
 
                         //Start pull after push
                         pullAfterPushInProgress = true;
+
                         launchPull();
+
                         return;
 
                     }

@@ -35,6 +35,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.util.Log;
 
 import com.squareup.okhttp.HttpUrl;
@@ -76,6 +77,21 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
     private static final String TAG = ".Settings";
     private AutoCompleteEditTextPreference autoCompleteEditTextPreference;
+
+    /**
+     * Intent extra param that states that the login before changing critical info has been done
+     */
+    public static final String LOGIN_BEFORE_CHANGE_DONE="LOGIN_BEFORE_CHANGE_DONE";
+
+    /**
+     * Intent extra param that states that the login is being done due to an attempt to change the orgunit
+     */
+    public static final String SETTINGS_CHANGING_ORGUNIT="SETTINGS_CHANGING_ORGUNIT";
+
+    /**
+     * Intent extra param that states that the login is being done due to an attempt to change the server
+     */
+    public static final String SETTINGS_CHANGING_SERVER="SETTINGS_CHANGING_SERVER";
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,9 +142,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         // Set the ClickListener to the android:key"remove_sent_surveys" preference.
 
         autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
+        autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this,true));
 
-        Preference button = (Preference)findPreference(getApplicationContext().getString(R.string.remove_sent_surveys));
-        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        Preference removeSentPreference = (Preference)findPreference(getApplicationContext().getString(R.string.remove_sent_surveys));
+        removeSentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 askRemoveSentSurveys();
@@ -136,8 +153,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        Preference button2 = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
-        button2.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        Preference serverUrlPreference = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
+        serverUrlPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this, false));
+        serverUrlPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
 
@@ -161,6 +179,42 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         //Check current server version to populate orgunits
         initPopulateOrgUnitsByServerVersion(PreferencesState.getInstance().getDhisURL());
+
+        //XXX Open preference that was being edited, (to review)
+        //openClickedPreference();
+    }
+
+    /**
+     * Opens the preference that is being edited before login
+     */
+    void openClickedPreference(){
+        //No login -> nothing to open
+        if(!getIntent().getBooleanExtra(LOGIN_BEFORE_CHANGE_DONE,false)){
+            return;
+        }
+
+        //Login done -> open right preference
+        PreferenceScreen screen = (PreferenceScreen) findPreference("pref_screen");
+
+        //Find key to press
+        int key=-1;
+        if(getIntent().getBooleanExtra(SETTINGS_CHANGING_ORGUNIT,false)){
+            key = R.string.org_unit;
+        }
+        if(getIntent().getBooleanExtra(SETTINGS_CHANGING_SERVER,false)){
+            key = R.string.dhis_url;
+        }
+
+        //Nothing to show up
+        if(key==-1){
+            return;
+        }
+
+        //Find order in screen
+        int pos = findPreference(getApplicationContext().getString(key)).getOrder();
+
+        //Simulate click on that one
+        screen.onItemClick( null, null, pos, 0 );
     }
 
     /**
@@ -386,7 +440,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
 
-//        private AutoCompleteEditTextPreference autoCompleteEditTextPreference;
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -401,21 +454,23 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
 
-//            autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
-            ((SettingsActivity)getActivity()).setAutoCompleteEditTextPreference((AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit)));
+            SettingsActivity settingsActivity = (SettingsActivity) getActivity();
+            AutoCompleteEditTextPreference autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
+            autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, true));
+            settingsActivity.setAutoCompleteEditTextPreference(autoCompleteEditTextPreference);
 
-            Preference button = (Preference)findPreference(getString(R.string.remove_sent_surveys));
-            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    askRemoveSentSurveys(getActivity());
-                    return true;
-                }
-            });
+            Preference removeSentPreference = (Preference)findPreference(getString(R.string.remove_sent_surveys));
+            removeSentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                 @Override
+                 public boolean onPreferenceClick(Preference preference) {
+                     askRemoveSentSurveys(getActivity());
+                     return true;
+                 }
+             });
 
-            Preference button2 = (Preference)findPreference(getResources().getString(R.string.dhis_url));
-
-            button2.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            Preference serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));
+            serverUrlPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, false));
+            serverUrlPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     //Save preference new value
@@ -429,12 +484,13 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                     PreferencesState.getInstance().reloadPreferences();
 
                     //Reload orgunits according to server version
-                    ((SettingsActivity)getActivity()).initReloadByServerVersion(newValue.toString());
+                    ((SettingsActivity) getActivity()).initReloadByServerVersion(newValue.toString());
 
                     return true;
                 }
             });
             ((SettingsActivity)getActivity()).initPopulateOrgUnitsByServerVersion(PreferencesState.getInstance().getDhisURL());
+//            ((SettingsActivity)getActivity()).openClickedPreference();
     }
     }
 
@@ -555,11 +611,62 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
             //Orgunits will be reloaded
             callbackPopulateOrgUnitsByServerVersion(serverInfo);
-
-
-
         }
 
     }
 
+}
+
+/**
+ * Listener that moves to the LoginActivity before changing orgunit|server.
+ * If login has already been done simply pass through
+ */
+class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceClickListener{
+
+    /**
+     * Reference to the activity so you can use this from the activity or the fragment
+     */
+    SettingsActivity activity;
+
+    /**
+     * Flag to indicate if you are changing orgunit or server
+     */
+    boolean changingOrgUnit;
+
+    LoginRequiredOnPreferenceClickListener(SettingsActivity activity, boolean changingOrgUnit){
+        this.activity=activity;
+        this.changingOrgUnit=changingOrgUnit;
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+
+        //Login already done -> move on
+        if(isLoginDone()){
+            return false;
+        }
+
+        //Launch login with the right extra param
+        launchLoginPreChange();
+        return true;
+    }
+
+    /**
+     * Checks if login is required
+     * @return
+     */
+    boolean isLoginDone(){
+        return activity.getIntent().getBooleanExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,false);
+    }
+
+    /**
+     * Launches Login activity with the right extra params
+     */
+    void launchLoginPreChange(){
+        String extraKey = changingOrgUnit?SettingsActivity.SETTINGS_CHANGING_ORGUNIT:SettingsActivity.SETTINGS_CHANGING_SERVER;
+        Intent intent = new Intent(activity,LoginActivity.class);
+        intent.putExtra(extraKey,true);
+        activity.finish();
+        activity.startActivity(intent);
+    }
 }

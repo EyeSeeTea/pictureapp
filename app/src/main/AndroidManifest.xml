@@ -110,6 +110,17 @@
                 android:value=".DashboardActivity" />
         </activity>
 
+        <activity
+            android:name=".LoginActivity"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SettingsActivity" />
+        </activity>
+
+
         <receiver android:name="org.eyeseetea.malariacare.receivers.AlarmPushReceiver"></receiver>
 
         <meta-data

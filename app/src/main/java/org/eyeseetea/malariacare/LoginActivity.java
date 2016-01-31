@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of Facility QA Tool App.
+ * This file is part of QIS Survelliance App.
  *
- *  Facility QA Tool App is free software: you can redistribute it and/or modify
+ *  QIS Survelliance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  Facility QA Tool App is distributed in the hope that it will be useful,
+ *  QIS Survelliance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.squareup.otto.Subscribe;
@@ -35,6 +36,7 @@ import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
@@ -45,6 +47,7 @@ import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
  */
 public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity implements LoaderCallbacks<Cursor> {
 
+    private static final String TAG = ".LoginActivity";
     /**
      * DHIS server URL
      */
@@ -63,15 +66,12 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (User.getLoggedUser() != null && !ProgressActivity.PULL_CANCEL ) {
-            startActivity(new Intent(LoginActivity.this,
-                    ((Dhis2Application) getApplication()).getMainActivity()));
-            finish();
-        }
-        ProgressActivity.PULL_CANCEL =false;
+
+        //Populate server with the current value
         EditText serverText = (EditText) findViewById(org.hisp.dhis.android.sdk.R.id.server_url);
-        serverText.setText(R.string.DHIS_DEFAULT_SERVER);
+        serverText.setText(ServerAPIController.getServerUrl());
+        //Readonly
+        serverText.setEnabled(false);
     }
 
     @Override
@@ -89,62 +89,39 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     }
 
-    @Override
-    public void login(String serverUrl, String username, String password) {
-        //This method is overriden to capture credentials data
-        this.serverUrl=serverUrl;
-        this.username=username;
-        this.password=password;
-
-        //Delegate real login attempt to parent
-        super.login(serverUrl,username,password);
-    }
-
     @Subscribe
     public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
         if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
             if(result.getResponseHolder().getApiException() == null) {
-                saveUserDetails();
-
-                populateFromAssetsIfRequired();
-
-                launchMainActivity();
+                goSettingsWithRightExtras();
             } else {
                 onLoginFail(result.getResponseHolder().getApiException());
             }
         }
     }
 
-    /**
-     * Utility method to use while developing to avoid a real pull
-     */
-    private void populateFromAssetsIfRequired() {
-//        //From server -> done
-//        if(PreferencesState.getInstance().getPullFromServer()) {
-//            return;
-//        }
-//
-//        //Populate locally
-//        try{
-//            PullController.getInstance().wipeDatabase();
-//            User user = new User();
-//            user.save();
-//            Session.setUser(user);
-//            PopulateDB.populateDB(getAssets());
-//        }catch(Exception ex){
-//        }
+    private void goSettingsWithRightExtras(){
+
+        Intent intent = new Intent(LoginActivity.this,SettingsActivity.class);
+        intent = propagateExtra(intent);
+
+        finish();
+        startActivity(intent);
     }
 
-    /**
-     * Saves user credentials into preferences
-     */
-    private void saveUserDetails(){
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString(getString(R.string.dhis_url), this.serverUrl);
-//        editor.putString(getString(R.string.dhis_user), this.username);
-//        editor.putString(getString(R.string.dhis_password), this.password);
-//        editor.commit();
+    private Intent propagateExtra(Intent intent){
+        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,false)){
+            Log.i(TAG, "propagateExtra -> Changing orgunit");
+            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,true);
+        }
+
+        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,false)){
+            Log.i(TAG, "propagateExtra -> Changing server");
+            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,true);
+        }
+
+        intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);
+        return intent;
     }
 
 }

@@ -282,11 +282,7 @@ public class PullController {
         //Fixme maybe it is not the best place to reload the logged user.(Without reload the user after pull, the user had diferent id and application crash).
         User user = User.getLoggedUser();
         Session.setUser(user);
-        try {
-            Dhis2Application.getEventBus().post(new SyncProgressStatus());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Dhis2Application.getEventBus().post(new SyncProgressStatus());
     }
 
     //Returns true if the pull thead is finish

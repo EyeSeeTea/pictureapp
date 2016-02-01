@@ -49,6 +49,7 @@ import org.eyeseetea.malariacare.network.ServerInfo;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
+import org.eyeseetea.malariacare.views.ShowException;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
@@ -101,13 +102,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     public void onStop(){
-        try {
-            Dhis2Application.bus.unregister(this);
-        }catch(Exception e){}
+        Dhis2Application.bus.unregister(this);
         super.onStop();
     }
-
-
+    
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -443,7 +441,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
             addPreferencesFromResource(R.xml.pref_general);
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences

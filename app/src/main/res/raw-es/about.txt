@@ -1,3 +1,5 @@
+<p>Versión S4a</p>
+
 <p>
 Esta aplicación fue desarrollada por la PSI y es liberada bajo la GNU General Public License.
 Para obtener más información acerca de esta licencia, por favor visite la sección de "licencia" de la aplicación en el

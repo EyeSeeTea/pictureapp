@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -24,18 +24,26 @@ import android.content.res.AssetManager;
 
 import com.opencsv.CSVReader;
 import com.raizlabs.android.dbflow.runtime.TransactionManager;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Header;
+import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
+import org.eyeseetea.malariacare.database.model.OrgUnitLevel;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.database.model.Score;
+import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.TabGroup;
+import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.model.Value;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -161,6 +169,31 @@ public class PopulateDB {
      * Used for testing purposes
      */
     public static void populateDummyData(){
+    }
+
+    /**
+     * Deletes all data from the app database
+     */
+    public static void wipeDatabase() {
+        Delete.tables(
+                Value.class,
+                Score.class,
+                Survey.class,
+                OrgUnit.class,
+                OrgUnitLevel.class,
+                User.class
+        );
+    }
+
+    /**
+     * Delete all surveys from database (and its related info)
+     */
+    public static void wipeSurveys(){
+        Delete.tables(
+                Value.class,
+                Score.class,
+                Survey.class
+        );
     }
 
 }

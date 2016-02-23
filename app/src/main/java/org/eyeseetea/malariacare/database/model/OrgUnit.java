@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QA App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.database.model;
@@ -182,8 +182,38 @@ public class OrgUnit extends BaseModel {
         return programs;
     }
 
+    /**
+     * Returns all the orgunits from the db
+     * @return
+     */
     public static List<OrgUnit> getAllOrgUnit() {
-        return new Select().all().from(OrgUnit.class).queryList();
+        return new Select().all().from(OrgUnit.class).orderBy(OrgUnit$Table.NAME).queryList();
+    }
+
+    /**
+     * Returns the list of org units from the database
+     * @return
+     */
+    public static String[] listAllNames(){
+        List<OrgUnit> orgUnits = getAllOrgUnit();
+        String[] orgUnitNames = new String[orgUnits.size()];
+        for(int i=0;i<orgUnits.size();i++){
+            orgUnitNames[i]=orgUnits.get(i).getName();
+        }
+        return orgUnitNames;
+    }
+
+    /**
+     * Returns the UID of an orgUnit with the given name
+     * @param name Name of the orgunit
+     * @return
+     */
+    public static String findUIDByName(String name) {
+        OrgUnit orgUnit=new Select().from(OrgUnit.class).where(Condition.column(OrgUnit$Table.NAME).eq(name)).querySingle();
+        if(orgUnit==null){
+            return null;
+        }
+        return orgUnit.getUid();
     }
 
     public void addProgram(Program program){
@@ -236,4 +266,5 @@ public class OrgUnit extends BaseModel {
                 ", id_org_unit_level=" + id_org_unit_level +
                 '}';
     }
+
 }

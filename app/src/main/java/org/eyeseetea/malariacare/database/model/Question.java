@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QA App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.database.model;
@@ -27,6 +27,7 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.builder.Condition.In;
+import com.raizlabs.android.dbflow.sql.builder.ConditionQueryBuilder;
 import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -704,6 +705,18 @@ public class Question extends BaseModel {
                 output == Constants.DROPDOWN_LIST_DISABLED ||
                 output == Constants.RADIO_GROUP_HORIZONTAL ||
                 output == Constants.RADIO_GROUP_VERTICAL;
+    }
+
+    /**
+     * Finds a question by its UID
+     * @param uid
+     * @return
+     */
+    public static Question findByUID(String uid){
+        return new Select()
+                .from(Question.class)
+                .where(Condition.column(Question$Table.UID).is(uid))
+                .querySingle();
     }
 
     @Override

@@ -91,6 +91,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DashboardActivity" />
         </activity>
+
+        <activity
+            android:name=".ProgressActivity"
+            android:label="@string/app_name"
+            android:configChanges="orientation|screenSize">
+        </activity>
+
         <activity
             android:name="org.eyeseetea.malariacare.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -102,6 +109,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DashboardActivity" />
         </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SettingsActivity" />
+        </activity>
+
 
         <receiver android:name="org.eyeseetea.malariacare.receivers.AlarmPushReceiver"></receiver>
 

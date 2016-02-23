@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QA App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.database.model;
@@ -29,6 +29,8 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKVisitor;
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -41,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 @Table(databaseName = AppDatabase.NAME)
-public class Survey extends BaseModel{
+public class Survey extends BaseModel  implements VisitableToSDK {
     public static final float MAX_AMBER = 80f;
     public static final float MAX_RED = 50f;
 
@@ -771,6 +773,10 @@ public class Survey extends BaseModel{
         return valuesStr;
     }
 
+    @Override
+    public void accept(IConvertToSDKVisitor IConvertToSDKVisitor) throws Exception{
+        IConvertToSDKVisitor.visit(this);
+    }
 
     @Override
     public boolean equals(Object o) {

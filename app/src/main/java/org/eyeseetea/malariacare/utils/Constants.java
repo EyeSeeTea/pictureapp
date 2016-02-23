@@ -40,6 +40,8 @@ public class Constants {
     //FIXME So far the special sub type of composite scores is treated by name
     public static final String COMPOSITE_SCORE_TAB_NAME="Composite Scores";
 
+    public static final String LABEL="Label";
+
     // ############# SURVEY STATUS ###############
     public static final int SURVEY_IN_PROGRESS = 0,
             SURVEY_COMPLETED = 1,
@@ -70,6 +72,10 @@ public class Constants {
         QUESTION_RELATION_IDX="QuestionRelation_operation",
         MATCH_IDX="Match_id_question_relation",
         VALUE_IDX="Value_id_survey";
+
+    public static final String DHIS_API_SERVER="2.20",
+            DHIS_SDK_221_SERVER="2.21",
+            DHIS_SDK_222_SERVER="2.22";
 
 
 }

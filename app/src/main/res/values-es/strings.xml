@@ -268,5 +268,12 @@
     <string name="dhis_url_error">DHIS URL Error</string>
     <string name="dhis_url_error_bad_version">Servidor DHIS no compatible (soportados 2.20, 2.21, 2.22 )</string>
     <string name="dhis_url_error_bad_credentials">Esta app no esta autorizada en el servidor indicado</string>
+    <string name="settings_menu_monitoring" >Monitorizar</string>
+    <string name="monitor_label">Por favor, selecciona un periodo de tiempo</string>
+    <string name="monitor_label_option_months">Últimos 6 meses</string>
+    <string name="monitor_label_option_days">Últimos 6 dias </string>
+    <string name="monitor_label_option_weeks">Últimas 6 semanas</string>
+    <string name="monitor_table_title_suspected">Casos positivos y sospechosos</string>
+    <string name="monitor_table_title_stock">Consumo de stocks</string>
 
 </resources>

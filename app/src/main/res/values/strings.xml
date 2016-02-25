@@ -36,6 +36,7 @@
     <string name="settings_menu_licence">License</string>
     <string name="settings_menu_update">Update questions (DHIS)</string>
     <string name="settings_menu_logout">Logout</string>
+    <string name="settings_menu_monitoring">Monitor</string>
 
     <!-- login -->
     <string name="login_info_username">User</string>
@@ -303,5 +304,11 @@
     <string name="dhis_url_error">DHIS URL Error</string>
     <string name="dhis_url_error_bad_version">Dhis server not compatible (only 2.20, 2.21, 2.22 allowed)</string>
     <string name="dhis_url_error_bad_credentials">This app is not authorized in the given server</string>
+    <string name="monitor_label">Please, select a time period</string>
+    <string name="monitor_label_option_months">Last 6 months</string>
+    <string name="monitor_label_option_weeks">Last 6 weeks</string>
+    <string name="monitor_label_option_days">Last 6 days</string>
+    <string name="monitor_table_title_suspected">Suspected and Positive cases</string>
+    <string name="monitor_table_title_stock">Stock Consumption</string>
 
 </resources>

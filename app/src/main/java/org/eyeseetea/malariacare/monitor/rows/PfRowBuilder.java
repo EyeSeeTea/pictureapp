@@ -14,33 +14,14 @@ import java.util.List;
 /**
  * Created by arrizabalaga on 26/02/16.
  */
-public class PfRowBuilder extends MonitorRowBuilder {
+public class PfRowBuilder extends CounterRowBuilder {
 
     public PfRowBuilder(Context context){
         super(context, context.getString(R.string.monitor_row_title_pf));
     }
 
-    /**
-     * Returns a list with:
-     * ["rowMetric", "rowTimeUnit", "rowTimeUnit", "rowTimeUnit", "rowTimeUnit", "rowTimeUnit", "rowTimeUnit"]
-     * @return
-     */
     @Override
-    protected List<String> defineColumnClasses() {
-        List<String> cssClasses = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
-        cssClasses.add(CSS_ROW_METRIC);
-        for(int i=0;i<Constants.MONITOR_HISTORY_SIZE;i++){
-            cssClasses.add(CSS_ROW_VALUE);
-        }
-        return cssClasses;
-    }
-
-    @Override
-    protected Object updateColumn(Object currentValue, Survey survey) {
-        Integer currentCount=(Integer)currentValue;
-        if(SurveyStats.isPf(survey)){
-            return Integer.valueOf(currentCount+1);
-        }
-        return currentValue;
+    protected boolean hasToIncrement(Survey survey) {
+        return SurveyStats.isPf(survey);
     }
 }

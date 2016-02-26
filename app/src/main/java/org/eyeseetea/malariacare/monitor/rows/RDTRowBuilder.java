@@ -14,14 +14,14 @@ import java.util.List;
 /**
  * Created by arrizabalaga on 26/02/16.
  */
-public class SuspectedRowBuilder extends CounterRowBuilder {
+public class RDTRowBuilder extends CounterRowBuilder {
 
-    public SuspectedRowBuilder(Context context){
-        super(context, context.getString(R.string.monitor_row_title_suspected));
+    public RDTRowBuilder(Context context){
+        super(context, context.getString(R.string.monitor_row_title_rdts));
     }
 
     @Override
     protected boolean hasToIncrement(Survey survey) {
-        return SurveyStats.isSuspected(survey);
+        return SurveyStats.isRDT(survey);
     }
 }

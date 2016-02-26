@@ -61,26 +61,26 @@ public class SurveyStats {
     private final static Long ID_OPTION_SPECIE_PV=8l;
 
 
-    // TODO: 26/02/16  Review options for treatments since they are not OK
+    // TODO: 26/02/16  Review options for treatments AS/MQ
     /**
      * Id of AS/MQ treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ASMQ=9l;
+    private final static Long ID_OPTION_TREATMENT_ASMQ=99l;
 
     /**
      * Id of DHA-PIP1 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP1=10l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP1=9l;
 
     /**
      * Id of DHA-PIP2 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP2=11l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP2=10l;
 
     /**
      * Id of DHA-PIP3 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP3=12l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP3=11l;
 
     /**
      * Id of referral treatment option
@@ -134,7 +134,7 @@ public class SurveyStats {
     }
 
     /**
-     * Tells if the given survey has Pf treatment
+     * Tells if the given survey has Pf specie
      * @param survey
      * @return
      */
@@ -143,7 +143,7 @@ public class SurveyStats {
     }
 
     /**
-     * Tells if the given survey has Pv treatment
+     * Tells if the given survey has Pv specie
      * @param survey
      * @return
      */
@@ -152,12 +152,48 @@ public class SurveyStats {
     }
 
     /**
-     * Tells if the given survey has Pf/Pv treatment
+     * Tells if the given survey has Pf/Pv specie
      * @param survey
      * @return
      */
     public static boolean isPfPv(Survey survey){
         return findValue(survey.getId_survey(),ID_QUESTION_SPECIE,ID_OPTION_SPECIE_PFPV)!=null;
+    }
+
+    /**
+     * Tells if the given survey has AS/MQ treatment
+     * @param survey
+     * @return
+     */
+    public static boolean isASMQ(Survey survey){
+        return findValue(survey.getId_survey(),ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_ASMQ)!=null;
+    }
+
+    /**
+     * Tells if the given survey has DHA-PIP 1 treatment
+     * @param survey
+     * @return
+     */
+    public static boolean isDHAPIP1(Survey survey){
+        return findValue(survey.getId_survey(),ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_DHA_PIP1)!=null;
+    }
+
+    /**
+     * Tells if the given survey has DHA-PIP 1 treatment
+     * @param survey
+     * @return
+     */
+    public static boolean isDHAPIP2(Survey survey){
+        return findValue(survey.getId_survey(),ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_DHA_PIP2)!=null;
+    }
+
+    /**
+     * Tells if the given survey has DHA-PIP 1 treatment
+     * @param survey
+     * @return
+     */
+    public static boolean isDHAPIP3(Survey survey){
+        return findValue(survey.getId_survey(),ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_DHA_PIP3)!=null;
     }
 
     /**

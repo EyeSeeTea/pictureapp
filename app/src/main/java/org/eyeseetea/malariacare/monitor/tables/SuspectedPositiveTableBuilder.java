@@ -6,11 +6,14 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.monitor.MonitorTableBuilder;
 import org.eyeseetea.malariacare.monitor.rows.NegativeRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.NotTestedRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PeriodRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PfPvRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PfRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PositiveRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.PositivityRateRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PvRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.ReferralRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.SuspectedRowBuilder;
 
 import java.util.ArrayList;
@@ -35,6 +38,9 @@ public class SuspectedPositiveTableBuilder extends MonitorTableBuilder{
         rowBuilders.add(new PvRowBuilder(context));
         rowBuilders.add(new PfPvRowBuilder(context));
         rowBuilders.add(new NegativeRowBuilder(context));
+        rowBuilders.add(new NotTestedRowBuilder(context));
+        rowBuilders.add(new ReferralRowBuilder(context));
+        rowBuilders.add(new PositivityRateRowBuilder(context));
         return rowBuilders;
     }
 }

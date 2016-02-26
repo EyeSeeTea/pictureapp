@@ -52,6 +52,7 @@ import java.util.List;
  * Created by arrizabalaga on 4/11/15.
  */
 public class PullController {
+    public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 600;
     private final String TAG = ".PullController";
 
     private static PullController instance;
@@ -117,6 +118,7 @@ public class PullController {
             //Enabling resources to pull
             enableMetaDataFlags();
             //Delete previous metadata
+            TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
             MetaDataController.clearMetaDataLoadedFlags();
             MetaDataController.wipe();
             //Pull new metadata

@@ -37,7 +37,7 @@ public class EventExtended implements VisitableFromSDK {
 
     private final static String TAG=".EventExtended";
     private final static String COMPLETION_DATE_FORMAT="yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    public static final int MAX_MONTHS_LOADED = -3;
+    public static final int MAX_MONTHS_LOADED = -6;
 
     Event event;
 

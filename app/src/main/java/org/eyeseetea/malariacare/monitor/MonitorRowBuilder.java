@@ -30,7 +30,12 @@ public abstract class MonitorRowBuilder {
     /**
      * Css to style a column with summary info
      */
-    protected static final String CSS_ROW_SUMMARY="rowMetric rowSummary";
+    protected static final String CSS_ROW_METRIC_SUMMARY ="rowMetric rowSummary";
+    /**
+     * Css to style a column with summary info
+     */
+    protected static final String CSS_ROW_VALUE_SUMMARY ="rowValue rowSummary";
+    public static final String ROW_JSON = "{\"columnClasses\":[%s],\"columnData\":{\"months\":[%s],\"weeks\":[%s],\"days\":[%s]}}";
 
     /**
      * Title of the row
@@ -120,8 +125,6 @@ public abstract class MonitorRowBuilder {
      * @return
      */
     public String getRowAsJSON(){
-
-        String ROW_JSON="{\"columnClasses\":[%s],\"columnData\":{\"months\":[%s],\"weeks\":[%s],\"days\":[%s]}}";
         String rowJSON=String.format(ROW_JSON,
                 getColumnClassesAsJSON(),
                 getDataAsJSON(monthsData),

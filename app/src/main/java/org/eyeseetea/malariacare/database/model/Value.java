@@ -206,7 +206,7 @@ public class Value extends BaseModel  implements VisitableToSDK {
                 .from(Value.class)
                 .where(Condition.column(Value$Table.ID_SURVEY).eq(survey.getId_survey())).count();
     }
-    
+
     /**
      * List ordered values of the survey
      * @param survey

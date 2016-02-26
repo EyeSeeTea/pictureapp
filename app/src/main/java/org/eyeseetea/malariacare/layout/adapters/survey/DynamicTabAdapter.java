@@ -415,6 +415,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     String positiveIntValue = String.valueOf(numberPicker.getText());
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, positiveIntValue);
+                    hideKeyboard(context,v);
                     finishOrNext();
                 }
             });

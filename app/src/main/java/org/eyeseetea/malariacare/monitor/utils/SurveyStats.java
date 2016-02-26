@@ -65,27 +65,32 @@ public class SurveyStats {
     /**
      * Id of AS/MQ treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ASMQ=99l;
+    private final static Long ID_OPTION_TREATMENT_ASMQ=9l;
 
     /**
      * Id of DHA-PIP1 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP1=9l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP1=10l;
 
     /**
      * Id of DHA-PIP2 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP2=10l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP2=11l;
 
     /**
      * Id of DHA-PIP3 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP3=11l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP3=12l;
+
+    /**
+     * Id of DHA-PIP3 treatment option
+     */
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP4=13l;
 
     /**
      * Id of referral treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_REFERRAL=12l;
+    private final static Long ID_OPTION_TREATMENT_REFERRAL=14l;
 
     /**
      * Tells if the given survey is suspected (positive, negative or not tested)
@@ -193,7 +198,50 @@ public class SurveyStats {
      * @return
      */
     public static boolean isDHAPIP3(Survey survey){
-        return findValue(survey.getId_survey(),ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_DHA_PIP3)!=null;
+        return findValue(survey.getId_survey(), ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP3)!=null;
+    }
+
+    /**
+     * Tells if the given survey has DHA-PIP1 or 4 (child|bigadult) treatment
+     * @param survey
+     * @return
+     */
+    public static boolean isDHAPIP1Or4(Survey survey){
+        Value value=new Select().from(Value.class)
+                .where(Condition.column(Value$Table.ID_SURVEY).eq(survey.getId_survey()))
+                .and(Condition.column(Value$Table.ID_QUESTION).eq(ID_QUESTION_TREATMENT))
+                .querySingle();
+
+        //No value (not tested or negative) -> false
+        if(value==null){
+            return false;
+        }
+
+        //Positive (with value) -> check options
+        Long idOption=value.getId_option();
+        //Positive and Negative cases are RDT cases
+        return ID_OPTION_TREATMENT_DHA_PIP1.equals(idOption) || ID_OPTION_TREATMENT_DHA_PIP4.equals(idOption);
+    }
+
+    /**
+     * Tells if the given survey has DHA-PIP3 or 4 (adult|bigadult) treatment
+     * @param survey
+     * @return
+     */
+    public static boolean isDHAPIP3Or4(Survey survey){
+        Value value=new Select().from(Value.class)
+                .where(Condition.column(Value$Table.ID_SURVEY).eq(survey.getId_survey()))
+                .and(Condition.column(Value$Table.ID_QUESTION).eq(ID_QUESTION_TREATMENT))
+                .querySingle();
+        //No value (not tested or negative) -> false
+        if(value==null){
+            return false;
+        }
+
+        //Positive (with value) -> check options
+        Long idOption=value.getId_option();
+        //Positive and Negative cases are RDT cases
+        return ID_OPTION_TREATMENT_DHA_PIP3.equals(idOption) || ID_OPTION_TREATMENT_DHA_PIP4.equals(idOption);
     }
 
     /**

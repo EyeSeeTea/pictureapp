@@ -22,6 +22,6 @@ public class DHAPIP1RowBuilder extends CounterRowBuilder {
 
     @Override
     protected boolean hasToIncrement(Survey survey) {
-        return SurveyStats.isDHAPIP1(survey);
+        return SurveyStats.isDHAPIP1Or4(survey);
     }
 }

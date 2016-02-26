@@ -279,5 +279,14 @@
     <string name="monitor_label_option_weeks">៦ សប្តាហ៍មុន</string>
     <string name="monitor_table_title_suspected">ករណីីសង្ស័យ និងករណីវិជ្ជមាន</string>
     <string name="monitor_table_title_stock">ស្តុកនៃការប្រើប្រាស់</string>
+    <string name="monitor_row_title_period">រយៈពេល</string>
+    <string name="monitor_row_title_week">សប្តាហ៍</string>
+    <string name="monitor_row_title_suspected">ករណីសង្ស័យ</string>
+    <string name="monitor_row_title_positive">វិជ្ជមាន</string>
+    <string name="monitor_row_title_pf"><![CDATA[&nbsp;&nbsp;ផ្លាស្មូដ្យូម ហ្វាល់ស៊ីប៉ារ៉ូម (Pf)]]></string>
+    <string name="monitor_row_title_pv"><![CDATA[&nbsp;&nbsp;ផ្លាស្មូដ្យូម វីវ៉ាក់ (Pv)]]></string>
+    <string name="monitor_row_title_pfpv"><![CDATA[&nbsp;&nbsp;ចំរុះ (Mixed)]]></string>
+    <string name="monitor_row_title_negative">អវិជ្ជមាន</string>
+    <string name="monitor_row_title_not_tested">មិនបានធ្វើតេស្ត</string>
 
 </resources>

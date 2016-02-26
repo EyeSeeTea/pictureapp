@@ -5,6 +5,13 @@ import android.content.Context;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.monitor.MonitorTableBuilder;
+import org.eyeseetea.malariacare.monitor.rows.NegativeRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.PeriodRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.PfPvRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.PfRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.PositiveRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.PvRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.SuspectedRowBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +27,14 @@ public class SuspectedPositiveTableBuilder extends MonitorTableBuilder{
     }
     @Override
     protected List<MonitorRowBuilder> defineRowBuilders() {
-        //TODO define rows for this table
-        return new ArrayList<>();
+        List<MonitorRowBuilder> rowBuilders = new ArrayList<>();
+        rowBuilders.add(new PeriodRowBuilder(context));
+        rowBuilders.add(new SuspectedRowBuilder(context));
+        rowBuilders.add(new PositiveRowBuilder(context));
+        rowBuilders.add(new PfRowBuilder(context));
+        rowBuilders.add(new PvRowBuilder(context));
+        rowBuilders.add(new PfPvRowBuilder(context));
+        rowBuilders.add(new NegativeRowBuilder(context));
+        return rowBuilders;
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.monitor.MonitorTableBuilder;
+import org.eyeseetea.malariacare.monitor.rows.PeriodRowBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,8 @@ public class StockTableBuilder extends MonitorTableBuilder{
     }
     @Override
     protected List<MonitorRowBuilder> defineRowBuilders() {
-        //TODO define rows for this table
-        return new ArrayList<>();
+        List<MonitorRowBuilder> rowBuilders = new ArrayList<>();
+        rowBuilders.add(new PeriodRowBuilder(context));
+        return rowBuilders;
     }
 }

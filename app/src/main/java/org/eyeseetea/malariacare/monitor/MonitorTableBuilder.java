@@ -28,7 +28,7 @@ public abstract class MonitorTableBuilder {
     /**
      * Reference to the context to translate strings
      */
-    private Context context;
+    protected Context context;
 
     /**
      * Title of this table

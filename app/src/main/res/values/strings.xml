@@ -310,5 +310,14 @@
     <string name="monitor_label_option_days">Last 6 days</string>
     <string name="monitor_table_title_suspected">Suspected and Positive cases</string>
     <string name="monitor_table_title_stock">Stock Consumption</string>
+    <string name="monitor_row_title_period">Time-period</string>
+    <string name="monitor_row_title_week">Week</string>
+    <string name="monitor_row_title_suspected">Suspected cases</string>
+    <string name="monitor_row_title_positive">Positive</string>
+    <string name="monitor_row_title_pf"><![CDATA[&nbsp;&nbsp;Pf]]></string>
+    <string name="monitor_row_title_pv"><![CDATA[&nbsp;&nbsp;Pv]]></string>
+    <string name="monitor_row_title_pfpv"><![CDATA[&nbsp;&nbsp;Pf/Pv]]></string>
+    <string name="monitor_row_title_negative">Negative</string>
+    <string name="monitor_row_title_not_tested">Not tested</string>
 
 </resources>

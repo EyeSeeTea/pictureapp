@@ -275,5 +275,14 @@
     <string name="monitor_label_option_weeks">Últimas 6 semanas</string>
     <string name="monitor_table_title_suspected">Casos positivos y sospechosos</string>
     <string name="monitor_table_title_stock">Consumo de stocks</string>
+    <string name="monitor_row_title_period">Periodo tiempo</string>
+    <string name="monitor_row_title_week">Semana</string>
+    <string name="monitor_row_title_suspected">Casos sospechosos</string>
+    <string name="monitor_row_title_positive">Positivo</string>
+    <string name="monitor_row_title_pf"><![CDATA[&nbsp;&nbsp;Pf]]></string>
+    <string name="monitor_row_title_pv"><![CDATA[&nbsp;&nbsp;Pv]]></string>
+    <string name="monitor_row_title_pfpv"><![CDATA[&nbsp;&nbsp;Pf/Pv]]></string>
+    <string name="monitor_row_title_negative">Negativo</string>
+    <string name="monitor_row_title_not_tested">No testado</string>
 
 </resources>

@@ -88,6 +88,10 @@ public class Value extends BaseModel  implements VisitableToSDK {
         this.id_value = id_value;
     }
 
+    public Long getId_option(){
+        return this.id_option;
+    }
+
     public Option getOption() {
         if(option==null){
             if(id_option==null) return null;

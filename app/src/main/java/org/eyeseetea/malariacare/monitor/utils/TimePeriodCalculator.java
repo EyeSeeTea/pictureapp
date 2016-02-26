@@ -46,14 +46,29 @@ public class TimePeriodCalculator {
     List<String> monthPeriodsKeys;
 
     /**
+     * Calculated list of specific dates for the current time span in months
+     */
+    List<Date> monthPeriodDates;
+
+    /**
      * Calculated list of keys for the current time span in months: 201550|201551|201552|201601|201602
      */
     List<String> weekPeriodsKeys;
 
     /**
+     * Calculated list of specific dates for the current time span in months
+     */
+    List<Date> weekPeriodDates;
+
+    /**
      * Calculated list of keys for the current time span in months: 20150224|20150225|20150226|20150227|20150228
      */
     List<String> dayPeriodsKeys;
+
+    /**
+     * Calculated list of specific dates for the current time span in months
+     */
+    List<Date> dayPeriodDates;
 
     /**
      * Singleton reference to make this usable as such
@@ -165,11 +180,36 @@ public class TimePeriodCalculator {
     }
 
     /**
+     * Returns the list of dates for the months time unit
+     * @return
+     */
+    public List<Date> getMonthPeriodDates(){
+        return monthPeriodDates;
+    }
+
+    /**
+     * Returns the list of dates for the months time unit
+     * @return
+     */
+    public List<Date> getWeekPeriodDates(){
+        return weekPeriodDates;
+    }
+
+    /**
+     * Returns the list of dates for the months time unit
+     * @return
+     */
+    public List<Date> getDayPeriodDates(){
+        return dayPeriodDates;
+    }
+
+    /**
      * Calculates a list of keys for the last 6 months [201509, 2001510,201511, 2001512, 201601, 201602]
      * @param today The reference date to build the periods of time
      */
     private void calculateMonthPeriods(Date today){
-        monthPeriodsKeys = calculatePeriods(today,Calendar.MONTH,KEY_MONTH_FORMATTER);
+        monthPeriodDates = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
+        monthPeriodsKeys = calculatePeriods(today,Calendar.MONTH,KEY_MONTH_FORMATTER,monthPeriodDates);
     }
 
     /**
@@ -177,7 +217,8 @@ public class TimePeriodCalculator {
      * @param today The reference date to build the periods of time
      */
     private void calculateWeekPeriods(Date today){
-        weekPeriodsKeys = calculatePeriods(today,Calendar.WEEK_OF_YEAR,KEY_WEEK_FORMATTER);
+        weekPeriodDates = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
+        weekPeriodsKeys = calculatePeriods(today,Calendar.WEEK_OF_YEAR,KEY_WEEK_FORMATTER,weekPeriodDates);
     }
 
     /**
@@ -185,7 +226,8 @@ public class TimePeriodCalculator {
      * @param today The reference date to build the periods of time
      */
     private void calculateDayPeriods(Date today){
-        dayPeriodsKeys = calculatePeriods(today,Calendar.DATE,KEY_DAY_FORMATTER);
+        dayPeriodDates = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
+        dayPeriodsKeys = calculatePeriods(today,Calendar.DATE,KEY_DAY_FORMATTER,dayPeriodDates);
     }
 
     /**
@@ -195,7 +237,7 @@ public class TimePeriodCalculator {
      * @return
      */
     private String getPeriodKeyInMonths(Date date){
-        return getPeriodKey(date,KEY_WEEK_FORMATTER);
+        return getPeriodKey(date,KEY_MONTH_FORMATTER);
     }
 
     /**
@@ -238,7 +280,7 @@ public class TimePeriodCalculator {
      * @param calendarUnit The calendar unit to move from period to period (months, weeks, days)
      * @param keyFormatter
      */
-    private List<String> calculatePeriods(Date today, int calendarUnit, SimpleDateFormat keyFormatter){
+    private List<String> calculatePeriods(Date today, int calendarUnit, SimpleDateFormat keyFormatter,List<Date> periodDates){
         List<String> periodKeys = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
         Calendar cal=Calendar.getInstance();
         cal.setTime(today);
@@ -252,6 +294,7 @@ public class TimePeriodCalculator {
             String iMonthKey=keyFormatter.format(iDate);
             //Add always at 0
             periodKeys.add(0,iMonthKey);
+            periodDates.add(0,iDate);
         }
         return periodKeys;
     }

@@ -49,7 +49,6 @@ import org.eyeseetea.malariacare.network.ServerInfo;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
-import org.eyeseetea.malariacare.views.ShowException;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
@@ -102,7 +101,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     public void onStop(){
-        Dhis2Application.bus.unregister(this);
+        try{
+            Dhis2Application.bus.unregister(this);
+        }catch(IllegalArgumentException ex){
+            Log.e(TAG,"Unregistering SettingsActivity before it is register");
+        }
+
         super.onStop();
     }
     
@@ -141,6 +145,27 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
         autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this,true));
+        autoCompleteEditTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                //Save preference new value
+                PreferencesState.getInstance().saveStringPreference(R.string.org_unit, newValue.toString());
+
+                // Now, manually update it's value to next value
+                // Now, if you click on the item, you'll see the value you've just set here
+                preference.setSummary(newValue.toString());
+
+                //Reload preference in memory
+                PreferencesState.getInstance().reloadPreferences();
+
+                //Reload orgunits according to server version
+                initReloadByServerVersionWhenOrgUnitChanged();
+
+                return true;
+
+            }
+        });
 
         Preference removeSentPreference = (Preference)findPreference(getApplicationContext().getString(R.string.remove_sent_surveys));
         removeSentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -168,7 +193,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 PreferencesState.getInstance().reloadPreferences();
 
                 //Reload orgunits according to server version
-                initReloadByServerVersion(newValue.toString());
+                initReloadByServerVersionWhenUrlChanged(newValue.toString());
 
                 return true;
 
@@ -230,10 +255,53 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     /**
+     * Launches an async task that resolved the current server version when the org unit has changed.
+     */
+    private void initReloadByServerVersionWhenOrgUnitChanged() {
+        CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this,true,true);
+        serverVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
+    }
+
+
+    /**
+     * Reloads organisationUnits according to the server version:
+     *  - 2.20: Manually via API
+     *  - 2.21|2.22: Via sdk (which requires a login to initialize DHIS sdk)
+     *  - Else: Error
+     */
+    private void callbackReloadByServerVersionWhenOrgUnitChanged(ServerInfo serverInfo) {
+        Log.d(TAG, "callbackReloadByServerVersionWhenOrgUnitChanged " + serverInfo.getVersion());
+
+        //After changing to a new server survey data is always removed
+        PopulateDB.wipeSurveys();
+
+        String serverVersion=serverInfo.getVersion();
+
+        //2.20 -> nothing to do (since orgunits are already loaded)
+        if(ServerAPIController.isAPIVersion(serverVersion)){
+            return;
+        }
+
+        //2.21, 2.22 -> surveys
+        if(Constants.DHIS_SDK_221_SERVER.equals(serverVersion) || Constants.DHIS_SDK_222_SERVER.equals(serverVersion)){
+            initLoginPrePull(serverInfo);
+            return;
+        }
+
+        //Server version not supported -> Error
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.dhis_url_error)
+                .setMessage(R.string.dhis_url_error_bad_version)
+                .setNeutralButton(android.R.string.yes, null)
+                .create()
+                .show();
+    }
+
+    /**
      * Launches an async task that resolved the current server version.
      * @param url
      */
-    private void initReloadByServerVersion(String url) {
+    private void initReloadByServerVersionWhenUrlChanged(String url) {
         CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this,true);
         serverVersionAsync.execute(url);
     }
@@ -244,8 +312,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      *  - 2.21|2.22: Via sdk (which requires a login to initialize DHIS sdk)
      *  - Else: Error
      */
-    private void callbackReloadByServerVersion(ServerInfo serverInfo) {
-        Log.d(TAG, "callbackReloadByServerVersion " + serverInfo.getVersion());
+    private void callbackReloadByServerVersionWhenUrlChanged(ServerInfo serverInfo) {
+        Log.d(TAG, "callbackReloadByServerVersionWhenUrlChanged " + serverInfo.getVersion());
 
         //After changing to a new server survey data is always removed
         PopulateDB.wipeSurveys();
@@ -454,6 +522,27 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             SettingsActivity settingsActivity = (SettingsActivity) getActivity();
             AutoCompleteEditTextPreference autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
             autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, true));
+            autoCompleteEditTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                    //Save preference new value
+                    PreferencesState.getInstance().saveStringPreference(R.string.org_unit, newValue.toString());
+
+                    // Now, manually update it's value to next value
+                    // Now, if you click on the item, you'll see the value you've just set here
+                    preference.setSummary(newValue.toString());
+
+                    //Reload preference in memory
+                    PreferencesState.getInstance().reloadPreferences();
+
+                    //Reload orgunits according to server version
+                    ((SettingsActivity) getActivity()).initReloadByServerVersionWhenOrgUnitChanged();
+
+                    return true;
+
+                }
+            });
             settingsActivity.setAutoCompleteEditTextPreference(autoCompleteEditTextPreference);
 
             Preference removeSentPreference = (Preference)findPreference(getString(R.string.remove_sent_surveys));
@@ -481,7 +570,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                     PreferencesState.getInstance().reloadPreferences();
 
                     //Reload orgunits according to server version
-                    ((SettingsActivity) getActivity()).initReloadByServerVersion(newValue.toString());
+                    ((SettingsActivity) getActivity()).initReloadByServerVersionWhenUrlChanged(newValue.toString());
 
                     return true;
                 }
@@ -575,14 +664,39 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
          */
         boolean pullRequired;
 
+        /**
+         * Flag that tells if this check corresponds to a change in the orgunit
+         */
+        boolean orgUnitChanged;
+
+        /**
+         * Constructor used to check orgunits after activity creation
+         * @param context
+         */
         public CheckServerVersionAsync(Context context) {
             this.context = context;
             this.pullRequired = false;
         }
 
+        /**
+         * Constructor used to pull metadata after url change
+         * @param context
+         * @param pullRequired
+         */
         public CheckServerVersionAsync(Context context,boolean pullRequired) {
             this(context);
             this.pullRequired = pullRequired;
+        }
+
+        /**
+         * Constructor used to pull events after orgunit change
+         * @param context
+         * @param pullRequired
+         * @param orgUnitChanged
+         */
+        public CheckServerVersionAsync(Context context,boolean pullRequired, boolean orgUnitChanged) {
+            this(context,pullRequired);
+            this.orgUnitChanged = orgUnitChanged;
         }
 
         @Override
@@ -600,9 +714,16 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         @Override
         protected void onPostExecute(ServerInfo serverInfo) {
-            //A pull is going to be executed
+
+            //OrgUnit has change -> init pull (orgunits not reloaded)
+            if(orgUnitChanged){
+                callbackReloadByServerVersionWhenOrgUnitChanged(serverInfo);
+                return;
+            }
+
+            //Url has change -> init pull (orgunits reloaded)
             if(pullRequired) {
-                callbackReloadByServerVersion(serverInfo);
+                callbackReloadByServerVersionWhenUrlChanged(serverInfo);
                 return;
             }
 

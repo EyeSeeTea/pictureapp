@@ -14,6 +14,6 @@ We’d love to hear your thoughts on the initiative in general, improvements, ne
 
 This app is compatible with SDK API version 15+.
 
-## License
+## License 
 
 This app is licensed under GPLv3. Please respect the terms of that license.

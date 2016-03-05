@@ -69,21 +69,21 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         mEditText.setThreshold(0);
         this.context = context;
     }
-
-    @Override
-    public void setOnPreferenceChangeListener(OnPreferenceChangeListener onPreferenceChangeListener) {
-        super.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                PreferencesState.getInstance().saveStringPreference(R.string.org_unit,newValue.toString());
-                preference.setSummary(newValue.toString());
-                mEditText.setText(newValue.toString());
-                PreferencesState.getInstance().reloadPreferences();
-                return true;
-            }
-        });
-
-    }
+//
+//    @Override
+//    public void setOnPreferenceChangeListener(OnPreferenceChangeListener onPreferenceChangeListener) {
+//        super.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//            @Override
+//            public boolean onPreferenceChange(Preference preference, Object newValue) {
+//                PreferencesState.getInstance().saveStringPreference(R.string.org_unit,newValue.toString());
+//                preference.setSummary(newValue.toString());
+//                mEditText.setText(newValue.toString());
+//                PreferencesState.getInstance().reloadPreferences();
+//                return true;
+//            }
+//        });
+//
+//    }
 
     public void pullOrgUnits(String serverVersion) {
 
@@ -143,18 +143,18 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
     protected void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
             String value = mEditText.getText().toString();
-            if (callChangeListener(value)) {
-                mEditText.setText(value);
-                CheckCodeAsync checkCodeAsync = new CheckCodeAsync(mEditText.getContext());
-                try {
-                    boolean orgUnits = checkCodeAsync.execute(value).get();
-                    if (!orgUnits) {
-                        ShowException.showError(R.string.exception_org_unit_not_valid);
-                    }
-                }catch(Exception ex){
-                    Log.e(TAG,"onDialogClosed: "+ex.getMessage());
+            //Check orgUnit state in server
+            CheckCodeAsync checkCodeAsync = new CheckCodeAsync(mEditText.getContext());
+            try {
+                boolean orgUnits = checkCodeAsync.execute(value).get();
+                if (!orgUnits) {
+                    ShowException.showError(R.string.exception_org_unit_not_valid);
+                }else{
+                    //Super invokes changeListener
+                    callChangeListener(value);
                 }
-
+            }catch(Exception ex){
+                Log.e(TAG,"onDialogClosed: "+ex.getMessage());
             }
         }
     }

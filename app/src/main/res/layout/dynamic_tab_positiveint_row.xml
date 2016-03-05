@@ -6,7 +6,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_weight="1"
         android:gravity="center_vertical"
         >
@@ -18,7 +18,8 @@
             <!--android:layout_margin="10dp"/>-->
         <EditText
             android:id="@+id/dynamic_positiveInt_edit"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
             android:layout_height="wrap_content"
             android:background="#d3d3d3"
             android:inputType="number"
@@ -26,7 +27,8 @@
         <Button
             android:id="@+id/dynamic_positiveInt_btn"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="0.2"
             android:text="@string/ok"
             android:layout_margin="10dp"
             />

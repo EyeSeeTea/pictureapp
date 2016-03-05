@@ -269,5 +269,28 @@
     <string name="dhis_url_error">DHIS URL Error</string>
     <string name="dhis_url_error_bad_version">Serveur dhis pas pris en charge (seulement 2.20, 2.21, 2.22 acceptés)</string>
     <string name="dhis_url_error_bad_credentials">Ce soft est pas autorisé dans le serveur donné</string>
+    <string name="settings_menu_monitoring" >Moniteur</string>
+    <string name="monitor_label">"S\'il vous plaît, sélectionner une période de temps"</string>
+    <string name="monitor_label_option_months">6 derniers mois</string>
+    <string name="monitor_label_option_weeks">6 dernières semaines</string>
+    <string name="monitor_label_option_days">6 derniers jours</string>
+    <string name="monitor_table_title_suspected">Suspicion et les cas positifs</string>
+    <string name="monitor_table_title_stock">Stock Consommation</string>
+    <string name="monitor_row_title_period">Période de temps</string>
+    <string name="monitor_row_title_week">Semaine</string>
+    <string name="monitor_row_title_suspected">Les cas suspects</string>
+    <string name="monitor_row_title_positive">Positif</string>
+    <string name="monitor_row_title_pf"><![CDATA[&nbsp;&nbsp;Pf]]></string>
+    <string name="monitor_row_title_pv"><![CDATA[&nbsp;&nbsp;Pv]]></string>
+    <string name="monitor_row_title_pfpv"><![CDATA[&nbsp;&nbsp;Pf/Pv]]></string>
+    <string name="monitor_row_title_negative">Négatif</string>
+    <string name="monitor_row_title_not_tested">Pas testé</string>
+    <string name="monitor_row_title_referral">Referral</string>
+    <string name="monitor_row_title_asmq">AS/MQ</string>
+    <string name="monitor_row_title_dhapip1">DHA-PIP1</string>
+    <string name="monitor_row_title_dhapip2">DHA-PIP2</string>
+    <string name="monitor_row_title_dhapip3">DHIS-PIP3</string>
+    <string name="monitor_row_title_rdts">RDTs</string>
+    <string name="monitor_row_title_positivity_rate">Positivity rate</string>
 
 </resources>

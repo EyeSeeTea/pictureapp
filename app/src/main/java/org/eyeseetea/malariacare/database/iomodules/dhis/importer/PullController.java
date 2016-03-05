@@ -31,6 +31,7 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.Organis
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.controllers.LoadingController;
@@ -52,6 +53,7 @@ import java.util.List;
  * Created by arrizabalaga on 4/11/15.
  */
 public class PullController {
+    public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 600;
     private final String TAG = ".PullController";
 
     private static PullController instance;
@@ -117,6 +119,7 @@ public class PullController {
             //Enabling resources to pull
             enableMetaDataFlags();
             //Delete previous metadata
+            TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
             MetaDataController.clearMetaDataLoadedFlags();
             MetaDataController.wipe();
             //Pull new metadata
@@ -230,14 +233,22 @@ public class PullController {
     private void convertDataValues(ConvertFromSDKVisitor converter) {
         if (!ProgressActivity.PULL_IS_ACTIVE) return;
         Program appProgram = Program.getFirstProgram();
+        String orgUnitName = PreferencesState.getInstance().getOrgUnit();
+
         postProgress(context.getString(R.string.progress_pull_surveys));
         //XXX This is the right place to apply additional filters to data conversion (only predefined orgunit for instance)
         //For each unit
         for (OrganisationUnit organisationUnit : MetaDataController.getAssignedOrganisationUnits()) {
+
+            //Only events for the right ORGUNIT are loaded
+            if(!organisationUnit.getLabel().equals(orgUnitName)){
+                continue;
+            }
+
             //Each assigned program
             for (org.hisp.dhis.android.sdk.persistence.models.Program program : MetaDataController.getProgramsForOrganisationUnit(organisationUnit.getId(), ProgramType.WITHOUT_REGISTRATION)) {
 
-                //Only events for the right program are loaded
+                //Only events for the right PROGRAM are loaded
                 if(!appProgram.getUid().equals(program.getUid())){
                     continue;
                 }
@@ -248,7 +259,7 @@ public class PullController {
                     if (!ProgressActivity.PULL_IS_ACTIVE) return;
                     EventExtended eventExtended = new EventExtended(event);
 
-                    //Only last 3 months
+                    //Only last X months
                     if(eventExtended.isTooOld()) return;
                     eventExtended.accept(converter);
                 }

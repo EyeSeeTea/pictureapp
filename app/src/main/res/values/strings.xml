@@ -36,6 +36,7 @@
     <string name="settings_menu_licence">License</string>
     <string name="settings_menu_update">Update questions (DHIS)</string>
     <string name="settings_menu_logout">Logout</string>
+    <string name="settings_menu_monitoring">Monitor</string>
 
     <!-- login -->
     <string name="login_info_username">User</string>
@@ -303,5 +304,27 @@
     <string name="dhis_url_error">DHIS URL Error</string>
     <string name="dhis_url_error_bad_version">Dhis server not compatible (only 2.20, 2.21, 2.22 allowed)</string>
     <string name="dhis_url_error_bad_credentials">This app is not authorized in the given server</string>
+    <string name="monitor_label">Please, select a time period</string>
+    <string name="monitor_label_option_months">Last 6 months</string>
+    <string name="monitor_label_option_weeks">Last 6 weeks</string>
+    <string name="monitor_label_option_days">Last 6 days</string>
+    <string name="monitor_table_title_suspected">Suspected and Positive cases</string>
+    <string name="monitor_table_title_stock">Stock Consumption</string>
+    <string name="monitor_row_title_period">Time-period</string>
+    <string name="monitor_row_title_week">Week</string>
+    <string name="monitor_row_title_suspected">Suspected cases</string>
+    <string name="monitor_row_title_positive">Positive</string>
+    <string name="monitor_row_title_pf"><![CDATA[&nbsp;&nbsp;Pf]]></string>
+    <string name="monitor_row_title_pv"><![CDATA[&nbsp;&nbsp;Pv]]></string>
+    <string name="monitor_row_title_pfpv"><![CDATA[&nbsp;&nbsp;Pf/Pv]]></string>
+    <string name="monitor_row_title_negative">Negative</string>
+    <string name="monitor_row_title_not_tested">Not tested</string>
+    <string name="monitor_row_title_referral">Referral</string>
+    <string name="monitor_row_title_asmq">AS/MQ</string>
+    <string name="monitor_row_title_dhapip1">DHA-PIP1</string>
+    <string name="monitor_row_title_dhapip2">DHA-PIP2</string>
+    <string name="monitor_row_title_dhapip3">DHIS-PIP3</string>
+    <string name="monitor_row_title_rdts">RDTs</string>
+    <string name="monitor_row_title_positivity_rate">Positivity rate</string>
 
 </resources>

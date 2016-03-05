@@ -66,7 +66,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     public static final String SETTINGS_CALLER_ACTIVITY = "SETTINGS_CALLER_ACTIVITY";
 
-    private static String TAG=".BaseActivity";
+    protected static String TAG=".BaseActivity";
 
     private SurveyLocationListener locationListener;
 
@@ -114,6 +114,10 @@ public abstract class BaseActivity extends ActionBarActivity {
             case R.id.action_settings:
                 debugMessage("User asked for settings");
                 goSettings();
+                break;
+            case R.id.action_monitoring:
+                debugMessage("User asked for monitor");
+                goMonitor();
                 break;
             case R.id.action_license:
                 debugMessage("User asked for license");
@@ -170,6 +174,10 @@ public abstract class BaseActivity extends ActionBarActivity {
         Intent intentSettings=new Intent(this,SettingsActivity.class);
         intentSettings.putExtra(SETTINGS_CALLER_ACTIVITY, this.getClass());
         startActivity(new Intent(this, SettingsActivity.class));
+    }
+
+    protected void goMonitor(){
+        startActivity(new Intent(this, MonitorActivity.class));
     }
 
     /**

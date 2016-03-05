@@ -77,5 +77,10 @@ public class Constants {
             DHIS_SDK_221_SERVER="2.21",
             DHIS_SDK_222_SERVER="2.22";
 
+    /**
+     * Max columns for the monitor activity (6 months by default)
+     */
+    public static final int MONITOR_HISTORY_SIZE=6;
+
 
 }

@@ -114,13 +114,6 @@ public class SurveyActivity extends BaseActivity{
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_survey, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed");
         Survey survey=Session.getSurvey();

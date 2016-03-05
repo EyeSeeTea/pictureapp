@@ -387,7 +387,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
 
     /**
-     * Inits NumberPicker and button to view/edit a integer between 0 and Constants.MAX_INT_AGE
+     * Initialise NumberPicker and button to view/edit a integer between 0 and Constants.MAX_INT_AGE
      * @param tableRow
      * @param value
      */
@@ -412,9 +412,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     String positiveIntValue = String.valueOf(numberPicker.getText());
+
+                    //Required, empty values rejected
+                    if(checkEditTextNotNull(positiveIntValue)){
+                        numberPicker.setError(context.getString(R.string.dynamic_error_age));
+                        return;
+                    }
+
                     Question question = progressTabStatus.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, positiveIntValue);
+                    hideKeyboard(context,v);
                     finishOrNext();
                 }
             });
@@ -564,6 +573,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         return phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.matches(PLAIN_PHONENUMBER_MASK);
     }
+
+    /**
+     * Checks if edit text is not null:
+     * @param editValue
+     * @return true|false
+     */
+    private boolean checkEditTextNotNull(String editValue){
+        if (editValue == null) {
+            editValue = "";
+        }
+        return editValue.isEmpty();
+    }
+
     /**
      * Attach an option with its button in view, adding the listener
      * @param button

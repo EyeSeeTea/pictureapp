@@ -48,7 +48,7 @@ public class PushResult {
     }
 
     public boolean isSuccessful(){
-        return exception==null && jsonObject!=null;
+        return exception==null && jsonObject!=null && !getValue(IMPORTED).equals("0");
     }
 
     public String getUpdated(){
@@ -80,12 +80,11 @@ public class PushResult {
     }
 
     private String getValue(String key){
-        try {
-            //DHIS 2.19
-            return jsonObject.getString(key);
-        } catch (JSONException e){
-        }
-
+//        try {
+//            //DHIS 2.19
+//            return jsonObject.getString(key);
+//        } catch (JSONException e){
+//        }
         try {
             //DHIS 2.20
             JSONObject response=jsonObject.getJSONObject(DHIS220_RESPONSE);

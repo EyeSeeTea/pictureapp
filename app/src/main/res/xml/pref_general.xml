@@ -20,25 +20,25 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="pref_screen">
 
-    <PreferenceCategory
-        android:title="@string/pref_data"
-        android:key="pref_data">
-        <org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference
-            android:key="@string/org_unit"
-            android:title="@string/create_info_organization_unit"
-            android:defaultValue=""
-            android:selectAllOnFocus="true"
-            android:inputType="text"
-            android:singleLine="true"
-            android:maxLines="1" />
-        <Preference
-            android:key="@string/remove_sent_surveys"
-            android:title="@string/settings_menu_delete"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:maxLines="1" />
+    <!--<PreferenceCategory-->
+        <!--android:title="@string/pref_data"-->
+        <!--android:key="pref_data">-->
+        <!--<org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference-->
+            <!--android:key="@string/org_unit"-->
+            <!--android:title="@string/create_info_organization_unit"-->
+            <!--android:defaultValue=""-->
+            <!--android:selectAllOnFocus="true"-->
+            <!--android:inputType="text"-->
+            <!--android:singleLine="true"-->
+            <!--android:maxLines="1" />-->
+        <!--<Preference-->
+            <!--android:key="@string/remove_sent_surveys"-->
+            <!--android:title="@string/settings_menu_delete"-->
+            <!--android:selectAllOnFocus="true"-->
+            <!--android:singleLine="true"-->
+            <!--android:maxLines="1" />-->
 
-    </PreferenceCategory>
+    <!--</PreferenceCategory>-->
     <PreferenceCategory
         android:title="@string/pref_server"
         android:key="pref_server">
@@ -48,6 +48,15 @@
             android:defaultValue="@string/DHIS_DEFAULT_SERVER"
             android:selectAllOnFocus="true"
             android:inputType="textUri"
+            android:singleLine="true"
+            android:maxLines="1" />
+
+        <org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference
+            android:key="@string/org_unit"
+            android:title="@string/create_info_organization_unit"
+            android:defaultValue=""
+            android:selectAllOnFocus="true"
+            android:inputType="text"
             android:singleLine="true"
             android:maxLines="1" />
 

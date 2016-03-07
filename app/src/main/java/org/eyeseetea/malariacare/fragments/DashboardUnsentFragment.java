@@ -369,7 +369,10 @@ public class DashboardUnsentFragment extends ListFragment {
             String msg;
             if(pushResult.isSuccessful()){
                 msg=getActivity().getResources().getString(R.string.dialog_info_push_ok)+" \n"+String.format("Imported: %s | Updated: %s | Ignored: %s",pushResult.getImported(),pushResult.getUpdated(),pushResult.getIgnored());
-            }else{
+            } else if (pushResult.getImported().equals("0")){
+                msg=getActivity().getResources().getString(R.string.dialog_info_push_bad_credentials);
+            }
+            else{
                 msg=pushResult.getException().getMessage();
             }
 

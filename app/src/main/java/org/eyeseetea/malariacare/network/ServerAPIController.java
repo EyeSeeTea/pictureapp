@@ -311,7 +311,7 @@ public class ServerAPIController {
             return false;
         }
 
-        if(!isValidOrgUnit(url, orgUnitCodeOrName)){
+        if(orgUnitCodeOrName == null || orgUnitCodeOrName.equals("") || !isValidOrgUnit(url, orgUnitCodeOrName)){
             Log.w(TAG,String.format("isReadyForPush(%s,%s) -> OrgUnit not found in server",url,orgUnitCodeOrName));
             return false;
         }

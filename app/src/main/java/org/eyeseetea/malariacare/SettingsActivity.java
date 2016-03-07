@@ -545,14 +545,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             });
             settingsActivity.setAutoCompleteEditTextPreference(autoCompleteEditTextPreference);
 
-            Preference removeSentPreference = (Preference)findPreference(getString(R.string.remove_sent_surveys));
-            removeSentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                 @Override
-                 public boolean onPreferenceClick(Preference preference) {
-                     askRemoveSentSurveys(getActivity());
-                     return true;
-                 }
-             });
+//            Preference removeSentPreference = (Preference)findPreference(getString(R.string.remove_sent_surveys));
+//            removeSentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//                 @Override
+//                 public boolean onPreferenceClick(Preference preference) {
+//                     askRemoveSentSurveys(getActivity());
+//                     return true;
+//                 }
+//             });
 
             Preference serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));
             serverUrlPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, false));

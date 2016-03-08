@@ -287,10 +287,7 @@ public class SurveyMonitor {
      */
     public static List<Survey> findSentSurveysForMonitor() {
         Date minDateForMonitor = TimePeriodCalculator.getInstance().getMinDateForMonitor();
-        return new Select().from(Survey.class)
-                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
-                .and(Condition.column(Survey$Table.EVENTDATE).greaterThanOrEq(minDateForMonitor)).queryList();
-
+        return Survey.findSentSurveysAfterDate(minDateForMonitor);
     }
 
 }

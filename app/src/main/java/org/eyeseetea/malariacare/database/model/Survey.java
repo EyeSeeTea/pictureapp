@@ -773,6 +773,18 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         return valuesStr;
     }
 
+
+    /**
+     * Find the surveys that have been sent after the given date
+     * @param minDateForMonitor
+     * @return
+     */
+    public static List<Survey> findSentSurveysAfterDate(Date minDateForMonitor) {
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
+                .and(Condition.column(Survey$Table.EVENTDATE).greaterThanOrEq(minDateForMonitor)).queryList();
+    }
+
     @Override
     public void accept(IConvertToSDKVisitor IConvertToSDKVisitor) throws Exception{
         IConvertToSDKVisitor.visit(this);
@@ -832,4 +844,5 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 ", status=" + status +
                 '}';
     }
+
 }

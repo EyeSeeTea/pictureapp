@@ -22,12 +22,7 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
-import org.eyeseetea.malariacare.monitor.utils.SurveyStats;
-import org.eyeseetea.malariacare.utils.Constants;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 
 /**
  * Created by arrizabalaga on 26/02/16.
@@ -39,7 +34,7 @@ public class DHAPIP1RowBuilder extends CounterRowBuilder {
     }
 
     @Override
-    protected boolean hasToIncrement(Survey survey) {
-        return SurveyStats.isDHAPIP1Or4(survey);
+    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
+        return surveyMonitor.isDHAPIP1Or4();
     }
 }

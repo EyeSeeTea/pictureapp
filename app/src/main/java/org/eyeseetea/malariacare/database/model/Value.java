@@ -225,6 +225,38 @@ public class Value extends BaseModel  implements VisitableToSDK {
                         .eq(survey.getId_survey())).orderBy(true,Question$Table.ORDER_POS).queryList();
     }
 
+    /**
+     * Checks if this value matches the given question and option
+     * @param idQuestion
+     * @param idOption
+     * @return
+     */
+    public boolean matchesQuestionOption(Long idQuestion, Long idOption){
+
+        //No question or option -> no match
+        if (idQuestion == null || idOption == null){
+            return false;
+        }
+
+        //Check if both matches
+        return idQuestion==this.id_question && idOption==this.id_option;
+    }
+
+    /**
+     * Checks if this value matches the given question
+     * @param idQuestion
+     * @return
+     */
+    public boolean matchesQuestion(Long idQuestion){
+
+        //No question or option -> no match
+        if (idQuestion == null){
+            return false;
+        }
+
+        //Check if both matches
+        return idQuestion==this.id_question;
+    }
 
     @Override
     public void accept(IConvertToSDKVisitor IConvertToSDKVisitor) {

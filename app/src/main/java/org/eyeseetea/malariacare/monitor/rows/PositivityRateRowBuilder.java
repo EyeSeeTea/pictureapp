@@ -24,7 +24,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.monitor.utils.PositivityRate;
-import org.eyeseetea.malariacare.monitor.utils.SurveyStats;
+import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -62,12 +62,12 @@ public class PositivityRateRowBuilder extends MonitorRowBuilder {
     }
 
     @Override
-    protected Object updateColumn(Object currentValue, Survey survey) {
+    protected Object updateColumn(Object currentValue, SurveyMonitor surveyMonitor) {
         PositivityRate positivityRate = (PositivityRate) currentValue;
-        if(SurveyStats.isSuspected(survey)){
+        if(surveyMonitor.isSuspected()){
             positivityRate.incNumSuspected();
         }
-        if(SurveyStats.isPositive(survey)){
+        if(surveyMonitor.isPositive()){
             positivityRate.incNumPositive();
         }
         return positivityRate;

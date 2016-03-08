@@ -48,5 +48,8 @@
     <!-- Text Card default -->
     <dimen name="text_card_def">24sp</dimen>
 
+    <!--Text size for age and phone-->
+    <dimen name="input_number_edit_text">32dp</dimen>
+
 
 </resources>

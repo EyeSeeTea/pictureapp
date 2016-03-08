@@ -46,6 +46,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -392,7 +393,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param value
      */
     private void initPositiveIntValue(TableRow tableRow, Value value){
-        Button button=(Button)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
+        ImageButton button=(ImageButton)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
 
         final EditText numberPicker = (EditText)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
 
@@ -436,8 +437,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Add button to listener
         swipeTouchListener.addClickableView(button);
 
-        //Take focus to this view
-        numberPicker.requestFocus();
+        //Take focus and open keyboard
+        openKeyboard(numberPicker);
     }
 
     /**
@@ -446,7 +447,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param value
      */
     private void initPhoneValue(TableRow tableRow, Value value){
-        Button button=(Button)tableRow.findViewById(R.id.dynamic_phone_btn);
+        ImageButton button=(ImageButton)tableRow.findViewById(R.id.dynamic_phone_btn);
         final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_phone_edit);
         final Context ctx = tableRow.getContext();
 
@@ -502,14 +503,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Add button to listener
         swipeTouchListener.addClickableView(button);
 
-        //Take focus to this view
+        //Take focus and open keyboard
+        openKeyboard(editText);
+    }
+
+    private void openKeyboard(final EditText editText){
         if(!readOnly) {
             editText.requestFocus();
             editText.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     //Show keypad
-                    showKeyboard(ctx, editText);
+                    showKeyboard(context, editText);
                 }
             }, 300);
         }

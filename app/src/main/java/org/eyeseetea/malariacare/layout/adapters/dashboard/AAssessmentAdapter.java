@@ -54,14 +54,11 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Survey survey = (Survey) getItem(position);
-        float density = getContext().getResources().getDisplayMetrics().density;
-        int paddingDp = (int)(5 * density);
 
         // Get the row layout
         View rowView = this.lInflater.inflate(getRecordLayout(), parent, false);
         //To ease testing
         rowView.setTag(survey.getId_survey());
-        rowView.setPadding(paddingDp, paddingDp, paddingDp, paddingDp);
 
 
         //Completion Date

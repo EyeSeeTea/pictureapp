@@ -23,8 +23,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:id="@+id/assessment_row"
-    android:padding="5dp"
-    android:background="@drawable/cell_borders">
+    android:background="@drawable/cell_borders"
+    android:padding="@dimen/dashboard_row_padding">
 
     <LinearLayout
         android:orientation="vertical"
@@ -44,7 +44,8 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/medium_font_name" />
+            app:tFontName="@string/medium_font_name"
+            android:textSize="@dimen/dashboard_text_size"/>
 
     </LinearLayout>
 
@@ -67,7 +68,8 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/medium_font_name" />
+            app:tFontName="@string/medium_font_name"
+            android:textSize="@dimen/dashboard_text_size"/>
 
     </LinearLayout>
 
@@ -90,7 +92,8 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/medium_font_name" />
+            app:tFontName="@string/medium_font_name"
+            android:textSize="@dimen/dashboard_text_size"/>
 
     </LinearLayout>
 

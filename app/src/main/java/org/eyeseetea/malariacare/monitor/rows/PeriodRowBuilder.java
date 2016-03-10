@@ -23,6 +23,7 @@ import android.content.Context;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
+import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 import org.eyeseetea.malariacare.monitor.utils.TimePeriodCalculator;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -85,11 +86,11 @@ public class PeriodRowBuilder extends MonitorRowBuilder{
     /**
      * This is a special row where survey is not important
      * @param currentValue
-     * @param survey
+     * @param surveyMonitor
      * @return
      */
     @Override
-    protected Object updateColumn(Object currentValue, Survey survey) {
+    protected Object updateColumn(Object currentValue, SurveyMonitor surveyMonitor) {
         return null;
     }
 

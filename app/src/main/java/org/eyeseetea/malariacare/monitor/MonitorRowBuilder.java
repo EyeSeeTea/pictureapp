@@ -22,6 +22,7 @@ package org.eyeseetea.malariacare.monitor;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 import org.eyeseetea.malariacare.monitor.utils.TimePeriodCalculator;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -103,10 +104,10 @@ public abstract class MonitorRowBuilder {
     /**
      * Calculates the new value of the column considering given survey + current column value
      * @param currentValue
-     * @param survey
+     * @param surveyMonitor
      * @return New value for the same column
      */
-    protected abstract Object updateColumn(Object currentValue, Survey survey);
+    protected abstract Object updateColumn(Object currentValue, SurveyMonitor surveyMonitor);
 
     /**
      * Returns the title of the row
@@ -134,9 +135,10 @@ public abstract class MonitorRowBuilder {
             return;
         }
         //Update data for each time dimension
-        addSurveyToMonthsData(survey);
-        addSurveyToWeeksData(survey);
-        addSurveyToDaysData(survey);
+        SurveyMonitor surveyMonitor  = new SurveyMonitor(survey);
+        addSurveyToMonthsData(surveyMonitor);
+        addSurveyToWeeksData(surveyMonitor);
+        addSurveyToDaysData(surveyMonitor);
     }
 
     /**
@@ -195,49 +197,49 @@ public abstract class MonitorRowBuilder {
 
     /**
      * Updates months data according to given survey
-     * @param survey
+     * @param surveyMonitor
      */
-    private void addSurveyToMonthsData(Survey survey){
-        int columnIndex = TimePeriodCalculator.getInstance().findIndexInMonths(survey.getEventDate());
+    private void addSurveyToMonthsData(SurveyMonitor surveyMonitor){
+        int columnIndex = TimePeriodCalculator.getInstance().findIndexInMonths(surveyMonitor.getSurvey().getEventDate());
         //This survey is not relevant to the monitor (too old)
         if(columnIndex==TimePeriodCalculator.COLUMN_NOT_FOUND){
             return;
         }
 
         //Updates column considering current value + survey
-        this.monthsData[columnIndex]=updateColumn(this.monthsData[columnIndex],survey);
+        this.monthsData[columnIndex]=updateColumn(this.monthsData[columnIndex],surveyMonitor);
     }
 
 
     /**
      * Updates months data according to given survey
-     * @param survey
+     * @param surveyMonitor
      */
-    private void addSurveyToWeeksData(Survey survey){
-        int columnIndex = TimePeriodCalculator.getInstance().findIndexInWeeks(survey.getEventDate());
+    private void addSurveyToWeeksData(SurveyMonitor surveyMonitor){
+        int columnIndex = TimePeriodCalculator.getInstance().findIndexInWeeks(surveyMonitor.getSurvey().getEventDate());
         //This survey is not relevant to the monitor (too old)
         if(columnIndex==TimePeriodCalculator.COLUMN_NOT_FOUND){
             return;
         }
 
         //Updates column considering current value + survey
-        this.weeksData[columnIndex]=updateColumn(this.weeksData[columnIndex],survey);
+        this.weeksData[columnIndex]=updateColumn(this.weeksData[columnIndex],surveyMonitor);
     }
 
 
     /**
      * Updates months data according to given survey
-     * @param survey
+     * @param surveyMonitor
      */
-    private void addSurveyToDaysData(Survey survey){
-        int columnIndex = TimePeriodCalculator.getInstance().findIndexInDays(survey.getEventDate());
+    private void addSurveyToDaysData(SurveyMonitor surveyMonitor){
+        int columnIndex = TimePeriodCalculator.getInstance().findIndexInDays(surveyMonitor.getSurvey().getEventDate());
         //This survey is not relevant to the monitor (too old)
         if(columnIndex==TimePeriodCalculator.COLUMN_NOT_FOUND){
             return;
         }
 
         //Updates column considering current value + survey
-        this.daysData[columnIndex]=updateColumn(this.daysData[columnIndex],survey);
+        this.daysData[columnIndex]=updateColumn(this.daysData[columnIndex],surveyMonitor);
     }
 
 

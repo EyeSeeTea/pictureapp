@@ -82,29 +82,29 @@ public class SurveyMonitor {
     private final static Long ID_OPTION_SPECIE_PV=8l;
 
     /**
-     * Id of AS/MQ treatment option
-     */
-    private final static Long ID_OPTION_TREATMENT_ASMQ=9l;
-
-    /**
      * Id of DHA-PIP1 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP1=10l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP1=9l;
 
     /**
      * Id of DHA-PIP2 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP2=11l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP2=10l;
 
     /**
      * Id of DHA-PIP3 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP3=12l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP3=11l;
 
     /**
      * Id of DHA-PIP3 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP4=13l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP4=12l;
+
+    /**
+     * Id of AS/MQ treatment option
+     */
+    private final static Long ID_OPTION_TREATMENT_ASMQ=13l;
 
     /**
      * Id of referral treatment option

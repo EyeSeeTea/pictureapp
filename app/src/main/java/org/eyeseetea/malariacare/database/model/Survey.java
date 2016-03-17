@@ -596,13 +596,14 @@ public class Survey extends BaseModel  implements VisitableToSDK {
             values=Value.listAllBySurvey(this);
         }
 
-        if(values.size()==0){
-            return false;
+        Boolean hasValues = !(values==null || values.isEmpty());
+        if(hasValues){
+            Value rdtValue=values.get(0);
+            return rdtValue.isAPositive();
         }
 
-        Value rdtValue=values.get(0);
+        return true;
 
-        return rdtValue.isAPositive();
     }
 
     /**

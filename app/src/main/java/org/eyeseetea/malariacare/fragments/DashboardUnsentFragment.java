@@ -241,29 +241,30 @@ public class DashboardUnsentFragment extends ListFragment {
         // we don't look for swipes.
         listView.setOnScrollListener(touchListener.makeScrollListener());
 
-        listView.setLongClickable(true);
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-
-
-                new AlertDialog.Builder(getActivity())
-                        .setTitle(R.string.dialog_title_push)
-                        .setMessage(R.string.dialog_info_push_confirm)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                final Survey survey = (Survey) adapter.getItem(position-1);
-                                AsyncPush asyncPush=new AsyncPush(survey);
-                                asyncPush.execute((Void) null);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null).create().show();
-
-
-                return true;
-            }
-        });
+        // Remove long click as push is done automatically now
+//        listView.setLongClickable(true);
+//
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+//
+//
+//                new AlertDialog.Builder(getActivity())
+//                        .setTitle(R.string.dialog_title_push)
+//                        .setMessage(R.string.dialog_info_push_confirm)
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface arg0, int arg1) {
+//                                final Survey survey = (Survey) adapter.getItem(position-1);
+//                                AsyncPush asyncPush=new AsyncPush(survey);
+//                                asyncPush.execute((Void) null);
+//                            }
+//                        })
+//                        .setNegativeButton(android.R.string.no, null).create().show();
+//
+//
+//                return true;
+//            }
+//        });
 
 
         setListShown(false);

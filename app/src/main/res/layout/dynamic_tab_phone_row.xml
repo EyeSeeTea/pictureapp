@@ -16,7 +16,7 @@
         <org.eyeseetea.malariacare.views.EditCard
             android:id="@+id/dynamic_phone_edit"
             android:layout_width="0dp"
-            android:layout_weight="0.8"
+            android:layout_weight="0.6"
             android:layout_height="wrap_content"
             android:inputType="phone"
             android:background="@drawable/edit_text_bottom_border"
@@ -27,14 +27,14 @@
             app:tDimension="@string/font_size_level2"
             app:tFontName="@string/condensed_font_name"
             />
-        <ImageButton
+        <Button
             android:id="@+id/dynamic_phone_btn"
-            android:background="#eecf00"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/ic_done_black_24dp"
-            android:layout_margin="5dp"
-             />
+            android:layout_width="0dp"
+            android:layout_weight="0.4"
+            android:text="@string/ok"
+            android:layout_margin="10dp"
+            />
     </LinearLayout>
 
 </TableRow>

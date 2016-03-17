@@ -267,15 +267,12 @@ public class SurveyService extends IntentService {
     private void prepareSurveyInfo(){
         Log.d(TAG, "prepareSurveyInfo (Thread:" + Thread.currentThread().getId() + ")");
 
-        Survey survey=Session.getSurvey();
-        Program program=survey.getProgram();
-
         //Get composite scores for current program & register them (scores)
         List<CompositeScore> compositeScores = new Select().all().from(CompositeScore.class).queryList();
         ScoreRegister.registerCompositeScores(compositeScores);
 
         //Get tabs for current program & register them (scores)
-        List<Tab> tabs = Tab.getTabsBySession();
+        List<Tab> tabs = new Select().all().from(Tab.class).queryList();
         ScoreRegister.registerTabScores(tabs);
 
         //Since intents does NOT admit NON serializable as values we use Session instead

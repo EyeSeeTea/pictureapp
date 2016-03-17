@@ -50,6 +50,8 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        createActionBar();
+
         setContentView(R.layout.fragment_dashboard);
         if (savedInstanceState == null) {
             DashboardUnsentFragment detailsFragment = new DashboardUnsentFragment();

@@ -68,8 +68,6 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected static String TAG=".BaseActivity";
 
-    private SurveyLocationListener locationListener;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -89,6 +87,19 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         if (savedInstanceState == null){
             initTransition();
+        }
+    }
+
+    /**
+     * Adds actionbar to the activity
+     */
+    public void createActionBar(){
+        Program program = Program.getFirstProgram();
+
+        if (program != null) {
+            android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+            LayoutUtils.setActionBarLogo(actionBar);
+            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), program.getName());
         }
     }
 
@@ -197,7 +208,6 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     public void newSurvey(View v){
-
         TabGroup tabGroup = new Select().from(TabGroup.class).querySingle();
         // Put new survey in session
         Survey survey = new Survey(null, tabGroup, Session.getUser());
@@ -211,9 +221,10 @@ public abstract class BaseActivity extends ActionBarActivity {
         finishAndGo(SurveyActivity.class);
     }
 
+
     private void prepareLocationListener(Survey survey){
 
-        locationListener = new SurveyLocationListener(survey.getId_survey());
+        SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
         LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Log.d(TAG, "requestLocationUpdates via GPS");

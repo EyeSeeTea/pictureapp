@@ -235,21 +235,6 @@ public class SurveyActivity extends BaseActivity{
         }
     }
 
-
-
-    /**
-     * Adds actionbar to the activity
-     */
-    private void createActionBar(){
-        Survey survey=Session.getSurvey();
-        Program program = survey.getProgram();
-
-        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
-        LayoutUtils.setActionBarLogo(actionBar);
-        LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), program.getName());
-    }
-
-
     /**
      * Gets a reference to the progress view in order to stop it later
      */

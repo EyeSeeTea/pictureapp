@@ -31,6 +31,8 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
 import android.text.InputFilter;
@@ -57,17 +59,22 @@ import android.widget.TextView;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SurveyActivity;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.progress.ProgressTabStatus;
+import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.TextCard;
@@ -134,7 +141,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.items=initItems(tab);
         List<Question> questions= initHeaderAndQuestions();
         this.progressTabStatus=initProgress(questions);
-        this.readOnly = !Session.getSurvey().isInProgress();
+        this.readOnly = Session.getSurvey() != null && !Session.getSurvey().isInProgress();
         this.isSwipeAdded=false;
     }
 
@@ -181,6 +188,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              */
             public void onClick(View view) {
                 Log.d(TAG, "onClick");
+
                 Option selectedOption=(Option)view.getTag();
                 Question question=progressTabStatus.getCurrentQuestion();
                 ReadWriteDB.saveValuesDDL(question, selectedOption);
@@ -393,7 +401,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param value
      */
     private void initPositiveIntValue(TableRow tableRow, Value value){
-        ImageButton button=(ImageButton)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
+        Button button=(Button)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
 
         final EditText numberPicker = (EditText)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
 
@@ -447,7 +455,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param value
      */
     private void initPhoneValue(TableRow tableRow, Value value){
-        ImageButton button=(ImageButton)tableRow.findViewById(R.id.dynamic_phone_btn);
+        Button button=(Button)tableRow.findViewById(R.id.dynamic_phone_btn);
         final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_phone_edit);
         final Context ctx = tableRow.getContext();
 
@@ -491,6 +499,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     hideKeyboard(ctx, v);
 
                     Question question = progressTabStatus.getCurrentQuestion();
+
                     ReadWriteDB.saveValuesText(question, phoneValue);
                     finishOrNext();
                 }

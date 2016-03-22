@@ -44,8 +44,9 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/medium_font_name"
-            android:textSize="@dimen/dashboard_text_size"/>
+            app:tFontName="@string/medium_font_name"/>
+            <!--android:textSize="@dimen/dashboard_text_size"-->
+
 
     </LinearLayout>
 
@@ -68,8 +69,9 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/medium_font_name"
-            android:textSize="@dimen/dashboard_text_size"/>
+            app:tFontName="@string/medium_font_name"/>
+            <!--android:textSize="@dimen/dashboard_text_size"-->
+
 
     </LinearLayout>
 
@@ -92,8 +94,9 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/medium_font_name"
-            android:textSize="@dimen/dashboard_text_size"/>
+            app:tFontName="@string/medium_font_name"/>
+            <!--android:textSize="@dimen/dashboard_text_size"-->
+
 
     </LinearLayout>
 

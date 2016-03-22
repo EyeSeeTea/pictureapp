@@ -40,8 +40,8 @@
         android:layout_weight="0.4"
         android:layout_gravity="center"
         app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/condensed_font_name"
-        android:textSize="@dimen/dashboard_text_size"/>
+        app:tFontName="@string/condensed_font_name"/>
+        <!--android:textSize="@dimen/dashboard_text_size"-->
 
     <org.eyeseetea.malariacare.views.TextCard
         android:layout_width="0dip"
@@ -57,8 +57,8 @@
         android:layout_gravity="center"
         android:autoText="false"
         app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/condensed_font_name"
-        android:textSize="@dimen/dashboard_text_size"/>
+        app:tFontName="@string/condensed_font_name"/>
+        <!--android:textSize="@dimen/dashboard_text_size"-->
 
     <org.eyeseetea.malariacare.views.TextCard
         android:layout_width="0dip"
@@ -74,7 +74,7 @@
         android:layout_gravity="center"
         android:autoText="false"
         app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/condensed_font_name"
-        android:textSize="@dimen/dashboard_text_size"/>
+        app:tFontName="@string/condensed_font_name"/>
+        <!--android:textSize="@dimen/dashboard_text_size"-->
 
 </TableRow>

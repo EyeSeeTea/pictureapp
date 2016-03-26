@@ -8,38 +8,21 @@
     <string name="cancel">Cancel</string>
     <string name="review">Review</string>
     <string name="send">Send</string>
-    <string name="score">Score</string>
-    <string name="number_zero">0</string>
-    <string name="number_zero_percentage">0 % </string>
-    <string name="title_id">ID</string>
-    <string name="title_name">Name</string>
-    <string name="good">Good</string>
-    <string name="fair">Fair</string>
-    <string name="poor">Poor</string>
 
     <!-- settings -->
     <string name="settings_menu_about">About</string>
     <string name="settings_menu_configuration">Settings</string>
     <string name="settings_menu_licence">License</string>
-    <string name="settings_menu_logout">Logout</string>
     <string name="settings_menu_monitoring">Monitor</string>
-
-    <!-- login -->
-    <string name="login_info_username">User</string>
-    <string name="login_info_password">Password</string>
-    <string name="login_info_sign_in">Sign in</string>
 
     <!-- # dialogs -->
     <string name="dialog_title_delete_surveys">Are you sure that you want to remove all sent surveys?</string>
     <string name="dialog_title_delete_survey">Delete Survey</string>
     <string name="dialog_info_delete_survey">Are you sure you want to completely delete this survey?</string>
     <string name="dialog_title_error">Error</string>
-    <string name="dialog_content_logout_confirmation">If you exit the system, all the not sent data will be deleted. Do you still want to exit?</string>
 
     <!-- create -->
-    <string name="create_info_ok">Create assessment</string>
     <string name="create_info_organization_unit">Organization Unit</string>
-    <string name="create_info_survey">Survey</string>
 
     <!-- assessment -->
     <string name="assessment_title_header">Pending Send</string>
@@ -49,7 +32,6 @@
     <string name="assessment_sent_date">Date</string>
 
     <!-- survey -->
-    <string name="survey_title_exit">Really Exit?</string>
     <string name="survey_info_exit">Are you sure you want to exit?</string>
     <string name="survey_info_exit_delete">The survey in progress will be deleted</string>
     <string name="survey_title_completed">Survey completed</string>
@@ -59,51 +41,9 @@
     <string name="exception_org_unit_not_valid">Outlet Code is not active for program. Contact PSI at 123456789</string>
     <string name="exception_org_unit_banned">Outlet is closed or blocked. Contact PSI at 123456789</string>
 
-    <!--widget-->
-    <string name="widget_info_empty_statement">Question statement</string>
-
-    <!-- custom -->
-    <string name="custom_title_tallies">TALLIES - Add up and enter the totals for the following indicators from the registers in column A.  In column B enter the total numbers from the monthly reporting sheet</string>
-    <string name="custom_info_tallies">TALLIES for the Month of</string>
-    <string name="custom_info_one">1</string>
-
-    <!-- adherence -->
-    <string name="adherence_info_switchquestion">Are there pharmacy records of ACTs dispensed?</string>
-    <string name="adherence_title_explanation">Phamacy/clinical register v.s Lab records. Steps in Evaluation of Provider Adherence to Malaria Diagnostic Test Results</string>
-    <string name="adherence_info_pharmacy_register">Pharmacy Register</string>
-    <string name="adherence_title_gender">Gender</string>
-    <string name="adherence_title_age">Age</string>
-    <string name="adherence_title_test_results">Test results</string>
-    <string name="adherence_info_patient_id">Patient\nID</string>
-    <string name="adherence_info_prescribed">ACT\nPrescribed?</string>
-    <string name="adherence_info_rdt_positive">RDT Positive</string>
-    <string name="adherence_info_rdt_negative">RDT Negative</string>
-    <string name="adherence_info_microscopy_positive">Microscopy Positive</string>
-    <string name="adherence_info_microscopy_negative">Microscopy Negative</string>
-
-    <!-- iqa eqa -->
-    <string name="iqatab_info_supervisor">Supervisor</string>
-    <string name="iqatab_info_parasites">Parasites/uL</string>
-    <string name="iqatab_info_species">Species</string>
-    <string name="iqatab_info_labstaff">Lab Staff</string>
-
-    <!-- reporting -->
-    <string name="reporting_info_reporting">Reporting</string>
-    <string name="reporting_info_results">Results</string>
-    <string name="reporting_info_register">Register</string>
-    <string name="reporting_info_monthly">Monthly \nReport</string>
-    <string name="iqatab_info_supervisor_matches">Supervisor matches lab staff?</string>
-
     <!-- dynamic -->
     <string name="dynamic_error_phone_format">Invalid format for phone number ( 0NN NNN NNN{N} )</string>
     <string name="dynamic_error_age">Invalid age</string>
-
-    <!-- score -->
-    <string name="score_info_tab_score">Score for tab:</string>
-    <string name="score_info_accumulated">Tab num/dem</string>
-
-    <!-- composite score -->
-    <string name="compscore_title_score_percentage">Score (%)</string>
 
     <!-- settings -->
     <string name="title_activity_settings">Settings</string>
@@ -135,8 +75,6 @@
     <string name="font_size_level4">xlarge</string>
 
 
-    <string name="textcard_default_scale">system</string>
-    <string name="textcard_default_dimension">medium</string>
     <string name="dialog_title_push_response">Push response</string>
     <string name="dialog_info_push_ok">Survey data pushed to server. Results:</string>
     <string name="dialog_info_push_bad_credentials">Bad credentials for pushing</string>

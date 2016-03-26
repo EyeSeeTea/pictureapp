@@ -6,8 +6,8 @@
     <string name="eyeseetea">EyeSeeTea LTD</string>
     <string name="empty_string"></string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet</string>
-    <string name="score_title_percentage">%</string>
-    <string name="score_info_zero_float">0.0</string>
+    <!--<string name="score_title_percentage">%</string>-->
+    <!--<string name="score_info_zero_float">0.0</string>-->
 
     <!-- Preference variable names -->
     <item name="show_num_dems" type="string">show_num_dems</item>

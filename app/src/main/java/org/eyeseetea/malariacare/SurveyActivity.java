@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
@@ -38,20 +37,13 @@ import android.widget.ProgressBar;
 
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.adapters.survey.AutoTabAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.CompositeScoreAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.CustomAdherenceAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.CustomIQTABAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
-import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -119,7 +111,7 @@ public class SurveyActivity extends BaseActivity{
         Survey survey=Session.getSurvey();
         int infoMessage=survey.isInProgress()?R.string.survey_info_exit_delete:R.string.survey_info_exit;
         new AlertDialog.Builder(this)
-                .setTitle(R.string.survey_title_exit)
+                .setTitle(R.string.survey_info_exit)
                 .setMessage(infoMessage)
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -439,27 +431,10 @@ public class SurveyActivity extends BaseActivity{
          * @return
          */
         private ITabAdapter buildAdapter(Tab tab){
-            if (tab.isCompositeScore())
-                return new CompositeScoreAdapter(this.compositeScores, SurveyActivity.this, R.layout.composite_score_tab, tab.getName());
-
-            if (tab.isAdherenceTab()) {
-                Log.d(TAG, "Creating an Adherence Adapter");
-                return CustomAdherenceAdapter.build(tab, SurveyActivity.this);
-            }
-
-            if (tab.isIQATab())
-                return CustomIQTABAdapter.build(tab, SurveyActivity.this);
-
-
-            if(tab.isGeneralScore()){
-                return null;
-            }
-
-            if (tab.isDynamicTab()){
+            if (tab.isDynamicTab())
                 return new DynamicTabAdapter(tab,SurveyActivity.this);
-            }
 
-            return AutoTabAdapter.build(tab,SurveyActivity.this);
+            return null;
         }
     }
 }

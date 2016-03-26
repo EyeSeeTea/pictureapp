@@ -3,7 +3,7 @@
 
     <!-- # general -->
     <string name="app_name" translatable="false">QIS Surveillance</string>
-    <string name="developers">EyeSeeTea LTD</string>
+    <string name="developers">EyeSeeTea LT</string>
     <string name="empty_string" translatable="false"></string>
     <string name="yes">Yes</string>
     <string name="no">No</string>

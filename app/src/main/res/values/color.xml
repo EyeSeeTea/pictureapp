@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="mainColor">#E0F8E0</color>
     <color name="green">#40FF00</color>
     <color name="amber">#FF8000</color>
     <color name="red">#FF0000</color>
@@ -14,6 +13,5 @@
     <color name="light_grey">#FFE5E5E5</color>
     <color name="parentColor">#DAF2FF</color>
     <color name="textFieldColor">#BEBEBE</color>
-    <color name="formFooter">#429470</color>
     <color name="custom_blue_light">#1f70c3</color>
 </resources>

@@ -191,22 +191,6 @@ public abstract class BaseActivity extends ActionBarActivity {
         startActivity(new Intent(this, MonitorActivity.class));
     }
 
-    /**
-     * Closes current session and goes back to loginactivity
-     */
-    protected void logout(){
-        new AlertDialog.Builder(this)
-                .setTitle(getApplicationContext().getString(R.string.settings_menu_logout))
-                .setMessage(getApplicationContext().getString(R.string.dialog_content_logout_confirmation))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Session.logout();
-                        finishAndGo(DashboardActivity.class);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null).create().show();
-    }
-
     public void newSurvey(View v){
         TabGroup tabGroup = new Select().from(TabGroup.class).querySingle();
         // Put new survey in session

@@ -2,103 +2,35 @@
 <resources>
 
     <!-- # general -->
-    <string name="developers">EyeSeeTea LTD</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>
     <string name="review">Revisar</string>
     <string name="send">Enviar</string>
-    <string name="score">Puntuación</string>
-    <string name="number_zero">0</string>
-    <string name="number_zero_percentage">0 % </string>
-    <string name="title_id">ID</string>
-    <string name="title_name">Nombre</string>
-    <string name="good">Bien</string>
-    <string name="fair">Normal</string>
-    <string name="poor">Mal</string>
-    <string name="plus">+</string>
-    <string name="lorem_ipsum">Lorem ipsum dolor sit amet</string>
 
     <!-- settings -->
     <string name="settings_menu_about">Acerca de</string>
     <string name="settings_menu_configuration">Configuración</string>
-    <string name="settings_menu_delete">Borrar todas las encuestas enviadas</string>
     <string name="settings_menu_licence">Licencia</string>
-    <string name="settings_menu_update">Actualizar preguntas (DHIS)</string>
-    <string name="settings_menu_logout">Desconectar</string>
 
     <!-- login -->
-    <string name="login_info_username">Email</string>
-    <string name="login_info_password">Contraseña</string>
-    <string name="login_info_sign_in">Acceder</string>
-    <string name="login_error_bad_credentials">El usuario/contraseña es incorrecto</string>
 
     <!-- # dialogs -->
     <string name="dialog_title_delete_surveys">¿Está seguro de querer borrar todas las encuestas enviadas?</string>
     <string name="dialog_title_delete_survey">Borrar evaluación</string>
     <string name="dialog_info_delete_survey">¿Seguro que desea borrar la evaluación?</string>
     <string name="dialog_title_error">Error</string>
-    <string name="dialog_error_denominator">Error, denominador = 0</string>
-    <string name="dialog_title_missing_selection">Selección obligatoria</string>
-    <string name="dialog_content_missing_selection">Por favor, seleccione un centro y un tipo de encuesta</string>
-    <string name="dialog_title_existing_survey">Encuesta existente</string>
-    <string name="dialog_content_existing_survey">Ya existe una encuesta previa no enviada para esa centro/tipo de encuesta</string>
-    <string name="dialog_content_logout_confirmation">Si se desconecta del sistema, se borrarán todas las encuestas no enviadas. ¿Quiere continuar?</string>
-
-    <!-- dashboard -->
-    <string name="dashboard_info_feedback">Feedback</string>
-    <string name="dashboard_info_active_assessments">Evaluaciones activas</string>
-    <string name="dashboard_info_new_assessment">Nueva evaluación</string>
-    <string name="dashboard_info_future_assessments">Evaluaciones futuras</string>
-    <string name="dashboard_info_performance">Rendimiento</string>
-    <string name="dashboard_info_analytics">Métricas</string>
-    <string name="dashboard_button_new_survey">Nueva Encuesta</string>
-    <string name="dashboard_button_see_all">Ver todas</string>
-    <string name="dashboard_info_ready_to_upload">Lista para enviar</string>
 
     <!-- create -->
-    <string name="create_info_ok">Crear evaluación</string>
     <string name="create_info_organization_unit">Unidad de organización</string>
-    <string name="create_info_survey">Formulario</string>
 
     <!-- assessment -->
-    <string name="assessment_title_facility_date">Centro de salud/ Fecha</string>
-    <string name="assessment_title_state">Estado</string>
-    <string name="assessment_info_delete">Eliminar</string>
     <string name="assessment_title_header">Pendiente de enviar</string>
 
-    <!-- feedback -->
-    <!-- XXX Should it be replaced by 'assessment_title_facility_date'?-->
-    <string name="feedback_title_organization_unit_date">Unidad de organización/ Date</string>
-    <string name="feedback_title_header">Realimentación</string>
-
-    <!-- future -->
-    <string name="future_title_facility">Centro de salud</string>
-    <string name="future_title_previous_date">Fecha última evaluación</string>
-    <string name="future_title_due_date">Fecha límite</string>
-    <string name="future_title_action">Acción</string>
-    <string name="future_title_header">Evaluaciones Futuras</string>
-
-    <!-- performance -->
-    <string name="performance_title_period">Periodo</string>
-    <string name="performance_title_target">Objetivo</string>
-    <string name="performance_title_completed">Completado</string>
-    <string name="performance_title_achievement">%</string>
-    <string name="performance_title_header">Rendimiento Frente a Objetivo</string>
-
-    <!-- analytics -->
-    <string name="analytics_title_period">Periodo</string>
-    <string name="analytics_title_target">Objetivo</string>
-    <string name="analytics_title_completed">Completado</string>
-    <string name="analytics_title_achievement">%</string>
-    <string name="analytics_title_header">Estadísticas</string>
-
     <!-- survey -->
-    <string name="survey_title_exit">¿Realmente salir?</string>
     <string name="survey_info_exit">¿Está seguro de que quiere salir?</string>
     <string name="survey_info_exit_delete">La evaluación en marcha será eliminada</string>
-    <string name="survey_info_select_tab">Seleccione pestaña: </string>
     <string name="survey_title_completed">Evaluacion finalizada</string>
     <string name="survey_info_completed">La evaluacion ha sido completada correctamente</string>
 
@@ -106,88 +38,12 @@
     <string name="exception_org_unit_not_valid">El código de salida no está activo para el programa . Contacto PSI en el 123456789</string>
     <string name="exception_org_unit_banned">El código está cerrado o bloqueado . Contacto PSI en el 123456789</string>
 
-    <!-- widget -->
-    <string name="widget_info_empty_statement">Enunciado de cuestión</string>
-
-    <!-- custom -->
-    <string name="custom_title_tallies">TALLIES - Add up and enter the totals for the following indicators from the registers in column A.  In column B enter the total numbers from the monthly reporting sheet</string>
-    <string name="custom_info_tallies">TALLIES for the Month of</string>
-    <string name="custom_info_one">1</string>
-    <string name="custom_info_two">2</string>
-    <string name="custom_info_three">3</string>
-    <string name="custom_info_four">4</string>
-    <string name="custom_info_five">5</string>
-    <string name="custom_info_six">6</string>
-    <string name="custom_info_seven">7</string>
-    <string name="custom_info_eight">8</string>
-    <string name="custom_info_nine">9</string>
-    <string name="custom_info_ten">10</string>
-    <string name="custom_info_eleven">11</string>
-    <string name="custom_info_twelve">12</string>
-    <string name="custom_info_thirteen">13</string>
-    <string name="custom_info_fourteen">14</string>
-    <string name="custom_info_fifteen">15</string>
-    <string name="custom_info_sixteen">16</string>
-    <string name="custom_info_seventeen">17</string>
-    <string name="custom_info_eighteen">18</string>
-    <string name="custom_info_nineteen">19</string>
-    <string name="custom_info_twenty">20</string>
-
-    <!-- adherence -->
-    <string name="adherence_info_switchquestion">¿Hay registros de ACTs dispensados?</string>
-    <string name="adherence_title_explanation">Registros de farmacia/clínicos v.s. registros de laboratorio. Steps in Evaluation of Provider Adherence to Malaria Diagnostic Test Results</string>
-    <string name="adherence_info_pharmacy_register">Registro de farmacia</string>
-    <string name="adherence_title_gender">Género</string>
-    <string name="adherence_title_age">Edad</string>
-    <string name="adherence_title_test_results">Resultados del test</string>
-    <string name="adherence_info_patient_id">ID\npaciente</string>
-    <string name="adherence_info_prescribed">¿ACT\nPrescrito?</string>
-    <string name="adherence_info_rdt_positive">RDT Positivo</string>
-    <string name="adherence_info_rdt_negative">RDT Negativo</string>
-    <string name="adherence_info_microscopy_positive">Microscopía Positiva</string>
-    <string name="adherence_info_microscopy_negative">Microscopía Negativa</string>
-
-    <!-- iqa eqa -->
-    <string name="iqatab_info_supervisor">Supervisor</string>
-    <string name="iqatab_info_parasites">Parásitos/uL</string>
-    <string name="iqatab_info_species">Especímenes</string>
-    <string name="iqatab_info_labstaff">Personal de laboratorio</string>
-
-    <!-- reporting -->
-    <string name="reporting_info_reporting">Informes</string>
-    <string name="reporting_info_results">Resultados</string>
-    <string name="reporting_info_register">Registro</string>
-    <string name="reporting_info_monthly">Informe\nMensual</string>
-    <string name="iqatab_info_supervisor_matches">¿Coinciden supervisor y personal de laboratorio?</string>
-
     <!-- dynamic -->
     <string name="dynamic_error_phone_format">El télefono dado no esta bien formateado ( 0NN NNN NNN{N} )</string>
-    <string name="dynamic_required_field">Este campo es obligatorio</string>
     <string name="dynamic_error_age">La edad no es válida</string>
-
-    <!-- score -->
-    <string name="score_title_clinical_fever">Evaluación\nde fiebre\nclínica</string>
-    <string name="score_title_rdt">RDT</string>
-    <string name="score_title_avg">Media</string>
-    <string name="score_title_environment">Entorno</string>
-    <string name="score_title_profile">Perfil</string>
-    <string name="score_title_percentage">%</string>
-    <string name="score_info_tab_score">Puntuación para pestaña:</string>
-    <string name="score_info_overall">Total</string>
-    <string name="score_info_zero_float">0.0</string>
-    <string name="score_info_accumulated">Pestaña num/dem</string>
-    <string name="score_info_case1">Caso 1</string>
-    <string name="score_info_case2">Caso 2</string>
-    <string name="score_info_case3">Caso 3</string>
-    <string name="score_info_case4">Caso 4</string>
-
-    <!-- composite score -->
-    <string name="compscore_title_score_percentage">Puntuación (%)</string>
 
     <!-- settings -->
     <string name="title_activity_settings">Configuración</string>
-    <string name="settings_checkbox_show_num_dems">Mostrar num/dems</string>
-    <string name="settings_checkbox_description_show_num_dems">Si está activo, las preguntas del formulario muestran sus numeradores y denominadores, usados para calcular la puntuación total de la encuesta</string>
     <string name="settings_checkbox_customize_fonts">¿Personalizar fuentes?</string>
     <string name="settings_list_font_sizes">Tamaño de fuentes</string>
     <string-array name="settings_array_titles_font_sizes">
@@ -215,39 +71,20 @@
     <string name="font_size_level3">large</string>
     <string name="font_size_level4">xlarge</string>
 
-    <string name="textcard_default_scale">system</string>
-    <string name="textcard_default_dimension">medium</string>
-    <string name="dashboard_info_sent">Enviado</string>
     <string name="dialog_title_push">Enviando datos</string>
-    <string name="dialog_info_push_confirm">"Está seguro? No se puede deshacer esta acción"</string>
     <string name="dialog_title_push_response">Respuesta carga</string>
     <string name="dialog_info_push_ok">Datos subidos correctamente al servidor. Resultados: </string>
     <string name="dialog_info_push_bad_credentials">Credenciales incorrectas para el push</string>
-    <string name="dialog_error_push_no_org_unit">No hay configurado ningún codigo de Organización. Por favor, revise la configuracion.</string>
     <string name="dialog_error_push_no_uid">No UID encontrado en el servidor para el código </string>
     <string name="dialog_error_push_no_location">Localización no disponible</string>
 
-    <string name="assessment_sent_title_state">Estado</string>
     <string name="assessment_sent_title_header">Encuestas Enviadas</string>
     <string name="assessment_sent_date">Fecha de llenado</string>
-    <string name="assessment_title_date_completion">Fecha</string>
     <string name="assessment_title_info">Info</string>
 
-    <string name="pref_data">Datos</string>
     <string name="pref_server">Servidor</string>
     <string name="pref_visual">Visual</string>
 
-    <!-- numbers: hardcoded to khmer -->
-    <string name="number_0">0</string>
-    <string name="number_1">1</string>
-    <string name="number_2">2</string>
-    <string name="number_3">3</string>
-    <string name="number_4">4</string>
-    <string name="number_5">5</string>
-    <string name="number_6">6</string>
-    <string name="number_7">7</string>
-    <string name="number_8">8</string>
-    <string name="number_9">9</string>
     <string name="assessment_title_rdt">RDT</string>
     <string name="progress_pull_downloading" >Refrescando metadatos (esto puede llevar algunos minutos) ...</string>
     <string name="progress_pull_preparing_orgs">Cargando organizaciones ...</string>
@@ -291,5 +128,15 @@
     <string name="monitor_row_title_dhapip3">DHIS-PIP3</string>
     <string name="monitor_row_title_rdts">RDTs</string>
     <string name="monitor_row_title_positivity_rate">Positivity rate</string>
+    <string name="number_0">0</string>
+    <string name="number_1">1</string>
+    <string name="number_2">2</string>
+    <string name="number_3">3</string>
+    <string name="number_4">4</string>
+    <string name="number_5">5</string>
+    <string name="number_6">6</string>
+    <string name="number_7">7</string>
+    <string name="number_8">8</string>
+    <string name="number_9">9</string>
 
 </resources>

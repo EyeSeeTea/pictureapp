@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- # general -->
+    <string name="app_name">QIS Surveillance</string>
+    <string name="eyeseetea">EyeSeeTea LTD</string>
+    <string name="empty_string"></string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet</string>
+    <!--<string name="score_title_percentage">%</string>-->
+    <!--<string name="score_info_zero_float">0.0</string>-->
+
+    <!-- Preference variable names -->
+    <item name="show_num_dems" type="string">show_num_dems</item>
+    <item name="customize_fonts" type="string">customize_fonts</item>
+    <item name="font_sizes" type="string">font_sizes</item>
+    <item name="dhis_url" type="string">dhis_url</item>
+    <item name="org_unit" type="string">org_unit</item>
+
+    <!-- async push -->
+    <string name="PUSH_PERIOD">10</string>
+
+    <!-- gps location -->
+    <string name="GPS_PROVIDER_DEFAULT">default</string>
+    <string name="GPS_LATITUDE_DEFAULT">10.0</string>
+    <string name="GPS_LONGITUDE_DEFAULT">103.0</string>
+
+    <!-- UID program-->
+    <string name="DHIS_DEFAULT_SERVER">https://www.psi-mis.org</string>
+
+    <!-- settings -->
+    <string name="normal_font">Roboto-Medium.ttf</string>
+    <string name="light_font">Roboto-Light.ttf</string>
+    <string name="bold_font_name">Roboto-Bold.ttf</string>
+    <string name="medium_font_name">Roboto-Medium.ttf</string>
+    <string name="condensed_font_name">Roboto-Condensed.ttf</string>
+
+    <string name="font_size_system">system</string>
+
+
+
+
+
+    <string name="symbolPlus">+</string>
+    <string name="symbolMinus">-</string>
+    <string name="symbolCross">X</string>
+    <string name="rdtPositive">Positive</string>
+    <string name="rdtNegative">Negative</string>
+    <string name="rdtNotTested">Not Tested</string>
+</resources>

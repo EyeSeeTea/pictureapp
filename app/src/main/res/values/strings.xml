@@ -2,7 +2,7 @@
 <resources>
 
     <!-- # general -->
-    <string name="yes">Yah</string>
+    <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- # general -->
     <string name="yes">Oui</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
@@ -9,42 +8,30 @@
     <string name="review">Réviser</string>
     <string name="send">Envoyer</string>
 
-    <!-- settings -->
     <string name="settings_menu_about">A propos de cette app</string>
     <string name="settings_menu_configuration">Paramètres</string>
     <string name="settings_menu_licence">License</string>
 
-    <!-- login -->
-
-    <!-- # dialogs -->
     <string name="dialog_title_delete_surveys">Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?</string>
     <string name="dialog_title_delete_survey">Supprimer envoyés</string>
     <string name="dialog_info_delete_survey">Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?</string>
     <string name="dialog_title_error">Erreur</string>
 
-    <!-- create -->
     <string name="create_info_organization_unit">Unité d\'organisation</string>
 
-    <!-- assessment -->
     <string name="assessment_title_header">Attendant Envoyer</string>
 
-    <!-- survey -->
     <string name="survey_info_exit">"Êtes-vous sûr de vouloir quitter?"</string>
     <string name="survey_info_exit_delete">"L'enquête en cours sera supprimé"</string>
     <string name="survey_title_completed">Enquête terminée</string>
     <string name="survey_info_completed">Le sondage a été effectué avec succès</string>
 
-    <!-- exceptions -->
     <string name="exception_org_unit_not_valid">Code de sortie est pas active pour le programme . Contactez PSI au 123456789</string>
     <string name="exception_org_unit_banned">Sortie est fermée ou bloquée. Contactez PSI au 123456789</string>
 
-    <!-- dynamic -->
     <string name="dynamic_error_phone_format">"Le numéro de téléphone donné a un format incorrect ( 0NN NNN NNN{N} )"</string>
     <string name="dynamic_error_age">âge invalide</string>
 
-    <!-- score -->
-
-    <!-- settings -->
     <string name="title_activity_settings">Parametres</string>
     <string name="settings_checkbox_customize_fonts">Personaliser les fonts?</string>
     <string name="settings_list_font_sizes">Taille des fonts</string>

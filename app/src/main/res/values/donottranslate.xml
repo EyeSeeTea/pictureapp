@@ -44,4 +44,6 @@
     <string name="rdtPositive">Positive</string>
     <string name="rdtNegative">Negative</string>
     <string name="rdtNotTested">Not Tested</string>
+
+    <string name="monitor_row_title"><![CDATA[&nbsp;&nbsp;%1$s]]></string>
 </resources>

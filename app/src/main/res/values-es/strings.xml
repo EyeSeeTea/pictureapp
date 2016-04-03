@@ -114,9 +114,9 @@
     <string name="monitor_row_title_week">Semana</string>
     <string name="monitor_row_title_suspected">Casos sospechosos</string>
     <string name="monitor_row_title_positive">Positivo</string>
-    <string name="monitor_row_title_pf"><![CDATA[&nbsp;&nbsp;Pf]]></string>
-    <string name="monitor_row_title_pv"><![CDATA[&nbsp;&nbsp;Pv]]></string>
-    <string name="monitor_row_title_pfpv"><![CDATA[&nbsp;&nbsp;Pf/Pv]]></string>
+    <string name="pf">Pf</string>
+    <string name="pv">Pv</string>
+    <string name="pfpv">Pf/Pv</string>
     <string name="monitor_row_title_negative">Negativo</string>
     <string name="monitor_row_title_not_tested">No testado</string>
     <string name="monitor_row_title_referral">Referral</string>

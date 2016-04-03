@@ -30,7 +30,7 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 public class PvRowBuilder extends CounterRowBuilder {
 
     public PvRowBuilder(Context context){
-        super(context, context.getString(R.string.monitor_row_title_pv));
+        super(context, context.getString(R.string.monitor_row_title, context.getString(R.string.pv)));
     }
 
     @Override

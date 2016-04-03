@@ -36,9 +36,7 @@
 
     <string name="font_size_system">system</string>
 
-
-
-
+    <string name="settings_array_values_font_sizes_def">@string/font_size_level2</string>
 
     <string name="symbolPlus">+</string>
     <string name="symbolMinus">-</string>

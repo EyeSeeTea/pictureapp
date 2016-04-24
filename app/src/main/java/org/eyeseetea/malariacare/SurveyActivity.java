@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.eyeseetea.malariacare;
 
@@ -24,42 +24,28 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.adapters.general.TabArrayAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.AutoTabAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.CompositeScoreAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.CustomAdherenceAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.CustomIQTABAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
-import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.TextCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,19 +106,12 @@ public class SurveyActivity extends BaseActivity{
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_survey, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed");
         Survey survey=Session.getSurvey();
         int infoMessage=survey.isInProgress()?R.string.survey_info_exit_delete:R.string.survey_info_exit;
         new AlertDialog.Builder(this)
-                .setTitle(R.string.survey_title_exit)
+                .setTitle(R.string.survey_info_exit)
                 .setMessage(infoMessage)
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -233,7 +212,7 @@ public class SurveyActivity extends BaseActivity{
             content.removeAllViews();
             content.addView(viewContent);
             ITabAdapter tabAdapter = tabAdaptersCache.findAdapter(tab);
-            if (    tab.getType() == Constants.TAB_AUTOMATIC_SCORED ||
+            if (    tab.getType() == Constants.TAB_AUTOMATIC ||
                     tab.getType() == Constants.TAB_ADHERENCE    ||
                     tab.getType() == Constants.TAB_IQATAB ||
                     tab.getType() == Constants.TAB_SCORE_SUMMARY) {
@@ -247,21 +226,6 @@ public class SurveyActivity extends BaseActivity{
             stopProgress();
         }
     }
-
-
-
-    /**
-     * Adds actionbar to the activity
-     */
-    private void createActionBar(){
-        Survey survey=Session.getSurvey();
-        Program program = survey.getProgram();
-
-        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
-        LayoutUtils.setActionBarLogo(actionBar);
-        LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), program.getName());
-    }
-
 
     /**
      * Gets a reference to the progress view in order to stop it later
@@ -467,27 +431,10 @@ public class SurveyActivity extends BaseActivity{
          * @return
          */
         private ITabAdapter buildAdapter(Tab tab){
-            if (tab.isCompositeScore())
-                return new CompositeScoreAdapter(this.compositeScores, SurveyActivity.this, R.layout.composite_score_tab, tab.getName());
-
-            if (tab.isAdherenceTab()) {
-                Log.d(TAG, "Creating an Adherence Adapter");
-                return CustomAdherenceAdapter.build(tab, SurveyActivity.this);
-            }
-
-            if (tab.isIQATab())
-                return CustomIQTABAdapter.build(tab, SurveyActivity.this);
-
-
-            if(tab.isGeneralScore()){
-                return null;
-            }
-
-            if (tab.isDynamicTab()){
+            if (tab.isDynamicTab())
                 return new DynamicTabAdapter(tab,SurveyActivity.this);
-            }
 
-            return AutoTabAdapter.build(tab,SurveyActivity.this);
+            return null;
         }
     }
 }

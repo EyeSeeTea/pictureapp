@@ -1,43 +1,57 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.support.multidex.MultiDex;
 import android.telephony.TelephonyManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.index.Index;
 
+import org.eyeseetea.malariacare.database.migrations.Migration2Database;
+import org.eyeseetea.malariacare.database.model.Match;
+import org.eyeseetea.malariacare.database.model.Match$Table;
+import org.eyeseetea.malariacare.database.model.QuestionOption;
+import org.eyeseetea.malariacare.database.model.QuestionOption$Table;
+import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.database.model.QuestionRelation$Table;
+import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.model.Value$Table;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
+import org.eyeseetea.malariacare.utils.Constants;
+import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
 import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by nacho on 04/08/15.
  */
-public class EyeSeeTeaApplication extends Application {
+public class EyeSeeTeaApplication extends Dhis2Application {
 
     @Override
     public void onCreate() {
@@ -50,8 +64,20 @@ public class EyeSeeTeaApplication extends Application {
         PhoneMetaData phoneMetaData=this.getPhoneMetadata();
         Session.setPhoneMetaData(phoneMetaData);
 
-        FlowManager.init(this);
+        FlowManager.init(this, "_EyeSeeTeaDB");
+        createDBIndexes();
+        Migration2Database.postMigrate();
     }
+
+    private void createDBIndexes(){
+        new Index<QuestionOption>(Constants.QUESTION_OPTION_IDX).on(QuestionOption.class, QuestionOption$Table.ID_QUESTION).enable();
+        new Index<QuestionRelation>(Constants.QUESTION_RELATION_IDX).on(QuestionRelation.class, QuestionRelation$Table.OPERATION).enable();
+        //XXX This should be reviewed
+        new Index<QuestionRelation>(Constants.QUESTION_RELATION_IDX).on(QuestionRelation.class, QuestionRelation$Table.ID_QUESTION).enable();
+        new Index<Match>(Constants.MATCH_IDX).on(Match.class, Match$Table.ID_QUESTION_RELATION).enable();
+        new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
+    }
+
 
     PhoneMetaData getPhoneMetadata(){
         PhoneMetaData phoneMetaData=new PhoneMetaData();
@@ -68,6 +94,12 @@ public class EyeSeeTeaApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+        FlowManager.destroy();
+    }
+
+    @Override
+    public Class<? extends Activity> getMainActivity() {
+        return new DashboardActivity().getClass();
     }
 
     @Override
@@ -75,4 +107,7 @@ public class EyeSeeTeaApplication extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
+
+
 }

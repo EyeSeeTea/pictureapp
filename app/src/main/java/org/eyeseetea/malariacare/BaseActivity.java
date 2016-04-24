@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare;
@@ -47,6 +47,7 @@ import org.eyeseetea.malariacare.database.model.OrgUnit$Table;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Program$Table;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -65,9 +66,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     public static final String SETTINGS_CALLER_ACTIVITY = "SETTINGS_CALLER_ACTIVITY";
 
-    private static String TAG=".BaseActivity";
-
-    private SurveyLocationListener locationListener;
+    protected static String TAG=".BaseActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +87,19 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         if (savedInstanceState == null){
             initTransition();
+        }
+    }
+
+    /**
+     * Adds actionbar to the activity
+     */
+    public void createActionBar(){
+        Program program = Program.getFirstProgram();
+
+        if (program != null) {
+            android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+            LayoutUtils.setActionBarLogo(actionBar);
+            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), program.getName());
         }
     }
 
@@ -113,6 +125,10 @@ public abstract class BaseActivity extends ActionBarActivity {
             case R.id.action_settings:
                 debugMessage("User asked for settings");
                 goSettings();
+                break;
+            case R.id.action_monitoring:
+                debugMessage("User asked for monitor");
+                goMonitor();
                 break;
             case R.id.action_license:
                 debugMessage("User asked for license");
@@ -171,27 +187,14 @@ public abstract class BaseActivity extends ActionBarActivity {
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
-    /**
-     * Closes current session and goes back to loginactivity
-     */
-    protected void logout(){
-        new AlertDialog.Builder(this)
-                .setTitle(getApplicationContext().getString(R.string.settings_menu_logout))
-                .setMessage(getApplicationContext().getString(R.string.dialog_content_logout_confirmation))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Session.logout();
-                        finishAndGo(DashboardActivity.class);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null).create().show();
+    protected void goMonitor(){
+        startActivity(new Intent(this, MonitorActivity.class));
     }
 
     public void newSurvey(View v){
-        //Get Programs from database
-        List<Program> firstProgram = new Select().from(Program.class).where(Condition.column(Program$Table.ID_PROGRAM).eq(1)).queryList();
+        TabGroup tabGroup = new Select().from(TabGroup.class).querySingle();
         // Put new survey in session
-        Survey survey = new Survey(null, firstProgram.get(0), Session.getUser());
+        Survey survey = new Survey(null, tabGroup, Session.getUser());
         survey.save();
         Session.setSurvey(survey);
 
@@ -202,9 +205,10 @@ public abstract class BaseActivity extends ActionBarActivity {
         finishAndGo(SurveyActivity.class);
     }
 
+
     private void prepareLocationListener(Survey survey){
 
-        locationListener = new SurveyLocationListener(survey.getId_survey());
+        SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
         LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Log.d(TAG, "requestLocationUpdates via GPS");

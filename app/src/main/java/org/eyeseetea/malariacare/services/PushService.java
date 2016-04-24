@@ -1,41 +1,44 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
-        package org.eyeseetea.malariacare.services;
+package org.eyeseetea.malariacare.services;
 
-        import android.app.Activity;
-        import android.app.IntentService;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.SharedPreferences;
-        import android.preference.PreferenceManager;
-        import android.telephony.TelephonyManager;
-        import android.util.Log;
+import android.app.IntentService;
+import android.content.Intent;
+import android.util.Log;
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.otto.Subscribe;
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
+import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.network.PushClient;
+import org.eyeseetea.malariacare.network.PushResult;
+import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.utils.Constants;
+import org.hisp.dhis.android.sdk.controllers.DhisService;
+import org.hisp.dhis.android.sdk.job.NetworkJob;
+import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
+import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
-        import org.eyeseetea.malariacare.DashboardActivity;
-        import org.eyeseetea.malariacare.database.model.Survey;
-        import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
-        import org.eyeseetea.malariacare.network.PushClient;
-        import org.eyeseetea.malariacare.network.PushResult;
-
-        import java.util.List;
+import java.util.List;
 
 /**
  * A service that runs pushing process for pending surveys.
@@ -54,6 +57,11 @@ public class PushService extends IntentService {
     public static final String PENDING_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.PushService.PENDING_SURVEYS_ACTION";
 
     /**
+     * List of surveys that are going to be pushed
+     */
+    List<Survey> surveys;
+
+    /**
      * Tag for logging
      */
     public static final String TAG = ".PushService";
@@ -63,6 +71,7 @@ public class PushService extends IntentService {
      */
     public PushService(){
         super(PushService.class.getSimpleName());
+        Log.d(TAG, "PushService() register in Dhis2Application bus");
     }
 
     /**
@@ -72,16 +81,28 @@ public class PushService extends IntentService {
      */
     public PushService(String name) {
         super(name);
+        Log.d(TAG, "PushService(name) constructor");
+    }
+
+    private synchronized void startProgress(){
+        Log.d(TAG, "startProgress, registering in bus");
+        Dhis2Application.bus.register(this);
+    }
+
+    private synchronized void stopProgress(){
+        Log.d(TAG, "stopProgress, unregistering from bus");
+        Dhis2Application.bus.unregister(this);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        //Take action to be done
-        switch (intent.getStringExtra(SERVICE_METHOD)){
-            case PENDING_SURVEYS_ACTION:
-                pushAllPendingSurveys();
-                break;
+        //Ignore wrong actions
+        if(!PENDING_SURVEYS_ACTION.equals(intent.getStringExtra(SERVICE_METHOD))){
+            return;
         }
+
+        //Launch push according to current server
+        pushAllPendingSurveys();
     }
 
     /**
@@ -91,29 +112,124 @@ public class PushService extends IntentService {
         Log.d(TAG, "pushAllPendingSurveys (Thread:" + Thread.currentThread().getId() + ")");
 
         //Select surveys from sql
-        List<Survey> surveys = Survey.getAllUnsentSurveys();
+        surveys = Survey.getAllUnsentSurveys();
 
-        if(surveys!=null && !surveys.isEmpty()){
-            for(Survey survey : surveys){
-                PushClient pushClient=new PushClient(survey, getApplicationContext());
+        //No surveys to send -> done
+        if(surveys==null || surveys.isEmpty()){
+            return;
+        }
 
-                //Push  data
+        //Server is not ready for push -> move on
+        if(!ServerAPIController.isReadyForPush()){
+            return;
+        }
 
-                PushResult result = pushClient.pushBackground();
-                if(result.isSuccessful()){
-                    Log.d(TAG, "Estado del push: OK");
-
-
-                    //Reload data using service
-                    Intent surveysIntent=new Intent(this, SurveyService.class);
-                    surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
-                    this.startService(surveysIntent);
-                }else{
-                    Log.d(TAG, "Estado del push: ERROR");
-                }
-            }
+        //Push according to current server version
+        if(ServerAPIController.isAPIServer()){
+            pushByAPI();
+        }else{
+            pushBySDK();
         }
 
     }
 
+    /**
+     * Pushes pending surveys via API
+     */
+    private void pushByAPI(){
+        Log.i(TAG, "pushByAPI");
+        PushClient pushClient=new PushClient(getApplicationContext());
+        for(Survey survey : surveys){
+            //Prepare for sending current survey
+            pushClient.setSurvey(survey);
+
+            //Push  data
+            PushResult result = pushClient.pushBackground();
+            if(result.isSuccessful()){
+                Log.d(TAG, "pushByAPI ok");
+                reloadDashboard();
+            }else{
+                Log.e(TAG, "pushByAPI ERROR");
+            }
+        }
+    }
+
+    /**
+     * Push via sdk requires 2 steps:
+     *  -Login into sdk
+     *  -Push data via PushController
+     */
+    private void pushBySDK(){
+        Log.i(TAG, "pushBySDK");
+        startProgress();
+
+        //Init sdk login
+        DhisService.logInUser(HttpUrl.parse(ServerAPIController.getServerUrl()), ServerAPIController.getSDKCredentials());
+    }
+
+    @Subscribe
+    public void callbackLoginPrePush(NetworkJob.NetworkJobResult<ResourceType> result) {
+        Log.d(TAG, "callbackLoginPrePush");
+        //Nothing to check
+        if(result==null || result.getResourceType()==null || !result.getResourceType().equals(ResourceType.USERS)){
+            return;
+        }
+
+        //Login failed
+        if(result.getResponseHolder().getApiException()!=null) {
+            Log.e(TAG, "callbackLoginPrePush cannot login via sdk");
+            stopProgress();
+            return;
+        }
+
+        callPushBySDK();
+    }
+
+    private void callPushBySDK(){
+        //Login successful start reload
+        PushController.getInstance().push(getApplicationContext(), surveys);
+    }
+
+    /**
+     * Callback that is invoked once the push is over or has failed
+     * @param syncProgressStatus
+     */
+    @Subscribe
+    public void onPushBySDKFinished(final SyncProgressStatus syncProgressStatus) {
+        Log.d(TAG, "onPushBySDKFinished ");
+        if(syncProgressStatus ==null){
+            Log.i(TAG, "onPushBySDKFinished null");
+            stopProgress();
+            return;
+        }
+
+        //Step
+        if (syncProgressStatus.hasProgress()) {
+            Log.i(TAG, "onPushBySDKFinished progress: " + syncProgressStatus.getMessage());
+            return;
+        }
+
+        //Exception
+        if (syncProgressStatus.hasError()) {
+            Log.w(TAG, "onPushBySDKFinished error: " + syncProgressStatus.getException().getMessage());
+            stopProgress();
+            return;
+        }
+
+        //Finish
+        if (syncProgressStatus.isFinish()) {
+            Log.i(TAG, "onPushBySDKFinished finished");
+            reloadDashboard();
+            stopProgress();
+        }
+    }
+
+    /**
+     * Reloads dashboard via SurveyService
+     */
+    private void reloadDashboard(){
+        Intent surveysIntent=new Intent(this, SurveyService.class);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
+        this.startService(surveysIntent);
+    }
 }

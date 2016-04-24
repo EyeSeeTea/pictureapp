@@ -1,65 +1,78 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.util.Log;
+
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.utils.Constants;
+
+import java.util.List;
 
 /**
  * Created by Jose on 25/05/2015.
  */
 @Table(databaseName = AppDatabase.NAME)
+
 public class QuestionRelation extends BaseModel {
+
+    private static final String TAG = ".QuestionRelation";
+    /**
+     * Constant that reflects a parent child relationship
+     */
+    public static final int PARENT_CHILD=1;
+    /**
+     * Constant that reflects a match relationship
+     */
+    public static final int MATCH=0;
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_question_relation;
-
     @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "master",
-            columnType = Long.class,
-            foreignColumnName = "id_question")},
-            saveForeignKeyModel = false)
-    Question master;
-
-    @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "relative",
-            columnType = Long.class,
-            foreignColumnName = "id_question")},
-            saveForeignKeyModel = false)
-    Question relative;
+    Long id_question;
+    /**
+     * Reference to associated question (loaded lazily)
+     */
+    Question question;
 
     @Column
     int operation;
 
-    public QuestionRelation(){};
+    /**
+     * List of matches associated to this questionRelation
+     */
+    List<Match> matches;
 
-    public QuestionRelation(Question master, Question relative, int operation) {
-        this.master = master;
-        this.relative = relative;
+    public QuestionRelation(){}
+
+    public QuestionRelation(Question question, int operation) {
         this.operation = operation;
+        this.setQuestion(question);
     }
 
     public long getId_question_relation() {
@@ -70,20 +83,25 @@ public class QuestionRelation extends BaseModel {
         this.id_question_relation = id_question_relation;
     }
 
-    public Question getMaster() {
-        return master;
+    public Question getQuestion() {
+        if(question==null){
+            if(id_question==null) return null;
+            question = new Select()
+                    .from(Question.class)
+                    .where(Condition.column(Question$Table.ID_QUESTION)
+                            .is(id_question)).querySingle();
+        }
+        return question;
     }
 
-    public void setMaster(Question master) {
-        this.master = master;
+    public void setQuestion(Question question) {
+        this.question = question;
+        this.id_question = (question!=null)?question.getId_question():null;
     }
 
-    public Question getRelative() {
-        return relative;
-    }
-
-    public void setRelative(Question relative) {
-        this.relative = relative;
+    public void setQuestion(Long id_question){
+        this.id_question = id_question;
+        this.question = null;
     }
 
     public int getOperation() {
@@ -94,31 +112,61 @@ public class QuestionRelation extends BaseModel {
         this.operation = operation;
     }
 
+    public void createMatchFromQuestions(List<Question> children){
+        if (children.size() != 2){
+            Log.e(TAG, "createMatchFromQuestions(): children must be 2. Match not created");
+            return;
+        }
+        Match match;
+        for (Option optionA : children.get(0).getAnswer().getOptions()) {
+            for (Option optionB : children.get(1).getAnswer().getOptions()) {
+                if(optionA.getFactor().equals(optionB.getFactor())){
+                    //Save all optiona factor optionb factor with the same match
+                    match = new Match(this);
+                    match.save();
+                    new QuestionOption(optionA, children.get(0), match).save();
+                    new QuestionOption(optionB, children.get(1), match).save();
+                }
+            }
+        }
+    }
+
+    public List<Match> getMatches() {
+        if(matches==null) {
+            this.matches = new Select().from(Match.class)
+                    .indexedBy(Constants.MATCH_IDX)
+                    .where(Condition.column(Match$Table.ID_QUESTION_RELATION).eq(this.getId_question_relation()))
+                    .queryList();
+        }
+        return this.matches;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof QuestionRelation)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+
         QuestionRelation that = (QuestionRelation) o;
+
         if (id_question_relation != that.id_question_relation) return false;
-        if (!master.equals(that.master)) return false;
-        return relative.equals(that.relative);
+        if (operation != that.operation) return false;
+        return !(id_question != null ? !id_question.equals(that.id_question) : that.id_question != null);
+
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id_question_relation ^ (id_question_relation >>> 32));
-        result = 31 * result + master.hashCode();
-        result = 31 * result + relative.hashCode();
+        result = 31 * result + (id_question != null ? id_question.hashCode() : 0);
         result = 31 * result + operation;
         return result;
     }
 
-         @Override
+    @Override
     public String toString() {
-         return "QuestionRelation{" +
-                "id=" + id_question_relation +
-                ", master=" + master +
-                ", relative=" + relative +
+        return "QuestionRelation{" +
+                "id_question_relation=" + id_question_relation +
+                ", id_question=" + id_question +
                 ", operation=" + operation +
                 '}';
     }

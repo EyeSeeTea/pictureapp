@@ -1,30 +1,29 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 package org.eyeseetea.malariacare.database.model;
 
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
@@ -40,25 +39,25 @@ public class Score extends BaseModel {
     long id_score;
 
     @Column
-    Float value;
-
-    @Column
-    @ForeignKey(references = {@ForeignKeyReference(columnName = "id_tab",
-            columnType = Long.class,
-            foreignColumnName = "id_tab")},
-            saveForeignKeyModel = false)
-    Tab tab;
+    Long id_survey;
+    /**
+     * Reference to the survey associated to this score (loaded lazily)
+     */
+    Survey survey;
 
     @Column
     String uid;
 
+    @Column
+    Float score;
+
     public Score() {
     }
 
-    public Score(Float real, Tab tab, String uid) {
-        this.value = real;
-        this.tab = tab;
+    public Score(Survey survey, String uid, Float score) {
         this.uid = uid;
+        this.score = score;
+        this.setSurvey(survey);
     }
 
     public Long getId_score() {
@@ -69,20 +68,25 @@ public class Score extends BaseModel {
         this.id_score = id_score;
     }
 
-    public Float getValue() {
-        return value;
+    public Survey getSurvey() {
+        if(survey==null){
+            if(id_survey==null) return null;
+            survey = new Select()
+                    .from(Survey.class)
+                    .where(Condition.column(Survey$Table.ID_SURVEY)
+                            .is(id_survey)).querySingle();
+        }
+        return survey;
     }
 
-    public void setValue(Float real) {
-        this.value = real;
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
+        this.id_survey = (survey!=null)?survey.getId_survey():null;
     }
 
-    public Tab getTab() {
-        return tab;
-    }
-
-    public void setTab(Tab tab) {
-        this.tab = tab;
+    public void setSurvey(Long id_survey){
+        this.id_survey = id_survey;
+        this.survey = null;
     }
 
     public String getUid() {
@@ -93,13 +97,12 @@ public class Score extends BaseModel {
         this.uid = uid;
     }
 
-    @Override
-    public String toString() {
-        return "Score{" +
-                "id='" + id_score + '\'' +
-                "real=" + value +
-                ", tab=" + tab +
-                '}';
+    public Float getScore() {
+        return score;
+    }
+
+    public void setScore(Float score) {
+        this.score = score;
     }
 
     @Override
@@ -107,18 +110,32 @@ public class Score extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Score score = (Score) o;
+        Score score1 = (Score) o;
 
-        if (value != null ? !value.equals(score.value) : score.value != null) return false;
-        if (tab != null ? !tab.equals(score.tab) : score.tab != null) return false;
+        if (id_score != score1.id_score) return false;
+        if (id_survey != null ? !id_survey.equals(score1.id_survey) : score1.id_survey != null)
+            return false;
+        if (uid != null ? !uid.equals(score1.uid) : score1.uid != null) return false;
+        return !(score != null ? !score.equals(score1.score) : score1.score != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = value != null ? value.hashCode() : 0;
-        result = 31 * result + (tab != null ? tab.hashCode() : 0);
+        int result = (int) (id_score ^ (id_score >>> 32));
+        result = 31 * result + (id_survey != null ? id_survey.hashCode() : 0);
+        result = 31 * result + (uid != null ? uid.hashCode() : 0);
+        result = 31 * result + (score != null ? score.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Score{" +
+                "id_score=" + id_score +
+                ", id_survey=" + id_survey +
+                ", uid='" + uid + '\'' +
+                ", score=" + score +
+                '}';
     }
 }

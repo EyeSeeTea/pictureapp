@@ -32,6 +32,7 @@
         android:theme="@style/EyeSeeTheme"
         tools:replace="android:icon" >
 
+        <service android:name=".services.MonitorService" android:exported="false"/>
         <service android:name=".services.SurveyService" android:exported="false"/>
         <service android:name=".services.PushService" android:exported="false"/>
 
@@ -59,16 +60,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.eyeseetea.malariacare.CreateSurveyActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:finishOnTaskLaunch="true"
-            android:label="@string/app_name"
-            android:parentActivityName=".DashboardActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DashboardActivity" />
-        </activity>
-        <activity
             android:name="org.eyeseetea.malariacare.views.Dialog"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -91,6 +82,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DashboardActivity" />
         </activity>
+
+        <activity
+            android:name=".ProgressActivity"
+            android:label="@string/app_name"
+            android:configChanges="orientation|screenSize">
+        </activity>
+
         <activity
             android:name="org.eyeseetea.malariacare.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -102,6 +100,26 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DashboardActivity" />
         </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:finishOnTaskLaunch="true"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SettingsActivity" />
+        </activity>
+
+        <activity
+            android:name=".MonitorActivity"
+            android:label="@string/app_name"
+            android:configChanges="orientation|screenSize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DashboardActivity" />
+        </activity>
+
 
         <receiver android:name="org.eyeseetea.malariacare.receivers.AlarmPushReceiver"></receiver>
 

@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.services;
@@ -135,10 +135,10 @@ public class SurveyService extends IntentService {
     }
 
     private void reloadDashboard(){
-
+        Log.i(TAG, "reloadDashboard");
         List<Survey> surveys=new Select().all().from(Survey.class)
                 .orderBy(Survey$Table.EVENTDATE)
-                .orderBy(Survey$Table.ORGUNIT_ID_ORG_UNIT).queryList();
+                .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
 
         List<Survey> unsentSurveys=new ArrayList<Survey>();
         List<Survey> sentSurveys=new ArrayList<Survey>();
@@ -267,15 +267,12 @@ public class SurveyService extends IntentService {
     private void prepareSurveyInfo(){
         Log.d(TAG, "prepareSurveyInfo (Thread:" + Thread.currentThread().getId() + ")");
 
-        Survey survey=Session.getSurvey();
-        Program program=survey.getProgram();
-
         //Get composite scores for current program & register them (scores)
-        List<CompositeScore> compositeScores = CompositeScore.listAllByProgram(program);
+        List<CompositeScore> compositeScores = new Select().all().from(CompositeScore.class).queryList();
         ScoreRegister.registerCompositeScores(compositeScores);
 
         //Get tabs for current program & register them (scores)
-        List<Tab> tabs = Tab.getTabsBySession();
+        List<Tab> tabs = new Select().all().from(Tab.class).queryList();
         ScoreRegister.registerTabScores(tabs);
 
         //Since intents does NOT admit NON serializable as values we use Session instead

@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.database.utils;
@@ -90,7 +90,7 @@ public class PreferencesState {
         dhisURL=initDhisURL();
         Log.d(TAG, "reloadPreferences: "
                 + " orgUnit:" + orgUnit
-                + " dhisURL:" + dhisURL
+                + " |dhisURL:" + dhisURL
                 + " |scale:" + scale
                 + " | showNumDen:" + showNumDen);
     }
@@ -223,5 +223,17 @@ public class PreferencesState {
 
     public String getDhisURL(){
         return dhisURL;
+    }
+
+    /**
+     * Saves a value into a preference
+     * @param namePreference
+     * @param value
+     */
+    public void saveStringPreference(int namePreference,String value){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putString(context.getResources().getString(namePreference), value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
     }
 }

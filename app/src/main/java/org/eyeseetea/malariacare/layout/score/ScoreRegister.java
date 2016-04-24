@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2015.
  *
- * This file is part of QIS Survelliance App.
+ * This file is part of QIS Surveillance App.
  *
- *  QIS Survelliance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Survelliance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with QIS Survelliance App.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.eyeseetea.malariacare.layout.score;
@@ -120,7 +120,7 @@ public class ScoreRegister {
     public static void registerCompositeScores(List<CompositeScore> compositeScores){
         compositeScoreMap.clear();
         for(CompositeScore compositeScore:compositeScores){
-            Log.i(TAG, "Register composite score: " + compositeScore.getCode());
+            Log.i(TAG, "Register composite score: " + compositeScore.getHierarchical_code());
             compositeScoreMap.put(compositeScore, new CompositeNumDenRecord());
         }
     }
@@ -212,6 +212,29 @@ public class ScoreRegister {
             return factor * denum;
         }
         return 0;
+    }
+
+    /**
+     * Cleans, prepares, calculates and returns all the scores info for the given survey
+     * @param survey
+     * @return
+     */
+    public static List<CompositeScore> loadCompositeScores(Survey survey){
+        //Cleans score
+        ScoreRegister.clear();
+
+        //Register scores for tabs
+        List<Tab> tabs=survey.getTabGroup().getTabs();
+        ScoreRegister.registerTabScores(tabs);
+
+        //Register scores for composites
+        List<CompositeScore> compositeScoreList=CompositeScore.listByTabGroup(survey.getTabGroup());
+        ScoreRegister.registerCompositeScores(compositeScoreList);
+
+        //Initialize scores x question
+        ScoreRegister.initScoresForQuestions(Question.listByTabGroup(survey.getTabGroup()),survey);
+
+        return compositeScoreList;
     }
 
 }

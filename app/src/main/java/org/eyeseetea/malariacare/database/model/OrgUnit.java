@@ -196,11 +196,14 @@ public class OrgUnit extends BaseModel {
      */
     public static String[] listAllNames(){
         List<OrgUnit> orgUnits = getAllOrgUnit();
-        String[] orgUnitNames = new String[orgUnits.size()];
+        List<String> orgUnitsName = new ArrayList<String>();
+        //String[] orgUnitNames = new String[orgUnits.size()];
         for(int i=0;i<orgUnits.size();i++){
-            orgUnitNames[i]=orgUnits.get(i).getName();
+            if (orgUnits.get(i).getName() != null && !orgUnits.get(i).getName().equals("")){
+                orgUnitsName.add(orgUnits.get(i).getName());
+            }
         }
-        return orgUnitNames;
+        return orgUnitsName.toArray(new String[orgUnitsName.size()]);
     }
 
     /**

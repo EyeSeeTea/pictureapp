@@ -125,7 +125,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         //super.onBindDialogView(view);
 
         AutoCompleteTextView editText = mEditText;
-        SharedPreferences preferences = view.getContext().getSharedPreferences("org.eyeseetea.pictureapp_preferences", view.getContext().MODE_PRIVATE);
+        SharedPreferences preferences = view.getContext().getSharedPreferences("org.eyeseetea.surveillance_kh_preferences", view.getContext().MODE_PRIVATE);
         String key=view.getContext().getResources().getString(R.string.org_unit);
         String value=preferences.getString(key, "");
         editText.setText(value);

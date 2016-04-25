@@ -98,6 +98,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public static final String FORMATTED_PHONENUMBER_MASK = "0\\d{2} \\d{3} \\d{3,4}";
 
+    private static final String DEFAULT_PHONE_VALUE = "0XX XXX XXXX";
+
     /**
      * Formatted telephone mask: 0NN NNN NNN{N}
      */
@@ -127,6 +129,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private final Context context;
 
     int id_layout;
+
 
     /**
      * Flag that indicates if the current survey in session is already sent or not (it affects readonly settings)
@@ -199,6 +202,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     for (int itemPos = 0; itemPos < vgRow.getChildCount(); itemPos++) {
                         View childItem = vgRow.getChildAt(itemPos);
                         if (childItem instanceof ImageView) {
+                            //We dont want the user to click anything else
+                            swipeTouchListener.clearClickableViews();
+
                             Option otherOption=(Option)childItem.getTag();
                             if(selectedOption.getId_option() != otherOption.getId_option()){
                                 overshadow((ImageView) childItem, otherOption);
@@ -459,13 +465,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_phone_edit);
         final Context ctx = tableRow.getContext();
 
-        //Has value? show it
-        if(value!=null){
-            editText.setText(value.getValue());
-        }
-
         //Editable? add listener
         if(!readOnly){
+
+            // show a kind of mask for helping purpose
+            editText.setText(DEFAULT_PHONE_VALUE);
 
             //Try to format on done
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -490,6 +494,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     String phoneValue = editText.getText().toString();
 
                     //Check phone ok
+                    if (phoneValue != null && phoneValue.equals(DEFAULT_PHONE_VALUE)) {
+                        phoneValue = "";
+                    }
                     if(!checkPhoneNumberByMask(phoneValue)){
                         editText.setError(context.getString(R.string.dynamic_error_phone_format));
                         return;
@@ -499,12 +506,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     hideKeyboard(ctx, v);
 
                     Question question = progressTabStatus.getCurrentQuestion();
-
                     ReadWriteDB.saveValuesText(question, phoneValue);
                     finishOrNext();
                 }
             });
         }else{
+            //Has value? show it
+            if(value!=null){
+                editText.setText(value.getValue());
+            }
             editText.setEnabled(false);
             button.setEnabled(false);
         }
@@ -691,7 +701,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 next();
             }
-        }, 1000);
+        }, 750);
     }
 
     /**
@@ -737,7 +747,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Changes the current question moving forward
      */
     private void next(){
-        if(!progressTabStatus.hasNextQuestion()){
+        Question question = progressTabStatus.getCurrentQuestion();
+        Value value = question.getValueBySession();
+        if (isDone(value)) {
             return;
         }
 

@@ -20,8 +20,8 @@
 package org.eyeseetea.malariacare;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
@@ -33,19 +33,18 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
-import org.eyeseetea.malariacare.database.model.OrgUnit;
-import org.eyeseetea.malariacare.database.model.OrgUnit$Table;
 import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Program$Table;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
@@ -56,7 +55,6 @@ import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.InputStream;
-import java.util.List;
 
 
 public abstract class BaseActivity extends ActionBarActivity {
@@ -138,10 +136,18 @@ public abstract class BaseActivity extends ActionBarActivity {
                 debugMessage("User asked for about");
                 showAlertWithHtmlMessage(R.string.settings_menu_about, R.raw.about);
                 break;
-            /*case R.id.action_logout:
-                debugMessage("User asked for logout");
-                logout();
-                break;*/
+            case R.id.action_copyright:
+                debugMessage("User asked for copyright");
+                showAlertWithMessage(R.string.settings_menu_copyright, R.raw.copyright);
+                break;
+            case R.id.action_licenses:
+                debugMessage("User asked for software licenses");
+                showAlertWithHtmlMessage(R.string.settings_menu_licenses, R.raw.licenses);
+                break;
+            case R.id.action_eula:
+                debugMessage("User asked for EULA");
+                showAlertWithHtmlMessage(R.string.settings_menu_eula, R.raw.eula);
+                break;
             case android.R.id.home:
                 debugMessage("Go back");
                 onBackPressed();
@@ -278,6 +284,78 @@ public abstract class BaseActivity extends ActionBarActivity {
         Linkify.addLinks(linkedMessage, Linkify.ALL);
         showAlert(titleId, linkedMessage);
     }
+
+    /**
+            * Shows an alert dialog with a big message inside based on a raw resource HTML formatted
+    * @param titleId Id of the title resource
+    * @param rawId Id of the raw text resource in HTML format
+    */
+    public void showAlertWithHtmlMessageAndLastCommit(int titleId, int rawId, Context context){
+        String stringMessage = getMessageWithCommit(rawId, context);
+        final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
+        Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+
+        showAlertWithLogoAndVersion(titleId, linkedMessage, context);
+    }
+
+    /**
+     * Merge the lastcommit into the raw file
+     * @param rawId Id of the raw text resource in HTML format
+     */
+    public String getMessageWithCommit(int rawId, Context context) {
+        InputStream message = context.getResources().openRawResource(rawId);
+        String stringCommit;
+        //Check if lastcommit.txt file exist, and if not exist show as unavailable.
+        int layoutId = context.getResources().getIdentifier("lastcommit", "raw", context.getPackageName());
+        if (layoutId == 0){
+            stringCommit=context.getString(R.string.unavailable);
+        } else {
+            InputStream commit = context.getResources().openRawResource( layoutId);
+            stringCommit= Utils.convertFromInputStreamToString(commit).toString();
+        }
+        String stringMessage= Utils.convertFromInputStreamToString(message).toString();
+        if(stringCommit.contains(context.getString(R.string.unavailable))){
+            stringCommit=String.format(context.getString(R.string.lastcommit),stringCommit);
+            stringCommit=stringCommit+" "+context.getText(R.string.lastcommit_unavailable);
+        }
+        else {
+            stringCommit = String.format(context.getString(R.string.lastcommit), stringCommit);
+        }
+        stringMessage=String.format(stringMessage,stringCommit);
+        return stringMessage;
+    }
+
+    public void showAlertWithLogoAndVersion(int titleId, CharSequence text, Context context){
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.dialog_about);
+        dialog.setTitle(titleId);
+        dialog.setCancelable(true);
+
+        //set up text title
+        TextView textTile = (TextView) dialog.findViewById(R.id.aboutTitle);
+        textTile.setText(BuildConfig.VERSION_NAME);
+        textTile.setGravity(Gravity.RIGHT);
+
+        //set up image view
+        ImageView img = (ImageView) dialog.findViewById(R.id.aboutImage);
+        img.setImageResource(R.drawable.psi);
+
+        //set up text title
+        TextView textContent = (TextView) dialog.findViewById(R.id.aboutMessage);
+        textContent.setMovementMethod(LinkMovementMethod.getInstance());
+        textContent.setText(text);
+        //set up button
+        Button button = (Button) dialog.findViewById(R.id.aboutButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        //now that the dialog is set up, it's time to show it
+        dialog.show();
+    }
+
     /**
      * Shows an alert dialog with a given string
      * @param titleId Id of the title resource

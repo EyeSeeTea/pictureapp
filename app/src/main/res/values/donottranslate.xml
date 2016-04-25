@@ -2,7 +2,7 @@
 <resources>
 
     <!-- # general -->
-    <string name="app_name">QIS Surveillance</string>
+    <string name="app_name">Malaria Case Surveillance</string>
     <string name="eyeseetea">EyeSeeTea LTD</string>
     <string name="empty_string"></string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet</string>
@@ -46,4 +46,24 @@
     <string name="rdtNotTested">Not Tested</string>
 
     <string name="monitor_row_title"><![CDATA[&nbsp;&nbsp;%1$s]]></string>
+
+    <item name="eula_accepted" type="string">eula_accepted</item>
+
+    <!-- last commit info -->
+    <string name="lastcommit">Version %s</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="lastcommit_unavailable"><![CDATA[
+    <p>This option requires some changes in the git repository.</p>
+    <p>Steps:</p>
+    <p>1. Please open or create the.git/hooks/post-commit and .git/hooks/post-checkout files.</p>
+    <p>2. If the file does not exist, add the following lines: </p>
+    <p>#!/bin/sh </p>
+    <p>gitPath=$(git rev-parse --show-toplevel)</p>
+    <p>sh ${gitPath}/generate_last_commit.sh </p>
+    <p>2. If the file already exists, you only need add the following lines at the end:</p>
+    <p>gitPath=$(git rev-parse --show-toplevel)</p>
+    <p>sh ${gitPath}/generate_last_commit.sh </p>
+    <p>3. Run "git checkout". </p>]]>
+    </string>
+
 </resources>

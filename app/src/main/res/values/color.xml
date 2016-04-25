@@ -11,4 +11,5 @@
     <color name="light_grey">#FFE5E5E5</color>
     <color name="textFieldColor">#BEBEBE</color>
     <color name="custom_blue_light">#1f70c3</color>
+    <color name="dialog_button_text">#06988a</color>
 </resources>

@@ -12,6 +12,10 @@
     <string name="settings_menu_configuration">Settings</string>
     <string name="settings_menu_licence">License</string>
     <string name="settings_menu_monitoring">Monitor</string>
+    <string name="settings_menu_legal">Legal</string>
+    <string name="settings_menu_copyright">Copyright</string>
+    <string name="settings_menu_licenses">Software licenses</string>
+    <string name="settings_menu_eula">EULA</string>
 
     <string name="dialog_title_delete_surveys">Are you sure that you want to remove all sent surveys?</string>
     <string name="dialog_title_delete_survey">Delete Survey</string>
@@ -98,7 +102,7 @@
     <string name="monitor_label_option_days">Last 6 days</string>
     <string name="monitor_table_title_suspected">Suspected and Positive cases</string>
     <string name="monitor_table_title_stock">Stock Consumption</string>
-    <string name="monitor_row_title_period">Time-period</string>
+    <string name="monitor_row_title_period">Period</string>
     <string name="monitor_row_title_week">Week</string>
     <string name="monitor_row_title_suspected">Suspected cases</string>
     <string name="monitor_row_title_positive">Positive</string>

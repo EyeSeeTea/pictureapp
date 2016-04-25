@@ -125,5 +125,9 @@
     <string name="number_7">7</string>
     <string name="number_8">8</string>
     <string name="number_9">9</string>
+    <string name="settings_menu_copyright">Copyright</string>
+    <string name="settings_menu_licenses">Licencias de software</string>
+    <string name="settings_menu_legal">Legal</string>
+    <string name="settings_menu_eula">EULA</string>
 
 </resources>

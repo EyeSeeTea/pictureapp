@@ -23,7 +23,7 @@ public class Constants {
 
     public static final String DEFAULT_SELECT_OPTION = "";
 
-    public static final int MAX_INT_CHARS = 5;
+    public static final int MAX_INT_CHARS = 2;
 
     public static final int MAX_INT_AGE = 99;
 

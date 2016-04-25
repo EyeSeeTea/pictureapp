@@ -36,7 +36,12 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
@@ -48,12 +53,14 @@ import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.network.ServerInfo;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -756,6 +763,36 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
         this.changingOrgUnit=changingOrgUnit;
     }
 
+    /**
+     * Shows an alert dialog asking for acceptance of the EULA terms. If ok calls login function, do nothing otherwise
+     * @param titleId
+     * @param rawId
+     * @param context
+     */
+    public void askEula(int titleId, int rawId, final Context context){
+        InputStream message = context.getResources().openRawResource(rawId);
+        String stringMessage = Utils.convertFromInputStreamToString(message).toString();
+        final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
+        Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle(context.getString(titleId))
+                .setMessage(linkedMessage)
+                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(activity.getApplicationContext().getResources().getString(R.string.eula_accepted), true);
+                editor.commit();
+                launchLoginPreChange();
+            }
+                })
+                .setNegativeButton(android.R.string.no, null).create();
+        dialog.show();
+        ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
     @Override
     public boolean onPreferenceClick(Preference preference) {
 
@@ -764,8 +801,15 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
             return false;
         }
 
-        //Launch login with the right extra param
-        launchLoginPreChange();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        if (!sharedPreferences.getBoolean(activity.getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
+            askEula(R.string.settings_menu_eula, R.raw.eula, activity);
+        } else {
+            //Launch login with the right extra param
+            launchLoginPreChange();
+        }
+
         return true;
     }
 

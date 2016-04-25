@@ -595,7 +595,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (phoneValue == null) {
             phoneValue = "";
         }
-        return phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.matches(PLAIN_PHONENUMBER_MASK);
+        return phoneValue.isEmpty() || phoneValue.replace(" ", "").matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.replace(" ", "").matches(PLAIN_PHONENUMBER_MASK);
     }
 
     /**

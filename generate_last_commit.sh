@@ -1,8 +1,4 @@
 #!/bin/sh
-
-gitPath=$(git rev-parse --show-toplevel)
-sh ${gitPath}/generate_last_commit.sh
-#!/bin/sh
 gitPath=$(git rev-parse --show-toplevel)
 filePath="${gitPath}/app/src/main/res/raw/lastcommit.txt"
 echo "Last commit path $filePath"

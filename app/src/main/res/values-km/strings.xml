@@ -130,5 +130,7 @@
     <string name="settings_menu_licenses">Software licenses</string>
     <string name="settings_menu_legal">Legal</string>
     <string name="settings_menu_eula">EULA</string>
+    <string name="monitor_row_title_day">ទី</string>
+    <string name="monitor_row_title_month">ខែ</string>
 
 </resources>

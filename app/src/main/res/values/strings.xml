@@ -104,6 +104,8 @@
     <string name="monitor_table_title_stock">Stock Consumption</string>
     <string name="monitor_row_title_period">Period</string>
     <string name="monitor_row_title_week">Week</string>
+    <string name="monitor_row_title_day">Day</string>
+    <string name="monitor_row_title_month">Month</string>
     <string name="monitor_row_title_suspected">Suspected cases</string>
     <string name="monitor_row_title_positive">Positive</string>
     <string name="pf">Pf</string>

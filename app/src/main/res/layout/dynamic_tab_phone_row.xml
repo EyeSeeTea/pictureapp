@@ -23,7 +23,7 @@
             android:imeOptions="actionDone"
             android:singleLine="true"
             android:gravity="center"
-            android:textSize="@dimen/input_number_edit_text"
+            android:textSize="@dimen/input_number_edit_text_phone"
             app:tDimension="@string/font_size_level2"
             app:tFontName="@string/condensed_font_name"
             />

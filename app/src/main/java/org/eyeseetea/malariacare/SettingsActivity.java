@@ -759,7 +759,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             if (data.hasExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE)) {
                 Log.d(TAG, "Executing onActivityResult:");
                 callbackReloadByServerVersionWhenUrlChanged(serverInfo);
-                CheckServerVersionAsync checkServerVersionAsync = new CheckServerVersionAsync(getApplicationContext(), true, true);
+                CheckServerVersionAsync checkServerVersionAsync = new CheckServerVersionAsync(this, true, true);
                 checkServerVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
             }
         }

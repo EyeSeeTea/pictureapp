@@ -100,6 +100,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      */
     public static final String SETTINGS_CHANGING_SERVER="SETTINGS_CHANGING_SERVER";
 
+    /**
+     * Intent extra param that states that the EULA has been accepted
+     */
+    public static final String SETTINGS_EULA_ACCEPTED="SETTINGS_EULA_ACCEPTED";
+
+
+    public static ServerInfo serverInfo;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         Dhis2Application.bus.register(this);
@@ -126,6 +134,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     void setAutoCompleteEditTextPreference(AutoCompleteEditTextPreference autoCompleteEditTextPreference){
         this.autoCompleteEditTextPreference=autoCompleteEditTextPreference;
+    }
+
+    public AutoCompleteEditTextPreference getAutoCompleteEditTextPreference(){
+        return this.autoCompleteEditTextPreference;
     }
 
     /**
@@ -256,7 +268,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         serverVersionAsync.execute(url);
     }
 
-    private void callbackPopulateOrgUnitsByServerVersion(ServerInfo serverInfo){
+    public void callbackPopulateOrgUnitsByServerVersion(ServerInfo serverInfo){
         Log.d(TAG, "callbackPopulateOrgUnitsByServerVersion " + serverInfo.getVersion());
         autoCompleteEditTextPreference.pullOrgUnits(serverInfo.getVersion());
     }
@@ -319,7 +331,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      *  - 2.21|2.22: Via sdk (which requires a login to initialize DHIS sdk)
      *  - Else: Error
      */
-    private void callbackReloadByServerVersionWhenUrlChanged(ServerInfo serverInfo) {
+    public void callbackReloadByServerVersionWhenUrlChanged(ServerInfo serverInfo) {
         Log.d(TAG, "callbackReloadByServerVersionWhenUrlChanged " + serverInfo.getVersion());
 
         //After changing to a new server survey data is always removed
@@ -716,6 +728,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             String serverVersion= ServerAPIController.getServerVersion(serverInfo.getUrl());
 
             serverInfo.setVersion(serverVersion);
+            SettingsActivity.serverInfo = serverInfo;
             return serverInfo;
         }
 
@@ -740,6 +753,37 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_ON_EULA_ACCEPTED) {
+            if (data.hasExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE)) {
+                Log.d(TAG, "Executing onActivityResult:");
+                callbackReloadByServerVersionWhenUrlChanged(serverInfo);
+                CheckServerVersionAsync checkServerVersionAsync = new CheckServerVersionAsync(getApplicationContext(), true, true);
+                checkServerVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+        Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+        propagateExtra(intent);
+        finish();
+        startActivity(intent);
+    }
+
+    private Intent propagateExtra(Intent intent){
+        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,false)){
+            Log.i(TAG, "propagateExtra -> Changing orgunit");
+            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,true);
+        }
+
+        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,false)){
+            Log.i(TAG, "propagateExtra -> Changing server");
+            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,true);
+        }
+
+        intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);
+        return intent;
+    }
 }
 
 /**
@@ -785,7 +829,8 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean(activity.getApplicationContext().getResources().getString(R.string.eula_accepted), true);
                 editor.commit();
-                launchLoginPreChange();
+                launchLoginOnEulaAccepted();
+                //activity.callbackReloadByServerVersionWhenUrlChanged(SettingsActivity.serverInfo);
             }
                 })
                 .setNegativeButton(android.R.string.no, null).create();
@@ -825,10 +870,21 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
      * Launches Login activity with the right extra params
      */
     void launchLoginPreChange(){
+        Intent intent = prepareIntent();
+        activity.finish();
+        activity.startActivity(intent);
+    }
+
+    void launchLoginOnEulaAccepted(){
+        Intent intent = prepareIntent();
+        activity.startActivityForResult(intent, Constants.REQUEST_CODE_ON_EULA_ACCEPTED);
+    }
+
+    Intent prepareIntent(){
         String extraKey = changingOrgUnit?SettingsActivity.SETTINGS_CHANGING_ORGUNIT:SettingsActivity.SETTINGS_CHANGING_SERVER;
         Intent intent = new Intent(activity,LoginActivity.class);
         intent.putExtra(extraKey,true);
-        activity.finish();
-        activity.startActivity(intent);
+        intent.putExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, true);
+        return intent;
     }
 }

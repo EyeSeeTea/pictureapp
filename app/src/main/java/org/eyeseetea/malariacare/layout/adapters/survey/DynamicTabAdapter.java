@@ -35,7 +35,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -85,6 +87,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Created by Jose on 21/04/2015.
@@ -97,8 +100,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Formatted telephone mask: 0NN NNN NNN{N}
      */
     public static final String FORMATTED_PHONENUMBER_MASK = "0\\d{2} \\d{3} \\d{3,4}";
-
-    private static final String DEFAULT_PHONE_VALUE = "0XX XXX XXXX";
 
     /**
      * Formatted telephone mask: 0NN NNN NNN{N}
@@ -465,11 +466,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_phone_edit);
         final Context ctx = tableRow.getContext();
 
+        //Has value? show it
+        if(value!=null){
+            editText.setText(value.getValue());
+        }
+
         //Editable? add listener
         if(!readOnly){
-
-            // show a kind of mask for helping purpose
-            editText.setText(DEFAULT_PHONE_VALUE);
 
             //Try to format on done
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -494,9 +497,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     String phoneValue = editText.getText().toString();
 
                     //Check phone ok
-                    if (phoneValue != null && phoneValue.equals(DEFAULT_PHONE_VALUE)) {
-                        phoneValue = "";
-                    }
                     if(!checkPhoneNumberByMask(phoneValue)){
                         editText.setError(context.getString(R.string.dynamic_error_phone_format));
                         return;
@@ -511,10 +511,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
             });
         }else{
-            //Has value? show it
-            if(value!=null){
-                editText.setText(value.getValue());
-            }
             editText.setEnabled(false);
             button.setEnabled(false);
         }

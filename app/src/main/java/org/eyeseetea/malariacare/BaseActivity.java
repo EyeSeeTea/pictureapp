@@ -128,10 +128,10 @@ public abstract class BaseActivity extends ActionBarActivity {
                 debugMessage("User asked for monitor");
                 goMonitor();
                 break;
-            case R.id.action_license:
-                debugMessage("User asked for license");
-                showAlertWithMessage(R.string.settings_menu_licence, R.raw.gpl);
-                break;
+//            case R.id.action_license:
+//                debugMessage("User asked for license");
+//                showAlertWithMessage(R.string.settings_menu_licence, R.raw.gpl);
+//                break;
             case R.id.action_about:
                 debugMessage("User asked for about");
                 showAlertWithHtmlMessageAndLastCommit(R.string.settings_menu_about, R.raw.about, BaseActivity.this);
@@ -216,15 +216,17 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
         LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Log.d(TAG, "requestLocationUpdates via GPS");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        }
+
 
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Log.d(TAG, "requestLocationUpdates via NETWORK");
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        } else {
+        }
+        else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Log.d(TAG, "requestLocationUpdates via GPS");
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
+        else {
             Location lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
             if(lastLocation != null) {
@@ -337,8 +339,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         textTile.setGravity(Gravity.RIGHT);
 
         //set up image view
-        ImageView img = (ImageView) dialog.findViewById(R.id.aboutImage);
-        img.setImageResource(R.drawable.psi);
+//        ImageView img = (ImageView) dialog.findViewById(R.id.aboutImage);
+//        img.setImageResource(R.drawable.psi);
 
         //set up text title
         TextView textContent = (TextView) dialog.findViewById(R.id.aboutMessage);

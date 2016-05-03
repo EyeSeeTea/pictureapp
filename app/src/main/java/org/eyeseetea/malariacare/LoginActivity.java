@@ -25,6 +25,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.squareup.otto.Subscribe;
@@ -126,6 +127,38 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
         intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);
         return intent;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    /**
+     * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
+     */
+    public void onBackPressed(){
+        finishAndGo(DashboardActivity.class);
+    }
+
+    /**
+     * Finish current activity and launches an activity with the given class
+     * @param targetActivityClass Given target activity class
+     */
+    public void finishAndGo(Class targetActivityClass){
+        Intent targetActivityIntent = new Intent(this,targetActivityClass);
+        finish();
+        startActivity(targetActivityIntent);
     }
 }
 

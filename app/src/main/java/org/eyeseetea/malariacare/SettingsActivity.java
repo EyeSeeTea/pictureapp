@@ -760,6 +760,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 Log.d(TAG, "Executing onActivityResult:");
                 CheckServerVersionAsync checkServerVersionAsync = new CheckServerVersionAsync(this, true, true);
                 checkServerVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), true);
+                editor.commit();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -824,12 +828,7 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(activity.getApplicationContext().getResources().getString(R.string.eula_accepted), true);
-                editor.commit();
                 launchLoginOnEulaAccepted();
-                //activity.callbackReloadByServerVersionWhenUrlChanged(SettingsActivity.serverInfo);
             }
                 })
                 .setNegativeButton(android.R.string.no, null).create();

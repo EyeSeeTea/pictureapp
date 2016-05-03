@@ -22,23 +22,15 @@ package org.eyeseetea.malariacare;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.EditText;
 
 import com.squareup.otto.Subscribe;
 
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
-import org.eyeseetea.malariacare.database.model.User;
-import org.eyeseetea.malariacare.database.utils.PopulateDB;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
-import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 /**
@@ -109,27 +101,32 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     private void goSettingsWithRightExtras(){
 
         Intent intent = new Intent(LoginActivity.this,SettingsActivity.class);
-        intent = propagateExtra(intent);
+        intent = propagateExtraAndResult(intent);
 
         finish();
-        startActivity(intent);
+        if(!getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false))
+            startActivity(intent);
     }
 
-    private Intent propagateExtra(Intent intent){
+    private Intent propagateExtraAndResult(Intent intent){
         if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,false)){
-            Log.i(TAG, "propagateExtra -> Changing orgunit");
+            Log.i(TAG, "propagateExtraAndResult -> Changing orgunit");
             intent.putExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,true);
         }
 
         if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,false)){
-            Log.i(TAG, "propagateExtra -> Changing server");
+            Log.i(TAG, "propagateExtraAndResult -> Changing server");
             intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,true);
+        }
+
+        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false)){
+            Log.i(TAG, "propagateExtraAndResult -> EULA accepted");
+            setResult(RESULT_OK, intent);
         }
 
         intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);
         return intent;
     }
-
 }
 
 

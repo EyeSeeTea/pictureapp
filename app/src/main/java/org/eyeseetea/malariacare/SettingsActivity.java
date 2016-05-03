@@ -758,7 +758,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_ON_EULA_ACCEPTED) {
             if (data.hasExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE)) {
                 Log.d(TAG, "Executing onActivityResult:");
-                callbackReloadByServerVersionWhenUrlChanged(serverInfo);
                 CheckServerVersionAsync checkServerVersionAsync = new CheckServerVersionAsync(this, true, true);
                 checkServerVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
             }

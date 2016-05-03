@@ -875,6 +875,7 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
 
     void launchLoginOnEulaAccepted(){
         Intent intent = prepareIntent();
+        intent.putExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, true);
         activity.startActivityForResult(intent, Constants.REQUEST_CODE_ON_EULA_ACCEPTED);
     }
 
@@ -882,7 +883,6 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
         String extraKey = changingOrgUnit?SettingsActivity.SETTINGS_CHANGING_ORGUNIT:SettingsActivity.SETTINGS_CHANGING_SERVER;
         Intent intent = new Intent(activity,LoginActivity.class);
         intent.putExtra(extraKey,true);
-        intent.putExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, true);
         return intent;
     }
 }

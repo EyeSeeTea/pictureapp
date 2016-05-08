@@ -38,6 +38,7 @@ import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,6 +66,8 @@ public class PushService extends IntentService {
      * Tag for logging
      */
     public static final String TAG = ".PushService";
+
+    private boolean pushInProgress = false;
 
     /**
      * Constructor required due to a error message in AndroidManifest.xml if it is not present
@@ -101,6 +104,10 @@ public class PushService extends IntentService {
             return;
         }
 
+        if (pushInProgress){
+            return;
+        }
+
         //Launch push according to current server
         pushAllPendingSurveys();
     }
@@ -118,6 +125,8 @@ public class PushService extends IntentService {
         if(surveys==null || surveys.isEmpty()){
             return;
         }
+
+        pushInProgress = true;
 
         //Server is not ready for push -> move on
         if(!ServerAPIController.isReadyForPush()){
@@ -186,8 +195,24 @@ public class PushService extends IntentService {
     }
 
     private void callPushBySDK(){
+
+        List<Survey> filteredSurveys = new ArrayList<>();
+        //Check surveys not in progress
+        for (Survey survey: surveys){
+
+            if (survey.isCompleted(survey.getId_survey())){
+                filteredSurveys.add(survey);
+            }
+        }
+
+        if (filteredSurveys.size()==0){
+            return;
+        }
+
         //Login successful start reload
-        PushController.getInstance().push(getApplicationContext(), surveys);
+        PushController.getInstance().push(getApplicationContext(), filteredSurveys);
+
+        pushInProgress = false;
     }
 
     /**

@@ -185,7 +185,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     private void updateEventDates() {
 
         //Sent date 'now' (this change will be saves after successful push)
-        currentSurvey.setEventDate(new Date());
+        //currentSurvey.setEventDate(new Date());
 
         //Creation date is null because it is used by sdk to POST|PUT we always POST a new survey
         currentEvent.setLastUpdated(EventExtended.format(currentSurvey.getCompletionDate()));

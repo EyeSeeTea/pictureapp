@@ -27,6 +27,7 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.controllers.DhisService;

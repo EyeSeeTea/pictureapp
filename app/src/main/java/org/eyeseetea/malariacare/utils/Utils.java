@@ -19,8 +19,10 @@
 
 package org.eyeseetea.malariacare.utils;
 
+import android.content.Context;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
@@ -81,6 +83,19 @@ public class Utils {
         }
 
         return result;
+    }
+
+    public static String getCommitHash(Context context){
+        String stringCommit;
+        //Check if lastcommit.txt file exist, and if not exist show as unavailable.
+        int layoutId = context.getResources().getIdentifier("lastcommit", "raw", context.getPackageName());
+        if (layoutId == 0){
+            stringCommit=context.getString(R.string.unavailable);
+        } else {
+            InputStream commit = context.getResources().openRawResource( layoutId);
+            stringCommit= Utils.convertFromInputStreamToString(commit).toString();
+        }
+        return stringCommit;
     }
 
     public static StringBuilder convertFromInputStreamToString(InputStream inputStream){

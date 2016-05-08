@@ -204,6 +204,13 @@ public abstract class BaseActivity extends ActionBarActivity {
         survey.save();
         Session.setSurvey(survey);
 
+//        SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
+//        LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
+//
+//        Intent targetActivityIntent = new Intent(this,DashboardActivity.class);
+//        finish();
+//        startActivity(targetActivityIntent);
+
         //Look for coordinates
         prepareLocationListener(survey);
 
@@ -300,21 +307,15 @@ public abstract class BaseActivity extends ActionBarActivity {
         showAlertWithLogoAndVersion(titleId, linkedMessage, context);
     }
 
+
     /**
      * Merge the lastcommit into the raw file
      * @param rawId Id of the raw text resource in HTML format
      */
     public String getMessageWithCommit(int rawId, Context context) {
         InputStream message = context.getResources().openRawResource(rawId);
-        String stringCommit;
-        //Check if lastcommit.txt file exist, and if not exist show as unavailable.
-        int layoutId = context.getResources().getIdentifier("lastcommit", "raw", context.getPackageName());
-        if (layoutId == 0){
-            stringCommit=context.getString(R.string.unavailable);
-        } else {
-            InputStream commit = context.getResources().openRawResource( layoutId);
-            stringCommit= Utils.convertFromInputStreamToString(commit).toString();
-        }
+
+        String stringCommit = Utils.getCommitHash(context);
         String stringMessage= Utils.convertFromInputStreamToString(message).toString();
         if(stringCommit.contains(context.getString(R.string.unavailable))){
             stringCommit=String.format(context.getString(R.string.lastcommit),stringCommit);

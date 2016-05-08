@@ -42,6 +42,7 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
 import io.fabric.sdk.android.Fabric;
@@ -86,6 +87,8 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         phoneMetaData.setImei(imei);
         phoneMetaData.setPhone_number(phone);
         phoneMetaData.setPhone_serial(serial);
+        phoneMetaData.setBuild_number(Utils.getCommitHash(getApplicationContext()));
+
         return phoneMetaData;
     }
 

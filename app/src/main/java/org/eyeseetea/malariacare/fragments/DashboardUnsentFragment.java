@@ -307,7 +307,7 @@ public class DashboardUnsentFragment extends ListFragment {
     public void manageSurveysAlarm(List<Survey> newListSurveys){
         Log.d(TAG, "manageSurveysAlarm (Thread: " + Thread.currentThread().getId() + "): " + newListSurveys.size());
         if(!newListSurveys.isEmpty()) {
-            Survey.removeInProgress();
+            //Survey.removeInProgress();
             alarmPush.setPushAlarm(getActivity());
         }else{
             alarmPush.cancelPushAlarm(getActivity());

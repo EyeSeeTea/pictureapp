@@ -205,7 +205,7 @@ public class PushService extends IntentService {
         //Check surveys not in progress
         for (Survey survey: surveys){
 
-            if (survey.isCompleted(survey.getId_survey())){
+            if (survey.isCompleted(survey.getId_survey()) && survey.getValues().size() > 0){
                 Log.d("DpBlank", "Survey is completed" + survey.getId_survey());
                 filteredSurveys.add(survey);
             }

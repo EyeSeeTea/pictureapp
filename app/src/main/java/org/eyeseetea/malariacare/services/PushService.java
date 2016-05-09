@@ -185,7 +185,6 @@ public class PushService extends IntentService {
         Log.d(TAG, "callbackLoginPrePush");
         //Nothing to check
         if(result==null || result.getResourceType()==null || !result.getResourceType().equals(ResourceType.USERS)){
-            PushController.getInstance().setPushInProgress(false);
             return;
         }
 

@@ -67,7 +67,7 @@ public class PushService extends IntentService {
      */
     public static final String TAG = ".PushService";
 
-    private boolean pushInProgress = false;
+
 
     /**
      * Constructor required due to a error message in AndroidManifest.xml if it is not present
@@ -104,7 +104,9 @@ public class PushService extends IntentService {
             return;
         }
 
-        if (pushInProgress){
+        Log.d("DpBlank", "Push in Progress" + PushController.getInstance().isPushInProgress());
+
+        if (PushController.getInstance().isPushInProgress()){
             return;
         }
 
@@ -118,18 +120,20 @@ public class PushService extends IntentService {
     private void pushAllPendingSurveys() {
         Log.d(TAG, "pushAllPendingSurveys (Thread:" + Thread.currentThread().getId() + ")");
 
+        PushController.getInstance().setPushInProgress(true);
+
         //Select surveys from sql
         surveys = Survey.getAllUnsentSurveys();
 
         //No surveys to send -> done
         if(surveys==null || surveys.isEmpty()){
+            PushController.getInstance().setPushInProgress(false);
             return;
         }
 
-        pushInProgress = true;
-
         //Server is not ready for push -> move on
         if(!ServerAPIController.isReadyForPush()){
+            PushController.getInstance().setPushInProgress(false);
             return;
         }
 
@@ -181,6 +185,7 @@ public class PushService extends IntentService {
         Log.d(TAG, "callbackLoginPrePush");
         //Nothing to check
         if(result==null || result.getResourceType()==null || !result.getResourceType().equals(ResourceType.USERS)){
+            PushController.getInstance().setPushInProgress(false);
             return;
         }
 
@@ -188,6 +193,7 @@ public class PushService extends IntentService {
         if(result.getResponseHolder().getApiException()!=null) {
             Log.e(TAG, "callbackLoginPrePush cannot login via sdk");
             stopProgress();
+            PushController.getInstance().setPushInProgress(false);
             return;
         }
 
@@ -201,18 +207,22 @@ public class PushService extends IntentService {
         for (Survey survey: surveys){
 
             if (survey.isCompleted(survey.getId_survey())){
+                Log.d("DpBlank", "Survey is completed" + survey.getId_survey());
                 filteredSurveys.add(survey);
+            }
+            else{
+                Log.d("DpBlank", "Survey is sent" + survey.getId_survey());
             }
         }
 
         if (filteredSurveys.size()==0){
+            PushController.getInstance().setPushInProgress(false);
             return;
         }
 
         //Login successful start reload
         PushController.getInstance().push(getApplicationContext(), filteredSurveys);
 
-        pushInProgress = false;
     }
 
     /**

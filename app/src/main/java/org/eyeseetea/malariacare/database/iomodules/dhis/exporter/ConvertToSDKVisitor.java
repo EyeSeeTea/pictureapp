@@ -248,6 +248,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             }else{
                 iSurvey.saveMainScore();
                 iSurvey.save();
+                Log.d("DpBlank", "Saving suvey as completed " + iSurvey);
+
                 //To avoid several pushes
                 iEvent.setFromServer(true);
                 iEvent.save();

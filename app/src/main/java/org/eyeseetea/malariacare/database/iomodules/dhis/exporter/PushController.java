@@ -34,6 +34,7 @@ import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.network.ResponseHolder;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
+import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.ImportSummary;
 
 import java.util.HashMap;
@@ -58,6 +59,18 @@ public class PushController {
      * The stateful converter used to turn a survey into its corresponding event + datavalues;
      */
     ConvertToSDKVisitor converter;
+
+
+    public boolean isPushInProgress() {
+        return pushInProgress;
+    }
+
+    public void setPushInProgress(boolean pushInProgress) {
+        this.pushInProgress = pushInProgress;
+    }
+
+    private boolean pushInProgress = false;
+
 
     /**
      * Constructs and register this pull controller to the event bus
@@ -97,9 +110,21 @@ public class PushController {
 
         //No survey no push
         if(surveys==null || surveys.size()==0){
+            PushController.getInstance().setPushInProgress(false);
             postException(new Exception(context.getString(R.string.progress_push_no_survey)));
             return;
         }
+
+
+        Log.d("DpBlank", "Sets of Surveys to push");
+
+        for (Survey srv : surveys){
+            Log.d("DpBlank", "Survey to push " + srv.toString());
+            for (Value dv : srv.getValues()){
+                Log.d("DpBlank", "Values to push " + dv.toString());
+            }
+        }
+
 
         try {
             //Register for event bus
@@ -137,6 +162,7 @@ public class PushController {
                     if (result.getResponseHolder() != null && result.getResponseHolder().getApiException() != null) {
                         Log.e(TAG, result.getResponseHolder().getApiException().getMessage());
                         postException(new Exception(context.getString(R.string.dialog_pull_error)));
+                        PushController.getInstance().setPushInProgress(false);
                         return;
                     }
                     //Ok: Updates + check ban server
@@ -148,6 +174,8 @@ public class PushController {
                     ServerAPIController.banOrgUnitIfRequired();
 
                     Log.d(TAG, "PUSH process...OK");
+
+                    PushController.getInstance().setPushInProgress(false);
                 }catch (Exception ex){
                     Log.e(TAG,"onSendDataFinished: "+ex.getLocalizedMessage());
                     postException(ex);

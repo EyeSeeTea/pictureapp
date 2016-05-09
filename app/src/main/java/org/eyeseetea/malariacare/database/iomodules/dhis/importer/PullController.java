@@ -172,6 +172,7 @@ public class PullController {
                         Log.d(TAG, "PULL process...OK");
                     }
                 } catch (Exception ex) {
+                    ex.printStackTrace();
                     Log.e(TAG, "onLoadMetadataFinished: " + ex.getLocalizedMessage());
                     postException(ex);
                 } finally {
@@ -241,7 +242,7 @@ public class PullController {
         for (OrganisationUnit organisationUnit : MetaDataController.getAssignedOrganisationUnits()) {
 
             //Only events for the right ORGUNIT are loaded
-            if(!organisationUnit.getLabel().equals(orgUnitName)){
+            if(organisationUnit.getLabel() == null || !organisationUnit.getLabel().equals(orgUnitName)){
                 continue;
             }
 

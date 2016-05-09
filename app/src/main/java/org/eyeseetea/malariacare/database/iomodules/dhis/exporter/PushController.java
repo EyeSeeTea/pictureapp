@@ -141,9 +141,11 @@ public class PushController {
             DhisService.sendEventChanges();
 
         }catch (Exception ex){
+            ex.printStackTrace();
             Log.e(TAG,"push: "+ex.getLocalizedMessage());
             unregister();
             postException(ex);
+            PushController.getInstance().setPushInProgress(false);
         }
     }
 
@@ -175,13 +177,13 @@ public class PushController {
 
                     Log.d(TAG, "PUSH process...OK");
 
-                    PushController.getInstance().setPushInProgress(false);
                 }catch (Exception ex){
                     Log.e(TAG,"onSendDataFinished: "+ex.getLocalizedMessage());
                     postException(ex);
                 }finally {
                     postFinish();
                     unregister();
+                    PushController.getInstance().setPushInProgress(false);
                 }
             }
         }.start();

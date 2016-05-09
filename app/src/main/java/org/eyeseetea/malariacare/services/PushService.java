@@ -215,6 +215,7 @@ public class PushService extends IntentService {
         }
 
         if (filteredSurveys.size()==0){
+            stopProgress();
             PushController.getInstance().setPushInProgress(false);
             return;
         }

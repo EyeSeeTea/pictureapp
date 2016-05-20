@@ -632,7 +632,8 @@ public class Survey extends BaseModel  implements VisitableToSDK {
 
         if (values.size() > 0) {
             Value firstValue = values.get(0);
-            rdtValue = firstValue.getOption().getName();
+            if (firstValue.getOption() != null)
+                rdtValue = firstValue.getOption().getName();
         }
         return rdtValue;
     }

@@ -75,7 +75,7 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         //Since there are three possible values first question (RDT):'Yes','No','Cancel'
         //rdt.setText(survey.isRDT()?"+":"-");
         String rdtValueFromDB = survey.getRDT();
-        String rdtValue = (rdtValueFromDB.equals("")) ? getContext().getResources().getString(R.string.unavailable) : rdtValueFromDB;
+        String rdtValue = (rdtValueFromDB.equals("")) ? getContext().getResources().getString(R.string.unrecognized_option) : rdtValueFromDB;
         String rdtSymbol = rdtValue;
         if(rdtValue.equals(getContext().getResources().getString(R.string.rdtPositive))){
             rdtSymbol = getContext().getResources().getString(R.string.symbolPlus);

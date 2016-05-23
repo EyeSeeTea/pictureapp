@@ -132,5 +132,6 @@
     <string name="settings_menu_eula">EULA</string>
     <string name="monitor_row_title_day">ទី</string>
     <string name="monitor_row_title_month">ខែ</string>
+    <string name="unrecognized_option">មិនស្គាល់</string>
 
 </resources>

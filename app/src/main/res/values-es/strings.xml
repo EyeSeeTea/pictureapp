@@ -131,5 +131,6 @@
     <string name="settings_menu_eula">EULA</string>
     <string name="monitor_row_title_day">Día</string>
     <string name="monitor_row_title_month">Mes</string>
+    <string name="unrecognized_option">Desconocido</string>
 
 </resources>

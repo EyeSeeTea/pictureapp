@@ -326,7 +326,13 @@ public class DashboardUnsentFragment extends ListFragment {
             Log.d(TAG, "onReceive");
             //Listening only intents from this method
             if(SurveyService.ALL_UNSENT_SURVEYS_ACTION.equals(intent.getAction())) {
-                List<Survey> surveysUnsentFromService = (List<Survey>) Session.popServiceValue(SurveyService.ALL_UNSENT_SURVEYS_ACTION);
+                List<Survey> surveysUnsentFromService;
+                Session.valuesLock.readLock().lock();
+                try {
+                    surveysUnsentFromService = (List<Survey>) Session.popServiceValue(SurveyService.ALL_UNSENT_SURVEYS_ACTION);
+                } finally {
+                    Session.valuesLock.readLock().unlock();
+                }
                 reloadSurveys(surveysUnsentFromService);
                 manageSurveysAlarm(surveysUnsentFromService);
             }

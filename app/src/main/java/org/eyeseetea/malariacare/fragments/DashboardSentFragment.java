@@ -242,7 +242,13 @@ public class DashboardSentFragment extends ListFragment {
             Log.d(TAG, "onReceive");
             //Listening only intents from this method
             if(SurveyService.ALL_SENT_SURVEYS_ACTION.equals(intent.getAction())) {
-                List<Survey> surveysFromService = (List<Survey>) Session.popServiceValue(SurveyService.ALL_SENT_SURVEYS_ACTION);
+                List<Survey> surveysFromService;
+                Session.valuesLock.readLock().lock();
+                try {
+                    surveysFromService = (List<Survey>) Session.popServiceValue(SurveyService.ALL_SENT_SURVEYS_ACTION);
+                } finally {
+                    Session.valuesLock.readLock().unlock();
+                }
                 reloadSurveys(surveysFromService);
             }
         }

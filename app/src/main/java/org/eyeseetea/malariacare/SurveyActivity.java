@@ -327,8 +327,20 @@ public class SurveyActivity extends BaseActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG,"onReceive");
-            List<CompositeScore> compositeScores=(List<CompositeScore>)Session.popServiceValue(SurveyService.PREPARE_SURVEY_ACTION_COMPOSITE_SCORES);
-            List<Tab> tabs=(List<Tab>)Session.popServiceValue(SurveyService.PREPARE_SURVEY_ACTION_TABS);
+            List<CompositeScore> compositeScores;
+            List<Tab> tabs;
+            Session.valuesLock.readLock().lock();
+            try {
+                compositeScores = (List<CompositeScore>) Session.popServiceValue(SurveyService.PREPARE_SURVEY_ACTION_COMPOSITE_SCORES);
+            } finally {
+                Session.valuesLock.readLock().unlock();
+            }
+            Session.valuesLock.readLock().lock();
+            try {
+                tabs = (List<Tab>) Session.popServiceValue(SurveyService.PREPARE_SURVEY_ACTION_TABS);
+            } finally {
+                Session.valuesLock.readLock().unlock();
+            }
 
             tabAdaptersCache.reloadAdapters(tabs,compositeScores);
             reloadTabs(tabs);

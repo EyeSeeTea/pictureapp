@@ -19,24 +19,24 @@
 
 package org.eyeseetea.malariacare.layout.utils;
 
+import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TableLayout;
+import android.view.WindowManager;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.layout.score.ScoreRegister;
-import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.TextCard;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,6 +45,20 @@ import java.util.List;
 public class LayoutUtils {
 
     public static final int [] rowBackgrounds = {R.drawable.background_even, R.drawable.background_odd};
+
+    /**
+     * Variable to store the Unsent surveys list height
+     */
+    private static int unsentListHeight;
+
+
+    public static synchronized int getUnsentListHeight() {
+        return unsentListHeight;
+    }
+
+    public static synchronized void setUnsentListHeight(int unsentHeight) {
+        unsentListHeight = unsentHeight;
+    }
 
     // Given a index, this method return a background color
     public static int calculateBackgrounds(int index) {
@@ -80,5 +94,30 @@ public class LayoutUtils {
         // actionBar.setIcon(null);
         actionBar.setTitle(title);
         actionBar.setSubtitle(subtitle);
+    }
+
+    public static synchronized void measureListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        int desiredHeight = View.MeasureSpec.makeMeasureSpec(listView.getHeight(), View.MeasureSpec.AT_MOST);
+
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(desiredHeight, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += listItem.getMeasuredHeight()/2; //FIXME: measure is not properly measuring (it gives a very high number compared to the screen height measure) so I'm dividing by 2
+        }
+
+        setUnsentListHeight(totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)));
+    }
+
+    public static int measureScreenHeight(Activity activity){
+        DisplayMetrics metrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Log.d("measureScreen", metrics.toString());
+        return Math.round(metrics.heightPixels*metrics.density);
     }
 }

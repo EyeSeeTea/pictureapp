@@ -23,7 +23,7 @@
     android:layout_height="fill_parent">
 
     <org.eyeseetea.malariacare.views.TextCard
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/empty_string"
@@ -47,7 +47,7 @@
             android:id="@+id/dashboard_details_table">
 
             <ListView
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/dashboard_details_list"/>
 
@@ -55,7 +55,7 @@
     </FrameLayout>
 
     <org.eyeseetea.malariacare.views.TextCard
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/empty_string"
@@ -79,7 +79,7 @@
             android:id="@+id/dashboard_details_table_sent">
 
             <ListView
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/dashboard_details_list_sent"/>
 

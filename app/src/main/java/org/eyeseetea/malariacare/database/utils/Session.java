@@ -19,9 +19,14 @@
 
 package org.eyeseetea.malariacare.database.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.ListView;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
@@ -105,6 +110,25 @@ public class Session {
 
     public static synchronized void setAdapterCompleted(IDashboardAdapter adapterCompleted) {
         Session.adapterCompleted = adapterCompleted;
+    }
+
+    public static synchronized void setFullOfUnsent(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.fullOfUnsent), true);
+        editor.commit();
+    }
+
+    public static synchronized void setNotFullOfUnsent(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.fullOfUnsent), false);
+        editor.commit();
+    }
+
+    public static boolean isNotFullOfUnsent(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return !sharedPreferences.getBoolean(context.getResources().getString(R.string.fullOfUnsent),false);
     }
 
     /**

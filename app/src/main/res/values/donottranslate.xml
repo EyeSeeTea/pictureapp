@@ -66,4 +66,6 @@
     <p>3. Run "git checkout". </p>]]>
     </string>
 
+    <string name="fullOfUnsent" translatable="false">fullOfUnsent</string>
+
 </resources>

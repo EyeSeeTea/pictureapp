@@ -122,6 +122,10 @@ public class PullController {
             TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
             MetaDataController.clearMetaDataLoadedFlags();
             MetaDataController.wipe();
+            //Fixme delete the events
+            Log.d(TAG,"Delete sdk db");
+            PopulateDB.wipeSDKData();
+
             //Pull new metadata
             postProgress(context.getString(R.string.progress_pull_downloading));
             try {

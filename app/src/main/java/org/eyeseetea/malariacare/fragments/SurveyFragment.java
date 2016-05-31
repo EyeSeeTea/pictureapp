@@ -125,13 +125,7 @@ public class SurveyFragment extends Fragment{
         llLayout = (RelativeLayout) inflater.inflate(R.layout.survey, container, false);
         registerReceiver();
         registerReceiver();
-        //createActionBar();
         createProgress();
-
-
-        //createMenu();
-        //createProgress();
-        //prepareSurveyInfo();
         return llLayout;
     }
 
@@ -147,25 +141,6 @@ public class SurveyFragment extends Fragment{
 
         prepareSurveyInfo();
         //this.tabAdapter.notifyDataSetChanged();
-    }
-
-    //@Override
-    public void onBackPressed() {
-        Log.d(TAG, "onBackPressed");
-        Survey survey=Session.getSurvey();
-        int infoMessage=survey.isInProgress()?R.string.survey_info_exit_delete:R.string.survey_info_exit;
-        new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.survey_info_exit)
-                .setMessage(infoMessage)
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int arg1) {
-                        ScoreRegister.clear();
-                        unregisterReceiver();
-                        isBackPressed=true;
-                        //getActivity().finishAndGo(DashboardActivity.class);
-                    }
-                }).create().show();
     }
 
     @Override

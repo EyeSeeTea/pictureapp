@@ -41,6 +41,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SurveyActivity;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentSentAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
@@ -192,8 +193,8 @@ public class DashboardSentFragment extends ListFragment {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View header = inflater.inflate(this.adapter.getHeaderLayout(), null, false);
             View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
-            TextCard title = (TextCard) getActivity().findViewById(R.id.titleCompleted);
-            title.setText(adapter.getTitle());
+            //TextCard title = (TextCard) getActivity().findViewById(R.id.titleCompleted);
+            //title.setText(adapter.getTitle());
             ListView listView = getListView();
             listView.addHeaderView(header);
             listView.addFooterView(footer);
@@ -206,7 +207,7 @@ public class DashboardSentFragment extends ListFragment {
     /**
      * Register a survey receiver to load surveys into the listadapter
      */
-    private void registerSurveysReceiver() {
+    public void registerSurveysReceiver() {
         Log.d(TAG, "registerSurveysReceiver");
 
         if(surveyReceiver==null){
@@ -256,6 +257,13 @@ public class DashboardSentFragment extends ListFragment {
                 reloadSurveys(surveysFromService);
             }
         }
+    }
 
+
+    public void reloadData(){
+        //Reload data using service
+        Intent surveysIntent=new Intent(PreferencesState.getInstance().getContext().getApplicationContext(), SurveyService.class);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.ALL_SENT_SURVEYS_ACTION);
+        PreferencesState.getInstance().getContext().getApplicationContext().startService(surveysIntent);
     }
 }

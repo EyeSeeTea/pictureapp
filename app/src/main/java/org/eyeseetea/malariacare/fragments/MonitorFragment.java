@@ -19,13 +19,13 @@
 
 package org.eyeseetea.malariacare.fragments;
 
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,10 +33,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.RelativeLayout;
 
-import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.monitor.MonitorBuilder;
 import org.eyeseetea.malariacare.services.MonitorService;
@@ -64,14 +63,9 @@ public class MonitorFragment extends Fragment {
      */
     private MonitorReceiver monitorReceiver;
 
-    /**
-     * Actual layout to be accessible in the fragment
-     */
-    RelativeLayout llLayout;
 
-
-    public static SurveyFragment newInstance(int index) {
-        SurveyFragment f = new SurveyFragment();
+    public static MonitorFragment newInstance(int index) {
+        MonitorFragment f = new MonitorFragment();
 
         // Supply index input as an argument.
         Bundle args = new Bundle();
@@ -88,16 +82,14 @@ public class MonitorFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         if (container == null) {
             return null;
         }
-        llLayout = (RelativeLayout) inflater.inflate(R.layout.activity_monitor, container, false);
-        //createActionBar();
-        return llLayout;
-    }
 
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.d(TAG, "onActivityCreated");
@@ -217,4 +209,13 @@ public class MonitorFragment extends Fragment {
     }
 
 
+    /**
+     * load and reload sent surveys
+     */
+    public void reloadData() {
+        //Reload data using service
+        Intent surveysIntent=new Intent(PreferencesState.getInstance().getContext().getApplicationContext(), MonitorService.class);
+        surveysIntent.putExtra(MonitorService.SERVICE_METHOD, MonitorService.PREPARE_MONITOR_DATA);
+        PreferencesState.getInstance().getContext().getApplicationContext().startService(surveysIntent);
+    }
 }

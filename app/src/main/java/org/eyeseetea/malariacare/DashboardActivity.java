@@ -81,7 +81,7 @@ public class DashboardActivity extends BaseActivity {
         createActionBar();
         dashboardActivity=this;
         setContentView(R.layout.tab_dashboard);
-
+        Survey.removeInProgress();
         //Survey.removeInProgress();
         if(savedInstanceState==null) {
             initAssess();

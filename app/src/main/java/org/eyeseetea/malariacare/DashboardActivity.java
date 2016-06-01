@@ -57,6 +57,7 @@ import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 public class DashboardActivity extends BaseActivity {
 
     private final static String TAG=".DashboardActivity";
+    public static DashboardActivity dashboardActivity;
 
     TabHost tabHost;
     MonitorFragment monitorFragment;
@@ -68,12 +69,17 @@ public class DashboardActivity extends BaseActivity {
     private boolean reloadOnResume=true;
     boolean isMoveToLeft;
 
+    /**
+     * Flags required to decide if the survey must be deleted or not
+     */
+    private boolean isBackPressed=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         createActionBar();
-
+        dashboardActivity=this;
         setContentView(R.layout.tab_dashboard);
 
         //Survey.removeInProgress();
@@ -285,7 +291,7 @@ public class DashboardActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         isMoveToLeft =true;
-        if (isSurveyFragmentActive() && currentTab == getResources().getString(R.string.tab_tag_assess)) {
+        if (isSurveyFragmentActive()) {
             onSurveyBackPressed();
         } else {
             confirmExitApp();
@@ -315,7 +321,7 @@ public class DashboardActivity extends BaseActivity {
      */
     private void onSurveyBackPressed() {
         Log.d(TAG, "onBackPressed");
-        Survey survey=Session.getSurvey();
+        final Survey survey=Session.getSurvey();
         int infoMessage=survey.isInProgress()?R.string.survey_info_exit_delete:R.string.survey_info_exit;
         new AlertDialog.Builder(this)
                 .setTitle(R.string.survey_info_exit)
@@ -323,17 +329,44 @@ public class DashboardActivity extends BaseActivity {
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ScoreRegister.clear();
-                        surveyFragment.unregisterReceiver();
+                        //Reload data using service
+                        isBackPressed=true;
                         closeSurveyFragment();
                     }
                 }).create().show();
     }
 
     public void closeSurveyFragment(){
+        ScoreRegister.clear();
+        if(isBackPressed){
+            beforeExit();
+        }
         surveyFragment.unregisterReceiver();
         initAssess();
         unsentFragment.reloadData();
+    }
+
+    public void beforeExit(){
+        Survey survey=Session.getSurvey();
+        if(survey!=null) {
+            boolean isInProgress = survey.isInProgress();
+
+            //Exit + InProgress -> delete
+            if (isBackPressed && isInProgress) {
+                survey.delete();
+                //Session.getSurvey().delete();
+                Session.setSurvey(null);
+                isBackPressed = false;
+                return;
+            }
+
+            //InProgress -> update status
+            if (isInProgress) {
+                survey.updateSurveyStatus();
+            }
+
+            //Completed | Sent -> no action
+        }
     }
 
     /**

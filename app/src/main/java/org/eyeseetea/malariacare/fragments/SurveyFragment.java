@@ -150,21 +150,7 @@ public class SurveyFragment extends Fragment{
     }
 
     private void beforeExit(){
-        Survey survey=Session.getSurvey();
-        boolean isInProgress=survey.isInProgress();
-
-        //Exit + InProgress -> delete
-        if(isBackPressed && isInProgress){
-            survey.delete();
-            return;
-        }
-
-        //InProgress -> update status
-        if(isInProgress){
-            survey.updateSurveyStatus();
-        }
-
-        //Completed | Sent -> no action
+        DashboardActivity.dashboardActivity.beforeExit();
     }
 
     @Override

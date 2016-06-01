@@ -182,11 +182,6 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void initSurvey(){
-        TabGroup tabGroup = new Select().from(TabGroup.class).querySingle();
-        // Put new survey in session
-        Survey survey = new Survey(null, tabGroup, Session.getUser());
-        survey.save();
-        Session.setSurvey(survey);
         int  mStackLevel=0;
         mStackLevel++;
         if(surveyFragment==null)
@@ -373,6 +368,14 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the New Survey button
      */
     public void newSurvey(View view) {
+        TabGroup tabGroup = new Select().from(TabGroup.class).querySingle();
+        // Put new survey in session
+        Survey survey = new Survey(null, tabGroup, Session.getUser());
+        survey.save();
+        Session.setSurvey(survey);
+        //Look for coordinates
+        prepareLocationListener(survey);
+
         initSurvey();
     }
 
@@ -396,6 +399,11 @@ public class DashboardActivity extends BaseActivity {
             return true;
         }
         return false;
+    }
+
+    public void openSentSurvey() {
+        tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_assess));
+        initSurvey();
     }
 
     /**

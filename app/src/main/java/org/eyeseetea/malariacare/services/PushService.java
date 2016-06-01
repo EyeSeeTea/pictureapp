@@ -123,7 +123,7 @@ public class PushService extends IntentService {
         PushController.getInstance().setPushInProgress(true);
 
         //Select surveys from sql
-        surveys = Survey.getAllUnsentSurveys();
+        surveys = Survey.getAllSurveysToBeSent();
 
         //No surveys to send -> done
         if(surveys==null || surveys.isEmpty()){

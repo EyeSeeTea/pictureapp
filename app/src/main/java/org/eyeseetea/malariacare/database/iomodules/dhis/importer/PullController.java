@@ -53,7 +53,7 @@ import java.util.List;
  * Created by arrizabalaga on 4/11/15.
  */
 public class PullController {
-    public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 600;
+    public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 10000;
     private final String TAG = ".PullController";
 
     private static PullController instance;

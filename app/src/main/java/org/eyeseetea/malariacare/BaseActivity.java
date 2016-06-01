@@ -124,10 +124,6 @@ public abstract class BaseActivity extends ActionBarActivity {
                 debugMessage("User asked for settings");
                 goSettings();
                 break;
-            case R.id.action_monitoring:
-                debugMessage("User asked for monitor");
-                goMonitor();
-                break;
 //            case R.id.action_license:
 //                debugMessage("User asked for license");
 //                showAlertWithMessage(R.string.settings_menu_licence, R.raw.gpl);
@@ -191,10 +187,6 @@ public abstract class BaseActivity extends ActionBarActivity {
         Intent intentSettings=new Intent(this,SettingsActivity.class);
         intentSettings.putExtra(SETTINGS_CALLER_ACTIVITY, this.getClass());
         startActivity(new Intent(this, SettingsActivity.class));
-    }
-
-    protected void goMonitor(){
-        startActivity(new Intent(this, MonitorActivity.class));
     }
 
     public void newSurvey(View v){

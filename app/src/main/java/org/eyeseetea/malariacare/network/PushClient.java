@@ -94,11 +94,11 @@ public class PushClient {
     /**
      * Hardcoded UID for dataElement DATETIME CAPTURE
      */
-    public static String TAG_DATETIME_CAPTURE="";
+    public static String TAG_DATETIME_CAPTURE="qWMb2UM2ikL";
     /**
      * Hardcoded UID for dataElement DATETIME SENT
      */
-    public static String TAG_DATETIME_SENT="";
+    public static String TAG_DATETIME_SENT="aBahytzj2u0";
 
     Survey survey;
     Activity activity;

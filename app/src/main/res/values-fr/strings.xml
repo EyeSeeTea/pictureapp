@@ -132,5 +132,8 @@
     <string name="monitor_row_title_day">Jour</string>
     <string name="monitor_row_title_month">Mois</string>
     <string name="unrecognized_option">Méconnu</string>
+    <string name="number_10">10</string>
+    <string name="number_11">11</string>
+    <string name="number_12">12</string>
 
 </resources>

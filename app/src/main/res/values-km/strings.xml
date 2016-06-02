@@ -133,5 +133,8 @@
     <string name="monitor_row_title_day">ទី</string>
     <string name="monitor_row_title_month">ខែ</string>
     <string name="unrecognized_option">មិនស្គាល់</string>
+    <string name="number_10">១០</string>
+    <string name="number_11">១១</string>
+    <string name="number_12">12</string>
 
 </resources>

@@ -137,7 +137,7 @@ public class DashboardActivity extends BaseActivity {
         private static final String DUMMY_USER="user";
         User user;
 
-        AsyncPopulateDB() {
+         AsyncPopulateDB() {
         }
 
         @Override

@@ -21,6 +21,7 @@
 package org.eyeseetea.malariacare.database.utils;
 
 import android.content.res.AssetManager;
+import android.util.Log;
 
 import com.opencsv.CSVReader;
 import com.raizlabs.android.dbflow.runtime.TransactionManager;
@@ -44,6 +45,10 @@ import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.hisp.dhis.android.sdk.persistence.models.DataValue;
+import org.hisp.dhis.android.sdk.persistence.models.Event;
+import org.hisp.dhis.android.sdk.persistence.models.FailedItem;
+import org.hisp.dhis.android.sdk.persistence.preferences.DateTimeManager;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -196,4 +201,15 @@ public class PopulateDB {
         );
     }
 
+    /**
+     * Deletes all data from the sdk database
+     */
+    public static void wipeSDKData() {
+        Delete.tables(
+                Event.class,
+                DataValue.class,
+                FailedItem.class
+        );
+        DateTimeManager.getInstance().delete();
+    }
 }

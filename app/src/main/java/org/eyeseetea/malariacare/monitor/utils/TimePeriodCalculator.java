@@ -51,7 +51,7 @@ public class TimePeriodCalculator {
     /**
      * Formatter that turns a date into a key representing that day
      */
-    private SimpleDateFormat KEY_DAY_FORMATTER=new SimpleDateFormat("dd");
+    private SimpleDateFormat KEY_DAY_FORMATTER=new SimpleDateFormat("yyyyMMdd");
 
     /**
      * Reference date for today (periods will be calculated from this date into the past

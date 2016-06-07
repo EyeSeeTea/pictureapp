@@ -139,4 +139,8 @@
     <string name="number_11">១១</string>
     <string name="number_12">12</string>
 
+    <string name="unsent_button">Unsent</string>
+    <string name="sent_button" >Sent</string>
+    <string name="monitor_button" >Monitoring</string>
+
 </resources>

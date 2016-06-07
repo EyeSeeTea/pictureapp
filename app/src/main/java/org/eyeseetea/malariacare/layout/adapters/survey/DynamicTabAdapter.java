@@ -66,7 +66,6 @@ import com.raizlabs.android.dbflow.structure.Model;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.SurveyActivity;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
@@ -680,7 +679,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 .setMessage(R.string.survey_info_completed)
                 .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        ((SurveyActivity) activity).finishAndGo(DashboardActivity.class);
+                        DashboardActivity.dashboardActivity.closeSurveyFragment();
                     }
                 });
         if(!navigationController.isFirstQuestion()){

@@ -138,4 +138,8 @@
     <string name="monitor_row_title_month">Mes</string>
     <string name="unrecognized_option">Desconocido</string>
 
+    <string name="unsent_button">No enviado</string>
+    <string name="sent_button" >Enviado</string>
+    <string name="monitor_button" >Supervisión</string>
+
 </resources>

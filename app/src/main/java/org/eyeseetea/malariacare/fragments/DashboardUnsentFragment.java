@@ -29,11 +29,11 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -45,6 +45,7 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentUnsentAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -301,13 +302,14 @@ public class DashboardUnsentFragment extends ListFragment {
         this.surveys.clear();
         this.surveys.addAll(newListSurveys);
         this.adapter.notifyDataSetChanged();
+        LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
         setListShown(true);
     }
 
     public void manageSurveysAlarm(List<Survey> newListSurveys){
         Log.d(TAG, "manageSurveysAlarm (Thread: " + Thread.currentThread().getId() + "): " + newListSurveys.size());
         if(!newListSurveys.isEmpty()) {
-            Survey.removeInProgress();
+            //Survey.removeInProgress();
             alarmPush.setPushAlarm(getActivity());
         }else{
             alarmPush.cancelPushAlarm(getActivity());
@@ -326,8 +328,25 @@ public class DashboardUnsentFragment extends ListFragment {
             Log.d(TAG, "onReceive");
             //Listening only intents from this method
             if(SurveyService.ALL_UNSENT_SURVEYS_ACTION.equals(intent.getAction())) {
-                List<Survey> surveysUnsentFromService = (List<Survey>) Session.popServiceValue(SurveyService.ALL_UNSENT_SURVEYS_ACTION);
+                List<Survey> surveysUnsentFromService;
+                Session.valuesLock.readLock().lock();
+                try {
+                    surveysUnsentFromService = (List<Survey>) Session.popServiceValue(SurveyService.ALL_UNSENT_SURVEYS_ACTION);
+                } finally {
+                    Session.valuesLock.readLock().unlock();
+                }
                 reloadSurveys(surveysUnsentFromService);
+
+                // Measure the screen height
+                int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
+
+                // Get the unsent list height, measured when reloading the surveys
+                int unsentHeight = LayoutUtils.getUnsentListHeight();
+
+                // Set the variable that establish the unsent list is shown or not
+                if (unsentHeight >= screenHeight) Session.setFullOfUnsent(getActivity());
+                else Session.setNotFullOfUnsent(getActivity());
+
                 manageSurveysAlarm(surveysUnsentFromService);
             }
         }

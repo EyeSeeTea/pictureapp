@@ -19,9 +19,14 @@
 
 package org.eyeseetea.malariacare.database.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.ListView;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
@@ -30,6 +35,8 @@ import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * An application scoped object that stores transversal information:
@@ -61,6 +68,11 @@ public class Session {
     private static PhoneMetaData phoneMetaData;
 
     /**
+     * Lock to protect the inclusion or extraction of any value in a concurrent way
+     */
+    final public static ReentrantReadWriteLock valuesLock = new ReentrantReadWriteLock();
+
+    /**
      * Map that holds non serializable results from services
      */
     private static Map<String,Object> serviceValues=new HashMap<>();
@@ -72,7 +84,7 @@ public class Session {
         return survey;
     }
 
-    public static void setSurvey(Survey survey) {
+    public static synchronized void setSurvey(Survey survey) {
         Session.survey = survey;
     }
 
@@ -80,7 +92,7 @@ public class Session {
         return user;
     }
 
-    public static void setUser(User user) {
+    public static synchronized void setUser(User user) {
         Session.user = user;
     }
 
@@ -88,7 +100,7 @@ public class Session {
         return adapterUncompleted;
     }
 
-    public static void setAdapterUncompleted(IDashboardAdapter adapterUncompleted) {
+    public static synchronized void setAdapterUncompleted(IDashboardAdapter adapterUncompleted) {
         Session.adapterUncompleted = adapterUncompleted;
     }
 
@@ -96,8 +108,27 @@ public class Session {
         return adapterCompleted;
     }
 
-    public static void setAdapterCompleted(IDashboardAdapter adapterCompleted) {
+    public static synchronized void setAdapterCompleted(IDashboardAdapter adapterCompleted) {
         Session.adapterCompleted = adapterCompleted;
+    }
+
+    public static synchronized void setFullOfUnsent(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.fullOfUnsent), true);
+        editor.commit();
+    }
+
+    public static synchronized void setNotFullOfUnsent(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.fullOfUnsent), false);
+        editor.commit();
+    }
+
+    public static boolean isNotFullOfUnsent(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return !sharedPreferences.getBoolean(context.getResources().getString(R.string.fullOfUnsent),false);
     }
 
     /**
@@ -122,8 +153,13 @@ public class Session {
      * @param value
      */
     public static void putServiceValue(String key, Object value){
-        Log.i(TAG, "putServiceValue(" + key + ", " + value.toString() + ")");
-        serviceValues.put(key, value);
+        valuesLock.writeLock().lock();
+        try {
+            Log.i(TAG, "putServiceValue(" + key + ", " + value.toString() + ")");
+            serviceValues.put(key, value);
+        } finally {
+            valuesLock.writeLock().unlock();
+        }
     }
 
     /**
@@ -141,6 +177,7 @@ public class Session {
      * Used for clean testing.
      */
     public static void clearServiceValues(){
+
         serviceValues.clear();
     }
 
@@ -148,14 +185,13 @@ public class Session {
         return location;
     }
 
-    public static void setLocation(Location location) {
+    public static synchronized void setLocation(Location location) {
         Session.location = location;
     }
 
-
     public static PhoneMetaData getPhoneMetaData(){return phoneMetaData;}
 
-    public static void setPhoneMetaData(PhoneMetaData phoneMetaData) {
+    public static synchronized void setPhoneMetaData(PhoneMetaData phoneMetaData) {
         Session.phoneMetaData = phoneMetaData;
     }
 

@@ -267,6 +267,20 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         return Constants.SURVEY_COMPLETED==this.status;
     }
 
+
+    /**
+     * Checks if the survey has been completed or not
+     * @return true|false
+     */
+    public boolean isCompleted(Long idSurvey){
+        Survey srv= new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.ID_SURVEY).eq(idSurvey)).querySingle();
+
+        return srv.getStatus().equals(Constants.SURVEY_COMPLETED);
+    }
+
+
     /**
      * Checks if the survey is in progress
      * @return true|false
@@ -533,10 +547,17 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     public static List<Survey> getAllSentSurveys() {
         return new Select().from(Survey.class)
                 .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
-                .orderBy(Survey$Table.EVENTDATE)
-                .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
+                .orderBy(false, Survey$Table.COMPLETIONDATE).queryList();
     }
 
+    /**
+     * Returns all the surveys
+     * @return
+     */
+    public static List<Survey> getAllSurveys() {
+        return new Select().all().from(Survey.class)
+                .orderBy(false, Survey$Table.COMPLETIONDATE).queryList();
+    }
     /**
      * Returns the last surveys (by date) with status put to "Sent"
      * @param limit
@@ -618,7 +639,8 @@ public class Survey extends BaseModel  implements VisitableToSDK {
 
         if (values.size() > 0) {
             Value firstValue = values.get(0);
-            rdtValue = firstValue.getOption().getName();
+            if (firstValue.getOption() != null)
+                rdtValue = firstValue.getOption().getName();
         }
         return rdtValue;
     }

@@ -460,20 +460,22 @@ public class AutocompleteAdapterFilter<T> extends ArrayAdapter<T> {
 
                 for (int i = 0; i < count; i++) {
                     final T value = values.get(i);
-                    final String valueText = value.toString().toLowerCase();
+                    if (value != null) {
+                        final String valueText = value.toString().toLowerCase();
 
-                    // First match against the whole, non-splitted value
-                    if (valueText.contains(prefixString)) {
-                        newValues.add(value);
-                    } else {
-                        final String[] words = valueText.split(" ");
-                        final int wordCount = words.length;
+                        // First match against the whole, non-splitted value
+                        if (valueText.contains(prefixString)) {
+                            newValues.add(value);
+                        } else {
+                            final String[] words = valueText.split(" ");
+                            final int wordCount = words.length;
 
-                        // Start at index 0, in case valueText starts with space(s)
-                        for (int k = 0; k < wordCount; k++) {
-                            if (words[k].contains(prefixString)) {
-                                newValues.add(value);
-                                break;
+                            // Start at index 0, in case valueText starts with space(s)
+                            for (int k = 0; k < wordCount; k++) {
+                                if (words[k].contains(prefixString)) {
+                                    newValues.add(value);
+                                    break;
+                                }
                             }
                         }
                     }

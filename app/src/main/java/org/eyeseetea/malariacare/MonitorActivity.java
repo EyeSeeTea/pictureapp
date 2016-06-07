@@ -175,7 +175,13 @@ public class MonitorActivity extends BaseActivity {
             Log.d(TAG, "onReceive");
             //Listening only intents from this method
             if (MonitorService.PREPARE_MONITOR_DATA.equals(intent.getAction())) {
-                MonitorBuilder monitorBuilder = (MonitorBuilder) Session.popServiceValue(MonitorService.PREPARE_MONITOR_DATA);
+                MonitorBuilder monitorBuilder;
+                Session.valuesLock.readLock().lock();
+                try {
+                    monitorBuilder = (MonitorBuilder) Session.popServiceValue(MonitorService.PREPARE_MONITOR_DATA);
+                } finally {
+                    Session.valuesLock.readLock().unlock();
+                }
                 reloadMonitor(monitorBuilder);
             }
         }

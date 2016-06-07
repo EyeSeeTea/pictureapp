@@ -36,7 +36,12 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
@@ -48,12 +53,14 @@ import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.network.ServerInfo;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -93,6 +100,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      */
     public static final String SETTINGS_CHANGING_SERVER="SETTINGS_CHANGING_SERVER";
 
+    /**
+     * Intent extra param that states that the EULA has been accepted
+     */
+    public static final String SETTINGS_EULA_ACCEPTED="SETTINGS_EULA_ACCEPTED";
+
+
+    public static ServerInfo serverInfo;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         Dhis2Application.bus.register(this);
@@ -119,6 +134,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     void setAutoCompleteEditTextPreference(AutoCompleteEditTextPreference autoCompleteEditTextPreference){
         this.autoCompleteEditTextPreference=autoCompleteEditTextPreference;
+    }
+
+    public AutoCompleteEditTextPreference getAutoCompleteEditTextPreference(){
+        return this.autoCompleteEditTextPreference;
     }
 
     /**
@@ -249,7 +268,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         serverVersionAsync.execute(url);
     }
 
-    private void callbackPopulateOrgUnitsByServerVersion(ServerInfo serverInfo){
+    public void callbackPopulateOrgUnitsByServerVersion(ServerInfo serverInfo){
         Log.d(TAG, "callbackPopulateOrgUnitsByServerVersion " + serverInfo.getVersion());
         autoCompleteEditTextPreference.pullOrgUnits(serverInfo.getVersion());
     }
@@ -312,7 +331,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      *  - 2.21|2.22: Via sdk (which requires a login to initialize DHIS sdk)
      *  - Else: Error
      */
-    private void callbackReloadByServerVersionWhenUrlChanged(ServerInfo serverInfo) {
+    public void callbackReloadByServerVersionWhenUrlChanged(ServerInfo serverInfo) {
         Log.d(TAG, "callbackReloadByServerVersionWhenUrlChanged " + serverInfo.getVersion());
 
         //After changing to a new server survey data is always removed
@@ -709,6 +728,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             String serverVersion= ServerAPIController.getServerVersion(serverInfo.getUrl());
 
             serverInfo.setVersion(serverVersion);
+            SettingsActivity.serverInfo = serverInfo;
             return serverInfo;
         }
 
@@ -733,6 +753,40 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_ON_EULA_ACCEPTED) {
+            if (data.hasExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE)) {
+                Log.d(TAG, "Executing onActivityResult:");
+                CheckServerVersionAsync checkServerVersionAsync = new CheckServerVersionAsync(this, true, true);
+                checkServerVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), true);
+                editor.commit();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+        Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+        propagateExtra(intent);
+        finish();
+        startActivity(intent);
+    }
+
+    private Intent propagateExtra(Intent intent){
+        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,false)){
+            Log.i(TAG, "propagateExtra -> Changing orgunit");
+            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,true);
+        }
+
+        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,false)){
+            Log.i(TAG, "propagateExtra -> Changing server");
+            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,true);
+        }
+
+        intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);
+        return intent;
+    }
 }
 
 /**
@@ -756,6 +810,32 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
         this.changingOrgUnit=changingOrgUnit;
     }
 
+    /**
+     * Shows an alert dialog asking for acceptance of the EULA terms. If ok calls login function, do nothing otherwise
+     * @param titleId
+     * @param rawId
+     * @param context
+     */
+    public void askEula(int titleId, int rawId, final Context context){
+        InputStream message = context.getResources().openRawResource(rawId);
+        String stringMessage = Utils.convertFromInputStreamToString(message).toString();
+        final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
+        Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle(context.getString(titleId))
+                .setMessage(linkedMessage)
+                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                launchLoginOnEulaAccepted();
+            }
+                })
+                .setNegativeButton(android.R.string.no, null).create();
+        dialog.show();
+        ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
     @Override
     public boolean onPreferenceClick(Preference preference) {
 
@@ -764,8 +844,15 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
             return false;
         }
 
-        //Launch login with the right extra param
-        launchLoginPreChange();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        if (!sharedPreferences.getBoolean(activity.getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
+            askEula(R.string.settings_menu_eula, R.raw.eula, activity);
+        } else {
+            //Launch login with the right extra param
+            launchLoginPreChange();
+        }
+
         return true;
     }
 
@@ -781,10 +868,21 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
      * Launches Login activity with the right extra params
      */
     void launchLoginPreChange(){
+        Intent intent = prepareIntent();
+        activity.finish();
+        activity.startActivity(intent);
+    }
+
+    void launchLoginOnEulaAccepted(){
+        Intent intent = prepareIntent();
+        intent.putExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, true);
+        activity.startActivityForResult(intent, Constants.REQUEST_CODE_ON_EULA_ACCEPTED);
+    }
+
+    Intent prepareIntent(){
         String extraKey = changingOrgUnit?SettingsActivity.SETTINGS_CHANGING_ORGUNIT:SettingsActivity.SETTINGS_CHANGING_SERVER;
         Intent intent = new Intent(activity,LoginActivity.class);
         intent.putExtra(extraKey,true);
-        activity.finish();
-        activity.startActivity(intent);
+        return intent;
     }
 }

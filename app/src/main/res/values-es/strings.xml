@@ -78,6 +78,8 @@
     <string name="progress_pull_surveys">Cargando encuestas ...</string>
     <string name="progress_pull_connecting">Conectando a servidor DHIS</string>
     <string name="progress_pull_done">Hecho</string>
+    <string name="progress_pull_building_survey">Construyendo encuesta ...</string>
+    <string name="progress_pull_building_value">Construyendo valores ...</string>
     <string name="progress_push_no_survey">No hay encuesta para subir</string>
     <string name="progress_push_posting_survey">Subiendo datos al servidor...</string>
     <string name="progress_push_preparing_survey">Preparando datos para la subida ...</string>
@@ -125,5 +127,12 @@
     <string name="number_7">7</string>
     <string name="number_8">8</string>
     <string name="number_9">9</string>
+    <string name="settings_menu_copyright">Copyright</string>
+    <string name="settings_menu_licenses">Licencias de software</string>
+    <string name="settings_menu_legal">Legal</string>
+    <string name="settings_menu_eula">EULA</string>
+    <string name="monitor_row_title_day">Día</string>
+    <string name="monitor_row_title_month">Mes</string>
+    <string name="unrecognized_option">Desconocido</string>
 
 </resources>

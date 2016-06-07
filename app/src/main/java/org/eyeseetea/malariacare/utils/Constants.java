@@ -23,7 +23,7 @@ public class Constants {
 
     public static final String DEFAULT_SELECT_OPTION = "";
 
-    public static final int MAX_INT_CHARS = 5;
+    public static final int MAX_INT_CHARS = 2;
 
     public static final int MAX_INT_AGE = 99;
 
@@ -82,5 +82,8 @@ public class Constants {
      */
     public static final int MONITOR_HISTORY_SIZE=6;
 
-
+    /**
+     * Intent extra param that states that the login is being done due to an attempt to change the server
+     */
+    public static final int REQUEST_CODE_ON_EULA_ACCEPTED=1;
 }

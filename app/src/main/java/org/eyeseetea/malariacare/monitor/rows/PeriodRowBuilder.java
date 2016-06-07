@@ -41,7 +41,8 @@ public class PeriodRowBuilder extends MonitorRowBuilder{
     /**
      * Date format for months periods: 'Jan'
      */
-    private static final String MONTH_FORMAT="MMM";
+    //private static final String MONTH_FORMAT="MMM";
+    private static String MONTHS_FORMAT="'%s' MM";
 
     /**
      * Date format for weeks periods 'Week 09'
@@ -51,11 +52,14 @@ public class PeriodRowBuilder extends MonitorRowBuilder{
     /**
      * Date format for days periods: 'Wed'
      */
-    private static final String DAYS_FORMAT="EEE";
+    //private static final String DAYS_FORMAT="EEE";
+    private static String DAYS_FORMAT="'%s' dd";
 
     public PeriodRowBuilder(Context context){
         super(context,context.getString(R.string.monitor_row_title_period));
         initWeekFormat();
+        initDayFormat();
+        initMonthFormat();
         initData();
     }
 
@@ -98,6 +102,14 @@ public class PeriodRowBuilder extends MonitorRowBuilder{
         WEEKS_FORMAT = String.format(WEEKS_FORMAT,context.getString(R.string.monitor_row_title_week));
     }
 
+    private void initDayFormat(){
+        DAYS_FORMAT = String.format(DAYS_FORMAT,context.getString(R.string.monitor_row_title_day));
+    }
+
+    private void initMonthFormat(){
+        MONTHS_FORMAT = String.format(MONTHS_FORMAT,context.getString(R.string.monitor_row_title_month));
+    }
+
     /**
      * Loads period times info
      */
@@ -112,7 +124,7 @@ public class PeriodRowBuilder extends MonitorRowBuilder{
      */
     private void initMonthsData(){
         List<Date> monthsDates= TimePeriodCalculator.getInstance().getMonthPeriodDates();
-        initTimeData(monthsDates, new SimpleDateFormat(MONTH_FORMAT), monthsData);
+        initTimeData(monthsDates, new SimpleDateFormat(MONTHS_FORMAT), monthsData);
     }
 
     /**

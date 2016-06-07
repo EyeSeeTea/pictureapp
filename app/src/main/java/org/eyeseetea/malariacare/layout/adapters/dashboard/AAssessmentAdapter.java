@@ -74,7 +74,8 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         TextCard rdt = (TextCard) rowView.findViewById(R.id.rdt);
         //Since there are three possible values first question (RDT):'Yes','No','Cancel'
         //rdt.setText(survey.isRDT()?"+":"-");
-        String rdtValue = survey.getRDT();
+        String rdtValueFromDB = survey.getRDT();
+        String rdtValue = (rdtValueFromDB.equals("")) ? getContext().getResources().getString(R.string.unrecognized_option) : rdtValueFromDB;
         String rdtSymbol = rdtValue;
         if(rdtValue.equals(getContext().getResources().getString(R.string.rdtPositive))){
             rdtSymbol = getContext().getResources().getString(R.string.symbolPlus);

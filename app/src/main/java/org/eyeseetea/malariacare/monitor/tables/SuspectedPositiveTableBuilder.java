@@ -55,9 +55,9 @@ public class SuspectedPositiveTableBuilder extends MonitorTableBuilder{
         rowBuilders.add(new PfRowBuilder(context));
         rowBuilders.add(new PvRowBuilder(context));
         rowBuilders.add(new PfPvRowBuilder(context));
+        rowBuilders.add(new ReferralRowBuilder(context));
         rowBuilders.add(new NegativeRowBuilder(context));
         rowBuilders.add(new NotTestedRowBuilder(context));
-        rowBuilders.add(new ReferralRowBuilder(context));
         rowBuilders.add(new PositivityRateRowBuilder(context));
         return rowBuilders;
     }

@@ -34,6 +34,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -44,6 +45,7 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentSentAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.views.TextCard;
 
@@ -186,16 +188,18 @@ public class DashboardSentFragment extends ListFragment {
      * Initializes the listview component, adding a listener for swiping right
      */
     private void initListView(){
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View header = inflater.inflate(this.adapter.getHeaderLayout(), null, false);
-        View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
-        TextCard title = (TextCard) getActivity().findViewById(R.id.titleCompleted);
-        title.setText(adapter.getTitle());
-        ListView listView = getListView();
-        listView.addHeaderView(header);
-        listView.addFooterView(footer);
-        setListAdapter((BaseAdapter) adapter);
-        setListShown(false);
+        if (Session.isNotFullOfUnsent(getActivity())) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View header = inflater.inflate(this.adapter.getHeaderLayout(), null, false);
+            View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
+            TextCard title = (TextCard) getActivity().findViewById(R.id.titleCompleted);
+            title.setText(adapter.getTitle());
+            ListView listView = getListView();
+            listView.addHeaderView(header);
+            listView.addFooterView(footer);
+            setListAdapter((BaseAdapter) adapter);
+            setListShown(false);
+        }
     }
 
 
@@ -242,7 +246,13 @@ public class DashboardSentFragment extends ListFragment {
             Log.d(TAG, "onReceive");
             //Listening only intents from this method
             if(SurveyService.ALL_SENT_SURVEYS_ACTION.equals(intent.getAction())) {
-                List<Survey> surveysFromService = (List<Survey>) Session.popServiceValue(SurveyService.ALL_SENT_SURVEYS_ACTION);
+                List<Survey> surveysFromService;
+                Session.valuesLock.readLock().lock();
+                try {
+                    surveysFromService = (List<Survey>) Session.popServiceValue(SurveyService.ALL_SENT_SURVEYS_ACTION);
+                } finally {
+                    Session.valuesLock.readLock().unlock();
+                }
                 reloadSurveys(surveysFromService);
             }
         }

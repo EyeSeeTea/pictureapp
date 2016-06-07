@@ -35,7 +35,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -85,6 +87,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Created by Jose on 21/04/2015.
@@ -127,6 +130,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private final Context context;
 
     int id_layout;
+
 
     /**
      * Flag that indicates if the current survey in session is already sent or not (it affects readonly settings)
@@ -199,6 +203,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     for (int itemPos = 0; itemPos < vgRow.getChildCount(); itemPos++) {
                         View childItem = vgRow.getChildAt(itemPos);
                         if (childItem instanceof ImageView) {
+                            //We dont want the user to click anything else
+                            swipeTouchListener.clearClickableViews();
+
                             Option otherOption=(Option)childItem.getTag();
                             if(selectedOption.getId_option() != otherOption.getId_option()){
                                 overshadow((ImageView) childItem, otherOption);
@@ -499,7 +506,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     hideKeyboard(ctx, v);
 
                     Question question = progressTabStatus.getCurrentQuestion();
-
                     ReadWriteDB.saveValuesText(question, phoneValue);
                     finishOrNext();
                 }
@@ -585,7 +591,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (phoneValue == null) {
             phoneValue = "";
         }
-        return phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.matches(PLAIN_PHONENUMBER_MASK);
+        return phoneValue.isEmpty() || phoneValue.replace(" ", "").matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.replace(" ", "").matches(PLAIN_PHONENUMBER_MASK);
     }
 
     /**
@@ -691,7 +697,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 next();
             }
-        }, 1000);
+        }, 750);
     }
 
     /**
@@ -737,7 +743,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Changes the current question moving forward
      */
     private void next(){
-        if(!progressTabStatus.hasNextQuestion()){
+        Question question = progressTabStatus.getCurrentQuestion();
+        Value value = question.getValueBySession();
+        if (isDone(value)) {
             return;
         }
 

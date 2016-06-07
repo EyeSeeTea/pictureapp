@@ -103,7 +103,7 @@ public class ServerAPIController {
     /**
      * Default Server
      */
-    private static String DHIS_SERVER ="https://www.psi-mis.org";
+    private static String DHIS_SERVER ="https://dev.psi-mis.org";
 
     /**
      * Endpoint to retrieve server info (including version)

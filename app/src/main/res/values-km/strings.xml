@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="app_name_local">ឃ្លាំមើលករណីគ្រុនចាញ់</string>
     <string name="yes">បាទ/ចាស</string>
     <string name="no">ទេ</string>
     <string name="ok">យល់ព្រម</string>

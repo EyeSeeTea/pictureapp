@@ -61,26 +61,18 @@ import android.widget.TextView;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import com.raizlabs.android.dbflow.sql.language.Select;
-import com.raizlabs.android.dbflow.structure.Model;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
-import org.eyeseetea.malariacare.layout.adapters.survey.progress.ProgressTabStatus;
-import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
@@ -89,7 +81,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 /**
  * Created by Jose on 21/04/2015.
@@ -313,8 +304,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     initOptionButton(imageButton, currentOption, value, parent);
                 }
                 break;
-            //TODO Review with ina
-            case Constants.IMAGES_5:
             case Constants.IMAGES_3:
                 List<Option> opts = question.getAnswer().getOptions();
                 swipeTouchListener.clearClickableViews();
@@ -329,6 +318,38 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
                     initOptionButton(imageButton, currentOption, value, parent);
+                }
+                break;
+            case Constants.IMAGES_5:
+                List<Option> optns = question.getAnswer().getOptions();
+                swipeTouchListener.clearClickableViews();
+                for(int i=0;i<optns.size();i++) {
+                    Option currentOption = optns.get(i);
+                    int mod = i % 2;
+                    //First item per row requires a new row
+                    if (mod == 0) {
+                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
+                        tableLayout.addView(tableRow);
+                    }
+                    //The last option in the last row is a single image
+                    if (i == optns.size()-1) {
+                        ImageView imageButton = null;
+                        TableRow.LayoutParams params = new TableRow.LayoutParams(
+                                TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1f);
+                        imageButton = (ImageView) tableRow.getChildAt(mod);
+                        //remove the innecesary second imageview.
+                        tableRow.removeViewAt(mod+1);
+                        imageButton.setLayoutParams(params);
+                        imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                        initOptionButton(imageButton, currentOption, value, parent);
+                    }
+                    else{
+                        ImageView imageButton = (ImageView) tableRow.getChildAt(mod);
+                        imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                        initOptionButton(imageButton, currentOption, value, parent);
+                    }
                 }
                 break;
             case Constants.PHONE:

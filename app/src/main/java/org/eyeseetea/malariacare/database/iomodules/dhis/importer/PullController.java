@@ -22,10 +22,13 @@ package org.eyeseetea.malariacare.database.iomodules.dhis.importer;
 import android.content.Context;
 import android.util.Log;
 
+import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
+import com.raizlabs.android.dbflow.runtime.transaction.process.SaveModelTransaction;
 import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.database.model.Program;
@@ -41,6 +44,7 @@ import org.hisp.dhis.android.sdk.job.Job;
 import org.hisp.dhis.android.sdk.job.JobExecutor;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
+import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.Event;
 import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
@@ -53,7 +57,7 @@ import java.util.List;
  * Created by arrizabalaga on 4/11/15.
  */
 public class PullController {
-    public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 10000;
+    public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
     private final String TAG = ".PullController";
 
     private static PullController instance;
@@ -122,6 +126,10 @@ public class PullController {
             TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
             MetaDataController.clearMetaDataLoadedFlags();
             MetaDataController.wipe();
+            //Fixme delete the events
+            Log.d(TAG,"Delete sdk db");
+            PopulateDB.wipeSDKData();
+
             //Pull new metadata
             postProgress(context.getString(R.string.progress_pull_downloading));
             try {
@@ -200,11 +208,11 @@ public class PullController {
         Log.d(TAG, "Converting SDK into APP data");
 
         //One shared converter to match parents within the hierarchy
+
         ConvertFromSDKVisitor converter = new ConvertFromSDKVisitor();
         convertMetaData(converter);
         if (!ProgressActivity.PULL_IS_ACTIVE) return;
         convertDataValues(converter);
-
     }
 
     /**
@@ -256,7 +264,10 @@ public class PullController {
 
                 List<Event> events = TrackerController.getEvents(organisationUnit.getId(), program.getUid());
                 Log.i(TAG, String.format("Converting surveys and values for orgUnit: %s | program: %s", organisationUnit.getLabel(), program.getDisplayName()));
+                // Visit all the events and save them in block
+                int i=0;
                 for (Event event : events) {
+                    postProgress(context.getString(R.string.progress_pull_building_survey) + String.format(" %s/%s",i++, events.size()));
                     if (!ProgressActivity.PULL_IS_ACTIVE) return;
                     EventExtended eventExtended = new EventExtended(event);
 
@@ -264,6 +275,20 @@ public class PullController {
                     if(eventExtended.isTooOld()) return;
                     eventExtended.accept(converter);
                 }
+                new SaveModelTransaction<>(ProcessModelInfo.withModels(converter.getSurveys())).onExecute();
+
+                // Visit all the Values and save them in block
+                i=0;
+                for (Event event : events) {
+                    //Visit its values
+                    for(DataValue dataValue:event.getDataValues()){
+                        if(++i%50==0)
+                            postProgress(context.getString(R.string.progress_pull_building_value) + String.format(" %s",i));
+                        DataValueExtended dataValueExtended=new DataValueExtended(dataValue);
+                        dataValueExtended.accept(converter);
+                    }
+                }
+                new SaveModelTransaction<>(ProcessModelInfo.withModels(converter.getValues())).onExecute();
             }
         }
 

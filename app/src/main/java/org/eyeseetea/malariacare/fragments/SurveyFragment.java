@@ -173,7 +173,8 @@ public class SurveyFragment extends Fragment{
             DynamicTabAdapter tabAdapter=(DynamicTabAdapter)this.tabAdaptersCache.findAdapter(tabZero);
 
             //Get options from question
-            List<Option> options=tabAdapter.progressTabStatus.getCurrentQuestion().getAnswer().getOptions();
+//            List<Option> options=tabAdapter.progressTabStatus.getCurrentQuestion().getAnswer().getOptions();
+            List<Option> options=tabAdapter.navigationController.getCurrentQuestion().getAnswer().getOptions();
 
             //Return proper option if possible
             for(Option option:options){

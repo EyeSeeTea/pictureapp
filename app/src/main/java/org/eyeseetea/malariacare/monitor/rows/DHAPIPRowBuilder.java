@@ -8,14 +8,14 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 /**
  * Created by idelcano on 07/06/2016.
  */
-public class ASMQRowBuilder extends CounterRowBuilder {
+public class DHAPIPRowBuilder  extends CounterRowBuilder {
 
-    public ASMQRowBuilder(Context context){
-        super(context, context.getString(R.string.monitor_row_title_asmq));
+    public DHAPIPRowBuilder(Context context){
+        super(context, context.getString(R.string.monitor_row_title_dhapip));
     }
 
     @Override
     protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isASMQ();
+        return surveyMonitor.isDHAPIP();
     }
 }

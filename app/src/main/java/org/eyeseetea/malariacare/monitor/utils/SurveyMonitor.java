@@ -112,7 +112,7 @@ public class SurveyMonitor {
      * @return
      */
     public boolean isSuspected(){
-        return true;
+        return (isPositive() || isNegative() || isNotTested());
     }
 
     /**

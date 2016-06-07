@@ -143,6 +143,7 @@ public class SurveyService extends IntentService {
         List<Survey> unsentSurveys=new ArrayList<Survey>();
         List<Survey> sentSurveys=new ArrayList<Survey>();
         for(Survey survey:surveys){
+            //fixme this is to ALL_UNSENT_SURVEYS_ACTION but in the service exclusive fot ALL_UNSENT_SURVEY_ACTION we sent other list(!isSent but hide too)
             if(!survey.isSent() && !survey.isHide() ){
                 Log.d(TAG,"SurveyStatusUnSent:"+survey.getStatus() + "");
                 unsentSurveys.add(survey);

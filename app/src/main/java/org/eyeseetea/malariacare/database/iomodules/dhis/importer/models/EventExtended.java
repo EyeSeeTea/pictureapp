@@ -37,6 +37,7 @@ public class EventExtended implements VisitableFromSDK {
 
     private final static String TAG=".EventExtended";
     private final static String COMPLETION_DATE_FORMAT="yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    public final static String AMERICAN_DATE_FORMAT ="yyyy-MM-dd";
     public static final int MAX_MONTHS_LOADED = -6;
 
     Event event;
@@ -140,4 +141,16 @@ public class EventExtended implements VisitableFromSDK {
         return simpleDateFormat.format(date);
     }
 
+    /**
+     * Turns a given date into a parseable String according to sdk date format
+     * @param date
+     * @return
+     */
+    public static String format(Date date, String format){
+        if(date==null){
+            return null;
+        }
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat(format);
+        return simpleDateFormat.format(date);
+    }
 }

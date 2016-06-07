@@ -18,14 +18,8 @@
  */
 package org.eyeseetea.malariacare.monitor.utils;
 
-import com.raizlabs.android.dbflow.sql.builder.Condition;
-import com.raizlabs.android.dbflow.sql.language.Select;
-
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Survey$Table;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.model.Value$Table;
-import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.Date;
 import java.util.List;
@@ -87,14 +81,14 @@ public class SurveyMonitor {
     private final static Long ID_OPTION_TREATMENT_REFERRAL=14l;
 
     /**
-     * Id of erurartesim treatment option
+     * Id of ASMQ treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_EURARTESIM=12l;
+    private final static Long ID_OPTION_TREATMENT_ASMQ =13l;
 
     /**
-     * Id of DHA-PIP1 treatment option
+     * Id of DHA-PIP treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP=13l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP=12l;
 
     /**
      * Reference to inner survey
@@ -195,14 +189,14 @@ public class SurveyMonitor {
      * Tells if the given survey has Eurartesim treatment
      * @return
      */
-    public boolean isEurartesim(){
+    public boolean isASMQ(){
         Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
         }
 
         Long idOption=value.getId_option();
-        return ID_OPTION_TREATMENT_DHA_EURARTESIM.equals(idOption);
+        return ID_OPTION_TREATMENT_ASMQ.equals(idOption);
     }
 
     /**

@@ -8,14 +8,14 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 /**
  * Created by idelcano on 07/06/2016.
  */
-public class EurartesimRowBuilder  extends CounterRowBuilder {
+public class ASMQRowBuilder extends CounterRowBuilder {
 
-    public EurartesimRowBuilder(Context context){
-        super(context, context.getString(R.string.monitor_row_title_eurartesim));
+    public ASMQRowBuilder(Context context){
+        super(context, context.getString(R.string.monitor_row_title_asmq));
     }
 
     @Override
     protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isEurartesim();
+        return surveyMonitor.isASMQ();
     }
 }

@@ -24,7 +24,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.monitor.MonitorTableBuilder;
 import org.eyeseetea.malariacare.monitor.rows.DHAPIPRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.EurartesimRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.ASMQRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PeriodRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.RDTRowBuilder;
 
@@ -44,7 +44,7 @@ public class StockTableBuilder extends MonitorTableBuilder{
     protected List<MonitorRowBuilder> defineRowBuilders() {
         List<MonitorRowBuilder> rowBuilders = new ArrayList<>();
         rowBuilders.add(new PeriodRowBuilder(context));
-        rowBuilders.add(new EurartesimRowBuilder(context));
+        rowBuilders.add(new ASMQRowBuilder(context));
         rowBuilders.add(new DHAPIPRowBuilder(context));
         rowBuilders.add(new RDTRowBuilder(context));
         return rowBuilders;

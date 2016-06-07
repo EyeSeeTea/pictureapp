@@ -119,9 +119,8 @@
     <string name="monitor_row_title_not_tested">Not tested</string>
     <string name="monitor_row_title_referral">Referral</string>
     <string name="monitor_row_title_asmq">AS/MQ</string>
-    <string name="monitor_row_title_dhapip1">DHA-PIP1</string>
-    <string name="monitor_row_title_dhapip2">DHA-PIP2</string>
-    <string name="monitor_row_title_dhapip3">DHIS-PIP3</string>
+    <string name="monitor_row_title_dhapip">DHA-PIP</string>
+    <string name="monitor_row_title_eurartesim">Eurartesim</string>
     <string name="monitor_row_title_rdts">RDTs</string>
     <string name="monitor_row_title_positivity_rate">Positivity rate</string>
     <string name="dialog_title_push">Pushing data</string>

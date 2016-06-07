@@ -123,9 +123,8 @@
     <string name="monitor_row_title_not_tested">មិនបានធ្វើតេស្ត</string>
     <string name="monitor_row_title_referral">ធ្វើការបញ្ចូន</string>
     <string name="monitor_row_title_asmq">ឱសថអាតេស៊ុយណាត​ ម៉េហ្លូគីន</string>
-    <string name="monitor_row_title_dhapip1">ឱសថសំរាប់ក្មេង​​​ (7KG-23KG)</string>
-    <string name="monitor_row_title_dhapip2">ឱសថសំរាប់មនុស្សជំទង់ (24KG-35KG)</string>
-    <string name="monitor_row_title_dhapip3">ឱសថសំរាប់មនុស្សធំ (36KG-74KG)</string>
+    <string name="monitor_row_title_dhapip">ឱសថសំរាប់ក្មេង​​​ </string>
+    <string name="monitor_row_title_eurartesim">Eurartesim</string>
     <string name="monitor_row_title_rdts">តេស្ត RDTs</string>
     <string name="monitor_row_title_positivity_rate">កម្រិតវិជ្ជមាន</string>
     <string name="settings_menu_copyright">Copyright</string>

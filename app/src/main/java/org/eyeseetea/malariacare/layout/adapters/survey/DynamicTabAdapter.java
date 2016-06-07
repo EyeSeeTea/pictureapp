@@ -62,6 +62,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.structure.Model;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -75,6 +76,8 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.progress.ProgressTabStatus;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -106,10 +109,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public static final String PLAIN_PHONENUMBER_MASK = "0\\d{8,9}";
 
-    /**
-     * Hold the progress of completion
-     */
-    public ProgressTabStatus progressTabStatus;
+    public NavigationController navigationController;
 
     /**
      * Flag that indicates if the swipe listener has been already added to the listview container
@@ -121,8 +121,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private OnSwipeTouchListener swipeTouchListener;
 
-    //List of Headers and Questions. Each position contains an object to be showed in the listview
-    List<Object> items;
     Tab tab;
 
     LayoutInflater lInflater;
@@ -142,42 +140,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.context = context;
         this.id_layout = R.layout.form_without_score;
 
-        this.items=initItems(tab);
-        List<Question> questions= initHeaderAndQuestions();
-        this.progressTabStatus=initProgress(questions);
+        this.navigationController = initNavigationController(tab);
         this.readOnly = Session.getSurvey() != null && !Session.getSurvey().isInProgress();
         this.isSwipeAdded=false;
     }
 
-    /**
-     * Turns a tab into an ordered list of headers+questions
-     * @param tab
-     */
-    private List<Object> initItems(Tab tab){
-        this.tab=tab;
-        return Utils.convertTabToArray(tab);
-    }
-
-    /**
-     * Initializes the clean list of questions (without headers)
-     */
-    private List<Question> initHeaderAndQuestions() {
-        List<Question> questions=new ArrayList<Question>();
-
-        for(int i=1;i<this.items.size();i++){
-            questions.add((Question)this.items.get(i));
-        }
-
-        return questions;
-    }
-
-    /**
-     * Builds a progress status based on the current list of questions
-     * @param questions
-     * @return
-     */
-    private ProgressTabStatus initProgress(List<Question> questions){
-        return new ProgressTabStatus(questions);
+    private NavigationController initNavigationController(Tab tab) {
+        NavigationController navigationController = NavigationBuilder.getInstance().buildController(tab);
+        navigationController.next(null);
+        return navigationController;
     }
 
     public void addOnSwipeListener(final ListView listView){
@@ -194,7 +165,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Log.d(TAG, "onClick");
 
                 Option selectedOption=(Option)view.getTag();
-                Question question=progressTabStatus.getCurrentQuestion();
+                Question question=navigationController.getCurrentQuestion();
                 ReadWriteDB.saveValuesDDL(question, selectedOption);
 
                 ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
@@ -235,7 +206,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              */
             public void onSwipeLeft() {
                 Log.d(TAG,"onSwipeLeft(next)");
-                if(readOnly || progressTabStatus.isNextAllowed()) {
+                if(readOnly || navigationController.isNextAllowed()) {
 
                     //Hide keypad
                     hideKeyboard(listView.getContext(), listView);
@@ -287,7 +258,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     @Override
     public Object getItem(int position) {
-        return this.progressTabStatus.getCurrentQuestion();
+        return this.navigationController.getCurrentQuestion();
     }
 
     @Override
@@ -301,8 +272,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         View rowView = lInflater.inflate(R.layout.dynamic_tab_grid_question, parent, false);
         rowView.getLayoutParams().height=parent.getHeight();
         rowView.requestLayout();
-
-        Question question=this.progressTabStatus.getCurrentQuestion();
+        Question question=(Question)this.getItem(position);
         Value value=question.getValueBySession();
 
         //Question
@@ -314,9 +284,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Progress
         ProgressBar progressView=(ProgressBar)rowView.findViewById(R.id.dynamic_progress);
-        progressView.setMax(progressTabStatus.getTotalPages());
-        progressView.setProgress(progressTabStatus.getCurrentPage()+1);
         TextView progressText=(TextView)rowView.findViewById(R.id.dynamic_progress_text);
+        progressView.setMax(navigationController.getTotalPages());
+        progressView.setProgress(navigationController.getCurrentPage()+1);
         progressText.setText(getLocaleProgressStatus(progressView.getProgress(), progressView.getMax()));
 
         //Options
@@ -344,6 +314,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     initOptionButton(imageButton, currentOption, value, parent);
                 }
                 break;
+            //TODO Review with ina
+            case Constants.IMAGES_5:
             case Constants.IMAGES_3:
                 List<Option> opts = question.getAnswer().getOptions();
                 swipeTouchListener.clearClickableViews();
@@ -436,8 +408,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         numberPicker.setError(context.getString(R.string.dynamic_error_age));
                         return;
                     }
-
-                    Question question = progressTabStatus.getCurrentQuestion();
+                    Question question = navigationController.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, positiveIntValue);
                     hideKeyboard(context,v);
                     finishOrNext();
@@ -504,8 +475,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     //Hide keypad
                     hideKeyboard(ctx, v);
-
-                    Question question = progressTabStatus.getCurrentQuestion();
+                    Question question = navigationController.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, phoneValue);
                     finishOrNext();
                 }
@@ -689,7 +659,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Question question = progressTabStatus.getCurrentQuestion();
+                Question question = navigationController.getCurrentQuestion();
                 Value value = question.getValueBySession();
                 if (isDone(value)) {
                     showDone();
@@ -713,7 +683,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         ((SurveyActivity) activity).finishAndGo(DashboardActivity.class);
                     }
                 });
-        if(!progressTabStatus.isFirstQuestion()){
+        if(!navigationController.isFirstQuestion()){
             msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int arg1) {
                     review();
@@ -730,26 +700,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @return
      */
     private boolean isDone(Value value){
-        //First question + NO => true
-        if(progressTabStatus.isFirstQuestion() && !value.isAPositive()){
-            return true;
-        }
-
-        //No more questions => true
-        return !progressTabStatus.hasNextQuestion();
+        return !navigationController.hasNext(value!=null?value.getOption():null);
     }
 
     /**
      * Changes the current question moving forward
      */
     private void next(){
-        Question question = progressTabStatus.getCurrentQuestion();
+        Question question = navigationController.getCurrentQuestion();
         Value value = question.getValueBySession();
         if (isDone(value)) {
             return;
         }
-
-        progressTabStatus.getNextQuestion();
+        navigationController.next(value!=null?value.getOption():null);
         notifyDataSetChanged();
     }
 
@@ -757,11 +720,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Changes the current question moving backward
      */
     private void previous(){
-        if(!progressTabStatus.hasPreviousQuestion()){
+        if(!navigationController.hasPrevious()){
             return;
         }
-
-        progressTabStatus.getPreviousQuestion();
+        navigationController.previous();
         notifyDataSetChanged();
     }
 
@@ -769,8 +731,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Back to initial question to review questions
      */
     private void review(){
-
-        progressTabStatus.getFirstQuestion();
+        navigationController.first();
         notifyDataSetChanged();
     }
 
@@ -796,7 +757,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
          * Delegates any touch into the our custom gesture detector
          */
         public boolean onTouch(View v, MotionEvent event) {
-//            Log.d(TAG, "onTouch: " + v.toString() + "\t (" + this.toString() + ")");
             return gestureDetector.onTouchEvent(event);
         }
 
@@ -827,7 +787,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Rect visibleRectangle = new Rect();
                 v.getGlobalVisibleRect(visibleRectangle);
                 //Image/Button clicked
-//                Log.d(TAG,String.format("findViewByCoords(%d,%d,%d,%d)",visibleRectangle.left,visibleRectangle.top,visibleRectangle.right, visibleRectangle.bottom));
                 if(x>=visibleRectangle.left && x<=visibleRectangle.right && y>=visibleRectangle.top && y<=visibleRectangle.bottom){
                     return v;
                 }

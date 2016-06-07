@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name_local">ឃ្លាំមើលករណីគ្រុនចាញ់</string>
-	
     <string name="yes">បាទ/ចាស</string>
     <string name="no">ទេ</string>
     <string name="ok">យល់ព្រម</string>
@@ -15,31 +14,31 @@
     <string name="settings_menu_licence">អាជ្ញាប័ណ្ណ</string>
 
     <string name="dialog_title_delete_surveys">តើអ្នកប្រាកដទេថា អ្នកចង់លុបព័ត៌មានស្ទង់មតិដែលបានផ្ញើរចេញទាំងអស់?</string>
-    <string name="dialog_title_delete_survey">លុប​ចោលការស្ទង់មតិ</string>
-    <string name="dialog_info_delete_survey">តើអ្នកប្រាកដជាចង់លុបចោលនូវការស្ទង់មតិនេះទាំងស្រុង?</string>
+    <string name="dialog_title_delete_survey">លុបលទ្ធផលដែលបានផ្ញើរចេញ</string>
+    <string name="dialog_info_delete_survey">តើ​អ្នក​ប្រាកដ​ជា​ចង់​លុបចោល​ទាំង​ស្រុង​ការស្ទង់មតិ​នេះ​?</string>
     <string name="dialog_title_error">មានកំហុស</string>
 
     <string name="create_info_organization_unit">Organization Unit</string>
 
     <string name="assessment_sent_date">កាលបរិច្ឆេទ</string>
-    <string name="assessment_title_header">ការបញ្ជូនមិនទាន់បានសម្រេច</string>
+    <string name="assessment_title_header">ការបញ្ជូនមិនទាន់សម្រេច</string>
     <string name="assessment_sent_title_header">ការស្ទង់មតិ​ បានផ្ញើចេញ</string>
     <string name="assessment_title_info">ព័ត៌មាន</string>
 
     <string name="survey_info_exit">តើអ្នកពិតជាចង់ចាកចេញមែនទេ?</string>
-    <string name="survey_info_exit_delete">ការស្ទង់មតិដែលកំពុងដំណើរការ​ នឹងត្រូវលុបចោល</string>
-    <string name="survey_title_completed">ការស្ទង់មតិបានបញ្ចប់</string>
+    <string name="survey_info_exit_delete">ការស្ទង់មតិកំពុងដំណើរការ​ ហើយនឹងត្រូវលុបចោល</string>
+    <string name="survey_title_completed">ការស្ទង់មតិបានបញ្ចប់់</string>
     <string name="survey_info_completed">ការស្ទង់មតិបានបញ្ចប់ដោយជោគជ័យ</string>
 
     <string name="exception_org_unit_not_valid">លេខកូដកន្លែងផ្តល់សេវាមិនត្រឹមត្រូវទេ។
-ទំនាក់ទំនងមក ភី អេស ខេ តាមរយៈលេខ ០១១ ៧៧១ ៨១១</string>
+ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈលេខ១២៣៤៥៦៧៨៩</string>
     <string name="exception_org_unit_banned">កន្លែងផ្តល់សេវាត្រូវបានបិទ។
-ទំនាក់ទំនងមក ភី អេស ខេ តាមរយៈលេខ ០១១ ៧៧១ ៨១១</string>
+ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈលេខ១២៣៤៥៦៧៨៩</string>
 
-    <string name="dynamic_error_phone_format">លេខទូរស័ព្ទមិនត្រឹមត្រូវ</string>
+    <string name="dynamic_error_phone_format">បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ ( 0NN NNN NNN{N} )</string>
     <string name="dynamic_error_age">អាយុមិនត្រឹមត្រូវ</string>
 
-    <string name="title_activity_settings">ការកំណត់</string>
+    <string name="title_activity_settings">ការកំនត់</string>
     <string name="settings_checkbox_customize_fonts">ប្តូរពុម្ពអក្សរ?</string>
     <string name="settings_list_font_sizes">ទំហំពុម្ពអក្សរ</string>
     <string-array name="settings_array_titles_font_sizes">

@@ -97,7 +97,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (program != null) {
             android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
             LayoutUtils.setActionBarLogo(actionBar);
-            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), program.getName());
+            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), this.getResources().getString(R.string.app_name_local));
         }
     }
 

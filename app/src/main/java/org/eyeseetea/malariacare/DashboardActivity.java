@@ -90,10 +90,12 @@ public class DashboardActivity extends BaseActivity {
         }
         initTabHost(savedInstanceState);
         /* set tabs in order */
-        setTab(getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout, getResources().getDrawable(R.drawable.tab_assess));
-        setTab(getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout, getResources().getDrawable(R.drawable.tab_improve));
-        setTab(getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout, getResources().getDrawable(R.drawable.tab_monitor));
+        setTab(getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout, getResources().getString(R.string.sent_button));
+        setTab(getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout, getResources().getString(R.string.unsent_button));
+        setTab(getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout, getResources().getString(R.string.monitor_button));
 
+        //set the tabs background as transparent
+        setTabsBackgroundColor(R.color.white);
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
 
             @Override
@@ -101,9 +103,7 @@ public class DashboardActivity extends BaseActivity {
                 /** If current tab is android */
 
                 //set the tabs background as transparent
-                for(int i=0;i<tabHost.getTabWidget().getChildCount();i++){
-                    tabHost.getTabWidget().getChildAt(i).setBackgroundColor(getResources().getColor(R.color.transparent));
-                }
+                setTabsBackgroundColor(R.color.white);
                 currentTab = tabId;
 
                 //If change of tab from surveyFragment or FeedbackFragment they could be closed.
@@ -111,15 +111,15 @@ public class DashboardActivity extends BaseActivity {
                     onSurveyBackPressed();
                if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
                     currentTabName=getString(R.string.assess);
-                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.tab_yellow_assess));
+                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.light_grey));
                     unsentFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_improve))) {
                     currentTabName=getString(R.string.improve);
-                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.tab_blue_improve));
+                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.light_grey));
                     sentFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_monitor))) {
                     currentTabName=getString(R.string.monitor);
-                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.tab_green_monitor));
+                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.light_grey));
                     monitorFragment.reloadData();
                 }
             }
@@ -130,9 +130,16 @@ public class DashboardActivity extends BaseActivity {
             tabHost.getTabWidget().getChildAt(i).setFocusable(false);
         }
         //set the initial selected tab background
-        tabHost.getTabWidget().getChildAt(0).setBackgroundColor(getResources().getColor(R.color.tab_yellow_assess));
+
         currentTabName=getString(R.string.assess);
         currentTab=currentTabName;
+    }
+
+    private void setTabsBackgroundColor(int color) {
+        //set the tabs background as transparent
+        for(int i=0;i<tabHost.getTabWidget().getChildCount();i++){
+            tabHost.getTabWidget().getChildAt(i).setBackgroundColor(getResources().getColor(color));
+        }
     }
 
 
@@ -148,12 +155,11 @@ public class DashboardActivity extends BaseActivity {
      * Set tab in tabHost
      * @param tabName is the name of the tab
      * @param layout is the id of the layout
-     * @param image is the drawable with the tab icon image
-     */
-    private void setTab(String tabName, int layout,  Drawable image) {
+     * */
+    private void setTab(String tabName, int layout, String text) {
         TabHost.TabSpec tab = tabHost.newTabSpec(tabName);
         tab.setContent(layout);
-        tab.setIndicator("", image);
+        tab.setIndicator(text);
         tabHost.addTab(tab);
         addTagToLastTab(tabName);
     }

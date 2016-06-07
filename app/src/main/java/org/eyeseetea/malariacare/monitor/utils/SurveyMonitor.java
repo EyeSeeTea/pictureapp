@@ -82,31 +82,6 @@ public class SurveyMonitor {
     private final static Long ID_OPTION_SPECIE_PV=8l;
 
     /**
-     * Id of DHA-PIP1 treatment option
-     */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP1=9l;
-
-    /**
-     * Id of DHA-PIP2 treatment option
-     */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP2=10l;
-
-    /**
-     * Id of DHA-PIP3 treatment option
-     */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP3=11l;
-
-    /**
-     * Id of DHA-PIP3 treatment option
-     */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP4=12l;
-
-    /**
-     * Id of AS/MQ treatment option
-     */
-    private final static Long ID_OPTION_TREATMENT_ASMQ=13l;
-
-    /**
      * Id of referral treatment option
      */
     private final static Long ID_OPTION_TREATMENT_REFERRAL=14l;
@@ -114,12 +89,12 @@ public class SurveyMonitor {
     /**
      * Id of erurartesim treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_EURARTESIM=14l;
+    private final static Long ID_OPTION_TREATMENT_DHA_EURARTESIM=12l;
 
     /**
      * Id of DHA-PIP1 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP=9l;
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP=13l;
 
     /**
      * Reference to inner survey
@@ -203,14 +178,6 @@ public class SurveyMonitor {
     }
 
     /**
-     * Tells if the given survey has AS/MQ treatment
-     * @return
-     */
-    public boolean isASMQ(){
-        return findValue(ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_ASMQ)!=null;
-    }
-
-    /**
      * Tells if the given survey has DHA-PIP treatment
      * @return
      */
@@ -236,41 +203,6 @@ public class SurveyMonitor {
 
         Long idOption=value.getId_option();
         return ID_OPTION_TREATMENT_DHA_EURARTESIM.equals(idOption);
-    }
-    /**
-     * Tells if the given survey has DHA-PIP 1 treatment
-     * @return
-     */
-    public boolean isDHAPIP2(){
-        return findValue(ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_DHA_PIP2)!=null;
-    }
-
-    /**
-     * Tells if the given survey has DHA-PIP1 or 4 (child|bigadult) treatment
-     * @return
-     */
-    public boolean isDHAPIP1Or4(){
-        Value value = findValue(ID_QUESTION_TREATMENT);
-        if(value==null){
-            return false;
-        }
-
-        Long idOption=value.getId_option();
-        return ID_OPTION_TREATMENT_DHA_PIP1.equals(idOption) || ID_OPTION_TREATMENT_DHA_PIP4.equals(idOption);
-    }
-
-    /**
-     * Tells if the given survey has DHA-PIP3 or 4 (adult|bigadult) treatment
-     * @return
-     */
-    public boolean isDHAPIP3Or4(){
-        Value value = findValue(ID_QUESTION_TREATMENT);
-        if(value==null){
-            return false;
-        }
-
-        Long idOption=value.getId_option();
-        return ID_OPTION_TREATMENT_DHA_PIP3.equals(idOption) || ID_OPTION_TREATMENT_DHA_PIP4.equals(idOption);
     }
 
     /**

@@ -1,5 +1,8 @@
 package org.eyeseetea.malariacare.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Constants {
 
     // ############# QUESTION TYPE ###############
@@ -12,13 +15,24 @@ public class Constants {
             NO_ANSWER = 7,
             RADIO_GROUP_HORIZONTAL = 8,
             RADIO_GROUP_VERTICAL = 9,
-    //TODO now review this constants
             DROPDOWN_LIST_DISABLED = 10,
             IMAGES_2 = 10,
             IMAGES_4 = 11,
             IMAGES_6 = 12,
             PHONE = 13,
-            IMAGES_3 = 14;
+            IMAGES_3 = 14,
+            IMAGES_5 = 15;
+
+    public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
+            DROPDOWN_LIST,
+            RADIO_GROUP_HORIZONTAL,
+            RADIO_GROUP_VERTICAL,
+            DROPDOWN_LIST_DISABLED,
+            IMAGES_2,
+            IMAGES_3,
+            IMAGES_4,
+            IMAGES_5,
+            IMAGES_6);
 
 
     public static final String DEFAULT_SELECT_OPTION = "";
@@ -33,14 +47,14 @@ public class Constants {
             TAB_COMPOSITE_SCORE = 2,
             TAB_SCORE_SUMMARY = 4,
             TAB_ADHERENCE = 6,
-            TAB_IQATAB=7,
-            TAB_REPORTING=8,
-            TAB_DYNAMIC_AUTOMATIC_TAB=9;
+            TAB_IQATAB = 7,
+            TAB_REPORTING = 8,
+            TAB_DYNAMIC_AUTOMATIC_TAB = 9;
 
     //FIXME So far the special sub type of composite scores is treated by name
-    public static final String COMPOSITE_SCORE_TAB_NAME="Composite Scores";
+    public static final String COMPOSITE_SCORE_TAB_NAME = "Composite Scores";
 
-    public static final String LABEL="Label";
+    public static final String LABEL = "Label";
 
     // ############# SURVEY STATUS ###############
     public static final int SURVEY_IN_PROGRESS = 0,
@@ -60,30 +74,32 @@ public class Constants {
             FONTS_XLARGE = "xlarge",
             FONTS_SYSTEM = "system";
 
-    public static final int MAX_ITEMS_IN_DASHBOARD=5;
+    public static final int MAX_ITEMS_IN_DASHBOARD = 5;
 
     //############# LOGIN AUTHORIZATION ACTIONS ##############
     public static final int AUTHORIZE_PUSH = 0,
             AUTHORIZE_PULL = 1;
 
-    public static final String CHECKBOX_YES_OPTION="Yes";
+    public static final String CHECKBOX_YES_OPTION = "Yes";
 
-    public static final String QUESTION_OPTION_IDX="QuestionOption_id_question",
-        QUESTION_RELATION_IDX="QuestionRelation_operation",
-        MATCH_IDX="Match_id_question_relation",
-        VALUE_IDX="Value_id_survey";
+    public static final String QUESTION_OPTION_QUESTION_IDX = "QuestionOption_id_question",
+            QUESTION_OPTION_MATCH_IDX = "QuestionOption_id_match",
+            QUESTION_RELATION_OPERATION_IDX = "QuestionRelation_operation",
+            QUESTION_RELATION_QUESTION_IDX = "QuestionRelation_id_question",
+            MATCH_QUESTION_RELATION_IDX = "Match_id_question_relation",
+            VALUE_IDX = "Value_id_survey";
 
-    public static final String DHIS_API_SERVER="2.20",
-            DHIS_SDK_221_SERVER="2.21",
-            DHIS_SDK_222_SERVER="2.22";
+    public static final String DHIS_API_SERVER = "2.20",
+            DHIS_SDK_221_SERVER = "2.21",
+            DHIS_SDK_222_SERVER = "2.22";
 
     /**
      * Max columns for the monitor activity (6 months by default)
      */
-    public static final int MONITOR_HISTORY_SIZE=6;
+    public static final int MONITOR_HISTORY_SIZE = 6;
 
     /**
      * Intent extra param that states that the login is being done due to an attempt to change the server
      */
-    public static final int REQUEST_CODE_ON_EULA_ACCEPTED=1;
+    public static final int REQUEST_CODE_ON_EULA_ACCEPTED = 1;
 }

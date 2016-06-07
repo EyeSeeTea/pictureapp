@@ -19,6 +19,12 @@ public class QuestionNode {
      * Where to go given an option (children questions)
      */
     private Map<Long,QuestionNode> navigation;
+
+    /**
+     * Parent node
+     */
+    private QuestionNode parentNode;
+
     /**
      * Next question (sibling)
      */
@@ -47,7 +53,18 @@ public class QuestionNode {
             return;
         }
 
+        //Add parentNode to children
+        nextNode.setParentNode(this);
+        //Annotate navigation
         this.navigation.put(option.getId_option(),nextNode);
+    }
+
+    /**
+     * Sets the parent of this questionnode
+     * @param parentNode
+     */
+    public void setParentNode(QuestionNode parentNode){
+        this.parentNode=parentNode;
     }
 
     /**
@@ -56,6 +73,8 @@ public class QuestionNode {
      */
     public void setSibling(QuestionNode sibling){
         this.sibling=sibling;
+        //Siblings share same parent
+        this.sibling.parentNode=this.parentNode;
     }
 
     /**
@@ -64,25 +83,46 @@ public class QuestionNode {
      * @return
      */
     public QuestionNode next(Option option){
-        //No option -> try sibling
-        if(option==null){
-            return next();
+
+        //Try children
+        QuestionNode nextNode = nextByOption(option);
+        if(nextNode!=null){
+            return nextNode;
         }
 
-        QuestionNode nextNode=this.navigation.get(option.getId_option());
-        //Nowhere to go from here
-        if(nextNode==null){
+        //Try sibling same level
+        nextNode = nextBySibling();
+        if(nextNode!=null){
+            return nextNode;
+        }
+
+        //No parent -> no where to go
+        if(parentNode==null){
             return null;
         }
 
-        return nextNode;
+        //Parent -> Try parent's sibling
+        return this.parentNode.nextBySibling();
+    }
+
+    /**
+     * Returns navigation from here with the given option
+     * @param option
+     * @return
+     */
+    private QuestionNode nextByOption(Option option){
+        if(option==null){
+            return null;
+        }
+
+        return this.navigation.get(option.getId_option());
     }
 
     /**
      * Returns next question no matter what (moves to sibling)
      * @return
      */
-    public QuestionNode next(){
+    public QuestionNode nextBySibling(){
         //NO sibling ->nowhere to go
         if(this.sibling==null){
             return null;

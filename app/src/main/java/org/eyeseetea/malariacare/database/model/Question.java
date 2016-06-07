@@ -1017,7 +1017,7 @@ public class Question extends BaseModel {
         //Find current position of this
         int currentPosition=-1;
         for(int i=0;i<siblings.size();i++){
-            Question iQuestion=siblings.get(currentPosition);
+            Question iQuestion=siblings.get(i);
             if(iQuestion.getId_question().equals(this.getId_question())){
                 currentPosition=i;
                 break;
@@ -1030,7 +1030,7 @@ public class Question extends BaseModel {
             return this.sibling;
         }
         //Return next position
-        this.sibling=siblings.get(currentPosition);
+        this.sibling=siblings.get(currentPosition+1);
         return this.sibling;
     }
 

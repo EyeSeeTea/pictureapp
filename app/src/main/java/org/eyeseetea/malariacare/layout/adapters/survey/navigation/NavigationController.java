@@ -99,7 +99,7 @@ public class NavigationController {
     }
 
     public Question next(Option option){
-        Log.d(TAG,String.format("next(%s)...",option==null?"":option.getCode()));
+        Log.d(TAG,String.format("next(%s)...",option==null?"":option.getName()));
         //Find next node
         QuestionNode nextNode=findNext(option);
 
@@ -113,7 +113,7 @@ public class NavigationController {
         Question nextQuestion=nextNode.getQuestion();
 
         //Return next question
-        Log.d(TAG,String.format("next(%s)->%s",option==null?"":option.getCode(),nextQuestion.getCode()));
+        Log.d(TAG,String.format("next(%s)->%s",option==null?"":option.getName(),nextQuestion.getCode()));
         return nextNode.getQuestion();
     }
 

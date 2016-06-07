@@ -87,6 +87,7 @@ public class NavigationBuilder {
                 continue;
             }
 
+            Log.d(TAG,String.format("'%s' + '%s' --> '%s'",currentQuestion.getCode(),option.getName(),firstChildrenQuestion.getCode()));
             //Build navigation from there
             QuestionNode childNode=buildNode(firstChildrenQuestion);
             //Add navigation by option to current node

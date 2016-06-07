@@ -69,11 +69,14 @@ public class EyeSeeTeaApplication extends Dhis2Application {
     }
 
     private void createDBIndexes(){
-        new Index<QuestionOption>(Constants.QUESTION_OPTION_IDX).on(QuestionOption.class, QuestionOption$Table.ID_QUESTION).enable();
-        new Index<QuestionRelation>(Constants.QUESTION_RELATION_IDX).on(QuestionRelation.class, QuestionRelation$Table.OPERATION).enable();
-        //XXX This should be reviewed
-        new Index<QuestionRelation>(Constants.QUESTION_RELATION_IDX).on(QuestionRelation.class, QuestionRelation$Table.ID_QUESTION).enable();
-        new Index<Match>(Constants.MATCH_IDX).on(Match.class, Match$Table.ID_QUESTION_RELATION).enable();
+        new Index<QuestionOption>(Constants.QUESTION_OPTION_QUESTION_IDX).on(QuestionOption.class, QuestionOption$Table.ID_QUESTION).enable();
+        new Index<QuestionOption>(Constants.QUESTION_OPTION_MATCH_IDX).on(QuestionOption.class, QuestionOption$Table.ID_MATCH).enable();
+
+        new Index<QuestionRelation>(Constants.QUESTION_RELATION_OPERATION_IDX).on(QuestionRelation.class, QuestionRelation$Table.OPERATION).enable();
+        new Index<QuestionRelation>(Constants.QUESTION_RELATION_QUESTION_IDX).on(QuestionRelation.class, QuestionRelation$Table.ID_QUESTION).enable();
+
+        new Index<Match>(Constants.MATCH_QUESTION_RELATION_IDX).on(Match.class, Match$Table.ID_QUESTION_RELATION).enable();
+
         new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
     }
 

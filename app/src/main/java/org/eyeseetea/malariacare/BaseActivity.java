@@ -97,7 +97,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (program != null) {
             android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
             LayoutUtils.setActionBarLogo(actionBar);
-            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), program.getName());
+            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), this.getResources().getString(R.string.app_name_local));
         }
     }
 
@@ -123,10 +123,6 @@ public abstract class BaseActivity extends ActionBarActivity {
             case R.id.action_settings:
                 debugMessage("User asked for settings");
                 goSettings();
-                break;
-            case R.id.action_monitoring:
-                debugMessage("User asked for monitor");
-                goMonitor();
                 break;
 //            case R.id.action_license:
 //                debugMessage("User asked for license");
@@ -193,33 +189,9 @@ public abstract class BaseActivity extends ActionBarActivity {
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
-    protected void goMonitor(){
-        startActivity(new Intent(this, MonitorActivity.class));
-    }
-
-    public void newSurvey(View v){
-        TabGroup tabGroup = new Select().from(TabGroup.class).querySingle();
-        // Put new survey in session
-        Survey survey = new Survey(null, tabGroup, Session.getUser());
-        survey.save();
-        Session.setSurvey(survey);
-
-//        SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
-//        LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
-//
-//        Intent targetActivityIntent = new Intent(this,DashboardActivity.class);
-//        finish();
-//        startActivity(targetActivityIntent);
-
-        //Look for coordinates
-        prepareLocationListener(survey);
-
-        //Call Survey Activity
-        finishAndGo(SurveyActivity.class);
-    }
 
 
-    private void prepareLocationListener(Survey survey){
+    public void prepareLocationListener(Survey survey){
 
         SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
         LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);

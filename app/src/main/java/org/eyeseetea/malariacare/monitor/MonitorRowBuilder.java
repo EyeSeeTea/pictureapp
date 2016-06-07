@@ -27,6 +27,7 @@ import org.eyeseetea.malariacare.monitor.utils.TimePeriodCalculator;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -130,8 +131,8 @@ public abstract class MonitorRowBuilder {
      * @param survey
      */
     public void addSurvey(Survey survey){
-        //Null or not sent surveys are not evaluated
-        if(survey==null || survey.getEventDate()==null){
+        //Null or not sent surveys are not evaluated or surveys with a date from the future
+        if(survey==null || survey.getEventDate()==null || survey.getEventDate().after(new Date())){
             return;
         }
         //Update data for each time dimension

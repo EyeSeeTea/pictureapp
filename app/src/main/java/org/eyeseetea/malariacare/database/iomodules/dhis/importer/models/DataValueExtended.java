@@ -21,6 +21,9 @@ package org.eyeseetea.malariacare.database.iomodules.dhis.importer.models;
 
 import android.util.Log;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.IConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.VisitableFromSDK;
 import org.eyeseetea.malariacare.database.model.Answer;
@@ -29,6 +32,8 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,72 +81,13 @@ public class DataValueExtended implements VisitableFromSDK {
             if(optionName==null){
                 continue;
             }
-            String optionCleaned=extractValue(optionName);
-            String valueCleaned=extractValue(dataValue.getValue());
-            //Yes[1]==Yes || Yes==Yes || Yes==Yes[1]
-            if(optionName.equals(dataValue.getValue()) || optionCleaned.equals(dataValue.getValue()) || optionName.equals(valueCleaned)){
+
+            if(optionName.equals(dataValue.getValue())){
                 return option;
             }
         }
 
-        Log.w(TAG,String.format("Cannot find option '%s' in %s",dataValue.getValue(),optionCodes.toString()));
+        //Log.w(TAG,String.format("Cannot find option '%s'",dataValue.getValue()));
         return null;
-    }
-
-    /**
-     * Turns a value with a code 'Yes[1]' into its proper aprox value 'Yes'.
-     * This might not be an exact translation when it comes to translated values such as 'Oui' but it better than nothing
-     * @param code
-     * @return
-     */
-    private String extractValue(String code) {
-        if(code==null || code.isEmpty()){
-            return code;
-        }
-
-        Pattern pattern = Pattern.compile(REGEXP_FACTOR);
-        Matcher matcher = pattern.matcher(code);
-
-        //No match
-        if(!matcher.matches()){
-            return code;
-        }
-
-        //Found a match
-        String factorStr="["+matcher.group(1)+"]";
-
-        return code.replace(factorStr,"").trim();
-    }
-
-    /**
-     *
-     * @return
-     */
-    public String extractValue(){
-       return extractValue(dataValue.getValue());
-    }
-
-    /**
-     * The factor of an option is codified inside its code. Ex: Yes[1]
-     * @param code
-     * @return
-     */
-    public static Float extractFactor(String code){
-        if(code==null || code.isEmpty()){
-            return 0f;
-        }
-
-        Pattern pattern = Pattern.compile(REGEXP_FACTOR);
-        Matcher matcher = pattern.matcher(code);
-
-        //No match
-        if(!matcher.matches()){
-            return 0f;
-        }
-
-        //Found a match
-        String factorStr=matcher.group(1);
-
-        return Float.parseFloat(factorStr);
     }
 }

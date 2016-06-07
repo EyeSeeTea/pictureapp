@@ -22,15 +22,9 @@ package org.eyeseetea.malariacare.network;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
-import com.squareup.okhttp.Authenticator;
-import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -38,11 +32,9 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -52,13 +44,11 @@ import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.ShowException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.Proxy;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -71,7 +61,7 @@ public class PushClient {
     /**
      * Current server url
      */
-    private static String DHIS_SERVER ="https://www.psi-mis.org";
+    private static String DHIS_SERVER ="https://dev.psi-mis.org";
 
     /**
      * Endpoint sending events
@@ -101,6 +91,14 @@ public class PushClient {
      * Hardcoded UID for dataElement PhoneMetaData
      */
     public static String TAG_PHONEMETADA="RuNZUhiAmlv";
+    /**
+     * Hardcoded UID for dataElement DATETIME CAPTURE
+     */
+    public static String TAG_DATETIME_CAPTURE="qWMb2UM2ikL";
+    /**
+     * Hardcoded UID for dataElement DATETIME SENT
+     */
+    public static String TAG_DATETIME_SENT="aBahytzj2u0";
 
     Survey survey;
     Activity activity;
@@ -298,7 +296,11 @@ public class PushClient {
         }
 
         PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
-        values.put(preparePhoneValue(TAG_PHONEMETADA, phoneMetaData.getPhone_metaData()));
+        values.put(prepareDataElementValue(TAG_PHONEMETADA, phoneMetaData.getPhone_metaData()));
+        if(TAG_DATETIME_CAPTURE!=null && !TAG_DATETIME_CAPTURE.equals(""))
+            values.put(prepareDataElementValue(TAG_DATETIME_CAPTURE, EventExtended.format(survey.getCompletionDate(),EventExtended.AMERICAN_DATE_FORMAT)));
+        if(TAG_DATETIME_SENT!=null && !TAG_DATETIME_SENT.equals(""))
+            values.put(prepareDataElementValue(TAG_DATETIME_SENT, EventExtended.format(new Date(),EventExtended.AMERICAN_DATE_FORMAT)));
         return values;
     }
 
@@ -323,7 +325,7 @@ public class PushClient {
      * @return
      * @throws Exception
      */
-    private JSONObject preparePhoneValue(String uid, String value) throws Exception{
+    private JSONObject prepareDataElementValue(String uid, String value) throws Exception{
         JSONObject elementObject = new JSONObject();
         elementObject.put(TAG_DATAELEMENT, uid);
         elementObject.put(TAG_VALUE, value);

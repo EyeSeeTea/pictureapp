@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="app_name_local">Malaria Case Surveillance</string>
+
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
@@ -35,9 +37,9 @@
     <string name="survey_title_completed">Survey completed</string>
     <string name="survey_info_completed">The survey has been successfully completed</string>
 
-    <string name="exception_org_unit_not_valid">Outlet Code is not active for program. Contact PSI at 123456789</string>
-    <string name="exception_org_unit_banned">Outlet is closed or blocked. Contact PSI at 123456789</string>
-
+    <string name="exception_org_unit_not_valid">Outlet Code is not valid. Contact PSK at 011 771 811</string>
+    <string name="exception_org_unit_banned">Outlet is closed or blocked. Contact PSI at 011 771 811</string>
+    
     <string name="dynamic_error_phone_format">Invalid format for phone number ( 0NN NNN NNN{N} )</string>
     <string name="dynamic_error_age">Invalid age</string>
 
@@ -81,6 +83,8 @@
     <string name="progress_pull_preparing_orgs">Loading organisations ...</string>
     <string name="progress_pull_surveys">Loading surveys ...</string>
     <string name="progress_pull_connecting">Connecting to DHIS server ...</string>
+    <string name="progress_pull_building_survey">Building survey ...</string>
+    <string name="progress_pull_building_value">Building values ...</string>
     <string name="progress_pull_done">Done</string>
     <string name="progress_push_no_survey">No survey found for pushing</string>
     <string name="progress_push_posting_survey">Pushing survey data to server ...</string>
@@ -134,5 +138,11 @@
     <string name="number_8">8</string>
     <string name="number_9">9</string>
     <string name="unrecognized_option">Unrecognized</string>
+    <string name="number_10">10</string>
+    <string name="number_11">11</string>
+    <string name="number_12">12</string>
 
+    <string name="unsent_button">Unsent</string>
+    <string name="sent_button" >Sent</string>
+    <string name="monitor_button" >Monitoring</string>
 </resources>

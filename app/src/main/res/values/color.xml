@@ -12,4 +12,10 @@
     <color name="textFieldColor">#BEBEBE</color>
     <color name="custom_blue_light">#1f70c3</color>
     <color name="dialog_button_text">#06988a</color>
+    <color name="tab_orange_plan">#f38b00</color>
+    <color name="tab_yellow_assess">#dce442</color>
+    <color name="tab_green_monitor">#799900</color>
+    <color name="tab_blue_improve">#00b3e3</color>
+
+    <color name="custom_background_grey">#3e3e3f</color>
 </resources>

@@ -134,12 +134,14 @@ public class QuestionRelation extends BaseModel {
     public List<Match> getMatches() {
         if(matches==null) {
             this.matches = new Select().from(Match.class)
-                    .indexedBy(Constants.MATCH_IDX)
+                    .indexedBy(Constants.MATCH_QUESTION_RELATION_IDX)
                     .where(Condition.column(Match$Table.ID_QUESTION_RELATION).eq(this.getId_question_relation()))
                     .queryList();
         }
         return this.matches;
     }
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -169,5 +171,9 @@ public class QuestionRelation extends BaseModel {
                 ", id_question=" + id_question +
                 ", operation=" + operation +
                 '}';
+    }
+
+    public static List<QuestionRelation> listAll() {
+        return new Select().all().from(QuestionRelation.class).queryList();
     }
 }

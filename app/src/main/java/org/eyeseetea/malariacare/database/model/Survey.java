@@ -552,6 +552,18 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     }
 
     /**
+     * Returns all the surveys with status put to "Sent"
+     * @return
+     */
+    public static List<Survey> getAllSurveysToBeSent() {
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_COMPLETED))
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
+    }
+
+
+    /**
      * Returns the last surveys (by date) with status put to "Sent"
      * @param limit
      * @return

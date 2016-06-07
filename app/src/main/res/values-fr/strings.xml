@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="app_name_local">Malaria Case Surveillance</string>
+    
     <string name="yes">Oui</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
@@ -133,5 +135,12 @@
     <string name="monitor_row_title_day">Jour</string>
     <string name="monitor_row_title_month">Mois</string>
     <string name="unrecognized_option">Méconnu</string>
+    <string name="number_10">10</string>
+    <string name="number_11">11</string>
+    <string name="number_12">12</string>
+
+    <string name="unsent_button">Pas envoyé</string>
+    <string name="sent_button" >Envoyé</string>
+    <string name="monitor_button" >surveillance</string>
 
 </resources>

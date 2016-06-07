@@ -112,6 +112,16 @@ public class SurveyMonitor {
     private final static Long ID_OPTION_TREATMENT_REFERRAL=14l;
 
     /**
+     * Id of erurartesim treatment option
+     */
+    private final static Long ID_OPTION_TREATMENT_DHA_EURARTESIM=14l;
+
+    /**
+     * Id of DHA-PIP1 treatment option
+     */
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP=9l;
+
+    /**
      * Reference to inner survey
      */
     final Survey survey;
@@ -200,6 +210,33 @@ public class SurveyMonitor {
         return findValue(ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_ASMQ)!=null;
     }
 
+    /**
+     * Tells if the given survey has DHA-PIP treatment
+     * @return
+     */
+    public boolean isDHAPIP(){
+        Value value = findValue(ID_QUESTION_TREATMENT);
+        if(value==null){
+            return false;
+        }
+
+        Long idOption=value.getId_option();
+        return ID_OPTION_TREATMENT_DHA_PIP.equals(idOption);
+    }
+
+    /**
+     * Tells if the given survey has Eurartesim treatment
+     * @return
+     */
+    public boolean isEurartesim(){
+        Value value = findValue(ID_QUESTION_TREATMENT);
+        if(value==null){
+            return false;
+        }
+
+        Long idOption=value.getId_option();
+        return ID_OPTION_TREATMENT_DHA_EURARTESIM.equals(idOption);
+    }
     /**
      * Tells if the given survey has DHA-PIP 1 treatment
      * @return

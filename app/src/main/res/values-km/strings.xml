@@ -134,4 +134,8 @@
     <string name="monitor_row_title_month">ខែ</string>
     <string name="unrecognized_option">មិនស្គាល់</string>
 
+    <string name="unsent_button">Unsent</string>
+    <string name="sent_button" >Sent</string>
+    <string name="monitor_button" >Monitoring</string>
+
 </resources>

@@ -135,4 +135,7 @@
     <string name="number_9">9</string>
     <string name="unrecognized_option">Unrecognized</string>
 
+    <string name="unsent_button">Unsent</string>
+    <string name="sent_button" >Sent</string>
+    <string name="monitor_button" >Monitoring</string>
 </resources>

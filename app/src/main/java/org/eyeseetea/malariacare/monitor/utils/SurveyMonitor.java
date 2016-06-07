@@ -38,12 +38,12 @@ public class SurveyMonitor {
     /**
      * Id of specie question
      */
-    private final static Long ID_QUESTION_SPECIE=4l;
+    private final static Long ID_QUESTION_SPECIE=5l;
 
     /**
      * Id of treatment question
      */
-    private final static Long ID_QUESTION_TREATMENT=5l;
+    private final static Long ID_QUESTION_TREATMENT=6l;
 
     /**
      * Id of positive rdt option
@@ -63,17 +63,17 @@ public class SurveyMonitor {
     /**
      * Id of pf/pv specie option
      */
-    private final static Long ID_OPTION_SPECIE_PFPV=6l;
+    private final static Long ID_OPTION_SPECIE_PFPV=9l;
 
     /**
      * Id of pf specie option
      */
-    private final static Long ID_OPTION_SPECIE_PF=7l;
+    private final static Long ID_OPTION_SPECIE_PF=10l;
 
     /**
      * Id of pf specie option
      */
-    private final static Long ID_OPTION_SPECIE_PV=8l;
+    private final static Long ID_OPTION_SPECIE_PV=11l;
 
     /**
      * Id of referral treatment option

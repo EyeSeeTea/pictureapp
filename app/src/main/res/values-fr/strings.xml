@@ -80,6 +80,8 @@
     <string name="progress_pull_surveys">Enquêtes de chargement ...</string>
     <string name="progress_pull_connecting">La connexion à DHIS serveur ...</string>
     <string name="progress_pull_done">Terminé</string>
+    <string name="progress_pull_building_survey">Enquête en construction ...</string>
+    <string name="progress_pull_building_value">Valeurs en construction ...</string>
     <string name="progress_push_no_survey">Aucune enquête a révélé pour pousser</string>
     <string name="progress_push_posting_survey">"Pousser les données d\'enquête au serveur ..."</string>
     <string name="progress_push_preparing_survey">"Préparation de l\'enquête pour pousser ..."</string>
@@ -134,5 +136,12 @@
     <string name="monitor_row_title_day">Jour</string>
     <string name="monitor_row_title_month">Mois</string>
     <string name="unrecognized_option">Méconnu</string>
+    <string name="number_10">10</string>
+    <string name="number_11">11</string>
+    <string name="number_12">12</string>
+
+    <string name="unsent_button">Pas envoyé</string>
+    <string name="sent_button" >Envoyé</string>
+    <string name="monitor_button" >surveillance</string>
 
 </resources>

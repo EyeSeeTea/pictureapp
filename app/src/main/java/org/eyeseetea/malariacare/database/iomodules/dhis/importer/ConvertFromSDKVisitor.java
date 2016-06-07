@@ -19,6 +19,11 @@
 
 package org.eyeseetea.malariacare.database.iomodules.dhis.importer;
 
+import android.util.Log;
+
+import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
+import com.raizlabs.android.dbflow.runtime.transaction.process.SaveModelTransaction;
+
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
@@ -39,8 +44,12 @@ import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.Event;
 import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
 import org.hisp.dhis.android.sdk.persistence.models.UserAccount;
+import org.hisp.dhis.android.sdk.persistence.models.meta.DbOperation;
+import org.hisp.dhis.android.sdk.utils.DbUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
@@ -50,6 +59,8 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     TabGroup tabgroup;
     Map<String,Object> appMapObjects;
+    List<Survey> surveys;
+    List<Value> values;
 
 
 
@@ -57,6 +68,32 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         Program firstProgram = Program.getFirstProgram();
         tabgroup = firstProgram.getTabGroups().get(0);
         appMapObjects = new HashMap();
+        surveys = new ArrayList<>();
+        values = new ArrayList<>();
+    }
+
+    public Map<String, Object> getAppMapObjects() {
+        return appMapObjects;
+    }
+
+    public void setAppMapObjects(Map<String, Object> appMapObjects) {
+        this.appMapObjects = appMapObjects;
+    }
+
+    public List<Survey> getSurveys() {
+        return surveys;
+    }
+
+    public void setSurveys(List<Survey> surveys) {
+        this.surveys = surveys;
+    }
+
+    public List<Value> getValues() {
+        return values;
+    }
+
+    public void setValues(List<Value> values) {
+        this.values = values;
     }
 
     /**
@@ -129,22 +166,14 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         //Set fks
         survey.setOrgUnit(orgUnit);
         survey.setTabGroup(tabgroup);
-        survey.save();
+        surveys.add(survey);
 
         //Annotate object in map
         appMapObjects.put(event.getUid(), survey);
-
-        //Visit its values
-        for(DataValue dataValue:event.getDataValues()){
-            DataValueExtended dataValueExtended=new DataValueExtended(dataValue);
-            dataValueExtended.accept(this);
-        }
-
     }
 
     @Override
     public void visit(DataValueExtended sdkDataValueExtended) {
-
         DataValue dataValue=sdkDataValueExtended.getDataValue();
         Survey survey=(Survey)appMapObjects.get(dataValue.getEvent());
         String questionUID=dataValue.getDataElement();
@@ -173,9 +202,9 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
             value.setValue(dataValue.getValue());
         }else{
         //Option -> extract value from code
-            value.setValue(sdkDataValueExtended.extractValue());
+            value.setValue(sdkDataValueExtended.getDataValue().getValue());
         }
-        value.save();
+        values.add(value);
     }
 
 }

@@ -569,7 +569,6 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         return new Select().all().from(Survey.class)
                 .orderBy(false, Survey$Table.COMPLETIONDATE).queryList();
     }
-
     /**
      * Returns the last surveys (by date) with status put to "Sent"
      * @param limit

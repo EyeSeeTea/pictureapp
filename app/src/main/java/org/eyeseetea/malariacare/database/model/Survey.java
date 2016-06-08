@@ -781,7 +781,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         Map map = new HashMap();
         while(iterator.hasNext() && valid){
             Value value = iterator.next();
-            //Control data elements
+            //The control dataelements not have questions and its should be ignored
             if(value.getQuestion()==null){
                 continue;
             }

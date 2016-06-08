@@ -272,7 +272,7 @@ public class PullController {
                     EventExtended eventExtended = new EventExtended(event);
 
                     //Only last X months
-                    if(eventExtended.isTooOld()) return;
+                    if(eventExtended.isTooOld()) continue;
                     eventExtended.accept(converter);
                 }
                 new SaveModelTransaction<>(ProcessModelInfo.withModels(converter.getSurveys())).onExecute();

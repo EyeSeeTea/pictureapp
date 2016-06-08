@@ -781,6 +781,10 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         Map map = new HashMap();
         while(iterator.hasNext() && valid){
             Value value = iterator.next();
+            //Control data elements
+            if(value.getQuestion()==null){
+                continue;
+            }
             String qCode = value.getQuestion().getCode();
 
             // RDT is the first field: if it is not Positive no values are shown

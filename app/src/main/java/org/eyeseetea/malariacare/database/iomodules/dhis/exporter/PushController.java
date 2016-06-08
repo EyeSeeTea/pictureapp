@@ -196,6 +196,7 @@ public class PushController {
         Log.d(TAG,"Converting APP survey into a SDK event");
         converter =new ConvertToSDKVisitor(context);
         for(Survey survey:surveys){
+            Log.d(TAG,"Status of survey to be push is = "+survey.getStatus());
             survey.accept(converter);
         }
     }

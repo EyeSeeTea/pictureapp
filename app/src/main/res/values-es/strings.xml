@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="app_name_local">Malaria Case Surveillance</string>
+
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
@@ -112,9 +114,7 @@
     <string name="monitor_row_title_not_tested">No testado</string>
     <string name="monitor_row_title_referral">Referral</string>
     <string name="monitor_row_title_asmq">AS/MQ</string>
-    <string name="monitor_row_title_dhapip1">DHA-PIP1</string>
-    <string name="monitor_row_title_dhapip2">DHA-PIP2</string>
-    <string name="monitor_row_title_dhapip3">DHIS-PIP3</string>
+    <string name="monitor_row_title_dhapip">DHA-PIP</string>
     <string name="monitor_row_title_rdts">RDTs</string>
     <string name="monitor_row_title_positivity_rate">Positivity rate</string>
     <string name="number_0">0</string>
@@ -127,6 +127,9 @@
     <string name="number_7">7</string>
     <string name="number_8">8</string>
     <string name="number_9">9</string>
+    <string name="number_10">10</string>
+    <string name="number_11">11</string>
+    <string name="number_12">12</string>
     <string name="settings_menu_copyright">Copyright</string>
     <string name="settings_menu_licenses">Licencias de software</string>
     <string name="settings_menu_legal">Legal</string>
@@ -134,5 +137,9 @@
     <string name="monitor_row_title_day">Día</string>
     <string name="monitor_row_title_month">Mes</string>
     <string name="unrecognized_option">Desconocido</string>
+
+    <string name="unsent_button">No enviado</string>
+    <string name="sent_button" >Enviado</string>
+    <string name="monitor_button" >Supervisión</string>
 
 </resources>

@@ -122,8 +122,9 @@ public class PushService extends IntentService {
 
         PushController.getInstance().setPushInProgress(true);
 
+        //Fixme the method getAllUnsentSurveys returns all the surveys not sent(completed, inprogres, and hide)
         //Select surveys from sql
-        surveys = Survey.getAllUnsentSurveys();
+        surveys = Survey.getAllSurveysToBeSent();
 
         //No surveys to send -> done
         if(surveys==null || surveys.isEmpty()){

@@ -17,8 +17,9 @@
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare;
+package org.eyeseetea.malariacare.fragments;
 
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,32 +28,26 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Spinner;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
-
-import org.eyeseetea.malariacare.database.model.OrgUnit;
-import org.eyeseetea.malariacare.database.model.Program;
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.adapters.general.OrgUnitArrayAdapter;
-import org.eyeseetea.malariacare.layout.adapters.general.ProgramArrayAdapter;
-import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.monitor.MonitorBuilder;
 import org.eyeseetea.malariacare.services.MonitorService;
-import org.eyeseetea.malariacare.utils.Constants;
-
-import java.util.List;
 
 
 /**
  * Activity that shows summary info related to the surveys that have been sent
  * @author ivan.arrizabalaga
  */
-public class MonitorActivity extends BaseActivity {
+public class MonitorFragment extends Fragment {
 
+    public static final String TAG = ".MonitorFragment";
     /**
      * Local monitor html
      */
@@ -68,11 +63,37 @@ public class MonitorActivity extends BaseActivity {
      */
     private MonitorReceiver monitorReceiver;
 
+
+    public static MonitorFragment newInstance(int index) {
+        MonitorFragment f = new MonitorFragment();
+
+        // Supply index input as an argument.
+        Bundle args = new Bundle();
+        args.putInt("index", index);
+        f.setArguments(args);
+
+        return f;
+    }
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState){
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_monitor);
-        createActionBar();
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
+        if (container == null) {
+            return null;
+        }
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated");
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -82,9 +103,9 @@ public class MonitorActivity extends BaseActivity {
         registerMonitorReceiver();
 
         //Ask for data
-        Intent surveysIntent=new Intent(this, MonitorService.class);
+        Intent surveysIntent=new Intent(getActivity().getApplicationContext(), MonitorService.class);
         surveysIntent.putExtra(MonitorService.SERVICE_METHOD, MonitorService.PREPARE_MONITOR_DATA);
-        this.startService(surveysIntent);
+        getActivity().startService(surveysIntent);
 
         //Go on with resume
         super.onResume();
@@ -106,7 +127,7 @@ public class MonitorActivity extends BaseActivity {
 
         if (monitorReceiver == null) {
             monitorReceiver= new MonitorReceiver();
-            LocalBroadcastManager.getInstance(this).registerReceiver(monitorReceiver, new IntentFilter(MonitorService.PREPARE_MONITOR_DATA));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(monitorReceiver, new IntentFilter(MonitorService.PREPARE_MONITOR_DATA));
         }
     }
     /**
@@ -115,7 +136,7 @@ public class MonitorActivity extends BaseActivity {
      */
     public void unregisterMonitorReceiver() {
         if (monitorReceiver != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(monitorReceiver);
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(monitorReceiver);
             monitorReceiver = null;
         }
     }
@@ -135,7 +156,7 @@ public class MonitorActivity extends BaseActivity {
     }
 
     private WebView initMonitor() {
-        webView = (WebView) findViewById(R.id.dashboard_monitor);
+        webView = (WebView) getActivity().findViewById(R.id.dashboard_monitor);
         //Init webView settings
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
@@ -188,4 +209,13 @@ public class MonitorActivity extends BaseActivity {
     }
 
 
+    /**
+     * load and reload sent surveys
+     */
+    public void reloadData() {
+        //Reload data using service
+        Intent surveysIntent=new Intent(PreferencesState.getInstance().getContext().getApplicationContext(), MonitorService.class);
+        surveysIntent.putExtra(MonitorService.SERVICE_METHOD, MonitorService.PREPARE_MONITOR_DATA);
+        PreferencesState.getInstance().getContext().getApplicationContext().startService(surveysIntent);
+    }
 }

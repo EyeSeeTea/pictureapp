@@ -103,25 +103,44 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             value.accept(this);
         }
 
-        //Add phoneMetaData as a value
-        addPhoneMetaData();
+        Log.d(TAG,"Saving control dataelements");
+        buildControlDataElements(survey);
 
         //Annotate both objects to update its state once the process is over
         annotateSurveyAndEvent();
     }
+    /**
+     * Builds several datavalues from the mainScore of the survey
+     * @param survey
+     */
+    private void buildControlDataElements(Survey survey) {
+        //save phonemetadata
+        PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
+        buildAndSaveDataValue(PushClient.TAG_PHONEMETADA,phoneMetaData.getPhone_metaData());
+
+        //save Time capture
+        if(PushClient.TAG_DATETIME_CAPTURE!=null && !PushClient.TAG_DATETIME_CAPTURE.equals(""))
+            buildAndSaveDataValue(PushClient.TAG_DATETIME_CAPTURE, EventExtended.format(survey.getCompletionDate(), EventExtended.AMERICAN_DATE_FORMAT));
+
+        //save Time Sent
+        if(PushClient.TAG_DATETIME_SENT!=null && !PushClient.TAG_DATETIME_SENT.equals(""))
+            buildAndSaveDataValue(PushClient.TAG_DATETIME_SENT,  EventExtended.format(new Date(), EventExtended.AMERICAN_DATE_FORMAT));
+    }
 
     /**
-     * Adds phonemetaData as a value
+     * Adds value in Datavalue
+     * @param UID is the dataElement uid
+     * @param value is the value
      */
-    private void addPhoneMetaData() {
-        PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
+    private void buildAndSaveDataValue(String UID, String value){
         DataValue dataValue=new DataValue();
-        dataValue.setDataElement(PushClient.TAG_PHONEMETADA);
+        dataValue.setDataElement(UID);
         dataValue.setLocalEventId(currentEvent.getLocalId());
         dataValue.setEvent(currentEvent.getEvent());
         dataValue.setProvidedElsewhere(false);
-        dataValue.setStoredBy(Session.getUser().getName());
-        dataValue.setValue(phoneMetaData.getPhone_metaData());
+        if(Session.getUser()!=null)
+            dataValue.setStoredBy(Session.getUser().getName());
+        dataValue.setValue(value);
         dataValue.save();
     }
 

@@ -22,14 +22,19 @@ package org.eyeseetea.malariacare;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
@@ -92,6 +97,9 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
         if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
             if(result.getResponseHolder().getApiException() == null) {
+                EditText serverEditText = (EditText) findViewById(R.id.server_url);
+                PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
+                PreferencesState.getInstance().reloadPreferences();
                 goSettingsWithRightExtras();
             } else {
                 onLoginFail(result.getResponseHolder().getApiException());

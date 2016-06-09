@@ -142,4 +142,6 @@
     <string name="sent_button" >Envoyé</string>
     <string name="monitor_button" >surveillance</string>
 
+    <string name="review_dialog_title" >Examen</string>
+    <string name="review_dialog_message" >"Voulez-vous voir l'examen de votre enquête?"</string>
 </resources>

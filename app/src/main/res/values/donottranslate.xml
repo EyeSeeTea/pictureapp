@@ -76,4 +76,9 @@
     <string name="assess" translatable="false">Assess - active surveys</string>
     <string name="improve" translatable="false">Improve</string>
     <string name="monitor" translatable="false">Monitor</string>
+
+    <string name="review_title" translatable="false">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>
+    <string name="review_subtitle" translatable="false">ធ្វើការបញ្ជូន</string>
+
+
 </resources>

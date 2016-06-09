@@ -142,4 +142,6 @@
     <string name="sent_button" >Enviado</string>
     <string name="monitor_button" >Supervisión</string>
 
+    <string name="review_dialog_title" >Revisión</string>
+    <string name="review_dialog_message" >¿Quieres ver una revisión de su encuesta?</string>
 </resources>

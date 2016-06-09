@@ -143,4 +143,9 @@
     <string name="unsent_button">Unsent</string>
     <string name="sent_button" >Sent</string>
     <string name="monitor_button" >Monitoring</string>
+
+    <string name="review_dialog_title" >Review</string>
+    <string name="review_dialog_message" >Do you want view a review of your survey?</string>
+
+
 </resources>

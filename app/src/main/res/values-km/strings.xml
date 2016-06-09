@@ -142,4 +142,7 @@
     <string name="sent_button" >Sent</string>
     <string name="monitor_button" >Monitoring</string>
 
+    <string name="review_dialog_title" >ពិនិត្យឡើងវិញ</string>
+    <string name="review_dialog_message" >តើអ្នកចង់មើលពិនិត្យឡើងវិញនៃស្ទង់មតិរបស់អ្នក?</string>
+
 </resources>

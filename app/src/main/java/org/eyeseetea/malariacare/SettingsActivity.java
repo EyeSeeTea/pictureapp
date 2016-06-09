@@ -101,9 +101,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * Intent extra param that states that the login is being done due to an attempt to change the server
      */
     public static final String SETTINGS_CHANGING_SERVER="SETTINGS_CHANGING_SERVER";
-
-    /** Standard activity result: operation succeeded. */
-    public static final String RESULT_SERVER_CHANGE           = "RESULT_SERVER_CHANGE";
     /**
      * Intent extra param that states that the EULA has been accepted
      */
@@ -340,12 +337,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         Log.d(TAG, "callbackReloadByServerVersionWhenUrlChanged " + serverInfo.getVersion());
 
         //After changing to a new server survey data is always removed
-        Log.d(TAG, "Remove db");
         PopulateDB.wipeSurveys();
 
         //And the orgUnit too
         PreferencesState.getInstance().saveStringPreference(R.string.org_unit,"");
-        Log.d(TAG, "get server version");
+
         String serverVersion=serverInfo.getVersion();
         Log.d(TAG, "SDK pull start");
         //2.20 -> reload orgunits from server via api
@@ -785,16 +781,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 editor.commit();
             }
         }
-        if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_SERVER_CHANGE) {
-            if (data.hasExtra(SettingsActivity.RESULT_SERVER_CHANGE)) {
-                Log.d(TAG, "Executing onActivityResult Server was changed:");
-                PreferencesState.getInstance().saveStringPreference(R.string.org_unit, "");
-                PreferencesState.getInstance().reloadPreferences();
-                CheckServerVersionAsync checkServerVersionAsync = new CheckServerVersionAsync(this, true, true);
-                checkServerVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
-                initReloadByServerVersionWhenUrlChanged(PreferencesState.getInstance().getDhisURL());
-            }
-        }
         super.onActivityResult(requestCode, resultCode, data);
         Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
         propagateExtra(intent);
@@ -898,8 +884,8 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
      */
     void launchLoginPreChange(){
         Intent intent = prepareIntent();
-        intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER, true);
-        activity.startActivityForResult(intent, Constants.REQUEST_SERVER_CHANGE);
+        activity.finish();
+        activity.startActivity(intent);
     }
     void launchLoginOnEulaAccepted(){
         Intent intent = prepareIntent();

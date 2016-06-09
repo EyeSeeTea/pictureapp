@@ -102,8 +102,4 @@ public class Constants {
      * Intent extra param that states that the login is being done due to an attempt to change the server
      */
     public static final int REQUEST_CODE_ON_EULA_ACCEPTED = 1;
-    /**
-     * Intent extra param that states that the login is being done but the server was changed
-     */
-    public static final int REQUEST_SERVER_CHANGE = 2;
 }

@@ -52,6 +52,10 @@ public class PreferencesState {
      * Flag that determines if numerator/denominator are shown in scores.
      */
     private boolean showNumDen;
+    /**
+     * Flag that determines if the url server was changed
+     */
+    private boolean isNewServerUrl;
 
 
     /**
@@ -207,6 +211,14 @@ public class PreferencesState {
 
     public void setShowNumDen(boolean value){
         this.showNumDen=value;
+    }
+
+    public boolean isNewServerUrl() {
+        return isNewServerUrl;
+    }
+
+    public void setIsNewServerUrl(boolean value){
+        this.isNewServerUrl=value;
     }
 
     public Float getFontSize(String scale,String dimension){

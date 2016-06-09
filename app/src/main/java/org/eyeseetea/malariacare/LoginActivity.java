@@ -114,8 +114,6 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         finish();
         if(!getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false))
             startActivity(intent);
-        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_SERVER, false))
-            startActivity(intent);
     }
 
     private Intent propagateExtraAndResult(Intent intent){
@@ -139,9 +137,6 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
                 EditText serverEditText = (EditText) findViewById(R.id.server_url);
                 if (!PreferencesState.getInstance().getDhisURL().equals(serverEditText.getText().toString())) {
                     Log.i(TAG, "propagateExtraAndResult -> Server changed");
-                    intent.putExtra(SettingsActivity.RESULT_SERVER_CHANGE,true);
-                    setResult(RESULT_OK, intent);
-                    intent.putExtra(SettingsActivity.RESULT_SERVER_CHANGE,true);
                     PreferencesState.getInstance().reloadPreferences();
                     PreferencesState.getInstance().setIsNewServerUrl(true);
                 }

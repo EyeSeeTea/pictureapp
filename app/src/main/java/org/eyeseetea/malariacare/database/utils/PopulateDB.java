@@ -96,6 +96,7 @@ public class PopulateDB {
     static Map<Integer, Answer> answerList = new LinkedHashMap<Integer, Answer>();
     static Map<Integer, QuestionRelation> questionRelationList = new LinkedHashMap();
     static Map<Integer, Match> matchList = new LinkedHashMap();
+    static Map<Integer, QuestionOption> questionOptionList = new LinkedHashMap();
 
 
     public static void populateDB(AssetManager assetManager) throws IOException {
@@ -185,8 +186,8 @@ public class PopulateDB {
                         break;
                     case QUESTION_RELATIONS_CSV:
                         QuestionRelation questionRelation = new QuestionRelation();
-                        questionRelation.setQuestion(questionList.get(Integer.valueOf(line[1])));
-                        questionRelation.setOperation(Integer.valueOf(line[2]));
+                        questionRelation.setOperation(Integer.valueOf(line[1]));
+                        questionRelation.setQuestion(questionList.get(Integer.valueOf(line[2])));
                         questionRelation.save();
                         questionRelationList.put(Integer.valueOf(line[0]),questionRelation);
                         break;
@@ -202,6 +203,8 @@ public class PopulateDB {
                         questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
                         questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
                         questionOption.save();
+                        questionOptionList.put(Integer.valueOf(line[0]),questionOption);
+                        break;
                 }
             }
             reader.close();
@@ -227,6 +230,7 @@ public class PopulateDB {
         answerList.clear();
         questionRelationList.clear();
         matchList.clear();
+        questionOptionList.clear();
     }
 
     /**

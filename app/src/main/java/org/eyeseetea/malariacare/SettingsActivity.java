@@ -46,6 +46,8 @@ import android.widget.TextView;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
+import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
@@ -100,6 +102,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      */
     public static final String SETTINGS_CHANGING_SERVER="SETTINGS_CHANGING_SERVER";
 
+    /** Standard activity result: operation succeeded. */
+    public static final String RESULT_SERVER_CHANGE           = "RESULT_SERVER_CHANGE";
     /**
      * Intent extra param that states that the EULA has been accepted
      */
@@ -321,6 +325,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * @param url
      */
     private void initReloadByServerVersionWhenUrlChanged(String url) {
+        Log.d(TAG,"init reload server version when url changed");
         CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this,true);
         serverVersionAsync.execute(url);
     }
@@ -335,21 +340,24 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         Log.d(TAG, "callbackReloadByServerVersionWhenUrlChanged " + serverInfo.getVersion());
 
         //After changing to a new server survey data is always removed
+        Log.d(TAG, "Remove db");
         PopulateDB.wipeSurveys();
 
         //And the orgUnit too
         PreferencesState.getInstance().saveStringPreference(R.string.org_unit,"");
-
+        Log.d(TAG, "get server version");
         String serverVersion=serverInfo.getVersion();
-
+        Log.d(TAG, "SDK pull start");
         //2.20 -> reload orgunits from server via api
         if(ServerAPIController.isAPIVersion(serverVersion)){
+            Log.d(TAG, "Api pull start");
             autoCompleteEditTextPreference.pullOrgUnits(Constants.DHIS_API_SERVER);
             return;
         }
 
         //2.21, 2.22 -> pull orgunits + surveys
         if(Constants.DHIS_SDK_221_SERVER.equals(serverVersion) || Constants.DHIS_SDK_222_SERVER.equals(serverVersion)){
+            Log.d(TAG, "SDK pull start");
             initLoginPrePull(serverInfo);
             return;
         }
@@ -369,6 +377,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      */
     private void initLoginPrePull(ServerInfo serverInfo){
         HttpUrl serverUri = HttpUrl.parse(serverInfo.getUrl());
+        Log.d(TAG, "Server url "+serverUri);
         DhisService.logInUser(serverUri, ServerAPIController.getSDKCredentials());
     }
 
@@ -736,13 +745,22 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         protected void onPostExecute(ServerInfo serverInfo) {
 
             //OrgUnit has change -> init pull (orgunits not reloaded)
+            Log.d(TAG,"org unit changed:"+pullRequired);
             if(orgUnitChanged){
                 callbackReloadByServerVersionWhenOrgUnitChanged(serverInfo);
                 return;
             }
-
+            Log.d(TAG,"pull required:"+pullRequired);
             //Url has change -> init pull (orgunits reloaded)
             if(pullRequired) {
+                callbackReloadByServerVersionWhenUrlChanged(serverInfo);
+                //if the server was changed in the first loging it need be set as false
+                PreferencesState.getInstance().setIsNewServerUrl(false);
+                return;
+            }
+            //Url has change on autentication -> init pull (orgunits reloaded)
+            else if(PreferencesState.getInstance().isNewServerUrl()){
+                PreferencesState.getInstance().setIsNewServerUrl(false);
                 callbackReloadByServerVersionWhenUrlChanged(serverInfo);
                 return;
             }
@@ -755,6 +773,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "On activity result");
         if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_ON_EULA_ACCEPTED) {
             if (data.hasExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE)) {
                 Log.d(TAG, "Executing onActivityResult:");
@@ -764,6 +783,16 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), true);
                 editor.commit();
+            }
+        }
+        if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_SERVER_CHANGE) {
+            if (data.hasExtra(SettingsActivity.RESULT_SERVER_CHANGE)) {
+                Log.d(TAG, "Executing onActivityResult Server was changed:");
+                PreferencesState.getInstance().saveStringPreference(R.string.org_unit, "");
+                PreferencesState.getInstance().reloadPreferences();
+                CheckServerVersionAsync checkServerVersionAsync = new CheckServerVersionAsync(this, true, true);
+                checkServerVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
+                initReloadByServerVersionWhenUrlChanged(PreferencesState.getInstance().getDhisURL());
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -869,10 +898,9 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
      */
     void launchLoginPreChange(){
         Intent intent = prepareIntent();
-        activity.finish();
-        activity.startActivity(intent);
+        intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER, true);
+        activity.startActivityForResult(intent, Constants.REQUEST_SERVER_CHANGE);
     }
-
     void launchLoginOnEulaAccepted(){
         Intent intent = prepareIntent();
         intent.putExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, true);

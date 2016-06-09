@@ -99,7 +99,6 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
             if(result.getResponseHolder().getApiException() == null) {
                 EditText serverEditText = (EditText) findViewById(R.id.server_url);
                 PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
-                PreferencesState.getInstance().reloadPreferences();
                 goSettingsWithRightExtras();
             } else {
                 onLoginFail(result.getResponseHolder().getApiException());
@@ -114,6 +113,8 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
         finish();
         if(!getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false))
+            startActivity(intent);
+        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_SERVER, false))
             startActivity(intent);
     }
 
@@ -131,6 +132,20 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false)){
             Log.i(TAG, "propagateExtraAndResult -> EULA accepted");
             setResult(RESULT_OK, intent);
+        }
+        else{
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            if (sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
+                EditText serverEditText = (EditText) findViewById(R.id.server_url);
+                if (!PreferencesState.getInstance().getDhisURL().equals(serverEditText.getText().toString())) {
+                    Log.i(TAG, "propagateExtraAndResult -> Server changed");
+                    intent.putExtra(SettingsActivity.RESULT_SERVER_CHANGE,true);
+                    setResult(RESULT_OK, intent);
+                    intent.putExtra(SettingsActivity.RESULT_SERVER_CHANGE,true);
+                    PreferencesState.getInstance().reloadPreferences();
+                    PreferencesState.getInstance().setIsNewServerUrl(true);
+                }
+            }
         }
 
         intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);

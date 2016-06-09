@@ -1,0 +1,99 @@
+package org.eyeseetea.malariacare.fragments;
+
+import android.app.Fragment;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.views.TextCard;
+
+import java.util.List;
+
+/**
+ * Created by idelcano on 09/06/2016.
+ */
+public class ReviewFragment extends Fragment {
+
+    public static final String TAG = ".ReviewFragment";
+
+    LayoutInflater lInflater;
+
+    public static ReviewFragment newInstance(int index) {
+        ReviewFragment f = new ReviewFragment();
+
+        // Supply index input as an argument.
+        Bundle args = new Bundle();
+        args.putInt("index", index);
+        f.setArguments(args);
+
+        return f;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
+        this.lInflater = LayoutInflater.from(getActivity().getApplicationContext());
+        View view = inflater.inflate(R.layout.review_layout,
+                container, false);
+        initValues(view);
+        return view;
+    }
+
+    private void initValues(View view) {
+        Survey survey= Session.getSurvey();
+        List<Value> values = survey.getValues();
+        LinearLayout tableLayout=(LinearLayout)view.findViewById(R.id.options_review_table);
+        for(Value value:values) {
+            drawValue(tableLayout, value);
+        }
+    }
+
+    private void drawValue(LinearLayout tableLayout, Value value) {
+        TextCard textCard=(TextCard) lInflater.inflate(R.layout.dynamic_review_row,tableLayout,false);
+        //TextCard textCard = (TextCard) tableRow.findViewById(R.id.review_content_text);
+        textCard.setText(value.getValue());
+        if(value.getQuestion()!=null) {
+            if(value.getOption()!=null && value.getOption().getBackground_colour()!=null)
+                textCard.setBackgroundColor(Color.parseColor("#" + value.getOption().getBackground_colour()));
+            tableLayout.addView(textCard);
+        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated");
+        super.onActivityCreated(savedInstanceState);
+
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(TAG, "onResume");
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        Log.d(TAG, "onStop");
+        super.onStop();
+    }
+}

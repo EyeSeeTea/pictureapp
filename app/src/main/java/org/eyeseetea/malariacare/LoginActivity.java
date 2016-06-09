@@ -130,21 +130,43 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false)){
             Log.i(TAG, "propagateExtraAndResult -> EULA accepted");
             setResult(RESULT_OK, intent);
-        }
-        else{
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            if (sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
-                EditText serverEditText = (EditText) findViewById(R.id.server_url);
-                if (!PreferencesState.getInstance().getDhisURL().equals(serverEditText.getText().toString())) {
-                    Log.i(TAG, "propagateExtraAndResult -> Server changed");
-                    PreferencesState.getInstance().reloadPreferences();
-                    PreferencesState.getInstance().setIsNewServerUrl(true);
-                }
+        } else {
+            if (isEulaAccepted() && !getServerFromPreferences().equals(getUserIntroducedServer())) {
+                Log.i(TAG, "propagateExtraAndResult -> Server changed");
+                PreferencesState.getInstance().reloadPreferences();
+                PreferencesState.getInstance().setIsNewServerUrl(true);
             }
         }
 
         intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);
         return intent;
+    }
+
+    /**
+     * Check whether the EULA has already been accepted by the user. When the user accepts the EULA,
+     * a preference is set so the app will remind between different executions
+     * @return
+     */
+    private boolean isEulaAccepted(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        return sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), false);
+    }
+
+    /**
+     * Get from the server textfield what the user introduced
+     * @return
+     */
+    private String getUserIntroducedServer(){
+        EditText serverEditText = (EditText) findViewById(R.id.server_url);
+        return serverEditText.getText().toString();
+    }
+
+    /**
+     * Get from the preferences the server setting
+     * @return
+     */
+    private String getServerFromPreferences(){
+        return PreferencesState.getInstance().getDhisURL();
     }
 
     @Override

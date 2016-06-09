@@ -747,15 +747,15 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 return;
             }
             Log.d(TAG,"pull required:"+pullRequired);
+            //FIXME: review the "pullRequired" variable. There's an inconsistency if we need to make a pull even when pullRequired is false
             //Url has change -> init pull (orgunits reloaded)
             if(pullRequired) {
                 callbackReloadByServerVersionWhenUrlChanged(serverInfo);
                 //if the server was changed in the first loging it need be set as false
                 PreferencesState.getInstance().setIsNewServerUrl(false);
                 return;
-            }
-            //Url has change on autentication -> init pull (orgunits reloaded)
-            else if(PreferencesState.getInstance().isNewServerUrl()){
+            } else if(PreferencesState.getInstance().isNewServerUrl()){
+                //Url has change on autentication -> init pull (orgunits reloaded)
                 PreferencesState.getInstance().setIsNewServerUrl(false);
                 callbackReloadByServerVersionWhenUrlChanged(serverInfo);
                 return;

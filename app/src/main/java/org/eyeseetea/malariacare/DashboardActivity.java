@@ -43,6 +43,7 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
+import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
@@ -63,6 +64,7 @@ public class DashboardActivity extends BaseActivity {
     MonitorFragment monitorFragment;
     DashboardUnsentFragment unsentFragment;
     DashboardSentFragment sentFragment;
+    ReviewFragment reviewFragment;
     SurveyFragment surveyFragment;
     String currentTab;
     String currentTabName;
@@ -109,6 +111,8 @@ public class DashboardActivity extends BaseActivity {
                 //If change of tab from surveyFragment or FeedbackFragment they could be closed.
                 if(isSurveyFragmentActive())
                     onSurveyBackPressed();
+                if(isReviewFragmentActive())
+                    exitReview(null);
                if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
                     currentTabName=getString(R.string.assess);
                     tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.light_grey));
@@ -178,6 +182,14 @@ public class DashboardActivity extends BaseActivity {
         unsentFragment = new DashboardUnsentFragment();
         unsentFragment.setArguments(getIntent().getExtras());
         replaceListFragment(R.id.dashboard_details_container, unsentFragment);
+    }
+
+    public void initReview(){
+        int mStackLevel=0;
+        mStackLevel++;
+        if(reviewFragment==null)
+            reviewFragment = ReviewFragment.newInstance(mStackLevel);
+        replaceFragment(R.id.dashboard_details_container, reviewFragment);
     }
 
     public void initImprove(){
@@ -294,6 +306,8 @@ public class DashboardActivity extends BaseActivity {
         isMoveToLeft =true;
         if (isSurveyFragmentActive()) {
             onSurveyBackPressed();
+        } else if (isReviewFragmentActive()){
+            closeReviewFragment();
         } else {
             confirmExitApp();
         }
@@ -337,6 +351,14 @@ public class DashboardActivity extends BaseActivity {
                 }).create().show();
     }
 
+    public void closeSurveyFragmentAndAskReview(){
+        ScoreRegister.clear();
+        if(isBackPressed){
+            beforeExit();
+        }
+        surveyFragment.unregisterReceiver();
+        askToShowReview();
+    }
     public void closeSurveyFragment(){
         ScoreRegister.clear();
         if(isBackPressed){
@@ -347,6 +369,10 @@ public class DashboardActivity extends BaseActivity {
         unsentFragment.reloadData();
     }
 
+    public void closeReviewFragment(){
+        initAssess();
+        unsentFragment.reloadData();
+    }
     public void beforeExit(){
         Survey survey=Session.getSurvey();
         if(survey!=null) {
@@ -370,6 +396,26 @@ public class DashboardActivity extends BaseActivity {
         }
     }
 
+    private void askToShowReview() {
+        Log.d(TAG, "ask to show review");
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.review_dialog_title))
+                .setMessage(getString(R.string.review_dialog_message))
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        initAssess();
+                        unsentFragment.reloadData();
+                    }
+                })
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        initReview();
+                    }
+                }).create().show();
+    }
+
     /**
      * Called when the user clicks the New Survey button
      */
@@ -385,6 +431,23 @@ public class DashboardActivity extends BaseActivity {
         initSurvey();
     }
 
+    /**
+     * Called when the user clicks the exit Review button
+     */
+    public void exitReview(View view) {
+        closeReviewFragment();
+    }
+
+    /**
+     * Checks if a survey fragment is active
+     */
+    private boolean isReviewFragmentActive() {
+        Fragment currentFragment = this.getFragmentManager ().findFragmentById(R.id.dashboard_details_container);
+        if (currentFragment instanceof ReviewFragment) {
+            return true;
+        }
+        return false;
+    }
     /**
      * Checks if a survey fragment is active
      */

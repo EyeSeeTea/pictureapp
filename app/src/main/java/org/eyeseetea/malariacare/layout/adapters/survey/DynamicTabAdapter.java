@@ -700,7 +700,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 .setMessage(R.string.survey_info_completed)
                 .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        DashboardActivity.dashboardActivity.closeSurveyFragment();
+                        if(Session.getSurvey().isRDT())
+                            DashboardActivity.dashboardActivity.closeSurveyFragmentAndAskReview();
+                        else
+                            DashboardActivity.dashboardActivity.closeSurveyFragment();
                     }
                 });
         if(!navigationController.isFirstQuestion()){

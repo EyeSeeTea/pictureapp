@@ -58,23 +58,32 @@ public class ReviewFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Inflate a TextCard inside a linearLayout for each value
+     * @param view
+     */
     private void initValues(View view) {
         Survey survey= Session.getSurvey();
         List<Value> values = survey.getValues();
-        LinearLayout tableLayout=(LinearLayout)view.findViewById(R.id.options_review_table);
+        LinearLayout linearLayout=(LinearLayout)view.findViewById(R.id.options_review_table);
         for(Value value:values) {
-            drawValue(tableLayout, value);
+            drawValue(linearLayout, value);
         }
     }
 
-    private void drawValue(LinearLayout tableLayout, Value value) {
-        TextCard textCard=(TextCard) lInflater.inflate(R.layout.dynamic_review_row,tableLayout,false);
-        //TextCard textCard = (TextCard) tableRow.findViewById(R.id.review_content_text);
+
+    /**
+     * Inflate the linearlayout to add the values
+     * @param linearLayout
+     * @param value
+     */
+    private void drawValue(LinearLayout linearLayout, Value value) {
+        TextCard textCard=(TextCard) lInflater.inflate(R.layout.dynamic_review_row,linearLayout,false);
         textCard.setText(value.getValue());
         if(value.getQuestion()!=null) {
             if(value.getOption()!=null && value.getOption().getBackground_colour()!=null)
                 textCard.setBackgroundColor(Color.parseColor("#" + value.getOption().getBackground_colour()));
-            tableLayout.addView(textCard);
+            linearLayout.addView(textCard);
         }
     }
 

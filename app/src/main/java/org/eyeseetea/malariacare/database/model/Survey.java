@@ -377,6 +377,17 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     }
 
     /**
+     * Returns the list of answered values from this survey
+     * @return
+     */
+    public List<Value> getRealValues(){
+        values = new Select()
+                .from(Value.class)
+                .where(Condition.column(Value$Table.ID_SURVEY)
+                        .eq(this.getId_survey())).queryList();
+        return values;
+    }
+    /**
      * Returns the list of previous schedules for this survey
      * @return
      */
@@ -890,4 +901,16 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 '}';
     }
 
+    public String showValues() {
+        String valuesString = "Survey values: ";
+        if(getRealValues()!=null)
+            for(Value value:values){
+                valuesString += "Value: " + value.getValue();
+                if(value.getOption()!=null)
+                    valuesString+= " Option: " + value.getOption().getName();
+                if(value.getQuestion()!=null)
+                    valuesString+=" Question: " + value.getQuestion().getDe_name() + "\n";
+            }
+        return valuesString;
+    }
 }

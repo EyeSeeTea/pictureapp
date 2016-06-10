@@ -188,6 +188,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void initSurvey(){
+        tabHost.getTabWidget().setVisibility(View.GONE);
         int  mStackLevel=0;
         mStackLevel++;
         if(surveyFragment==null)
@@ -338,6 +339,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void closeSurveyFragment(){
+        tabHost.getTabWidget().setVisibility(View.VISIBLE);
         ScoreRegister.clear();
         if(isBackPressed){
             beforeExit();

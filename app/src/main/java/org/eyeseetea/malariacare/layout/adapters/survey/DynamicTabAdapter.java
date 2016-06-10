@@ -404,7 +404,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Log.d(TAG,"KEYBOARD HIDE ");
         InputMethodManager keyboard = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
         if(v!=null)
-            keyboard.hideSoftInputFromWindow(keyboardView.getWindowToken(), 0);
+            keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
        }
 
 

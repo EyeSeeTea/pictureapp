@@ -38,7 +38,7 @@ import java.util.Map;
 /**
  * Created by idelcano on 10/06/2016.
  */
-@Migration(version = 4, databaseName = AppDatabase.NAME)
+@Migration(version = 3, databaseName = AppDatabase.NAME)
 public class Migration3AddQuestionColumn extends BaseMigration {
 
     private static String TAG=".Migration3";

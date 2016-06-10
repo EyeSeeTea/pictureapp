@@ -67,9 +67,7 @@ public class ReadWriteDB {
         return option;
     }
 
-    public static void saveValuesDDL(Question question, Option option) {
-
-        Value value = question.getValueBySession();
+    public static void saveValuesDDL(Question question, Option option, Value value) {
 
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
             if (value == null) {

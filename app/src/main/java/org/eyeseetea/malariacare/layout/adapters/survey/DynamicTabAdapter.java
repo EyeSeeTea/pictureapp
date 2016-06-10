@@ -162,7 +162,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 Option selectedOption=(Option)view.getTag();
                 Question question=navigationController.getCurrentQuestion();
-                ReadWriteDB.saveValuesDDL(question, selectedOption);
+
+
+                Value value = question.getValueBySession();
+                //set new totalpages if the value is not null and the value change
+                if(value!=null)
+                    navigationController.setTotalPages(question.getTotalQuestions());
+                ReadWriteDB.saveValuesDDL(question, selectedOption, value);
 
                 ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
                 for (int rowPos = 0; rowPos < vgTable.getChildCount(); rowPos++) {
@@ -756,6 +762,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         navigationController.next(value!=null?value.getOption():null);
         notifyDataSetChanged();
         hideKeyboard(PreferencesState.getInstance().getContext());
+
+        question = navigationController.getCurrentQuestion();
+        value = question.getValueBySession();
+        //set new page number if the value is null
+        if(value==null)
+            navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());
     }
 
     /**

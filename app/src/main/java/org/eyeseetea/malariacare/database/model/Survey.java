@@ -841,6 +841,40 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 .and(Condition.column(Survey$Table.EVENTDATE).greaterThanOrEq(minDateForMonitor)).queryList();
     }
 
+
+    public String printValues() {
+        String valuesString = "Survey values: ";
+        if(getValuesFromDB()!=null)
+            for(Value value:values){
+                valuesString += "Value: " + value.getValue();
+                if(value.getOption()!=null)
+                    valuesString+= " Option: " + value.getOption().getName();
+                if(value.getQuestion()!=null)
+                    valuesString+=" Question: " + value.getQuestion().getDe_name() + "\n";
+            }
+        return valuesString;
+    }
+
+    public void removeChildrenValuesFromQuestionRecursively(Question question) {
+        List<Value> values= getValuesFromDB();
+        List<Question> questionChildren=question.getChildren();
+        for (int i=values.size()-1;i>0;i--) {
+            if(questionChildren.contains(values.get(i).getQuestion())){
+                removeValue(values.get(i));
+                if(question.hasChildren()) {
+                    for(Question child: questionChildren) {
+                        removeChildrenValuesFromQuestionRecursively(child);
+                    }
+                }
+            }
+        }
+
+    }
+
+    private static void removeValue(Value value) {
+        value.delete();
+    }
+
     @Override
     public void accept(IConvertToSDKVisitor IConvertToSDKVisitor) throws Exception{
         IConvertToSDKVisitor.visit(this);
@@ -899,37 +933,5 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 ", scheduledDate=" + scheduledDate +
                 ", status=" + status +
                 '}';
-    }
-
-    public String printValues() {
-        String valuesString = "Survey values: ";
-        if(getValuesFromDB()!=null)
-            for(Value value:values){
-                valuesString += "Value: " + value.getValue();
-                if(value.getOption()!=null)
-                    valuesString+= " Option: " + value.getOption().getName();
-                if(value.getQuestion()!=null)
-                    valuesString+=" Question: " + value.getQuestion().getDe_name() + "\n";
-            }
-        return valuesString;
-    }
-
-    public void removeChildrenValuesFromQuestionRecursively(Question question) {
-        List<Value> values= getValuesFromDB();
-        List<Question> questionsChildren=question.getChildren();
-        for (int i=values.size()-1;i>0;i--) {
-            if(questionsChildren.contains(values.get(i).getQuestion())){
-                removeValue(values.get(i));
-                if(values.get(i).getQuestion().hasChildren()) {
-                    for(Question questionChild:questionsChildren)
-                        removeChildrenValuesFromQuestionRecursively(questionChild);
-                }
-            }
-        }
-
-    }
-
-    private static void removeValue(Value value) {
-        value.delete();
     }
 }

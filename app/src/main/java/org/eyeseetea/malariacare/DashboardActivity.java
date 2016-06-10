@@ -70,6 +70,10 @@ public class DashboardActivity extends BaseActivity {
     String currentTabName;
     private boolean reloadOnResume=true;
     boolean isMoveToLeft;
+    /**
+     * Flags required to decide if the survey must be deleted or not on pause the surveyFragment
+     */
+    public boolean isLoadingReview=false;
 
     /**
      * Flags required to decide if the survey must be deleted or not
@@ -84,7 +88,6 @@ public class DashboardActivity extends BaseActivity {
         dashboardActivity=this;
         setContentView(R.layout.tab_dashboard);
         Survey.removeInProgress();
-        //Survey.removeInProgress();
         if(savedInstanceState==null) {
             initAssess();
             initImprove();
@@ -179,9 +182,14 @@ public class DashboardActivity extends BaseActivity {
 
 
     public void initAssess(){
+        isLoadingReview=false;
         unsentFragment = new DashboardUnsentFragment();
         unsentFragment.setArguments(getIntent().getExtras());
         replaceListFragment(R.id.dashboard_details_container, unsentFragment);
+    }
+
+    public void restoreAssess(){
+        replaceFragment(R.id.dashboard_details_container, surveyFragment);
     }
 
     public void initReview(){
@@ -307,7 +315,7 @@ public class DashboardActivity extends BaseActivity {
         if (isSurveyFragmentActive()) {
             onSurveyBackPressed();
         } else if (isReviewFragmentActive()){
-            closeReviewFragment();
+            onSurveyBackPressed();
         } else {
             confirmExitApp();
         }
@@ -352,14 +360,12 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void closeSurveyFragmentAndAskReview(){
-        ScoreRegister.clear();
-        if(isBackPressed){
-            beforeExit();
-        }
-        surveyFragment.unregisterReceiver();
-        askToShowReview();
+        isLoadingReview=true;
+        initReview();
     }
+
     public void closeSurveyFragment(){
+        isLoadingReview=false;
         ScoreRegister.clear();
         if(isBackPressed){
             beforeExit();
@@ -370,6 +376,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void closeReviewFragment(){
+        isLoadingReview=false;
         initAssess();
         unsentFragment.reloadData();
     }
@@ -396,26 +403,6 @@ public class DashboardActivity extends BaseActivity {
         }
     }
 
-    private void askToShowReview() {
-        Log.d(TAG, "ask to show review");
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.review_dialog_title))
-                .setMessage(getString(R.string.review_dialog_message))
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        initAssess();
-                        unsentFragment.reloadData();
-                    }
-                })
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        initReview();
-                    }
-                }).create().show();
-    }
-
     /**
      * Called when the user clicks the New Survey button
      */
@@ -435,6 +422,8 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the exit Review button
      */
     public void exitReview(View view) {
+        ScoreRegister.clear();
+        beforeExit();
         closeReviewFragment();
     }
 
@@ -473,6 +462,14 @@ public class DashboardActivity extends BaseActivity {
     public void openSentSurvey() {
         tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_assess));
         initSurvey();
+    }
+
+    public void hideReview() {
+        restoreAssess();
+    }
+
+    public boolean isLoadingReview() {
+        return isLoadingReview;
     }
 
     /**

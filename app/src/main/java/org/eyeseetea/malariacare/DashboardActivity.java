@@ -465,6 +465,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void hideReview() {
+        isMoveToLeft=true;
         restoreAssess();
     }
 

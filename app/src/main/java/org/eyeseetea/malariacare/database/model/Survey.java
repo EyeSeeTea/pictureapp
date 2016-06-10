@@ -815,6 +815,8 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                     }
                 }
             }
+        if(valuesStr.endsWith(", "))
+            valuesStr=valuesStr.substring(0,valuesStr.lastIndexOf(", "));
         return valuesStr;
     }
 

@@ -38,13 +38,19 @@ import java.util.Map;
 /**
  * Created by idelcano on 10/06/2016.
  */
-@Migration(version = 3, databaseName = AppDatabase.NAME)
-public class Migration2AddQuestionColumn extends BaseMigration {
+@Migration(version = 4, databaseName = AppDatabase.NAME)
+public class Migration3AddQuestionColumn extends BaseMigration {
 
+    private static String TAG=".Migration3";
     public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
 
-    public Migration2AddQuestionColumn() {
+    private static Migration3AddQuestionColumn instance;
+    private boolean postMigrationRequired;
+
+    public Migration3AddQuestionColumn() {
         super();
+        instance = this;
+        postMigrationRequired=false;
     }
 
     public void onPreMigrate() {
@@ -52,7 +58,8 @@ public class Migration2AddQuestionColumn extends BaseMigration {
 
     @Override
     public void migrate(SQLiteDatabase database) {
-        addColumn(database, OrgUnit.class, "total_questions", "Integer");
+        postMigrationRequired=true;
+        addColumn(database, Question.class, "total_questions", "Integer");
     }
 
     @Override
@@ -62,5 +69,37 @@ public class Migration2AddQuestionColumn extends BaseMigration {
     public static void addColumn(SQLiteDatabase database, Class model, String columnName, String type) {
         ModelAdapter myAdapter = FlowManager.getModelAdapter(model);
         database.execSQL(String.format(ALTER_TABLE_ADD_COLUMN, myAdapter.getTableName(), columnName, type));
+    }
+
+
+    public static void postMigrate(){
+        //Migration NOT required -> done
+        Log.d(TAG,"Post migrate");
+        if(!instance.postMigrationRequired){
+            return;
+        }
+
+
+        //Data? Add new default data
+        if(instance.hasData()) {
+            List<Question> questions = Question.getAllQuestions();
+
+            try {
+                PopulateDB.addTotalQuestions(PreferencesState.getInstance().getContext().getAssets(), questions);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //This operation wont be done again
+        instance.postMigrationRequired=false;
+    }
+
+    /**
+     * Checks if the current db has data or not
+     * @return
+     */
+    private boolean hasData() {
+        return Program.getFirstProgram()!=null;
     }
 }

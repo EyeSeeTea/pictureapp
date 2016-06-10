@@ -1083,6 +1083,10 @@ public class Question extends BaseModel {
         this.total_questions = total_questions;
     }
 
+    public static List<Question> getAllQuestions() {
+        return new Select().all().from(Question.class).queryList();
+    }
+
 
     private static class QuestionOrderComparator implements Comparator {
 

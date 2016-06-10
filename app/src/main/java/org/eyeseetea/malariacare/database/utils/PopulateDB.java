@@ -270,4 +270,20 @@ public class PopulateDB {
         );
         DateTimeManager.getInstance().delete();
     }
+
+    public static void addTotalQuestions(AssetManager assetManager, List<Question> questions) throws IOException {
+        //Reset inner references
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)), SEPARATOR, QUOTECHAR);
+
+        String[] line;
+        while ((line = reader.readNext()) != null) {
+            for (Question question : questions) {
+                if (question.getUid().equals(line[5])) {
+                    question.setTotalQuestions(Integer.valueOf(line[13]));
+                    question.save();
+                }
+            }
+        }
+        reader.close();
+    }
 }

@@ -124,7 +124,7 @@
     <string name="monitor_row_title_not_tested">មិនបានធ្វើតេស្ត</string>
     <string name="monitor_row_title_referral">ធ្វើការបញ្ចូន</string>
     <string name="monitor_row_title_asmq">ឱសថអាតេស៊ុយណាត​ ម៉េហ្លូគីន</string>
-    <string name="monitor_row_title_dhapip">ឱសថសំរាប់ក្មេង​​​ </string>
+    <string name="monitor_row_title_dhapip">អីរ៉ាតេស៊ីម</string>
     <string name="monitor_row_title_rdts">តេស្ត RDTs</string>
     <string name="monitor_row_title_positivity_rate">កម្រិតវិជ្ជមាន</string>
     <string name="settings_menu_copyright">រក្សាសិទ្ធិ</string>
@@ -138,9 +138,9 @@
     <string name="number_11">១១</string>
     <string name="number_12">12</string>
 
-    <string name="unsent_button">Unsent</string>
-    <string name="sent_button" >Sent</string>
-    <string name="monitor_button" >Monitoring</string>
+    <string name="unsent_button">មិនទាន់ផ្ញើ</string>
+    <string name="sent_button" >ដែលបានផ្ញើ</string>
+    <string name="monitor_button" >ការតាមដាន</string>
 
     <string name="review_dialog_title" >ពិនិត្យឡើងវិញ</string>
     <string name="review_dialog_message" >តើអ្នកចង់មើលពិនិត្យឡើងវិញនៃស្ទង់មតិរបស់អ្នក?</string>

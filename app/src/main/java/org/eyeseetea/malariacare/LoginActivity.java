@@ -22,14 +22,19 @@ package org.eyeseetea.malariacare;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
@@ -92,6 +97,8 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
         if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
             if(result.getResponseHolder().getApiException() == null) {
+                EditText serverEditText = (EditText) findViewById(R.id.server_url);
+                PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
                 goSettingsWithRightExtras();
             } else {
                 onLoginFail(result.getResponseHolder().getApiException());
@@ -123,10 +130,43 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false)){
             Log.i(TAG, "propagateExtraAndResult -> EULA accepted");
             setResult(RESULT_OK, intent);
+        } else {
+            if (isEulaAccepted() && !getServerFromPreferences().equals(getUserIntroducedServer())) {
+                Log.i(TAG, "propagateExtraAndResult -> Server changed");
+                PreferencesState.getInstance().reloadPreferences();
+                PreferencesState.getInstance().setIsNewServerUrl(true);
+            }
         }
 
         intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);
         return intent;
+    }
+
+    /**
+     * Check whether the EULA has already been accepted by the user. When the user accepts the EULA,
+     * a preference is set so the app will remind between different executions
+     * @return
+     */
+    private boolean isEulaAccepted(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        return sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), false);
+    }
+
+    /**
+     * Get from the server textfield what the user introduced
+     * @return
+     */
+    private String getUserIntroducedServer(){
+        EditText serverEditText = (EditText) findViewById(R.id.server_url);
+        return serverEditText.getText().toString();
+    }
+
+    /**
+     * Get from the preferences the server setting
+     * @return
+     */
+    private String getServerFromPreferences(){
+        return PreferencesState.getInstance().getDhisURL();
     }
 
     @Override

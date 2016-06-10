@@ -68,6 +68,7 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
@@ -124,6 +125,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Flag that indicates if the current survey in session is already sent or not (it affects readonly settings)
      */
     private boolean readOnly;
+
+    /**
+     * View needed to close the keyboard in methods with view
+     */
+    View keyboardView;
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
@@ -381,19 +387,33 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return current.concat("/").concat(total);
     }
 
-
     private void showKeyboard(Context c, View v){
+        Log.d(TAG,"KEYBOARD SHOW ");
+        keyboardView=v;
         InputMethodManager keyboard = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
         keyboard.showSoftInput(v, 0);
-
     }
 
+    /**
+     * hide keyboard using a provided view
+     */
     private void hideKeyboard(Context c, View v){
+        Log.d(TAG,"KEYBOARD HIDE ");
         InputMethodManager keyboard = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
-        keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        if(v!=null)
+            keyboard.hideSoftInputFromWindow(keyboardView.getWindowToken(), 0);
+       }
+
+
+    /**
+     * hide keyboard using a keyboardView variable view
+     */
+    private void hideKeyboard(Context c){
+        Log.d(TAG,"KEYBOARD HIDE ");
+        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(keyboardView!=null)
+            keyboard.hideSoftInputFromWindow(keyboardView.getWindowToken(), 0);
     }
-
-
     /**
      * Initialise NumberPicker and button to view/edit a integer between 0 and Constants.MAX_INT_AGE
      * @param tableRow
@@ -430,7 +450,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     Question question = navigationController.getCurrentQuestion();
                     ReadWriteDB.saveValuesText(question, positiveIntValue);
-                    hideKeyboard(context,v);
                     finishOrNext();
                 }
             });
@@ -700,6 +719,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 .setMessage(R.string.survey_info_completed)
                 .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
+                        hideKeyboard(PreferencesState.getInstance().getContext());
                         if(Session.getSurvey().isRDT())
                             DashboardActivity.dashboardActivity.closeSurveyFragmentAndAskReview();
                         else
@@ -709,6 +729,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(!navigationController.isFirstQuestion()){
             msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int arg1) {
+                    hideKeyboard(PreferencesState.getInstance().getContext());
                     review();
                 }
             });
@@ -737,6 +758,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         navigationController.next(value!=null?value.getOption():null);
         notifyDataSetChanged();
+        hideKeyboard(PreferencesState.getInstance().getContext());
     }
 
     /**

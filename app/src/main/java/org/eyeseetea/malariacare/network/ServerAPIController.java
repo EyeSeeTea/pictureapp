@@ -101,11 +101,6 @@ public class ServerAPIController {
     private static final String DATE_CLOSED_DATE_FORMAT = "yyyy-MM-dd";
 
     /**
-     * Default Server
-     */
-    private static String DHIS_SERVER ="https://dev.psi-mis.org";
-
-    /**
      * Endpoint to retrieve server info (including version)
      */
     private static final String DHIS_SERVER_INFO="/api/system/info";
@@ -211,7 +206,7 @@ public class ServerAPIController {
      * @return
      */
     public static String getServerVersion(){
-        return getServerVersion(DHIS_SERVER);
+        return getServerVersion(PreferencesState.getInstance().getDhisURL());
     }
 
     /**

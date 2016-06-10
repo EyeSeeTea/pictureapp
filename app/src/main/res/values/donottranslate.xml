@@ -43,7 +43,18 @@
     <string name="rdtPositive">Positive</string>
     <string name="rdtNegative">Negative</string>
     <string name="rdtNotTested">Not Tested</string>
-    <string name="test_code" translatable="false">RDT</string>
+    <string name="RDT_code" translatable="false">RDT</string>
+    <string name="Age_code" translatable="false">Age</string>
+    <string name="Gender_code" translatable="false">Gender</string>
+    <string name="Specie_code" translatable="false">Specie</string>
+    <string name="Reason_code" translatable="false">Reason</string>
+    <string name="Treatment_code" translatable="false">Treatment</string>
+    <string name="DHAPIP_code" translatable="false">DHA-PIP</string>
+    <string name="ASMQ_code" translatable="false">AS/MQ</string>
+    <string name="Referral_code" translatable="false">Referral</string>
+    <string name="Classification_code" translatable="false">Classification</string>
+    <string name="Occupation_code" translatable="false">Occupation</string>
+    <string name="Phone_code" translatable="false">Phone</string>
 
     <string name="monitor_row_title"><![CDATA[&nbsp;&nbsp;%1$s]]></string>
 

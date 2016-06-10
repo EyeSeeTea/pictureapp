@@ -852,10 +852,8 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         for (int i=values.size()-1;i>0;i--) {
             if(questionChildren.contains(values.get(i).getQuestion())){
                 removeValue(values.get(i));
-                if(question.hasChildren()) {
-                    for(Question child: questionChildren) {
-                        removeChildrenValuesFromQuestionRecursively(child);
-                    }
+                for(Question child: questionChildren) {
+                    removeChildrenValuesFromQuestionRecursively(child);
                 }
             }
         }

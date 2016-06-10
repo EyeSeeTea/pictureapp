@@ -78,7 +78,7 @@ public class ReadWriteDB {
             } else {
                 if(!value.getOption().equals(option) && question.hasChildren()) {
                     Survey survey = Session.getSurvey();
-                    survey.removeChildValuesFromQuestion(question);
+                    survey.removeChildrenValuesFromQuestionRecursively(question);
                 }
                 value.setOption(option);
                 value.setValue(option.getName());

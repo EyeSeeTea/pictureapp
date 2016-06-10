@@ -19,8 +19,12 @@
 
 package org.eyeseetea.malariacare.database.utils;
 
+import android.util.Log;
+
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -30,6 +34,8 @@ import java.util.List;
  * Created by Jose on 26/04/2015.
  */
 public class ReadWriteDB {
+
+    private static final String TAG = ".RWDATABASE";
 
     public static String readValueQuestion(Question question) {
         String result = null;
@@ -67,10 +73,12 @@ public class ReadWriteDB {
         return option;
     }
 
-    public static void saveValuesDDL(Question question, Option option) {
+    public static void removeChildValuesDDL(Question question, Option option) {
 
         Value value = question.getValueBySession();
+        if (value!=null){
 
+        }
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
             if (value == null) {
                 value = new Value(option, question, Session.getSurvey());
@@ -81,6 +89,61 @@ public class ReadWriteDB {
             value.save();
         } else {
             if (value != null) value.delete();
+        }
+    }
+
+    public static void saveValuesDDL(Question question, Option option) {
+
+        Value value = question.getValueBySession();
+
+        if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
+            if (value == null) {
+                value = new Value(option, question, Session.getSurvey());
+            } else {
+                if(!value.getOption().equals(option) && question.hasChildren()) {
+                    Survey survey = Session.getSurvey();
+                    removeOldChildValues(survey, question);
+                }
+                value.setOption(option);
+                value.setValue(option.getName());
+            }
+            value.save();
+        } else {
+            if (value != null) value.delete();
+        }
+    }
+
+    private static void removeOldChildValues(Survey survey, Question question) {
+        Log.d("RW DATABASE:","remove old child values");
+        List<Value> values= survey.getRealValues();
+        List<Question> questionsChildren=question.getChildren();
+        for (int i=values.size()-1;i>0;i--) {
+            if(questionsChildren.contains(values.get(i).getQuestion())){
+                removeValue(values.get(i));
+            }
+        }
+        //remove all child values
+        for(Question questionChild:questionsChildren)
+            removeChildValuesByQuestionRecursive(survey,questionChild);
+
+    }
+
+    private static void removeValue(Value value) {
+        Log.d(TAG,"remove value: "+value.getValue());
+        value.delete();
+    }
+
+    private static void removeChildValuesByQuestionRecursive(Survey survey, Question question){
+        Log.d("RW DATABASE:","remove child recursive");
+        List<Question> questionsChildren=question.getChildren();
+        List <Value> values= survey.getRealValues();
+        for (int i=values.size()-1;i>0;i--) {
+            if(questionsChildren.contains(values.get(i).getQuestion())){
+                removeValue(values.get(i));
+                if(values.get(i).getQuestion().hasChildren()){
+                    removeChildValuesByQuestionRecursive(survey,values.get(i).getQuestion());
+                }
+            }
         }
     }
 

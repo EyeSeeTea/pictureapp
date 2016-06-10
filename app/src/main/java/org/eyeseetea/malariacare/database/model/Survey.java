@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.util.Log;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -380,7 +382,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      * Returns the list of answered values from this survey
      * @return
      */
-    public List<Value> getRealValues(){
+    public List<Value> getValuesFromDB(){
         values = new Select()
                 .from(Value.class)
                 .where(Condition.column(Value$Table.ID_SURVEY)
@@ -901,9 +903,9 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 '}';
     }
 
-    public String showValues() {
+    public String printValues() {
         String valuesString = "Survey values: ";
-        if(getRealValues()!=null)
+        if(getValuesFromDB()!=null)
             for(Value value:values){
                 valuesString += "Value: " + value.getValue();
                 if(value.getOption()!=null)
@@ -912,5 +914,36 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                     valuesString+=" Question: " + value.getQuestion().getDe_name() + "\n";
             }
         return valuesString;
+    }
+
+    public void removeChildValuesFromQuestion(Question question) {
+        List<Value> values= getValuesFromDB();
+        List<Question> questionsChildren=question.getChildren();
+        for (int i=values.size()-1;i>0;i--) {
+            if(questionsChildren.contains(values.get(i).getQuestion())){
+                removeValue(values.get(i));
+            }
+        }
+        //remove all child values
+        for(Question questionChild:questionsChildren)
+            removeChildValuesByQuestionRecursive(questionChild);
+
+    }
+
+    private static void removeValue(Value value) {
+        value.delete();
+    }
+
+    private void removeChildValuesByQuestionRecursive(Question question){
+        List<Question> questionsChildren=question.getChildren();
+        List <Value> values= getValuesFromDB();
+        for (int i=values.size()-1;i>0;i--) {
+            if(questionsChildren.contains(values.get(i).getQuestion())){
+                removeValue(values.get(i));
+                if(values.get(i).getQuestion().hasChildren()){
+                    removeChildValuesByQuestionRecursive(values.get(i).getQuestion());
+                }
+            }
+        }
     }
 }

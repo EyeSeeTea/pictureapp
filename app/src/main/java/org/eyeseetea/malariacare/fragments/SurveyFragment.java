@@ -145,7 +145,9 @@ public class SurveyFragment extends Fragment{
 
     @Override
     public void onPause(){
-        beforeExit();
+        Log.d(TAG, "onPause");
+        if(!DashboardActivity.dashboardActivity.isLoadingReview())
+            beforeExit();
         super.onPause();
     }
 

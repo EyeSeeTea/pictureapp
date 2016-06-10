@@ -1,15 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1.1">
-        <ImageView
+    android:weightSum="1.2">
+        <org.eyeseetea.malariacare.views.TextCard
             android:layout_width="match_parent"
             android:layout_height="0px"
-            android:scaleType="centerInside"
+            android:layout_weight="0.1"
+            android:text="@string/review_title"
+            android:id="@+id/review_title"
+            android:textColor="@color/black"
+            android:textSize="24sp"
             android:background="@color/white"
-            android:src="@drawable/review_header_text"
-            android:layout_weight="0.1" />
+            android:paddingLeft="10dip"
+            android:gravity="center"
+            app:tDimension="@string/font_size_level1"
+            app:tFontName="@string/condensed_font_name"/>
+        <org.eyeseetea.malariacare.views.TextCard
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="0.1"
+            android:text="@string/review_subtitle"
+            android:id="@+id/answer_subtitle"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:background="@color/white"
+            android:paddingLeft="10dip"
+            android:gravity="center"
+            app:tDimension="@string/font_size_level1"
+            app:tFontName="@string/condensed_font_name"/>
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="0px"

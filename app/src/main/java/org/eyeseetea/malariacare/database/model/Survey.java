@@ -637,18 +637,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      * @return true|false
      */
     public boolean isRDT(){
-        if(values==null){
-            values=Value.listAllBySurvey(this);
-        }
-
-        Boolean hasValues = !(values==null || values.isEmpty());
-        if(hasValues){
-            Value rdtValue=values.get(0);
-            return rdtValue.isAPositive();
-        }
-
-        return true;
-
+        return getRDT().equals(PreferencesState.getInstance().getContext().getResources().getString(R.string.rdtPositive));
     }
 
     /**

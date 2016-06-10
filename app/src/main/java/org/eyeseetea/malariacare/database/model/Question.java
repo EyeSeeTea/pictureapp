@@ -102,6 +102,10 @@ public class Question extends BaseModel {
     @Column
     Long id_composite_score;
 
+
+    @Column
+    Integer total_questions;
+
     /**
      * Reference to associated compositeScore for this question (loaded lazily)
      */
@@ -802,6 +806,8 @@ public class Question extends BaseModel {
             return false;
         if (id_parent != null ? !id_parent.equals(question.id_parent) : question.id_parent != null)
             return false;
+        if (total_questions != null ? !total_questions.equals(question.total_questions) : question.total_questions != null)
+            return false;
         return !(id_composite_score != null ? !id_composite_score.equals(question.id_composite_score) : question.id_composite_score != null);
 
     }
@@ -823,6 +829,7 @@ public class Question extends BaseModel {
         result = 31 * result + (output != null ? output.hashCode() : 0);
         result = 31 * result + (id_parent != null ? id_parent.hashCode() : 0);
         result = 31 * result + (id_composite_score != null ? id_composite_score.hashCode() : 0);
+        result = 31 * result + (total_questions != null ? total_questions.hashCode() : 0);
         return result;
     }
 
@@ -844,6 +851,7 @@ public class Question extends BaseModel {
                 ", output=" + output +
                 ", id_parent=" + id_parent +
                 ", id_composite_score=" + id_composite_score +
+                ", total_questions=" + total_questions +
                 '}';
     }
 
@@ -1065,6 +1073,14 @@ public class Question extends BaseModel {
             this.sibling=buildNullQuestion();
         }
         return this.sibling;
+    }
+
+    public Integer getTotalQuestions() {
+        return total_questions;
+    }
+
+    public void setTotalQuestions(Integer total_questions) {
+        this.total_questions = total_questions;
     }
 
 

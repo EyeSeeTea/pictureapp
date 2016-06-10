@@ -162,8 +162,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 Option selectedOption=(Option)view.getTag();
                 Question question=navigationController.getCurrentQuestion();
+                //Uncomment to read in the console the workflow values on saveValue
+                //Note: it is commented becouse showValues needs a sql query and make the application more slowy.
+                //Log.d(TAG, Session.getSurvey().showValues());
                 ReadWriteDB.saveValuesDDL(question, selectedOption);
-
+                //Log.d(TAG, Session.getSurvey().showValues());
                 ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
                 for (int rowPos = 0; rowPos < vgTable.getChildCount(); rowPos++) {
                     ViewGroup vgRow = (ViewGroup) vgTable.getChildAt(rowPos);

@@ -632,7 +632,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
 
         Boolean hasValues = !(values==null || values.isEmpty());
         if(hasValues){
-            Value rdtValue=values.get(0);
+            Value rdtValue=values.getRDT();
             return rdtValue.isAPositive();
         }
 

@@ -780,6 +780,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * Back to initial question to review questions
+     */
+    private void comeFromReview(){
+        navigationController.last();
+        notifyDataSetChanged();
+    }
     public class OnSwipeTouchListener implements View.OnTouchListener {
 
         /**

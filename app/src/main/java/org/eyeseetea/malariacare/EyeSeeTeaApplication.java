@@ -29,6 +29,7 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.index.Index;
 
 import org.eyeseetea.malariacare.database.migrations.Migration2Database;
+import org.eyeseetea.malariacare.database.migrations.Migration3AddQuestionColumn;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Match$Table;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
@@ -66,6 +67,7 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         FlowManager.init(this, "_EyeSeeTeaDB");
         createDBIndexes();
         Migration2Database.postMigrate();
+        Migration3AddQuestionColumn.postMigrate();
     }
 
     private void createDBIndexes(){

@@ -139,6 +139,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.navigationController = initNavigationController(tab);
         this.readOnly = Session.getSurvey() != null && !Session.getSurvey().isInProgress();
         this.isSwipeAdded=false;
+        navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());
     }
 
     private NavigationController initNavigationController(Tab tab) {

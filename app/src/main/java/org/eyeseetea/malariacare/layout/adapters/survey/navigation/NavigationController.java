@@ -31,6 +31,11 @@ public class NavigationController {
      */
     private int currentPosition;
 
+    /**
+     * Current total of questions in the list of questions
+     */
+    private int currentTotal;
+
     public NavigationController(QuestionNode rootNode){
         this.rootNode = rootNode;
         this.visited=new ArrayList<>();
@@ -41,9 +46,12 @@ public class NavigationController {
         return this.currentPosition==0;
     }
 
+    public void setTotalPages(int total){
+        currentTotal=total;
+    }
+
     public int getTotalPages(){
-        //FIXME: This is hard to calculate since now depends on children questions
-        return 9;
+        return currentTotal;
     }
 
     public int getCurrentPage(){

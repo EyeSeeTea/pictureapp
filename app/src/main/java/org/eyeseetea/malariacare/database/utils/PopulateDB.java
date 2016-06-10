@@ -181,6 +181,7 @@ public class PopulateDB {
                         if (!line[11].equals(""))
                             question.setQuestion(questionList.get(Integer.valueOf(line[11])));
                         question.setOutput(Integer.valueOf(line[12]));
+                        question.setTotalQuestions(Integer.valueOf(line[13]));
                         question.save();
                         questionList.put(Integer.valueOf(line[0]), question);
                         break;
@@ -268,5 +269,21 @@ public class PopulateDB {
                 FailedItem.class
         );
         DateTimeManager.getInstance().delete();
+    }
+
+    public static void addTotalQuestions(AssetManager assetManager, List<Question> questions) throws IOException {
+        //Reset inner references
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)), SEPARATOR, QUOTECHAR);
+
+        String[] line;
+        while ((line = reader.readNext()) != null) {
+            for (Question question : questions) {
+                if (question.getUid().equals(line[5])) {
+                    question.setTotalQuestions(Integer.valueOf(line[13]));
+                    question.save();
+                }
+            }
+        }
+        reader.close();
     }
 }

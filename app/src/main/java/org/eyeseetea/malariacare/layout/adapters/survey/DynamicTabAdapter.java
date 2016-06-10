@@ -139,6 +139,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.navigationController = initNavigationController(tab);
         this.readOnly = Session.getSurvey() != null && !Session.getSurvey().isInProgress();
         this.isSwipeAdded=false;
+        navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());
     }
 
     private NavigationController initNavigationController(Tab tab) {
@@ -162,11 +163,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 Option selectedOption=(Option)view.getTag();
                 Question question=navigationController.getCurrentQuestion();
-                //Uncomment to read in the console the workflow values on saveValue
-                //Note: it is commented becouse printValues needs a sql query and make the application more slowy.
-                //Log.d(TAG, Session.getSurvey().printValues());
-                ReadWriteDB.saveValuesDDL(question, selectedOption);
-                //Log.d(TAG, Session.getSurvey().printValues());
+
+
+                Value value = question.getValueBySession();
+                //set new totalpages if the value is not null and the value change
+                if(value!=null)
+                    navigationController.setTotalPages(question.getTotalQuestions());
+                ReadWriteDB.saveValuesDDL(question, selectedOption, value);
+
                 ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
                 for (int rowPos = 0; rowPos < vgTable.getChildCount(); rowPos++) {
                     ViewGroup vgRow = (ViewGroup) vgTable.getChildAt(rowPos);
@@ -759,6 +763,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         navigationController.next(value!=null?value.getOption():null);
         notifyDataSetChanged();
         hideKeyboard(PreferencesState.getInstance().getContext());
+
+        question = navigationController.getCurrentQuestion();
+        value = question.getValueBySession();
+        //set new page number if the value is null
+        if(value==null)
+            navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());
     }
 
     /**

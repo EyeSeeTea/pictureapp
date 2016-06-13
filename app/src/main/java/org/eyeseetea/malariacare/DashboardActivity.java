@@ -323,7 +323,7 @@ public class DashboardActivity extends BaseActivity {
      */
     private void onSurveyBackPressed() {
         Log.d(TAG, "onBackPressed");
-        final Survey survey=Session.getSurvey();
+        Survey survey=Session.getSurvey();
         if(!survey.isSent()) {
             int infoMessage = survey.isInProgress() ? R.string.survey_info_exit_delete : R.string.survey_info_exit;
             new AlertDialog.Builder(this)
@@ -339,7 +339,6 @@ public class DashboardActivity extends BaseActivity {
                     }).create().show();
         }else{
             //Reload data using service
-            isBackPressed=true;
             closeSurveyFragment();
         }
     }

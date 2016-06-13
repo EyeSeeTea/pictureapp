@@ -324,29 +324,43 @@ public class DashboardActivity extends BaseActivity {
     private void onSurveyBackPressed() {
         Log.d(TAG, "onBackPressed");
         final Survey survey=Session.getSurvey();
-        int infoMessage=survey.isInProgress()?R.string.survey_info_exit_delete:R.string.survey_info_exit;
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.survey_info_exit)
-                .setMessage(infoMessage)
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int arg1) {
-                        //Reload data using service
-                        isBackPressed=true;
-                        closeSurveyFragment();
-                    }
-                }).create().show();
+        if(!survey.isSent()) {
+            int infoMessage = survey.isInProgress() ? R.string.survey_info_exit_delete : R.string.survey_info_exit;
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.survey_info_exit)
+                    .setMessage(infoMessage)
+                    .setNegativeButton(android.R.string.no, null)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int arg1) {
+                            //Reload data using service
+                            isBackPressed = true;
+                            closeSurveyFragment();
+                        }
+                    }).create().show();
+        }else{
+            //Reload data using service
+            isBackPressed=true;
+            closeSurveyFragment();
+        }
     }
 
     public void closeSurveyFragment(){
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         ScoreRegister.clear();
+        boolean isSent=false;
         if(isBackPressed){
+            isSent=Session.getSurvey().isSent();
             beforeExit();
         }
         surveyFragment.unregisterReceiver();
-        initAssess();
-        unsentFragment.reloadData();
+        if(isSent){
+            tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
+            initAssess();
+        }
+        else{
+            initAssess();
+            unsentFragment.reloadData();
+        }
     }
 
     public void beforeExit(){

@@ -347,15 +347,15 @@ public class DashboardActivity extends BaseActivity {
     public void closeSurveyFragment(){
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         ScoreRegister.clear();
-        boolean isSent=Session.getSurvey().isSent();
+        boolean isSent=false;
         if(isBackPressed){
+            isSent=Session.getSurvey().isSent();
             beforeExit();
         }
         surveyFragment.unregisterReceiver();
         if(isSent){
             tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
             initAssess();
-            initImprove();
         }
         else{
             initAssess();

@@ -124,7 +124,6 @@ public class SurveyFragment extends Fragment{
         }
         llLayout = (RelativeLayout) inflater.inflate(R.layout.survey, container, false);
         registerReceiver();
-        registerReceiver();
         createProgress();
         return llLayout;
     }
@@ -139,6 +138,9 @@ public class SurveyFragment extends Fragment{
         Log.d(TAG, "onResume");
         super.onResume();
 
+        if(Session.getSurvey()!=null){
+            Session.getSurvey().getValuesFromDB();
+        }
         prepareSurveyInfo();
         //this.tabAdapter.notifyDataSetChanged();
     }

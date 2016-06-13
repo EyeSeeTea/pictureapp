@@ -440,16 +440,10 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     private SurveyAnsweredRatio reloadSurveyAnsweredRatio(){
 
         SurveyAnsweredRatio surveyAnsweredRatio;
-        //Negative or Not Tested
-        if(!this.isRDT()){
-            surveyAnsweredRatio = new SurveyAnsweredRatio(1,1);
-        }else{
-            //Positive
-            int numRequired = Question.countRequiredByProgram(this.getTabGroup());
-            int numOptional = (int)countNumOptionalQuestionsToAnswer();
-            int numAnswered = Value.countBySurvey(this);
-            surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired+numOptional, numAnswered);
-        }
+        int numRequired = Question.countRequiredByProgram(this.getTabGroup());
+        int numOptional = (int)countNumOptionalQuestionsToAnswer();
+        int numAnswered = Value.countBySurvey(this);
+        surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired+numOptional, numAnswered);
 
         SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);
         return surveyAnsweredRatio;

@@ -620,9 +620,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      */
     public static List<Survey> getAllUncompletedSurveys() {
         return new Select().from(Survey.class)
-                .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
-                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_HIDE))
-                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_COMPLETED))
+                .where(Condition.column(Survey$Table.STATUS).is(Constants.SURVEY_IN_PROGRESS))
                 .orderBy(Survey$Table.EVENTDATE)
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }

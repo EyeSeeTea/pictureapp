@@ -367,7 +367,7 @@ public class DashboardActivity extends BaseActivity {
         Survey survey=Session.getSurvey();
         if(survey!=null) {
             boolean isInProgress = survey.isInProgress();
-
+            survey.getValuesFromDB();
             //Exit + InProgress -> delete
             if (isBackPressed && isInProgress) {
                 survey.delete();

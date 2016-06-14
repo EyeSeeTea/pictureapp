@@ -285,6 +285,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rowView.getLayoutParams().height=parent.getHeight();
         rowView.requestLayout();
         Question question=(Question)this.getItem(position);
+        // We get values from DB and put them in Session
+        if(Session.getSurvey()!=null)
+            Session.getSurvey().getValuesFromDB();
+        // Se get the value from Session
         Value value=question.getValueBySession();
 
         //Question

@@ -456,17 +456,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    String positiveIntValue = String.valueOf(numberPicker.getText());
-
-                    //Required, empty values rejected
-                    if(checkEditTextNotNull(positiveIntValue)){
-                        numberPicker.setError(context.getString(R.string.dynamic_error_age));
-                        return;
-                    }
-                    Question question = navigationController.getCurrentQuestion();
-                    ReadWriteDB.saveValuesText(question, positiveIntValue);
-                    finishOrNext();
+                    savePositiveIntValue(numberPicker);
                 }
             });
 
@@ -480,6 +470,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Take focus and open keyboard
         openKeyboard(numberPicker);
+    }
+
+    private void savePositiveIntValue(EditText numberPicker) {
+        String positiveIntValue = String.valueOf(numberPicker.getText());
+
+        //Required, empty values rejected
+        if(checkEditTextNotNull(positiveIntValue)){
+            numberPicker.setError(context.getString(R.string.dynamic_error_age));
+            return;
+        }
+        Question question = navigationController.getCurrentQuestion();
+        ReadWriteDB.saveValuesText(question, positiveIntValue);
+        finishOrNext();
     }
 
     /**
@@ -509,6 +512,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         if (checkPhoneNumberByMask(phoneValue)) {
                             editText.setText(formatPhoneNumber(phoneValue));
                         }
+                        savePhoneValue(editText);
                     }
                     return false;
                 }
@@ -520,19 +524,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 public void onClick(View v) {
                     View parentView = (View) v.getParent();
                     EditText editText = (EditText) parentView.findViewById(R.id.dynamic_phone_edit);
-                    String phoneValue = editText.getText().toString();
-
-                    //Check phone ok
-                    if(!checkPhoneNumberByMask(phoneValue)){
-                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
-                        return;
-                    }
-
-                    //Hide keypad
-                    hideKeyboard(ctx, v);
-                    Question question = navigationController.getCurrentQuestion();
-                    ReadWriteDB.saveValuesText(question, phoneValue);
-                    finishOrNext();
+                    savePhoneValue(editText);
                 }
             });
         }else{
@@ -547,6 +539,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         openKeyboard(editText);
     }
 
+    private void savePhoneValue(EditText editText) {
+
+        String phoneValue = editText.getText().toString();
+        //Check phone ok
+        if(!checkPhoneNumberByMask(phoneValue)){
+            editText.setError(context.getString(R.string.dynamic_error_phone_format));
+            return;
+        }
+        String value=editText.getText().toString();
+        //Hide keypad
+        hideKeyboard(PreferencesState.getInstance().getContext());
+        editText.setText(value);
+        Question question = navigationController.getCurrentQuestion();
+        ReadWriteDB.saveValuesText(question, phoneValue);
+        finishOrNext();
+    }
+
     private void openKeyboard(final EditText editText){
         if(!readOnly) {
             editText.requestFocus();
@@ -557,6 +566,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     showKeyboard(context, editText);
                 }
             }, 300);
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        if(v.getId()==R.id.dynamic_positiveInt_edit)
+                            savePositiveIntValue((EditText) v);
+                        else if(v.getId()==R.id.dynamic_phone_edit)
+                            savePhoneValue((EditText)v);
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            });
         }
     }
 

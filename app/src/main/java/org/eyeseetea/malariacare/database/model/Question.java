@@ -106,6 +106,18 @@ public class Question extends BaseModel {
     @Column
     Integer total_questions;
 
+    @Column
+    Integer visible;
+
+
+    /**
+     * Constant that reflects a visible question in information
+     */
+    public static final int QUESTION_VISIBLE=1;
+    /**
+     * Constant that reflects a not visible question in information
+     */
+    public static final int QUESTION_INVISIBLE=0;
     /**
      * Reference to associated compositeScore for this question (loaded lazily)
      */
@@ -808,6 +820,8 @@ public class Question extends BaseModel {
             return false;
         if (total_questions != null ? !total_questions.equals(question.total_questions) : question.total_questions != null)
             return false;
+        if (visible != null ? !visible.equals(question.visible) : question.visible != null)
+            return false;
         return !(id_composite_score != null ? !id_composite_score.equals(question.id_composite_score) : question.id_composite_score != null);
 
     }
@@ -829,6 +843,7 @@ public class Question extends BaseModel {
         result = 31 * result + (output != null ? output.hashCode() : 0);
         result = 31 * result + (id_parent != null ? id_parent.hashCode() : 0);
         result = 31 * result + (id_composite_score != null ? id_composite_score.hashCode() : 0);
+        result = 31 * result + (visible != null ? visible.hashCode() : 0);
         result = 31 * result + (total_questions != null ? total_questions.hashCode() : 0);
         return result;
     }
@@ -852,6 +867,7 @@ public class Question extends BaseModel {
                 ", id_parent=" + id_parent +
                 ", id_composite_score=" + id_composite_score +
                 ", total_questions=" + total_questions +
+                ", visible=" + visible +
                 '}';
     }
 
@@ -1087,6 +1103,13 @@ public class Question extends BaseModel {
         return new Select().all().from(Question.class).queryList();
     }
 
+    public Boolean isVisible() {
+        return (this.visible==QUESTION_VISIBLE);
+    }
+
+    public void setVisible(Integer visible) {
+        this.visible = visible;
+    }
 
     private static class QuestionOrderComparator implements Comparator {
 

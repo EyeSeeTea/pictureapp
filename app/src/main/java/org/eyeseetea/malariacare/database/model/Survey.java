@@ -441,16 +441,10 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     private SurveyAnsweredRatio reloadSurveyAnsweredRatio(){
 
         SurveyAnsweredRatio surveyAnsweredRatio;
-        //Negative or Not Tested
-        if(!this.isRDT()){
-            surveyAnsweredRatio = new SurveyAnsweredRatio(1,1);
-        }else{
-            //Positive
-            int numRequired = Question.countRequiredByProgram(this.getTabGroup());
-            int numOptional = (int)countNumOptionalQuestionsToAnswer();
-            int numAnswered = Value.countBySurvey(this);
-            surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired+numOptional, numAnswered);
-        }
+        int numRequired = Question.countRequiredByProgram(this.getTabGroup());
+        int numOptional = (int)countNumOptionalQuestionsToAnswer();
+        int numAnswered = Value.countBySurvey(this);
+        surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired+numOptional, numAnswered);
 
         SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);
         return surveyAnsweredRatio;
@@ -626,9 +620,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      */
     public static List<Survey> getAllUncompletedSurveys() {
         return new Select().from(Survey.class)
-                .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
-                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_HIDE))
-                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_COMPLETED))
+                .where(Condition.column(Survey$Table.STATUS).is(Constants.SURVEY_IN_PROGRESS))
                 .orderBy(Survey$Table.EVENTDATE)
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }

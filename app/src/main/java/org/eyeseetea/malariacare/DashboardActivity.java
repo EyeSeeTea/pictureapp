@@ -78,6 +78,10 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+
+        AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
+        asyncPopulateDB.execute((Void) null);
+
         createActionBar();
         dashboardActivity=this;
         setContentView(R.layout.tab_dashboard);
@@ -251,9 +255,6 @@ public class DashboardActivity extends BaseActivity {
     public void onResume(){
         Log.d(TAG, "onResume");
         super.onResume();
-        AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
-        asyncPopulateDB.execute((Void) null);
-        Survey.removeInProgress();
     }
 
     @Override
@@ -323,7 +324,7 @@ public class DashboardActivity extends BaseActivity {
      */
     private void onSurveyBackPressed() {
         Log.d(TAG, "onBackPressed");
-        final Survey survey=Session.getSurvey();
+        Survey survey=Session.getSurvey();
         if(!survey.isSent()) {
             int infoMessage = survey.isInProgress() ? R.string.survey_info_exit_delete : R.string.survey_info_exit;
             new AlertDialog.Builder(this)
@@ -339,7 +340,6 @@ public class DashboardActivity extends BaseActivity {
                     }).create().show();
         }else{
             //Reload data using service
-            isBackPressed=true;
             closeSurveyFragment();
         }
     }
@@ -367,7 +367,7 @@ public class DashboardActivity extends BaseActivity {
         Survey survey=Session.getSurvey();
         if(survey!=null) {
             boolean isInProgress = survey.isInProgress();
-
+            survey.getValuesFromDB();
             //Exit + InProgress -> delete
             if (isBackPressed && isInProgress) {
                 survey.delete();

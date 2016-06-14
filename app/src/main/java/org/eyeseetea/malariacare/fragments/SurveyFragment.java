@@ -113,7 +113,7 @@ public class SurveyFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState){
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-
+        prepareSurveyInfo();
     }
 
     @Override
@@ -123,7 +123,6 @@ public class SurveyFragment extends Fragment{
             return null;
         }
         llLayout = (RelativeLayout) inflater.inflate(R.layout.survey, container, false);
-        registerReceiver();
         registerReceiver();
         createProgress();
         return llLayout;
@@ -138,9 +137,6 @@ public class SurveyFragment extends Fragment{
     public void onResume(){
         Log.d(TAG, "onResume");
         super.onResume();
-
-        prepareSurveyInfo();
-        //this.tabAdapter.notifyDataSetChanged();
     }
 
     @Override

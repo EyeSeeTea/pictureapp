@@ -139,12 +139,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.navigationController = initNavigationController(tab);
         this.readOnly = Session.getSurvey() != null && !Session.getSurvey().isInProgress();
         this.isSwipeAdded=false;
+        //On create dynamictabadapter, if is not readonly and has value not null it should come from reviewFragment
+        if(!readOnly){
+            Question question=navigationController.getCurrentQuestion();
+            Value value = question.getValueBySession();
+            if(value!=null) {
+                comeFromReview();
+            }
+        }
+
         int totalPages=navigationController.getCurrentQuestion().getTotalQuestions();
         if(readOnly){
             if(Session.getSurvey()!=null){
                 Question lastQuestion=Session.getSurvey().findLastSavedQuestion();
                 if(lastQuestion!=null){
-                        totalPages=lastQuestion.getTotalQuestions();
+                    totalPages=lastQuestion.getTotalQuestions();
                 }
             }
         }
@@ -831,12 +840,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Back to initial question to review questions
+     * Go to the last question
      */
     private void comeFromReview(){
-        navigationController.last();
+        navigationController.first();
+        Value value=null;
+        do {
+            next();
+            Question question = navigationController.getCurrentQuestion();
+            value = question.getValueBySession();
+        }while(value!=null && !isDone(value));
         notifyDataSetChanged();
     }
+
     public class OnSwipeTouchListener implements View.OnTouchListener {
 
         /**

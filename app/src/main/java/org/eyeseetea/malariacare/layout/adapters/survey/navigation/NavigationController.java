@@ -5,7 +5,6 @@ import android.util.Log;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -191,14 +190,6 @@ public class NavigationController {
      */
     public void first(){
         currentPosition=-1;
-        visited.clear();
-        next(null);
-    }
-    /**
-     * Moves state back to last question
-     */
-    public void last(){
-        currentPosition= Session.getSurvey().getValues().size()-1;
         visited.clear();
         next(null);
     }

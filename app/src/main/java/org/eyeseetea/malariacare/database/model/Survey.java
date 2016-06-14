@@ -917,4 +917,12 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 '}';
     }
 
+    public Question findLastSavedQuestion() {
+        List<Value> values=getValuesFromDB();
+        for(Value value:values){
+            if(value.getQuestion()!=null && !value.getQuestion().hasChildren())
+                return value.getQuestion();
+        }
+        return null;
+    }
 }

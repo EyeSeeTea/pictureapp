@@ -72,8 +72,7 @@ public class ReviewFragment extends Fragment {
      */
     private void initValues(View view) {
         Survey survey= Session.getSurvey();
-        //Fixme need be changed to survey.getValuesFromDB();
-        List<Value> values = survey.getValues();
+        List<Value> values = survey.getValuesFromDB();
         LinearLayout linearLayout=(LinearLayout)view.findViewById(R.id.options_review_table);
         for(Value value:values) {
             drawValue(linearLayout, value);

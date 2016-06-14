@@ -139,7 +139,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.navigationController = initNavigationController(tab);
         this.readOnly = Session.getSurvey() != null && !Session.getSurvey().isInProgress();
         this.isSwipeAdded=false;
-        navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());
+        int totalPages=navigationController.getCurrentQuestion().getTotalQuestions();
+        if(readOnly){
+            if(Session.getSurvey()!=null){
+                Question lastQuestion=Session.getSurvey().findLastSavedQuestion();
+                if(lastQuestion!=null){
+                        totalPages=lastQuestion.getTotalQuestions();
+                }
+            }
+        }
+        navigationController.setTotalPages(totalPages);
     }
 
     private NavigationController initNavigationController(Tab tab) {
@@ -167,7 +176,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 Value value = question.getValueBySession();
                 //set new totalpages if the value is not null and the value change
-                if(value!=null)
+                if(value!=null && !readOnly)
                     navigationController.setTotalPages(question.getTotalQuestions());
                 ReadWriteDB.saveValuesDDL(question, selectedOption, value);
 
@@ -791,7 +800,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         question = navigationController.getCurrentQuestion();
         value = question.getValueBySession();
         //set new page number if the value is null
-        if(value==null)
+        if(value==null  && !readOnly)
             navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());
     }
 

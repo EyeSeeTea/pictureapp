@@ -770,19 +770,14 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         String valuesStr="";
 
         //Define a filter to select which values will be turned into string by code_question
-        List<String> codeQuestionFilter = new ArrayList<String>() {{
-            add(PreferencesState.getInstance().getContext().getResources().getString(R.string.Specie_code));
-            add(PreferencesState.getInstance().getContext().getResources().getString(R.string.Gender_code));
-            add(PreferencesState.getInstance().getContext().getResources().getString(R.string.Age_code));
-            add(PreferencesState.getInstance().getContext().getResources().getString(R.string.Reason_code));
-            add(PreferencesState.getInstance().getContext().getResources().getString(R.string.Treatment_code));
-            add(PreferencesState.getInstance().getContext().getResources().getString(R.string.DHAPIP_code));
-            add(PreferencesState.getInstance().getContext().getResources().getString(R.string.ASMQ_code));
-            add(PreferencesState.getInstance().getContext().getResources().getString(R.string.Referral_code));
-            add(PreferencesState.getInstance().getContext().getResources().getString(R.string.Classification_code));
-            add(PreferencesState.getInstance().getContext().getResources().getString(R.string.Occupation_code));
-            add(PreferencesState.getInstance().getContext().getResources().getString(R.string.Phone_code));
-        }};
+        List<Question> questions=Question.getAllQuestions();
+        List<String> codeQuestionFilter = new ArrayList<String>();
+
+        for(Question question:questions){
+            if(question.isVisible()){
+                codeQuestionFilter.add(question.getCode());
+            }
+        }
 
         Map map = new HashMap();
         while(iterator.hasNext()){

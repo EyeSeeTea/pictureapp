@@ -391,6 +391,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void closeReviewFragment(){
+        tabHost.getTabWidget().setVisibility(View.VISIBLE);
         isLoadingReview=false;
         initAssess();
         unsentFragment.reloadData();

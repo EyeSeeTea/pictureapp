@@ -64,12 +64,12 @@
                         android:id="@+id/dashboard_details_container">
                         <TableLayout
                             android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:id="@+id/dashboard_details_table">
 
                             <ListView
                                 android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:id="@+id/dashboard_details_list"/>
 
                         </TableLayout>

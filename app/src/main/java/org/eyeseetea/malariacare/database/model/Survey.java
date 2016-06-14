@@ -33,6 +33,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -377,6 +378,17 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     }
 
     /**
+     * Returns the list of answered values from this survey
+     * @return
+     */
+    public List<Value> getValuesFromDB(){
+        values = new Select()
+                .from(Value.class)
+                .where(Condition.column(Value$Table.ID_SURVEY)
+                        .eq(this.getId_survey())).queryList();
+        return values;
+    }
+    /**
      * Returns the list of previous schedules for this survey
      * @return
      */
@@ -429,16 +441,10 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     private SurveyAnsweredRatio reloadSurveyAnsweredRatio(){
 
         SurveyAnsweredRatio surveyAnsweredRatio;
-        //Negative or Not Tested
-        if(!this.isRDT()){
-            surveyAnsweredRatio = new SurveyAnsweredRatio(1,1);
-        }else{
-            //Positive
-            int numRequired = Question.countRequiredByProgram(this.getTabGroup());
-            int numOptional = (int)countNumOptionalQuestionsToAnswer();
-            int numAnswered = Value.countBySurvey(this);
-            surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired+numOptional, numAnswered);
-        }
+        int numRequired = Question.countRequiredByProgram(this.getTabGroup());
+        int numOptional = (int)countNumOptionalQuestionsToAnswer();
+        int numAnswered = Value.countBySurvey(this);
+        surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired+numOptional, numAnswered);
 
         SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);
         return surveyAnsweredRatio;
@@ -614,9 +620,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      */
     public static List<Survey> getAllUncompletedSurveys() {
         return new Select().from(Survey.class)
-                .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
-                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_HIDE))
-                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_COMPLETED))
+                .where(Condition.column(Survey$Table.STATUS).is(Constants.SURVEY_IN_PROGRESS))
                 .orderBy(Survey$Table.EVENTDATE)
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }
@@ -626,18 +630,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      * @return true|false
      */
     public boolean isRDT(){
-        if(values==null){
-            values=Value.listAllBySurvey(this);
-        }
-
-        Boolean hasValues = !(values==null || values.isEmpty());
-        if(hasValues){
-            Value rdtValue=values.getRDT();
-            return rdtValue.isAPositive();
-        }
-
-        return true;
-
+        return getRDT().equals(PreferencesState.getInstance().getContext().getResources().getString(R.string.rdtPositive));
     }
 
     /**
@@ -815,6 +808,8 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                     }
                 }
             }
+        if(valuesStr.endsWith(", "))
+            valuesStr=valuesStr.substring(0,valuesStr.lastIndexOf(", "));
         return valuesStr;
     }
 
@@ -828,6 +823,38 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         return new Select().from(Survey.class)
                 .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
                 .and(Condition.column(Survey$Table.EVENTDATE).greaterThanOrEq(minDateForMonitor)).queryList();
+    }
+
+
+    public String printValues() {
+        String valuesString = "Survey values: ";
+        if(getValuesFromDB()!=null)
+            for(Value value:values){
+                valuesString += "Value: " + value.getValue();
+                if(value.getOption()!=null)
+                    valuesString+= " Option: " + value.getOption().getName();
+                if(value.getQuestion()!=null)
+                    valuesString+=" Question: " + value.getQuestion().getDe_name() + "\n";
+            }
+        return valuesString;
+    }
+
+    public void removeChildrenValuesFromQuestionRecursively(Question question) {
+        List<Value> values= getValuesFromDB();
+        List<Question> questionChildren=question.getChildren();
+        for (int i=values.size()-1;i>0;i--) {
+            if(questionChildren.contains(values.get(i).getQuestion())){
+                removeValue(values.get(i));
+                for(Question child: questionChildren) {
+                    removeChildrenValuesFromQuestionRecursively(child);
+                }
+            }
+        }
+
+    }
+
+    private static void removeValue(Value value) {
+        value.delete();
     }
 
     @Override
@@ -890,4 +917,12 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 '}';
     }
 
+    public Question findLastSavedQuestion() {
+        List<Value> values=getValuesFromDB();
+        for(Value value:values){
+            if(value.getQuestion()!=null && !value.getQuestion().hasChildren())
+                return value.getQuestion();
+        }
+        return null;
+    }
 }

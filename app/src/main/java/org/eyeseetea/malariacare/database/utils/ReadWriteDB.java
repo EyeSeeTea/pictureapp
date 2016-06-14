@@ -21,6 +21,7 @@ package org.eyeseetea.malariacare.database.utils;
 
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -67,14 +68,16 @@ public class ReadWriteDB {
         return option;
     }
 
-    public static void saveValuesDDL(Question question, Option option) {
-
-        Value value = question.getValueBySession();
+    public static void saveValuesDDL(Question question, Option option, Value value) {
 
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
             if (value == null) {
                 value = new Value(option, question, Session.getSurvey());
             } else {
+                if(!value.getOption().equals(option) && question.hasChildren()) {
+                    Survey survey = Session.getSurvey();
+                    survey.removeChildrenValuesFromQuestionRecursively(question);
+                }
                 value.setOption(option);
                 value.setValue(option.getName());
             }

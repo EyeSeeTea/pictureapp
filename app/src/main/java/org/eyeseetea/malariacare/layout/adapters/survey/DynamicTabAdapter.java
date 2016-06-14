@@ -139,6 +139,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.navigationController = initNavigationController(tab);
         this.readOnly = Session.getSurvey() != null && !Session.getSurvey().isInProgress();
         this.isSwipeAdded=false;
+        int totalPages=navigationController.getCurrentQuestion().getTotalQuestions();
+        if(readOnly){
+            if(Session.getSurvey()!=null){
+                Question lastQuestion=Session.getSurvey().findLastSavedQuestion();
+                if(lastQuestion!=null){
+                        totalPages=lastQuestion.getTotalQuestions();
+                }
+            }
+        }
+        navigationController.setTotalPages(totalPages);
     }
 
     private NavigationController initNavigationController(Tab tab) {
@@ -162,7 +172,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 Option selectedOption=(Option)view.getTag();
                 Question question=navigationController.getCurrentQuestion();
-                ReadWriteDB.saveValuesDDL(question, selectedOption);
+
+
+                Value value = question.getValueBySession();
+                //set new totalpages if the value is not null and the value change
+                if(value!=null && !readOnly)
+                    navigationController.setTotalPages(question.getTotalQuestions());
+                ReadWriteDB.saveValuesDDL(question, selectedOption, value);
 
                 ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
                 for (int rowPos = 0; rowPos < vgTable.getChildCount(); rowPos++) {
@@ -269,6 +285,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rowView.getLayoutParams().height=parent.getHeight();
         rowView.requestLayout();
         Question question=(Question)this.getItem(position);
+        // We get values from DB and put them in Session
+        if(Session.getSurvey()!=null)
+            Session.getSurvey().getValuesFromDB();
+        // Se get the value from Session
         Value value=question.getValueBySession();
 
         //Question
@@ -440,17 +460,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    String positiveIntValue = String.valueOf(numberPicker.getText());
-
-                    //Required, empty values rejected
-                    if(checkEditTextNotNull(positiveIntValue)){
-                        numberPicker.setError(context.getString(R.string.dynamic_error_age));
-                        return;
-                    }
-                    Question question = navigationController.getCurrentQuestion();
-                    ReadWriteDB.saveValuesText(question, positiveIntValue);
-                    finishOrNext();
+                    savePositiveIntValue(numberPicker);
                 }
             });
 
@@ -464,6 +474,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Take focus and open keyboard
         openKeyboard(numberPicker);
+    }
+
+    private void savePositiveIntValue(EditText numberPicker) {
+        String positiveIntValue = String.valueOf(numberPicker.getText());
+
+        //Required, empty values rejected
+        if(checkEditTextNotNull(positiveIntValue)){
+            numberPicker.setError(context.getString(R.string.dynamic_error_age));
+            return;
+        }
+        Question question = navigationController.getCurrentQuestion();
+        ReadWriteDB.saveValuesText(question, positiveIntValue);
+        finishOrNext();
     }
 
     /**
@@ -493,6 +516,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         if (checkPhoneNumberByMask(phoneValue)) {
                             editText.setText(formatPhoneNumber(phoneValue));
                         }
+                        savePhoneValue(editText);
                     }
                     return false;
                 }
@@ -504,19 +528,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 public void onClick(View v) {
                     View parentView = (View) v.getParent();
                     EditText editText = (EditText) parentView.findViewById(R.id.dynamic_phone_edit);
-                    String phoneValue = editText.getText().toString();
-
-                    //Check phone ok
-                    if(!checkPhoneNumberByMask(phoneValue)){
-                        editText.setError(context.getString(R.string.dynamic_error_phone_format));
-                        return;
-                    }
-
-                    //Hide keypad
-                    hideKeyboard(ctx, v);
-                    Question question = navigationController.getCurrentQuestion();
-                    ReadWriteDB.saveValuesText(question, phoneValue);
-                    finishOrNext();
+                    savePhoneValue(editText);
                 }
             });
         }else{
@@ -531,6 +543,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         openKeyboard(editText);
     }
 
+    private void savePhoneValue(EditText editText) {
+
+        String phoneValue = editText.getText().toString();
+        //Check phone ok
+        if(!checkPhoneNumberByMask(phoneValue)){
+            editText.setError(context.getString(R.string.dynamic_error_phone_format));
+            return;
+        }
+        String value=editText.getText().toString();
+        //Hide keypad
+        hideKeyboard(PreferencesState.getInstance().getContext());
+        editText.setText(value);
+        Question question = navigationController.getCurrentQuestion();
+        ReadWriteDB.saveValuesText(question, phoneValue);
+        finishOrNext();
+    }
+
     private void openKeyboard(final EditText editText){
         if(!readOnly) {
             editText.requestFocus();
@@ -541,6 +570,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     showKeyboard(context, editText);
                 }
             }, 300);
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        if(v.getId()==R.id.dynamic_positiveInt_edit)
+                            savePositiveIntValue((EditText) v);
+                        else if(v.getId()==R.id.dynamic_phone_edit)
+                            savePhoneValue((EditText)v);
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            });
         }
     }
 
@@ -759,6 +803,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         navigationController.next(value!=null?value.getOption():null);
         notifyDataSetChanged();
         hideKeyboard(PreferencesState.getInstance().getContext());
+
+        question = navigationController.getCurrentQuestion();
+        value = question.getValueBySession();
+        //set new page number if the value is null
+        if(value==null  && !readOnly)
+            navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());
     }
 
     /**

@@ -113,7 +113,7 @@ public class SurveyFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState){
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-
+        prepareSurveyInfo();
     }
 
     @Override
@@ -137,12 +137,6 @@ public class SurveyFragment extends Fragment{
     public void onResume(){
         Log.d(TAG, "onResume");
         super.onResume();
-
-        if(Session.getSurvey()!=null){
-            Session.getSurvey().getValuesFromDB();
-        }
-        prepareSurveyInfo();
-        //this.tabAdapter.notifyDataSetChanged();
     }
 
     @Override

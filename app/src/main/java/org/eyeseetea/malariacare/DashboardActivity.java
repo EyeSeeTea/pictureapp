@@ -78,6 +78,10 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+
+        AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
+        asyncPopulateDB.execute((Void) null);
+
         createActionBar();
         dashboardActivity=this;
         setContentView(R.layout.tab_dashboard);
@@ -251,9 +255,6 @@ public class DashboardActivity extends BaseActivity {
     public void onResume(){
         Log.d(TAG, "onResume");
         super.onResume();
-        AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
-        asyncPopulateDB.execute((Void) null);
-        Survey.removeInProgress();
     }
 
     @Override

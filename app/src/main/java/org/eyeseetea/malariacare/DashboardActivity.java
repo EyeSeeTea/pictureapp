@@ -340,6 +340,7 @@ public class DashboardActivity extends BaseActivity {
                     }).create().show();
         }else{
             //Reload data using service
+            isBackPressed=true;
             closeSurveyFragment();
         }
     }

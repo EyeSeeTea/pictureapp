@@ -137,6 +137,10 @@ public class SurveyFragment extends Fragment{
     public void onResume(){
         Log.d(TAG, "onResume");
         super.onResume();
+        if(Session.getSurvey()!=null){
+            Session.getSurvey().getValuesFromDB();
+        }
+
     }
 
     @Override

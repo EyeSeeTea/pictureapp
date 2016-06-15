@@ -93,12 +93,19 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     }
 
+    @Override
+    public void onClick(View v) {
+        // Save dhis URL and establish in preferences, so it will be used to make the pull
+        EditText serverEditText = (EditText) findViewById(R.id.server_url);
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
+        PreferencesState.getInstance().setDhisURL(serverEditText.getText().toString());
+        super.onClick(v);
+    }
+
     @Subscribe
     public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
         if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
             if(result.getResponseHolder().getApiException() == null) {
-                EditText serverEditText = (EditText) findViewById(R.id.server_url);
-                PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
                 goSettingsWithRightExtras();
             } else {
                 onLoginFail(result.getResponseHolder().getApiException());

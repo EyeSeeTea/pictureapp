@@ -347,8 +347,9 @@ public class DashboardActivity extends BaseActivity {
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         ScoreRegister.clear();
         boolean isSent=false;
-        if(isBackPressed){
+        if(Session.getSurvey()!=null)
             isSent=Session.getSurvey().isSent();
+        if(isBackPressed){
             beforeExit();
         }
         surveyFragment.unregisterReceiver();

@@ -761,6 +761,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder((activity))
                 .setTitle(R.string.survey_title_completed)
                 .setMessage(R.string.survey_info_completed)
+                .setCancelable(false)
                 .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         hideKeyboard(PreferencesState.getInstance().getContext());

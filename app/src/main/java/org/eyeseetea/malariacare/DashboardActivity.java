@@ -192,6 +192,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void initSurvey(){
+        isBackPressed=false;
         tabHost.getTabWidget().setVisibility(View.GONE);
         int  mStackLevel=0;
         mStackLevel++;

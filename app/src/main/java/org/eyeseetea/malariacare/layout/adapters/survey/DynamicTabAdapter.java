@@ -767,14 +767,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
                     }
                 });
-        if(!navigationController.isFirstQuestion()){
             msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int arg1) {
                     hideKeyboard(PreferencesState.getInstance().getContext());
                     review();
                 }
             });
-        }
 
         msgConfirmation.create().show();
     }

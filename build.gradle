@@ -34,7 +34,7 @@ allprojects {
 ext {
     // SDK version.
     versionCode = 8
-    versionName = "1.2.2"
+    versionName = "1.2.3"
 
     // Compilation configuration.
     minSdkVersion = 15

@@ -108,13 +108,20 @@ public class SurveyMonitor {
     }
 
     /**
-     * Tells if the given survey is suspected (positive, negative or not tested.
+     * Tells if the given survey is suspected (positive, negative or not tested).
      * @return
      */
     public boolean isSuspected(){
         return (isPositive() || isNegative() || isNotTested());
     }
 
+    /**
+     * Tells if the given survey is used in Posivility stats (positive and negative).
+     * @return
+     */
+    public boolean isRated() {
+        return (isPositive() || isNegative());
+    }
     /**
      * Tells if the given survey is positive
      * @return

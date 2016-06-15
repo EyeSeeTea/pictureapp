@@ -21,7 +21,6 @@ package org.eyeseetea.malariacare.monitor.rows;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.monitor.utils.PositivityRate;
 import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
@@ -64,7 +63,7 @@ public class PositivityRateRowBuilder extends MonitorRowBuilder {
     @Override
     protected Object updateColumn(Object currentValue, SurveyMonitor surveyMonitor) {
         PositivityRate positivityRate = (PositivityRate) currentValue;
-        if(surveyMonitor.isSuspected()){
+        if(surveyMonitor.isRated()){
             positivityRate.incNumSuspected();
         }
         if(surveyMonitor.isPositive()){

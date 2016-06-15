@@ -61,7 +61,7 @@ public class PushClient {
     /**
      * Current server url
      */
-    private static String DHIS_SERVER ="https://dev.psi-mis.org";
+    private static String DHIS_SERVER ="https://www.psi-mis.org";
 
     /**
      * Endpoint sending events

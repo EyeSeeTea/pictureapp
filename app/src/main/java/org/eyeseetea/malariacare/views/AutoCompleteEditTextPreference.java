@@ -141,7 +141,8 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
-        if (positiveResult) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
+        if(sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getApplicationContext().getResources().getString(R.string.eula_accepted), false) && positiveResult) {
             String value = mEditText.getText().toString();
             //Check orgUnit state in server
             CheckCodeAsync checkCodeAsync = new CheckCodeAsync(mEditText.getContext());

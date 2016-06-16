@@ -192,6 +192,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void initSurvey(){
+        isBackPressed=false;
         tabHost.getTabWidget().setVisibility(View.GONE);
         int  mStackLevel=0;
         mStackLevel++;
@@ -339,8 +340,6 @@ public class DashboardActivity extends BaseActivity {
                         }
                     }).create().show();
         }else{
-            //Reload data using service
-            isBackPressed=true;
             closeSurveyFragment();
         }
     }
@@ -349,8 +348,9 @@ public class DashboardActivity extends BaseActivity {
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         ScoreRegister.clear();
         boolean isSent=false;
-        if(isBackPressed){
+        if(Session.getSurvey()!=null)
             isSent=Session.getSurvey().isSent();
+        if(isBackPressed){
             beforeExit();
         }
         surveyFragment.unregisterReceiver();

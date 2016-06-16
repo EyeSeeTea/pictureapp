@@ -36,7 +36,7 @@ import java.util.Date;
 public class EventExtended implements VisitableFromSDK {
 
     private final static String TAG=".EventExtended";
-    private final static String COMPLETION_DATE_FORMAT="yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    public final static String COMPLETION_DATE_FORMAT="yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     public final static String AMERICAN_DATE_FORMAT ="yyyy-MM-dd";
     public static final int MAX_MONTHS_LOADED = -6;
 

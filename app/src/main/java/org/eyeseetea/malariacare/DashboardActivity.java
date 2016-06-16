@@ -86,7 +86,6 @@ public class DashboardActivity extends BaseActivity {
         dashboardActivity=this;
         setContentView(R.layout.tab_dashboard);
         Survey.removeInProgress();
-        //Survey.removeInProgress();
         if(savedInstanceState==null) {
             initAssess();
             initImprove();
@@ -110,9 +109,6 @@ public class DashboardActivity extends BaseActivity {
                 setTabsBackgroundColor(R.color.white);
                 currentTab = tabId;
 
-                //If change of tab from surveyFragment or FeedbackFragment they could be closed.
-                if(isSurveyFragmentActive())
-                    onSurveyBackPressed();
                if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
                     currentTabName=getString(R.string.assess);
                     tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.light_grey));
@@ -262,7 +258,6 @@ public class DashboardActivity extends BaseActivity {
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart");
-        Survey.removeInProgress();
     }
 
 
@@ -371,9 +366,8 @@ public class DashboardActivity extends BaseActivity {
             survey.getValuesFromDB();
             //Exit + InProgress -> delete
             if (isBackPressed && isInProgress) {
-                survey.delete();
-                //Session.getSurvey().delete();
                 Session.setSurvey(null);
+                survey.delete();
                 isBackPressed = false;
                 return;
             }

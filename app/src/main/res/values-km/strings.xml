@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name_local">ឃ្លាំមើលករណីគ្រុនចាញ់</string>
+    <string name="app_name">ឃ្លាំមើលករណីគ្រុនចាញ់</string>
     <string name="yes">បាទ/ចាស</string>
     <string name="no">ទេ</string>
     <string name="ok">យល់ព្រម</string>
@@ -122,7 +122,7 @@
     <string name="pfpv">ចំរុះ (Mixed)</string>
     <string name="monitor_row_title_negative">អវិជ្ជមាន</string>
     <string name="monitor_row_title_not_tested">មិនបានធ្វើតេស្ត</string>
-    <string name="monitor_row_title_referral">ធ្វើការបញ្ចូន</string>
+    <string name="monitor_row_title_referral">ធ្វើកាបេញ្ជូន</string>
     <string name="monitor_row_title_asmq">ឱសថអាតេស៊ុយណាត​ ម៉េហ្លូគីន</string>
     <string name="monitor_row_title_dhapip">អីរ៉ាតេស៊ីម</string>
     <string name="monitor_row_title_rdts">តេស្ត RDTs</string>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Malaria Case Surveillance</string>
     <string name="eyeseetea">EyeSeeTea LTD</string>
     <string name="empty_string"></string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet</string>

@@ -555,7 +555,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     public static List<Survey> getAllSentSurveys() {
         return new Select().from(Survey.class)
                 .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
-                .orderBy(false, Survey$Table.COMPLETIONDATE).queryList();
+                .orderBy(false, Survey$Table.EVENTDATE).queryList();
     }
 
     /**

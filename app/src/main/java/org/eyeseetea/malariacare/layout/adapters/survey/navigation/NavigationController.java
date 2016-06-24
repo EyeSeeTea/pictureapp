@@ -36,6 +36,12 @@ public class NavigationController {
      */
     private int currentTotal;
 
+    /**
+     * Flag used to block the swip to the forward question if a question option is clicked
+     */
+    public static boolean isMovingToForward=false;
+
+
     public NavigationController(QuestionNode rootNode){
         this.rootNode = rootNode;
         this.visited=new ArrayList<>();
@@ -75,6 +81,8 @@ public class NavigationController {
      * @return
      */
     public boolean isNextAllowed(){
+        if(isMovingToForward)
+            return false;
         QuestionNode currentQuestionNode=getCurrentNode();
         //not even start
         if(currentQuestionNode==null){

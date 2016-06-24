@@ -169,7 +169,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              */
             public void onClick(View view) {
                 Log.d(TAG, "onClick");
-
+                navigationController.isMovingToForward=true;
                 Option selectedOption=(Option)view.getTag();
                 Question question=navigationController.getCurrentQuestion();
 
@@ -484,6 +484,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             numberPicker.setError(context.getString(R.string.dynamic_error_age));
             return;
         }
+
+        navigationController.isMovingToForward=true;
         Question question = navigationController.getCurrentQuestion();
         ReadWriteDB.saveValuesText(question, positiveIntValue);
         finishOrNext();
@@ -551,6 +553,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             editText.setError(context.getString(R.string.dynamic_error_phone_format));
             return;
         }
+
+        navigationController.isMovingToForward=true;
         String value=editText.getText().toString();
         //Hide keypad
         hideKeyboard(PreferencesState.getInstance().getContext());
@@ -745,6 +749,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Question question = navigationController.getCurrentQuestion();
                 Value value = question.getValueBySession();
                 if (isDone(value)) {
+                    navigationController.isMovingToForward=false;
                     showDone();
                     return;
                 }
@@ -794,6 +799,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Question question = navigationController.getCurrentQuestion();
         Value value = question.getValueBySession();
         if (isDone(value)) {
+            navigationController.isMovingToForward=false;
             return;
         }
         navigationController.next(value!=null?value.getOption():null);
@@ -805,6 +811,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //set new page number if the value is null
         if(value==null  && !readOnly)
             navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());
+        navigationController.isMovingToForward=false;
     }
 
     /**

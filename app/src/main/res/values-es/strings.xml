@@ -36,11 +36,6 @@
 <string name="font_size_level2">"medium"</string>
 <string name="font_size_level3">"large"</string>
 <string name="font_size_level4">"xlarge"</string>
-<string name="font_size_level0_title">"Extra pequeño"</string>
-<string name="font_size_level1_title">"Pequeño"</string>
-<string name="font_size_level2_title">"Medio"</string>
-<string name="font_size_level3_title">"Grande"</string>
-<string name="font_size_level4_title">"Extra grande"</string>
 <string name="dialog_title_push">"Enviando datos"</string>
 <string name="dialog_title_push_response">"Respuesta carga"</string>
 <string name="dialog_info_push_ok">"Datos subidos correctamente al servidor. Resultados: "</string>
@@ -116,4 +111,9 @@
 <string name="sent_button">"Enviado"</string>
 <string name="monitor_button">"Supervisión"</string>
 <string name="app_name">"Malaria Case Surveillance"</string>
+<string name="font_size_level0_title">"Extra pequeño"</string>
+<string name="font_size_level1_title">"Pequeño"</string>
+<string name="font_size_level2_title">"Medio"</string>
+<string name="font_size_level3_title">"Grande"</string>
+<string name="font_size_level4_title">"Extra grande"</string>
 </resources>

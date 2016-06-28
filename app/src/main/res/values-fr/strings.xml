@@ -36,6 +36,11 @@
 <string name="font_size_level2">"medium"</string>
 <string name="font_size_level3">"large"</string>
 <string name="font_size_level4">"xlarge"</string>
+<string name="font_size_level0_title">"Extra petit"</string>
+<string name="font_size_level1_title">"Petit"</string>
+<string name="font_size_level2_title">"Moyen"</string>
+<string name="font_size_level3_title">"Grand"</string>
+<string name="font_size_level4_title">"Extra grand"</string>
 <string name="dialog_title_push">"Envoi de données"</string>
 <string name="dialog_title_push_response">"Réponse de charge"</string>
 <string name="dialog_info_push_ok">"Les données du sondage a été poussé avec succès au serveur. Résultats: "</string>

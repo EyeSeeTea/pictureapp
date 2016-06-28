@@ -86,4 +86,18 @@
     <string name="assess" translatable="false">Assess - active surveys</string>
     <string name="improve" translatable="false">Improve</string>
     <string name="monitor" translatable="false">Monitor</string>
+    <string-array name="settings_array_titles_font_sizes" translatable="false">
+        <item>@string/font_size_level0_title</item>
+        <item>@string/font_size_level1_title</item>
+        <item>@string/font_size_level2_title</item>
+        <item>@string/font_size_level3_title</item>
+        <item>@string/font_size_level4_title</item>
+    </string-array>
+    <string-array name="settings_array_values_font_sizes" translatable="false">
+        <item>@string/font_size_level0</item>
+        <item>@string/font_size_level1</item>
+        <item>@string/font_size_level2</item>
+        <item>@string/font_size_level3</item>
+        <item>@string/font_size_level4</item>
+    </string-array>
 </resources>

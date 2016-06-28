@@ -55,14 +55,14 @@
     <string name="Occupation_code" translatable="false">Occupation</string>
     <string name="Phone_code" translatable="false">Phone</string>
 
-    <string name="monitor_row_title"><![CDATA[&nbsp;&nbsp;%1$s]]></string>
+    <string name="monitor_row_title" translatable="false"><![CDATA[&nbsp;&nbsp;%1$s]]></string>
 
-    <item name="eula_accepted" type="string">eula_accepted</item>
+    <item name="eula_accepted" type="string" translatable="false">eula_accepted</item>
 
 
-    <string name="lastcommit">Version %s</string>
-    <string name="unavailable">Unavailable</string>
-    <string name="lastcommit_unavailable"><![CDATA[
+    <string name="lastcommit" translatable="false">Version %s</string>
+    <string name="unavailable" translatable="false">Unavailable</string>
+    <string name="lastcommit_unavailable" translatable="false"><![CDATA[
     <p>This option requires some changes in the git repository.</p>
     <p>Steps:</p>
     <p>1. Please open or create the.git/hooks/post-commit and .git/hooks/post-checkout files.</p>

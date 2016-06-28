@@ -115,4 +115,18 @@
 <string name="sent_button">"Enviado"</string>
 <string name="monitor_button">"Supervisión"</string>
 <string name="app_name">"Malaria Case Surveillance"</string>
+<string-array name="settings_array_titles_font_sizes">
+    <item>Extra pequeño</item>
+    <item>Pequeño</item>
+    <item>Medio</item>
+    <item>Grande</item>
+    <item>Extra grande</item>
+</string-array>
+<string-array name="settings_array_values_font_sizes">
+    <item>@string/font_size_level0</item>
+    <item>@string/font_size_level1</item>
+    <item>@string/font_size_level2</item>
+    <item>@string/font_size_level3</item>
+    <item>@string/font_size_level4</item>
+</string-array>
 </resources>

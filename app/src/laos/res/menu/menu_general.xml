@@ -1,0 +1,36 @@
+<!--
+  ~ Copyright (c) 2015.
+  ~
+  ~ This file is part of QIS Surveillance App.
+  ~
+  ~  QIS Surveillance App is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  QIS Surveillance App is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_settings" android:title="@string/settings_menu_configuration"
+        android:orderInCategory="100"/>
+    <item android:id="@+id/action_about" android:title="@string/settings_menu_about"
+        android:orderInCategory="102"/>
+    <item android:title="@string/settings_menu_legal" android:orderInCategory="103">
+        <menu>
+            <item android:id="@+id/action_copyright" android:title="@string/settings_menu_copyright"
+                android:orderInCategory="103" />
+            <item android:id="@+id/action_licenses" android:title="@string/settings_menu_licenses"
+                android:orderInCategory="104" />
+            <item android:id="@+id/action_eula" android:title="@string/settings_menu_eula"
+                android:orderInCategory="105" />
+        </menu>
+    </item>
+
+</menu>

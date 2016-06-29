@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="eyeseetea" translatable="false">EyeSeeTea LTD</string>
+    <string name="empty_string" translatable="false"></string>
+    <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet</string>
+    <!--<string name="score_title_percentage">%</string>-->
+    <!--<string name="score_info_zero_float">0.0</string>-->
+
+
+    <item name="show_num_dems" type="string" translatable="false">show_num_dems</item>
+    <item name="customize_fonts" type="string" translatable="false">customize_fonts</item>
+    <item name="font_sizes" type="string" translatable="false">font_sizes</item>
+    <item name="dhis_url" type="string" translatable="false">dhis_url</item>
+    <item name="org_unit" type="string" translatable="false">org_unit</item>
+
+
+    <string name="PUSH_PERIOD" translatable="false">10</string>
+
+
+    <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
+    <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
+    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
+
+
+    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://www.psi-mis.org</string>
+
+
+    <string name="normal_font" translatable="false">Roboto-Medium.ttf</string>
+    <string name="light_font" translatable="false">Roboto-Light.ttf</string>
+    <string name="bold_font_name" translatable="false">Roboto-Bold.ttf</string>
+    <string name="medium_font_name" translatable="false">Roboto-Medium.ttf</string>
+    <string name="condensed_font_name" translatable="false">Roboto-Condensed.ttf</string>
+
+    <string name="font_size_system" translatable="false">system</string>
+
+    <string name="settings_array_values_font_sizes_def" translatable="false">@string/font_size_level2</string>
+
+    <string name="symbolPlus" translatable="false">+</string>
+    <string name="symbolMinus" translatable="false">-</string>
+    <string name="symbolCross" translatable="false">X</string>
+    <string name="rdtPositive" translatable="false">Positive</string>
+    <string name="rdtNegative" translatable="false">Negative</string>
+    <string name="rdtNotTested" translatable="false">Not Tested</string>
+    <string name="RDT_code" translatable="false">RDT</string>
+    <string name="Age_code" translatable="false">Age</string>
+    <string name="Gender_code" translatable="false">Gender</string>
+    <string name="Specie_code" translatable="false">Specie</string>
+    <string name="Reason_code" translatable="false">Reason</string>
+    <string name="Treatment_code" translatable="false">Treatment</string>
+    <string name="DHAPIP_code" translatable="false">DHA-PIP</string>
+    <string name="ASMQ_code" translatable="false">AS/MQ</string>
+    <string name="Referral_code" translatable="false">Referral</string>
+    <string name="Classification_code" translatable="false">Classification</string>
+    <string name="Occupation_code" translatable="false">Occupation</string>
+    <string name="Phone_code" translatable="false">Phone</string>
+
+    <string name="monitor_row_title" translatable="false"><![CDATA[&nbsp;&nbsp;%1$s]]></string>
+
+    <item name="eula_accepted" type="string" translatable="false">eula_accepted</item>
+
+
+    <string name="lastcommit" translatable="false">Version %s</string>
+    <string name="unavailable" translatable="false">Unavailable</string>
+    <string name="lastcommit_unavailable" translatable="false"><![CDATA[
+    <p>This option requires some changes in the git repository.</p>
+    <p>Steps:</p>
+    <p>1. Please open or create the.git/hooks/post-commit and .git/hooks/post-checkout files.</p>
+    <p>2. If the file does not exist, add the following lines: </p>
+    <p>#!/bin/sh </p>
+    <p>gitPath=$(git rev-parse --show-toplevel)</p>
+    <p>sh ${gitPath}/generate_last_commit.sh </p>
+    <p>2. If the file already exists, you only need add the following lines at the end:</p>
+    <p>gitPath=$(git rev-parse --show-toplevel)</p>
+    <p>sh ${gitPath}/generate_last_commit.sh </p>
+    <p>3. Run "git checkout". </p>]]>
+    </string>
+
+    <string name="fullOfUnsent" translatable="false">fullOfUnsent</string>
+
+
+    <string name="tab_tag_assess" translatable="false">tab_assess</string>
+    <string name="tab_tag_improve" translatable="false">tab_improve</string>
+    <string name="tab_tag_monitor" translatable="false">tab_monitor</string>
+
+    <string name="assess" translatable="false">Assess - active surveys</string>
+    <string name="improve" translatable="false">Improve</string>
+    <string name="monitor" translatable="false">Monitor</string>
+    <string-array name="settings_array_titles_font_sizes" translatable="false">
+        <item>@string/font_size_level0_title</item>
+        <item>@string/font_size_level1_title</item>
+        <item>@string/font_size_level2_title</item>
+        <item>@string/font_size_level3_title</item>
+        <item>@string/font_size_level4_title</item>
+    </string-array>
+    <string-array name="settings_array_values_font_sizes" translatable="false">
+        <item>@string/font_size_level0</item>
+        <item>@string/font_size_level1</item>
+        <item>@string/font_size_level2</item>
+        <item>@string/font_size_level3</item>
+        <item>@string/font_size_level4</item>
+    </string-array>
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="red">#FF0000</color>
+    <color name="black">#000000</color>
+    <color name="headerColor">#FF1D5288</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#ffffff</color>
+    <color name="evenRows">#FFE5E5E5</color>
+    <color name="navy_blue">#FF1F70C3</color>
+    <color name="dark_navy_blue">#FF1D5288</color>
+    <color name="light_grey">#FFE5E5E5</color>
+    <color name="textFieldColor">#BEBEBE</color>
+    <color name="custom_blue_light">#1f70c3</color>
+    <color name="dialog_button_text">#06988a</color>
+    <color name="tab_orange_plan">#f38b00</color>
+    <color name="tab_yellow_assess">#dce442</color>
+    <color name="tab_green_monitor">#799900</color>
+    <color name="tab_blue_improve">#00b3e3</color>
+
+    <color name="custom_background_grey">#3e3e3f</color>
+</resources>

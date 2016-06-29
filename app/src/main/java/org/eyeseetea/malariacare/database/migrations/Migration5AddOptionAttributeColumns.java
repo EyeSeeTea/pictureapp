@@ -43,8 +43,8 @@ public class Migration5AddOptionAttributeColumns extends BaseMigration {
     @Override
     public void migrate(SQLiteDatabase database) {
         postMigrationRequired=true;
-        //addColumn(database, OptionAttribute.class, "horizontal_alignment", "Integer");
-        //addColumn(database, OptionAttribute.class, "vertical_alignment", "Integer");
+        addColumn(database, OptionAttribute.class, "horizontal_alignment", "Integer");
+        addColumn(database, OptionAttribute.class, "vertical_alignment", "Integer");
     }
 
     @Override

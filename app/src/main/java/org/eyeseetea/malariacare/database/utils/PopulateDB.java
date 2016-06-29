@@ -151,6 +151,10 @@ public class PopulateDB {
                         OptionAttribute optionAttribute = new OptionAttribute();
                         optionAttribute.setBackground_colour(line[1]);
                         optionAttribute.setPath(line[2]);
+                        if(line.length>3 && !line[3].equals(""))
+                            optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
+                        if(line.length>4 && !line[4].equals(""))
+                            optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
                         optionAttribute.save();
                         optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
                         break;
@@ -298,6 +302,43 @@ public class PopulateDB {
                     question.setVisible(Integer.valueOf(line[14]));
                     question.save();
                 }
+            }
+        }
+        reader.close();
+    }
+
+    public static void addOptionAttributes(AssetManager assetManager) throws IOException  {
+        List<Option> options = Option.getAllOptions();
+        //Reset inner references
+        cleanInnerLists();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(OPTION_ATTRIBUTES_CSV)), SEPARATOR, QUOTECHAR);
+        CSVReader readerOptions = new CSVReader(new InputStreamReader(assetManager.open(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
+        //Remove bad optionAttributes.
+        Delete.tables(OptionAttribute.class);
+        String[] line;
+
+        //save new optionattributes
+        while ((line = reader.readNext()) != null) {
+            OptionAttribute optionAttribute = new OptionAttribute();
+            optionAttribute.setBackground_colour(line[1]);
+            optionAttribute.setPath(line[2]);
+            if(line.length>3 && !line[3].equals(""))
+                optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
+            if(line.length>4 && !line[4].equals(""))
+                optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
+            optionAttribute.save();
+            optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
+        }
+
+        line=null;
+
+        //Save new optionattributes for each question
+        while ((line = readerOptions.readNext()) != null) {
+            for(Option option:options) {
+                if (option.getCode().equals(line[1]))
+                    if (!line[5].equals(""))
+                        option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
+                option.save();
             }
         }
         reader.close();

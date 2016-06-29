@@ -153,8 +153,12 @@ public class PopulateDB {
                         optionAttribute.setPath(line[2]);
                         if(line.length>3 && !line[3].equals(""))
                             optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
+                        else
+                            optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_HORIZONTAL_ALIGMENT);
                         if(line.length>4 && !line[4].equals(""))
                             optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
+                        else
+                            optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGMENT);
                         optionAttribute.save();
                         optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
                         break;
@@ -324,8 +328,12 @@ public class PopulateDB {
             optionAttribute.setPath(line[2]);
             if(line.length>3 && !line[3].equals(""))
                 optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
+            else
+                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_HORIZONTAL_ALIGMENT);
             if(line.length>4 && !line[4].equals(""))
                 optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
+            else
+                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGMENT);
             optionAttribute.save();
             optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
         }

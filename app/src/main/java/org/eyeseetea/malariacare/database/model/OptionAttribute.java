@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.view.Gravity;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -134,6 +136,52 @@ public class OptionAttribute extends BaseModel {
 
     public void setVertical_alignment(int vertical_alignment) {
         this.vertical_alignment = vertical_alignment;
+    }
+
+    public boolean isHorizontalCenter(){
+        return horizontal_alignment==HORIZONTAL_ALIGMENT_CENTER;
+    }
+
+    public boolean isHorizontalLeft(){
+        return horizontal_alignment==HORIZONTAL_ALIGMENT_LEFT;
+    }
+
+    public boolean isHorizontalRight(){
+        return horizontal_alignment==HORIZONTAL_ALIGMENT_RIGHT;
+    }
+
+    public boolean isVerticalBottom(){
+        return vertical_alignment==VERTICAL_ALIGMENT_BOTTOM;
+    }
+
+    public boolean isVerticalTop(){
+        return vertical_alignment==VERTICAL_ALIGMENT_TOP;
+    }
+
+    public boolean isVerticalMiddle(){
+        return vertical_alignment==VERTICAL_ALIGMENT_MIDDLE;
+    }
+
+    /**
+     * The option gravity is the result of the (vertical | horizontal) gravity.
+     */
+    public int getGravity(){
+        int verticalGravity=Gravity.CENTER_HORIZONTAL;
+        int horizontalGravity=Gravity.CENTER_VERTICAL;
+        if(isHorizontalRight())
+            horizontalGravity= Gravity.RIGHT;
+        else if(isHorizontalLeft())
+            horizontalGravity= Gravity.LEFT;
+        else if(isHorizontalCenter())
+            horizontalGravity= Gravity.CENTER_HORIZONTAL;
+        if(isVerticalBottom())
+            verticalGravity=Gravity.BOTTOM;
+        else if(isVerticalTop())
+            verticalGravity=Gravity.TOP;
+        else if(isVerticalMiddle())
+            verticalGravity=Gravity.CENTER_VERTICAL;
+
+        return (verticalGravity | horizontalGravity);
     }
 
     @Override

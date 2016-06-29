@@ -26,6 +26,7 @@
     <string name="DHIS_DEFAULT_SERVER" translatable="false">https://www.psi-mis.org</string>
 
 
+    <string name="khmer_font" translatable="false">KhmerOS.ttf</string>
     <string name="normal_font" translatable="false">Roboto-Medium.ttf</string>
     <string name="light_font" translatable="false">Roboto-Light.ttf</string>
     <string name="bold_font_name" translatable="false">Roboto-Bold.ttf</string>

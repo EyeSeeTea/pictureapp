@@ -294,7 +294,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Question
         TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
         //Load a font which support Khmer character
-        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + "KhmerOS.ttf");
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + context.getString(R.string.khmer_font));
         headerView.setTypeface(tf);
         headerView.setText(question.getForm_name());
 

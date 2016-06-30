@@ -407,8 +407,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void setTextSettings(TextCard textOption, Option currentOption) {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
-        textOption.setText(currentOption.getCode());
-        textOption.setGravity(currentOption.getOptionAttribute().getGravity());
+        if (currentOption.getOptionAttribute().hasHorizontalAligment() && currentOption.getOptionAttribute().hasVerticalAligment())
+        {
+            textOption.setText(currentOption.getCode());
+            textOption.setGravity(currentOption.getOptionAttribute().getGravity());
+        }
+        else{
+            textOption.setVisibility(View.GONE);
+        }
     }
 
     /**

@@ -180,6 +180,12 @@ public class NavigationController {
      * @param nextNode
      */
     private void visit(QuestionNode nextNode){
+        //Self references are neither moving the counter nor adding a new position
+        if(isALoop(nextNode)){
+            Log.d(TAG,String.format("visit(%s) -> Not advancing",nextNode.getQuestion().getCode()));
+            return;
+        }
+        //annotate new current node and advance counter
         Log.d(TAG,String.format("visit(%s) -> In position %d",nextNode.getQuestion().getCode(),currentPosition+1));
         currentPosition++;
         visited.add(nextNode);
@@ -222,5 +228,17 @@ public class NavigationController {
         //Return next question
         Log.d(TAG,String.format("findNext(%s)->%s",option==null?"":option.getCode(),nextNode.getQuestion().getCode()));
         return nextNode;
+    }
+
+    /**
+     * Checks if the given nextNode is a loop with the current one
+     * @param nextNode
+     * @return
+     */
+    private boolean isALoop(QuestionNode nextNode){
+        if(nextNode==null || getCurrentNode()==null){
+            return false;
+        }
+        return nextNode.getQuestion().getId_question()==this.getCurrentNode().getQuestion().getId_question();
     }
 }

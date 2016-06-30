@@ -53,46 +53,46 @@ public class OptionAttribute extends BaseModel {
     /**
      * Constant that reflects a left alignment
      */
-    public static final int HORIZONTAL_ALIGMENT_LEFT=0;
+    public static final int HORIZONTAL_ALIGNMENT_LEFT=0;
     /**
      * Constant that reflects a right alignment
      */
-    public static final int HORIZONTAL_ALIGMENT_CENTER=1;
+    public static final int HORIZONTAL_ALIGNMENT_CENTER=1;
 
     /**
      * Constant that reflects a center alignment
      */
-    public static final int HORIZONTAL_ALIGMENT_RIGHT=2;
+    public static final int HORIZONTAL_ALIGNMENT_RIGHT=2;
     /**
-     * Constant that reflects a not applicable horizontal aligment
+     * Constant that reflects a not applicable horizontal alignment
      */
-    public static final int HORIZONTAL_ALIGMENT_NONE=3;
+    public static final int HORIZONTAL_ALIGNMENT_NONE=3;
     /**
      * Constant that reflects a DEFAULT alignment
      */
-    public static final int DEFAULT_HORIZONTAL_ALIGMENT=HORIZONTAL_ALIGMENT_NONE;
+    public static final int DEFAULT_HORIZONTAL_ALIGNMENT=HORIZONTAL_ALIGNMENT_NONE;
 
     /**
      * Constant that reflects a top alignment
      */
-    public static final int VERTICAL_ALIGMENT_TOP=0;
+    public static final int VERTICAL_ALIGNMENT_TOP=0;
     /**
      * Constant that reflects a middle alignment
      */
-    public static final int VERTICAL_ALIGMENT_MIDDLE=1;
+    public static final int VERTICAL_ALIGNMENT_MIDDLE=1;
 
     /**
      * Constant that reflects a bottom alignment
      */
-    public static final int VERTICAL_ALIGMENT_BOTTOM=2;
+    public static final int VERTICAL_ALIGNMENT_BOTTOM=2;
     /**
-     * Constant that reflects a not applicable vertical aligment
+     * Constant that reflects a not applicable vertical alignment
      */
-    public static final int VERTICAL_ALIGMENT_NONE=3;
+    public static final int VERTICAL_ALIGNMENT_NONE=3;
     /**
      * Constant that reflects a DEFAULT alignment
      */
-    public static final int DEFAULT_VERTICAL_ALIGMENT=VERTICAL_ALIGMENT_NONE;
+    public static final int DEFAULT_VERTICAL_ALIGNMENT=VERTICAL_ALIGNMENT_NONE;
 
     public OptionAttribute() {
     }
@@ -146,35 +146,35 @@ public class OptionAttribute extends BaseModel {
         this.vertical_alignment = vertical_alignment;
     }
 
-    public boolean hasHorizontalAligment(){
-        return horizontal_alignment!=HORIZONTAL_ALIGMENT_NONE;
+    public boolean hasHorizontalAlignment(){
+        return horizontal_alignment!=HORIZONTAL_ALIGNMENT_NONE;
     }
 
-    public boolean hasVerticalAligment(){
-        return vertical_alignment!=VERTICAL_ALIGMENT_NONE;
+    public boolean hasVerticalAlignment(){
+        return vertical_alignment!=VERTICAL_ALIGNMENT_NONE;
     }
     public boolean isHorizontalCenter(){
-        return horizontal_alignment==HORIZONTAL_ALIGMENT_CENTER;
+        return horizontal_alignment==HORIZONTAL_ALIGNMENT_CENTER;
     }
 
     public boolean isHorizontalLeft(){
-        return horizontal_alignment==HORIZONTAL_ALIGMENT_LEFT;
+        return horizontal_alignment==HORIZONTAL_ALIGNMENT_LEFT;
     }
 
     public boolean isHorizontalRight(){
-        return horizontal_alignment==HORIZONTAL_ALIGMENT_RIGHT;
+        return horizontal_alignment==HORIZONTAL_ALIGNMENT_RIGHT;
     }
 
     public boolean isVerticalBottom(){
-        return vertical_alignment==VERTICAL_ALIGMENT_BOTTOM;
+        return vertical_alignment==VERTICAL_ALIGNMENT_BOTTOM;
     }
 
     public boolean isVerticalTop(){
-        return vertical_alignment==VERTICAL_ALIGMENT_TOP;
+        return vertical_alignment==VERTICAL_ALIGNMENT_TOP;
     }
 
     public boolean isVerticalMiddle(){
-        return vertical_alignment==VERTICAL_ALIGMENT_MIDDLE;
+        return vertical_alignment==VERTICAL_ALIGNMENT_MIDDLE;
     }
 
     /**

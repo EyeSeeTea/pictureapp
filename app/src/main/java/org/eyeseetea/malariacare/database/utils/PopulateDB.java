@@ -154,11 +154,11 @@ public class PopulateDB {
                         if(line.length>3 && !line[3].equals(""))
                             optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
                         else
-                            optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_HORIZONTAL_ALIGMENT);
+                            optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_HORIZONTAL_ALIGNMENT);
                         if(line.length>4 && !line[4].equals(""))
                             optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
                         else
-                            optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGMENT);
+                            optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
                         optionAttribute.save();
                         optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
                         break;
@@ -329,11 +329,11 @@ public class PopulateDB {
             if(line.length>3 && !line[3].equals(""))
                 optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
             else
-                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_HORIZONTAL_ALIGMENT);
+                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_HORIZONTAL_ALIGNMENT);
             if(line.length>4 && !line[4].equals(""))
                 optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
             else
-                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGMENT);
+                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
             optionAttribute.save();
             optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
         }

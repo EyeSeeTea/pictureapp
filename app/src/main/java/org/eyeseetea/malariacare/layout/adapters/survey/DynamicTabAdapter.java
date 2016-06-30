@@ -404,6 +404,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rowView.requestLayout();
         return rowView;
     }
+    /**
+     * Used to set the text widht like the framelayout size
+     * to prevent a resize of the frameLayout if the textoption is more bigger.
+     */
+    private void resizeTextWidth(FrameLayout frameLayout, TextCard textOption) {
+            textOption.setWidth(frameLayout.getWidth());
+    }
 
     private void setTextSettings(TextCard textOption, Option currentOption) {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
@@ -722,6 +729,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Add button to listener
         swipeTouchListener.addClickableView(button);
 
+        resizeTextWidth(button,(TextCard) button.getChildAt(1));
     }
 
     /**

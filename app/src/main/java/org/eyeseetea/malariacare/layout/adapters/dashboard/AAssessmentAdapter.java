@@ -89,7 +89,7 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         //INFO
         TextCard info = (TextCard) rowView.findViewById(R.id.info);
         //Load a font which support Khmer character
-        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" +  context.getString(R.string.khmer_font));
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" +  context.getString(R.string.specific_language_font));
         info.setTypeface(tf);
 
         info.setText(survey.getValuesToString());

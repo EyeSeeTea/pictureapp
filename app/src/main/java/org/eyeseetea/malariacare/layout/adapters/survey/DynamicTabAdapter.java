@@ -294,7 +294,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Question
         TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
         //Load a font which support Khmer character
-        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + context.getString(R.string.khmer_font));
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + context.getString(R.string.specific_language_font));
         headerView.setTypeface(tf);
         headerView.setText(question.getForm_name());
 
@@ -406,7 +406,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void setTextSettings(TextCard textOption, Option currentOption) {
-        //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in dynamic_tab_row and dynamic_tab_row_singleitem
+        //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
         textOption.setText(currentOption.getCode());
         textOption.setGravity(currentOption.getOptionAttribute().getGravity());
     }

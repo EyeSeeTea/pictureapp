@@ -21,7 +21,7 @@
         android:gravity="center"
         android:layout_height="match_parent"
         android:layout_width="fill_parent"
-        app:tFontName="@string/khmer_font"
+        app:tFontName="@string/specific_language_font"
         app:tDimension="@string/font_size_level1"
         android:layout_gravity="center"
         android:textColor="@color/white"

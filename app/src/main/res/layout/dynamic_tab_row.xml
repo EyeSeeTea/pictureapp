@@ -21,13 +21,13 @@
         android:padding="5dip"
         android:gravity="center"
         android:layout_height="match_parent"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         app:tFontName="@string/specific_language_font"
         app:tDimension="@string/font_size_level1"
         android:layout_gravity="center"
         android:textColor="@color/white"
         android:textSize="40dp"
-        android:text="asdasdasdadst" />
+        android:text="" />
 </FrameLayout>    <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
@@ -49,6 +49,6 @@
         android:layout_gravity="center"
         android:textColor="@color/white"
         android:textSize="40dp"
-        android:text="asdasdasdadst" />
+        android:text="" />
 </FrameLayout>
 </TableRow>

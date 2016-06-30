@@ -26,6 +26,6 @@
         android:layout_gravity="center"
         android:textColor="@color/white"
         android:textSize="40dp"
-        android:text="asdasdasdadst" />
+        android:text="" />
 </FrameLayout>
 </TableRow>

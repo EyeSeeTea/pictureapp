@@ -124,6 +124,11 @@ public class NavigationController {
             return null;
         }
 
+        //Trigger counters
+        if(!isInitialMove()) {
+            getCurrentNode().increaseRepetitions(option);
+        }
+
         //Found
         visit(nextNode);
         Question nextQuestion=nextNode.getQuestion();

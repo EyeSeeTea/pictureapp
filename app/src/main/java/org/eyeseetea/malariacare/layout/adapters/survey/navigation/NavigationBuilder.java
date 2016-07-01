@@ -64,6 +64,8 @@ public class NavigationBuilder {
         buildChildren(currentNode);
         //Add sibling navigation
         buildSibling(currentNode);
+        //Add counters
+        buildCounters(currentNode);
         return currentNode;
     }
 
@@ -72,12 +74,13 @@ public class NavigationBuilder {
      * @param currentNode
      */
     private void buildChildren(QuestionNode currentNode){
-        Question currentQuestion=currentNode.getQuestion();
-        //No children questions -> no children to build
-        if(currentQuestion==null || !currentQuestion.hasOutputWithOptions() || currentQuestion.getQuestionOption().size()==0){
+
+        //precondition: options and some relations
+        if(!withOptionsAndRelations(currentNode)){
             return;
         }
 
+        Question currentQuestion=currentNode.getQuestion();
         Answer currentAnswer=currentQuestion.getAnswer();
         for(Option option:currentAnswer.getOptions()){
             Question firstChildrenQuestion = currentQuestion.findFirstChildrenByOption(option);
@@ -115,6 +118,45 @@ public class NavigationBuilder {
         }
         QuestionNode nextNode = buildNode(nextQuestion);
         currentNode.setSibling(nextNode);
+    }
+
+    /**
+     * Adds counters to this node
+     * @param currentNode
+     */
+    private void buildCounters(QuestionNode currentNode){
+        //precondition: options and some relations
+        if(!withOptionsAndRelations(currentNode)){
+            return;
+        }
+
+        Question currentQuestion=currentNode.getQuestion();
+        Answer currentAnswer=currentQuestion.getAnswer();
+        for(Option option:currentAnswer.getOptions()){
+            Question optionCounter = currentQuestion.findCounterByOption(option);
+            //no counter -> try next option
+            if(optionCounter==null){
+                continue;
+            }
+            //found a counter -> annotate it
+            currentNode.addCounter(option,optionCounter);
+        }
+    }
+
+    /**
+     * Checks if the currentNode requires knitting children, counters, ...
+     * @param currentNode
+     * @return
+     */
+    private boolean withOptionsAndRelations(QuestionNode currentNode){
+        Question currentQuestion=currentNode.getQuestion();
+        //No children questions -> no children ||counters to build
+        if(currentQuestion==null || !currentQuestion.hasOutputWithOptions() || currentQuestion.getQuestionOption().size()==0){
+            return false;
+        }
+
+        //there might be something related to build
+        return true;
     }
 
 }

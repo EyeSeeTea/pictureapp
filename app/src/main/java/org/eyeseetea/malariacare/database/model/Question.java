@@ -667,7 +667,7 @@ public class Question extends BaseModel {
                         .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
                 .where(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(Constants.NO_ANSWER))
                 .and(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP)).eq(tabGroup.getId_tab_group()))
-                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(Constants.OPERATION_TYPE_PARENT)).count();
+                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(QuestionRelation.PARENT_CHILD)).count();
 
         // Return number of parents (total - children)
         return (int) (totalAnswerableQuestions - numChildrenQuestion);
@@ -708,7 +708,7 @@ public class Question extends BaseModel {
                                 .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_OPTION)))
                 .where(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY)).eq(survey.getId_survey()))
                 .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)).eq(this.getId_question()))
-                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(Constants.OPERATION_TYPE_MATCH))
+                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(QuestionRelation.MATCH))
                 .queryList();
 
         //No values no match
@@ -897,6 +897,48 @@ public class Question extends BaseModel {
         Collections.sort(childrenQuestions, new QuestionOrderComparator());
 
         return childrenQuestions;
+    }
+
+    /**
+     * Find the counter question for this question taking into the account the given option.
+     * Only 1 counter question will be activated by option
+     * @param option
+     * @return
+     */
+    public Question findCounterByOption(Option option){
+
+        //No option -> no children
+        if(option==null){
+            return null;
+        }
+
+        List<QuestionOption> questionOptions=this.getQuestionOption();
+        //No trigger (questionOption) -> no counters
+        if(questionOptions==null || questionOptions.size()==0){
+            return null;
+        }
+
+        //Navigate to questionRelation to get child questions
+        long optionId=option.getId_option().longValue();
+        for(QuestionOption questionOption:questionOptions){
+            //Other options must be discarded
+            long currentOptionId=questionOption.getOption().getId_option().longValue();
+            if(optionId!=currentOptionId){continue;}
+            Match match =questionOption.getMatch();
+            if(match==null){continue;}
+
+            QuestionRelation questionRelation=match.getQuestionRelation();
+            //only COUNTER RELATIONSHIPs are interesting for this
+            if(questionRelation==null || questionRelation.getOperation()!=QuestionRelation.COUNTER){continue;}
+
+            Question childQuestion=questionRelation.getQuestion();
+            if(childQuestion==null){continue;}
+
+            //Found
+            return childQuestion;
+        }
+
+        return null;
     }
 
     /**

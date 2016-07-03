@@ -21,6 +21,11 @@ public class QuestionNode {
     private Map<Long,QuestionNode> navigation;
 
     /**
+     * Question counters associated to each option of the question
+     */
+    private Map<Long,QuestionCounter> counters;
+
+    /**
      * Parent node
      */
     private QuestionNode parentNode;
@@ -33,6 +38,7 @@ public class QuestionNode {
     public QuestionNode(Question question){
         this.question = question;
         this.navigation = new HashMap<>();
+        this.counters = new HashMap<>();
     }
 
     public void setQuestion(Question question){
@@ -57,6 +63,24 @@ public class QuestionNode {
         nextNode.setParentNode(this);
         //Annotate navigation
         this.navigation.put(option.getId_option(),nextNode);
+    }
+
+    /**
+     * The given option triggers a counter to save the number of times its been answered
+     * @param option
+     * @param question
+     */
+    public void addCounter(Option option, Question question){
+        //something wrong -> nothing to add
+        if(option==null || question==null){
+            return;
+        }
+
+        //Build a counter
+        QuestionCounter questionCounter = new QuestionCounter(question);
+
+        //Add counter to option
+        this.counters.put(option.getId_option(),questionCounter);
     }
 
     /**
@@ -129,6 +153,23 @@ public class QuestionNode {
         }
 
         return this.sibling;
+    }
+
+    /**
+     * Updates the question counter for the given option
+     * @param option
+     */
+    public void increaseRepetitions(Option option){
+        if(option==null){
+            return;
+        }
+
+        QuestionCounter questionCounter = this.counters.get(option.getId_option());
+        if(questionCounter==null){
+            return;
+        }
+
+        questionCounter.increaseRepetitions();
     }
 
 

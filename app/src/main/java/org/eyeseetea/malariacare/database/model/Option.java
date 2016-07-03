@@ -235,4 +235,8 @@ public class Option extends BaseModel {
                 ", id_option_attribute=" + id_option_attribute +
                 '}';
     }
+
+    public static List<Option> getAllOptions() {
+        return new Select().from(Option.class).queryList();
+    }
 }

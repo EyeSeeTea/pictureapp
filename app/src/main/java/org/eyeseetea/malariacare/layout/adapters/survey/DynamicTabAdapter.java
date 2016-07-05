@@ -167,13 +167,29 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * Click listener for image option
              * @param view
              */
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 Log.d(TAG, "onClick");
                 navigationController.isMovingToForward=true;
-                Option selectedOption=(Option)view.getTag();
-                Question question=navigationController.getCurrentQuestion();
+                final Option selectedOption=(Option)view.getTag();
+                final Question question=navigationController.getCurrentQuestion();
+                Question counterQuestion = question.findCounterByOption(selectedOption);
+                if(counterQuestion==null){
+                    saveOptionAndMove(view,selectedOption,question);
+                }else{
+                    new AlertDialog.Builder((context))
+                            .setTitle(R.string.option_confirm)
+                            .setMessage(counterQuestion.getForm_name())
+                            .setCancelable(false)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int arg1) {
+                                    saveOptionAndMove(view,selectedOption,question);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null).create().show();
+                }
+            }
 
-
+            private void saveOptionAndMove(View view, Option selectedOption, Question question) {
                 Value value = question.getValueBySession();
                 //set new totalpages if the value is not null and the value change
                 if(value!=null && !readOnly)
@@ -318,13 +334,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 swipeTouchListener.clearClickableViews();
                 for(int i=0;i<options.size();i++){
                     Option currentOption = options.get(i);
+                    int optionID=R.id.option2;
+                    int counterID=R.id.counter2;
                     int mod=i%2;
                     //First item per row requires a new row
                     if(mod==0){
                         tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row,tableLayout,false);
                         tableLayout.addView(tableRow);
+                        optionID=R.id.option1;
+                        counterID=R.id.counter1;
                     }
-                    ImageView imageButton = (ImageView) tableRow.getChildAt(mod);
+
+                    //Add counter value if possible
+                    addCounterValue(question,currentOption,tableRow,counterID);
+
+                    ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
                     imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
                     initOptionButton(imageButton, currentOption, value, parent);
@@ -335,12 +359,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 swipeTouchListener.clearClickableViews();
                 for(int i=0;i<opts.size();i++){
 
+                    Option currentOption = opts.get(i);
+
                     tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem,tableLayout,false);
                     tableLayout.addView(tableRow);
 
-                    ImageView imageButton = (ImageView) tableRow.getChildAt(0);
+                    //Add counter value if possible
+                    addCounterValue(question,currentOption,tableRow,R.id.counter1);
 
-                    Option currentOption = opts.get(i);
+                    ImageView imageButton = (ImageView) tableRow.findViewById(R.id.option1);
                     imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
                     initOptionButton(imageButton, currentOption, value, parent);
@@ -351,18 +378,27 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 swipeTouchListener.clearClickableViews();
                 for(int i=0;i<optns.size();i++) {
                     Option currentOption = optns.get(i);
+                    int optionID=R.id.option2;
+                    int counterID=R.id.counter2;
+
                     int mod = i % 2;
                     //First item per row requires a new row
                     if (mod == 0) {
                         tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
                         tableLayout.addView(tableRow);
+                        optionID=R.id.option1;
+                        counterID=R.id.counter1;
                     }
+
+                    //Add counter value if possible
+                    addCounterValue(question,currentOption,tableRow,counterID);
+
                     //The last option in the last row is a single image
                     if (i == optns.size()-1) {
                         ImageView imageButton = null;
                         TableRow.LayoutParams params = new TableRow.LayoutParams(
                                 TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1f);
-                        imageButton = (ImageView) tableRow.getChildAt(mod);
+                        imageButton = (ImageView) tableRow.findViewById(optionID);
                         //remove the innecesary second imageview.
                         tableRow.removeViewAt(mod+1);
                         imageButton.setLayoutParams(params);
@@ -371,7 +407,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         initOptionButton(imageButton, currentOption, value, parent);
                     }
                     else{
-                        ImageView imageButton = (ImageView) tableRow.getChildAt(mod);
+                        ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
                         imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
                         initOptionButton(imageButton, currentOption, value, parent);
@@ -394,6 +430,30 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rowView.requestLayout();
         return rowView;
     }
+
+    /**
+     * Adds current Counter value to image option
+     * @param question Current question
+     * @param currentOption Current option
+     * @param tableRow Row where the counter is gonna be added
+     */
+    private void addCounterValue(Question question, Option currentOption, TableRow tableRow, int counterID) {
+        Question optionCounter = question.findCounterByOption(currentOption);
+        if(optionCounter==null){
+            return;
+        }
+        String counterValue = ReadWriteDB.readValueQuestion(optionCounter);
+        if(counterValue==null || counterValue.isEmpty()){
+            return;
+        }
+
+        EditText counterText = (EditText) tableRow.findViewById(counterID);
+        String counterTextValue=context.getResources().getString(R.string.option_counter);
+
+        //Repetitions: 3
+        counterText.setText(counterTextValue+counterValue);
+    }
+
 
     /**
      * Get status progress in locale strings

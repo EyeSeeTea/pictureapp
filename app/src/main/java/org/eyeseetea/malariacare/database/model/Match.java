@@ -97,6 +97,17 @@ public class Match extends BaseModel {
         this.questionRelation = null;
     }
 
+    /**
+     * Returns the threshold associated with this questionoption
+     * @return
+     */
+    public QuestionThreshold getQuestionThreshold(){
+        //Find threshold with this match
+        return new Select().from(QuestionThreshold.class)
+                .where(Condition.column(Match$Table.ID_MATCH)
+                        .is(id_match)).querySingle();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

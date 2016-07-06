@@ -149,6 +149,11 @@ public class Question extends BaseModel {
     private List<QuestionOption> questionOptions;
 
     /**
+     * List of question Thresholds associated with this question
+     */
+    private List<QuestionThreshold> questionThresholds;
+
+    /**
      * Cached reference to next question for this one.
      * No parent: Next question in order
      * Has parent: Next child question in order for its parent
@@ -444,6 +449,21 @@ public class Question extends BaseModel {
 
     public boolean hasQuestionOption() {
         return !this.getQuestionOption().isEmpty();
+    }
+
+    public List<QuestionThreshold> getQuestionThresholds() {
+
+        if (this.questionThresholds == null) {
+            this.questionThresholds= new Select().from(QuestionThreshold.class)
+                    .indexedBy(Constants.QUESTION_THRESHOLDS_QUESTION_IDX)
+                    .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(this.getId_question()))
+                    .queryList();
+        }
+        return this.questionThresholds;
+    }
+
+    public boolean hasQuestionThresholds(){
+        return !this.getQuestionThresholds().isEmpty();
     }
 
     public List<Match> getMatches() {

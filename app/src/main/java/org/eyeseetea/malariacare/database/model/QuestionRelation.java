@@ -54,6 +54,11 @@ public class QuestionRelation extends BaseModel {
      */
     public static final int COUNTER=2;
 
+    /**
+     * Constant that reflects a warning (validation) relationship
+     */
+    public static final int WARNING=3;
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_question_relation;

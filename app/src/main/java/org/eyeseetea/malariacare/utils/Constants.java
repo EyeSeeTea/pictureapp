@@ -83,6 +83,7 @@ public class Constants {
             QUESTION_RELATION_OPERATION_IDX = "QuestionRelation_operation",
             QUESTION_RELATION_QUESTION_IDX = "QuestionRelation_id_question",
             MATCH_QUESTION_RELATION_IDX = "Match_id_question_relation",
+            QUESTION_THRESHOLDS_QUESTION_IDX = "QuestionThreshold_id_question",
             VALUE_IDX = "Value_id_survey";
 
     public static final String DHIS_API_SERVER = "2.20",

@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.util.Log;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -34,17 +36,11 @@ import java.util.List;
  * Created by Jose on 25/05/2015.
  */
 @Table(databaseName = AppDatabase.NAME)
-public class QuestionOption extends BaseModel {
+public class QuestionThreshold extends BaseModel {
+    private static final String TAG = ".QuestionThreshold";
     @Column
     @PrimaryKey(autoincrement = true)
-    long id_question_option;
-
-    @Column
-    Long id_option;
-    /**
-     * Reference to its option (lazy)
-     */
-    Option option;
+    long id_question_threshold;
 
     @Column
     Long id_question;
@@ -60,41 +56,27 @@ public class QuestionOption extends BaseModel {
      */
     Match match;
 
-    public QuestionOption(){}
+    @Column
+    Integer minValue;
 
-    public QuestionOption(Option option, Question question, Match match) {
+    @Column
+    Integer maxValue;
+
+    public QuestionThreshold(){}
+
+    public QuestionThreshold(Question question, Match match, Integer minValue, Integer maxValue) {
         setQuestion(question);
-        setOption(option);
         setMatch(match);
+        this.minValue = minValue;
+        this.maxValue = maxValue;
     }
 
-    public long getId_question_option() {
-        return id_question_option;
+    public long getId_question_threshold() {
+        return id_question_threshold;
     }
 
-    public void setId_question_option(long id_question_option) {
-        this.id_question_option = id_question_option;
-    }
-
-    public Option getOption() {
-        if(option==null){
-            if(id_option==null) return null;
-            option = new Select()
-                    .from(Option.class)
-                    .where(Condition.column(Option$Table.ID_OPTION)
-                            .is(id_option)).querySingle();
-        }
-        return option;
-    }
-
-    public void setOption(Option option) {
-        this.option = option;
-        this.id_option = (option!=null)?option.getId_option():null;
-    }
-
-    public void setOption(Long id_option){
-        this.id_option = id_option;
-        this.option = null;
+    public void setId_question_threshold(long id_question_threshold) {
+        this.id_question_threshold = id_question_threshold;
     }
 
     public Question getQuestion() {
@@ -139,38 +121,67 @@ public class QuestionOption extends BaseModel {
         this.match = null;
     }
 
-    /**
-     * Returns the threshold associated with this questionoption
-     * @return
-     */
-    public QuestionThreshold getQuestionThreshold(){
-        Match match = getMatch();
+    public Integer getMinValue() {
+        return minValue;
+    }
 
-        //No match -> no threshold
-        if(match==null){
-            return null;
-        }
+    public void setMinValue(Integer minValue) {
+        this.minValue = minValue;
+    }
 
-        return match.getQuestionThreshold();
+    public Integer getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(Integer maxValue) {
+        this.maxValue = maxValue;
     }
 
     /**
-     * Returns the QuestionOptions for the given question and option
-     * @param questionWithOption
-     * @param option
+     * Checks if the given string contains a number inside this threshold
+     * @param value
      * @return
      */
-    public static List<QuestionOption> findByQuestionAndOption(Question questionWithOption, Option option) {
-        if(questionWithOption==null || option==null){
+    public boolean isInThreshold(String value){
+        //Get number
+        try {
+            int intValue=Integer.valueOf(value);
+            return isInThreshold(intValue);
+        }catch (NumberFormatException ex){
+            Log.e(TAG,ex.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the given number is inside this threshold
+     * @param value
+     * @return
+     */
+    public boolean isInThreshold(int value){
+        boolean okLowerBound = minValue==null || value>=minValue;
+        boolean okUpperBound = maxValue==null || value<=maxValue;
+
+        return okLowerBound && okUpperBound;
+    }
+
+    public static QuestionThreshold findByQuestionAndOption(Question questionWithOption, Option option){
+        List<QuestionOption> questionOptionList = QuestionOption.findByQuestionAndOption(questionWithOption,option);
+        //No questionOption no threshold
+        if(questionOptionList==null || questionOptionList.isEmpty()){
             return null;
         }
 
-        return new Select().all().from(QuestionOption.class)
-                .where(Condition.column(QuestionOption$Table.ID_QUESTION)
-                .is(questionWithOption.getId_question()))
-                .and(Condition.column(QuestionOption$Table.ID_OPTION)
-                        .is(option.getId_option()))
-                .queryList();
+        //Look for threshold under questionOption
+        for(QuestionOption questionOption:questionOptionList){
+            Match match = questionOption.getMatch();
+            QuestionThreshold questionThreshold=match.getQuestionThreshold();
+            //Found
+            if(questionThreshold!=null){
+                return questionThreshold;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -178,34 +189,34 @@ public class QuestionOption extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        QuestionOption that = (QuestionOption) o;
+        QuestionThreshold that = (QuestionThreshold) o;
 
-        if (id_question_option != that.id_question_option) return false;
-        if (id_option != null ? !id_option.equals(that.id_option) : that.id_option != null)
-            return false;
-        if (id_question != null ? !id_question.equals(that.id_question) : that.id_question != null)
-            return false;
-        return !(id_match != null ? !id_match.equals(that.id_match) : that.id_match != null);
+        if (id_question_threshold != that.id_question_threshold) return false;
+        if (minValue != that.minValue) return false;
+        if (maxValue != that.maxValue) return false;
+        if (!id_question.equals(that.id_question)) return false;
+        return id_match.equals(that.id_match);
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id_question_option ^ (id_question_option >>> 32));
-        result = 31 * result + (id_option != null ? id_option.hashCode() : 0);
-        result = 31 * result + (id_question != null ? id_question.hashCode() : 0);
-        result = 31 * result + (id_match != null ? id_match.hashCode() : 0);
+        int result = (int) (id_question_threshold ^ (id_question_threshold >>> 32));
+        result = 31 * result + id_question.hashCode();
+        result = 31 * result + id_match.hashCode();
+        result = 31 * result + minValue;
+        result = 31 * result + maxValue;
         return result;
     }
 
     @Override
     public String toString() {
-        return "QuestionOption{" +
-                "id_question_option=" + id_question_option +
-                ", id_option=" + id_option +
+        return "QuestionThreshold{" +
+                "id_question_threshold=" + id_question_threshold +
                 ", id_question=" + id_question +
                 ", id_match=" + id_match +
+                ", minValue=" + minValue +
+                ", maxValue=" + maxValue +
                 '}';
     }
-
 }

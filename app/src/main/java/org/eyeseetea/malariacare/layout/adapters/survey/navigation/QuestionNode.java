@@ -3,7 +3,9 @@ package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,9 +28,14 @@ public class QuestionNode {
     private Map<Long,QuestionCounter> counters;
 
     /**
+     * List of warning that can be triggered once this question is answer
+     */
+    private List<QuestionWarning> warnings;
+
+    /**
      * Parent node
      */
-    private QuestionNode parentNode;
+    QuestionNode parentNode;
 
     /**
      * Next question (sibling)
@@ -39,6 +46,7 @@ public class QuestionNode {
         this.question = question;
         this.navigation = new HashMap<>();
         this.counters = new HashMap<>();
+        this.warnings = new ArrayList<>();
     }
 
     public void setQuestion(Question question){
@@ -81,6 +89,14 @@ public class QuestionNode {
 
         //Add counter to option
         this.counters.put(option.getId_option(),questionCounter);
+    }
+
+    /**
+     * Adds a warning to check for this node
+     * @param questionWarning
+     */
+    public void addWarning(QuestionWarning questionWarning){
+        this.warnings.add(questionWarning);
     }
 
     /**
@@ -146,7 +162,7 @@ public class QuestionNode {
      * Returns next question no matter what (moves to sibling)
      * @return
      */
-    public QuestionNode nextBySibling(){
+    private QuestionNode nextBySibling(){
         //NO sibling ->nowhere to go
         if(this.sibling==null){
             return null;

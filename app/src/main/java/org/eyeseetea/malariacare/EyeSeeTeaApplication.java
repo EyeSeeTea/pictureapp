@@ -37,6 +37,8 @@ import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionOption$Table;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.QuestionRelation$Table;
+import org.eyeseetea.malariacare.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.database.model.QuestionThreshold$Table;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.model.Value$Table;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
@@ -80,6 +82,8 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         new Index<QuestionRelation>(Constants.QUESTION_RELATION_QUESTION_IDX).on(QuestionRelation.class, QuestionRelation$Table.ID_QUESTION).enable();
 
         new Index<Match>(Constants.MATCH_QUESTION_RELATION_IDX).on(Match.class, Match$Table.ID_QUESTION_RELATION).enable();
+
+        new Index<QuestionThreshold>(Constants.QUESTION_THRESHOLDS_QUESTION_IDX).on(QuestionThreshold.class, QuestionThreshold$Table.ID_QUESTION).enable();
 
         new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
     }

@@ -22,7 +22,9 @@ public class Constants {
             PHONE = 13,
             IMAGES_3 = 14,
             IMAGES_5 = 15,
-            COUNTER = 16;
+            COUNTER = 16,
+            WARNING = 17;
+
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
             DROPDOWN_LIST,

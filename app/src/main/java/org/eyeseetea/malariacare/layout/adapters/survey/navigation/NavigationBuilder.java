@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Tab;
 
 import java.util.HashMap;
@@ -181,20 +182,14 @@ public class NavigationBuilder {
             Match match =questionOption.getMatch();
             if(match==null){continue;}
 
-            QuestionRelation questionRelation=match.getQuestionRelation();
-            if(questionRelation==null || questionRelation.getOperation()!=QuestionRelation.WARNING){continue;}
-
-            //Found a warning (validation)
-            Question warningQuestion=questionRelation.getQuestion();
-            if(warningQuestion==null){continue;}
-
+            Question warningQuestion=match.getQuestionFromRelationWithType(QuestionRelation.WARNING);
             QuestionWarning questionWarning = this.warningMap.get(warningQuestion.getId_question());
 
             //Already built (this question is second in order)
             if(questionWarning!=null){
                 questionWarning.triggersWithOption(questionNode);
             }else{
-                //Question with option comes with in graph
+                //Question with option comes first with in graph
                 questionWarning = QuestionWarning.buildParentWithOption(questionNode,warningQuestion);
                 warningMap.put(warningQuestion.getId_question(),questionWarning);
             }
@@ -206,7 +201,24 @@ public class NavigationBuilder {
      * @param questionNode
      */
     private void buildWarningsFromValue(QuestionNode questionNode) {
-        //TODO empezar aqui
+
+        //Each threshold will have a warning associated
+        for(QuestionThreshold questionThreshold:questionNode.getQuestion().getQuestionThresholds()){
+            Match match = questionThreshold.getMatch();
+            if(match==null){continue;}
+
+            Question warningQuestion=match.getQuestionFromRelationWithType(QuestionRelation.WARNING);
+            QuestionWarning questionWarning = this.warningMap.get(warningQuestion.getId_question());
+
+            //Already built (this question is second in order)
+            if(questionWarning!=null){
+                questionWarning.triggersWithValue(questionNode);
+            }else{
+                //Question with value comes first with in graph
+                questionWarning = QuestionWarning.buildParentWithValue(questionNode,warningQuestion);
+                this.warningMap.put(warningQuestion.getId_question(),questionWarning);
+            }
+        }
     }
 
     /**

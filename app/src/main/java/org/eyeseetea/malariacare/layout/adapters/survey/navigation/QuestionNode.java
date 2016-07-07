@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
+import com.google.android.gms.games.quest.Quest;
+
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 

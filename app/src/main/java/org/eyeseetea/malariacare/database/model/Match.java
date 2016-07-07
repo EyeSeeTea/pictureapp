@@ -108,6 +108,20 @@ public class Match extends BaseModel {
                         .is(id_match)).querySingle();
     }
 
+    /**
+     * Returns the question from QuestionRelation for this match with the given operationType
+     * @param operationType
+     * @return
+     */
+    public Question getQuestionFromRelationWithType(int operationType){
+        QuestionRelation questionRelation = this.getQuestionRelation();
+        if(questionRelation==null || questionRelation.getOperation()!=operationType){
+            return null;
+        }
+
+        return questionRelation.getQuestion();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -326,12 +326,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         TableRow tableRow=null;
         int typeQuestion=question.getOutput();
+        swipeTouchListener.clearClickableViews();
         switch (typeQuestion){
             case Constants.IMAGES_2:
             case Constants.IMAGES_4:
             case Constants.IMAGES_6:
                 List<Option> options = question.getAnswer().getOptions();
-                swipeTouchListener.clearClickableViews();
                 for(int i=0;i<options.size();i++){
                     Option currentOption = options.get(i);
                     int optionID=R.id.option2;
@@ -356,7 +356,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 break;
             case Constants.IMAGES_3:
                 List<Option> opts = question.getAnswer().getOptions();
-                swipeTouchListener.clearClickableViews();
                 for(int i=0;i<opts.size();i++){
 
                     Option currentOption = opts.get(i);
@@ -375,7 +374,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 break;
             case Constants.IMAGES_5:
                 List<Option> optns = question.getAnswer().getOptions();
-                swipeTouchListener.clearClickableViews();
                 for(int i=0;i<optns.size();i++) {
                     Option currentOption = optns.get(i);
                     int optionID=R.id.option2;
@@ -414,14 +412,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                 }
                 break;
+            case Constants.WARNING:
+                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem, tableLayout, false);
+                tableLayout.addView(tableRow);
+                initWarningValue(tableRow);
+                break;
             case Constants.PHONE:
-                swipeTouchListener.clearClickableViews();
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                 tableLayout.addView(tableRow);
                 initPhoneValue(tableRow, value);
                 break;
             case Constants.POSITIVE_INT:
-                swipeTouchListener.clearClickableViews();
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_positiveint_row, tableLayout, false);
                 tableLayout.addView(tableRow);
                 initPositiveIntValue(tableRow, value);
@@ -429,6 +430,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    private void initWarningValue(TableRow tableRow) {
+        ImageView errorImage = (ImageView)tableRow.findViewById(R.id.option1);
+        errorImage.setImageResource(R.drawable.ic_event_error);
+        //Add button to listener
+        swipeTouchListener.addClickableView(errorImage);
+
+        EditText okText = (EditText)tableRow.findViewById(R.id.counter1);
+        okText.setText(R.string.ok);
     }
 
     /**

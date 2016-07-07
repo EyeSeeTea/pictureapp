@@ -5,6 +5,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -190,10 +191,43 @@ public class NavigationController {
             Log.d(TAG,String.format("visit(%s) -> Not advancing",nextNode.getQuestion().getCode()));
             return;
         }
+
+        //Moving from a warning replaces warning itself instead of moving forward
+        if(getCurrentNode() instanceof QuestionWarning){
+            visited.remove(currentPosition);
+            currentPosition--;
+        }
+
         //annotate new current node and advance counter
-        Log.d(TAG,String.format("visit(%s) -> In position %d",nextNode.getQuestion().getCode(),currentPosition+1));
         currentPosition++;
+        Log.d(TAG,String.format("visit(%s) -> In position %d",nextNode.getQuestion().getCode(),currentPosition));
         visited.add(nextNode);
+    }
+
+    /**
+     * Goes back to warning that will be showed right before the first question in the validation
+     * @param questionWarning
+     */
+    private void visit(QuestionWarning questionWarning){
+        //Find position of 'parentQuestion' in visited
+        QuestionNode firstQuestionInWarning = questionWarning.next(null);
+
+        int i;
+        for(i=currentPosition;i>=0;i--){
+            //Get current Question in reverse traverse
+            QuestionNode iQuestionNode=this.visited.get(i);
+            //Remove value and visit
+            ReadWriteDB.deleteValue(iQuestionNode.getQuestion());
+            visited.remove(i);
+            //Found parent position
+            if(iQuestionNode.getQuestion().getId_question()==firstQuestionInWarning.getQuestion().getId_question()){
+                currentPosition=i;
+                break;
+            }
+        }
+
+        //The warning is added right where the first of its questions was
+        visited.add(questionWarning);
     }
 
     public boolean hasNext(Option option){

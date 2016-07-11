@@ -21,7 +21,10 @@ package org.eyeseetea.malariacare.database.iomodules.dhis.exporter;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.Build;
 import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
@@ -86,6 +89,12 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
     @Override
     public void visit(Survey survey) throws Exception{
+
+        //Precondition
+        if(isEmpty(survey)){
+            return;
+        }
+
         //Turn survey into an event
         this.currentSurvey=survey;
 
@@ -108,6 +117,29 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
         //Annotate both objects to update its state once the process is over
         annotateSurveyAndEvent();
+    }
+
+    private boolean isEmpty(Survey survey){
+        if(survey==null){
+            return true;
+        }
+
+        List<Value> values=survey.getValuesFromDB();
+        if(values==null || values.isEmpty()){
+            logEmptySurveyException(survey);
+            return true;
+        }
+        return false;
+    }
+
+    public static void logEmptySurveyException(Survey survey){
+        PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
+        String info=String.format("Survey: %s\nPhoneMetaData: %s\nAPI: %s",
+                survey.toString(),
+                phoneMetaData==null?"":phoneMetaData.getPhone_metaData(),
+                Build.VERSION.RELEASE
+                );
+        Crashlytics.logException(new Throwable(info));
     }
     /**
      * Builds several datavalues from the mainScore of the survey

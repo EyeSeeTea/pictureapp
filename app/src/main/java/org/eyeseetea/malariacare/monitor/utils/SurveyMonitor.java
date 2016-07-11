@@ -61,19 +61,18 @@ public class SurveyMonitor {
     private final static Long ID_OPTION_RDT_NOT_TESTED=3l;
 
     /**
-     * Id of pf/pv specie option
+     * Id of pv specie option
      */
-    private final static Long ID_OPTION_SPECIE_PFPV=9l;
+    private final static Long ID_OPTION_SPECIE_PF =9l;
+    /**
+     * Id of pv specie option
+     */
+    private final static Long ID_OPTION_SPECIE_PV =10l;
 
     /**
-     * Id of pf specie option
+     * Id of pf/pv (mixed) specie option
      */
-    private final static Long ID_OPTION_SPECIE_PF=10l;
-
-    /**
-     * Id of pf specie option
-     */
-    private final static Long ID_OPTION_SPECIE_PV=11l;
+    private final static Long ID_OPTION_SPECIE_PFPV =11l;
 
     /**
      * Id of referral treatment option
@@ -159,7 +158,7 @@ public class SurveyMonitor {
      * @return
      */
     public boolean isPf(){
-        return findValue(ID_QUESTION_SPECIE,ID_OPTION_SPECIE_PF)!=null;
+        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PF)!=null;
     }
 
     /**
@@ -167,15 +166,15 @@ public class SurveyMonitor {
      * @return
      */
     public boolean isPv(){
-        return findValue(ID_QUESTION_SPECIE,ID_OPTION_SPECIE_PV)!=null;
+        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PV)!=null;
     }
 
     /**
-     * Tells if the given survey has Pf/Pv specie
+     * Tells if the given survey has Pf/Pv (mixed)  specie
      * @return
      */
     public boolean isPfPv(){
-        return findValue(ID_QUESTION_SPECIE,ID_OPTION_SPECIE_PFPV)!=null;
+        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
     }
 
     /**

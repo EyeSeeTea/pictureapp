@@ -135,7 +135,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     /**
      * Flag that indicates if the actual question option is clicked to prevent multiple clicks.
      */
-    public boolean isClicked=false;
+    public static boolean isClicked;
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
@@ -155,6 +155,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         }
         navigationController.setTotalPages(totalPages);
+        isClicked=false;
     }
 
     private NavigationController initNavigationController(Tab tab) {
@@ -523,6 +524,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Required, empty values rejected
         if(checkEditTextNotNull(positiveIntValue)){
             numberPicker.setError(context.getString(R.string.dynamic_error_age));
+            isClicked=false;
             return;
         }
 
@@ -595,6 +597,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Check phone ok
         if(!checkPhoneNumberByMask(phoneValue)){
             editText.setError(context.getString(R.string.dynamic_error_phone_format));
+            isClicked=false;
             return;
         }
 
@@ -803,7 +806,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     return;
                 }
                 next();
-                isClicked=false;
             }
         }, 750);
     }
@@ -821,12 +823,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 public void onClick(DialogInterface dialog, int arg1) {
                     hideKeyboard(PreferencesState.getInstance().getContext());
                     DashboardActivity.dashboardActivity.closeSurveyFragment();
+                    isClicked=false;
                 }
             });
         msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 hideKeyboard(PreferencesState.getInstance().getContext());
                 review();
+                isClicked=false;
             }
         });
 
@@ -862,6 +866,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(value==null  && !readOnly)
             navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());
         navigationController.isMovingToForward=false;
+        isClicked=false;
     }
 
     /**
@@ -873,6 +878,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         navigationController.previous();
         notifyDataSetChanged();
+        isClicked=false;
     }
 
     /**

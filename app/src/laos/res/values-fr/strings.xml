@@ -117,5 +117,5 @@
 <string name="font_size_level3_title">"Grand"</string>
 <string name="font_size_level4_title">"Extra grand"</string>
 <string name="option_counter">"Répétitions: "</string>
-<string name="option_counter">"Confirmer option"</string>
+<string name="option_confirm">"Confirmer option"</string>
 </resources>

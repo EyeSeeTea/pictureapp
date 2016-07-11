@@ -556,6 +556,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if(isClicked)
+                        return false;
+                    isClicked=true;
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         String phoneValue = editText.getText().toString();
                         if (checkPhoneNumberByMask(phoneValue)) {
@@ -624,6 +627,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if(isClicked)
+                        return false;
+                    isClicked=true;
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         if(v.getId()==R.id.dynamic_positiveInt_edit)
                             savePositiveIntValue((EditText) v);
@@ -973,7 +979,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             @Override
             public boolean onSingleTapConfirmed(MotionEvent event){
-//              Log.d(TAG, String.format("onSingleTapConfirmed: %f %f", event.getX(), event.getY()));
+              Log.d(TAG, String.format("onSingleTapConfirmed: %f %f", event.getX(), event.getY()));
 
                 //Find the clicked button
                 View clickedView=findViewByCoords(event);
@@ -984,7 +990,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     onClick(clickedView);
                     return true;
                 }
-
                 //Not found, not consumed
                 return false;
             }

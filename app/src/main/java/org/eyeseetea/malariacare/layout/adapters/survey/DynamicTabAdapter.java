@@ -207,7 +207,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                             Option otherOption=(Option)childItem.getTag();
                             if(selectedOption.getId_option() != otherOption.getId_option()){
-                                overshadow((ImageView) childItem, otherOption);
+                                overshadow((FrameLayout) childItem, otherOption);
                             }
                         }
                     }
@@ -310,7 +310,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Question
         TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
         //Load a font which support Khmer character
-        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + "KhmerOS.ttf");
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + context.getString(R.string.specific_language_font));
         headerView.setTypeface(tf);
         headerView.setText(question.getForm_name());
 
@@ -344,14 +344,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         optionID=R.id.option1;
                         counterID=R.id.counter1;
                     }
-
                     //Add counter value if possible
                     addCounterValue(question,currentOption,tableRow,counterID);
 
-                    ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
-                    imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+                    FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
+                    TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                    setTextSettings(textOption,currentOption);
+                    frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
-                    initOptionButton(imageButton, currentOption, value, parent);
+                    initOptionButton(frameLayout, currentOption, value, parent);
                 }
                 break;
             case Constants.IMAGES_3:
@@ -359,18 +360,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 swipeTouchListener.clearClickableViews();
                 for(int i=0;i<opts.size();i++){
 
-                    Option currentOption = opts.get(i);
-
                     tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem,tableLayout,false);
                     tableLayout.addView(tableRow);
+                    Option currentOption = opts.get(i);
 
                     //Add counter value if possible
                     addCounterValue(question,currentOption,tableRow,R.id.counter1);
 
-                    ImageView imageButton = (ImageView) tableRow.findViewById(R.id.option1);
-                    imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+                    FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(0);
+                    TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                    setTextSettings(textOption,currentOption);
 
-                    initOptionButton(imageButton, currentOption, value, parent);
+                    frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                    initOptionButton(frameLayout, currentOption, value, parent);
                 }
                 break;
             case Constants.IMAGES_5:
@@ -398,19 +401,25 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         ImageView imageButton = null;
                         TableRow.LayoutParams params = new TableRow.LayoutParams(
                                 TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1f);
-                        imageButton = (ImageView) tableRow.findViewById(optionID);
+                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
+                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                        setTextSettings(textOption,currentOption);
+
                         //remove the innecesary second imageview.
                         tableRow.removeViewAt(mod+1);
-                        imageButton.setLayoutParams(params);
-                        imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+                        frameLayout.setLayoutParams(params);
+                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
-                        initOptionButton(imageButton, currentOption, value, parent);
+                        initOptionButton(frameLayout, currentOption, value, parent);
                     }
                     else{
-                        ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
-                        imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
+                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
 
-                        initOptionButton(imageButton, currentOption, value, parent);
+                        setTextSettings(textOption,currentOption);
+                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                        initOptionButton(frameLayout, currentOption, value, parent);
                     }
                 }
                 break;
@@ -454,6 +463,25 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         counterText.setText(counterTextValue+counterValue);
     }
 
+    /**
+     * Used to set the text widht like the framelayout size
+     * to prevent a resize of the frameLayout if the textoption is more bigger.
+     */
+    private void resizeTextWidth(FrameLayout frameLayout, TextCard textOption) {
+            textOption.setWidth(frameLayout.getWidth());
+    }
+
+    private void setTextSettings(TextCard textOption, Option currentOption) {
+        //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
+        if (currentOption.getOptionAttribute().hasHorizontalAlignment() && currentOption.getOptionAttribute().hasVerticalAlignment())
+        {
+            textOption.setText(currentOption.getCode());
+            textOption.setGravity(currentOption.getOptionAttribute().getGravity());
+        }
+        else{
+            textOption.setVisibility(View.GONE);
+        }
+    }
 
     /**
      * Get status progress in locale strings
@@ -728,7 +756,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param button
      * @param option
      */
-    private void initOptionButton(ImageView button, Option option, Value value, ViewGroup parent){
+    private void initOptionButton(FrameLayout button, Option option, Value value, ViewGroup parent){
 
         // value = null --> first time calling initOptionButton
         //Highlight button
@@ -742,7 +770,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         try {
             InputStream inputStream = context.getAssets().open(option.getPath());
             Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-            button.setImageBitmap(bmp);
+            //the button is a framelayout that contains a imageview
+            ImageView imageView= (ImageView) button.getChildAt(0);
+            imageView.setImageBitmap(bmp);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -758,6 +788,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Add button to listener
         swipeTouchListener.addClickableView(button);
 
+        resizeTextWidth(button,(TextCard) button.getChildAt(1));
     }
 
     /**
@@ -777,19 +808,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         bgShape.setColor(Color.parseColor("#" + backGColor));
 
         bgShape.setStroke(3, Color.WHITE);
-
-        ImageView v = (ImageView) view;
+        //the view is a framelayout that contains a imageview
+        FrameLayout f = (FrameLayout) view;
+        ImageView v= (ImageView) f.getChildAt(0);
         v.clearColorFilter();
     }
 
     /**
      * @param view
      */
-    private void overshadow(ImageView view, Option option){
+    private void overshadow(FrameLayout view, Option option){
 
         //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
         view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
-        view.setColorFilter(Color.parseColor("#805a595b"));
+        ImageView imageView = (ImageView) view.getChildAt(0);
+        imageView.setColorFilter(Color.parseColor("#805a595b"));
 
         Drawable bg = view.getBackground();
         if(bg instanceof GradientDrawable) {

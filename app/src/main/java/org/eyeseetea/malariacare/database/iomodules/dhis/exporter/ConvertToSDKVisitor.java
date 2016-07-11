@@ -92,6 +92,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
         //Precondition
         if(isEmpty(survey)){
+            survey.delete();
             return;
         }
 

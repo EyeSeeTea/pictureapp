@@ -131,6 +131,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     View keyboardView;
 
+
+    /**
+     * Flag that indicates if the actual question option is clicked to prevent multiple clicks.
+     */
+    public boolean isClicked=false;
+
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
@@ -168,6 +174,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * @param view
              */
             public void onClick(View view) {
+                if(isClicked)
+                    return;
+                isClicked=true;
                 Log.d(TAG, "onClick");
                 navigationController.isMovingToForward=true;
                 Option selectedOption=(Option)view.getTag();
@@ -489,6 +498,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(isClicked)
+                        return;
+                    isClicked=true;
                     savePositiveIntValue(numberPicker);
                 }
             });
@@ -557,6 +569,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(isClicked)
+                        return;
+                    isClicked=true;
                     View parentView = (View) v.getParent();
                     EditText editText = (EditText) parentView.findViewById(R.id.dynamic_phone_edit);
                     savePhoneValue(editText);
@@ -788,6 +803,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     return;
                 }
                 next();
+                isClicked=false;
             }
         }, 750);
     }

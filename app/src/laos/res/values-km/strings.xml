@@ -118,6 +118,6 @@
 <string name="font_size_level2_title">"មធ្យម"</string>
 <string name="font_size_level3_title">"ធំ"</string>
 <string name="font_size_level4_title">"ធំបំផុត"</string>
-<string name="option_counter">"អ្នកតំណាង: "</string>
-<string name="option_counter">"អះអាងជម្រើស"</string>
+<string name="option_counter">"ការធ្វើឡើងវិញ:"</string>
+<string name="option_confirm">"អះអាងជម្រើស"</string>
 </resources>

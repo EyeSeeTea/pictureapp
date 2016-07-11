@@ -176,18 +176,21 @@ public class QuestionNode {
     /**
      * Updates the question counter for the given option
      * @param option
+     * @return true when a counter has been incremented
      */
-    public void increaseRepetitions(Option option){
+    public boolean increaseRepetitions(Option option){
         if(option==null){
-            return;
+            return false;
         }
 
         QuestionCounter questionCounter = this.counters.get(option.getId_option());
         if(questionCounter==null){
-            return;
+            return false;
         }
 
+        //something to inc -> true
         questionCounter.increaseRepetitions();
+        return true;
     }
 
 

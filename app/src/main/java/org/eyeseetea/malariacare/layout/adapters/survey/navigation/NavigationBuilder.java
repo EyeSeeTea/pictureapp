@@ -183,6 +183,7 @@ public class NavigationBuilder {
             if(match==null){continue;}
 
             Question warningQuestion=match.getQuestionFromRelationWithType(QuestionRelation.WARNING);
+            if(warningQuestion==null){continue;}
             QuestionWarning questionWarning = this.warningMap.get(warningQuestion.getId_question());
 
             //Already built (this question is second in order)

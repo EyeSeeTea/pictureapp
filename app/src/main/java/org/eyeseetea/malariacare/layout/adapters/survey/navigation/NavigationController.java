@@ -117,17 +117,19 @@ public class NavigationController {
 
     public Question next(Option option){
         Log.d(TAG,String.format("next(%s)...",option==null?"":option.getName()));
+
+        //Trigger counters -> no movement
+        if(!isInitialMove() && getCurrentNode().increaseRepetitions(option)) {
+            Log.d(TAG,String.format("next(%s)->%s",option==null?"":option.getName(),getCurrentQuestion().getCode()));
+            return getCurrentQuestion();
+        }
+
         //Find next node
         QuestionNode nextNode=findNext(option);
 
         //No next
         if(nextNode==null){
             return null;
-        }
-
-        //Trigger counters
-        if(!isInitialMove()) {
-            getCurrentNode().increaseRepetitions(option);
         }
 
         //Found

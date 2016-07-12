@@ -16,7 +16,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
         android:layout_weight="1" ></ImageView>
     <org.eyeseetea.malariacare.views.TextCard
         android:padding="5dip"
@@ -40,8 +39,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"></ImageView>
+        android:scaleType="fitCenter" ></ImageView>
     <org.eyeseetea.malariacare.views.TextCard
         android:padding="5dip"
         android:gravity="center"

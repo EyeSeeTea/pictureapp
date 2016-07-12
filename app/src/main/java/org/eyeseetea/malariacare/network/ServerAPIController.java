@@ -344,7 +344,7 @@ public class ServerAPIController {
             return false;
         }
         boolean valid=getProgramUID()!=null && getProgramUID().equals(programUIDInServer);
-        Log.d(TAG, String.format("isValidProgram(%s) -> %b", url, valid));
+        Log.d(TAG, String.format("isValidProgram(%s) -> %b (Thread: %d)", url, valid, Thread.currentThread().getId()));
         return valid;
     }
 

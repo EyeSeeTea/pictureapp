@@ -30,6 +30,7 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -85,6 +86,13 @@ public class PushService extends IntentService {
     public PushService(String name) {
         super(name);
         Log.d(TAG, "PushService(name) constructor");
+    }
+
+    @Override
+    public void onDestroy(){
+        Log.d(TAG, "onDestroy");
+        PopulateDB.wipeSDKData();
+        super.onDestroy();
     }
 
     private synchronized void startProgress(){

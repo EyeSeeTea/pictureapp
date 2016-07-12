@@ -133,6 +133,7 @@ public class NavigationController {
         visit(nextNode);
         Question nextQuestion=nextNode.getQuestion();
 
+
         //Return next question
         Log.d(TAG,String.format("next(%s)->%s",option==null?"":option.getName(),nextQuestion.getCode()));
         return nextNode.getQuestion();

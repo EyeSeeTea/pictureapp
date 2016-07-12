@@ -23,16 +23,16 @@ package org.eyeseetea.malariacare.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
+
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
+
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;

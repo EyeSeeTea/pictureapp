@@ -15,8 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_weight="1"
-        android:scaleType="center"></ImageView>
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:layout_weight="1" ></ImageView>
     <org.eyeseetea.malariacare.views.TextCard
         android:padding="5dip"
         android:gravity="center"
@@ -28,7 +29,8 @@
         android:textColor="@color/white"
         android:textSize="40dp"
         android:text="" />
-</FrameLayout>    <FrameLayout
+</FrameLayout>
+    <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_weight="0.5"
@@ -38,7 +40,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:scaleType="center"></ImageView>
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"></ImageView>
     <org.eyeseetea.malariacare.views.TextCard
         android:padding="5dip"
         android:gravity="center"

@@ -105,7 +105,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         //Calculates scores and update survey
         Log.d(TAG,"Registering scores...");
         List<CompositeScore> compositeScores = ScoreRegister.loadCompositeScores(survey);
-        updateSurvey(compositeScores);
 
         //Turn question values into dataValues
         Log.d(TAG,"Creating datavalues from questions...");
@@ -246,15 +245,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     /**
-     * Several properties must be updated when a survey is about to be sent.
-     * This changes will be saved just when process finish successfully.
-     * @param compositeScores
-     */
-    private void updateSurvey(List<CompositeScore> compositeScores){
-        currentSurvey.setStatus(Constants.SURVEY_SENT);
-    }
-
-    /**
      * Updates the location of the current event that it is being processed
      * @throws Exception
      */
@@ -292,12 +282,13 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             ImportSummary importSummary=importSummaryMap.get(iEvent.getLocalId());
             if(hasImportSummaryErrors(importSummary)){
                 //Some error while pushing should be done again
-                iSurvey.setStatus(Constants.SURVEY_IN_PROGRESS);
+                iSurvey.setStatus(Constants.SURVEY_COMPLETED);
                 iSurvey.save();
 
                 //Generated event must be remove too
                 iEvent.delete();
             }else{
+                iSurvey.setStatus(Constants.SURVEY_SENT);
                 iSurvey.saveMainScore();
                 iSurvey.save();
                 Log.d("DpBlank", "Saving suvey as completed " + iSurvey);

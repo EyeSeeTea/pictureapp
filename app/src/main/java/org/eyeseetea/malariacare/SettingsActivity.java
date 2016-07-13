@@ -389,7 +389,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Subscribe
     public void callbackLoginPrePull(NetworkJob.NetworkJobResult<ResourceType> result) {
         //Nothing to check
-        if(result==null || !result.getResourceType().equals(ResourceType.USERS)){
+        if(result==null || result.getResourceType()==null || !result.getResourceType().equals(ResourceType.USERS)){
             return;
         }
 

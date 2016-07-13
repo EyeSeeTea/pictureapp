@@ -189,6 +189,8 @@ public class PushService extends IntentService {
 
     @Subscribe
     public void callbackLoginPrePush(NetworkJob.NetworkJobResult<ResourceType> result) {
+        if(!PushController.getInstance().isPushInProgress())
+            return;
         Log.d(TAG, "callbackLoginPrePush");
         //Nothing to check
         if(result==null || result.getResourceType()==null || !result.getResourceType().equals(ResourceType.USERS)){

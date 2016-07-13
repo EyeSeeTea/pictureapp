@@ -271,7 +271,6 @@ public class DashboardActivity extends BaseActivity {
     @Override
     public void onStop(){
         Log.d(TAG, "onStop");
-        AlarmPushReceiver.cancelPushAlarm(this);
         super.onStop();
     }
 

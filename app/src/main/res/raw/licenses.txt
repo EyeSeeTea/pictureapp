@@ -90,3 +90,8 @@ No warranties are given. The license may not give you all of the permissions nec
 <p><b>EXCLUSIONS</b></p>
 
 <p>This App uses proprietary Crashlytics software under a restricted license from Crashlytics to provide information to the developer(s) about the functioning of the App, including, but not limited to, information about how and under what circumstances the App crashed and how many users interact with the App and how they do so. The Crashlytics software is not included in the GNU General Public License for the App; PSI has no authority to sub-license the Crashlytics software.  For more information about Crashlytics software, please visit https://try.crashlytics.com/terms/.</p>
+
+
+
+
+

@@ -13,6 +13,7 @@
     <string name="dialog_title_delete_survey">"ลบผลการส่งออก"</string>
     <string name="dialog_info_delete_survey">"คุณแน่ใจหรือไม่ว่าคุณต้องการที่จะสมบูรณ์ยกเลิกการสำรวจครั้งนี้?"</string>
     <string name="dialog_title_error">"มีข้อผิดพลาด"</string>
+    <string name="toast_push_is_pushing">"ส่งการสำรวจก่อนเข้าสู่การตั้งค่า"</string>
     <string name="create_info_organization_unit">"องค์กรหน่วย"</string>
     <string name="assessment_sent_date">"วัน"</string>
     <string name="assessment_title_header">"ส่งยังไม่ได้ตัดสินใจ"</string>

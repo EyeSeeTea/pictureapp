@@ -13,6 +13,7 @@
     <string name="dialog_title_delete_survey">"ລົບຜົນສົ່ງອອກ"</string>
     <string name="dialog_info_delete_survey">"ທ່ານມີຄວາມແນ່ໃຈວ່າທ່ານຕ້ອງການທີ່ຈະມີການຍົກເລີກການສໍາຫຼວດນີ້?"</string>
     <string name="dialog_title_error">"ປະກອບດ້ວຍຄວາມຜິດພາດ"</string>
+    <string name="toast_push_is_pushing">"ສົ່ງການສໍາຫຼວດກ່ອນທີ່ຈະເຂົ້າການຕັ້ງຄ່າ."</string>
     <string name="create_info_organization_unit">"ອົງການສະຫະ"</string>
     <string name="assessment_sent_date">"ວັນທີ່"</string>
     <string name="assessment_title_header">"ສົ່ງຍັງບໍ່ທັນໄດ້ຕັດສິນໃຈ"</string>

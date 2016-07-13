@@ -126,7 +126,7 @@ public abstract class BaseActivity extends ActionBarActivity {
                 debugMessage("User asked for settings");
                 if(PushController.getInstance().isPushInProgress()) {
                     Log.d(TAG,"Click in settings true "+PushController.getInstance().isPushInProgress());
-                    Toast.makeText(this, "Sending surveys before entering settings.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.toast_push_is_pushing, Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Log.d(TAG,"Click in settings false "+PushController.getInstance().isPushInProgress());

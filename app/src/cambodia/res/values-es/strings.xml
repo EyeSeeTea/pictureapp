@@ -13,6 +13,7 @@
 <string name="dialog_title_delete_survey">"Borrar evaluación"</string>
 <string name="dialog_info_delete_survey">"¿Seguro que desea borrar la evaluación?"</string>
 <string name="dialog_title_error">"Error"</string>
+<string name="toast_push_is_pushing">"Enviando encuestas antes de entrar en ajustes"</string>
 <string name="create_info_organization_unit">"Unidad de organización"</string>
 <string name="assessment_sent_date">"Fecha de llenado"</string>
 <string name="assessment_title_header">"Pendiente de enviar"</string>

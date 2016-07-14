@@ -23,6 +23,8 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
+import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -171,6 +173,19 @@ public class QuestionOption extends BaseModel {
                 .and(Condition.column(QuestionOption$Table.ID_OPTION)
                         .is(option.getId_option()))
                 .queryList();
+    }
+
+    /**
+     * Find questionOptions related with the given questionRelation by its match
+     * @param questionRelation
+     * @return
+     */
+    public static List<QuestionOption> findByQuestionRelation(QuestionRelation questionRelation){
+        return new Select().all().from(QuestionOption.class).as("qo")
+                .join(Match.class, Join.JoinType.LEFT).as("m")
+                .on(Condition.column(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH))
+                                .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)))
+                .where(Condition.column(ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION)).eq(questionRelation.getId_question_relation())).queryList();
     }
 
     @Override

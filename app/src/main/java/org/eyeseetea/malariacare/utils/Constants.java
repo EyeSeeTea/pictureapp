@@ -23,7 +23,8 @@ public class Constants {
             IMAGES_3 = 14,
             IMAGES_5 = 15,
             COUNTER = 16,
-            WARNING = 17;
+            WARNING = 17,
+            REMINDER = 18;
 
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(

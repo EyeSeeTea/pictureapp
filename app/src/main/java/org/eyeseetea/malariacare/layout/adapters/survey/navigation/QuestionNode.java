@@ -1,9 +1,10 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
-import com.google.android.gms.games.quest.Quest;
-
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.ReminderStatusChecker;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.StatusChecker;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +36,11 @@ public class QuestionNode {
     private List<QuestionWarning> warnings;
 
     /**
+     * StatusChecker (provides info related to node state according to values)
+     */
+    private StatusChecker statusChecker;
+
+    /**
      * Parent node
      */
     QuestionNode parentNode;
@@ -49,6 +55,7 @@ public class QuestionNode {
         this.navigation = new HashMap<>();
         this.counters = new HashMap<>();
         this.warnings = new ArrayList<>();
+        this.statusChecker = buildStatusChecker();
     }
 
     public void setQuestion(Question question){
@@ -125,7 +132,31 @@ public class QuestionNode {
      * @return
      */
     public QuestionNode next(Option option){
+        //Find next (option, sibling, parent)
+        QuestionNode nextNode=nextAnyWay(option);
+        if(nextNode==null){
+            return null;
+        }
+        //If nextNode is off -> move forward (recursively)
+        while(nextNode!=null && !nextNode.isEnabled()){
+            nextNode=nextNode.nextAnyWay(null);
+        }
+        return nextNode;
+    }
 
+    /**
+     *
+     * @return
+     */
+    public boolean isEnabled(){
+        return this.statusChecker!=null && this.statusChecker.isEnabled();
+    }
+
+    public boolean isVisibleInReview(){
+        return this.statusChecker!=null && this.statusChecker.isVisibleInReview();
+    }
+
+    private QuestionNode nextAnyWay(Option option){
         //Try children
         QuestionNode nextNode = nextByOption(option);
         if(nextNode!=null){
@@ -145,6 +176,25 @@ public class QuestionNode {
 
         //Parent -> Try parent's sibling
         return this.parentNode.nextBySibling();
+    }
+
+    /**
+     * Builds a statusChecker according to the type of question
+     * @return
+     */
+    private StatusChecker buildStatusChecker(){
+        if(this.question==null){
+            return null;
+        }
+
+        switch (this.getQuestion().getOutput()){
+            case Constants.WARNING:
+                //TODO
+            case Constants.REMINDER:
+                return new ReminderStatusChecker(this.question);
+            default:
+                return new StatusChecker();
+        }
     }
 
     /**

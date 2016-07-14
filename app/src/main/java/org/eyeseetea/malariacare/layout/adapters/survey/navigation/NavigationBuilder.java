@@ -75,8 +75,8 @@ public class NavigationBuilder {
         buildSibling(currentNode);
         //Add counters
         buildCounters(currentNode);
-        //Add warnings
-        buildWarnings(currentNode);
+//        //Add warnings
+//        buildWarnings(currentNode);
 
         return currentNode;
     }

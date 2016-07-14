@@ -28,6 +28,12 @@ public class NavigationController {
     private List<QuestionNode> visited;
 
     /**
+     * A reference to a node that is shown it wont be shown up in previous movement
+     * such as Warnings
+     */
+    private QuestionNode nonVisibleNode;
+
+    /**
      * Current position in the list of questions
      */
     private int currentPosition;
@@ -47,10 +53,6 @@ public class NavigationController {
         this.rootNode = rootNode;
         this.visited=new ArrayList<>();
         this.currentPosition=-1;
-    }
-
-    public boolean isFirstQuestion(){
-        return this.currentPosition==0;
     }
 
     public void setTotalPages(int total){
@@ -168,6 +170,13 @@ public class NavigationController {
      * @return
      */
     private QuestionNode getCurrentNode(){
+
+        //Temporal nonVisibleNode comes first
+        if(nonVisibleNode!=null){
+            return nonVisibleNode;
+        }
+
+        //Most of times simply returns the las visited node
         if(currentPosition<0 || currentPosition>=this.visited.size()){
             Log.w(TAG,String.format("getCurrentNode(%d)->Nothing there",currentPosition));
             return null;
@@ -194,13 +203,16 @@ public class NavigationController {
             return;
         }
 
-        //Moving from a warning replaces warning itself instead of moving forward
-        if(getCurrentNode() instanceof QuestionWarning){
-            visited.remove(currentPosition);
-            currentPosition--;
+        //This node wont be shown in previous move (warnings)
+        if(!nextNode.isVisibleInReview()){
+            //TODO we should remove and do some stuff
+            Log.d(TAG,String.format("visit(%s) -> In position %d",nextNode.getQuestion().getCode(),currentPosition));
+            nonVisibleNode = nextNode;
+            return;
         }
 
         //annotate new current node and advance counter
+        nonVisibleNode=null;
         currentPosition++;
         Log.d(TAG,String.format("visit(%s) -> In position %d",nextNode.getQuestion().getCode(),currentPosition));
         visited.add(nextNode);

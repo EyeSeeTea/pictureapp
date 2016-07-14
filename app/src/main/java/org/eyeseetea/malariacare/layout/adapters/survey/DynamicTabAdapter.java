@@ -195,7 +195,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 if(value!=null && !readOnly)
                     navigationController.setTotalPages(question.getTotalQuestions());
                 ReadWriteDB.saveValuesDDL(question, selectedOption, value);
+                darkenNonSelected(view, selectedOption);
+                highlightSelection(view, selectedOption);
+                finishOrNext();
+            }
 
+            private void darkenNonSelected(View view, Option selectedOption) {
+                swipeTouchListener.clearClickableViews();
+                //A Warning or Reminder (not a real option)
+                if(selectedOption==null){
+                    return;
+                }
+                //A question with real options -> darken non selected
                 ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
                 for (int rowPos = 0; rowPos < vgTable.getChildCount(); rowPos++) {
                     ViewGroup vgRow = (ViewGroup) vgTable.getChildAt(rowPos);
@@ -203,18 +214,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         View childItem = vgRow.getChildAt(itemPos);
                         if (childItem instanceof ImageView) {
                             //We dont want the user to click anything else
-                            swipeTouchListener.clearClickableViews();
-
                             Option otherOption=(Option)childItem.getTag();
                             if(selectedOption.getId_option() != otherOption.getId_option()){
-                                overshadow((ImageView) childItem, otherOption);
+                                overshadow((ImageView) childItem);
                             }
                         }
                     }
                 }
-
-                highlightSelection(view, selectedOption);
-                finishOrNext();
             }
 
             /**
@@ -412,6 +418,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                 }
                 break;
+            case Constants.REMINDER:
             case Constants.WARNING:
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem, tableLayout, false);
                 tableLayout.addView(tableRow);
@@ -746,7 +753,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (value != null && value.getValue().equals(option.getName())) {
             highlightSelection(button, option);
         } else if (value != null) {
-            overshadow(button, option);
+            overshadow(button);
         }
 
         //Put image
@@ -783,20 +790,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             view.setBackgroundDrawable(selectedBackground);
         }
 
-        GradientDrawable bgShape = (GradientDrawable)view.getBackground();
-        String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
-        bgShape.setColor(Color.parseColor("#" + backGColor));
+        if(option!=null) {
+            GradientDrawable bgShape = (GradientDrawable) view.getBackground();
+            String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
+            bgShape.setColor(Color.parseColor("#" + backGColor));
+            bgShape.setStroke(3, Color.WHITE);
+        }
 
-        bgShape.setStroke(3, Color.WHITE);
-
-        ImageView v = (ImageView) view;
-        v.clearColorFilter();
+        ((ImageView) view).clearColorFilter();
     }
 
     /**
      * @param view
      */
-    private void overshadow(ImageView view, Option option){
+    private void overshadow(ImageView view){
 
         //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
         view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);

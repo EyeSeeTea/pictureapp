@@ -10,8 +10,12 @@ import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.WarningStatusChecker;
+import org.eyeseetea.malariacare.utils.Constants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,9 +27,13 @@ public class NavigationBuilder {
 
     private static NavigationBuilder instance;
 
-    private Map<Long,QuestionWarning> warningMap;
+    /**
+     * Maps that holds the relationships between a Question and the warnings that it might trigger
+     */
+    private Map<Long,List<QuestionNode>> warningsXQuestion;
 
     private NavigationBuilder(){
+        warningsXQuestion = new HashMap<>();
     }
 
     public static NavigationBuilder getInstance(){
@@ -46,8 +54,9 @@ public class NavigationBuilder {
             return null;
         }
 
+        warningsXQuestion.clear();
+
         Log.d(TAG,String.format("build(%s)",tab.getName()));
-        this.warningMap = new HashMap<>();
         Question rootQuestion = Question.findRootQuestion(tab);
 
         //NO first question -> nothing to build
@@ -69,14 +78,18 @@ public class NavigationBuilder {
             return null;
         }
         QuestionNode currentNode = new QuestionNode(currentQuestion);
+
         //Add children navigation
         buildChildren(currentNode);
         //Add sibling navigation
         buildSibling(currentNode);
         //Add counters
         buildCounters(currentNode);
-//        //Add warnings
-//        buildWarnings(currentNode);
+
+        //A warning is added to the map
+        annotateWarning(currentNode);
+        //A normal node subscribes to its warnings
+        subscribeWarnings(currentNode);
 
         return currentNode;
     }
@@ -130,6 +143,7 @@ public class NavigationBuilder {
         }
         QuestionNode nextNode = buildNode(nextQuestion);
         currentNode.setSibling(nextNode);
+        nextNode.setPreviousSibling(currentNode);
     }
 
     /**
@@ -156,73 +170,6 @@ public class NavigationBuilder {
     }
 
     /**
-     * Adds warnings related to this node to the graph
-     * @param questionNode
-     */
-    private void buildWarnings(QuestionNode questionNode){
-        Question currentQuestion=questionNode.getQuestion();
-        if(currentQuestion==null){
-            return;
-        }
-
-        if(withOptionsAndRelations(questionNode)){
-            buildWarningsFromOptions(questionNode);
-        }else{
-            buildWarningsFromValue(questionNode);
-        }
-    }
-
-    /**
-     * Adds/Completes a warning with the given questionNode (question with value)
-     * @param questionNode
-     */
-    private void buildWarningsFromOptions(QuestionNode questionNode) {
-        //Each option might have a warning associated
-        for(QuestionOption questionOption:questionNode.getQuestion().getQuestionOption()){
-            Match match =questionOption.getMatch();
-            if(match==null){continue;}
-
-            Question warningQuestion=match.getQuestionFromRelationWithType(QuestionRelation.WARNING);
-            if(warningQuestion==null){continue;}
-            QuestionWarning questionWarning = this.warningMap.get(warningQuestion.getId_question());
-
-            //Already built (this question is second in order)
-            if(questionWarning!=null){
-                questionWarning.triggersWithOption(questionNode);
-            }else{
-                //Question with option comes first with in graph
-                questionWarning = QuestionWarning.buildParentWithOption(questionNode,warningQuestion);
-                warningMap.put(warningQuestion.getId_question(),questionWarning);
-            }
-        }
-    }
-
-    /**
-     * Adds/Completes a warning with the given questionNode (question with options)
-     * @param questionNode
-     */
-    private void buildWarningsFromValue(QuestionNode questionNode) {
-
-        //Each threshold will have a warning associated
-        for(QuestionThreshold questionThreshold:questionNode.getQuestion().getQuestionThresholds()){
-            Match match = questionThreshold.getMatch();
-            if(match==null){continue;}
-
-            Question warningQuestion=match.getQuestionFromRelationWithType(QuestionRelation.WARNING);
-            QuestionWarning questionWarning = this.warningMap.get(warningQuestion.getId_question());
-
-            //Already built (this question is second in order)
-            if(questionWarning!=null){
-                questionWarning.triggersWithValue(questionNode);
-            }else{
-                //Question with value comes first with in graph
-                questionWarning = QuestionWarning.buildParentWithValue(questionNode,warningQuestion);
-                this.warningMap.put(warningQuestion.getId_question(),questionWarning);
-            }
-        }
-    }
-
-    /**
      * Checks if the currentNode requires knitting children, counters, ...
      * @param currentNode
      * @return
@@ -236,6 +183,48 @@ public class NavigationBuilder {
 
         //there might be something related to build
         return true;
+    }
+
+    /**
+     * Annotates  the questions involved in this warning
+     * @param warningNode
+     */
+    private void annotateWarning(QuestionNode warningNode){
+        //Not a warning -> done
+        if(warningNode.getQuestion().getOutput()!=Constants.WARNING){
+            return;
+        }
+
+        WarningStatusChecker warningStatusChecker =(WarningStatusChecker )warningNode.getStatusChecker();
+        Question questionWithThreshold = warningStatusChecker.getQuestionToSubscribeFromThreshold();
+        Question questionWithOption = warningStatusChecker.getQuestionToSubscribeFromOption();
+
+        addWarning(questionWithThreshold,warningNode);
+        addWarning(questionWithOption,warningNode);
+    }
+
+    private void addWarning(Question subscriber, QuestionNode warningNode){
+        List<QuestionNode> warnings = this.warningsXQuestion.get(subscriber.getId_question());
+        //First warning added
+        if(warnings==null){
+            warnings = new ArrayList<>();
+            this.warningsXQuestion.put(subscriber.getId_question(),warnings);
+        }
+        //Add new warning to list
+        warnings.add(warningNode);
+    }
+
+    private void subscribeWarnings(QuestionNode subscriberNode){
+        List<QuestionNode> warnings = this.warningsXQuestion.get(subscriberNode.getQuestion().getId_question());
+        //No warnings attached
+        if(warnings==null){
+            return;
+        }
+
+        //Subscribe to every warning
+        for(QuestionNode warningNode: warnings){
+            subscriberNode.addWarning(warningNode);
+        }
     }
 
 }

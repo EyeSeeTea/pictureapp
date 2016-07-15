@@ -4,7 +4,9 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.ReminderStatusChecker;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.StatusChecker;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.WarningStatusChecker;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.hisp.dhis.android.sdk.persistence.models.Constant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +35,7 @@ public class QuestionNode {
     /**
      * List of warning that can be triggered once this question is answer
      */
-    private List<QuestionWarning> warnings;
+    private List<QuestionNode> warnings;
 
     /**
      * StatusChecker (provides info related to node state according to values)
@@ -50,12 +52,17 @@ public class QuestionNode {
      */
     private QuestionNode sibling;
 
+    /**
+     * Previous question (sibling). Required to rewind to warnings
+     */
+    private QuestionNode previousSibling;
+
     public QuestionNode(Question question){
         this.question = question;
         this.navigation = new HashMap<>();
         this.counters = new HashMap<>();
-        this.warnings = new ArrayList<>();
         this.statusChecker = buildStatusChecker();
+        this.warnings = new ArrayList<>();
     }
 
     public void setQuestion(Question question){
@@ -101,11 +108,31 @@ public class QuestionNode {
     }
 
     /**
-     * Adds a warning to check for this node
-     * @param questionWarning
+     * Adds a warning to this node.
+     * This means that every time you about to leave this node every related warning node
+     * will be checked in order to see if its triggered or not according to the current values.
+     * @param warningNode
      */
-    public void addWarning(QuestionWarning questionWarning){
-        this.warnings.add(questionWarning);
+    public void addWarning(QuestionNode warningNode){
+        //Only nodes with type warning allows here
+        if(warningNode==null || warningNode.getQuestion().getOutput()!= Constants.WARNING){
+            return;
+        }
+
+        this.warnings.add(warningNode);
+    }
+
+    /**
+     * Looks for a related warning that is activated
+     * @return
+     */
+    public QuestionNode findWarningActivated(){
+        for(QuestionNode questionNode:this.warnings){
+            if(questionNode.isEnabled()){
+                return questionNode;
+            }
+        }
+        return null;
     }
 
     /**
@@ -124,6 +151,35 @@ public class QuestionNode {
         this.sibling=sibling;
         //Siblings share same parent
         this.sibling.parentNode=this.parentNode;
+    }
+
+    /**
+     * Sets the previous sibling
+     * @param previousSibling
+     */
+    public void setPreviousSibling(QuestionNode previousSibling){
+        this.previousSibling = previousSibling;
+    }
+
+    public QuestionNode getPreviousSibling(){
+        return this.previousSibling;
+    }
+
+    /**
+     * Returns previous actived node in navation
+     * @return
+     */
+    public QuestionNode previous(){
+        //No previousSibling -> return parent
+        if(this.previousSibling==null){
+            return this.parentNode;
+        }
+        //Previous not enable -> move backwards recursively
+        if (!this.previousSibling.isEnabled()){
+            return this.previousSibling.previous();
+        }
+        //Returns previous node
+        return this.previousSibling;
     }
 
     /**
@@ -179,6 +235,14 @@ public class QuestionNode {
     }
 
     /**
+     * Returns the status checker policy
+     * @return
+     */
+    public StatusChecker getStatusChecker(){
+        return statusChecker;
+    }
+
+    /**
      * Builds a statusChecker according to the type of question
      * @return
      */
@@ -189,7 +253,7 @@ public class QuestionNode {
 
         switch (this.getQuestion().getOutput()){
             case Constants.WARNING:
-                //TODO
+                return new WarningStatusChecker(this.question);
             case Constants.REMINDER:
                 return new ReminderStatusChecker(this.question);
             default:

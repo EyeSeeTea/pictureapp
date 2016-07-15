@@ -35,6 +35,11 @@ public class ReminderStatusChecker extends StatusChecker {
         return false;
     }
 
+    @Override
+    public boolean isVisibleInReview(){
+        return false;
+    }
+
     private void initRemainderTriggers(Question reminderQuestion){
         this.reminderTriggers = new ArrayList<>();
 
@@ -53,23 +58,6 @@ public class ReminderStatusChecker extends StatusChecker {
             //Annotate questionOption to check
             this.reminderTriggers.add(questionOption);
         }
-    }
-
-    /**
-     * Navigates from questionRelation -> match -> questionOption
-     * @param questionRelation
-     * @return
-     */
-    private QuestionOption findQuestionOption(QuestionRelation questionRelation){
-        if(questionRelation==null){
-            return null;
-        }
-        List<QuestionOption> questionOptions = QuestionOption.findByQuestionRelation(questionRelation);
-        if(questionOptions.isEmpty()){
-            return null;
-        }
-
-        return questionOptions.get(0);
     }
 
     /**

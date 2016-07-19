@@ -119,15 +119,22 @@ public class NavigationController {
 
     public Question next(Option option){
         Log.d(TAG,String.format("next(%s)...",option==null?"":option.getName()));
-
+        QuestionNode nextNode;
         //Trigger counters -> no movement
         if(!isInitialMove() && getCurrentNode().increaseRepetitions(option)) {
             Log.d(TAG,String.format("next(%s)->%s",option==null?"":option.getName(),getCurrentQuestion().getCode()));
             return getCurrentQuestion();
         }
 
-        //Check if current values trigger a warning
-        QuestionNode nextNode=getCurrentNode().findWarningActivated();
+        //First movement -> nothing to check
+        if(isInitialMove()){
+            nextNode = findNext(option);
+        }else{
+            //Check if current values trigger a warning
+            nextNode=getCurrentNode().findWarningActivated();
+        }
+
+        //No warning activated -> try normal
         if(nextNode==null){
             //No trigger -> next as usual
             nextNode = findNext(option);
@@ -164,6 +171,9 @@ public class NavigationController {
         if(nonVisibleNode==null) {
             this.visited.remove(currentPosition);
             currentPosition--;
+        }else{
+            //Abandoning temporal node
+            nonVisibleNode=null;
         }
 
         //Return the 'new' last question
@@ -289,6 +299,7 @@ public class NavigationController {
         }
 
         while(getCurrentNode()!=null && getCurrentNode()!=warningNode.previous()){
+            ReadWriteDB.deleteValue(getCurrentQuestion());
             previous();
         }
     }

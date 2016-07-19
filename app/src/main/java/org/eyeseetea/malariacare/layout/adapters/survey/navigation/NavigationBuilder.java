@@ -79,17 +79,17 @@ public class NavigationBuilder {
         }
         QuestionNode currentNode = new QuestionNode(currentQuestion);
 
+        //A warning is added to the map
+        annotateWarning(currentNode);
+        //A normal node subscribes to its warnings
+        subscribeWarnings(currentNode);
+
         //Add children navigation
         buildChildren(currentNode);
         //Add sibling navigation
         buildSibling(currentNode);
         //Add counters
         buildCounters(currentNode);
-
-        //A warning is added to the map
-        annotateWarning(currentNode);
-        //A normal node subscribes to its warnings
-        subscribeWarnings(currentNode);
 
         return currentNode;
     }
@@ -136,11 +136,15 @@ public class NavigationBuilder {
      * @param currentNode
      */
     private void buildSibling(QuestionNode currentNode){
-        Question nextQuestion = currentNode.getQuestion().getSibling();
+        Question currentQuestion=currentNode.getQuestion();
+        Question nextQuestion = currentQuestion.getSibling();
+
         //No next question
         if(nextQuestion==null){
+            Log.d(TAG,String.format("'%s' -(sibling)-> null",currentQuestion.getCode()));
             return;
         }
+        Log.d(TAG,String.format("'%s' -(sibling)-> '%s'",currentQuestion.getCode(),nextQuestion.getCode()));
         QuestionNode nextNode = buildNode(nextQuestion);
         currentNode.setSibling(nextNode);
         nextNode.setPreviousSibling(currentNode);

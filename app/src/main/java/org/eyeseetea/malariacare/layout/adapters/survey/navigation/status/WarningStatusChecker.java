@@ -42,6 +42,10 @@ public class WarningStatusChecker extends StatusChecker {
         if(optionValue==null || optionValue.getOption()==null|| intValue==null){
             return false;
         }
+        //The option for this warning has not been selected
+        if(optionValue.getId_option()!=questionOption.getOption().getId_option()){
+            return false;
+        }
         //If current int value NOT in threshold -> the warning is activated
         return !questionThreshold.isInThreshold(intValue.getValue());
     }

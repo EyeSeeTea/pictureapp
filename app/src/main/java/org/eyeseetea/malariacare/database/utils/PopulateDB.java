@@ -216,7 +216,7 @@ public class PopulateDB {
                             questionThreshold.setMinValue(Integer.valueOf(line[3]));
                         }
                         if (!line[4].equals("")){
-                            questionThreshold.setMinValue(Integer.valueOf(line[4]));
+                            questionThreshold.setMaxValue(Integer.valueOf(line[4]));
                         }
                         questionThreshold.save();
                 }

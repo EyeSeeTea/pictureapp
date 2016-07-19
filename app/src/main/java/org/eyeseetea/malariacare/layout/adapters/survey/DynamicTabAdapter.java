@@ -54,6 +54,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -379,16 +380,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 break;
             case Constants.IMAGES_5:
-                List<Option> optns = question.getAnswer().getOptions();
-                for(int i=0;i<optns.size();i++) {
-                    Option currentOption = optns.get(i);
+                List<Option> answerOptions = question.getAnswer().getOptions();
+                for(int i=0;i<answerOptions.size();i++) {
+                    Option currentOption = answerOptions.get(i);
                     int optionID=R.id.option2;
                     int counterID=R.id.counter2;
 
                     int mod = i % 2;
                     //First item per row requires a new row
                     if (mod == 0) {
-                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
+                        //Every new row admits 2 options
+                        if(i != 4) {
+                            tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
+                        }else{
+                            //but last one with just one
+                            tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem,tableLayout,false);
+                        }
                         tableLayout.addView(tableRow);
                         optionID=R.id.option1;
                         counterID=R.id.counter1;
@@ -398,24 +405,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     addCounterValue(question,currentOption,tableRow,counterID);
 
                     //The last option in the last row is a single image
-                    if (i == optns.size()-1) {
-                        ImageView imageButton = null;
-                        TableRow.LayoutParams params = new TableRow.LayoutParams(
-                                TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1f);
-                        imageButton = (ImageView) tableRow.findViewById(optionID);
-                        //remove the innecesary second imageview.
-                        tableRow.removeViewAt(mod+1);
-                        imageButton.setLayoutParams(params);
-                        imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
-
-                        initOptionButton(imageButton, currentOption, value, parent);
-                    }
-                    else{
-                        ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
-                        imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
-
-                        initOptionButton(imageButton, currentOption, value, parent);
-                    }
+                    ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
+                    imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+                    initOptionButton(imageButton, currentOption, value, parent);
                 }
                 break;
             case Constants.REMINDER:

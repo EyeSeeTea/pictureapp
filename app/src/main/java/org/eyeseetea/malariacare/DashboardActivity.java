@@ -45,6 +45,7 @@ import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.io.IOException;
@@ -265,7 +266,12 @@ public class DashboardActivity extends BaseActivity {
     public void onPause(){
         Log.d(TAG, "onPause");
         super.onPause();
+    }
 
+    @Override
+    public void onStop(){
+        Log.d(TAG, "onStop");
+        super.onStop();
     }
 
     public void setReloadOnResume(boolean doReload){

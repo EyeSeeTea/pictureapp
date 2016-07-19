@@ -46,6 +46,7 @@ import android.widget.TextView;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
@@ -388,8 +389,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Subscribe
     public void callbackLoginPrePull(NetworkJob.NetworkJobResult<ResourceType> result) {
+        if(PushController.getInstance().isPushInProgress())
+            return;
         //Nothing to check
-        if(result==null || !result.getResourceType().equals(ResourceType.USERS)){
+        if(result==null || result.getResourceType()==null || !result.getResourceType().equals(ResourceType.USERS)){
             return;
         }
 

@@ -41,9 +41,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.TabGroup;
@@ -122,12 +124,15 @@ public abstract class BaseActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_settings:
                 debugMessage("User asked for settings");
-                goSettings();
+                if(PushController.getInstance().isPushInProgress()) {
+                    Log.d(TAG,"Click in settings true "+PushController.getInstance().isPushInProgress());
+                    Toast.makeText(this, R.string.toast_push_is_pushing, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Log.d(TAG,"Click in settings false "+PushController.getInstance().isPushInProgress());
+                    goSettings();
+                }
                 break;
-//            case R.id.action_license:
-//                debugMessage("User asked for license");
-//                showAlertWithMessage(R.string.settings_menu_licence, R.raw.gpl);
-//                break;
             case R.id.action_about:
                 debugMessage("User asked for about");
                 showAlertWithHtmlMessageAndLastCommit(R.string.settings_menu_about, R.raw.about, BaseActivity.this);

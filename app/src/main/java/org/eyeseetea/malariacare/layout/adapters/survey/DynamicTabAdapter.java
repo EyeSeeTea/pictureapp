@@ -50,7 +50,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -132,6 +132,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     View keyboardView;
 
+
+    /**
+     * Flag that indicates if the actual question option is clicked to prevent multiple clicks.
+     */
+    public static boolean isClicked;
+
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
@@ -150,6 +156,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         }
         navigationController.setTotalPages(totalPages);
+        isClicked=false;
     }
 
     private NavigationController initNavigationController(Tab tab) {
@@ -168,7 +175,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * Click listener for image option
              * @param view
              */
-            public void onClick(final View view) {
+            public void onClick(View view) {
+                if(isClicked){
+                    return;
+                }
+
+                isClicked=true;
                 Log.d(TAG, "onClick");
                 navigationController.isMovingToForward=true;
                 final Option selectedOption=(Option)view.getTag();
@@ -217,7 +229,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             //We dont want the user to click anything else
                             Option otherOption=(Option)childItem.getTag();
                             if(selectedOption.getId_option() != otherOption.getId_option()){
-                                overshadow((ImageView) childItem);
+								//TODO mio review: overshadow((ImageView) childItem);
+                                overshadow((FrameLayout) childItem, otherOption);
                             }
                         }
                     }
@@ -317,7 +330,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Question
         TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
         //Load a font which support Khmer character
-        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + "KhmerOS.ttf");
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + context.getString(R.string.specific_language_font));
         headerView.setTypeface(tf);
         headerView.setText(question.getForm_name());
 
@@ -351,14 +364,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         optionID=R.id.option1;
                         counterID=R.id.counter1;
                     }
-
-                    //Add counter value if possible
+                    //Add counter value if possible                   
                     addCounterValue(question,currentOption,tableRow,counterID);
 
-                    ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
-                    imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+                    //TODO mio review
+                    //ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
+                    //imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
-                    initOptionButton(imageButton, currentOption, value, parent);
+                    FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
+                    TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                    setTextSettings(textOption,currentOption);
+                    frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                    initOptionButton(frameLayout, currentOption, value, parent);
                 }
                 break;
             case Constants.IMAGES_3:
@@ -369,14 +387,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem,tableLayout,false);
                     tableLayout.addView(tableRow);
+                    Option currentOption = opts.get(i);
 
                     //Add counter value if possible
-                    addCounterValue(question,currentOption,tableRow,R.id.counter1);
+                    addCounterValue(question,currentOption,tableRow,R.id.counter1);                    
 
-                    ImageView imageButton = (ImageView) tableRow.findViewById(R.id.option1);
-                    imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
-                    initOptionButton(imageButton, currentOption, value, parent);
+                    //TODO mio review
+                    //ImageView imageButton = (ImageView) tableRow.findViewById(R.id.option1);
+                    //imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                    FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(0);
+                    TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                    setTextSettings(textOption,currentOption);
+
+                    frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                    initOptionButton(frameLayout, currentOption, value, parent);
                 }
                 break;
             case Constants.IMAGES_5:
@@ -404,10 +431,37 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     //Add counter value if possible
                     addCounterValue(question,currentOption,tableRow,counterID);
 
+                    //TODO mio review The last option in the last row is a single image
+                    //ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
+                    //imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+                    //initOptionButton(imageButton, currentOption, value, parent);
+
+
                     //The last option in the last row is a single image
-                    ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
-                    imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
-                    initOptionButton(imageButton, currentOption, value, parent);
+                    if (i == optns.size()-1) {
+                        ImageView imageButton = null;
+                        TableRow.LayoutParams params = new TableRow.LayoutParams(
+                                TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1f);
+                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
+                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                        setTextSettings(textOption,currentOption);
+
+                        //remove the innecesary second imageview.
+                        tableRow.removeViewAt(mod+1);
+                        frameLayout.setLayoutParams(params);
+                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                        initOptionButton(frameLayout, currentOption, value, parent);
+                    }
+                    else{
+                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
+                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+
+                        setTextSettings(textOption,currentOption);
+                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                        initOptionButton(frameLayout, currentOption, value, parent);
+                    }
                 }
                 break;
             case Constants.REMINDER:
@@ -429,6 +483,25 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         rowView.requestLayout();
         return rowView;
+    }
+    /**
+     * Used to set the text widht like the framelayout size
+     * to prevent a resize of the frameLayout if the textoption is more bigger.
+     */
+    private void resizeTextWidth(FrameLayout frameLayout, TextCard textOption) {
+            textOption.setWidth(frameLayout.getWidth());
+    }
+
+    private void setTextSettings(TextCard textOption, Option currentOption) {
+        //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
+        if (currentOption.getOptionAttribute().hasHorizontalAlignment() && currentOption.getOptionAttribute().hasVerticalAlignment())
+        {
+            textOption.setText(currentOption.getCode());
+            textOption.setGravity(currentOption.getOptionAttribute().getGravity());
+        }
+        else{
+            textOption.setVisibility(View.GONE);
+        }
     }
 
     private void initWarningValue(TableRow tableRow) {
@@ -530,6 +603,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(isClicked)
+                        return;
+                    isClicked=true;
                     savePositiveIntValue(numberPicker);
                 }
             });
@@ -552,6 +628,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Required, empty values rejected
         if(checkEditTextNotNull(positiveIntValue)){
             numberPicker.setError(context.getString(R.string.dynamic_error_age));
+            isClicked=false;
             return;
         }
 
@@ -583,6 +660,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if(isClicked)
+                        return false;
+                    isClicked=true;
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         String phoneValue = editText.getText().toString();
                         if (checkPhoneNumberByMask(phoneValue)) {
@@ -598,6 +678,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(isClicked)
+                        return;
+                    isClicked=true;
                     View parentView = (View) v.getParent();
                     EditText editText = (EditText) parentView.findViewById(R.id.dynamic_phone_edit);
                     savePhoneValue(editText);
@@ -621,6 +704,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Check phone ok
         if(!checkPhoneNumberByMask(phoneValue)){
             editText.setError(context.getString(R.string.dynamic_error_phone_format));
+            isClicked=false;
             return;
         }
 
@@ -647,6 +731,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if(isClicked)
+                        return false;
+                    isClicked=true;
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         if(v.getId()==R.id.dynamic_positiveInt_edit)
                             savePositiveIntValue((EditText) v);
@@ -738,7 +825,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param button
      * @param option
      */
-    private void initOptionButton(ImageView button, Option option, Value value, ViewGroup parent){
+    private void initOptionButton(FrameLayout button, Option option, Value value, ViewGroup parent){
 
         // value = null --> first time calling initOptionButton
         //Highlight button
@@ -752,7 +839,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         try {
             InputStream inputStream = context.getAssets().open(option.getPath());
             Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-            button.setImageBitmap(bmp);
+            //the button is a framelayout that contains a imageview
+            ImageView imageView= (ImageView) button.getChildAt(0);
+            imageView.setImageBitmap(bmp);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -768,6 +857,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Add button to listener
         swipeTouchListener.addClickableView(button);
 
+        resizeTextWidth(button,(TextCard) button.getChildAt(1));
     }
 
     /**
@@ -782,6 +872,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             view.setBackgroundDrawable(selectedBackground);
         }
 
+        //TODO mio review
+        /*
         if(option!=null) {
             GradientDrawable bgShape = (GradientDrawable) view.getBackground();
             String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
@@ -790,16 +882,30 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         ((ImageView) view).clearColorFilter();
+        */
+        GradientDrawable bgShape = (GradientDrawable)view.getBackground();
+        String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
+        bgShape.setColor(Color.parseColor("#" + backGColor));
+
+        bgShape.setStroke(3, Color.WHITE);
+        //the view is a framelayout that contains a imageview
+        FrameLayout f = (FrameLayout) view;
+        ImageView v= (ImageView) f.getChildAt(0);
+        v.clearColorFilter();
     }
 
     /**
      * @param view
      */
-    private void overshadow(ImageView view){
 
+
+    //TODO mio review
+    //private void overshadow(ImageView view){
+    private void overshadow(FrameLayout view, Option option){
         //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
         view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
-        view.setColorFilter(Color.parseColor("#805a595b"));
+        ImageView imageView = (ImageView) view.getChildAt(0);
+        imageView.setColorFilter(Color.parseColor("#805a595b"));
 
         Drawable bg = view.getBackground();
         if(bg instanceof GradientDrawable) {
@@ -841,12 +947,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 public void onClick(DialogInterface dialog, int arg1) {
                     hideKeyboard(PreferencesState.getInstance().getContext());
                     DashboardActivity.dashboardActivity.closeSurveyFragment();
+                    isClicked=false;
                 }
             });
         msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 hideKeyboard(PreferencesState.getInstance().getContext());
                 review();
+                isClicked=false;
             }
         });
 
@@ -882,6 +990,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(value==null  && !readOnly)
             navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());
         navigationController.isMovingToForward=false;
+        isClicked=false;
     }
 
     /**
@@ -893,6 +1002,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         navigationController.previous();
         notifyDataSetChanged();
+        isClicked=false;
     }
 
     /**
@@ -987,7 +1097,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             @Override
             public boolean onSingleTapConfirmed(MotionEvent event){
-//              Log.d(TAG, String.format("onSingleTapConfirmed: %f %f", event.getX(), event.getY()));
+              Log.d(TAG, String.format("onSingleTapConfirmed: %f %f", event.getX(), event.getY()));
 
                 //Find the clicked button
                 View clickedView=findViewByCoords(event);
@@ -998,7 +1108,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     onClick(clickedView);
                     return true;
                 }
-
                 //Not found, not consumed
                 return false;
             }

@@ -175,8 +175,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * Click listener for image option
              * @param view
              */
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 if(isClicked){
+                    Log.d(TAG, "onClick ignored to avoid double click");
                     return;
                 }
 
@@ -189,51 +190,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 if(counterQuestion==null){
                     saveOptionAndMove(view,selectedOption,question);
                 }else{
-                    new AlertDialog.Builder((context))
-                            .setTitle(R.string.option_confirm)
-                            .setMessage(counterQuestion.getForm_name())
-                            .setCancelable(false)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int arg1) {
-                                    saveOptionAndMove(view,selectedOption,question);
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, null).create().show();
-                }
-            }
-
-            private void saveOptionAndMove(View view, Option selectedOption, Question question) {
-                Value value = question.getValueBySession();
-                //set new totalpages if the value is not null and the value change
-                if(value!=null && !readOnly)
-                    navigationController.setTotalPages(question.getTotalQuestions());
-                ReadWriteDB.saveValuesDDL(question, selectedOption, value);
-                darkenNonSelected(view, selectedOption);
-                highlightSelection(view, selectedOption);
-                finishOrNext();
-            }
-
-            private void darkenNonSelected(View view, Option selectedOption) {
-                swipeTouchListener.clearClickableViews();
-                //A Warning or Reminder (not a real option)
-                if(selectedOption==null){
-                    return;
-                }
-                //A question with real options -> darken non selected
-                ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
-                for (int rowPos = 0; rowPos < vgTable.getChildCount(); rowPos++) {
-                    ViewGroup vgRow = (ViewGroup) vgTable.getChildAt(rowPos);
-                    for (int itemPos = 0; itemPos < vgRow.getChildCount(); itemPos++) {
-                        View childItem = vgRow.getChildAt(itemPos);
-                        if (childItem instanceof ImageView) {
-                            //We dont want the user to click anything else
-                            Option otherOption=(Option)childItem.getTag();
-                            if(selectedOption.getId_option() != otherOption.getId_option()){
-								//TODO mio review: overshadow((ImageView) childItem);
-                                overshadow((FrameLayout) childItem, otherOption);
-                            }
-                        }
-                    }
+                    showConfirmCounter(view,selectedOption,question,counterQuestion);
                 }
             }
 
@@ -242,10 +199,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              */
             public void onSwipeRight() {
                 Log.d(TAG, "onSwipeRight(previous)");
-
                 //Hide keypad
                 hideKeyboard(listView.getContext(), listView);
-
                 previous();
             }
 
@@ -255,16 +210,86 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             public void onSwipeLeft() {
                 Log.d(TAG,"onSwipeLeft(next)");
                 if(readOnly || navigationController.isNextAllowed()) {
-
                     //Hide keypad
                     hideKeyboard(listView.getContext(), listView);
-
                     next();
                 }
             }
         };
 
         listView.setOnTouchListener(swipeTouchListener);
+    }
+
+    private void showConfirmCounter(final View view, final Option selectedOption, final Question question, Question questionCounter){
+        //Change question x confirm message
+        View rootView = view.getRootView();
+        final TextCard questionView=(TextCard)rootView.findViewById(R.id.question);
+        questionView.setText(questionCounter.getForm_name());
+
+        //cancel
+        ImageView noView=(ImageView)rootView.findViewById(R.id.confirm_no);
+        noView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Leave current question as it was
+                removeConfirmCounter(v);
+                isClicked=false;
+                notifyDataSetChanged();
+            }
+        });
+
+        //confirm
+        ImageView yesView=(ImageView)rootView.findViewById(R.id.confirm_yes);
+        yesView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeConfirmCounter(v);
+                saveOptionAndMove(view,selectedOption,question);
+            }
+        });
+
+        //Show confirm on full screen
+        rootView .findViewById(R.id.options_table).setVisibility(View.GONE);
+        rootView .findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
+    }
+
+    private void removeConfirmCounter(View view){
+        view.getRootView().findViewById(R.id.options_table).setVisibility(View.VISIBLE);
+        view.getRootView().findViewById(R.id.confirm_table).setVisibility(View.GONE);
+    }
+
+    private void saveOptionAndMove(View view, Option selectedOption, Question question) {
+        Value value = question.getValueBySession();
+        //set new totalpages if the value is not null and the value change
+        if(value!=null && !readOnly)
+            navigationController.setTotalPages(question.getTotalQuestions());
+        ReadWriteDB.saveValuesDDL(question, selectedOption, value);
+        darkenNonSelected(view, selectedOption);
+        highlightSelection(view, selectedOption);
+        finishOrNext();
+    }
+
+    private void darkenNonSelected(View view, Option selectedOption) {
+        swipeTouchListener.clearClickableViews();
+        //A Warning or Reminder (not a real option)
+        if(selectedOption==null){
+            return;
+        }
+        //A question with real options -> darken non selected
+        ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
+        for (int rowPos = 0; rowPos < vgTable.getChildCount(); rowPos++) {
+            ViewGroup vgRow = (ViewGroup) vgTable.getChildAt(rowPos);
+            for (int itemPos = 0; itemPos < vgRow.getChildCount(); itemPos++) {
+                View childItem = vgRow.getChildAt(itemPos);
+                if (childItem instanceof ImageView) {
+                    //We dont want the user to click anything else
+                    Option otherOption=(Option)childItem.getTag();
+                    if(selectedOption.getId_option() != otherOption.getId_option()){
+                        overshadow((FrameLayout) childItem);
+                    }
+                }
+            }
+        }
     }
 
 
@@ -318,6 +343,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         //Inflate the layout
         View rowView = lInflater.inflate(R.layout.dynamic_tab_grid_question, parent, false);
+
         rowView.getLayoutParams().height=parent.getHeight();
         rowView.requestLayout();
         Question question=(Question)this.getItem(position);
@@ -329,6 +355,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Question
         TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
+
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + context.getString(R.string.specific_language_font));
         headerView.setTypeface(tf);
@@ -354,29 +381,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 List<Option> options = question.getAnswer().getOptions();
                 for(int i=0;i<options.size();i++){
                     Option currentOption = options.get(i);
-                    int optionID=R.id.option2;
                     int counterID=R.id.counter2;
                     int mod=i%2;
                     //First item per row requires a new row
                     if(mod==0){
                         tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row,tableLayout,false);
                         tableLayout.addView(tableRow);
-                        optionID=R.id.option1;
                         counterID=R.id.counter1;
                     }
                     //Add counter value if possible                   
                     addCounterValue(question,currentOption,tableRow,counterID);
-
-                    //TODO mio review
-                    //ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
-                    //imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
                     FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
                     TextCard textOption = (TextCard) frameLayout.getChildAt(1);
                     setTextSettings(textOption,currentOption);
                     frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
-                    initOptionButton(frameLayout, currentOption, value, parent);
+                    initOptionButton(frameLayout, currentOption, value);
                 }
                 break;
             case Constants.IMAGES_3:
@@ -387,15 +408,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem,tableLayout,false);
                     tableLayout.addView(tableRow);
-                    Option currentOption = opts.get(i);
 
                     //Add counter value if possible
-                    addCounterValue(question,currentOption,tableRow,R.id.counter1);                    
-
-
-                    //TODO mio review
-                    //ImageView imageButton = (ImageView) tableRow.findViewById(R.id.option1);
-                    //imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+                    addCounterValue(question,currentOption,tableRow,R.id.counter1);
 
                     FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(0);
                     TextCard textOption = (TextCard) frameLayout.getChildAt(1);
@@ -403,65 +418,41 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
-                    initOptionButton(frameLayout, currentOption, value, parent);
+                    initOptionButton(frameLayout, currentOption, value);
                 }
                 break;
             case Constants.IMAGES_5:
                 List<Option> answerOptions = question.getAnswer().getOptions();
                 for(int i=0;i<answerOptions.size();i++) {
                     Option currentOption = answerOptions.get(i);
-                    int optionID=R.id.option2;
                     int counterID=R.id.counter2;
 
                     int mod = i % 2;
                     //First item per row requires a new row
                     if (mod == 0) {
                         //Every new row admits 2 options
-                        if(i != 4) {
-                            tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
-                        }else{
-                            //but last one with just one
-                            tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem,tableLayout,false);
-                        }
+                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
                         tableLayout.addView(tableRow);
-                        optionID=R.id.option1;
                         counterID=R.id.counter1;
                     }
 
                     //Add counter value if possible
                     addCounterValue(question,currentOption,tableRow,counterID);
 
-                    //TODO mio review The last option in the last row is a single image
-                    //ImageView imageButton = (ImageView) tableRow.findViewById(optionID);
-                    //imageButton.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
-                    //initOptionButton(imageButton, currentOption, value, parent);
-
-
-                    //The last option in the last row is a single image
-                    if (i == optns.size()-1) {
-                        ImageView imageButton = null;
-                        TableRow.LayoutParams params = new TableRow.LayoutParams(
-                                TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1f);
-                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
-                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
-                        setTextSettings(textOption,currentOption);
-
+                    FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
+                    if (i == 4) {
+                        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1f);
                         //remove the innecesary second imageview.
                         tableRow.removeViewAt(mod+1);
                         frameLayout.setLayoutParams(params);
-                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
-
-                        initOptionButton(frameLayout, currentOption, value, parent);
                     }
-                    else{
-                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
-                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                    frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
-                        setTextSettings(textOption,currentOption);
-                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+                    TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                    setTextSettings(textOption,currentOption);
 
-                        initOptionButton(frameLayout, currentOption, value, parent);
-                    }
+
+                    initOptionButton(frameLayout, currentOption, value);
                 }
                 break;
             case Constants.REMINDER:
@@ -510,7 +501,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Add button to listener
         swipeTouchListener.addClickableView(errorImage);
 
-        EditText okText = (EditText)tableRow.findViewById(R.id.counter1);
+        TextView okText = (TextView)tableRow.findViewById(R.id.counter1);
         okText.setText(R.string.ok);
     }
 
@@ -530,11 +521,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             return;
         }
 
-        EditText counterText = (EditText) tableRow.findViewById(counterID);
+        TextView counterText = (TextView) tableRow.findViewById(counterID);
         String counterTextValue=context.getResources().getString(R.string.option_counter);
 
         //Repetitions: 3
         counterText.setText(counterTextValue+counterValue);
+        counterText.setVisibility(View.VISIBLE);
     }
 
 
@@ -825,7 +817,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param button
      * @param option
      */
-    private void initOptionButton(FrameLayout button, Option option, Value value, ViewGroup parent){
+    private void initOptionButton(FrameLayout button, Option option, Value value){
 
         // value = null --> first time calling initOptionButton
         //Highlight button
@@ -872,8 +864,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             view.setBackgroundDrawable(selectedBackground);
         }
 
-        //TODO mio review
-        /*
         if(option!=null) {
             GradientDrawable bgShape = (GradientDrawable) view.getBackground();
             String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
@@ -881,27 +871,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             bgShape.setStroke(3, Color.WHITE);
         }
 
-        ((ImageView) view).clearColorFilter();
-        */
-        GradientDrawable bgShape = (GradientDrawable)view.getBackground();
-        String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
-        bgShape.setColor(Color.parseColor("#" + backGColor));
-
-        bgShape.setStroke(3, Color.WHITE);
         //the view is a framelayout that contains a imageview
-        FrameLayout f = (FrameLayout) view;
-        ImageView v= (ImageView) f.getChildAt(0);
-        v.clearColorFilter();
+        ImageView imageView;
+        if(view instanceof FrameLayout){
+            FrameLayout f = (FrameLayout) view;
+            imageView= (ImageView) f.getChildAt(0);
+        }else{
+            imageView = (ImageView)view;
+        }
+
+        imageView.clearColorFilter();
     }
 
     /**
+     * Puts a sort of dark shadow over the given view
      * @param view
      */
-
-
-    //TODO mio review
-    //private void overshadow(ImageView view){
-    private void overshadow(FrameLayout view, Option option){
+    private void overshadow(FrameLayout view){
         //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
         view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
         ImageView imageView = (ImageView) view.getChildAt(0);

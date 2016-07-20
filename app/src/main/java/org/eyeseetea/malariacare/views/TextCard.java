@@ -59,7 +59,7 @@ public class TextCard extends TextView implements IEyeSeeView {
     }
 
     public void init(AttributeSet attrs, int defStyle) {
-        if(isInEditMode()){
+        if(isInEditMode() && (getText()==null || getText().toString().isEmpty())){
             this.setText(R.string.lorem_ipsum);
             return;
         }

@@ -238,6 +238,7 @@ public class SurveyMonitor {
 
 
     public boolean isCombinedACT() {
+        //Fixme with real IDS
         Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
@@ -248,6 +249,7 @@ public class SurveyMonitor {
     }
 
     public boolean isACT6x4() {
+        //Fixme with real IDS
         Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
@@ -258,6 +260,7 @@ public class SurveyMonitor {
     }
 
     public boolean isACT6x3() {
+        //Fixme with real IDS
         Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
@@ -268,6 +271,7 @@ public class SurveyMonitor {
     }
 
     public boolean isACT6x2() {
+        //Fixme with real IDS
         Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
@@ -278,6 +282,7 @@ public class SurveyMonitor {
     }
 
     public boolean isACT6x1() {
+        //Fixme with real IDS
         Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
@@ -286,16 +291,7 @@ public class SurveyMonitor {
         Long idOption=value.getId_option();
         return ID_OPTION_TREATMENT_ACT6X1.equals(idOption);
     }
-
-    public boolean isRDTs() {
-        Value value = findValue(ID_QUESTION_TREATMENT);
-        if(value==null){
-            return false;
-        }
-
-        Long idOption=value.getId_option();
-        return ID_OPTION_TREATMENT_RDTS.equals(idOption);
-    }
+    
     /**
      * Tells if the given survey has DHA-PIP treatment
      * @return

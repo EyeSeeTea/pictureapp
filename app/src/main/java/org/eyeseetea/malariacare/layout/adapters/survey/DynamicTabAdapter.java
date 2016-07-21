@@ -432,6 +432,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         else{
             textOption.setVisibility(View.GONE);
         }
+        textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
     /**

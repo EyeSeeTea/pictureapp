@@ -90,6 +90,37 @@ public class SurveyMonitor {
     private final static Long ID_OPTION_TREATMENT_DHA_PIP=12l;
 
     /**
+     * Id of Combined act treatment option
+     */
+    private final static Long ID_OPTION_TREATMENT_COMBINEDACT=12l;
+
+    /**
+     * Id of ACT6x1 treatment option
+     */
+    private final static Long ID_OPTION_TREATMENT_ACT6X1=12l;
+
+    /**
+     * Id of  ACT6x2 treatment option
+     */
+    private final static Long ID_OPTION_TREATMENT_ACT6X2=12l;
+
+    /**
+     * Id of ACT6x3 treatment option
+     */
+    private final static Long ID_OPTION_TREATMENT_ACT6X3=12l;
+
+    /**
+     * Id of ACT6x4 treatment option
+     */
+    private final static Long ID_OPTION_TREATMENT_ACT6X4=12l;
+
+    /**
+     * Id of RDTs treatment option
+     */
+    private final static Long ID_OPTION_TREATMENT_RDTS=12l;
+
+
+    /**
      * Reference to inner survey
      */
     final Survey survey;
@@ -177,6 +208,94 @@ public class SurveyMonitor {
         return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
     }
 
+
+    public boolean isSubmission() {
+        //Fixme with real IDS
+        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
+    }
+
+    public boolean isSevere() {
+        //Fixme with real IDS
+        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
+    }
+
+
+    public boolean isPregnant() {
+        //Fixme with real IDS
+        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
+    }
+
+
+    public boolean isDenied() {
+        //Fixme with real IDS
+        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
+    }
+
+    public boolean isDrug() {
+        //Fixme with real IDS
+        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
+    }
+
+
+    public boolean isCombinedACT() {
+        Value value = findValue(ID_QUESTION_TREATMENT);
+        if(value==null){
+            return false;
+        }
+
+        Long idOption=value.getId_option();
+        return ID_OPTION_TREATMENT_COMBINEDACT.equals(idOption);
+    }
+
+    public boolean isACT6x4() {
+        Value value = findValue(ID_QUESTION_TREATMENT);
+        if(value==null){
+            return false;
+        }
+
+        Long idOption=value.getId_option();
+        return ID_OPTION_TREATMENT_ACT6X4.equals(idOption);
+    }
+
+    public boolean isACT6x3() {
+        Value value = findValue(ID_QUESTION_TREATMENT);
+        if(value==null){
+            return false;
+        }
+
+        Long idOption=value.getId_option();
+        return ID_OPTION_TREATMENT_ACT6X3.equals(idOption);
+    }
+
+    public boolean isACT6x2() {
+        Value value = findValue(ID_QUESTION_TREATMENT);
+        if(value==null){
+            return false;
+        }
+
+        Long idOption=value.getId_option();
+        return ID_OPTION_TREATMENT_ACT6X2.equals(idOption);
+    }
+
+    public boolean isACT6x1() {
+        Value value = findValue(ID_QUESTION_TREATMENT);
+        if(value==null){
+            return false;
+        }
+
+        Long idOption=value.getId_option();
+        return ID_OPTION_TREATMENT_ACT6X1.equals(idOption);
+    }
+
+    public boolean isRDTs() {
+        Value value = findValue(ID_QUESTION_TREATMENT);
+        if(value==null){
+            return false;
+        }
+
+        Long idOption=value.getId_option();
+        return ID_OPTION_TREATMENT_RDTS.equals(idOption);
+    }
     /**
      * Tells if the given survey has DHA-PIP treatment
      * @return

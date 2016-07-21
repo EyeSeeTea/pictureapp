@@ -110,4 +110,9 @@
 <string name="font_size_level2_title">"ປານກາງ"</string>
 <string name="font_size_level3_title">"ຂະຫນາດໃຫຍ່"</string>
 <string name="font_size_level4_title">"ຂະຫນາດໃຫຍ່ທີ່ດີທີ່ສຸດ"</string>
+<string name="monitor_row_title_denied">"ຄົນເຈັບປະຕິເສດ "</string>
+<string name="monitor_row_title_drug">"ຢາໝົດ"</string>
+<string name="monitor_row_title_pregnant">"ຄົນເຈັບຖືພາ"</string>
+<string name="monitor_row_title_severe">"ຄົນເຈັບເປັນໄຂ້ຮ້າຍແຮງ"</string>
+<string name="monitor_row_title_submission">"ນຳສົ່ງ"</string>
 </resources>

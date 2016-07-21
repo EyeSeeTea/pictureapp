@@ -89,6 +89,7 @@ public class PopulateDB {
 
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
+    private static final String TAG = "PopulateDB";
 
     static Map<Integer, Program> programList = new LinkedHashMap<Integer, Program>();
     static Map<Integer, TabGroup> tabGroups = new LinkedHashMap<Integer, TabGroup>();
@@ -106,6 +107,7 @@ public class PopulateDB {
         //Reset inner references
         cleanInnerLists();
         for (String table : tables2populate) {
+            Log.i(TAG,"Loading csv: "+table);
             CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(table)), SEPARATOR, QUOTECHAR);
 
             String[] line;
@@ -170,8 +172,9 @@ public class PopulateDB {
                         option.setName(line[2]);
                         option.setFactor(Float.valueOf(line[3]));
                         option.setAnswer(answerList.get(Integer.valueOf(line[4])));
-                        if (!line[5].equals(""))
-                        option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
+                        if (line[5]!=null && !line[5].isEmpty()) {
+                            option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
+                        }
                         option.save();
                         optionList.put(Integer.valueOf(line[0]), option);
                         break;

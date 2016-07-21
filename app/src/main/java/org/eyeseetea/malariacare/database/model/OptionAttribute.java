@@ -54,11 +54,6 @@ public class OptionAttribute extends BaseModel {
     int text_size;
 
     /**
-     * Constant that reflects a default text size
-     */
-    public static final int DEFAULT_TEXT_SIZE=24;
-
-    /**
      * Constant that reflects a left alignment
      */
     public static final int HORIZONTAL_ALIGNMENT_LEFT=0;

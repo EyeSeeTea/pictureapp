@@ -27,6 +27,7 @@ import com.opencsv.CSVReader;
 import com.raizlabs.android.dbflow.runtime.TransactionManager;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Header;
@@ -162,7 +163,7 @@ public class PopulateDB {
                         if(line.length>5 && !line[5].equals(""))
                             optionAttribute.setText_size(Integer.valueOf(line[5]));
                         else
-                            optionAttribute.setText_size(OptionAttribute.DEFAULT_TEXT_SIZE);
+                            optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
                         optionAttribute.save();
                         optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
                         break;
@@ -341,7 +342,7 @@ public class PopulateDB {
             if(line.length>5 && !line[5].equals(""))
                 optionAttribute.setText_size(Integer.valueOf(line[5]));
             else
-                optionAttribute.setText_size(OptionAttribute.DEFAULT_TEXT_SIZE);
+                optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
             optionAttribute.save();
             optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
         }
@@ -386,7 +387,7 @@ public class PopulateDB {
             if(line.length>5 && !line[5].equals(""))
                 optionAttribute.setText_size(Integer.valueOf(line[5]));
             else
-                optionAttribute.setText_size(OptionAttribute.DEFAULT_TEXT_SIZE);
+                optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
             optionAttribute.save();
             optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
         }

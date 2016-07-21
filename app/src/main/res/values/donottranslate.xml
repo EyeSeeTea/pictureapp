@@ -100,4 +100,8 @@
         <item>@string/font_size_level3</item>
         <item>@string/font_size_level4</item>
     </string-array>
+
+
+    <string name="default_option_text_size" translatable="false">24</string>
+
 </resources>

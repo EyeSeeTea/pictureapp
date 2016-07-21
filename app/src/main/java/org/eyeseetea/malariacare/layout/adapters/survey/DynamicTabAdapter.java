@@ -31,13 +31,9 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -75,6 +71,7 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBui
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.FlavorSettings;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
@@ -838,7 +835,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int arg1) {
                     hideKeyboard(PreferencesState.getInstance().getContext());
-                    if(Session.getSurvey().isRDT())
+                    if(Session.getSurvey().isRDT() && FlavorSettings.isReviewActive())
                         DashboardActivity.dashboardActivity.closeSurveyFragmentAndAskReview();
                     else
                         DashboardActivity.dashboardActivity.closeSurveyFragment();

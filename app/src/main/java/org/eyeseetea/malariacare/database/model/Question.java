@@ -106,6 +106,18 @@ public class Question extends BaseModel {
     @Column
     Integer total_questions;
 
+    @Column
+    Integer visible;
+
+
+    /**
+     * Constant that reflects a visible question in information
+     */
+    public static final int QUESTION_VISIBLE=1;
+    /**
+     * Constant that reflects a not visible question in information
+     */
+    public static final int QUESTION_INVISIBLE=0;
     /**
      * Reference to associated compositeScore for this question (loaded lazily)
      */
@@ -299,14 +311,20 @@ public class Question extends BaseModel {
         return output;
     }
 
-    /**
-     * Tells if this question has options or is an open value
-     *
-     * @return
-     */
-    public boolean hasOutputWithOptions() {
-        return Constants.QUESTION_TYPES_WITH_OPTIONS.contains(this.output);
+    public Integer getTotalQuestions() {
+        return total_questions;
+    }
 
+    public void setTotalQuestions(Integer total_questions) {
+        this.total_questions = total_questions;
+    }
+
+    public Boolean isVisible() {
+        return (this.visible==QUESTION_VISIBLE);
+    }
+
+    public void setVisible(Integer visible) {
+        this.visible = visible;
     }
 
     public Answer getAnswer() {
@@ -371,6 +389,10 @@ public class Question extends BaseModel {
         this.compositeScore = null;
     }
 
+    public static List<Question> getAllQuestions() {
+        return new Select().all().from(Question.class).queryList();
+    }
+
     public boolean hasParent() {
         if (parent == null) {
             long countChildQuestionRelations = new Select().count().from(QuestionRelation.class)
@@ -397,6 +419,16 @@ public class Question extends BaseModel {
 
     public boolean hasQuestionRelations() {
         return !this.getQuestionRelations().isEmpty();
+    }
+
+    /**
+     * Tells if this question has options or is an open value
+     *
+     * @return
+     */
+    public boolean hasOutputWithOptions() {
+        return Constants.QUESTION_TYPES_WITH_OPTIONS.contains(this.output);
+
     }
 
     public List<QuestionOption> getQuestionOption() {
@@ -635,7 +667,7 @@ public class Question extends BaseModel {
                         .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
                 .where(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(Constants.NO_ANSWER))
                 .and(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP)).eq(tabGroup.getId_tab_group()))
-                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(Constants.OPERATION_TYPE_PARENT)).count();
+                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(QuestionRelation.PARENT_CHILD)).count();
 
         // Return number of parents (total - children)
         return (int) (totalAnswerableQuestions - numChildrenQuestion);
@@ -676,7 +708,7 @@ public class Question extends BaseModel {
                                 .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_OPTION)))
                 .where(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY)).eq(survey.getId_survey()))
                 .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)).eq(this.getId_question()))
-                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(Constants.OPERATION_TYPE_MATCH))
+                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(QuestionRelation.MATCH))
                 .queryList();
 
         //No values no match
@@ -774,87 +806,6 @@ public class Question extends BaseModel {
                 .querySingle();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Question question = (Question) o;
-
-        if (id_question != question.id_question) return false;
-        if (code != null ? !code.equals(question.code) : question.code != null) return false;
-        if (de_name != null ? !de_name.equals(question.de_name) : question.de_name != null)
-            return false;
-        if (short_name != null ? !short_name.equals(question.short_name) : question.short_name != null)
-            return false;
-        if (form_name != null ? !form_name.equals(question.form_name) : question.form_name != null)
-            return false;
-        if (uid != null ? !uid.equals(question.uid) : question.uid != null) return false;
-        if (order_pos != null ? !order_pos.equals(question.order_pos) : question.order_pos != null)
-            return false;
-        if (numerator_w != null ? !numerator_w.equals(question.numerator_w) : question.numerator_w != null)
-            return false;
-        if (denominator_w != null ? !denominator_w.equals(question.denominator_w) : question.denominator_w != null)
-            return false;
-        if (feedback != null ? !feedback.equals(question.feedback) : question.feedback != null)
-            return false;
-        if (id_header != null ? !id_header.equals(question.id_header) : question.id_header != null)
-            return false;
-        if (id_answer != null ? !id_answer.equals(question.id_answer) : question.id_answer != null)
-            return false;
-        if (output != null ? !output.equals(question.output) : question.output != null)
-            return false;
-        if (id_parent != null ? !id_parent.equals(question.id_parent) : question.id_parent != null)
-            return false;
-        if (total_questions != null ? !total_questions.equals(question.total_questions) : question.total_questions != null)
-            return false;
-        return !(id_composite_score != null ? !id_composite_score.equals(question.id_composite_score) : question.id_composite_score != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id_question ^ (id_question >>> 32));
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        result = 31 * result + (de_name != null ? de_name.hashCode() : 0);
-        result = 31 * result + (short_name != null ? short_name.hashCode() : 0);
-        result = 31 * result + (form_name != null ? form_name.hashCode() : 0);
-        result = 31 * result + (uid != null ? uid.hashCode() : 0);
-        result = 31 * result + (order_pos != null ? order_pos.hashCode() : 0);
-        result = 31 * result + (numerator_w != null ? numerator_w.hashCode() : 0);
-        result = 31 * result + (denominator_w != null ? denominator_w.hashCode() : 0);
-        result = 31 * result + (feedback != null ? feedback.hashCode() : 0);
-        result = 31 * result + (id_header != null ? id_header.hashCode() : 0);
-        result = 31 * result + (id_answer != null ? id_answer.hashCode() : 0);
-        result = 31 * result + (output != null ? output.hashCode() : 0);
-        result = 31 * result + (id_parent != null ? id_parent.hashCode() : 0);
-        result = 31 * result + (id_composite_score != null ? id_composite_score.hashCode() : 0);
-        result = 31 * result + (total_questions != null ? total_questions.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Question{" +
-                "id_question=" + id_question +
-                ", code='" + code + '\'' +
-                ", de_name='" + de_name + '\'' +
-                ", short_name='" + short_name + '\'' +
-                ", form_name='" + form_name + '\'' +
-                ", uid='" + uid + '\'' +
-                ", order_pos=" + order_pos +
-                ", numerator_w=" + numerator_w +
-                ", feedback='" + feedback + '\'' +
-                ", denominator_w=" + denominator_w +
-                ", id_header=" + id_header +
-                ", id_answer=" + id_answer +
-                ", output=" + output +
-                ", id_parent=" + id_parent +
-                ", id_composite_score=" + id_composite_score +
-                ", total_questions=" + total_questions +
-                '}';
-    }
-
     /**
      * Find the first root question in the given tab
      *
@@ -946,6 +897,48 @@ public class Question extends BaseModel {
         Collections.sort(childrenQuestions, new QuestionOrderComparator());
 
         return childrenQuestions;
+    }
+
+    /**
+     * Find the counter question for this question taking into the account the given option.
+     * Only 1 counter question will be activated by option
+     * @param option
+     * @return
+     */
+    public Question findCounterByOption(Option option){
+
+        //No option -> no children
+        if(option==null){
+            return null;
+        }
+
+        List<QuestionOption> questionOptions=this.getQuestionOption();
+        //No trigger (questionOption) -> no counters
+        if(questionOptions==null || questionOptions.size()==0){
+            return null;
+        }
+
+        //Navigate to questionRelation to get child questions
+        long optionId=option.getId_option().longValue();
+        for(QuestionOption questionOption:questionOptions){
+            //Other options must be discarded
+            long currentOptionId=questionOption.getOption().getId_option().longValue();
+            if(optionId!=currentOptionId){continue;}
+            Match match =questionOption.getMatch();
+            if(match==null){continue;}
+
+            QuestionRelation questionRelation=match.getQuestionRelation();
+            //only COUNTER RELATIONSHIPs are interesting for this
+            if(questionRelation==null || questionRelation.getOperation()!=QuestionRelation.COUNTER){continue;}
+
+            Question childQuestion=questionRelation.getQuestion();
+            if(childQuestion==null){continue;}
+
+            //Found
+            return childQuestion;
+        }
+
+        return null;
     }
 
     /**
@@ -1075,19 +1068,6 @@ public class Question extends BaseModel {
         return this.sibling;
     }
 
-    public Integer getTotalQuestions() {
-        return total_questions;
-    }
-
-    public void setTotalQuestions(Integer total_questions) {
-        this.total_questions = total_questions;
-    }
-
-    public static List<Question> getAllQuestions() {
-        return new Select().all().from(Question.class).queryList();
-    }
-
-
     private static class QuestionOrderComparator implements Comparator {
 
         @Override
@@ -1098,5 +1078,90 @@ public class Question extends BaseModel {
 
             return new Integer(question1.getOrder_pos().compareTo(new Integer(question2.getOrder_pos())));
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Question question = (Question) o;
+
+        if (id_question != question.id_question) return false;
+        if (code != null ? !code.equals(question.code) : question.code != null) return false;
+        if (de_name != null ? !de_name.equals(question.de_name) : question.de_name != null)
+            return false;
+        if (short_name != null ? !short_name.equals(question.short_name) : question.short_name != null)
+            return false;
+        if (form_name != null ? !form_name.equals(question.form_name) : question.form_name != null)
+            return false;
+        if (uid != null ? !uid.equals(question.uid) : question.uid != null) return false;
+        if (order_pos != null ? !order_pos.equals(question.order_pos) : question.order_pos != null)
+            return false;
+        if (numerator_w != null ? !numerator_w.equals(question.numerator_w) : question.numerator_w != null)
+            return false;
+        if (denominator_w != null ? !denominator_w.equals(question.denominator_w) : question.denominator_w != null)
+            return false;
+        if (feedback != null ? !feedback.equals(question.feedback) : question.feedback != null)
+            return false;
+        if (id_header != null ? !id_header.equals(question.id_header) : question.id_header != null)
+            return false;
+        if (id_answer != null ? !id_answer.equals(question.id_answer) : question.id_answer != null)
+            return false;
+        if (output != null ? !output.equals(question.output) : question.output != null)
+            return false;
+        if (id_parent != null ? !id_parent.equals(question.id_parent) : question.id_parent != null)
+            return false;
+        if (total_questions != null ? !total_questions.equals(question.total_questions) : question.total_questions != null)
+            return false;
+        if (visible != null ? !visible.equals(question.visible) : question.visible != null)
+            return false;
+        return !(id_composite_score != null ? !id_composite_score.equals(question.id_composite_score) : question.id_composite_score != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id_question ^ (id_question >>> 32));
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (de_name != null ? de_name.hashCode() : 0);
+        result = 31 * result + (short_name != null ? short_name.hashCode() : 0);
+        result = 31 * result + (form_name != null ? form_name.hashCode() : 0);
+        result = 31 * result + (uid != null ? uid.hashCode() : 0);
+        result = 31 * result + (order_pos != null ? order_pos.hashCode() : 0);
+        result = 31 * result + (numerator_w != null ? numerator_w.hashCode() : 0);
+        result = 31 * result + (denominator_w != null ? denominator_w.hashCode() : 0);
+        result = 31 * result + (feedback != null ? feedback.hashCode() : 0);
+        result = 31 * result + (id_header != null ? id_header.hashCode() : 0);
+        result = 31 * result + (id_answer != null ? id_answer.hashCode() : 0);
+        result = 31 * result + (output != null ? output.hashCode() : 0);
+        result = 31 * result + (id_parent != null ? id_parent.hashCode() : 0);
+        result = 31 * result + (id_composite_score != null ? id_composite_score.hashCode() : 0);
+        result = 31 * result + (visible != null ? visible.hashCode() : 0);
+        result = 31 * result + (total_questions != null ? total_questions.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id_question=" + id_question +
+                ", code='" + code + '\'' +
+                ", de_name='" + de_name + '\'' +
+                ", short_name='" + short_name + '\'' +
+                ", form_name='" + form_name + '\'' +
+                ", uid='" + uid + '\'' +
+                ", order_pos=" + order_pos +
+                ", numerator_w=" + numerator_w +
+                ", feedback='" + feedback + '\'' +
+                ", denominator_w=" + denominator_w +
+                ", id_header=" + id_header +
+                ", id_answer=" + id_answer +
+                ", output=" + output +
+                ", id_parent=" + id_parent +
+                ", id_composite_score=" + id_composite_score +
+                ", total_questions=" + total_questions +
+                ", visible=" + visible +
+                '}';
     }
 }

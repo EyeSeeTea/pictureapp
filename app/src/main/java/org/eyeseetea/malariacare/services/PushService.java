@@ -23,16 +23,16 @@ package org.eyeseetea.malariacare.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
+
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
+
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
@@ -85,6 +85,12 @@ public class PushService extends IntentService {
     public PushService(String name) {
         super(name);
         Log.d(TAG, "PushService(name) constructor");
+    }
+
+    @Override
+    public void onDestroy(){
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
     }
 
     private synchronized void startProgress(){
@@ -183,6 +189,8 @@ public class PushService extends IntentService {
 
     @Subscribe
     public void callbackLoginPrePush(NetworkJob.NetworkJobResult<ResourceType> result) {
+        if(!PushController.getInstance().isPushInProgress())
+            return;
         Log.d(TAG, "callbackLoginPrePush");
         //Nothing to check
         if(result==null || result.getResourceType()==null || !result.getResourceType().equals(ResourceType.USERS)){

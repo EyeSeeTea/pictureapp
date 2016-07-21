@@ -46,6 +46,7 @@ import android.widget.TextView;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
@@ -265,8 +266,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * @param url
      */
     public void initPopulateOrgUnitsByServerVersion(String url){
-        CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this);
-        serverVersionAsync.execute(url);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
+        if(sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
+            CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this);
+            serverVersionAsync.execute(url);
+        }
     }
 
     public void callbackPopulateOrgUnitsByServerVersion(ServerInfo serverInfo){
@@ -278,8 +282,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * Launches an async task that resolved the current server version when the org unit has changed.
      */
     private void initReloadByServerVersionWhenOrgUnitChanged() {
-        CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this,true,true);
-        serverVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
+        if(sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
+            CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this, true, true);
+            serverVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
+        }
     }
 
 
@@ -322,9 +329,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * @param url
      */
     private void initReloadByServerVersionWhenUrlChanged(String url) {
-        Log.d(TAG,"init reload server version when url changed");
-        CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this,true);
-        serverVersionAsync.execute(url);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
+        if(sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
+            Log.d(TAG, "init reload server version when url changed");
+            CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this, true);
+            serverVersionAsync.execute(url);
+        }
     }
 
     /**
@@ -379,8 +389,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Subscribe
     public void callbackLoginPrePull(NetworkJob.NetworkJobResult<ResourceType> result) {
+        if(PushController.getInstance().isPushInProgress())
+            return;
         //Nothing to check
-        if(result==null || !result.getResourceType().equals(ResourceType.USERS)){
+        if(result==null || result.getResourceType()==null || !result.getResourceType().equals(ResourceType.USERS)){
             return;
         }
 
@@ -840,6 +852,7 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle(context.getString(titleId))
                 .setMessage(linkedMessage)
+                .setCancelable(false)
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

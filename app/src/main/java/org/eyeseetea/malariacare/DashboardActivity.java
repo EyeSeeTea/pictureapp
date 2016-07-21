@@ -46,6 +46,7 @@ import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.io.IOException;
@@ -212,6 +213,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void initSurvey(){
+        isBackPressed=false;
         tabHost.getTabWidget().setVisibility(View.GONE);
         int  mStackLevel=0;
         mStackLevel++;
@@ -281,7 +283,6 @@ public class DashboardActivity extends BaseActivity {
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart");
-        Survey.removeInProgress();
     }
 
 
@@ -289,7 +290,12 @@ public class DashboardActivity extends BaseActivity {
     public void onPause(){
         Log.d(TAG, "onPause");
         super.onPause();
+    }
 
+    @Override
+    public void onStop(){
+        Log.d(TAG, "onStop");
+        super.onStop();
     }
 
     public void setReloadOnResume(boolean doReload){
@@ -375,8 +381,9 @@ public class DashboardActivity extends BaseActivity {
         isLoadingReview=false;
         ScoreRegister.clear();
         boolean isSent=false;
-        if(isBackPressed){
+        if(Session.getSurvey()!=null)
             isSent=Session.getSurvey().isSent();
+        if(isBackPressed){
             beforeExit();
         }
         surveyFragment.unregisterReceiver();
@@ -403,9 +410,8 @@ public class DashboardActivity extends BaseActivity {
             survey.getValuesFromDB();
             //Exit + InProgress -> delete
             if (isBackPressed && isInProgress) {
-                survey.delete();
-                //Session.getSurvey().delete();
                 Session.setSurvey(null);
+                survey.delete();
                 isBackPressed = false;
                 return;
             }

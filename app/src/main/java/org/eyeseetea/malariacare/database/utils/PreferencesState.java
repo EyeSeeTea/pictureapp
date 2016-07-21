@@ -237,6 +237,10 @@ public class PreferencesState {
         return dhisURL;
     }
 
+    public void setDhisURL(String dhisURL){
+        this.dhisURL = dhisURL;
+    }
+
     /**
      * Saves a value into a preference
      * @param namePreference

@@ -21,7 +21,8 @@ public class Constants {
             IMAGES_6 = 12,
             PHONE = 13,
             IMAGES_3 = 14,
-            IMAGES_5 = 15;
+            IMAGES_5 = 15,
+            COUNTER = 16;
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
             DROPDOWN_LIST,
@@ -61,11 +62,6 @@ public class Constants {
             SURVEY_COMPLETED = 1,
             SURVEY_SENT = 2,
             SURVEY_HIDE = 3;
-
-    //############# OPERATION TYPE ##############
-    public static final int OPERATION_TYPE_MATCH = 0,
-            OPERATION_TYPE_PARENT = 1,
-            OPERATION_TYPE_OTHER = 2;
 
     public static final String FONTS_XSMALL = "xsmall",
             FONTS_SMALL = "small",

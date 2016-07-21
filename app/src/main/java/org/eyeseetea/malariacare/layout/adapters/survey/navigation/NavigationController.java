@@ -36,6 +36,12 @@ public class NavigationController {
      */
     private int currentTotal;
 
+    /**
+     * Flag used to block the swip to the forward question if a question option is clicked
+     */
+    public static boolean isMovingToForward=false;
+
+
     public NavigationController(QuestionNode rootNode){
         this.rootNode = rootNode;
         this.visited=new ArrayList<>();
@@ -75,6 +81,8 @@ public class NavigationController {
      * @return
      */
     public boolean isNextAllowed(){
+        if(isMovingToForward)
+            return false;
         QuestionNode currentQuestionNode=getCurrentNode();
         //not even start
         if(currentQuestionNode==null){
@@ -116,9 +124,15 @@ public class NavigationController {
             return null;
         }
 
+        //Trigger counters
+        if(!isInitialMove()) {
+            getCurrentNode().increaseRepetitions(option);
+        }
+
         //Found
         visit(nextNode);
         Question nextQuestion=nextNode.getQuestion();
+
 
         //Return next question
         Log.d(TAG,String.format("next(%s)->%s",option==null?"":option.getName(),nextQuestion.getCode()));
@@ -172,6 +186,12 @@ public class NavigationController {
      * @param nextNode
      */
     private void visit(QuestionNode nextNode){
+        //Self references are neither moving the counter nor adding a new position
+        if(isALoop(nextNode)){
+            Log.d(TAG,String.format("visit(%s) -> Not advancing",nextNode.getQuestion().getCode()));
+            return;
+        }
+        //annotate new current node and advance counter
         Log.d(TAG,String.format("visit(%s) -> In position %d",nextNode.getQuestion().getCode(),currentPosition+1));
         currentPosition++;
         visited.add(nextNode);
@@ -214,5 +234,17 @@ public class NavigationController {
         //Return next question
         Log.d(TAG,String.format("findNext(%s)->%s",option==null?"":option.getCode(),nextNode.getQuestion().getCode()));
         return nextNode;
+    }
+
+    /**
+     * Checks if the given nextNode is a loop with the current one
+     * @param nextNode
+     * @return
+     */
+    private boolean isALoop(QuestionNode nextNode){
+        if(nextNode==null || getCurrentNode()==null){
+            return false;
+        }
+        return nextNode.getQuestion().getId_question()==this.getCurrentNode().getQuestion().getId_question();
     }
 }

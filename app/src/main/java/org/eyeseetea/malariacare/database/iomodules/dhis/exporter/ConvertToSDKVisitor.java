@@ -21,7 +21,10 @@ package org.eyeseetea.malariacare.database.iomodules.dhis.exporter;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.Build;
 import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
@@ -86,6 +89,13 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
     @Override
     public void visit(Survey survey) throws Exception{
+
+        //Precondition
+        if(isEmpty(survey)){
+            survey.delete();
+            return;
+        }
+
         //Turn survey into an event
         this.currentSurvey=survey;
 
@@ -95,7 +105,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         //Calculates scores and update survey
         Log.d(TAG,"Registering scores...");
         List<CompositeScore> compositeScores = ScoreRegister.loadCompositeScores(survey);
-        updateSurvey(compositeScores);
 
         //Turn question values into dataValues
         Log.d(TAG,"Creating datavalues from questions...");
@@ -109,6 +118,29 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         //Annotate both objects to update its state once the process is over
         annotateSurveyAndEvent();
     }
+
+    private boolean isEmpty(Survey survey){
+        if(survey==null){
+            return true;
+        }
+
+        List<Value> values=survey.getValuesFromDB();
+        if(values==null || values.isEmpty()){
+            logEmptySurveyException(survey);
+            return true;
+        }
+        return false;
+    }
+
+    public static void logEmptySurveyException(Survey survey){
+        PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
+        String info=String.format("Survey: %s\nPhoneMetaData: %s\nAPI: %s",
+                survey.toString(),
+                phoneMetaData==null?"":phoneMetaData.getPhone_metaData(),
+                Build.VERSION.RELEASE
+                );
+        Crashlytics.logException(new Throwable(info));
+    }
     /**
      * Builds several datavalues from the mainScore of the survey
      * @param survey
@@ -120,11 +152,11 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
         //save Time capture
         if(PushClient.TAG_DATETIME_CAPTURE!=null && !PushClient.TAG_DATETIME_CAPTURE.equals(""))
-            buildAndSaveDataValue(PushClient.TAG_DATETIME_CAPTURE, EventExtended.format(survey.getCompletionDate(), EventExtended.AMERICAN_DATE_FORMAT));
+            buildAndSaveDataValue(PushClient.TAG_DATETIME_CAPTURE, EventExtended.format(survey.getCompletionDate(), EventExtended.COMPLETION_DATE_FORMAT));
 
         //save Time Sent
         if(PushClient.TAG_DATETIME_SENT!=null && !PushClient.TAG_DATETIME_SENT.equals(""))
-            buildAndSaveDataValue(PushClient.TAG_DATETIME_SENT,  EventExtended.format(new Date(), EventExtended.AMERICAN_DATE_FORMAT));
+            buildAndSaveDataValue(PushClient.TAG_DATETIME_SENT,  EventExtended.format(new Date(), EventExtended.COMPLETION_DATE_FORMAT));
     }
 
     /**
@@ -213,15 +245,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     /**
-     * Several properties must be updated when a survey is about to be sent.
-     * This changes will be saved just when process finish successfully.
-     * @param compositeScores
-     */
-    private void updateSurvey(List<CompositeScore> compositeScores){
-        currentSurvey.setStatus(Constants.SURVEY_SENT);
-    }
-
-    /**
      * Updates the location of the current event that it is being processed
      * @throws Exception
      */
@@ -259,19 +282,16 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             ImportSummary importSummary=importSummaryMap.get(iEvent.getLocalId());
             if(hasImportSummaryErrors(importSummary)){
                 //Some error while pushing should be done again
-                iSurvey.setStatus(Constants.SURVEY_IN_PROGRESS);
+                iSurvey.setStatus(Constants.SURVEY_COMPLETED);
                 iSurvey.save();
 
                 //Generated event must be remove too
                 iEvent.delete();
             }else{
+                iSurvey.setStatus(Constants.SURVEY_SENT);
                 iSurvey.saveMainScore();
                 iSurvey.save();
                 Log.d("DpBlank", "Saving suvey as completed " + iSurvey);
-
-                //To avoid several pushes
-                iEvent.setFromServer(true);
-                iEvent.save();
             }
         }
     }

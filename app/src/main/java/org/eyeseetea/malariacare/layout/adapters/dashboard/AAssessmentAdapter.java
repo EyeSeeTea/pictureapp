@@ -61,13 +61,13 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         rowView.setTag(survey.getId_survey());
 
 
-        //Completion Date
-        TextCard completionDate = (TextCard) rowView.findViewById(R.id.completionDate);
-        if(survey.getCompletionDate()!=null){
+        //Event Date
+        TextCard eventDate = (TextCard) rowView.findViewById(R.id.completionDate);
+        if(survey.getEventDate()!=null){
             //it show dd/mm/yy in europe, mm/dd/yy in america, etc.
             DateFormat formatter=DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Resources.getSystem().getConfiguration().locale);
 
-            completionDate.setText(formatter.format(survey.getCompletionDate()));
+            eventDate.setText(formatter.format(survey.getEventDate()));
         }
 
         //RDT
@@ -89,7 +89,7 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         //INFO
         TextCard info = (TextCard) rowView.findViewById(R.id.info);
         //Load a font which support Khmer character
-        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + "KhmerOS.ttf");
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" +  context.getString(R.string.specific_language_font));
         info.setTypeface(tf);
 
         info.setText(survey.getValuesToString());

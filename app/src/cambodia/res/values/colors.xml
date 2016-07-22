@@ -2,5 +2,6 @@
 <resources>
     <color name="questionHeaderColor">#FF1D5288</color>
     <color name="questionHeaderTextColor">#FFFFFF</color>
+    <color name="questionLayoutBackground">#e5e5e5</color>
     <color name="dynamicProgressBarColor">#00000000</color>
 </resources>

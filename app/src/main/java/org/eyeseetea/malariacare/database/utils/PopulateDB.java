@@ -191,6 +191,8 @@ public class PopulateDB {
                         question.setOutput(Integer.valueOf(line[12]));
                         question.setTotalQuestions(Integer.valueOf(line[13]));
                         question.setVisible(Integer.valueOf(line[14]));
+                        if(line.length>15 && !line[15].equals(""))
+                            question.setPath((line[15]));
                         question.save();
                         questionList.put(Integer.valueOf(line[0]), question);
                         break;
@@ -295,6 +297,25 @@ public class PopulateDB {
         }
         reader.close();
     }
+
+    public static void addImagePathQuestions(AssetManager assetManager) throws IOException {
+        //Reset inner references,
+        List<Question> questions=Question.getAllQuestions();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)), SEPARATOR, QUOTECHAR);
+
+        String[] line;
+        while ((line = reader.readNext()) != null) {
+            for (Question question : questions) {
+                if (question.getUid().equals(line[5])) {
+                    if(line.length>15 && !line[15].equals(""))
+                        question.setPath(line[15]);
+                    question.save();
+                }
+            }
+        }
+        reader.close();
+    }
+
     public static void addVisibleQuestions(AssetManager assetManager, List<Question> questions) throws IOException {
         //Reset inner references
         CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)), SEPARATOR, QUOTECHAR);

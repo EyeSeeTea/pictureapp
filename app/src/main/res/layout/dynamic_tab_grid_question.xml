@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/dynamic_progress_text"
-            android:background="#00000000"
+            android:background="@color/dynamicProgressBarColor"
             android:layout_alignLeft="@id/dynamic_progress"
             android:layout_alignTop="@id/dynamic_progress"
             android:layout_alignRight="@id/dynamic_progress"

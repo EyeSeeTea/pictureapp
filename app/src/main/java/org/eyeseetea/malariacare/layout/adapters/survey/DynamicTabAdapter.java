@@ -308,6 +308,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         headerView.setTypeface(tf);
         headerView.setText(question.getForm_name());
 
+        //question image
+        ImageView imageView=(ImageView) rowView.findViewById(R.id.questionImage);
+        if(question.getPath()!=null && !question.getPath().equals("")) {
+            putImageInImageView(question.getPath(), imageView);
+            imageView.setVisibility(View.VISIBLE);
+        }
+
         //Progress
         ProgressBar progressView=(ProgressBar)rowView.findViewById(R.id.dynamic_progress);
         TextView progressText=(TextView)rowView.findViewById(R.id.dynamic_progress_text);
@@ -732,16 +739,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             overshadow(button, option);
         }
 
+        //the button is a framelayout that contains a imageview
+        ImageView imageView= (ImageView) button.getChildAt(0);
         //Put image
-        try {
-            InputStream inputStream = context.getAssets().open(option.getPath());
-            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-            //the button is a framelayout that contains a imageview
-            ImageView imageView= (ImageView) button.getChildAt(0);
-            imageView.setImageBitmap(bmp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        putImageInImageView(option.getPath(), imageView);
         //Associate option
         button.setTag(option);
 
@@ -755,6 +756,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         swipeTouchListener.addClickableView(button);
 
         resizeTextWidth(button,(TextCard) button.getChildAt(1));
+    }
+
+    private void putImageInImageView(String path, ImageView imageView) {
+        try {
+            if(path==null || path.equals(""))
+                return;
+            InputStream inputStream = context.getAssets().open(path);
+            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+            imageView.setImageBitmap(bmp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

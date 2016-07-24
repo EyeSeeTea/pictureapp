@@ -13,6 +13,7 @@
 <string name="dialog_title_delete_survey">"Borrar evaluación"</string>
 <string name="dialog_info_delete_survey">"¿Seguro que desea borrar la evaluación?"</string>
 <string name="dialog_title_error">"Error"</string>
+<string name="toast_push_is_pushing">"Enviando encuestas antes de entrar en ajustes"</string>
 <string name="create_info_organization_unit">"Unidad de organización"</string>
 <string name="assessment_sent_date">"Fecha de llenado"</string>
 <string name="assessment_title_header">"Pendiente de enviar"</string>
@@ -118,4 +119,9 @@
 <string name="font_size_level4_title">"Extra grande"</string>
 <string name="option_counter">"Repeticiones: "</string>
 <string name="option_confirm">"Confirmar opción"</string>
+<string name="monitor_row_title_denied">Denegado</string>
+<string name="monitor_row_title_drug">Medicina</string>
+<string name="monitor_row_title_pregnant">Embarazada</string>
+<string name="monitor_row_title_severe">Grave</string>
+<string name="monitor_row_title_submission">Aceptado</string>
 </resources>

@@ -13,6 +13,7 @@
 <string name="dialog_title_delete_survey">"Delete Survey"</string>
 <string name="dialog_info_delete_survey">"Are you sure you want to completely delete this survey?"</string>
 <string name="dialog_title_error">"Error"</string>
+<string name="toast_push_is_pushing">"Sending surveys before entering settings."</string>
 <string name="create_info_organization_unit">"Organization Unit"</string>
 <string name="assessment_sent_date">"Date"</string>
 <string name="assessment_title_header">"Pending Send"</string>
@@ -118,4 +119,9 @@
 <string name="font_size_level4_title">"Extra large"</string>
 <string name="option_counter">"Repetitions: "</string>
 <string name="option_confirm">"Confirm option"</string>
+<string name="monitor_row_title_denied">Denied</string>
+<string name="monitor_row_title_drug">Drug</string>
+<string name="monitor_row_title_pregnant">Pregnant</string>
+<string name="monitor_row_title_severe">Severe</string>
+<string name="monitor_row_title_submission">Submission</string>
 </resources>

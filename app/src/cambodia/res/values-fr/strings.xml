@@ -13,6 +13,7 @@
 <string name="dialog_title_delete_survey">"Supprimer envoyés"</string>
 <string name="dialog_info_delete_survey">"Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?"</string>
 <string name="dialog_title_error">"Erreur"</string>
+<string name="toast_push_is_pushing">"Envoi d'enquêtes avant d'entrer dans les paramètres."</string>
 <string name="create_info_organization_unit">"Unité d'organisation"</string>
 <string name="assessment_sent_date">"Date de remplissement"</string>
 <string name="assessment_title_header">"Attendant Envoyer"</string>

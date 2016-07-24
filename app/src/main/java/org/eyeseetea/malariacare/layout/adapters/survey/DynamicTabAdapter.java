@@ -132,6 +132,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     View keyboardView;
 
+
+    /**
+     * Flag that indicates if the actual question option is clicked to prevent multiple clicks.
+     */
+    public static boolean isClicked;
+
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
@@ -150,6 +156,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         }
         navigationController.setTotalPages(totalPages);
+        isClicked=false;
     }
 
     private NavigationController initNavigationController(Tab tab) {
@@ -169,6 +176,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * @param view
              */
             public void onClick(final View view) {
+                if(isClicked)
+                    return;
+                isClicked=true;
                 Log.d(TAG, "onClick");
                 navigationController.isMovingToForward=true;
                 final Option selectedOption=(Option)view.getTag();
@@ -314,6 +324,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + context.getString(R.string.specific_language_font));
         headerView.setTypeface(tf);
         headerView.setText(question.getForm_name());
+
+        //question image
+        ImageView imageView=(ImageView) rowView.findViewById(R.id.questionImage);
+        if(question.getPath()!=null && !question.getPath().equals("")) {
+            putImageInImageView(question.getPath(), imageView);
+            imageView.setVisibility(View.VISIBLE);
+        }
 
         //Progress
         ProgressBar progressView=(ProgressBar)rowView.findViewById(R.id.dynamic_progress);
@@ -482,6 +499,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         else{
             textOption.setVisibility(View.GONE);
         }
+        textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
     /**
@@ -549,6 +567,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(isClicked)
+                        return;
+                    isClicked=true;
                     savePositiveIntValue(numberPicker);
                 }
             });
@@ -571,6 +592,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Required, empty values rejected
         if(checkEditTextNotNull(positiveIntValue)){
             numberPicker.setError(context.getString(R.string.dynamic_error_age));
+            isClicked=false;
             return;
         }
 
@@ -602,6 +624,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if(isClicked)
+                        return false;
+                    isClicked=true;
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         String phoneValue = editText.getText().toString();
                         if (checkPhoneNumberByMask(phoneValue)) {
@@ -617,6 +642,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(isClicked)
+                        return;
+                    isClicked=true;
                     View parentView = (View) v.getParent();
                     EditText editText = (EditText) parentView.findViewById(R.id.dynamic_phone_edit);
                     savePhoneValue(editText);
@@ -640,6 +668,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Check phone ok
         if(!checkPhoneNumberByMask(phoneValue)){
             editText.setError(context.getString(R.string.dynamic_error_phone_format));
+            isClicked=false;
             return;
         }
 
@@ -666,6 +695,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if(isClicked)
+                        return false;
+                    isClicked=true;
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         if(v.getId()==R.id.dynamic_positiveInt_edit)
                             savePositiveIntValue((EditText) v);
@@ -767,16 +799,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             overshadow(button, option);
         }
 
+        //the button is a framelayout that contains a imageview
+        ImageView imageView= (ImageView) button.getChildAt(0);
         //Put image
-        try {
-            InputStream inputStream = context.getAssets().open(option.getPath());
-            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-            //the button is a framelayout that contains a imageview
-            ImageView imageView= (ImageView) button.getChildAt(0);
-            imageView.setImageBitmap(bmp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        putImageInImageView(option.getPath(), imageView);
         //Associate option
         button.setTag(option);
 
@@ -790,6 +816,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         swipeTouchListener.addClickableView(button);
 
         resizeTextWidth(button,(TextCard) button.getChildAt(1));
+    }
+
+    private void putImageInImageView(String path, ImageView imageView) {
+        try {
+            if(path==null || path.equals(""))
+                return;
+            InputStream inputStream = context.getAssets().open(path);
+            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+            imageView.setImageBitmap(bmp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -865,12 +903,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 public void onClick(DialogInterface dialog, int arg1) {
                     hideKeyboard(PreferencesState.getInstance().getContext());
                     DashboardActivity.dashboardActivity.closeSurveyFragment();
+                    isClicked=false;
                 }
             });
         msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 hideKeyboard(PreferencesState.getInstance().getContext());
                 review();
+                isClicked=false;
             }
         });
 
@@ -906,6 +946,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(value==null  && !readOnly)
             navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());
         navigationController.isMovingToForward=false;
+        isClicked=false;
     }
 
     /**
@@ -917,6 +958,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         navigationController.previous();
         notifyDataSetChanged();
+        isClicked=false;
     }
 
     /**
@@ -1011,7 +1053,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             @Override
             public boolean onSingleTapConfirmed(MotionEvent event){
-//              Log.d(TAG, String.format("onSingleTapConfirmed: %f %f", event.getX(), event.getY()));
+              Log.d(TAG, String.format("onSingleTapConfirmed: %f %f", event.getX(), event.getY()));
 
                 //Find the clicked button
                 View clickedView=findViewByCoords(event);
@@ -1022,7 +1064,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     onClick(clickedView);
                     return true;
                 }
-
                 //Not found, not consumed
                 return false;
             }

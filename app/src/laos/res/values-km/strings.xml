@@ -13,6 +13,7 @@
 <string name="dialog_title_delete_survey">"លុបលទ្ធផលដែលបានផ្ញើរចេញ"</string>
 <string name="dialog_info_delete_survey">"តើ​អ្នក​ប្រាកដ​ជា​ចង់​លុបចោល​ទាំង​ស្រុង​ការស្ទង់មតិ​នេះ​?"</string>
 <string name="dialog_title_error">"មានកំហុស"</string>
+<string name="toast_push_is_pushing">"ការផ្ញើការស្ទង់មតិមុនពេលចូលទៅការកំណត់។"</string>
 <string name="create_info_organization_unit">"Organization Unit"</string>
 <string name="assessment_sent_date">"កាលបរិច្ឆេទ"</string>
 <string name="assessment_title_header">"ការបញ្ជូនមិនទាន់សម្រេច"</string>
@@ -120,4 +121,9 @@
 <string name="font_size_level4_title">"ធំបំផុត"</string>
 <string name="option_counter">"អ្នកតំណាង: "</string>
 <string name="option_confirm">"អះអាងជម្រើស"</string>
+<string name="monitor_row_title_denied">"បដិសេធ"</string>
+<string name="monitor_row_title_drug">" គ្រឿងញៀន "</string>
+<string name="monitor_row_title_pregnant">"មានផ្ទៃពោះ "</string>
+<string name="monitor_row_title_severe">" ធ្ងន់ធ្ងរ "</string>
+<string name="monitor_row_title_submission">" ការដាក់"</string>
 </resources>

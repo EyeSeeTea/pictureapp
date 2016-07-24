@@ -24,7 +24,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.monitor.MonitorTableBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,7 +37,7 @@ public class SuspectedPositiveTableBuilder extends MonitorTableBuilder{
     }
     @Override
     protected List<MonitorRowBuilder> defineRowBuilders() {
-        MonitorVariantUtils monitorVariantUtils=new MonitorVariantUtils(context);
-        return monitorVariantUtils.defineSuspectedRows();
+        MonitorUtils monitorUtils =new MonitorUtils(context);
+        return monitorUtils.defineSuspectedRows();
     }
 }

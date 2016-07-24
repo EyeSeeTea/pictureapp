@@ -37,8 +37,8 @@ public class StockTableBuilder extends MonitorTableBuilder {
     }
     @Override
     protected List<MonitorRowBuilder> defineRowBuilders() {
-        MonitorVariantUtils monitorVariantUtils=new MonitorVariantUtils(context);
-        return monitorVariantUtils.defineRows();
+        MonitorUtils monitorUtils =new MonitorUtils(context);
+        return monitorUtils.defineRows();
 
     }
 }

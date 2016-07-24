@@ -29,13 +29,10 @@ import java.util.List;
 /**
  * Created by idelcano on 21/07/2016.
  */
-public class MonitorVariantUtils {
-    Context context;
-    public MonitorVariantUtils(Context context) {
-        this.context=context;
+public class MonitorUtils extends AMonitorUtils {
+    public MonitorUtils(Context context) {
+        super(context);
     }
-
-
 
     public List<MonitorRowBuilder> defineRows(){
         List<MonitorRowBuilder> rowBuilders = new ArrayList<>();

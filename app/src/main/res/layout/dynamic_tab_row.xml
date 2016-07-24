@@ -12,6 +12,7 @@
     android:layout_weight="0.5"
     android:scaleType="centerInside">
     <ImageView
+        android:id="@+id/option1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -45,6 +46,7 @@
     android:layout_weight="0.5"
     android:scaleType="centerInside">
     <ImageView
+        android:id="@+id/option2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"

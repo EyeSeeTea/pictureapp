@@ -50,6 +50,9 @@ public class OptionAttribute extends BaseModel {
     @Column
     int vertical_alignment;
 
+    @Column
+    int text_size;
+
     /**
      * Constant that reflects a left alignment
      */
@@ -128,6 +131,14 @@ public class OptionAttribute extends BaseModel {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public int getText_size() {
+        return text_size;
+    }
+
+    public void setText_size(int size) {
+        this.text_size = size;
     }
 
     public int getHorizontal_alignment() {

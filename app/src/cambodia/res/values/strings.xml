@@ -117,4 +117,6 @@
 <string name="font_size_level2_title">"Medium"</string>
 <string name="font_size_level3_title">"Large"</string>
 <string name="font_size_level4_title">"Extra large"</string>
+<string name="option_counter">"Repetitions: "</string>
+<string name="option_confirm">"Confirm option"</string>
 </resources>

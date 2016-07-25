@@ -119,4 +119,11 @@
 <string name="font_size_level2_title">"មធ្យម"</string>
 <string name="font_size_level3_title">"ធំ"</string>
 <string name="font_size_level4_title">"ធំបំផុត"</string>
+<string name="option_counter">"អ្នកតំណាង: "</string>
+<string name="option_confirm">"អះអាងជម្រើស"</string>
+<string name="monitor_row_title_denied">"បដិសេធ"</string>
+<string name="monitor_row_title_drug">" គ្រឿងញៀន "</string>
+<string name="monitor_row_title_pregnant">"មានផ្ទៃពោះ "</string>
+<string name="monitor_row_title_severe">" ធ្ងន់ធ្ងរ "</string>
+<string name="monitor_row_title_submission">" ការដាក់"</string>
 </resources>

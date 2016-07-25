@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="specific_language_font" translatable="false">boon.ttf</string>
+    <string name="user_push" translatable="false">LAMCS</string>
+    <string name="pass_push" translatable="false">LAMCSadmin1</string>
     <string name="monitor_row_title_act6x1" translatable="false">ACT6x1</string>
     <string name="monitor_row_title_act6x2" translatable="false">ACT6x2</string>
     <string name="monitor_row_title_act6x3" translatable="false">ACT6x3</string>

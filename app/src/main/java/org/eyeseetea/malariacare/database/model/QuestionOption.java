@@ -23,10 +23,14 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
+import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+
+import java.util.List;
 
 /**
  * Created by Jose on 25/05/2015.
@@ -137,6 +141,53 @@ public class QuestionOption extends BaseModel {
         this.match = null;
     }
 
+    /**
+     * Returns the threshold associated with this questionoption
+     * @return
+     */
+    public QuestionThreshold getQuestionThreshold(){
+        Match match = getMatch();
+
+        //No match -> no threshold
+        if(match==null){
+            return null;
+        }
+
+        return match.getQuestionThreshold();
+    }
+
+    /**
+     * Returns the QuestionOptions for the given question and option
+     * @param questionWithOption
+     * @param option
+     * @return
+     */
+    public static List<QuestionOption> findByQuestionAndOption(Question questionWithOption, Option option) {
+        if(questionWithOption==null || option==null){
+            return null;
+        }
+
+        return new Select().all().from(QuestionOption.class)
+                .where(Condition.column(QuestionOption$Table.ID_QUESTION)
+                .is(questionWithOption.getId_question()))
+                .and(Condition.column(QuestionOption$Table.ID_OPTION)
+                        .is(option.getId_option()))
+                .queryList();
+    }
+
+    /**
+     * Find questionOptions related with the given questionRelation by its match
+     * @param questionRelation
+     * @return
+     */
+    public static List<QuestionOption> findByQuestionRelation(QuestionRelation questionRelation){
+        return new Select().all().from(QuestionOption.class).as("qo")
+                .join(Match.class, Join.JoinType.LEFT).as("m")
+                .on(Condition.column(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH))
+                                .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)))
+                .where(Condition.column(ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION)).eq(questionRelation.getId_question_relation())).queryList();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -171,4 +222,5 @@ public class QuestionOption extends BaseModel {
                 ", id_match=" + id_match +
                 '}';
     }
+
 }

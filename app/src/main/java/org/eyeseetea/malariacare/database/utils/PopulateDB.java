@@ -40,6 +40,7 @@ import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Score;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
@@ -71,6 +72,7 @@ public class PopulateDB {
     public static final String QUESTION_OPTIONS_CSV="QuestionOptions.csv";
     public static final String  MATCHES = "Matches.csv";
     public static final String QUESTION_RELATIONS_CSV="QuestionRelations.csv";
+    public static final String QUESTION_THRESHOLDS_CSV="QuestionThresholds.csv";
 
     private static final List<String> tables2populate = Arrays.asList(
             PROGRAMS_CSV,
@@ -83,7 +85,9 @@ public class PopulateDB {
             QUESTIONS_CSV,
             QUESTION_RELATIONS_CSV,
             MATCHES,
-            QUESTION_OPTIONS_CSV);
+            QUESTION_OPTIONS_CSV,
+            QUESTION_THRESHOLDS_CSV);
+
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
 
@@ -97,8 +101,6 @@ public class PopulateDB {
     static Map<Integer, Answer> answerList = new LinkedHashMap<Integer, Answer>();
     static Map<Integer, QuestionRelation> questionRelationList = new LinkedHashMap();
     static Map<Integer, Match> matchList = new LinkedHashMap();
-    static Map<Integer, QuestionOption> questionOptionList = new LinkedHashMap();
-
 
     public static void populateDB(AssetManager assetManager) throws IOException {
 
@@ -220,8 +222,18 @@ public class PopulateDB {
                         questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
                         questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
                         questionOption.save();
-                        questionOptionList.put(Integer.valueOf(line[0]),questionOption);
                         break;
+                    case QUESTION_THRESHOLDS_CSV:
+                        QuestionThreshold questionThreshold = new QuestionThreshold();
+                        questionThreshold.setMatch(matchList.get(Integer.valueOf(line[1])));
+                        questionThreshold.setQuestion(questionList.get(Integer.valueOf(line[2])));
+                        if (!line[3].equals("")){
+                            questionThreshold.setMinValue(Integer.valueOf(line[3]));
+                        }
+                        if (!line[4].equals("")){
+                            questionThreshold.setMaxValue(Integer.valueOf(line[4]));
+                        }
+                        questionThreshold.save();
                 }
             }
             reader.close();
@@ -247,7 +259,6 @@ public class PopulateDB {
         answerList.clear();
         questionRelationList.clear();
         matchList.clear();
-        questionOptionList.clear();
     }
 
     /**

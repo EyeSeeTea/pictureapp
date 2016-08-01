@@ -199,8 +199,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              */
             public void onSwipeRight() {
                 Log.d(TAG, "onSwipeRight(previous)");
+
                 //Hide keypad
                 hideKeyboard(listView.getContext(), listView);
+
                 previous();
             }
 
@@ -210,8 +212,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             public void onSwipeLeft() {
                 Log.d(TAG,"onSwipeLeft(next)");
                 if(readOnly || navigationController.isNextAllowed()) {
+
                     //Hide keypad
                     hideKeyboard(listView.getContext(), listView);
+
                     next();
                 }
             }
@@ -261,8 +265,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void saveOptionAndMove(View view, Option selectedOption, Question question) {
         Value value = question.getValueBySession();
         //set new totalpages if the value is not null and the value change
-        if(value!=null && !readOnly)
+        if(value!=null && !readOnly) {
             navigationController.setTotalPages(question.getTotalQuestions());
+        }
         ReadWriteDB.saveValuesDDL(question, selectedOption, value);
         darkenNonSelected(view, selectedOption);
         highlightSelection(view, selectedOption);
@@ -381,12 +386,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 List<Option> options = question.getAnswer().getOptions();
                 for(int i=0;i<options.size();i++){
                     Option currentOption = options.get(i);
+                    int optionID=R.id.option2;
                     int counterID=R.id.counter2;
                     int mod=i%2;
                     //First item per row requires a new row
                     if(mod==0){
                         tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row,tableLayout,false);
                         tableLayout.addView(tableRow);
+                        optionID=R.id.option1;
                         counterID=R.id.counter1;
                     }
                     //Add counter value if possible                   
@@ -475,13 +482,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rowView.requestLayout();
         return rowView;
     }
-    /**
-     * Used to set the text widht like the framelayout size
-     * to prevent a resize of the frameLayout if the textoption is more bigger.
-     */
-    private void resizeTextWidth(FrameLayout frameLayout, TextCard textOption) {
-            textOption.setWidth(frameLayout.getWidth());
-    }
 
     private void setTextSettings(TextCard textOption, Option currentOption) {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
@@ -493,6 +493,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         else{
             textOption.setVisibility(View.GONE);
         }
+        textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
     private void initWarningValue(TableRow tableRow) {
@@ -529,6 +530,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         counterText.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Used to set the text widht like the framelayout size
+     * to prevent a resize of the frameLayout if the textoption is more bigger.
+     */
+    private void resizeTextWidth(FrameLayout frameLayout, TextCard textOption) {
+            textOption.setWidth(frameLayout.getWidth());
+    }
 
     /**
      * Get status progress in locale strings
@@ -827,16 +835,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             overshadow(button);
         }
 
+        //the button is a framelayout that contains a imageview
+        ImageView imageView= (ImageView) button.getChildAt(0);
         //Put image
-        try {
-            InputStream inputStream = context.getAssets().open(option.getPath());
-            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-            //the button is a framelayout that contains a imageview
-            ImageView imageView= (ImageView) button.getChildAt(0);
-            imageView.setImageBitmap(bmp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        putImageInImageView(option.getPath(), imageView);
         //Associate option
         button.setTag(option);
 
@@ -850,6 +852,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         swipeTouchListener.addClickableView(button);
 
         resizeTextWidth(button,(TextCard) button.getChildAt(1));
+    }
+
+    private void putImageInImageView(String path, ImageView imageView) {
+        try {
+            if(path==null || path.equals(""))
+                return;
+            InputStream inputStream = context.getAssets().open(path);
+            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+            imageView.setImageBitmap(bmp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

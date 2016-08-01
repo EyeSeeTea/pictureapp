@@ -23,14 +23,14 @@
 </head>
 <style>
     @font-face {
-    font-family: 'Roboto-Condensed';
-    src: url('../fonts/Roboto-Condensed.ttf');
+    font-family: 'Boon';
+    src: url('../fonts/boon.ttf');
     font-weight: 300;
     }
 
     body {
-    background-color: #e5e5e5;
-    font-family: 'Roboto-Condensed';
+    background-color: #14b2be;
+    font-family: 'Boon';
     }
 
     table {
@@ -49,32 +49,52 @@
     margin-top: 25px;
     }
 
-    .line-title {}
+    .line-title {
+    color:#ffffff;}
 
     .rowMetric {
-    background-color: #a5a5a5;
+    background-color: #f9f3cf;
     text-align: left;
     width: 40%;
     }
 
     tr:first-child td {
-    font-weight: bold;
     }
 
-    tr:nth-child(even){background: #ededed}
-    tr:nth-child(odd){background: #dbdbdb}
+    tr:nth-child(even){background: #ffffff}
+    tr:nth-child(odd){background: #ffffff}
 
     .rowTimeUnit {
     font-weight: 700;
     }
 
     .rowSummary {
-    background-color: #a5a5a5 !important;
-    font-weight: bold;
+    background-color: #c4dfb2 !important;
     }
 
     .timeUnitPicker {
     text-align: right;
+    }
+    #LBL_TIMEUNIT{
+    color:white;
+    float:left;
+    }
+
+    .selectParent{
+    width:80px;
+    overflow:hidden;
+
+
+    }
+
+    #timeUnit{
+    border-radius:4px;border:1px;
+    width: 40%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    background: #fafbf6 url("triangle.png") no-repeat 90% center;}
     }
 </style>
 

@@ -194,34 +194,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
             }
 
-            private void saveOptionAndMove(View view, Option selectedOption, Question question) {
-                Value value = question.getValueBySession();
-                //set new totalpages if the value is not null and the value change
-                if(value!=null && !readOnly)
-                    navigationController.setTotalPages(question.getTotalQuestions());
-                ReadWriteDB.saveValuesDDL(question, selectedOption, value);
-
-                ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
-                for (int rowPos = 0; rowPos < vgTable.getChildCount(); rowPos++) {
-                    ViewGroup vgRow = (ViewGroup) vgTable.getChildAt(rowPos);
-                    for (int itemPos = 0; itemPos < vgRow.getChildCount(); itemPos++) {
-                        View childItem = vgRow.getChildAt(itemPos);
-                        if (childItem instanceof ImageView) {
-                            //We dont want the user to click anything else
-                            swipeTouchListener.clearClickableViews();
-
-                            Option otherOption=(Option)childItem.getTag();
-                            if(selectedOption.getId_option() != otherOption.getId_option()){
-                                overshadow((FrameLayout) childItem, otherOption);
-                            }
-                        }
-                    }
-                }
-
-                highlightSelection(view, selectedOption);
-                finishOrNext();
-            }
-
             /**
              * Swipe right listener moves to previous question
              */
@@ -293,8 +265,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void saveOptionAndMove(View view, Option selectedOption, Question question) {
         Value value = question.getValueBySession();
         //set new totalpages if the value is not null and the value change
-        if(value!=null && !readOnly)
+        if(value!=null && !readOnly) {
             navigationController.setTotalPages(question.getTotalQuestions());
+        }
         ReadWriteDB.saveValuesDDL(question, selectedOption, value);
         darkenNonSelected(view, selectedOption);
         highlightSelection(view, selectedOption);
@@ -467,7 +440,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         //Every new row admits 2 options
                         tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
                         tableLayout.addView(tableRow);
-                        optionID=R.id.option1;
                         counterID=R.id.counter1;
                     }
 
@@ -510,13 +482,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rowView.requestLayout();
         return rowView;
     }
-    /**
-     * Used to set the text widht like the framelayout size
-     * to prevent a resize of the frameLayout if the textoption is more bigger.
-     */
-    private void resizeTextWidth(FrameLayout frameLayout, TextCard textOption) {
-            textOption.setWidth(frameLayout.getWidth());
-    }
 
     private void setTextSettings(TextCard textOption, Option currentOption) {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
@@ -528,6 +493,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         else{
             textOption.setVisibility(View.GONE);
         }
+        textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
     private void initWarningValue(TableRow tableRow) {
@@ -570,19 +536,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void resizeTextWidth(FrameLayout frameLayout, TextCard textOption) {
             textOption.setWidth(frameLayout.getWidth());
-    }
-
-    private void setTextSettings(TextCard textOption, Option currentOption) {
-        //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
-        if (currentOption.getOptionAttribute().hasHorizontalAlignment() && currentOption.getOptionAttribute().hasVerticalAlignment())
-        {
-            textOption.setText(currentOption.getCode());
-            textOption.setGravity(currentOption.getOptionAttribute().getGravity());
-        }
-        else{
-            textOption.setVisibility(View.GONE);
-        }
-        textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
     /**

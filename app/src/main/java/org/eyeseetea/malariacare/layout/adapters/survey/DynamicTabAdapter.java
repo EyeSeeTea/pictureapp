@@ -31,13 +31,9 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -54,7 +50,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -84,22 +79,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import utils.VariantPhoneMask;
+
 /**
  * Created by Jose on 21/04/2015.
  */
 public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private final static String TAG=".DynamicTabAdapter";
-
-    /**
-     * Formatted telephone mask: 0NN NNN NNN{N}
-     */
-    public static final String FORMATTED_PHONENUMBER_MASK = "0\\d{2} \\d{3} \\d{3,4}";
-
-    /**
-     * Formatted telephone mask: 0NN NNN NNN{N}
-     */
-    public static final String PLAIN_PHONENUMBER_MASK = "0\\d{8,9}";
 
     public NavigationController navigationController;
 
@@ -665,8 +652,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     isClicked=true;
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         String phoneValue = editText.getText().toString();
-                        if (checkPhoneNumberByMask(phoneValue)) {
-                            editText.setText(formatPhoneNumber(phoneValue));
+                        if (VariantPhoneMask.checkPhoneNumberByMask(phoneValue)) {
+                            editText.setText(VariantPhoneMask.formatPhoneNumber(phoneValue));
                         }
                         savePhoneValue(editText);
                     }
@@ -702,7 +689,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         String phoneValue = editText.getText().toString();
         //Check phone ok
-        if(!checkPhoneNumberByMask(phoneValue)){
+        if(!VariantPhoneMask.checkPhoneNumberByMask(phoneValue)){
             editText.setError(context.getString(R.string.dynamic_error_phone_format));
             isClicked=false;
             return;
@@ -750,27 +737,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Formats number according to mask 0NN NNN NNN{N}
-     * @param phoneValue
-     * @return
-     */
-    private String formatPhoneNumber(String phoneValue) {
-        //Empty -> nothing to format
-        if (phoneValue == null || "".equals(phoneValue)) {
-            phoneValue = "";
-        }
-
-        //Already formatted -> done
-        if(phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK)){
-            return phoneValue;
-        }
-
-        //0NNNNNNNN{N} -> 0NN NNN NNN{N}
-        String formattedNumber=phoneValue.substring(0,3)+" "+phoneValue.substring(3,6)+" "+phoneValue.substring(6,phoneValue.length());
-        return  formattedNumber;
-    }
-
-    /**
      * Checks if the given string corresponds a correct phone number for the current country (by locale)
      * @param phoneValue
      * @return true|false
@@ -792,21 +758,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return PhoneNumberUtil.getInstance().isValidNumber(phoneNumber);
     }
 
-
-    /**
-     * Checks if the given string corresponds a correct phone number according to mask:
-     *  0NN NNN NNN{N}
-     * @param phoneValue
-     * @return true|false
-     */
-    private boolean checkPhoneNumberByMask(String phoneValue){
-
-        //Empty  is ok
-        if (phoneValue == null) {
-            phoneValue = "";
-        }
-        return phoneValue.isEmpty() || phoneValue.replace(" ", "").matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.replace(" ", "").matches(PLAIN_PHONENUMBER_MASK);
-    }
 
     /**
      * Checks if edit text is not null:

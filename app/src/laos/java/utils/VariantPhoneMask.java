@@ -16,7 +16,7 @@ public class VariantPhoneMask {
     public static final String PLAIN_PHONENUMBER_MASK = "(((020)\\d{8})|((030)\\d{7})|\\d{9})";
 
     /**
-     * Formats number according to mask 0NN NNN NNN{N}
+     * Formats number according to mask (xxx) xxx-xxx = 9 (020) xxxx-xxxx = 11  (030) xxx-xxxx = 10
      * @param phoneValue
      * @return
      */
@@ -37,7 +37,7 @@ public class VariantPhoneMask {
 
     /**
      * Checks if the given string corresponds a correct phone number according to mask:
-     *  0NN NNN NNN{N}
+     *  (xxx) xxx-xxx = 9 (020) xxxx-xxxx = 11  (030) xxx-xxxx = 10
      * @param phoneValue
      * @return true|false
      */
@@ -47,6 +47,6 @@ public class VariantPhoneMask {
         if (phoneValue == null) {
             phoneValue = "";
         }
-        return phoneValue.isEmpty() || phoneValue.replace(" ", "").matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.replace(" ", "").matches(PLAIN_PHONENUMBER_MASK);
+        return phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.replace(" ", "").matches(PLAIN_PHONENUMBER_MASK);
     }
 }

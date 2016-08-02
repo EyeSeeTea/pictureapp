@@ -34,6 +34,10 @@ public class SurveyMonitor {
      * Id of first question (positive, negative, not tested)
      */
     private final static Long ID_QUESTION_RDT=1l;
+    /**
+     * Id of reason question (pregnant, severe, denied, drug)
+     */
+    private final static Long ID_QUESTION_REASON=2l;
 
     /**
      * Id of specie question
@@ -43,7 +47,12 @@ public class SurveyMonitor {
     /**
      * Id of treatment question
      */
-    private final static Long ID_QUESTION_TREATMENT=6l;
+    private final static Long ID_QUESTION_TREATMENT=11l;
+
+    /**
+     * Id of treatment question
+     */
+    private final static Long ID_QUESTION_SUBMISION=12l;
 
     /**
      * Id of positive rdt option
@@ -56,68 +65,78 @@ public class SurveyMonitor {
     private final static Long ID_OPTION_RDT_NEGATIVE=2l;
 
     /**
-     * Id of not tested rdt option
+     * Id of pv specie option
      */
-    private final static Long ID_OPTION_RDT_NOT_TESTED=3l;
-
+    private final static Long ID_OPTION_SPECIE_PF =10l;
     /**
      * Id of pv specie option
      */
-    private final static Long ID_OPTION_SPECIE_PF =9l;
-    /**
-     * Id of pv specie option
-     */
-    private final static Long ID_OPTION_SPECIE_PV =10l;
+    private final static Long ID_OPTION_SPECIE_PV =11l;
 
     /**
      * Id of pf/pv (mixed) specie option
      */
-    private final static Long ID_OPTION_SPECIE_PFPV =11l;
+    private final static Long ID_OPTION_SPECIE_PFPV =12l;
 
     /**
      * Id of referral treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_REFERRAL=14l;
+    private final static Long ID_OPTION_TREATMENT_REFERRAL=13l;
 
     /**
-     * Id of ASMQ treatment option
+     * Id of hospital treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ASMQ =13l;
+    private final static Long ID_OPTION_HOSPITAL=23l;
 
     /**
-     * Id of DHA-PIP treatment option
+     * Id of severe reason option
      */
-    private final static Long ID_OPTION_TREATMENT_DHA_PIP=12l;
+    private final static Long ID_OPTION_SEVERE=3l;
+
+    /**
+     * Id of pregnant reason option
+     */
+    private final static Long ID_OPTION_PREGNANT=4l;
+
+    /**
+     * Id of refused reason option
+     */
+    private final static Long ID_OPTION_DENIED=5l;
+
+    /**
+     * Id of rdt stockout reason option
+     */
+    private final static Long ID_OPTION_DRUG=5l;
 
     /**
      * Id of Combined act treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_COMBINEDACT=12l;
+    private final static Long ID_OPTION_TREATMENT_COMBINEDACT=22l;
 
     /**
      * Id of ACT6x1 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ACT6X1=12l;
+    private final static Long ID_OPTION_TREATMENT_ACT6X1=17l;
 
     /**
      * Id of  ACT6x2 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ACT6X2=12l;
+    private final static Long ID_OPTION_TREATMENT_ACT6X2=18l;
 
     /**
      * Id of ACT6x3 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ACT6X3=12l;
+    private final static Long ID_OPTION_TREATMENT_ACT6X3=19l;
 
     /**
      * Id of ACT6x4 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ACT6X4=12l;
+    private final static Long ID_OPTION_TREATMENT_ACT6X4=20l;
 
     /**
-     * Id of RDTs treatment option
+     * Id of ACT6x4 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_RDTS=12l;
+    private final static Long ID_OPTION_TREATMENT_RDTS=21l;
 
 
     /**
@@ -138,11 +157,11 @@ public class SurveyMonitor {
     }
 
     /**
-     * Tells if the given survey is suspected (positive, negative or not tested).
+     * Tells if the given survey is suspected (positive, negative).
      * @return
      */
     public boolean isSuspected(){
-        return (isPositive() || isNegative() || isNotTested());
+        return (isPositive() || isNegative());
     }
 
     /**
@@ -166,14 +185,6 @@ public class SurveyMonitor {
      */
     public boolean isNegative(){
         return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_NEGATIVE)!=null;
-    }
-
-    /**
-     * Tells if the given survey is not tested
-     * @return
-     */
-    public boolean isNotTested(){
-        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_NOT_TESTED)!=null;
     }
 
     /**
@@ -210,35 +221,29 @@ public class SurveyMonitor {
 
 
     public boolean isSubmission() {
-        //Fixme with real IDS
-        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
+        return findValue(ID_QUESTION_SUBMISION, ID_OPTION_HOSPITAL)!=null;
     }
 
     public boolean isSevere() {
-        //Fixme with real IDS
-        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
+        return findValue(ID_QUESTION_REASON, ID_OPTION_SEVERE)!=null;
     }
 
 
     public boolean isPregnant() {
-        //Fixme with real IDS
-        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
+        return findValue(ID_QUESTION_REASON, ID_OPTION_PREGNANT)!=null;
     }
 
 
     public boolean isDenied() {
-        //Fixme with real IDS
-        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
+        return findValue(ID_QUESTION_REASON, ID_OPTION_DENIED)!=null;
     }
 
     public boolean isDrug() {
-        //Fixme with real IDS
-        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
+        return findValue(ID_QUESTION_REASON, ID_OPTION_DRUG)!=null;
     }
 
 
     public boolean isCombinedACT() {
-        //Fixme with real IDS
         Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
@@ -249,7 +254,6 @@ public class SurveyMonitor {
     }
 
     public boolean isACT6x4() {
-        //Fixme with real IDS
         Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
@@ -260,7 +264,6 @@ public class SurveyMonitor {
     }
 
     public boolean isACT6x3() {
-        //Fixme with real IDS
         Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
@@ -271,7 +274,6 @@ public class SurveyMonitor {
     }
 
     public boolean isACT6x2() {
-        //Fixme with real IDS
         Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
@@ -282,7 +284,6 @@ public class SurveyMonitor {
     }
 
     public boolean isACT6x1() {
-        //Fixme with real IDS
         Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
@@ -291,47 +292,19 @@ public class SurveyMonitor {
         Long idOption=value.getId_option();
         return ID_OPTION_TREATMENT_ACT6X1.equals(idOption);
     }
-    
-    /**
-     * Tells if the given survey has DHA-PIP treatment
-     * @return
-     */
-    public boolean isDHAPIP(){
-        Value value = findValue(ID_QUESTION_TREATMENT);
-        if(value==null){
-            return false;
-        }
-
-        Long idOption=value.getId_option();
-        return ID_OPTION_TREATMENT_DHA_PIP.equals(idOption);
-    }
-
-    /**
-     * Tells if the given survey has Eurartesim treatment
-     * @return
-     */
-    public boolean isASMQ(){
-        Value value = findValue(ID_QUESTION_TREATMENT);
-        if(value==null){
-            return false;
-        }
-
-        Long idOption=value.getId_option();
-        return ID_OPTION_TREATMENT_ASMQ.equals(idOption);
-    }
 
     /**
      * Tells if the given survey is a RDT survey (positive or negative)
      * @return
      */
     public boolean isRDT(){
-        Value value = findValue(ID_QUESTION_RDT);
+        Value value = findValue(ID_QUESTION_TREATMENT);
         if(value==null){
             return false;
         }
+
         Long idOption=value.getId_option();
-        //Positive and Negative cases are RDT cases
-        return ID_OPTION_RDT_POSITIVE.equals(idOption) || ID_OPTION_RDT_NEGATIVE.equals(idOption);
+        return ID_OPTION_TREATMENT_RDTS.equals(idOption);
     }
 
     /**

@@ -1,12 +1,13 @@
-1;'RDT';'What is your patient\'s RDT result?';;'ການກວດ';'OEdLEjF6Z8p';1;0;0;1;1;0;14;1;0;'question_images/p1_true.png'
-2;'Reason';'Why was the patient not tested for malaria?';;'มักจะโกหกผู้ป่วย?';'fkBDnkiQbWY';1;0;0;1;2;0;14;2;1;'question_images/p1_true.png'
-3;'Gender';'Male or Female?';;'ເພດ';'uuudizosfpU';1;0;0;1;3;0;10;9;1;'question_images/p1_true.png'
-4;'Age';'How old is your patient (years)?';;'อายุเท่าไหร่?';'JMM92njKuSc';2;0;0;1;4;0;6;9;1
-5;'Specie';'What type of malaria does your patient have?';;'สายพันธุ์?';'X6RFHreAu0L';3;0;0;1;5;0;14;9;1;'question_images/p1_true.png'
-6;'Treatment';'What type of treatment did you provide?';;'การรักษา?';'fNpYtVaL7OV';4;0;0;1;6;0;14;9;1;'question_images/p1_true.png'
-7;'DHA-PIP';'How much Euratesim did you provide?';;'ບໍ່ຖືກກວດດ້ວຍເຫດຜົນ';'LRzOBn2rZA3';1;0;0;1;7;0;14;9;0;'question_images/p1_true.png'
-8;'AS/MQ';'How much AS/MQ did you provide?';;'ຜົນການກວດເລືອດ';'mCSYUwYXnnj';1;0;0;1;8;0;14;9;0;'question_images/p1_true.png'
-9;'Referral';'Why was the patient referred?';;'นี่คือเหตุผลที่ผู้ป่วย';'Bi2NfBG8LGJ';1;0;0;1;9;0;14;9;0;'question_images/p1_true.png'
-10;'Classification';'Has the patient slept overnight outside of the village in the past two weeks?';;'ຂະໜາດຢາປົວພະຍາດໄຂ້ຍຸງ';'ff3lAAW1VLh';5;0;0;1;10;0;10;9;0;'question_images/p1_true.png'
-11;'Occupation';'What is the patient\'s occupation?';;'มืออาชีพ?';'Zf8O1uzl3JJ';6;0;0;1;11;0;15;9;0;'question_images/p1_true.png'
-12;'Phone';'Please enter your patient\'s phone number.';;'โทรศัพท์';'rDubghVv1L8';7;0;0;1;12;0;13;9;0;'question_images/p1_true.png'
+1;'RDT';'LA MAL SRV - RDT test result';;'ການກວດ';'FPNbkUi9D55';1;0;0;1;1;0;10;6;0
+2;'Reason';'LA MAL SRV - Reason NOT tested RDT';;'ບໍ່ຖືກກວດດ້ວຍເຫດຜົນ';'Elrozkdzh3r';1;0;0;1;2;0;11;2;1
+3;'Gender';'LA MAL SRV - Gender';;'ເພດ';'lNcuFJPKhp9';1;0;0;1;3;0;10;6;1
+4;'Age';'LA MAL SRV - Age';;'ອາຍຸ';'qQngeCbT4uI';2;0;0;1;4;0;6;6;1
+5;'Result';'LA MAL SRV - RDT test result';;'ຜົນການກວດເລືອດ';'FPNbkUi9D55';3;0;0;1;5;0;15;6;1
+6;'ConfirmInvalid';'Confirm invalid';'ກະລຸນາກວດຄົນເຈັບອີກຄັ້ງ\nໂດຍໃຊ້ເຈັ້ຍຈຸ່ມກວດເລືອດ\nອັນໃໝ່. ຢ່າລືມກວດເບິ່ງມື້ໝົດ\nອາຍຸຂອງເຈັ້ຍຈຸ່ມກວດເລືອດ';'ຜົນກວດບໍ່ຖືກຕ້ອງ';'xxx';4;0;0;1;6;0;16;6;0;'question_images/p9_rdt_test.png'
+7;'WarningBaby';'Treatment warning baby';'A ການໃຫ້ຂະໜາດຢາ ບໍ່ຖືກກັບ\nກຸ່ມອາຍຸຂອງຄົນເຈັບ.';'ການປິ່ນປົວ ບໍ່ຖືກຕ້ອງ';'xxx';5;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
+8;'WarningKid';'Treatment warning kid';'B ການໃຫ້ຂະໜາດຢາ ບໍ່ຖືກກັບ\nກຸ່ມອາຍຸຂອງຄົນເຈັບ.';'ການປິ່ນປົວ ບໍ່ຖືກຕ້ອງ';'xxx';6;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
+9;'WarningTeen';'Treatment warning teenager';'C ການໃຫ້ຂະໜາດຢາ ບໍ່ຖືກກັບ\nກຸ່ມອາຍຸຂອງຄົນເຈັບ.';'ການປິ່ນປົວ ບໍ່ຖືກຕ້ອງ';'xxx';7;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
+10;'WarningAdult';'Treatment warning adult';'D ການໃຫ້ຂະໜາດຢາ ບໍ່ຖືກກັບ\nກຸ່ມອາຍຸຂອງຄົນເຈັບ.';'ການປິ່ນປົວ ບໍ່ຖືກຕ້ອງ';'xxx';8;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
+11;'Treatment';'LA MAL SRV - Treatment';;'ຂະໜາດຢາປົວພະຍາດໄຂ້ຍຸງ';'TzL693oH3D9';9;0;0;1;8;0;12;6;1
+12;'ReminderHospital';'Reminder hospital';'ຖ້າວ່າພົບ Pv ຫຼື Pv + Pf\nໃຫ້ຢາ Coartem\nແລະ ນຳສົ່ງ';'ນຳສົ່ງ';'xxx';10;0;0;1;9;0;18;6;0;'question_images/p8_rdt_all.png'
+13;'Phone';'LA MAL SRV - Client telephone';'ພິມເບີໂທໃສ່';'ເບີໂທຂອງຄົນເຈັບ';'fnT1JoHmO94';11;0;0;1;10;0;13;6;0;'question_images/p13_phone.png'

@@ -448,7 +448,7 @@ public class PopulateDB {
         CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
 
         String line[];
-        //Save new optionattributes for each question
+        //Save new option name for each option
         while ((line = reader.readNext()) != null) {
             for(Option option:options) {
                 if(option.getCode().equals(line[1])){

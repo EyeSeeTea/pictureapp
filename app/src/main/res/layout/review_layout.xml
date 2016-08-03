@@ -18,7 +18,7 @@
             android:paddingLeft="10dip"
             android:gravity="center"
             app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/condensed_font_name"/>
+            app:tFontName="@string/specific_language_font"/>
         <org.eyeseetea.malariacare.views.TextCard
             android:layout_width="match_parent"
             android:layout_height="0px"
@@ -31,7 +31,7 @@
             android:paddingLeft="10dip"
             android:gravity="center"
             app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/condensed_font_name"/>
+            app:tFontName="@string/specific_language_font"/>
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="0px"

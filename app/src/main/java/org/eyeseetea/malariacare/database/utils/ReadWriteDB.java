@@ -70,6 +70,11 @@ public class ReadWriteDB {
 
     public static void saveValuesDDL(Question question, Option option, Value value) {
 
+        //No option, nothing to save
+        if(option==null){
+            return;
+        }
+
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
             if (value == null) {
                 value = new Value(option, question, Session.getSurvey());

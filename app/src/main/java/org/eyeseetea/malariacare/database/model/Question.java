@@ -109,6 +109,8 @@ public class Question extends BaseModel {
     @Column
     Integer visible;
 
+    @Column
+    String path;
 
     /**
      * Constant that reflects a visible question in information
@@ -147,6 +149,11 @@ public class Question extends BaseModel {
      * List of question Options of this question
      */
     private List<QuestionOption> questionOptions;
+
+    /**
+     * List of question Thresholds associated with this question
+     */
+    private List<QuestionThreshold> questionThresholds;
 
     /**
      * Cached reference to next question for this one.
@@ -280,6 +287,14 @@ public class Question extends BaseModel {
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public Header getHeader() {
@@ -444,6 +459,21 @@ public class Question extends BaseModel {
 
     public boolean hasQuestionOption() {
         return !this.getQuestionOption().isEmpty();
+    }
+
+    public List<QuestionThreshold> getQuestionThresholds() {
+
+        if (this.questionThresholds == null) {
+            this.questionThresholds= new Select().from(QuestionThreshold.class)
+                    .indexedBy(Constants.QUESTION_THRESHOLDS_QUESTION_IDX)
+                    .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(this.getId_question()))
+                    .queryList();
+        }
+        return this.questionThresholds;
+    }
+
+    public boolean hasQuestionThresholds(){
+        return !this.getQuestionThresholds().isEmpty();
     }
 
     public List<Match> getMatches() {
@@ -1112,6 +1142,8 @@ public class Question extends BaseModel {
             return false;
         if (id_parent != null ? !id_parent.equals(question.id_parent) : question.id_parent != null)
             return false;
+        if (path != null ? !path.equals(question.path) : question.path != null)
+            return false;
         if (total_questions != null ? !total_questions.equals(question.total_questions) : question.total_questions != null)
             return false;
         if (visible != null ? !visible.equals(question.visible) : question.visible != null)
@@ -1138,6 +1170,7 @@ public class Question extends BaseModel {
         result = 31 * result + (id_parent != null ? id_parent.hashCode() : 0);
         result = 31 * result + (id_composite_score != null ? id_composite_score.hashCode() : 0);
         result = 31 * result + (visible != null ? visible.hashCode() : 0);
+        result = 31 * result + (path != null ? path.hashCode() : 0);
         result = 31 * result + (total_questions != null ? total_questions.hashCode() : 0);
         return result;
     }
@@ -1162,6 +1195,7 @@ public class Question extends BaseModel {
                 ", id_composite_score=" + id_composite_score +
                 ", total_questions=" + total_questions +
                 ", visible=" + visible +
+                ", path=" + path +
                 '}';
     }
 }

@@ -2,77 +2,81 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/questionLayoutBackground">
 
     <!--Horizontal Progress bar + text-->
     <RelativeLayout
         android:id="@+id/dynamic_footer"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        >
+        android:layout_alignParentBottom="true">
+
         <ProgressBar
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:id="@+id/dynamic_progress"
             style="@android:style/Widget.ProgressBar.Horizontal"
-            android:progress="8"
-            android:max="10" />
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:max="10"
+            android:progress="8" />
+
+        <TextView
             android:id="@+id/dynamic_progress_text"
-            android:background="#00000000"
-            android:layout_alignLeft="@id/dynamic_progress"
-            android:layout_alignTop="@id/dynamic_progress"
-            android:layout_alignRight="@id/dynamic_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignBottom="@id/dynamic_progress"
-            android:paddingLeft="10dip"
-            android:text="1/7"
+            android:layout_alignLeft="@id/dynamic_progress"
+            android:layout_alignParentRight="false"
+            android:layout_alignRight="@id/dynamic_progress"
+            android:layout_alignTop="@id/dynamic_progress"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="false" />
+            android:background="@color/dynamicProgressBarColor"
+            android:paddingLeft="10dip"
+            android:text="1/7" />
     </RelativeLayout>
 
-    <!-- Scrollable region-->
-    <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-        <LinearLayout
-            android:orientation="vertical"
+    <LinearLayout
+        android:layout_above="@id/dynamic_footer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--Question-->
+        <org.eyeseetea.malariacare.views.TextCard
+            android:id="@+id/question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_header"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.5"
+            android:paddingBottom="2dip"
+            android:paddingLeft="10dip"
+            android:paddingTop="2dip"
+            android:text="@string/empty_string"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            app:tDimension="@string/font_size_level2"
+            app:tFontName="@string/condensed_font_name" />
+
+        <!--Options as a N x 2 grid-->
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/options_table"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/dynamic_footer"
-            android:paddingTop="15dip">
+            android:measureWithLargestChild="false"></TableLayout>
 
-            <!--Question-->
-            <org.eyeseetea.malariacare.views.TextCard
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/empty_string"
-                android:id="@+id/question"
-                android:textColor="@color/white"
-                android:typeface="sans"
-                android:textStyle="bold"
-                android:textSize="24sp"
-                android:lineSpacingMultiplier="1.5"
-                android:background="@drawable/background_header"
-                android:paddingLeft="10dip"
-                android:paddingTop="2dip"
-                android:paddingBottom="2dip"
-                app:tDimension="@string/font_size_level2"
-                app:tFontName="@string/condensed_font_name"
-                android:gravity="center" />
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/confirm_table"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:measureWithLargestChild="false"
+            android:visibility="gone">
 
-            <!--Options as a N x 2 grid-->
-            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:measureWithLargestChild="false"
-                android:id="@+id/options_table"
-                >
-            </TableLayout>
-        </LinearLayout>
-    <!--</ScrollView>-->
+            <include layout="@layout/dynamic_tab_row_confirm" />
+        </TableLayout>
+    </LinearLayout>
 
 </RelativeLayout>
 

@@ -27,6 +27,7 @@ import com.opencsv.CSVReader;
 import com.raizlabs.android.dbflow.runtime.TransactionManager;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Header;
@@ -39,6 +40,7 @@ import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Score;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
@@ -70,6 +72,7 @@ public class PopulateDB {
     public static final String QUESTION_OPTIONS_CSV="QuestionOptions.csv";
     public static final String  MATCHES = "Matches.csv";
     public static final String QUESTION_RELATIONS_CSV="QuestionRelations.csv";
+    public static final String QUESTION_THRESHOLDS_CSV="QuestionThresholds.csv";
 
     private static final List<String> tables2populate = Arrays.asList(
             PROGRAMS_CSV,
@@ -82,9 +85,12 @@ public class PopulateDB {
             QUESTIONS_CSV,
             QUESTION_RELATIONS_CSV,
             MATCHES,
-            QUESTION_OPTIONS_CSV);
+            QUESTION_OPTIONS_CSV,
+            QUESTION_THRESHOLDS_CSV);
+
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
+    private static final String TAG = "PopulateDB";
 
     static Map<Integer, Program> programList = new LinkedHashMap<Integer, Program>();
     static Map<Integer, TabGroup> tabGroups = new LinkedHashMap<Integer, TabGroup>();
@@ -96,14 +102,13 @@ public class PopulateDB {
     static Map<Integer, Answer> answerList = new LinkedHashMap<Integer, Answer>();
     static Map<Integer, QuestionRelation> questionRelationList = new LinkedHashMap();
     static Map<Integer, Match> matchList = new LinkedHashMap();
-    static Map<Integer, QuestionOption> questionOptionList = new LinkedHashMap();
-
 
     public static void populateDB(AssetManager assetManager) throws IOException {
 
         //Reset inner references
         cleanInnerLists();
         for (String table : tables2populate) {
+            Log.i(TAG,"Loading csv: "+table);
             CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(table)), SEPARATOR, QUOTECHAR);
 
             String[] line;
@@ -159,6 +164,10 @@ public class PopulateDB {
                             optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
                         else
                             optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+                        if(line.length>5 && !line[5].equals(""))
+                            optionAttribute.setText_size(Integer.valueOf(line[5]));
+                        else
+                            optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
                         optionAttribute.save();
                         optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
                         break;
@@ -168,8 +177,9 @@ public class PopulateDB {
                         option.setName(line[2]);
                         option.setFactor(Float.valueOf(line[3]));
                         option.setAnswer(answerList.get(Integer.valueOf(line[4])));
-                        if (!line[5].equals(""))
-                        option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
+                        if (line[5]!=null && !line[5].isEmpty()) {
+                            option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
+                        }
                         option.save();
                         optionList.put(Integer.valueOf(line[0]), option);
                         break;
@@ -191,6 +201,8 @@ public class PopulateDB {
                         question.setOutput(Integer.valueOf(line[12]));
                         question.setTotalQuestions(Integer.valueOf(line[13]));
                         question.setVisible(Integer.valueOf(line[14]));
+                        if(line.length>15 && !line[15].equals(""))
+                            question.setPath((line[15]));
                         question.save();
                         questionList.put(Integer.valueOf(line[0]), question);
                         break;
@@ -213,8 +225,18 @@ public class PopulateDB {
                         questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
                         questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
                         questionOption.save();
-                        questionOptionList.put(Integer.valueOf(line[0]),questionOption);
                         break;
+                    case QUESTION_THRESHOLDS_CSV:
+                        QuestionThreshold questionThreshold = new QuestionThreshold();
+                        questionThreshold.setMatch(matchList.get(Integer.valueOf(line[1])));
+                        questionThreshold.setQuestion(questionList.get(Integer.valueOf(line[2])));
+                        if (!line[3].equals("")){
+                            questionThreshold.setMinValue(Integer.valueOf(line[3]));
+                        }
+                        if (!line[4].equals("")){
+                            questionThreshold.setMaxValue(Integer.valueOf(line[4]));
+                        }
+                        questionThreshold.save();
                 }
             }
             reader.close();
@@ -240,7 +262,6 @@ public class PopulateDB {
         answerList.clear();
         questionRelationList.clear();
         matchList.clear();
-        questionOptionList.clear();
     }
 
     /**
@@ -295,6 +316,25 @@ public class PopulateDB {
         }
         reader.close();
     }
+
+    public static void addImagePathQuestions(AssetManager assetManager) throws IOException {
+        //Reset inner references,
+        List<Question> questions=Question.getAllQuestions();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)), SEPARATOR, QUOTECHAR);
+
+        String[] line;
+        while ((line = reader.readNext()) != null) {
+            for (Question question : questions) {
+                if (question.getUid().equals(line[5])) {
+                    if(line.length>15 && !line[15].equals(""))
+                        question.setPath(line[15]);
+                    question.save();
+                }
+            }
+        }
+        reader.close();
+    }
+
     public static void addVisibleQuestions(AssetManager assetManager, List<Question> questions) throws IOException {
         //Reset inner references
         CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)), SEPARATOR, QUOTECHAR);
@@ -334,6 +374,55 @@ public class PopulateDB {
                 optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
             else
                 optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+            if(line.length>5 && !line[5].equals(""))
+                optionAttribute.setText_size(Integer.valueOf(line[5]));
+            else
+                optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
+            optionAttribute.save();
+            optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
+        }
+
+        line=null;
+
+        //Save new optionattributes for each question
+        while ((line = readerOptions.readNext()) != null) {
+            for(Option option:options) {
+                if (option.getCode().equals(line[1]))
+                    if (!line[5].equals(""))
+                        option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
+                option.save();
+            }
+        }
+        reader.close();
+    }
+
+    public static void addOptionTextSize(AssetManager assetManager) throws IOException  {
+        List<Option> options = Option.getAllOptions();
+        //Reset inner references
+        cleanInnerLists();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(OPTION_ATTRIBUTES_CSV)), SEPARATOR, QUOTECHAR);
+        CSVReader readerOptions = new CSVReader(new InputStreamReader(assetManager.open(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
+        //Remove bad optionAttributes.
+        Delete.tables(OptionAttribute.class);
+        String[] line;
+
+        //save new optionattributes
+        while ((line = reader.readNext()) != null) {
+            OptionAttribute optionAttribute = new OptionAttribute();
+            optionAttribute.setBackground_colour(line[1]);
+            optionAttribute.setPath(line[2]);
+            if(line.length>3 && !line[3].equals(""))
+                optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
+            else
+                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_HORIZONTAL_ALIGNMENT);
+            if(line.length>4 && !line[4].equals(""))
+                optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
+            else
+                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+            if(line.length>5 && !line[5].equals(""))
+                optionAttribute.setText_size(Integer.valueOf(line[5]));
+            else
+                optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
             optionAttribute.save();
             optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
         }

@@ -97,6 +97,31 @@ public class Match extends BaseModel {
         this.questionRelation = null;
     }
 
+    /**
+     * Returns the threshold associated with this questionoption
+     * @return
+     */
+    public QuestionThreshold getQuestionThreshold(){
+        //Find threshold with this match
+        return new Select().from(QuestionThreshold.class)
+                .where(Condition.column(Match$Table.ID_MATCH)
+                        .is(id_match)).querySingle();
+    }
+
+    /**
+     * Returns the question from QuestionRelation for this match with the given operationType
+     * @param operationType
+     * @return
+     */
+    public Question getQuestionFromRelationWithType(int operationType){
+        QuestionRelation questionRelation = this.getQuestionRelation();
+        if(questionRelation==null || questionRelation.getOperation()!=operationType){
+            return null;
+        }
+
+        return questionRelation.getQuestion();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

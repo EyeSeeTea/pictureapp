@@ -54,31 +54,31 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     /**
      * Id of positive rdt option
      */
-    protected final static Long ID_OPTION_RDT_POSITIVE=1l;
+    final static Long ID_OPTION_RDT_POSITIVE=1l;
 
     /**
      * Id of negative rdt option
      */
-    protected final static Long ID_OPTION_RDT_NEGATIVE=2l;
+    final static Long ID_OPTION_RDT_NEGATIVE=2l;
 
     /**
      * Id of pv specie option
      */
-    protected final static Long ID_OPTION_SPECIE_PF =10l;
+    final static Long ID_OPTION_SPECIE_PF =10l;
     /**
      * Id of pv specie option
      */
-    protected final static Long ID_OPTION_SPECIE_PV =11l;
+    final static Long ID_OPTION_SPECIE_PV =11l;
 
     /**
      * Id of pf/pv (mixed) specie option
      */
-    protected final static Long ID_OPTION_SPECIE_PFPV =12l;
+    final static Long ID_OPTION_SPECIE_PFPV =12l;
 
     /**
      * Id of referral treatment option
      */
-    protected final static Long ID_OPTION_TREATMENT_REFERRAL=13l;
+    final static Long ID_OPTION_TREATMENT_REFERRAL=13l;
 
     /**
      * Id of hospital treatment option

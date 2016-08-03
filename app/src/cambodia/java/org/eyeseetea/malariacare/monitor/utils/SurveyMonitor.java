@@ -33,27 +33,27 @@ public class SurveyMonitor extends BaseSurveyMonitor{
     /**
      * Id of first question (positive, negative, not tested)
      */
-    protected final static Long ID_QUESTION_RDT=1l;
+    final static Long ID_QUESTION_RDT=1l;
 
     /**
      * Id of specie question
      */
-    protected final static Long ID_QUESTION_SPECIE=5l;
+    final static Long ID_QUESTION_SPECIE=5l;
 
     /**
      * Id of treatment question
      */
-    protected final static Long ID_QUESTION_TREATMENT=6l;
+    final static Long ID_QUESTION_TREATMENT=6l;
 
     /**
      * Id of positive rdt option
      */
-    protected final static Long ID_OPTION_RDT_POSITIVE=1l;
+    final static Long ID_OPTION_RDT_POSITIVE=1l;
 
     /**
      * Id of negative rdt option
      */
-    protected final static Long ID_OPTION_RDT_NEGATIVE=2l;
+    final static Long ID_OPTION_RDT_NEGATIVE=2l;
 
     /**
      * Id of not tested rdt option
@@ -63,21 +63,21 @@ public class SurveyMonitor extends BaseSurveyMonitor{
     /**
      * Id of pv specie option
      */
-    protected final static Long ID_OPTION_SPECIE_PF =9l;
+    final static Long ID_OPTION_SPECIE_PF =9l;
     /**
      * Id of pv specie option
      */
-    protected final static Long ID_OPTION_SPECIE_PV =10l;
+    final static Long ID_OPTION_SPECIE_PV =10l;
 
     /**
      * Id of pf/pv (mixed) specie option
      */
-    protected final static Long ID_OPTION_SPECIE_PFPV =11l;
+    final static Long ID_OPTION_SPECIE_PFPV =11l;
 
     /**
      * Id of referral treatment option
      */
-    protected final static Long ID_OPTION_TREATMENT_REFERRAL=14l;
+    final static Long ID_OPTION_TREATMENT_REFERRAL=14l;
 
     /**
      * Id of ASMQ treatment option

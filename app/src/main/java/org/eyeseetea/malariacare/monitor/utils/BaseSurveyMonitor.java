@@ -16,7 +16,7 @@ public class BaseSurveyMonitor {
     /**
      * Reference to inner survey
      */
-    final Survey survey;
+    private Survey survey;
 
     public BaseSurveyMonitor(Survey survey){
         this.survey=survey;

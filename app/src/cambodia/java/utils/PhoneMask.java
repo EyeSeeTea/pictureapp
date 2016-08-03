@@ -13,7 +13,7 @@ public class PhoneMask {
     public static final String FORMATTED_PHONENUMBER_MASK = "0\\d{2} \\d{3} \\d{3,4}";
 
     /**
-     * Formatted telephone mask: 0NN NNN NNN{N}
+     * PLAIN telephone mask: 0NNNNNNNN{N}
      */
     public static final String PLAIN_PHONENUMBER_MASK = "0\\d{8,9}";
 
@@ -24,7 +24,7 @@ public class PhoneMask {
      */
     public static String formatPhoneNumber(String phoneValue) {
         //Empty -> nothing to format
-        if (phoneValue == null || "".equals(phoneValue)) {
+        if (phoneValue == null) {
             phoneValue = "";
         }
 

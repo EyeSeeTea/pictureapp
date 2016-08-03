@@ -11,7 +11,7 @@ public class PhoneMask {
     public static final String FORMATTED_PHONENUMBER_MASK = "(\\(020\\) \\d{4}-\\d{3})|(\\(030\\) \\d{3}-\\d{4})|(\\(\\d{3}\\) \\d{3}-\\d{3})";
 
     /**
-     * Formatted telephone mask: xxxxxxxxx = 9 020xxxxxxxx = 11  030xxxxxxx = 10
+     * Plain telephone mask: xxxxxxxxx = 9 020xxxxxxxx = 11  030xxxxxxx = 10
      */
     public static final String PLAIN_PHONENUMBER_MASK = "(((020)\\d{8})|((030)\\d{7})|\\d{9})";
 
@@ -22,7 +22,7 @@ public class PhoneMask {
      */
     public static String formatPhoneNumber(String phoneValue) {
         //Empty -> nothing to format
-        if (phoneValue == null || "".equals(phoneValue)) {
+        if (phoneValue == null) {
             phoneValue = "";
         }
 
@@ -30,8 +30,16 @@ public class PhoneMask {
         if(phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK)){
             return phoneValue;
         }
-        //NNNNNNNN -> (NNN) NNN-NNN
-        String formattedNumber="("+phoneValue.substring(0,3)+") "+phoneValue.substring(3,6)+"-"+phoneValue.substring(6,phoneValue.length());
+
+        String formattedNumber;
+
+        if(phoneValue.length()==11)
+            //NNNNNNNN -> (NNN) NNNN-NNNN
+            formattedNumber="("+phoneValue.substring(0,3)+") "+phoneValue.substring(3,7)+"-"+phoneValue.substring(6,phoneValue.length());
+        else
+            //NNNNNNNN -> (NNN) NNN-NNN || (NNN) NNN-NNNN
+            formattedNumber="("+phoneValue.substring(0,3)+") "+phoneValue.substring(3,6)+"-"+phoneValue.substring(6,phoneValue.length());
+
         return  formattedNumber;
     }
 

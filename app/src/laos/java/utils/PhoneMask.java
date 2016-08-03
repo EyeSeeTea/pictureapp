@@ -3,7 +3,7 @@ package utils;
 /**
  * Created by ina on 02/08/2016.
  */
-public class VariantPhoneMask {
+public class PhoneMask {
 
     /**
      * Formatted telephone mask: (xxx) xxx-xxx = 9 (020) xxxx-xxxx = 11  (030) xxx-xxxx = 10

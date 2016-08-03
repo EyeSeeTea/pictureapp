@@ -3,7 +3,7 @@ package utils;
 /**
  * Created by ina on 02/08/2016.
  */
-public class VariantPhoneMask {
+public class PhoneMask {
 
 
 

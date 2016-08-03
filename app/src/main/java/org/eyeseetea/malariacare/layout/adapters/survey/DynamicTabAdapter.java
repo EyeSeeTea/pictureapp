@@ -79,7 +79,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import utils.VariantPhoneMask;
+import utils.PhoneMask;
 
 /**
  * Created by Jose on 21/04/2015.
@@ -652,8 +652,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     isClicked=true;
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         String phoneValue = editText.getText().toString();
-                        if (VariantPhoneMask.checkPhoneNumberByMask(phoneValue)) {
-                            editText.setText(VariantPhoneMask.formatPhoneNumber(phoneValue));
+                        if (PhoneMask.checkPhoneNumberByMask(phoneValue)) {
+                            editText.setText(PhoneMask.formatPhoneNumber(phoneValue));
                         }
                         savePhoneValue(editText);
                     }
@@ -689,7 +689,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         String phoneValue = editText.getText().toString();
         //Check phone ok
-        if(!VariantPhoneMask.checkPhoneNumberByMask(phoneValue)){
+        if(!PhoneMask.checkPhoneNumberByMask(phoneValue)){
             editText.setError(context.getString(R.string.dynamic_error_phone_format));
             isClicked=false;
             return;

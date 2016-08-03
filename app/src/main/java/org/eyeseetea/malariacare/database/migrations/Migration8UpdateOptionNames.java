@@ -16,11 +16,10 @@ import java.io.IOException;
 /**
  * Created by idelcano on 03/08/2016.
  */
-@Migration(version = 12, databaseName = AppDatabase.NAME)
+@Migration(version = 8, databaseName = AppDatabase.NAME)
 public class Migration8UpdateOptionNames extends BaseMigration {
 
     private static String TAG=".Migration8";
-    public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
 
     private static Migration8UpdateOptionNames instance;
     private boolean postMigrationRequired;

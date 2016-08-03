@@ -124,4 +124,6 @@
 <string name="monitor_row_title_pregnant">Enceinte</string>
 <string name="monitor_row_title_severe">"Sévère"</string>
 <string name="monitor_row_title_submission">Soumission</string>
+<string name="review_title">"S'il vous plaît vérifier avant"</string>
+<string name="review_subtitle">Transmission</string>
 </resources>

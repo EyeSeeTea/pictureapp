@@ -39,9 +39,6 @@
     <string name="symbolPlus" translatable="false">+</string>
     <string name="symbolMinus" translatable="false">-</string>
     <string name="symbolCross" translatable="false">X</string>
-    <string name="rdtPositive" translatable="false">Positive</string>
-    <string name="rdtNegative" translatable="false">Negative</string>
-    <string name="rdtNotTested" translatable="false">Not Tested</string>
     <string name="RDT_code" translatable="false">RDT</string>
     <string name="Age_code" translatable="false">Age</string>
     <string name="Gender_code" translatable="false">Gender</string>
@@ -86,8 +83,6 @@
     <string name="assess" translatable="false">Assess - active surveys</string>
     <string name="improve" translatable="false">Improve</string>
     <string name="monitor" translatable="false">Monitor</string>
-    <string name="review_title" translatable="false">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>
-    <string name="review_subtitle" translatable="false">ធ្វើការបញ្ជូន</string>
     <string-array name="settings_array_titles_font_sizes" translatable="false">
         <item>@string/font_size_level0_title</item>
         <item>@string/font_size_level1_title</item>

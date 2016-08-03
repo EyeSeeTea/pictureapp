@@ -440,4 +440,23 @@ public class PopulateDB {
         }
         reader.close();
     }
+
+    public static void updateOptionNames(AssetManager assetManager) throws IOException  {
+        List<Option> options = Option.getAllOptions();
+        //Reset inner references
+        cleanInnerLists();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
+
+        String line[];
+        //Save new optionattributes for each question
+        while ((line = reader.readNext()) != null) {
+            for(Option option:options) {
+                if(option.getCode().equals(line[1])){
+                    option.setName(line[2]);
+                    option.save();
+                }
+            }
+        }
+        reader.close();
+    }
 }

@@ -130,13 +130,4 @@ public class BaseSurveyMonitor {
         //No matches -> null
         return null;
     }
-
-    /**
-     * Returns the surveys that have been sent during the last 6 months in order to create monitor stats on top of them.
-     * @return
-     */
-    public static List<Survey> findSentSurveysForMonitor() {
-        Date minDateForMonitor = TimePeriodCalculator.getInstance().getMinDateForMonitor();
-        return Survey.findSentSurveysAfterDate(minDateForMonitor);
-    }
 }

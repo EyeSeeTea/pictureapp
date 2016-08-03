@@ -96,7 +96,7 @@ public class MonitorService extends IntentService {
         Log.i(TAG, "Preparing monitor data...");
 
         //Take last 6 months sent surveys
-        List<Survey> sentSurveysForMonitor = BaseSurveyMonitor.findSentSurveysForMonitor();
+        List<Survey> sentSurveysForMonitor = findSentSurveysForMonitor();
 
         Log.i(TAG, String.format("Found %d surveys to build monitor info, aggregating data...", sentSurveysForMonitor.size()));
         MonitorBuilder monitorBuilder = new MonitorBuilder(getApplicationContext());
@@ -107,6 +107,15 @@ public class MonitorService extends IntentService {
         Log.i(TAG, String.format("Monitor data calculated ok",sentSurveysForMonitor.size()));
         Session.putServiceValue(PREPARE_MONITOR_DATA, monitorBuilder);
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(PREPARE_MONITOR_DATA));
+    }
+
+    /**
+     * Returns the surveys that have been sent during the last 6 months in order to create monitor stats on top of them.
+     * @return
+     */
+    public static List<Survey> findSentSurveysForMonitor() {
+        Date minDateForMonitor = TimePeriodCalculator.getInstance().getMinDateForMonitor();
+        return Survey.findSentSurveysAfterDate(minDateForMonitor);
     }
 
 }

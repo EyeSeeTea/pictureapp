@@ -65,7 +65,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="@dimen/question_padding_image_top"/>
 
         <!--Options as a N x 2 grid-->
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"

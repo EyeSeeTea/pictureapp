@@ -30,6 +30,7 @@ import java.util.List;
  * Created by idelcano on 21/07/2016.
  */
 public class MonitorUtils extends AMonitorUtils {
+
     public MonitorUtils(Context context) {
         super(context);
     }

@@ -52,7 +52,7 @@
             android:paddingBottom="2dip"
             android:paddingLeft="10dip"
             android:paddingTop="2dip"
-            android:text="@string/empty_string"
+            android:text="sd@string/empty_string"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -63,7 +63,7 @@
         <ImageView
             android:id="@+id/questionImage"
             android:layout_width="match_parent"
-            android:layout_height="298dp"
+            android:layout_height="wrap_content"
             android:visibility="gone"
             android:layout_gravity="center_horizontal" />
 

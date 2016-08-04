@@ -483,10 +483,33 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 break;
             case Constants.REMINDER:
+                Log.d(TAG, "REMINDER");
             case Constants.WARNING:
+                Log.d(TAG, "WARNING");
+                TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,0.5f);
+
+                int paddingSize= (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_warning_padding);
+
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem, tableLayout, false);
+                tableRow.setLayoutParams(params);
                 tableLayout.addView(tableRow);
-                initWarningValue(tableRow);
+                List<QuestionOption> questionOptions= question.getQuestionOption();
+                //Warning text "header"
+                if(questionOptions!=null && questionOptions.size()>0) {
+                    tableRow.setPadding(paddingSize,paddingSize,paddingSize,paddingSize);
+                    initWarningText(tableRow, questionOptions.get(0).getOption());
+                }
+
+                //Warning button
+                if( questionOptions!=null && questionOptions.size()>1) {
+                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_singleitem, tableLayout, false);
+                    params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,0.5f);
+                    tableRow.setLayoutParams(params);
+                    tableRow.setPadding(paddingSize,paddingSize,paddingSize,paddingSize);
+                    tableLayout.addView(tableRow);
+                    initWarningValue(tableRow,  questionOptions.get(1).getOption());
+                }
+
                 break;
             case Constants.PHONE:
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
@@ -516,16 +539,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
-    private void initWarningValue(TableRow tableRow) {
+    private void initWarningValue(TableRow tableRow, Option option) {
         ImageView errorImage = (ImageView)tableRow.findViewById(R.id.option1);
-        errorImage.setImageResource(R.drawable.ic_event_error);
+        errorImage.setImageResource(R.drawable.option_button);
         //Add button to listener
         swipeTouchListener.addClickableView(errorImage);
+        //Add text into the button
+        initWarningText(tableRow,option);
 
         TextView okText = (TextView)tableRow.findViewById(R.id.counter1);
         okText.setText(R.string.ok);
     }
 
+    private void initWarningText(TableRow tableRow, Option option) {
+        TextView okText = (TextView)tableRow.findViewById(R.id.textoption1);
+        okText.setText(option.getCode());
+        okText.setTextSize(option.getOptionAttribute().getText_size());
+    }
     /**
      * Adds current Counter value to image option
      * @param question Current question

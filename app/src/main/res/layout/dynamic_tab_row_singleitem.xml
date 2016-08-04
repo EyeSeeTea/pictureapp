@@ -19,6 +19,7 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"/>
         <org.eyeseetea.malariacare.views.TextCard
+            android:id="@+id/textoption1"
             android:padding="5dip"
             android:gravity="center"
             android:layout_height="match_parent"

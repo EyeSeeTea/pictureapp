@@ -483,9 +483,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 break;
             case Constants.REMINDER:
-                Log.d(TAG, "REMINDER");
             case Constants.WARNING:
-                Log.d(TAG, "WARNING");
                 TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,0.5f);
 
                 int paddingSize= (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_warning_padding);

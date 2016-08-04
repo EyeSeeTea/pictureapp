@@ -60,6 +60,13 @@
             app:tDimension="@string/font_size_level2"
             app:tFontName="@string/condensed_font_name" />
 
+        <ImageView
+            android:id="@+id/questionImage"
+            android:layout_width="match_parent"
+            android:layout_height="298dp"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal" />
+
         <!--Options as a N x 2 grid-->
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/options_table"

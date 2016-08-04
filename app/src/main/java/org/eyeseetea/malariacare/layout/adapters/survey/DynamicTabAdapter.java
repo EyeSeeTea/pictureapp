@@ -353,6 +353,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         headerView.setTypeface(tf);
         headerView.setText(question.getForm_name());
 
+        //question image
+        ImageView imageView=(ImageView) rowView.findViewById(R.id.questionImage);
+        if(question.getPath()!=null && !question.getPath().equals("")) {
+            putImageInImageView(question.getPath(), imageView);
+            imageView.setVisibility(View.VISIBLE);
+        }
+
         //Progress
         ProgressBar progressView=(ProgressBar)rowView.findViewById(R.id.dynamic_progress);
         TextView progressText=(TextView)rowView.findViewById(R.id.dynamic_progress_text);

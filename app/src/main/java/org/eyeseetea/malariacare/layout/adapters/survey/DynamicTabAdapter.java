@@ -62,6 +62,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -242,6 +243,31 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Show confirm on full screen
         rootView .findViewById(R.id.options_table).setVisibility(View.GONE);
         rootView .findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
+
+        //question image
+        ImageView imageView=(ImageView) rootView.findViewById(R.id.questionImageRow);
+        if(questionCounter.getPath()!=null && !questionCounter.getPath().equals("")) {
+            putImageInImageView(questionCounter.getPath(), imageView);
+            imageView.setVisibility(View.VISIBLE);
+        }
+
+        List<QuestionOption> questionOptions = questionCounter.getQuestionOption();
+        if(questionOptions.get(0)!=null) {
+            TextCard textCard = (TextCard) rootView.findViewById(R.id.questionTextRow);
+            textCard.setText(questionOptions.get(0).getOption().getCode());
+            textCard.setTextSize(questionOptions.get(0).getOption().getOptionAttribute().getText_size());
+        }
+        if(questionOptions.get(1)!=null) {
+            TextCard confirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_yes);
+            confirmTextCard.setText(questionOptions.get(1).getOption().getCode());
+            confirmTextCard.setTextSize(questionOptions.get(1).getOption().getOptionAttribute().getText_size());
+        }
+        if(questionOptions.get(2)!=null) {
+            TextCard noConfirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_no);
+            noConfirmTextCard.setText(questionOptions.get(2).getOption().getCode());
+            noConfirmTextCard.setTextSize(questionOptions.get(2).getOption().getOptionAttribute().getText_size());
+        }
+
     }
 
     private void removeConfirmCounter(View view){

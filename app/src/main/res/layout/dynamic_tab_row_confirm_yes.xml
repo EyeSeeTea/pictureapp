@@ -6,33 +6,8 @@
     android:layout_weight="1"
     >
     <FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="0.5"
-    android:scaleType="centerInside">
-        <ImageView
-            android:id="@+id/confirm_no"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:scaleType="fitCenter"
-            android:layout_weight="1"
-            android:src="@drawable/option_button"/>
-        <org.eyeseetea.malariacare.views.TextCard
-            android:padding="5dip"
-            android:gravity="center"
-            android:layout_height="match_parent"
-            android:layout_width="fill_parent"
-            app:tFontName="@string/specific_language_font"
-            app:tDimension="@string/font_size_level1"
-            android:layout_gravity="center"
-            android:textColor="@color/white"
-            android:textSize="40dp"
-            android:text="@android:string/no"
-            />
-    </FrameLayout>
-    <FrameLayout
-
+    android:paddingTop="@dimen/dashboard_row_padding"
+    android:paddingBottom="@dimen/dashboard_row_padding"
     android:layout_height="match_parent"
     android:layout_weight="0.5"
     android:scaleType="centerInside">
@@ -45,6 +20,7 @@
             android:scaleType="fitCenter"
             android:src="@drawable/option_button"/>
         <org.eyeseetea.malariacare.views.TextCard
+            android:id="@+id/textcard_confirm_yes"
             android:padding="5dip"
             android:gravity="center"
             android:layout_height="match_parent"

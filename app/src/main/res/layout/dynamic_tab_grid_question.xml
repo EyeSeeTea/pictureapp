@@ -81,7 +81,10 @@
             android:measureWithLargestChild="false"
             android:visibility="gone">
 
-            <include layout="@layout/dynamic_tab_row_confirm" />
+            <include layout="@layout/dynamic_tab_row_question_image" />
+            <include layout="@layout/dynamic_tab_row_question_text" />
+            <include layout="@layout/dynamic_tab_row_confirm_yes" />
+            <include layout="@layout/dynamic_tab_row_confirm_no" />
         </TableLayout>
     </LinearLayout>
 

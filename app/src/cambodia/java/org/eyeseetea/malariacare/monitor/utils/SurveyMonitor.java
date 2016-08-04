@@ -30,30 +30,11 @@ public class SurveyMonitor extends BaseSurveyMonitor{
     public SurveyMonitor(Survey survey){
         super(survey);
     }
-    /**
-     * Id of first question (positive, negative, not tested)
-     */
-    final static Long ID_QUESTION_RDT=1l;
-
-    /**
-     * Id of specie question
-     */
-    final static Long ID_QUESTION_SPECIE=5l;
 
     /**
      * Id of treatment question
      */
     final static Long ID_QUESTION_TREATMENT=6l;
-
-    /**
-     * Id of positive rdt option
-     */
-    final static Long ID_OPTION_RDT_POSITIVE=1l;
-
-    /**
-     * Id of negative rdt option
-     */
-    final static Long ID_OPTION_RDT_NEGATIVE=2l;
 
     /**
      * Id of not tested rdt option

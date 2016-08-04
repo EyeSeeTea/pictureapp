@@ -22,28 +22,13 @@ package org.eyeseetea.malariacare.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.format.Time;
 import android.util.Log;
 
-import com.raizlabs.android.dbflow.sql.builder.Condition;
-import com.raizlabs.android.dbflow.sql.language.Select;
-
-import org.eyeseetea.malariacare.database.model.CompositeScore;
-import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Survey$Table;
-import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.monitor.MonitorBuilder;
-import org.eyeseetea.malariacare.monitor.utils.BaseSurveyMonitor;
-import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 import org.eyeseetea.malariacare.monitor.utils.TimePeriodCalculator;
-import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -95,8 +80,8 @@ public class MonitorService extends IntentService {
     private void prepareMonitorData(){
         Log.i(TAG, "Preparing monitor data...");
 
-        //Take last 6 months sent surveys
-        List<Survey> sentSurveysForMonitor = findSentSurveysForMonitor();
+        //Take last 6 months sent surveys in order to create monitor stats on top of them.
+        List<Survey> sentSurveysForMonitor = Survey.findSentSurveysAfterDate(TimePeriodCalculator.getInstance().getMinDateForMonitor());
 
         Log.i(TAG, String.format("Found %d surveys to build monitor info, aggregating data...", sentSurveysForMonitor.size()));
         MonitorBuilder monitorBuilder = new MonitorBuilder(getApplicationContext());
@@ -107,15 +92,6 @@ public class MonitorService extends IntentService {
         Log.i(TAG, String.format("Monitor data calculated ok",sentSurveysForMonitor.size()));
         Session.putServiceValue(PREPARE_MONITOR_DATA, monitorBuilder);
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(PREPARE_MONITOR_DATA));
-    }
-
-    /**
-     * Returns the surveys that have been sent during the last 6 months in order to create monitor stats on top of them.
-     * @return
-     */
-    public static List<Survey> findSentSurveysForMonitor() {
-        Date minDateForMonitor = TimePeriodCalculator.getInstance().getMinDateForMonitor();
-        return Survey.findSentSurveysAfterDate(minDateForMonitor);
     }
 
 }

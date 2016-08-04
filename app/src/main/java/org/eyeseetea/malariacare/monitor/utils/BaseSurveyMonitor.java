@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2015.
+ *
+ * This file is part of QIS Surveillance App.
+ *
+ *  QIS Surveillance App is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  QIS Surveillance App is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.eyeseetea.malariacare.monitor.utils;
 
 import org.eyeseetea.malariacare.database.model.Survey;
@@ -13,14 +31,14 @@ import java.util.List;
  */
 public class BaseSurveyMonitor {
 
+    public BaseSurveyMonitor(Survey survey){
+        this.survey=survey;
+    }
+
     /**
      * Reference to inner survey
      */
     private Survey survey;
-
-    public BaseSurveyMonitor(Survey survey){
-        this.survey=survey;
-    }
 
     /**
      * Returns wrapped survey
@@ -29,6 +47,28 @@ public class BaseSurveyMonitor {
     public Survey getSurvey(){
         return this.survey;
     }
+
+
+    /**
+     * Id of first question (positive, negative, not tested)
+     */
+    final static Long ID_QUESTION_RDT=1l;
+
+    /**
+     * Id of specie question
+     */
+    final static Long ID_QUESTION_SPECIE=5l;
+
+    /**
+     * Id of positive rdt option
+     */
+    final static Long ID_OPTION_RDT_POSITIVE=1l;
+
+    /**
+     * Id of negative rdt option
+     */
+    final static Long ID_OPTION_RDT_NEGATIVE=2l;
+
 
     public boolean isRated() {
         return (isPositive() || isNegative());
@@ -39,7 +79,7 @@ public class BaseSurveyMonitor {
      * @return
      */
     public boolean isPositive(){
-        return findValue(SurveyMonitor.ID_QUESTION_RDT,SurveyMonitor.ID_OPTION_RDT_POSITIVE)!=null;
+        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_POSITIVE)!=null;
     }
 
     /**
@@ -47,7 +87,7 @@ public class BaseSurveyMonitor {
      * @return
      */
     public boolean isNegative(){
-        return findValue(SurveyMonitor.ID_QUESTION_RDT,SurveyMonitor.ID_OPTION_RDT_NEGATIVE)!=null;
+        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_NEGATIVE)!=null;
     }
 
     /**
@@ -63,7 +103,7 @@ public class BaseSurveyMonitor {
      * @return
      */
     public boolean isPf(){
-        return findValue(SurveyMonitor.ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PF)!=null;
+        return findValue(ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PF)!=null;
     }
 
     /**
@@ -71,7 +111,7 @@ public class BaseSurveyMonitor {
      * @return
      */
     public boolean isPv(){
-        return findValue(SurveyMonitor.ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PV)!=null;
+        return findValue(ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PV)!=null;
     }
 
     /**
@@ -79,10 +119,8 @@ public class BaseSurveyMonitor {
      * @return
      */
     public boolean isPfPv(){
-        return findValue(SurveyMonitor.ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PFPV)!=null;
+        return findValue(ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PFPV)!=null;
     }
-
-
 
 
     /**

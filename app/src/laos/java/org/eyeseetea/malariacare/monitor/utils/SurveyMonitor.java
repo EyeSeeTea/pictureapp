@@ -26,15 +26,9 @@ import org.eyeseetea.malariacare.database.model.Survey;
  */
 public class SurveyMonitor extends BaseSurveyMonitor {
 
-    /**
-     * Id of first question (positive, negative, not tested)
-     */
-    protected final static Long ID_QUESTION_RDT=1l;
-
-    /**
-     * Id of specie question
-     */
-    protected final static Long ID_QUESTION_SPECIE=5l;
+    public SurveyMonitor(Survey survey){
+        super(survey);
+    }
 
     /**
      * Id of treatment question
@@ -50,16 +44,6 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Id of treatment question
      */
     private final static Long ID_QUESTION_SUBMISION=12l;
-
-    /**
-     * Id of positive rdt option
-     */
-    final static Long ID_OPTION_RDT_POSITIVE=1l;
-
-    /**
-     * Id of negative rdt option
-     */
-    final static Long ID_OPTION_RDT_NEGATIVE=2l;
 
     /**
      * Id of pv specie option
@@ -134,10 +118,6 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Id of ACT6x4 treatment option
      */
     private final static Long ID_OPTION_TREATMENT_RDTS=21l;
-
-    public SurveyMonitor(Survey survey){
-        super(survey);
-    }
 
     public boolean isSuspected(){
         return (isPositive() || isNegative());

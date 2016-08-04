@@ -22,27 +22,13 @@ package org.eyeseetea.malariacare.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.format.Time;
 import android.util.Log;
 
-import com.raizlabs.android.dbflow.sql.builder.Condition;
-import com.raizlabs.android.dbflow.sql.language.Select;
-
-import org.eyeseetea.malariacare.database.model.CompositeScore;
-import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Survey$Table;
-import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.monitor.MonitorBuilder;
-import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 import org.eyeseetea.malariacare.monitor.utils.TimePeriodCalculator;
-import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -94,8 +80,8 @@ public class MonitorService extends IntentService {
     private void prepareMonitorData(){
         Log.i(TAG, "Preparing monitor data...");
 
-        //Take last 6 months sent surveys
-        List<Survey> sentSurveysForMonitor = SurveyMonitor.findSentSurveysForMonitor();
+        //Take last 6 months sent surveys in order to create monitor stats on top of them.
+        List<Survey> sentSurveysForMonitor = Survey.findSentSurveysAfterDate(TimePeriodCalculator.getInstance().getMinDateForMonitor());
 
         Log.i(TAG, String.format("Found %d surveys to build monitor info, aggregating data...", sentSurveysForMonitor.size()));
         MonitorBuilder monitorBuilder = new MonitorBuilder(getApplicationContext());

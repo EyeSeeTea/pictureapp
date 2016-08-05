@@ -4,7 +4,7 @@
     <dimen name="activity_vertical_margin">5dp</dimen>
     <dimen name="question_padding_left">10dip</dimen>
     <dimen name="question_padding_all">5dip</dimen>
-    <dimen name="question_warning_padding">40dip</dimen>
+    <dimen name="question_padding">40dp</dimen>
     <dimen name="question_padding_image_top">10dip</dimen>
 
     <!-- Dashboard -->

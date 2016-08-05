@@ -486,7 +486,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.WARNING:
                 TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,0.5f);
 
-                int paddingSize= (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_warning_padding);
+                int paddingSize= (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_padding);
 
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem, tableLayout, false);
                 tableRow.setLayoutParams(params);

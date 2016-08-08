@@ -59,6 +59,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
@@ -72,7 +73,6 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBui
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.utils.FlavorSettings;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
@@ -953,7 +953,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int arg1) {
                     hideKeyboard(PreferencesState.getInstance().getContext());
-                    if(Session.getSurvey().isRDT() && FlavorSettings.isReviewActive())
+                    if(Session.getSurvey().isRDT() && BuildConfig.reviewScreen)
                         DashboardActivity.dashboardActivity.closeSurveyFragmentAndAskReview();
                     else
                         DashboardActivity.dashboardActivity.closeSurveyFragment();

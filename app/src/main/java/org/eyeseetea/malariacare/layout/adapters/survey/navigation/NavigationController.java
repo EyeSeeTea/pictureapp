@@ -225,11 +225,11 @@ public class NavigationController {
 
         //This node wont be shown in previous move (warnings)
         if(!nextNode.isVisibleInReview()){
-            //If the survey is sent we need hide the remminder question.
+            //If the survey is sent we need hide the reminder question.
             if(Session.getSurvey()!=null && !Session.getSurvey().isInProgress())
             for (QuestionRelation questionRelation : nextNode.getQuestion().getQuestionRelations()) {
                 if (questionRelation.isAReminder()) {
-                    //is a warning -> previous
+                    //is a reminder -> next
                     nonVisibleNode = nextNode;
 
                     if(nextNode==null){

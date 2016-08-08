@@ -52,7 +52,7 @@
             android:paddingBottom="2dip"
             android:paddingLeft="10dip"
             android:paddingTop="2dip"
-            android:text="sd@string/empty_string"
+            android:text="@string/empty_string"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"

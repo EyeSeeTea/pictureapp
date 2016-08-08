@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -71,7 +72,13 @@ public class ReviewFragment extends Fragment {
         List<Value> values = survey.getValuesFromDB();
         LinearLayout linearLayout=(LinearLayout)view.findViewById(R.id.options_review_table);
         for(Value value:values) {
-            drawValue(linearLayout, value);
+            boolean isReviewValue=true;
+            for(QuestionRelation questionRelation:value.getQuestion().getQuestionRelations()){
+                if(questionRelation.isACounter() || questionRelation.isAReminder() || questionRelation.isAWarning())
+                    isReviewValue=false;
+            }
+            if(isReviewValue)
+                drawValue(linearLayout, value);
         }
     }
 

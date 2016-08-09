@@ -968,7 +968,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 public void onClick(DialogInterface dialog, int arg1) {
                     hideKeyboard(PreferencesState.getInstance().getContext());
                     if(Session.getSurvey().isRDT() && BuildConfig.reviewScreen)
-                        DashboardActivity.dashboardActivity.showReviewAndCloseSurveyFragment();
+                        DashboardActivity.dashboardActivity.showReviewFragment();
                     else
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
                     isClicked=false;

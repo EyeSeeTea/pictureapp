@@ -1098,6 +1098,35 @@ public class Question extends BaseModel {
         return this.sibling;
     }
 
+    /**
+     * Count the total of the required questions by anwsered values
+     * @return
+     */
+    public static int countRequiredByValues(long id_survey) {
+        int numRequired=0;
+        List<Value> values=new Select().from(Value.class)
+                .where(Condition.column(Value$Table.ID_SURVEY).eq(id_survey)).queryList();
+        for(Value value:values){
+            //If the value Question is Counter|Reminder|Warning should increase the numRequired i
+            for(QuestionRelation questionRelation:value.getQuestion().getQuestionRelations()){
+                if(questionRelation.isACounter() || questionRelation.isAReminder() || questionRelation.isAWarning())
+                    numRequired++;
+                break;
+            }
+            if(value.getQuestion().getTotalQuestions()>numRequired) {
+                numRequired = value.getQuestion().getTotalQuestions();
+                //Increase the numRequired if the Question is parent and the match option is selected
+                if (value.getQuestion().getChildren().size() > 0)
+                    for(QuestionOption questionOption: QuestionOption.findByQuestionAndOption(value.getQuestion(),value.getOption()))
+                        if(questionOption.getMatch().getQuestionRelation().isAParentChild()) {
+                            numRequired++;
+                            break;
+                        }
+            }
+        }
+        return numRequired;
+    }
+
     private static class QuestionOrderComparator implements Comparator {
 
         @Override

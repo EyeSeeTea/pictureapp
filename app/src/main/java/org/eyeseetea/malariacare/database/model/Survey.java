@@ -33,7 +33,6 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -440,11 +439,11 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      */
     private SurveyAnsweredRatio reloadSurveyAnsweredRatio(){
 
+
         SurveyAnsweredRatio surveyAnsweredRatio;
-        int numRequired = Question.countRequiredByProgram(this.getTabGroup());
-        int numOptional = (int)countNumOptionalQuestionsToAnswer();
+        int numRequired = Question.countRequiredByValues(this.id_survey);
         int numAnswered = Value.countBySurvey(this);
-        surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired+numOptional, numAnswered);
+        surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired, numAnswered);
 
         SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);
         return surveyAnsweredRatio;

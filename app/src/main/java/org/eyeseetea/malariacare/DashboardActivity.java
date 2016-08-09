@@ -396,8 +396,9 @@ public class DashboardActivity extends BaseActivity {
         isLoadingReview=false;
         ScoreRegister.clear();
         boolean isSent=false;
-        if(Session.getSurvey()!=null)
-            isSent=Session.getSurvey().isSent();
+        if(Session.getSurvey()!=null) {
+            isSent = Session.getSurvey().isSent();
+        }
         if(isBackPressed){
             beforeExit();
         }

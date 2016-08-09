@@ -4,8 +4,10 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
+import org.eyeseetea.malariacare.database.utils.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -223,6 +225,21 @@ public class NavigationController {
 
         //This node wont be shown in previous move (warnings)
         if(!nextNode.isVisibleInReview()){
+            //If the survey is sent we need hide the reminder question.
+            if(Session.getSurvey()!=null && !Session.getSurvey().isInProgress()) {
+                for (QuestionRelation questionRelation : nextNode.getQuestion().getQuestionRelations()) {
+                    if (questionRelation.isAReminder()) {
+                        //is a reminder -> next
+                        nonVisibleNode = nextNode;
+
+                        if (nextNode == null) {
+                            return;
+                        }
+                        next(null);
+                        return;
+                    }
+                }
+            }
             Log.d(TAG,String.format("visit(%s) -> In position %d",nextNode.getQuestion().getCode(),currentPosition));
             //Requires a rewind leaving its parent as last visited
             rewindVisited(nextNode);

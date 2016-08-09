@@ -74,7 +74,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Flags required to decide if the survey must be deleted or not on pause the surveyFragment
      */
-    public boolean isLoadingReview=false;
+    private boolean isLoadingReview=false;
 
     /**
      * Flags required to decide if the survey must be deleted or not
@@ -197,6 +197,9 @@ public class DashboardActivity extends BaseActivity {
         replaceFragment(R.id.dashboard_details_container, surveyFragment);
     }
 
+    /**
+     * This method initializes the reviewFragment
+     */
     public void initReview(){
         int mStackLevel=0;
         mStackLevel++;
@@ -205,6 +208,9 @@ public class DashboardActivity extends BaseActivity {
         replaceFragment(R.id.dashboard_details_container, reviewFragment);
     }
 
+    /**
+     * This method initializes the Improve fragment(DashboardSentFragment)
+     */
     public void initImprove(){
         sentFragment = new DashboardSentFragment();
         sentFragment.setArguments(getIntent().getExtras());
@@ -212,6 +218,9 @@ public class DashboardActivity extends BaseActivity {
         replaceListFragment(R.id.dashboard_completed_container, sentFragment);
     }
 
+    /**
+     * This method initializes the Survey fragment
+     */
     public void initSurvey(){
         isBackPressed=false;
         tabHost.getTabWidget().setVisibility(View.GONE);
@@ -222,6 +231,9 @@ public class DashboardActivity extends BaseActivity {
         replaceFragment(R.id.dashboard_details_container, surveyFragment);
     }
 
+    /**
+     * This method initializes the Monitor fragment
+     */
     public void initMonitor(){
         int mStackLevel=0;
         mStackLevel++;
@@ -371,11 +383,20 @@ public class DashboardActivity extends BaseActivity {
         }
     }
 
-    public void closeSurveyFragmentAndAskReview(){
+    /**
+     *  This method shows the review fragment to te user before than close the surveyFragment.
+     */
+    public void showReviewAndCloseSurveyFragment(){
         isLoadingReview=true;
         initReview();
     }
 
+
+    /**
+     * This method closes the survey fragment.
+     * If the active survey was completed it will be saved as completed.
+     * After that, loads the Assess fragment(DashboardUnSentFragment) in the Assess tab.
+     */
     public void closeSurveyFragment(){
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         isLoadingReview=false;
@@ -397,12 +418,17 @@ public class DashboardActivity extends BaseActivity {
         }
     }
 
+    /**
+     * This method closes the Feedback Fragment and loads the Improve fragment(DashboardSentFragment) in the Improve tab
+     */
     public void closeReviewFragment(){
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         isLoadingReview=false;
         initAssess();
         unsentFragment.reloadData();
     }
+
+
     public void beforeExit(){
         Survey survey=Session.getSurvey();
         if(survey!=null) {
@@ -453,39 +479,37 @@ public class DashboardActivity extends BaseActivity {
      * Checks if a survey fragment is active
      */
     private boolean isReviewFragmentActive() {
-        Fragment currentFragment = this.getFragmentManager ().findFragmentById(R.id.dashboard_details_container);
-        if (currentFragment instanceof ReviewFragment) {
-            return true;
-        }
-        return false;
+        return isFragmentActive(ReviewFragment.class, R.id.dashboard_details_container);
     }
     /**
      * Checks if a survey fragment is active
      */
     private boolean isSurveyFragmentActive() {
-        Fragment currentFragment = this.getFragmentManager ().findFragmentById(R.id.dashboard_details_container);
-        if (currentFragment instanceof SurveyFragment) {
+        return isFragmentActive(SurveyFragment.class, R.id.dashboard_details_container);
+    }
+
+    /**
+     * Checks if a dashboardUnsentFragment is active
+     */
+    private boolean isFragmentActive(Class<?> fragment, int layout) {
+        Fragment currentFragment = this.getFragmentManager ().findFragmentById(layout);
+        if (currentFragment.getClass().equals(fragment.getClass())) {
             return true;
         }
         return false;
     }
 
     /**
-     * Checks if a dashboardUnsentFragment is active
+     * This method moves to the Assess tab and open the active survey.
      */
-    private boolean isDashboardUnsentFragmentActive() {
-        Fragment currentFragment = this.getFragmentManager ().findFragmentById(R.id.dashboard_details_container);
-        if (currentFragment instanceof DashboardUnsentFragment) {
-            return true;
-        }
-        return false;
-    }
-
     public void openSentSurvey() {
         tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_assess));
         initSurvey();
     }
 
+    /**
+     * This method hide the reviewFragment restoring the Assess tab with the active SurveyFragment
+     */
     public void hideReview() {
         isMoveToLeft=true;
         restoreAssess();

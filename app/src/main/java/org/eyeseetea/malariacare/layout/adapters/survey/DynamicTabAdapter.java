@@ -27,7 +27,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -35,10 +34,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -78,7 +75,6 @@ import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -139,9 +135,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //On create dynamictabadapter, if is not readonly and has value not null it should come from reviewFragment
         if(!readOnly){
             Question question=navigationController.getCurrentQuestion();
-            Value value = question.getValueBySession();
-            if(value!=null) {
-                comeFromReview();
+            if(question.getValueBySession()!=null) {
+                goToLastQuestion();
             }
         }
 
@@ -973,7 +968,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 public void onClick(DialogInterface dialog, int arg1) {
                     hideKeyboard(PreferencesState.getInstance().getContext());
                     if(Session.getSurvey().isRDT() && BuildConfig.reviewScreen)
-                        DashboardActivity.dashboardActivity.closeSurveyFragmentAndAskReview();
+                        DashboardActivity.dashboardActivity.showReviewAndCloseSurveyFragment();
                     else
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
                     isClicked=false;
@@ -1043,147 +1038,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Go to the last question
+     * When the user swip back from review fragment the navigationController should go to the last question
      */
-    private void comeFromReview(){
-            navigationController.first();
-            Value value=null;
-            do {
-                next();
-                Question question = navigationController.getCurrentQuestion();
-                value = question.getValueBySession();
-            }while(value!=null && !isDone(value));
-            notifyDataSetChanged();
-        }
-
-    public class OnSwipeTouchListener implements View.OnTouchListener {
-
-        /**
-         * Custom gesture detector
-         */
-        private final GestureDetector gestureDetector;
-
-        /**
-         * List of clickable items inside the swipable view (buttons)
-         */
-        private final List<View> clickableViews;
-
-        public OnSwipeTouchListener(Context ctx) {
-            gestureDetector = new GestureDetector(ctx, new GestureListener());
-            clickableViews = new ArrayList<>();
-        }
-
-        @Override
-        /**
-         * Delegates any touch into the our custom gesture detector
-         */
-        public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
-        }
-
-        /**
-         * Adds a clickable view
-         *
-         * @param view
-         */
-        public void addClickableView(View view) {
-            clickableViews.add(view);
-        }
-
-        /**
-         * Clears the list of clickable items
-         */
-        public void clearClickableViews() {
-            clickableViews.clear();
-        }
-
-        /**
-         * Calculates de clickable view that has been 'clicked' in the given event
-         *
-         * @param event
-         * @return Returns de touched view or null otherwise
-         */
-        public View findViewByCoords(MotionEvent event) {
-            float x = event.getRawX();
-            float y = event.getRawY();
-            for (View v : clickableViews) {
-                Rect visibleRectangle = new Rect();
-                v.getGlobalVisibleRect(visibleRectangle);
-                //Image/Button clicked
-                if (x >= visibleRectangle.left && x <= visibleRectangle.right && y >= visibleRectangle.top && y <= visibleRectangle.bottom) {
-                    return v;
-                }
-            }
-
-            return null;
-        }
-
-        public void onClick(View view) {
-//            Log.e(".DynamicTabAdapter", "empty onclick");
-        }
-
-        public void onSwipeRight() {
-//            Log.e(TAG, "onSwipeRight(DEFAULT)");
-        }
-
-        public void onSwipeLeft() {
-//            Log.e(TAG, "onSwipeLeft(DEFAULT)");
-        }
-
-        /**
-         * Our own custom gesture detector that distinguishes between onFling and a SingleTap
-         */
-        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
-
-            private static final int SWIPE_THRESHOLD = 50;
-            private static final int SWIPE_VELOCITY_THRESHOLD = 50;
-
-            private float lastX;
-
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent event) {
-                Log.d(TAG, String.format("onSingleTapConfirmed: %f %f", event.getX(), event.getY()));
-
-                //Find the clicked button
-                View clickedView = findViewByCoords(event);
-
-                //If found
-                if (clickedView != null) {
-                    //delegate onClick
-                    onClick(clickedView);
-                    return true;
-                }
-                //Not found, not consumed
-                return false;
-            }
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                lastX = e.getX();
-//                Log.d(TAG, "onDown: "+lastX);
-                return true;
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                try {
-                    float diffX = e2.getX() - ((e1 == null) ? lastX : e1.getX());
-//                    Log.d(TAG, String.format("onFling (%f): diffX: %f, velocityX: %f",lastX, diffX, velocityX));
-                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffX > 0) {
-                            onSwipeRight();
-                        } else {
-                            onSwipeLeft();
-                        }
-                    }
-                    return true;
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-                return false;
-            }
-        }
+    private void goToLastQuestion(){
+        navigationController.first();
+        Value value=null;
+        do {
+            next();
+            Question question = navigationController.getCurrentQuestion();
+            value = question.getValueBySession();
+        }while(value!=null && !isDone(value));
+        notifyDataSetChanged();
     }
+
 
 
 }

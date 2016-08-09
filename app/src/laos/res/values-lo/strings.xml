@@ -27,6 +27,7 @@
 ຕິດຕໍ່ຈໍານວນ PSC SI 123456789 "</string>
 <string name="exception_org_unit_banned">"ບ່ອນທີ່ການບໍລິການໄດ້ປິດ.
 ຕິດຕໍ່ຈໍານວນ PSC SI 123456789 "</string>
+<string name="dynamic_error_phone_format">"ຫມາຍເລກໂທລະສັບ ທີ່ບໍ່ຖືກຕ້ອງ  ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
 <string name="dynamic_error_age">"ບໍ່ຖືກຕ້ອງ"</string>
 <string name="title_activity_settings">"ການກໍານົດ"</string>
 <string name="settings_checkbox_customize_fonts">"ການປ່ຽນແປງຕົວອັກສອນທີ່?"</string>

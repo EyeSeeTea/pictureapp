@@ -24,12 +24,10 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.opencsv.CSVReader;
-import com.raizlabs.android.dbflow.runtime.TransactionManager;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Answer;
-import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
@@ -223,7 +221,8 @@ public class PopulateDB {
                         QuestionOption questionOption = new QuestionOption();
                         questionOption.setQuestion(questionList.get(Integer.valueOf(line[1])));
                         questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
-                        questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
+                        if(!line[3].equals(""))
+                            questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
                         questionOption.save();
                         break;
                     case QUESTION_THRESHOLDS_CSV:
@@ -311,6 +310,7 @@ public class PopulateDB {
                 if (question.getUid().equals(line[5])) {
                     question.setTotalQuestions(Integer.valueOf(line[13]));
                     question.save();
+                    break;
                 }
             }
         }
@@ -326,9 +326,11 @@ public class PopulateDB {
         while ((line = reader.readNext()) != null) {
             for (Question question : questions) {
                 if (question.getUid().equals(line[5])) {
-                    if(line.length>15 && !line[15].equals(""))
+                    if(line.length>15 && !line[15].equals("")) {
                         question.setPath(line[15]);
-                    question.save();
+                        question.save();
+                    }
+                    break;
                 }
             }
         }
@@ -345,6 +347,7 @@ public class PopulateDB {
                 if (question.getUid().equals(line[5])) {
                     question.setVisible(Integer.valueOf(line[14]));
                     question.save();
+                    break;
                 }
             }
         }
@@ -387,10 +390,13 @@ public class PopulateDB {
         //Save new optionattributes for each question
         while ((line = readerOptions.readNext()) != null) {
             for(Option option:options) {
-                if (option.getCode().equals(line[1]))
-                    if (!line[5].equals(""))
+                if (option.getCode().equals(line[1])){
+                    if (!line[5].equals("")) {
                         option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
-                option.save();
+                        option.save();
+                    }
+                    break;
+                }
             }
         }
         reader.close();
@@ -432,10 +438,33 @@ public class PopulateDB {
         //Save new optionattributes for each question
         while ((line = readerOptions.readNext()) != null) {
             for(Option option:options) {
-                if (option.getCode().equals(line[1]))
-                    if (!line[5].equals(""))
+                if (option.getCode().equals(line[1])) {
+                    if (!line[5].equals("")) {
                         option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
-                option.save();
+                        option.save();
+                    }
+                    break;
+                }
+            }
+        }
+        reader.close();
+    }
+
+    public static void updateOptionNames(AssetManager assetManager) throws IOException  {
+        List<Option> options = Option.getAllOptions();
+        //Reset inner references
+        cleanInnerLists();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
+
+        String line[];
+        //Save new option name for each option
+        while ((line = reader.readNext()) != null) {
+            for(Option option:options) {
+                if(option.getCode().equals(line[1])){
+                    option.setName(line[2]);
+                    option.save();
+                    break;
+                }
             }
         }
         reader.close();

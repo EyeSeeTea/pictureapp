@@ -50,7 +50,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -64,6 +63,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -82,22 +82,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import utils.PhoneMask;
+
 /**
  * Created by Jose on 21/04/2015.
  */
 public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private final static String TAG=".DynamicTabAdapter";
-
-    /**
-     * Formatted telephone mask: 0NN NNN NNN{N}
-     */
-    public static final String FORMATTED_PHONENUMBER_MASK = "0\\d{2} \\d{3} \\d{3,4}";
-
-    /**
-     * Formatted telephone mask: 0NN NNN NNN{N}
-     */
-    public static final String PLAIN_PHONENUMBER_MASK = "0\\d{8,9}";
 
     public NavigationController navigationController;
 
@@ -262,6 +254,34 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Show confirm on full screen
         rootView .findViewById(R.id.options_table).setVisibility(View.GONE);
         rootView .findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
+
+        //Show question image in counter alert
+        if(questionCounter.getPath()!=null && !questionCounter.getPath().equals("")) {
+            ImageView imageView=(ImageView) rootView.findViewById(R.id.questionImageRow);
+            putImageInImageView(questionCounter.getPath(), imageView);
+            imageView.setVisibility(View.VISIBLE);
+        }
+
+        //Question "header" is in the first option in Options.csv
+        List<QuestionOption> questionOptions = questionCounter.getQuestionOption();
+        if(questionOptions.get(0)!=null) {
+            TextCard textCard = (TextCard) rootView.findViewById(R.id.questionTextRow);
+            textCard.setText(questionOptions.get(0).getOption().getCode());
+            textCard.setTextSize(questionOptions.get(0).getOption().getOptionAttribute().getText_size());
+        }
+        //Question "confirm button" is in the second option in Options.csv
+        if(questionOptions.get(1)!=null) {
+            TextCard confirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_yes);
+            confirmTextCard.setText(questionOptions.get(1).getOption().getCode());
+            confirmTextCard.setTextSize(questionOptions.get(1).getOption().getOptionAttribute().getText_size());
+        }
+        //Question "no confirm button" is in the third option in Options.csv
+        if(questionOptions.get(2)!=null) {
+            TextCard noConfirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_no);
+            noConfirmTextCard.setText(questionOptions.get(2).getOption().getCode());
+            noConfirmTextCard.setTextSize(questionOptions.get(2).getOption().getOptionAttribute().getText_size());
+        }
+
     }
 
     private void removeConfirmCounter(View view){
@@ -373,6 +393,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         headerView.setTypeface(tf);
         headerView.setText(question.getForm_name());
 
+        //question image
+        if(question.getPath()!=null && !question.getPath().equals("")) {
+            ImageView imageView=(ImageView) rowView.findViewById(R.id.questionImage);
+            putImageInImageView(question.getPath(), imageView);
+            imageView.setVisibility(View.VISIBLE);
+        }
+
         //Progress
         ProgressBar progressView=(ProgressBar)rowView.findViewById(R.id.dynamic_progress);
         TextView progressText=(TextView)rowView.findViewById(R.id.dynamic_progress_text);
@@ -471,9 +498,30 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 break;
             case Constants.REMINDER:
             case Constants.WARNING:
+                TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,0.5f);
+
+                int paddingSize= (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_padding);
+
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem, tableLayout, false);
+                tableRow.setLayoutParams(params);
                 tableLayout.addView(tableRow);
-                initWarningValue(tableRow);
+                List<QuestionOption> questionOptions= question.getQuestionOption();
+                //Question "header" is in the first option in Options.csv
+                if(questionOptions!=null && questionOptions.size()>0) {
+                    tableRow.setPadding(paddingSize,paddingSize,paddingSize,paddingSize);
+                    initWarningText(tableRow, questionOptions.get(0).getOption());
+                }
+
+                //Question "button" is in the second option in Options.csv
+                if( questionOptions!=null && questionOptions.size()>1) {
+                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_singleitem, tableLayout, false);
+                    params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,0.5f);
+                    tableRow.setLayoutParams(params);
+                    tableRow.setPadding(paddingSize,paddingSize,paddingSize,paddingSize);
+                    tableLayout.addView(tableRow);
+                    initWarningValue(tableRow,  questionOptions.get(1).getOption());
+                }
+
                 break;
             case Constants.PHONE:
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
@@ -503,16 +551,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
-    private void initWarningValue(TableRow tableRow) {
+    private void initWarningValue(TableRow tableRow, Option option) {
         ImageView errorImage = (ImageView)tableRow.findViewById(R.id.option1);
-        errorImage.setImageResource(R.drawable.ic_event_error);
+        errorImage.setImageResource(R.drawable.option_button);
         //Add button to listener
         swipeTouchListener.addClickableView(errorImage);
+        //Add text into the button
+        initWarningText(tableRow,option);
 
         TextView okText = (TextView)tableRow.findViewById(R.id.counter1);
         okText.setText(R.string.ok);
     }
 
+    private void initWarningText(TableRow tableRow, Option option) {
+        TextView okText = (TextView)tableRow.findViewById(R.id.textoption1);
+        okText.setText(option.getCode());
+        okText.setTextSize(option.getOptionAttribute().getText_size());
+    }
     /**
      * Adds current Counter value to image option
      * @param question Current question
@@ -672,8 +727,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     isClicked=true;
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         String phoneValue = editText.getText().toString();
-                        if (checkPhoneNumberByMask(phoneValue)) {
-                            editText.setText(formatPhoneNumber(phoneValue));
+                        if (PhoneMask.checkPhoneNumberByMask(phoneValue)) {
+                            editText.setText(PhoneMask.formatPhoneNumber(phoneValue));
                         }
                         savePhoneValue(editText);
                     }
@@ -709,7 +764,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         String phoneValue = editText.getText().toString();
         //Check phone ok
-        if(!checkPhoneNumberByMask(phoneValue)){
+        if(!PhoneMask.checkPhoneNumberByMask(phoneValue)){
             editText.setError(context.getString(R.string.dynamic_error_phone_format));
             isClicked=false;
             return;
@@ -757,27 +812,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Formats number according to mask 0NN NNN NNN{N}
-     * @param phoneValue
-     * @return
-     */
-    private String formatPhoneNumber(String phoneValue) {
-        //Empty -> nothing to format
-        if (phoneValue == null || "".equals(phoneValue)) {
-            phoneValue = "";
-        }
-
-        //Already formatted -> done
-        if(phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK)){
-            return phoneValue;
-        }
-
-        //0NNNNNNNN{N} -> 0NN NNN NNN{N}
-        String formattedNumber=phoneValue.substring(0,3)+" "+phoneValue.substring(3,6)+" "+phoneValue.substring(6,phoneValue.length());
-        return  formattedNumber;
-    }
-
-    /**
      * Checks if the given string corresponds a correct phone number for the current country (by locale)
      * @param phoneValue
      * @return true|false
@@ -799,21 +833,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return PhoneNumberUtil.getInstance().isValidNumber(phoneNumber);
     }
 
-
-    /**
-     * Checks if the given string corresponds a correct phone number according to mask:
-     *  0NN NNN NNN{N}
-     * @param phoneValue
-     * @return true|false
-     */
-    private boolean checkPhoneNumberByMask(String phoneValue){
-
-        //Empty  is ok
-        if (phoneValue == null) {
-            phoneValue = "";
-        }
-        return phoneValue.isEmpty() || phoneValue.replace(" ", "").matches(FORMATTED_PHONENUMBER_MASK) || phoneValue.replace(" ", "").matches(PLAIN_PHONENUMBER_MASK);
-    }
 
     /**
      * Checks if edit text is not null:

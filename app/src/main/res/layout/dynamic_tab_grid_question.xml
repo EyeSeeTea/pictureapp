@@ -60,6 +60,14 @@
             app:tDimension="@string/font_size_level2"
             app:tFontName="@string/condensed_font_name" />
 
+        <ImageView
+            android:id="@+id/questionImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="@dimen/question_padding_image_top"/>
+
         <!--Options as a N x 2 grid-->
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/options_table"
@@ -74,7 +82,10 @@
             android:measureWithLargestChild="false"
             android:visibility="gone">
 
-            <include layout="@layout/dynamic_tab_row_confirm" />
+            <include layout="@layout/dynamic_tab_row_question_image" />
+            <include layout="@layout/dynamic_tab_row_question_text" />
+            <include layout="@layout/dynamic_tab_row_confirm_yes" />
+            <include layout="@layout/dynamic_tab_row_confirm_no" />
         </TableLayout>
     </LinearLayout>
 

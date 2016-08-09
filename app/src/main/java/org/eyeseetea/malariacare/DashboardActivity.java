@@ -201,10 +201,8 @@ public class DashboardActivity extends BaseActivity {
      * This method initializes the reviewFragment
      */
     public void initReview(){
-        int mStackLevel=0;
-        mStackLevel++;
         if(reviewFragment==null)
-            reviewFragment = ReviewFragment.newInstance(mStackLevel);
+            reviewFragment = new ReviewFragment();
         replaceFragment(R.id.dashboard_details_container, reviewFragment);
     }
 
@@ -224,10 +222,8 @@ public class DashboardActivity extends BaseActivity {
     public void initSurvey(){
         isBackPressed=false;
         tabHost.getTabWidget().setVisibility(View.GONE);
-        int  mStackLevel=0;
-        mStackLevel++;
         if(surveyFragment==null)
-            surveyFragment = SurveyFragment.newInstance(mStackLevel);
+            surveyFragment = new SurveyFragment();
         replaceFragment(R.id.dashboard_details_container, surveyFragment);
     }
 
@@ -235,10 +231,8 @@ public class DashboardActivity extends BaseActivity {
      * This method initializes the Monitor fragment
      */
     public void initMonitor(){
-        int mStackLevel=0;
-        mStackLevel++;
         if(monitorFragment==null)
-            monitorFragment = MonitorFragment.newInstance(mStackLevel);
+            monitorFragment = new MonitorFragment();
         replaceFragment(R.id.dashboard_charts_container, monitorFragment);
     }
 
@@ -479,21 +473,21 @@ public class DashboardActivity extends BaseActivity {
      * Checks if a survey fragment is active
      */
     private boolean isReviewFragmentActive() {
-        return isFragmentActive(ReviewFragment.class, R.id.dashboard_details_container);
+        return isFragmentActive(reviewFragment, R.id.dashboard_details_container);
     }
     /**
      * Checks if a survey fragment is active
      */
     private boolean isSurveyFragmentActive() {
-        return isFragmentActive(SurveyFragment.class, R.id.dashboard_details_container);
+        return isFragmentActive(surveyFragment, R.id.dashboard_details_container);
     }
 
     /**
      * Checks if a dashboardUnsentFragment is active
      */
-    private boolean isFragmentActive(Class<?> fragment, int layout) {
-        Fragment currentFragment = this.getFragmentManager ().findFragmentById(layout);
-        if (currentFragment.getClass().equals(fragment.getClass())) {
+    private boolean isFragmentActive(Fragment fragment, int layout) {
+        Fragment currentFragment = this.getFragmentManager().findFragmentById(layout);
+        if (currentFragment.equals(fragment)) {
             return true;
         }
         return false;

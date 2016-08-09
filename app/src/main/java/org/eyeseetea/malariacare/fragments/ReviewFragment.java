@@ -29,17 +29,6 @@ public class ReviewFragment extends Fragment {
 
     LayoutInflater lInflater;
 
-    public static ReviewFragment newInstance(int index) {
-        ReviewFragment f = new ReviewFragment();
-
-        // Supply index input as an argument.
-        Bundle args = new Bundle();
-        args.putInt("index", index);
-        f.setArguments(args);
-
-        return f;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");

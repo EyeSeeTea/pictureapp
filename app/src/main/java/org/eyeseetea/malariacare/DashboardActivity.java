@@ -378,7 +378,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     /**
-     *  This method shows the review fragment to te user before than send the active.
+     *  This method shows the review fragment to te user before decides if send the survey.
      */
     public void showReviewFragment(){
         isLoadingReview=true;

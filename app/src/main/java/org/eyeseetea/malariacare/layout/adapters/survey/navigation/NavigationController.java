@@ -226,17 +226,18 @@ public class NavigationController {
         //This node wont be shown in previous move (warnings)
         if(!nextNode.isVisibleInReview()){
             //If the survey is sent we need hide the reminder question.
-            if(Session.getSurvey()!=null && !Session.getSurvey().isInProgress())
-            for (QuestionRelation questionRelation : nextNode.getQuestion().getQuestionRelations()) {
-                if (questionRelation.isAReminder()) {
-                    //is a reminder -> next
-                    nonVisibleNode = nextNode;
+            if(Session.getSurvey()!=null && !Session.getSurvey().isInProgress()) {
+                for (QuestionRelation questionRelation : nextNode.getQuestion().getQuestionRelations()) {
+                    if (questionRelation.isAReminder()) {
+                        //is a reminder -> next
+                        nonVisibleNode = nextNode;
 
-                    if(nextNode==null){
+                        if (nextNode == null) {
+                            return;
+                        }
+                        next(null);
                         return;
                     }
-                    next(null);
-                    return;
                 }
             }
             Log.d(TAG,String.format("visit(%s) -> In position %d",nextNode.getQuestion().getCode(),currentPosition));

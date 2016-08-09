@@ -245,8 +245,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rootView .findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
 
         //Show question image in counter alert
-        ImageView imageView=(ImageView) rootView.findViewById(R.id.questionImageRow);
         if(questionCounter.getPath()!=null && !questionCounter.getPath().equals("")) {
+            ImageView imageView=(ImageView) rootView.findViewById(R.id.questionImageRow);
             putImageInImageView(questionCounter.getPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
         }
@@ -383,8 +383,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         headerView.setText(question.getForm_name());
 
         //question image
-        ImageView imageView=(ImageView) rowView.findViewById(R.id.questionImage);
         if(question.getPath()!=null && !question.getPath().equals("")) {
+            ImageView imageView=(ImageView) rowView.findViewById(R.id.questionImage);
             putImageInImageView(question.getPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
         }

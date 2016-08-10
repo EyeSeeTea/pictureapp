@@ -661,49 +661,6 @@ public class Question extends BaseModel {
     }
 
     /**
-     * Counts the number of required questions (without a parent question).
-     *
-     * @param tabGroup
-     * @return
-     */
-    public static int countRequiredByProgram(TabGroup tabGroup) {
-        if (tabGroup == null || tabGroup.getId_tab_group() == null) {
-            return 0;
-        }
-
-        // Count all the quesions that may have an answer
-        long totalAnswerableQuestions = new Select().count()
-                .from(Question.class).as("q")
-                .join(Header.class, Join.JoinType.LEFT).as("h")
-                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
-                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
-                .join(Tab.class, Join.JoinType.LEFT).as("t")
-                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
-                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
-                .where(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(Constants.NO_ANSWER))
-                .and(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP)).eq(tabGroup.getId_tab_group())).count();
-
-        // Count children questions from the given taggroup
-        long numChildrenQuestion = new Select().count()
-                .from(QuestionRelation.class).as("qr")
-                .join(Question.class, Join.JoinType.LEFT).as("q")
-                .on(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION))
-                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)))
-                .join(Header.class, Join.JoinType.LEFT).as("h")
-                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
-                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
-                .join(Tab.class, Join.JoinType.LEFT).as("t")
-                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
-                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
-                .where(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(Constants.NO_ANSWER))
-                .and(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP)).eq(tabGroup.getId_tab_group()))
-                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(QuestionRelation.PARENT_CHILD)).count();
-
-        // Return number of parents (total - children)
-        return (int) (totalAnswerableQuestions - numChildrenQuestion);
-    }
-
-    /**
      * Checks if this question is triggered according to the current values of the given survey.
      * Only applies to question with answers DROPDOWN_DISABLED
      *
@@ -1096,6 +1053,35 @@ public class Question extends BaseModel {
             this.sibling=buildNullQuestion();
         }
         return this.sibling;
+    }
+
+    /**
+     * Count the total of the required questions by anwsered values
+     * @return
+     */
+    public static int countRequiredByValues(long id_survey) {
+        int numRequired=0;
+        List<Value> values=new Select().from(Value.class)
+                .where(Condition.column(Value$Table.ID_SURVEY).eq(id_survey)).queryList();
+        for(Value value:values){
+            //If the value Question is Counter|Reminder|Warning should increase the numRequired i
+            for(QuestionRelation questionRelation:value.getQuestion().getQuestionRelations()){
+                if(questionRelation.isACounter() || questionRelation.isAReminder() || questionRelation.isAWarning())
+                    numRequired++;
+                break;
+            }
+            if(value.getQuestion().getTotalQuestions()>numRequired) {
+                numRequired = value.getQuestion().getTotalQuestions();
+                //Increase the numRequired if the Question is parent and the match option is selected
+                if (value.getQuestion().getChildren().size() > 0)
+                    for(QuestionOption questionOption: QuestionOption.findByQuestionAndOption(value.getQuestion(),value.getOption()))
+                        if(questionOption.getMatch().getQuestionRelation().isAParentChild()) {
+                            numRequired++;
+                            break;
+                        }
+            }
+        }
+        return numRequired;
     }
 
     private static class QuestionOrderComparator implements Comparator {

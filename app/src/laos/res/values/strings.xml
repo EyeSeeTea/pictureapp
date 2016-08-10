@@ -124,4 +124,6 @@
 <string name="monitor_row_title_pregnant">Pregnant</string>
 <string name="monitor_row_title_severe">Severe</string>
 <string name="monitor_row_title_submission">Submission</string>
+<string name="review_title">Please check before</string>
+<string name="review_subtitle">Transmission</string>
 </resources>

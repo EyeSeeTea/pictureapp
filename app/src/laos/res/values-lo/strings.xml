@@ -118,4 +118,6 @@
 <string name="monitor_row_title_pregnant">"ຄົນເຈັບຖືພາ"</string>
 <string name="monitor_row_title_severe">"ຄົນເຈັບເປັນໄຂ້ຮ້າຍແຮງ"</string>
 <string name="monitor_row_title_submission">"ນຳສົ່ງ"</string>
+<string name="review_title">ກະລຸນາກວດສອບກ່ອນທີ່ຈະ</string>
+<string name="review_subtitle">ລະບົບສາຍສົ່ງ</string>
 </resources>

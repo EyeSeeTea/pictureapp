@@ -8,4 +8,7 @@
     <string name="monitor_row_title_act6x3" translatable="false">ACT6x3</string>
     <string name="monitor_row_title_act6x4" translatable="false">ACT6x4</string>
     <string name="monitor_row_title_combined_act" translatable="false">Combined ACT</string>
+    <string name="rdtPositive" translatable="false">Yes</string>
+    <string name="rdtNegative" translatable="false">No</string>
+    <string name="rdtNotTested" translatable="false">Not Tested</string>
 </resources>

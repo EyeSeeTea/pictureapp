@@ -33,7 +33,6 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -440,50 +439,14 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      */
     private SurveyAnsweredRatio reloadSurveyAnsweredRatio(){
 
+
         SurveyAnsweredRatio surveyAnsweredRatio;
-        int numRequired = Question.countRequiredByProgram(this.getTabGroup());
-        int numOptional = (int)countNumOptionalQuestionsToAnswer();
+        int numRequired = Question.countRequiredByValues(this.id_survey);
         int numAnswered = Value.countBySurvey(this);
-        surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired+numOptional, numAnswered);
+        surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired, numAnswered);
 
         SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);
         return surveyAnsweredRatio;
-    }
-
-    /**
-     * Return the number of child questions that should be answered according to the values of the parent questions.
-     * @return
-     */
-    private long countNumOptionalQuestionsToAnswer(){
-        long numOptionalQuestions = new Select().count().from(Question.class).as("q")
-                .join(QuestionRelation.class, Join.JoinType.LEFT).as("qr")
-                .on(
-                        Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION))
-                                .eq(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)))
-                .join(Match.class, Join.JoinType.LEFT).as("m")
-                .on(
-                        Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION_RELATION))
-                                .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION)))
-                .join(QuestionOption.class, Join.JoinType.LEFT).as("qo")
-                .on(
-                        Condition.column(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH))
-                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH)))
-                .join(Value.class, Join.JoinType.LEFT).as("v")
-                .on(
-                        Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_QUESTION))
-                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_QUESTION)),
-                        Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_OPTION))
-                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_OPTION)))
-                    //Parent Child relationship
-                .where(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(1))
-                        //For the given survey
-                .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY)).eq(this.getId_survey()))
-                        //The child question requires an answer
-                .and(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(Constants.NO_ANSWER))
-                .count();
-
-        //Parent with the right value -> not hidden
-        return numOptionalQuestions;
     }
 
     /**
@@ -836,10 +799,25 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         return valuesString;
     }
 
+
+    /**
+     * This method removes the children question values from when a parent question is removed
+     * @return
+     */
     public void removeChildrenValuesFromQuestionRecursively(Question question) {
         List<Value> values= getValuesFromDB();
         List<Question> questionChildren=question.getChildren();
         for (int i=values.size()-1;i>0;i--) {
+            //This loop removes the Counter questions. We should include here the Warning or Reminder questions if is necessary in the future.
+            for(QuestionRelation questionRelation:question.getQuestionRelations()) {
+                if(questionRelation.isACounter()) {
+                    if(questionRelation.getQuestion().equals(question)) {
+                        removeValue(values.get(i));
+                        break;
+                    }
+                }
+            }
+            //This loop removes recursively the values on the children question
             if(questionChildren.contains(values.get(i).getQuestion())){
                 removeValue(values.get(i));
                 for(Question child: questionChildren) {
@@ -847,7 +825,6 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 }
             }
         }
-
     }
 
     private static void removeValue(Value value) {

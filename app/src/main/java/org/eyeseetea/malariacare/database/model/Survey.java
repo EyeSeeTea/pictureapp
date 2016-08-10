@@ -840,6 +840,14 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         List<Value> values= getValuesFromDB();
         List<Question> questionChildren=question.getChildren();
         for (int i=values.size()-1;i>0;i--) {
+            for(QuestionRelation questionRelation:question.getQuestionRelations()) {
+                if(questionRelation.isAWarning()|| questionRelation.isAReminder() || questionRelation.isACounter()) {
+                    if(questionRelation.getQuestion().equals(question)) {
+                        removeValue(values.get(i));
+                        break;
+                    }
+                }
+            }
             if(questionChildren.contains(values.get(i).getQuestion())){
                 removeValue(values.get(i));
                 for(Question child: questionChildren) {
@@ -847,7 +855,6 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 }
             }
         }
-
     }
 
     private static void removeValue(Value value) {

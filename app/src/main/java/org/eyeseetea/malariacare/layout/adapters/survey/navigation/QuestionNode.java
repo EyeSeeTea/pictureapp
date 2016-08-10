@@ -181,6 +181,19 @@ public class QuestionNode {
         //Returns previous node
         return this.previousSibling;
     }
+    /**
+     * Returns previous activated node in navigation
+     * @return
+     */
+    public QuestionNode next(){
+        //Next not enable -> move forward recursively
+        if (!this.sibling.isEnabled()){
+            return this.sibling.next(null);
+        }
+        //Go to next node
+        return this.sibling;
+    }
+
 
     /**
      * Returns next question given an option

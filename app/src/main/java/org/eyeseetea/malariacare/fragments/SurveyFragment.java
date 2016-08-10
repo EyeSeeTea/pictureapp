@@ -99,16 +99,6 @@ public class SurveyFragment extends Fragment{
     RelativeLayout llLayout;
 
 
-    public static SurveyFragment newInstance(int index) {
-        SurveyFragment f = new SurveyFragment();
-
-        // Supply index input as an argument.
-        Bundle args = new Bundle();
-        args.putInt("index", index);
-        f.setArguments(args);
-
-        return f;
-    }
     @Override
     public void onCreate(Bundle savedInstanceState){
         Log.d(TAG, "onCreate");
@@ -145,7 +135,9 @@ public class SurveyFragment extends Fragment{
 
     @Override
     public void onPause(){
-        beforeExit();
+        Log.d(TAG, "onPause");
+        if(!DashboardActivity.dashboardActivity.isLoadingReview())
+            beforeExit();
         super.onPause();
     }
 

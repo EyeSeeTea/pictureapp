@@ -221,7 +221,8 @@ public class PopulateDB {
                         QuestionOption questionOption = new QuestionOption();
                         questionOption.setQuestion(questionList.get(Integer.valueOf(line[1])));
                         questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
-                        questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
+                        if(!line[3].equals(""))
+                            questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
                         questionOption.save();
                         break;
                     case QUESTION_THRESHOLDS_CSV:

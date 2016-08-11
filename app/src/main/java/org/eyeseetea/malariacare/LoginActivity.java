@@ -134,11 +134,12 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         }
 
         if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false)){
-            Log.i(TAG, "propagateExtraAndResult -> EULA accepted");
+            Log.i(TAG, "propagateExtraAndResult -> EULA accepted, Server overwrite from "+PreferencesState.getInstance().getDhisURL() +" to "+getUserIntroducedServer());
+            PreferencesState.getInstance().setDhisURL(getUserIntroducedServer());
             setResult(RESULT_OK, intent);
         } else {
             if (isEulaAccepted() && !getServerFromPreferences().equals(getUserIntroducedServer())) {
-                Log.i(TAG, "propagateExtraAndResult -> Server changed");
+                Log.i(TAG, "propagateExtraAndResult -> Server changed from "+PreferencesState.getInstance().getDhisURL() +" to "+getUserIntroducedServer());
                 //If the user change the server, the getServerFromPreferents have the old server value only before to call reloadPreferences()
                 PreferencesState.getInstance().reloadPreferences();
                 PreferencesState.getInstance().setIsNewServerUrl(true);

@@ -65,7 +65,7 @@ public class Constants {
             SURVEY_COMPLETED = 1,
             SURVEY_SENT = 2,
             SURVEY_HIDE = 3,
-            SURVEY_CONFLICT = 4;;
+            SURVEY_CONFLICT = 4;
 
     public static final String FONTS_XSMALL = "xsmall",
             FONTS_SMALL = "small",

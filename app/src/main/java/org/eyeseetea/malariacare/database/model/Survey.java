@@ -879,6 +879,15 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 .querySingle();
     }
 
+    public void saveConflict(String uid){
+        for(Value value:getValues()){
+            if(value.getQuestion().getUid().equals(uid)){
+                value.setConflict(true);
+                value.save();
+            }
+        }
+    }
+
     private static void removeValue(Value value) {
         value.delete();
     }

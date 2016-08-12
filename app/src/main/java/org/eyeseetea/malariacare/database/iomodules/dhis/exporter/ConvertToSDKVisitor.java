@@ -25,8 +25,9 @@ import android.os.Build;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
@@ -40,9 +41,15 @@ import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.malariacare.views.ShowException;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.Event;
+import org.hisp.dhis.android.sdk.persistence.models.FailedItem;
+import org.hisp.dhis.android.sdk.persistence.models.FailedItem$Table;
 import org.hisp.dhis.android.sdk.persistence.models.ImportSummary;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -280,9 +287,19 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             Survey iSurvey=surveys.get(i);
             Event iEvent=events.get(i);
             ImportSummary importSummary=importSummaryMap.get(iEvent.getLocalId());
+            FailedItem failedItem= hasConflict(iEvent.getLocalId());
             if(hasImportSummaryErrors(importSummary)){
+
                 //Some error while pushing should be done again
                 iSurvey.setStatus(Constants.SURVEY_COMPLETED);
+                if(failedItem!=null) {
+                    List<String> failedUids=getFailedUidQuestion(failedItem.getErrorMessage());
+                    for(String uid:failedUids) {
+                        Log.d(TAG, "PUSH process...Conflict in "+uid+" dataElement. Survey: "+iSurvey.getId_survey());
+                        iSurvey.saveConflict(uid);
+                        iSurvey.setStatus(Constants.SURVEY_CONFLICT);
+                    }
+                }
                 iSurvey.save();
 
                 //Generated event must be remove too
@@ -294,6 +311,19 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 Log.d("DpBlank", "Saving suvey as completed " + iSurvey);
             }
         }
+    }
+
+    /**
+     * Checks whether the given event contains errors in SDK FailedItem table or has been successful.
+     * If not return null, it is becouse this item had a conflict.
+     * @param localId
+     * @return
+     */
+    private FailedItem hasConflict(long localId){
+        return  new Select()
+                .from(FailedItem.class)
+                .where(Condition.column(FailedItem$Table.ITEMID)
+                        .is(localId)).querySingle();
     }
 
     /**
@@ -311,5 +341,36 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             return true;
         }
         return importSummary.getImportCount().getImported()==0;
+    }
+
+
+    /**
+     * Get dataelement fails from errormessage JSON.
+     * @param responseData
+     * @return
+     */
+    private List<String> getFailedUidQuestion(String responseData){
+        String message="";
+        List<String> uid=new ArrayList<>();
+        JSONArray jsonArrayResponse=null;
+        JSONObject jsonObjectResponse= null;
+        try {
+            jsonObjectResponse = new JSONObject(responseData);
+            message=jsonObjectResponse.getString("message");
+            jsonObjectResponse=new JSONObject(jsonObjectResponse.getString("response"));
+            jsonArrayResponse=new JSONArray(jsonObjectResponse.getString("importSummaries"));
+            jsonObjectResponse=new JSONObject(jsonArrayResponse.getString(0));
+            jsonArrayResponse=new JSONArray(jsonObjectResponse.getString("conflicts"));
+            //values
+            for(int i=0;i<jsonArrayResponse.length();i++) {
+                jsonObjectResponse = new JSONObject(jsonArrayResponse.getString(i));
+                uid.add(jsonObjectResponse.getString("object"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if(message!="")
+            ShowException.showError(message,PreferencesState.getInstance().getContext());
+        return  uid;
     }
 }

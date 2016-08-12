@@ -74,6 +74,7 @@
 <string name="create_info_zone">"Zone"</string>
 <string name="dhis_url_error">"DHIS URL Error"</string>
 <string name="dhis_url_error_bad_version">"Serveur dhis pas pris en charge (seulement 2.20, 2.21, 2.22 acceptés)"</string>
+<string name="dhis_url_error_generic">"Cette erreur de serveur. Le serveur ne répond pas correctement"</string>
 <string name="dhis_url_error_bad_credentials">"Ce soft est pas autorisé dans le serveur donné"</string>
 <string name="settings_menu_monitoring">"Moniteur"</string>
 <string name="monitor_label">"S\'il vous plaît, sélectionner une période de temps"</string>

@@ -76,6 +76,7 @@
 <string name="create_info_zone">"តំបន់"</string>
 <string name="dhis_url_error">"DHIS URL មានកំហុស"</string>
 <string name="dhis_url_error_bad_version">"ម៉ាស៊ីនបម្រើ DHIS មិនសមស្រប (អនុញ្ញាត តែ 2.20, 2.21, 2.22 តែប៉ុណ្ណោះ)"</string>
+<string name="dhis_url_error_generic">"កំហុសម៉ាស៊ីនបម្រើនេះ។ ម៉ាស៊ីនបម្រើមិនឆ្លើយតបឱ្យបានត្រឹមត្រូវ"</string>
 <string name="dhis_url_error_bad_credentials">"កម្មវិធីនេះមិនត្រូវបានអនុញ្ញាតនៅក្នុងម៉ាស៊ីនបម្រើដែលបានផ្តល់ឱ្យ"</string>
 <string name="settings_menu_monitoring">"ម៉ូនីទ័រ"</string>
 <string name="monitor_label">"សូមធ្វើការជ្រើសរើសរយៈពេលមួយ៖"</string>

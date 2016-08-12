@@ -71,6 +71,7 @@
 <string name="create_info_zone">"ພື້ນທີ່"</string>
 <string name="dhis_url_error">"URL DHIS ປະກອບດ້ວຍຄວາມຜິດພາດ"</string>
 <string name="dhis_url_error_bad_version">"ເຄື່ອງແມ່ຂ່າຍຂອງ DHIS ທີ່ບໍ່ເຫມາະສົມ (220, 221, 222 ເທົ່ານັ້ນ)"</string>
+<string name="dhis_url_error_generic">"ຄວາມຜິດພາດຂອງເຄື່ອງແມ່ຂ່າຍນີ້. ເຄື່ອງແມ່ຂ່າຍຂອງບໍ່ຕອບສະຫນອງຢ່າງເຫມາະສົມ"</string>
 <string name="dhis_url_error_bad_credentials">"ໂຄງການນີ້ແມ່ນບໍ່ອະນຸຍາດໃຫ້ຢູ່ໃນເຄື່ອງແມ່ຂ່າຍຂອງໄດ້ຮັບການ"</string>
 <string name="settings_menu_monitoring">"ການຕິດຕາມ"</string>
 <string name="monitor_label">"ກະລຸນາເລືອກເອົາຫນຶ່ງໃນ:"</string>

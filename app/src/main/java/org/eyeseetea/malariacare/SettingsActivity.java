@@ -315,13 +315,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             return;
         }
 
-        //Server version not supported -> Error
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.dhis_url_error)
-                .setMessage(R.string.dhis_url_error_bad_version)
-                .setNeutralButton(android.R.string.yes, null)
-                .create()
-                .show();
+        showServerError(serverVersion);
     }
 
     /**
@@ -367,7 +361,22 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             initLoginPrePull(serverInfo);
             return;
         }
+        showServerError(serverVersion);
 
+
+    }
+
+    private void showServerError(String serverVersion) {
+        //Other error like: Too many follow-up requests: 21
+        if("".equals(serverVersion)){
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.dhis_url_error)
+                    .setMessage(R.string.dhis_url_error_generic)
+                    .setNeutralButton(android.R.string.yes, null)
+                    .create()
+                    .show();
+            return;
+        }
         //Server version not supported -> Error
         new AlertDialog.Builder(this)
                 .setTitle(R.string.dhis_url_error)

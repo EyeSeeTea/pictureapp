@@ -74,6 +74,7 @@
 <string name="create_info_zone">"Zona"</string>
 <string name="dhis_url_error">"DHIS URL Error"</string>
 <string name="dhis_url_error_bad_version">"Servidor DHIS no compatible (soportados 2.20, 2.21, 2.22 )"</string>
+<string name="dhis_url_error_generic">"Error en el servidor Dhis. El servidor no esta respondiendo correctamente"</string>
 <string name="dhis_url_error_bad_credentials">"Esta app no esta autorizada en el servidor indicado"</string>
 <string name="settings_menu_monitoring">"Monitorizar"</string>
 <string name="monitor_label">"Por favor, selecciona un periodo de tiempo"</string>

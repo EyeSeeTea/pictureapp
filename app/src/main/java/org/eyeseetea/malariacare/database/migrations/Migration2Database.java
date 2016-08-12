@@ -61,6 +61,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.eyeseetea.malariacare.database.migrations.MigrationUtils.addColumn;
+
 /**
  * Created by ignac on 30/11/2015.
  */
@@ -78,10 +80,6 @@ public class Migration2Database extends BaseMigration {
             QuestionOption.class,
             TabGroup.class
     };
-
-    public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
-
-    public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
 
     public Migration2Database() {
         super();
@@ -225,9 +223,4 @@ public class Migration2Database extends BaseMigration {
         return mapQuestion;
     }
 
-
-    private void addColumn(SQLiteDatabase database, Class model, String columnName,String type){
-        ModelAdapter myAdapter = FlowManager.getModelAdapter(model);
-        database.execSQL(String.format(ALTER_TABLE_ADD_COLUMN, myAdapter.getTableName(),columnName,type) );
-    }
 }

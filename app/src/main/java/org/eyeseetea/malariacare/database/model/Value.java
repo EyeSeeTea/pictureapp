@@ -65,6 +65,21 @@ public class Value extends BaseModel  implements VisitableToSDK {
      */
     Option option;
 
+    /**
+     * is conflict
+     */
+    @Column
+    Boolean conflict;
+
+    public Boolean getConflict() {
+        if(conflict==null)
+            return false;
+        return conflict;
+    }
+    public void setConflict(Boolean conflict) {
+        this.conflict = conflict;
+    }
+
     public Value() {
     }
 

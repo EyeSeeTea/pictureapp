@@ -91,8 +91,8 @@ No warranties are given. The license may not give you all of the permissions nec
 
 <p>This App uses proprietary Crashlytics software under a restricted license from Crashlytics to provide information to the developer(s) about the functioning of the App, including, but not limited to, information about how and under what circumstances the App crashed and how many users interact with the App and how they do so. The Crashlytics software is not included in the GNU General Public License for the App; PSI has no authority to sub-license the Crashlytics software.  For more information about Crashlytics software, please visit https://try.crashlytics.com/terms/.</p>
 
-<p><b>6. SIL OPEN FONT LICENSE</b>(for boon v1.1 font )<a href='http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web'>http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web</a></p>
-<p>Copyright 2013-2015, Sungsit Sawaiwan (fontuni.com | uni@fontuni.com)</p>
+<p><b>6. SIL OPEN FONT LICENSE</b>(for Saysettha OT font )<a href='http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web'>http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL</a></p>
+
 <p><b>PREAMBLE</b></p>
 <p>The goals of the Open Font License (OFL) are to stimulate worldwide development of collaborative font projects, to support the font creation efforts of academic and linguistic communities, and to provide a free and open framework in which fonts may be shared and improved in partnership with others.</p>
 <p>The OFL allows the licensed fonts to be used, studied, modified and redistributed freely as long as they are not sold by themselves.</p>

@@ -23,7 +23,6 @@
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
 
 
-    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://www.psi-mis.org</string>
 
 
     <string name="normal_font" translatable="false">Roboto-Medium.ttf</string>

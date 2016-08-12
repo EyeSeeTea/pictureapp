@@ -444,8 +444,9 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         //First parent is always required and not calculated.
         int numRequired=1;
         //Add children required by each parent (value+question)
-        for(Value value:Session.getSurvey().getValuesFromDB()){
-                numRequired+=Question.countChildrenByOptionValue(value.getId_option());
+        Survey survey =Survey.findById(id_survey);
+        for (Value value : survey.getValuesFromDB()) {
+            numRequired += Question.countChildrenByOptionValue(value.getId_option());
         }
         int numOptional = (int) countNumOptionalQuestionsAnswered();
         int numAnswered = Value.countBySurvey(this);
@@ -864,6 +865,18 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 }
             }
         }
+    }
+    /**
+     * Finds a survey by its ID
+     * @param id_survey
+     * @return
+     */
+    public static Survey findById(Long id_survey){
+        return new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.ID_SURVEY)
+                        .eq(id_survey))
+                .querySingle();
     }
 
     private static void removeValue(Value value) {

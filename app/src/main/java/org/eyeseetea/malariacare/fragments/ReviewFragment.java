@@ -79,7 +79,7 @@ public class ReviewFragment extends Fragment {
      */
     private void drawValue(LinearLayout linearLayout, Value value) {
         TextCard textCard=(TextCard) lInflater.inflate(R.layout.dynamic_review_row,linearLayout,false);
-        textCard.setText(value.getValue());
+        textCard.setText((value.getOption()!=null)?value.getOption().getCode():value.getValue());
         if(value.getQuestion()!=null) {
             if(value.getOption()!=null && value.getOption().getBackground_colour()!=null)
                 textCard.setBackgroundColor(Color.parseColor("#" + value.getOption().getBackground_colour()));

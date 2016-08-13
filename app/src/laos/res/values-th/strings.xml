@@ -71,6 +71,7 @@
 <string name="create_info_zone">"พื้นที่"</string>
 <string name="dhis_url_error">"URL DHIS มีข้อผิดพลาด"</string>
 <string name="dhis_url_error_bad_version">"เซิร์ฟเวอร์ DHIS ที่ไม่เหมาะสม (2.20, 2.21, 2.22 เท่านั้น)"</string>
+<string name="dhis_url_error_generic">"ข้อผิดพลาดเซิร์ฟเวอร์นี้ เซิร์ฟเวอร์ไม่ตอบสนองอย่างถูก"</string>
 <string name="dhis_url_error_bad_credentials">"โปรแกรมนี้ไม่ได้รับอนุญาตในเซิร์ฟเวอร์ที่กำหนดเพื่อ"</string>
 <string name="settings_menu_monitoring">"จอภาพ"</string>
 <string name="monitor_label">"กรุณาเลือก:"</string>

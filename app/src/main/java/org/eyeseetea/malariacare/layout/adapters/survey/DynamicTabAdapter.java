@@ -493,28 +493,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 break;
             case Constants.REMINDER:
             case Constants.WARNING:
-                TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,0.5f);
 
-                int paddingSize= (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_padding);
-
-                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem, tableLayout, false);
-                tableRow.setLayoutParams(params);
+                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_question_text, tableLayout, false);
                 tableLayout.addView(tableRow);
                 List<QuestionOption> questionOptions= question.getQuestionOption();
                 //Question "header" is in the first option in Options.csv
                 if(questionOptions!=null && questionOptions.size()>0) {
-                    tableRow.setPadding(paddingSize,paddingSize,paddingSize,paddingSize);
                     initWarningText(tableRow, questionOptions.get(0).getOption());
                 }
 
                 //Question "button" is in the second option in Options.csv
                 if( questionOptions!=null && questionOptions.size()>1) {
-                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_singleitem, tableLayout, false);
-                    params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,0.5f);
-                    tableRow.setLayoutParams(params);
-                    tableRow.setPadding(paddingSize,paddingSize,paddingSize,paddingSize);
+                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_confirm_yes, tableLayout, false);
                     tableLayout.addView(tableRow);
                     initWarningValue(tableRow,  questionOptions.get(1).getOption());
+                    int paddingSize= (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_padding);
+                    tableRow.setPadding(paddingSize,paddingSize,paddingSize,paddingSize);
                 }
 
                 break;
@@ -547,19 +541,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void initWarningValue(TableRow tableRow, Option option) {
-        ImageView errorImage = (ImageView)tableRow.findViewById(R.id.option1);
+        ImageView errorImage = (ImageView)tableRow.findViewById(R.id.confirm_yes);
         errorImage.setImageResource(R.drawable.option_button);
         //Add button to listener
         swipeTouchListener.addClickableView(errorImage);
         //Add text into the button
-        initWarningText(tableRow,option);
-
-        TextView okText = (TextView)tableRow.findViewById(R.id.counter1);
-        okText.setText(R.string.ok);
+        TextView okText = (TextView)tableRow.findViewById(R.id.textcard_confirm_yes);
+        okText.setText(option.getCode());
+        okText.setTextSize(option.getOptionAttribute().getText_size());
     }
 
     private void initWarningText(TableRow tableRow, Option option) {
-        TextView okText = (TextView)tableRow.findViewById(R.id.textoption1);
+        TextView okText = (TextView)tableRow.findViewById(R.id.questionTextRow);
         okText.setText(option.getCode());
         okText.setTextSize(option.getOptionAttribute().getText_size());
     }

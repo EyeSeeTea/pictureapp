@@ -60,33 +60,47 @@
             app:tDimension="@string/font_size_level2"
             app:tFontName="@string/condensed_font_name" />
 
-        <ImageView
-            android:id="@+id/questionImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="@dimen/question_padding_image_top"/>
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+            <ImageView
+                android:id="@+id/questionImage"
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="0.2"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="@dimen/question_padding_image_top" />
 
-        <!--Options as a N x 2 grid-->
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/options_table"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:measureWithLargestChild="false"></TableLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="0.8"
+                android:orientation="vertical">
+                <!--Options as a N x 2 grid-->
+                <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/options_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:measureWithLargestChild="false"></TableLayout>
 
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/confirm_table"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:measureWithLargestChild="false"
-            android:visibility="gone">
+                <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/confirm_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:measureWithLargestChild="false"
+                    android:visibility="gone"
+                    android:weightSum="4">
 
-            <include layout="@layout/dynamic_tab_row_question_image" />
-            <include layout="@layout/dynamic_tab_row_question_text" />
-            <include layout="@layout/dynamic_tab_row_confirm_yes" />
-            <include layout="@layout/dynamic_tab_row_confirm_no" />
-        </TableLayout>
+                    <include layout="@layout/dynamic_tab_row_question_image" />
+                    <include layout="@layout/dynamic_tab_row_question_text" />
+                    <include layout="@layout/dynamic_tab_row_confirm_yes" />
+                    <include layout="@layout/dynamic_tab_row_confirm_no" />
+                </TableLayout>
+
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

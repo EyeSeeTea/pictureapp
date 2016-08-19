@@ -51,6 +51,14 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     private final static Long ID_QUESTION_SUBMISION=12l;
 
     /**
+     * Id of not tested
+     */
+    final static Long ID_OPTION_RDT_NOT_TESTED =2l;
+    /**
+     * Id of negative  specie option
+     */
+    final static Long ID_OPTION_TEST_NEGATIVE =9l;
+    /**
      * Id of pv specie option
      */
     final static Long ID_OPTION_SPECIE_PF =10l;
@@ -63,16 +71,6 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Id of pf/pv (mixed) specie option
      */
     final static Long ID_OPTION_SPECIE_PFPV =12l;
-
-    /**
-     * Id of referral treatment option
-     */
-    final static Long ID_OPTION_TREATMENT_REFERRAL=13l;
-
-    /**
-     * Id of hospital treatment option
-     */
-    private final static Long ID_OPTION_HOSPITAL=23l;
 
     /**
      * Id of severe reason option
@@ -119,17 +117,50 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     private final static Long ID_OPTION_TREATMENT_ACT6X4=20l;
 
-    /**
-     * Id of ACT6x4 treatment option
-     */
-    private final static Long ID_OPTION_TREATMENT_RDTS=21l;
 
     public boolean isSuspected(){
         return (isPositive() || isNegative());
     }
 
+    /**
+     * Tells if the given survey is positive and the test is does in next questions.
+     * @return
+     */
+    public boolean isRated() {
+        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_POSITIVE)!=null;
+    }
+
+    /**
+     * Tells if the given survey is negative
+     * @return
+     */
+    public boolean isNotTested(){
+        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_NOT_TESTED)!=null;
+    }
+    /**
+     * Tells if the given survey is negative
+     * @return
+     */
+    public boolean isNegative(){
+        return findValue(ID_QUESTION_SPECIE,ID_OPTION_TEST_NEGATIVE)!=null;
+    }
+    /**
+     * Tells if the given survey is positive
+     * @return
+     */
+    public boolean isPositive(){
+        return (findValue(ID_QUESTION_SPECIE,ID_OPTION_SPECIE_PF)!=null || findValue(ID_QUESTION_SPECIE,ID_OPTION_SPECIE_PV)!=null || findValue(ID_QUESTION_SPECIE,ID_OPTION_SPECIE_PFPV)!=null );
+    }
+    /**
+     * Tells if the given survey has Pf/Pv (mixed)  specie
+     * @return
+     */
+    public boolean isReferral(){
+        return (findValue(ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PFPV)!=null || findValue(ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PV)!=null) ;
+    }
+
     public boolean isSubmission() {
-        return findValue(ID_QUESTION_SUBMISION, ID_OPTION_HOSPITAL)!=null;
+        return findValue(ID_QUESTION_RDT, ID_OPTION_RDT_NOT_TESTED)!=null;
     }
 
     public boolean isSevere() {

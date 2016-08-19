@@ -19,6 +19,7 @@
 package org.eyeseetea.malariacare.monitor.utils;
 
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.Value;
 
 /**
  * Decorator that tells if a survey has specific info
@@ -34,6 +35,10 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Id of treatment question
      */
     protected final static Long ID_QUESTION_TREATMENT=11l;
+    /**
+     * Id of treatment question
+     */
+    protected final static Long ID_QUESTION_COUNTER=6l;
 
     /**
      * Id of reason question (pregnant, severe, denied, drug)
@@ -166,10 +171,33 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     }
 
     /**
-     * Tells if the given survey is a RDT survey (positive or negative)
+     * Tells if the given survey is a RDT positive/negative or repeated
      * @return
      */
     public boolean isRDTs(){
-        return findOption(SurveyMonitor.ID_QUESTION_TREATMENT, SurveyMonitor.ID_OPTION_TREATMENT_RDTS);
+        return findOption(SurveyMonitor.ID_QUESTION_RDT, SurveyMonitor.ID_OPTION_RDT_POSITIVE);
     }
+    /**
+     * Returns the count of rdts for each survey
+     * @return
+     */
+    public Integer countRDT(){
+        if(isRDTs()){
+            return testCounter()+1;
+        }
+        else return 0;
+    }
+    /**
+     * Returns the invalid count rdts for each survey
+     * @return
+     */
+    public int testCounter() {
+        Value value = findValue(SurveyMonitor.ID_QUESTION_COUNTER);
+        if(value==null || value.getValue()==null){
+            return 0;
+        }
+        return Integer.parseInt(value.getValue());
+    }
+
+
 }

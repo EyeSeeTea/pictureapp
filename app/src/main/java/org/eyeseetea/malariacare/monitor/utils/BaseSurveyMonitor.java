@@ -70,24 +70,12 @@ public class BaseSurveyMonitor {
     final static Long ID_OPTION_RDT_NEGATIVE=2l;
 
 
-    public boolean isRated() {
-        return (isPositive() || isNegative());
-    }
-
     /**
      * Tells if the given survey is positive
      * @return
      */
     public boolean isPositive(){
         return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_POSITIVE)!=null;
-    }
-
-    /**
-     * Tells if the given survey is negative
-     * @return
-     */
-    public boolean isNegative(){
-        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_NEGATIVE)!=null;
     }
 
     /**

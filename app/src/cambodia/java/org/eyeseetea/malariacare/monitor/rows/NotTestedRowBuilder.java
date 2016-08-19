@@ -32,9 +32,8 @@ public class NotTestedRowBuilder extends CounterRowBuilder {
     public NotTestedRowBuilder(Context context){
         super(context, context.getString(R.string.monitor_row_title_not_tested));
     }
-
     @Override
-    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isNotTested();
+    protected Integer incrementRow(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isNotTested())?1:0;
     }
 }

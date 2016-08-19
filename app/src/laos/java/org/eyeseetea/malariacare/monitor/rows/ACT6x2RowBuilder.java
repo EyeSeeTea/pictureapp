@@ -12,10 +12,8 @@ public class ACT6x2RowBuilder  extends CounterRowBuilder {
 
     public ACT6x2RowBuilder(Context context) {
         super(context, context.getString(R.string.monitor_row_title_act6x2));
-    }
-
-    @Override
-    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isACT6x2();
+    }    @Override
+    protected Integer incrementRow(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isACT6x2())?1:0;
     }
 }

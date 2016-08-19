@@ -71,6 +71,18 @@ public class SurveyMonitor extends BaseSurveyMonitor{
     private final static Long ID_OPTION_TREATMENT_DHA_PIP=12l;
 
 
+    public boolean isRated() {
+        return (isPositive() || isNegative());
+    }
+
+    /**
+     * Tells if the given survey is negative
+     * @return
+     */
+    public boolean isNegative(){
+        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_NEGATIVE)!=null;
+    }
+
     /**
      * Tells if the given survey is suspected (positive, negative or not tested).
      * @return

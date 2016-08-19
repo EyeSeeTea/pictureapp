@@ -81,7 +81,7 @@ public class SurveyMonitor extends BaseSurveyMonitor{
     }
 
     /**
-     * Tells if the given survey is positive
+     * Tells if the given survey test  is positive
      * @return
      */
     public boolean isPositive(){
@@ -110,7 +110,14 @@ public class SurveyMonitor extends BaseSurveyMonitor{
     public boolean isNotTested(){
         return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_NOT_TESTED)!=null;
     }
-    
+
+    /**
+     * Tells if the given survey is referral
+     * @return
+     */
+    public boolean isReferral(){
+        return findValue(SurveyMonitor.ID_QUESTION_TREATMENT,SurveyMonitor.ID_OPTION_TREATMENT_REFERRAL)!=null;
+    }
     /**
      * Tells if the given survey has DHA-PIP treatment
      * @return

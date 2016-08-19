@@ -123,7 +123,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     }
 
     /**
-     * Tells if the given survey is positive and the test is does in next questions.
+     * Tells if the given survey is tested
      * @return
      */
     public boolean isRated() {
@@ -131,7 +131,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     }
 
     /**
-     * Tells if the given survey is negative
+     * Tells if the given survey is not tested
      * @return
      */
     public boolean isNotTested(){
@@ -152,13 +152,16 @@ public class SurveyMonitor extends BaseSurveyMonitor {
         return (findValue(ID_QUESTION_SPECIE,ID_OPTION_SPECIE_PF)!=null || findValue(ID_QUESTION_SPECIE,ID_OPTION_SPECIE_PV)!=null || findValue(ID_QUESTION_SPECIE,ID_OPTION_SPECIE_PFPV)!=null );
     }
     /**
-     * Tells if the given survey has Pf/Pv (mixed)  specie
+     * Tells if the given survey has Pf/Pv (mixed) or Pv  specie
      * @return
      */
     public boolean isReferral(){
         return (findValue(ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PFPV)!=null || findValue(ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PV)!=null) ;
     }
-
+    /**
+     * Tells if the given survey is not tested
+     * @return
+     */
     public boolean isSubmission() {
         return findValue(ID_QUESTION_RDT, ID_OPTION_RDT_NOT_TESTED)!=null;
     }

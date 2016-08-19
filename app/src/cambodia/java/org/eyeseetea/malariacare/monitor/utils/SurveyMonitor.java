@@ -37,6 +37,11 @@ public class SurveyMonitor extends BaseSurveyMonitor{
     final static Long ID_QUESTION_TREATMENT=6l;
 
     /**
+     * Id of negative rdt option
+     */
+    final static Long ID_OPTION_RDT_NEGATIVE=2l;
+
+    /**
      * Id of not tested rdt option
      */
     private final static Long ID_OPTION_RDT_NOT_TESTED=3l;
@@ -75,6 +80,13 @@ public class SurveyMonitor extends BaseSurveyMonitor{
         return (isPositive() || isNegative());
     }
 
+    /**
+     * Tells if the given survey is positive
+     * @return
+     */
+    public boolean isPositive(){
+        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_POSITIVE)!=null;
+    }
     /**
      * Tells if the given survey is negative
      * @return

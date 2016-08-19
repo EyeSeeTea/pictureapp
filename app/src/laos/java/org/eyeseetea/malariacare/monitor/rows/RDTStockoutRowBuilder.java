@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 public class RDTStockoutRowBuilder extends CounterRowBuilder {
 
     public RDTStockoutRowBuilder(Context context){
-        super(context, context.getString(R.string.monitor_row_title_drug));
+        super(context, context.getString(R.string.monitor_row_title_rdt_stockout));
     }
     @Override
     protected Integer incrementRow(SurveyMonitor surveyMonitor) {

@@ -123,7 +123,7 @@
 <string name="option_counter">"ការធ្វើឡើងវិញ:"</string>
 <string name="option_confirm">"អះអាងជម្រើស"</string>
 <string name="monitor_row_title_denied">"បដិសេធ"</string>
-<string name="monitor_row_title_drug">" គ្រឿងញៀន "</string>
+<string name="monitor_row_title_rdt_stockout">" គ្រឿងញៀន "</string>
 <string name="monitor_row_title_pregnant">"មានផ្ទៃពោះ "</string>
 <string name="monitor_row_title_severe">" ធ្ងន់ធ្ងរ "</string>
 <string name="monitor_row_title_submission">" ការដាក់"</string>

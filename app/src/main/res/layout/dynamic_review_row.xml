@@ -12,4 +12,4 @@
     android:layout_weight="0.01"
     android:gravity="center"
     app:tDimension="@string/font_size_level1"
-    app:tFontName="@string/medium_font_name" />
+    app:tFontName="@string/specific_language_font" />

@@ -36,7 +36,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     protected final static Long ID_QUESTION_TREATMENT=11l;
     /**
-     * Id of treatment question
+     * Id of counter question
      */
     protected final static Long ID_QUESTION_COUNTER=6l;
 
@@ -44,11 +44,6 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Id of reason question (pregnant, severe, denied, drug)
      */
     private final static Long ID_QUESTION_REASON=2l;
-
-    /**
-     * Id of treatment question
-     */
-    private final static Long ID_QUESTION_SUBMISION=12l;
 
     /**
      * Id of not tested
@@ -90,7 +85,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     /**
      * Id of rdt stockout reason option
      */
-    private final static Long ID_OPTION_DRUG=5l;
+    private final static Long ID_OPTION_RDT_STOCKOUT =5l;
 
     /**
      * Id of Combined act treatment option
@@ -118,6 +113,10 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     private final static Long ID_OPTION_TREATMENT_ACT6X4=20l;
 
 
+    /**
+     * Tells if the given survey is tested
+     * @return
+     */
     public boolean isSuspected(){
         return (isPositive() || isNegative());
     }
@@ -181,7 +180,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     }
 
     public boolean isDrug() {
-        return findValue(ID_QUESTION_REASON, ID_OPTION_DRUG)!=null;
+        return findValue(ID_QUESTION_REASON, ID_OPTION_RDT_STOCKOUT)!=null;
     }
 
 
@@ -205,14 +204,14 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     }
 
     /**
-     * Tells if the given survey is a RDT positive/negative or repeated
+     * Tells if the given survey is a RDT positive/negative
      * @return
      */
     public boolean isRDTs(){
         return findOption(SurveyMonitor.ID_QUESTION_RDT, SurveyMonitor.ID_OPTION_RDT_POSITIVE);
     }
     /**
-     * Returns the count of rdts for each survey
+     * Returns the number of rtd tests for each survey
      * @return
      */
     public Integer countRDT(){

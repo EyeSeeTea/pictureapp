@@ -9,7 +9,7 @@ import org.eyeseetea.malariacare.monitor.rows.ACT6x3RowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.ACT6x4RowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.CombinedACTRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.DeniedRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.DrugRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.RDTStockoutRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.NegativeRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PfPvRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PfRowBuilder;
@@ -62,7 +62,7 @@ public class MonitorUtils extends AMonitorUtils {
         rowBuilders.add(new SevereRowBuilder(context));
         rowBuilders.add(new PregnantRowBuilder(context));
         rowBuilders.add(new DeniedRowBuilder(context));
-        rowBuilders.add(new DrugRowBuilder(context));
+        rowBuilders.add(new RDTStockoutRowBuilder(context));
         return rowBuilders;
     }
 }

@@ -223,7 +223,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         View rootView = view.getRootView();
         final TextCard questionView=(TextCard)rootView.findViewById(R.id.question);
         questionView.setText(questionCounter.getForm_name());
-
+        ((TextView) rootView.findViewById(R.id.dynamic_progress_text)).setText("");
         //cancel
         ImageView noView=(ImageView)rootView.findViewById(R.id.confirm_no);
         noView.setOnClickListener(new View.OnClickListener() {
@@ -493,7 +493,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 break;
             case Constants.REMINDER:
             case Constants.WARNING:
-
+                ((TextView) rowView.findViewById(R.id.dynamic_progress_text)).setText("");
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_question_text, tableLayout, false);
                 tableLayout.addView(tableRow);
                 List<QuestionOption> questionOptions= question.getQuestionOption();

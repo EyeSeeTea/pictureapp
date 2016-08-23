@@ -15,7 +15,7 @@ public class DeniedRowBuilder extends CounterRowBuilder {
     }
 
     @Override
-    protected Integer incrementRow(SurveyMonitor surveyMonitor) {
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
         return (surveyMonitor.isDenied())?1:0;
     }
 }

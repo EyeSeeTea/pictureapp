@@ -33,7 +33,7 @@ public class PvRowBuilder extends CounterRowBuilder {
         super(context, context.getString(R.string.monitor_row_title, context.getString(R.string.pv)));
     }
     @Override
-    protected Integer incrementRow(SurveyMonitor surveyMonitor) {
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
         return (surveyMonitor.isPv())?1:0;
     }
 }

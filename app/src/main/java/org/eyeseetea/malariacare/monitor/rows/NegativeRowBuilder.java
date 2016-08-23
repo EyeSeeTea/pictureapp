@@ -33,7 +33,7 @@ public class NegativeRowBuilder extends CounterRowBuilder {
         super(context, context.getString(R.string.monitor_row_title_negative));
     }
     @Override
-    protected Integer incrementRow(SurveyMonitor surveyMonitor) {
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
         return (surveyMonitor.isNegative())?1:0;
     }
 }

@@ -15,7 +15,7 @@ public class SubmissionRowBuilder extends CounterRowBuilder {
     }
 
     @Override
-    protected Integer incrementRow(SurveyMonitor surveyMonitor) {
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
         return (surveyMonitor.isSubmission())?1:0;
     }
 }

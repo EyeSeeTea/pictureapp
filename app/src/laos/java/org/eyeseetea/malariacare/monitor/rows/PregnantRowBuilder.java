@@ -14,7 +14,7 @@ public class PregnantRowBuilder extends CounterRowBuilder {
         super(context, context.getString(R.string.monitor_row_title_pregnant));
     }
     @Override
-    protected Integer incrementRow(SurveyMonitor surveyMonitor) {
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
         return (surveyMonitor.isPregnant())?1:0;
     }
 }

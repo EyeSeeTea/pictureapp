@@ -14,7 +14,7 @@ public class SevereRowBuilder extends CounterRowBuilder {
         super(context, context.getString(R.string.monitor_row_title_severe));
     }
     @Override
-    protected Integer incrementRow(SurveyMonitor surveyMonitor) {
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
         return (surveyMonitor.isSevere())?1:0;
     }
 }

@@ -30,7 +30,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 10
+        versionCode 11
         multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -64,7 +64,7 @@ android {
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
-            versionName "1.0.0"
+            versionName "1.0.1"
             buildConfigField "boolean","reviewScreen", "true"
         }
     }

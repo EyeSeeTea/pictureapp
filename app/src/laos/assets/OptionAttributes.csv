@@ -1,6 +1,6 @@
 1;'69B945';'question_images/p1_true.png';'1';'0';24
 2;'BF2626';'question_images/p1_false.png';'1';'0';24
-3;'28B3BB';'question_images/p2_sick.png';'1';'1';20
+3;'28B3BB';'question_images/p2_sick.png';'1';'1';16
 4;'63BEC5';'question_images/p2_pregnant.png';'1';'1';20
 5;'28B3BB';'question_images/p2_stop.png';'1';'1';20
 6;'63BEC5';'question_images/p2_box.png';'1';'1';20
@@ -15,8 +15,8 @@
 15;'96c9e5';'question_images/p10_act_6x2.png';'1';'2';12
 16;'fbb040';'question_images/p10_act_6x3.png';'1';'2';12
 17;'aecab6';'question_images/p10_act_6x4.png';'1';'2';12
-18;'7ca3dc';'question_images/p10_refer.png';'1';'2';12
-19;'d7df23';'question_images/p10_mix.png';'1';'2';12
+18;'7ca3dc';'question_images/p10_refer.png';'1';'2';8
+19;'d7df23';'question_images/p10_mix.png';'1';'2';10
 20;'29B4BC';'question_images/p8_rdt_all.png';0;0;24
 21;'29B4BC';'';0;0;20
 22;'29B4BC';'';0;0;24

@@ -2,7 +2,7 @@
 <resources>
 <string name="yes">"ใช่ / ใช่"</string>
 <string name="no">"ไม่"</string>
-<string name="OK">"ตกลง"</string>
+<string name="ok">"ตกลง"</string>
 <string name="cancel">"ยกเลิก"</string>
 <string name="review">"ทบทวนตรวจสอบ"</string>
 <string name="send">"ส่ง"</string>
@@ -43,15 +43,16 @@
 <string name="dialog_title_push_response">"ในการตอบสนองดัน"</string>
 <string name="dialog_info_push_ok">"การสำรวจได้แรงหนุนการส่งออกไปยังเซิร์ฟเวอร์."</string>
 <string name="dialog_info_push_bad_credentials">"ข้อมูลประจำตัวที่ไ​​ม่ดีสำหรับการผลักดันมี"</string>
+<string name="dialog_error_push_no_uid">"ไม่มีโพสต์โปรแกรมที่พบในเซิร์ฟเวอร์รหัส"</string>
 <string name="dialog_error_push_no_location">"ซึ่งสามารถนำมาใช้โดยไม่ต้อง"</string>
 <string name="pref_server">"เซิร์ฟเวอร์"</string>
 <string name="pref_visual">"ภาพ"</string>
-<string name="NUMBER_0">"0"</string>
-<string name="NUMBER_1">"1"</string>
+<string name="number_0">"0"</string>
+<string name="number_1">"1"</string>
 <string name="number_2">"2"</string>
-<string name="NUMBER_3">"3"</string>
-<string name="NUMBER_4">"4"</string>
-<string name="NUMBER_5">"5"</string>
+<string name="number_3">"3"</string>
+<string name="number_4">"4"</string>
+<string name="number_5">"5"</string>
 <string name="number_6">"6"</string>
 <string name="number_7">"7"</string>
 <string name="number_8">"8"</string>
@@ -60,6 +61,7 @@
 <string name="progress_pull_downloading">"เร่งเมตาดาต้า (เมตาดาต้า) (อาจใช้เวลาไม่กี่นาที)"</string>
 <string name="progress_pull_preparing_orgs">"ดาวน์โหลดหน่วย ... "</string>
 <string name="progress_pull_surveys">"ดาวน์โหลดสำรวจ ... "</string>
+<string name="progress_pull_connecting">"การเชื่อมต่อกับเซิร์ฟเวอร์นี้ ..."</string>
 <string name="progress_pull_done">"เสร็จสิ้น"</string>
 <string name="progress_push_no_survey">"ไม่มีการสำรวจได้พบว่ามีการส่ง"</string>
 <string name="progress_push_posting_survey">"มีการส่งข้อมูลการสำรวจไปยังเซิร์ฟเวอร์ ... "</string>
@@ -67,7 +69,10 @@
 <string name="progress_push_updating_survey">"อัปเดตและการสำรวจข้อมูลที่ส่ง ... "</string>
 <string name="cancellingPull">"กระบวนการนี​​้จะหยุดในปลาไม่กี่วินาที"</string>
 <string name="dialog_title_pull_response">"ข้อมูลสถานะ"</string>
+<string name="dialog_pull_success">"เมตาดาต้า Dhis ประสบความสำเร็จในการดึงจากเซิร์ฟเวอร์"</string>
+<string name="dialog_push_before_pull_success">"ประสบความสำเร็จในการผลักดันการสำรวจไปยังเซิร์ฟเวอร์นี้เริ่มต้นที่จะดึงข้อมูลเมตา"</string>
 <string name="dialog_push_success">"การสำรวจส่งต่อความสำเร็จของเซิร์ฟเวอร์ DHIS"</string>
+<string name="dialog_pull_error">"ข้อผิดพลาดขณะพยายามที่จะดึงข้อมูลเมตาจากเซิร์ฟเวอร์นี้"</string>
 <string name="create_info_zone">"พื้นที่"</string>
 <string name="dhis_url_error">"URL DHIS มีข้อผิดพลาด"</string>
 <string name="dhis_url_error_bad_version">"เซิร์ฟเวอร์ DHIS ที่ไม่เหมาะสม (2.20, 2.21, 2.22 เท่านั้น)"</string>
@@ -90,6 +95,9 @@
 <string name="monitor_row_title_asmq">"ยาสวีเดนเม้งฟลอริด้าที่"</string>
 <string name="monitor_row_title_rdts">"RDTS ทดสอบ"</string>
 <string name="monitor_row_title_positivity_rate">"บวก"</string>
+<string name="pf">"Pf"</string>
+<string name="pv">"Pv"</string>
+<string name="pfpv">"Pf/Pv"</string>
 <string name="settings_menu_legal">"ถูกต้องตามกฎหมาย"</string>
 <string name="settings_menu_copyright">"ลิขสิทธิ์"</string>
 <string name="settings_menu_licenses">"โปรแกรมที่ได้รับอนุญาต"</string>

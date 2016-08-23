@@ -121,7 +121,7 @@
 <string name="option_counter">"Repetitions: "</string>
 <string name="option_confirm">"Confirm option"</string>
 <string name="monitor_row_title_denied">Denied</string>
-<string name="monitor_row_title_drug">Drug</string>
+<string name="monitor_row_title_rdt_stockout">Rdt stockout</string>
 <string name="monitor_row_title_pregnant">Pregnant</string>
 <string name="monitor_row_title_severe">Severe</string>
 <string name="monitor_row_title_submission">Submission</string>

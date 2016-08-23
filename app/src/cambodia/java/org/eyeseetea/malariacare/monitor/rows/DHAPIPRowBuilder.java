@@ -15,7 +15,7 @@ public class DHAPIPRowBuilder  extends CounterRowBuilder {
     }
 
     @Override
-    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isDHAPIP();
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isDHAPIP())?1:0;
     }
 }

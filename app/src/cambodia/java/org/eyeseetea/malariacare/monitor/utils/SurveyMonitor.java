@@ -37,6 +37,11 @@ public class SurveyMonitor extends BaseSurveyMonitor{
     final static Long ID_QUESTION_TREATMENT=6l;
 
     /**
+     * Id of negative rdt option
+     */
+    final static Long ID_OPTION_RDT_NEGATIVE=2l;
+
+    /**
      * Id of not tested rdt option
      */
     private final static Long ID_OPTION_RDT_NOT_TESTED=3l;
@@ -71,6 +76,25 @@ public class SurveyMonitor extends BaseSurveyMonitor{
     private final static Long ID_OPTION_TREATMENT_DHA_PIP=12l;
 
 
+    public boolean isRated() {
+        return (isPositive() || isNegative());
+    }
+
+    /**
+     * Tells if the given survey test  is positive
+     * @return
+     */
+    public boolean isPositive(){
+        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_POSITIVE)!=null;
+    }
+    /**
+     * Tells if the given survey is negative
+     * @return
+     */
+    public boolean isNegative(){
+        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_NEGATIVE)!=null;
+    }
+
     /**
      * Tells if the given survey is suspected (positive, negative or not tested).
      * @return
@@ -86,7 +110,14 @@ public class SurveyMonitor extends BaseSurveyMonitor{
     public boolean isNotTested(){
         return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_NOT_TESTED)!=null;
     }
-    
+
+    /**
+     * Tells if the given survey is referral
+     * @return
+     */
+    public boolean isReferral(){
+        return findValue(SurveyMonitor.ID_QUESTION_TREATMENT,SurveyMonitor.ID_OPTION_TREATMENT_REFERRAL)!=null;
+    }
     /**
      * Tells if the given survey has DHA-PIP treatment
      * @return

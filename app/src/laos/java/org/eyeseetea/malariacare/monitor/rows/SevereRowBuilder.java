@@ -9,12 +9,12 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
  * Created by idelcano on 21/07/2016.
  */
 public class SevereRowBuilder extends CounterRowBuilder {
+
     public SevereRowBuilder(Context context){
         super(context, context.getString(R.string.monitor_row_title_severe));
     }
-
     @Override
-    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isSevere();
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isSevere())?1:0;
     }
 }

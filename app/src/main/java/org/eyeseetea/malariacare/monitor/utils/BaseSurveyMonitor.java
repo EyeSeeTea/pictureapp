@@ -21,9 +21,6 @@ package org.eyeseetea.malariacare.monitor.utils;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created by idelcano on 03/08/2016.
  *
@@ -55,48 +52,16 @@ public class BaseSurveyMonitor {
     final static Long ID_QUESTION_RDT=1l;
 
     /**
-     * Id of specie question
+     * Id of specie question(test result)
      */
-    final static Long ID_QUESTION_SPECIE=5l;
+    final static Long ID_QUESTION_SPECIE =5l;
 
     /**
      * Id of positive rdt option
      */
     final static Long ID_OPTION_RDT_POSITIVE=1l;
 
-    /**
-     * Id of negative rdt option
-     */
-    final static Long ID_OPTION_RDT_NEGATIVE=2l;
 
-
-    public boolean isRated() {
-        return (isPositive() || isNegative());
-    }
-
-    /**
-     * Tells if the given survey is positive
-     * @return
-     */
-    public boolean isPositive(){
-        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_POSITIVE)!=null;
-    }
-
-    /**
-     * Tells if the given survey is negative
-     * @return
-     */
-    public boolean isNegative(){
-        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_NEGATIVE)!=null;
-    }
-
-    /**
-     * Tells if the given survey is referral
-     * @return
-     */
-    public boolean isReferral(){
-        return findValue(SurveyMonitor.ID_QUESTION_TREATMENT,SurveyMonitor.ID_OPTION_TREATMENT_REFERRAL)!=null;
-    }
 
     /**
      * Tells if the given survey has Pf specie

@@ -34,7 +34,7 @@ public class NotTestedRowBuilder extends CounterRowBuilder {
     }
 
     @Override
-    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isNotTested();
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isNotTested())?1:0;
     }
 }

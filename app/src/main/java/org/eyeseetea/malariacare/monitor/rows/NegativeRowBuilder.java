@@ -32,9 +32,8 @@ public class NegativeRowBuilder extends CounterRowBuilder {
     public NegativeRowBuilder(Context context){
         super(context, context.getString(R.string.monitor_row_title_negative));
     }
-
     @Override
-    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isNegative();
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isNegative())?1:0;
     }
 }

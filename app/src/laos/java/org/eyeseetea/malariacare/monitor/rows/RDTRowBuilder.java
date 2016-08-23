@@ -33,7 +33,7 @@ public class RDTRowBuilder extends CounterRowBuilder {
     }
 
     @Override
-    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isRDTs();
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        return surveyMonitor.countRDT();
     }
 }

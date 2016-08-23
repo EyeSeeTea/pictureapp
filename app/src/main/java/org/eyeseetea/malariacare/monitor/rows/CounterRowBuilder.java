@@ -20,7 +20,6 @@ package org.eyeseetea.malariacare.monitor.rows;
 
 import android.content.Context;
 
-import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -56,10 +55,7 @@ public abstract class CounterRowBuilder extends MonitorRowBuilder {
     @Override
     protected Object updateColumn(Object currentValue, SurveyMonitor surveyMonitor) {
         Integer currentCount=(Integer)currentValue;
-        if(hasToIncrement(surveyMonitor)){
-            return Integer.valueOf(currentCount+1);
-        }
-        return currentValue;
+        return Integer.valueOf(currentCount+ incrementCount(surveyMonitor));
     }
 
     /**
@@ -67,5 +63,5 @@ public abstract class CounterRowBuilder extends MonitorRowBuilder {
      * @param survey
      * @return
      */
-    protected abstract boolean hasToIncrement(SurveyMonitor survey);
+    protected abstract Integer incrementCount(SurveyMonitor survey);
 }

@@ -32,9 +32,8 @@ public class SuspectedRowBuilder extends CounterRowBuilder {
     public SuspectedRowBuilder(Context context){
         super(context, context.getString(R.string.monitor_row_title_suspected));
     }
-
     @Override
-    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isSuspected();
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isSuspected())?1:0;
     }
 }

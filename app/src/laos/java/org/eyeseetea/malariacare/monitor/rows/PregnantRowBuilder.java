@@ -9,12 +9,12 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
  * Created by idelcano on 21/07/2016.
  */
 public class PregnantRowBuilder extends CounterRowBuilder {
-        public PregnantRowBuilder(Context context){
-            super(context, context.getString(R.string.monitor_row_title_pregnant));
-        }
 
-        @Override
-        protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-            return surveyMonitor.isPregnant();
-        }
+    public PregnantRowBuilder(Context context){
+        super(context, context.getString(R.string.monitor_row_title_pregnant));
     }
+    @Override
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isPregnant())?1:0;
+    }
+}

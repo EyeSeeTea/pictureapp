@@ -115,7 +115,7 @@
 <string name="option_counter">"ซ้ำ: "</string>
 <string name="option_confirm">"ตัวเลือกการยืนยัน"</string>
 <string name="monitor_row_title_denied">"ผู้ป่วยปฏิเสธ "</string>
-<string name="monitor_row_title_drug">"ยาเสพติด"</string>
+<string name="monitor_row_title_rdt_stockout">"ยาเสพติด"</string>
 <string name="monitor_row_title_pregnant">"ผู้ป่วยตั้งครรภ์"</string>
 <string name="monitor_row_title_severe">"ผู้ป่วยที่มีอาการรุนแรง"</string>
 <string name="monitor_row_title_submission">"การยอม"</string>

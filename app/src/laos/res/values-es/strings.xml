@@ -121,7 +121,7 @@
 <string name="option_counter">"Repeticiones: "</string>
 <string name="option_confirm">"Confirmar opción"</string>
 <string name="monitor_row_title_denied">Denegado</string>
-<string name="monitor_row_title_drug">Medicina</string>
+<string name="monitor_row_title_rdt_stockout">Rdt desabastecido</string>
 <string name="monitor_row_title_pregnant">Embarazada</string>
 <string name="monitor_row_title_severe">Grave</string>
 <string name="monitor_row_title_submission">Aceptado</string>

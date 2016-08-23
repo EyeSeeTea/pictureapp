@@ -115,7 +115,7 @@
 <string name="option_counter">"ການຄ້າງຫ້ອງທີ່: "</string>
 <string name="option_confirm">"ທາງເລືອກຢືນຢັນ"</string>
 <string name="monitor_row_title_denied">"ຄົນເຈັບປະຕິເສດ "</string>
-<string name="monitor_row_title_drug">"ຢາໝົດ"</string>
+<string name="monitor_row_title_rdt_stockout">"ຢາໝົດ"</string>
 <string name="monitor_row_title_pregnant">"ຄົນເຈັບຖືພາ"</string>
 <string name="monitor_row_title_severe">"ຄົນເຈັບເປັນໄຂ້ຮ້າຍແຮງ"</string>
 <string name="monitor_row_title_submission">"ນຳສົ່ງ"</string>

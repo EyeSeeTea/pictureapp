@@ -13,9 +13,8 @@ public class CombinedACTRowBuilder  extends CounterRowBuilder {
     public CombinedACTRowBuilder(Context context) {
         super(context, context.getString(R.string.monitor_row_title_combined_act));
     }
-
     @Override
-    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isCombinedACT();
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isCombinedACT())?1:0;
     }
 }

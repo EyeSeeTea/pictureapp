@@ -1,8 +1,8 @@
-1;'RDT';'LA MAL SRV - RDT test result';;'ການກວດ';'pTZpMcKg1CY';1;0;0;1;1;0;14;6;0
+1;'RDT';'LA MAL SRV - RDT test result';;'ການກວດ';'pTZpMcKg1CY';1;0;0;1;1;0;14;2;0
 2;'Reason';'LA MAL SRV - Reason NOT tested RDT';;'ບໍ່ຖືກກວດດ້ວຍເຫດຜົນ';'Elrozkdzh3r';1;0;0;1;2;0;14;2;1
-3;'Gender';'LA MAL SRV - Gender';;'ເພດ';'lNcuFJPKhp9';1;0;0;1;3;0;10;6;1
-4;'Age';'LA MAL SRV - Age';;'ອາຍຸ';'qQngeCbT4uI';2;0;0;1;4;0;6;6;1
-5;'Result';'LA MAL SRV - RDT test result';;'ຜົນການກວດເລືອດ';'FPNbkUi9D55';3;0;0;1;5;0;14;6;1
+3;'Gender';'LA MAL SRV - Gender';;'ເພດ';'lNcuFJPKhp9';1;0;0;1;3;0;10;4;1
+4;'Age';'LA MAL SRV - Age';;'ອາຍຸ';'qQngeCbT4uI';2;0;0;1;4;0;6;4;1
+5;'Result';'LA MAL SRV - RDT test result';;'ຜົນການກວດເລືອດ';'FPNbkUi9D55';3;0;0;1;5;0;14;4;1
 6;'ConfirmInvalid';'Confirm invalid';'ກະລຸນາກວດຄົນເຈັບອີກຄັ້ງ\nໂດຍໃຊ້ເຈັ້ຍຈຸ່ມກວດເລືອດ\nອັນໃໝ່. ຢ່າລືມກວດເບິ່ງມື້ໝົດ\nອາຍຸຂອງເຈັ້ຍຈຸ່ມກວດເລືອດ';'ຜົນກວດບໍ່ຖືກຕ້ອງ';'R53JBYOhcQM';4;0;0;1;6;0;16;6;0;'question_images/p9_rdt_test.png'
 7;'WarningBaby';'Treatment warning baby';'A ການໃຫ້ຂະໜາດຢາ ບໍ່ຖືກກັບ\nກຸ່ມອາຍຸຂອງຄົນເຈັບ.';'ການປິ່ນປົວ ບໍ່ຖືກຕ້ອງ';'xxx';5;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
 8;'WarningKid';'Treatment warning kid';'B ການໃຫ້ຂະໜາດຢາ ບໍ່ຖືກກັບ\nກຸ່ມອາຍຸຂອງຄົນເຈັບ.';'ການປິ່ນປົວ ບໍ່ຖືກຕ້ອງ';'xxx';6;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'

@@ -43,6 +43,7 @@
 <string name="dialog_title_push_response">"ໃນການຕອບສະຫນອງການຊຸກຍູ້"</string>
 <string name="dialog_info_push_ok">"ການສໍາຫຼວດເພີ່ມຜົນຜະລິດກັບເຄື່ອງແມ່ຂ່າຍ."</string>
 <string name="dialog_info_push_bad_credentials">"ຂໍ້ມູນປະຈໍາທີ່ບໍ່ດີສໍາລັບການຊຸກຍູ້ໃຫ້ມີ"</string>
+<string name="dialog_error_push_no_uid">"ບໍ່ມີ UID ໂຄງການພົບເຫັນຢູ່ໃນເຄື່ອງແມ່ຂ່າຍສໍາລັບການລະຫັດ"</string>
 <string name="dialog_error_push_no_location">", ທີ່ສາມາດຖືກນໍາໃຊ້ໂດຍບໍ່ມີການ"</string>
 <string name="pref_server">"Server"</string>
 <string name="pref_visual">"Visual"</string>
@@ -60,6 +61,7 @@
 <string name="progress_pull_downloading">"ເລັ່ງ metadata (metadata) (ອາດຈະໃຊ້ເວລາບໍ່ຫຼາຍປານໃດນາທີ)"</string>
 <string name="progress_pull_preparing_orgs">"ການດາວໂຫຼດຫນ່ວຍບໍລິການ ... "</string>
 <string name="progress_pull_surveys">"ການດາວໂຫຼດສໍາຫຼວດ ... "</string>
+<string name="progress_pull_connecting">"ການເຊື່ອມຕໍ່ກັບເຄື່ອງແມ່ຂ່າຍນີ້ ..."</string>
 <string name="progress_pull_done">"Done"</string>
 <string name="progress_push_no_survey">"ບໍ່ມີການສໍາຫຼວດໄດ້ພົບເຫັນວ່າໄດ້ຮັບການສົ່ງ"</string>
 <string name="progress_push_posting_survey">"ແມ່ນການສົ່ງຂໍ້ມູນການສໍາຫຼວດກັບເຄື່ອງແມ່ຂ່າຍທີ່ ... "</string>
@@ -67,7 +69,10 @@
 <string name="progress_push_updating_survey">"ການປັບປຸງແລະການສໍາຫຼວດຂໍ້ມູນການ ... "</string>
 <string name="cancellingPull">"ຂະບວນການນີ້ຈະໄດ້ຮັບການຢຸດເຊົາຢູ່ໃນປາບໍ່ຫຼາຍປານໃດວິນາທີ"</string>
 <string name="dialog_title_pull_response">"ຂໍ້ມູນສະຖານະພາບ"</string>
+<string name="dialog_pull_success">"metadata Dhis ສົບຜົນສໍາເລັດດຶງອອກມາຈາກເຄື່ອງແມ່ຂ່າຍ"</string>
+<string name="dialog_push_before_pull_success">"ການສໍາຫຼວດສົບຜົນສໍາເລັດ pushed ກັບເຄື່ອງແມ່ຂ່າຍນີ້, ເລີ່ມຕົ້ນທີ່ຈະດຶງ metadata"</string>
 <string name="dialog_push_success">"ການສໍາຫຼວດຖືກສົ່ງໄປຫາຄວາມສໍາເລັດຂອງເຄື່ອງແມ່ຂ່າຍ DHIS"</string>
+<string name="dialog_pull_error">"ຄວາມຜິດພາດໃນຂະນະທີ່ຄວາມພະຍາຍາມທີ່ຈະດຶງ metadata ຈາກເຄື່ອງແມ່ຂ່າຍນີ້"</string>
 <string name="create_info_zone">"ພື້ນທີ່"</string>
 <string name="dhis_url_error">"URL DHIS ປະກອບດ້ວຍຄວາມຜິດພາດ"</string>
 <string name="dhis_url_error_bad_version">"ເຄື່ອງແມ່ຂ່າຍຂອງ DHIS ທີ່ບໍ່ເຫມາະສົມ (220, 221, 222 ເທົ່ານັ້ນ)"</string>
@@ -90,6 +95,9 @@
 <string name="monitor_row_title_asmq">"ຢາຊູແອັດ Meng Florida,"</string>
 <string name="monitor_row_title_rdts">"RDTs Test"</string>
 <string name="monitor_row_title_positivity_rate">"ລະດັບທາງບວກ"</string>
+<string name="pf">"Pf"</string>
+<string name="pv">"Pv"</string>
+<string name="pfpv">"Pf/Pv"</string>
 <string name="settings_menu_legal">"ທໍາ"</string>
 <string name="settings_menu_copyright">"ລິຂະສິດ"</string>
 <string name="settings_menu_licenses">"ໂຄງການອະນຸຍາດ"</string>

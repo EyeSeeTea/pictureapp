@@ -1,30 +1,30 @@
-1;'ຖືກກວດ';'1';0;1;1
-2;'ບໍ່ຖືກກວດ';'0';0;1;2
-3;'ຄົນເຈັບເປັນໄຂ້ຮ້າຍແຮງ';'Severe';0;2;3
-4;'ຄົນເຈັບຖືພາ';'Pregnant';0;2;4
-5;'ຄົນເຈັບປະຕິເສດ';'Refused';0;2;5
-6;'ຢາໝົດ';'RDT Stockout';0;2;6
-7;'ຊາຍ';'Male';0;3;7
-8;'ຍິງ';'Female';0;3;8
-9;'ກະທົບທາງລົບ';'Negative';0;5;9
+1;'Yes';'1';0;1;1
+2;'No';'0';0;1;2
+3;'Severe malaria symptoms';'Severe';0;2;3
+4;'Pregnant woman';'Pregnant';0;2;4
+5;'Patient refused';'Refused';0;2;5
+6;'Stock-out of RDTs';'RDT Stockout';0;2;6
+7;'Male';'Male';0;3;7
+8;'Female';'Female';0;3;8
+9;'Negative';'Negative';0;5;9
 10;'Pf';'Pf';0;5;10
 11;'Pv';'Pv';0;5;11
-12;'ປະສົມ';'Mixed';0;5;12
-13;'ທີ່ບໍ່ຖືກຕ້ອງ';'Invalid';0;5;13
-14;'ກະລຸນາລອງໃໝ່';'Repeat';0;6;
-15;'ບໍ່ໄດ້ກວດບໍ່ຖືກຕ້ອງ';'Ignore';0;6;
-16;'ກະລຸນາລອງໃໝ່';'TryAgain';0;7;
+12;'Mixed';'Mixed';0;5;12
+13;'Invalid';'Invalid';0;5;13
+14;'Please try again';'Repeat';0;6;
+15;'Not bad check';'Ignore';0;6;
+16;'Please try again່';'TryAgain';0;7;
 17;'ACT 6x1';'ACT 6x1';0;8;14
 18;'ACT 6x2';'ACT 6x2';0;8;15
 19;'ACT 6x3';'ACT 6x3';0;8;16
 20;'ACT 6x4';'ACT 6x4';0;8;17
-21;'ນຳສົ່ງຄົນເຈັບເພາະຢາໝົດ';'Referred ACT stockout';0;8;18
-22;'ຈັດຢາຕາມຂະໜາດຂ້າງເທິງໃຫ້ຖືກກັບຄົນເຈັບ';'Combined blister';0;8;19
-23;'ກວດຕໍ່';'ReferHospital';0;9;20
-24;'ກະລຸນາກວດຄົນເຈັບອີກຄັ້ງ ໂດຍໃຊ້ເຈັ້ຍຈຸ່ມກວດເລືອດ ອັນໃໝ່. ຢ່າລືມກວດເບິ່ງມື້ໝົດ ອາຍຸຂອງເຈັ້ຍຈຸ່ມກວດເລືອດ';'Counter Text';0;11;21
-25;'ກະລຸນາລອງໃໝ່';'Counter button';0;11;22
-26;'ບໍ່ໄດ້ກວດບໍ່ຖືກຕ້ອງ';'Counter button';0;11;23
-27;'ການໃຫ້ຂະໜາດຢາ ບໍ່ຖືກກັບ    ກຸ່ມອາຍຸຂອງຄົນເຈັບ.';'Warning text';0;11;24
-28;'ກະລຸນາລອງໃໝ່';'Warning button';0;11;25
-29;'ຖ້າວ່າພົບ Pv ຫຼື Pv + Pf ໃຫ້ຢາ Coartem ແລະ ນຳສົ່ງ';'Remminder text';0;11;26
-30;'ກວດຕໍ່';'Warning button';0;11;27
+21;'Refer patient because out of stock of ACTs';'Referred ACT stockout';0;8;18
+22;'Gave patient combination of ACTs';'Combined blister';0;8;19
+23;'Submission';'ReferHospital';0;9;20
+24;'Please re-test the patient using a new RDT. Don’t forget to look at the expiration date of the RDT.';'Counter Text';0;11;21
+25;'Please try again.';'Counter button';0;11;22
+26;'Not bad check';'Counter button';0;11;23
+27;'Treatment selected does not match patient’s age';'Warning text';0;11;24
+28;'Please re-check';'Warning button';0;11;25
+29;'If you find a Pv or PfPv case, give Coartem and refer.';'Remminder text';0;11;26
+30;'Continue';'Warning button';0;11;27

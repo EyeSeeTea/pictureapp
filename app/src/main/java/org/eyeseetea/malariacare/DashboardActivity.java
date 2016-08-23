@@ -326,7 +326,9 @@ public class DashboardActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         isMoveToLeft =true;
-        if (isSurveyFragmentActive()) {
+        if(isReviewFragmentActive()) {
+            hideReview();
+        }else if (isSurveyFragmentActive()) {
             onSurveyBackPressed();
         } else if (isReviewFragmentActive()){
             onSurveyBackPressed();

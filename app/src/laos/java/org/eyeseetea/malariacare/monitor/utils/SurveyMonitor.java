@@ -179,7 +179,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
         return findValue(ID_QUESTION_REASON, ID_OPTION_DENIED)!=null;
     }
 
-    public boolean isDrug() {
+    public boolean isRDTStockout() {
         return findValue(ID_QUESTION_REASON, ID_OPTION_RDT_STOCKOUT)!=null;
     }
 

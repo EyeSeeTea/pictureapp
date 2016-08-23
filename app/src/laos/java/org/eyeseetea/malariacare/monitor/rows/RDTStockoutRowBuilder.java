@@ -15,7 +15,7 @@ public class RDTStockoutRowBuilder extends CounterRowBuilder {
     }
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isDrug())?1:0;
+        return (surveyMonitor.isRDTStockout())?1:0;
     }
 }
 

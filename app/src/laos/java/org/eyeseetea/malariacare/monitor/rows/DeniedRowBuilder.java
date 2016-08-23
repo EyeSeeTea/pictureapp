@@ -13,6 +13,7 @@ public class DeniedRowBuilder extends CounterRowBuilder {
     public DeniedRowBuilder(Context context){
         super(context, context.getString(R.string.monitor_row_title_denied));
     }
+
     @Override
     protected Integer incrementRow(SurveyMonitor surveyMonitor) {
         return (surveyMonitor.isDenied())?1:0;

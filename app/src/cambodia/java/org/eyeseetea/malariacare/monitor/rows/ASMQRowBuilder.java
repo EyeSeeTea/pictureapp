@@ -13,6 +13,7 @@ public class ASMQRowBuilder extends CounterRowBuilder {
     public ASMQRowBuilder(Context context){
         super(context, context.getString(R.string.monitor_row_title_asmq));
     }
+    
     @Override
     protected Integer incrementRow(SurveyMonitor surveyMonitor) {
         return (surveyMonitor.isASMQ())?1:0;

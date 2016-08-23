@@ -13,6 +13,7 @@ public class DHAPIPRowBuilder  extends CounterRowBuilder {
     public DHAPIPRowBuilder(Context context){
         super(context, context.getString(R.string.monitor_row_title_dhapip));
     }
+
     @Override
     protected Integer incrementRow(SurveyMonitor surveyMonitor) {
         return (surveyMonitor.isDHAPIP())?1:0;

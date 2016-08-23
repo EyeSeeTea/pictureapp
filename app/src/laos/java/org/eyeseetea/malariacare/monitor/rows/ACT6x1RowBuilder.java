@@ -13,6 +13,7 @@ public class ACT6x1RowBuilder extends CounterRowBuilder {
     public ACT6x1RowBuilder(Context context){
         super(context, context.getString(R.string.monitor_row_title_act6x1));
     }
+
     @Override
     protected Integer incrementRow(SurveyMonitor surveyMonitor) {
         return (surveyMonitor.isACT6x1())?1:0;

@@ -747,13 +747,6 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         }
     }
 
-    public void updateSurveyState(){
-        //Change status and save mainScore
-        setStatus(Constants.SURVEY_SENT);
-        save();
-        saveMainScore();
-    }
-
     public static void removeInProgress() {
         List<Survey> inProgressSurvey= getAllUncompletedSurveys();
         for(int i=inProgressSurvey.size()-1;i>=0;i--){

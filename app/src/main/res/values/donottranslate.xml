@@ -40,6 +40,7 @@
     <string name="symbolCross" translatable="false">X</string>
     <string name="RDT_code" translatable="false">RDT</string>
     <string name="Age_code" translatable="false">Age</string>
+    <string name="Result_code" translatable="false">Result</string>
     <string name="Gender_code" translatable="false">Gender</string>
     <string name="Specie_code" translatable="false">Specie</string>
     <string name="Reason_code" translatable="false">Reason</string>

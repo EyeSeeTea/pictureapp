@@ -47,15 +47,13 @@ import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
-import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.io.IOException;
-import android.graphics.drawable.Drawable;
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabWidget;
-import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -74,7 +72,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Move to that question from reviewfragment
      */
-    public static Question isMoveToQuestion;
+    public static Question moveToQuestion;
     /**
      * Flag that controls the fragment change animations
      */
@@ -505,7 +503,7 @@ public class DashboardActivity extends BaseActivity {
                 if(isReviewFragmentActive())
                     hideReview();
                 else {
-                    DashboardActivity.isMoveToQuestion = (Session.getSurvey().getValues().get(0).getQuestion());
+                    DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(0).getQuestion());
                 }
             }
         });
@@ -549,7 +547,7 @@ public class DashboardActivity extends BaseActivity {
      * This method hide the reviewFragment restoring the Assess tab with the active SurveyFragment
      */
     public void hideReview(Question question) {
-        isMoveToQuestion=question;
+        moveToQuestion =question;
         hideReview();
     }
     /**

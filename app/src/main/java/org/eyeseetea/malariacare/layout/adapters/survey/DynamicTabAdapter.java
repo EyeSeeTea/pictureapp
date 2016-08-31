@@ -136,8 +136,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(!readOnly){
             Question question=navigationController.getCurrentQuestion();
             if(question.getValueBySession()!=null) {
-                if(DashboardActivity.isMoveToQuestion!=null){
-                    goToQuestion(DashboardActivity.isMoveToQuestion);
+                if(DashboardActivity.moveToQuestion !=null){
+                    goToQuestion(DashboardActivity.moveToQuestion);
+                    DashboardActivity.moveToQuestion =null;
                 }
                 else
                     goToLastQuestion();
@@ -948,9 +949,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     if(!Session.getSurvey().isRDT() || !BuildConfig.reviewScreen)
                         showDone();
                     else {
+                        DashboardActivity.dashboardActivity.showReviewFragment();
                         hideKeyboard(PreferencesState.getInstance().getContext());
                         isClicked = false;
-                        DashboardActivity.dashboardActivity.showReviewFragment();
                     }
                     return;
                 }
@@ -1040,16 +1041,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
 
     /**
-     * When the user clic in a value in the review fragment the navigationController should go to related question
+     * When the user click in a value in the review fragment the navigationController should go to related question
      */
     private void goToQuestion(Question isMoveToQuestion) {
         navigationController.first();
-        Question question;
-        do {
+        //it is compared by uid because comparing by question it could be not equal by the same question.
+        while(!isMoveToQuestion.getUid().equals(navigationController.getCurrentQuestion().getUid())) {
             next();
-            question = navigationController.getCurrentQuestion();
-        }while(isMoveToQuestion.equals(question));
-        DashboardActivity.isMoveToQuestion=null;
+        }
         notifyDataSetChanged();
     }
     /**

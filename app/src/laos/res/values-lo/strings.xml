@@ -129,4 +129,5 @@
 <string name="monitor_row_title_submission">"ນຳສົ່ງ"</string>
 <string name="review_title">ກະລຸນາກວດສອບກ່ອນທີ່ຈະ</string>
 <string name="review_subtitle">ລະບົບສາຍສົ່ງ</string>
+<string name="not_tested">ບໍ່ໄດ້ທົດສອບ</string>
 </resources>

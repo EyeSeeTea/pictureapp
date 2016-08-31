@@ -129,4 +129,5 @@
 <string name="monitor_row_title_submission">" ការដាក់"</string>
 <string name="review_title">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>
 <string name="review_subtitle">ធ្វើការបញ្ជូន</string>
+<string name="not_tested">មិនបានសាកល្បង</string>
 </resources>

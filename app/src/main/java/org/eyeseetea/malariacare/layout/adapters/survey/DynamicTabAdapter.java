@@ -136,7 +136,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(!readOnly){
             Question question=navigationController.getCurrentQuestion();
             if(question.getValueBySession()!=null) {
-                goToLastQuestion();
+                if(DashboardActivity.isMoveToQuestion!=null){
+                    goToQuestion(DashboardActivity.isMoveToQuestion);
+                }
+                else
+                    goToLastQuestion();
             }
         }
 
@@ -152,6 +156,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         navigationController.setTotalPages(totalPages);
         isClicked=false;
     }
+
 
     private NavigationController initNavigationController(Tab tab) {
         NavigationController navigationController = NavigationBuilder.getInstance().buildController(tab);
@@ -940,7 +945,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Value value = question.getValueBySession();
                 if (isDone(value)) {
                     navigationController.isMovingToForward=false;
-                    showDone();
+                    if(!Session.getSurvey().isRDT() || !BuildConfig.reviewScreen)
+                        showDone();
+                    else {
+                        hideKeyboard(PreferencesState.getInstance().getContext());
+                        isClicked = false;
+                        DashboardActivity.dashboardActivity.showReviewFragment();
+                    }
                     return;
                 }
                 next();
@@ -949,24 +960,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Show a final dialog to announce the survey is over
+     * Show a final dialog to announce the survey is over without reviewfragment.
      */
     private void showDone(){
         final Activity activity=(Activity)context;
-        AlertDialog.Builder msgConfirmation = new AlertDialog.Builder((activity))
-            .setTitle(R.string.survey_title_completed)
-            .setMessage(R.string.survey_info_completed)
-            .setCancelable(false)
-            .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int arg1) {
-                    hideKeyboard(PreferencesState.getInstance().getContext());
-                    if(Session.getSurvey().isRDT() && BuildConfig.reviewScreen)
-                        DashboardActivity.dashboardActivity.showReviewFragment();
-                    else
+        AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
+                .setTitle(R.string.survey_title_completed)
+                .setMessage(R.string.survey_info_completed)
+                .setCancelable(false)
+                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        hideKeyboard(PreferencesState.getInstance().getContext());
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
-                    isClicked=false;
-                }
-            });
+                        isClicked=false;
+                    }
+                });
         msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 hideKeyboard(PreferencesState.getInstance().getContext());
@@ -1030,6 +1038,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
+
+    /**
+     * When the user clic in a value in the review fragment the navigationController should go to related question
+     */
+    private void goToQuestion(Question isMoveToQuestion) {
+        navigationController.first();
+        Question question;
+        do {
+            next();
+            question = navigationController.getCurrentQuestion();
+        }while(isMoveToQuestion.equals(question));
+        DashboardActivity.isMoveToQuestion=null;
+        notifyDataSetChanged();
+    }
     /**
      * When the user swip back from review fragment the navigationController should go to the last question
      */

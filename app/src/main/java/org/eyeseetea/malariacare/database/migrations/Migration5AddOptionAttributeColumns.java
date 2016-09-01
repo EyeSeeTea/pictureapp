@@ -26,7 +26,6 @@ import java.util.List;
 public class Migration5AddOptionAttributeColumns extends BaseMigration {
 
     private static String TAG=".Migration5";
-    public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
 
     private static Migration5AddOptionAttributeColumns instance;
     private boolean postMigrationRequired;
@@ -43,17 +42,12 @@ public class Migration5AddOptionAttributeColumns extends BaseMigration {
     @Override
     public void migrate(SQLiteDatabase database) {
         postMigrationRequired=true;
-        addColumn(database, OptionAttribute.class, "horizontal_alignment", "Integer");
-        addColumn(database, OptionAttribute.class, "vertical_alignment", "Integer");
+        MigrationTools.addColumn(database, OptionAttribute.class, "horizontal_alignment", "Integer");
+        MigrationTools.addColumn(database, OptionAttribute.class, "vertical_alignment", "Integer");
     }
 
     @Override
     public void onPostMigrate() {
-    }
-
-    public static void addColumn(SQLiteDatabase database, Class model, String columnName, String type) {
-        ModelAdapter myAdapter = FlowManager.getModelAdapter(model);
-        database.execSQL(String.format(ALTER_TABLE_ADD_COLUMN, myAdapter.getTableName(), columnName, type));
     }
 
 

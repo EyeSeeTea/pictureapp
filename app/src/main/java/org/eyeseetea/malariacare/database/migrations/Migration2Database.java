@@ -81,7 +81,6 @@ public class Migration2Database extends BaseMigration {
 
     public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
 
-    public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
 
     public Migration2Database() {
         super();
@@ -101,26 +100,26 @@ public class Migration2Database extends BaseMigration {
 
         Log.d(TAG,"adding new columns...");
         postMigrationRequired=true;
-        addColumn(database, CompositeScore.class, "hierarchical_code", "text");
+        MigrationTools.addColumn(database, CompositeScore.class, "hierarchical_code", "text");
 
-        addColumn(database, OrgUnit.class, "id_parent", "integer");
-        addColumn(database, OrgUnit.class, "id_org_unit_level", "integer");
+        MigrationTools.addColumn(database, OrgUnit.class, "id_parent", "integer");
+        MigrationTools.addColumn(database, OrgUnit.class, "id_org_unit_level", "integer");
 
-        addColumn(database, Question.class, "feedback", "text");
-        addColumn(database, Question.class, "output", "integer");
+        MigrationTools.addColumn(database, Question.class, "feedback", "text");
+        MigrationTools.addColumn(database, Question.class, "output", "integer");
 
-        addColumn(database, OptionAttribute.class, "path", "text");
+        MigrationTools.addColumn(database, OptionAttribute.class, "path", "text");
 
-        addColumn(database,QuestionRelation.class, "id_question","integer");
+        MigrationTools.addColumn(database,QuestionRelation.class, "id_question","integer");
 
-        addColumn(database, Score.class, "id_survey", "integer");
-        addColumn(database, Score.class, "score", "real");
+        MigrationTools.addColumn(database, Score.class, "id_survey", "integer");
+        MigrationTools.addColumn(database, Score.class, "score", "real");
 
-        addColumn(database, Survey.class, "id_tab_group", "integer");
-        addColumn(database, Survey.class, "creationDate", "integer");
-        addColumn(database, Survey.class, "scheduledDate", "integer");
+        MigrationTools.addColumn(database, Survey.class, "id_tab_group", "integer");
+        MigrationTools.addColumn(database, Survey.class, "creationDate", "integer");
+        MigrationTools.addColumn(database, Survey.class, "scheduledDate", "integer");
 
-        addColumn(database, Tab.class, "id_tab_group", "integer");
+        MigrationTools.addColumn(database, Tab.class, "id_tab_group", "integer");
     }
 
     @Override
@@ -223,11 +222,5 @@ public class Migration2Database extends BaseMigration {
 
         }
         return mapQuestion;
-    }
-
-
-    private void addColumn(SQLiteDatabase database, Class model, String columnName,String type){
-        ModelAdapter myAdapter = FlowManager.getModelAdapter(model);
-        database.execSQL(String.format(ALTER_TABLE_ADD_COLUMN, myAdapter.getTableName(),columnName,type) );
     }
 }

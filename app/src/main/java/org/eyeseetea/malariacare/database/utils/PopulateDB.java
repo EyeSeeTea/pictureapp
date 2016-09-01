@@ -166,6 +166,11 @@ public class PopulateDB {
                             optionAttribute.setText_size(Integer.valueOf(line[5]));
                         else
                             optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
+                        if(line.length>6 && !line[6].equals(""))
+                            optionAttribute.setPadding((line[6]));
+                        else {
+                            optionAttribute.setPadding(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
+                        }
                         optionAttribute.save();
                         optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
                         break;
@@ -381,6 +386,11 @@ public class PopulateDB {
                 optionAttribute.setText_size(Integer.valueOf(line[5]));
             else
                 optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
+            if(line.length>6 && !line[6].equals(""))
+                optionAttribute.setPadding((line[6]));
+            else {
+                optionAttribute.setPadding(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
+            }
             optionAttribute.save();
             optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
         }

@@ -21,8 +21,12 @@ package org.eyeseetea.malariacare.database.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Point;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -74,6 +78,8 @@ public class PreferencesState {
     private Map<String, Map<String, Float>> scaleDimensionsMap;
 
     static Context context;
+
+    static int screenWidth,screenHeight=0;
 
     private PreferencesState(){ }
 
@@ -251,5 +257,24 @@ public class PreferencesState {
         SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
         prefEditor.putString(context.getResources().getString(namePreference), value); // set your default value here (could be empty as well)
         prefEditor.commit(); // finally save changes
+    }
+
+    public int getPixelsByWidthPercent(int percent){
+        if(screenWidth==0) {
+            screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+        }
+        return calculatePercent(percent,screenWidth);
+    }
+
+    public int getPixelsByHeightPercent(int percent){
+        if(screenHeight==0) {
+            screenHeight = context.getResources().getDisplayMetrics().heightPixels;
+        }
+        return calculatePercent(percent,screenHeight);
+    }
+
+    private int calculatePercent(int percent, int total) {
+        int pixels=(total*percent)/100;
+        return pixels;
     }
 }

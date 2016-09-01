@@ -99,5 +99,6 @@
 
 
     <string name="default_option_text_size" translatable="false">24</string>
+    <string name="default_option_padding" translatable="false">0</string>
 
 </resources>

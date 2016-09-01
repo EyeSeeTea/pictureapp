@@ -27,7 +27,9 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
 import java.util.List;
 
@@ -52,6 +54,19 @@ public class OptionAttribute extends BaseModel {
 
     @Column
     int text_size;
+
+    @Column
+    int padding_left;
+
+    @Column
+    int padding_top;
+
+    @Column
+    int padding_right;
+
+    @Column
+    int padding_bottom;
+
 
     /**
      * Constant that reflects a left alignment
@@ -208,6 +223,63 @@ public class OptionAttribute extends BaseModel {
             verticalGravity=Gravity.CENTER_VERTICAL;
 
         return (verticalGravity | horizontalGravity);
+    }
+
+    public void setPadding(String padding){
+        if(padding.equals(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding))){
+            int defaultPaddingValue=Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
+            setPadding_left(defaultPaddingValue);
+            setPadding_top(defaultPaddingValue);
+            setPadding_right(defaultPaddingValue);
+            setPadding_bottom(defaultPaddingValue);
+        }
+        else {
+            //Parse padding format "left,top,right,bottom"
+            int lastIndex = padding.indexOf(",");
+            setPadding_left(Integer.parseInt(padding.substring(0, lastIndex)));
+            lastIndex++;
+            int nextlastIndex = padding.indexOf(",", lastIndex);
+            setPadding_top(Integer.parseInt(padding.substring(lastIndex, nextlastIndex)));
+            lastIndex = nextlastIndex;
+            lastIndex++;
+            nextlastIndex = padding.indexOf(",", lastIndex);
+            setPadding_right(Integer.parseInt(padding.substring(lastIndex, nextlastIndex)));
+            lastIndex = nextlastIndex;
+            lastIndex++;
+            setPadding_bottom(Integer.parseInt(padding.substring(lastIndex)));
+        }
+    }
+
+    public int getPadding_left() {
+        return padding_left;
+    }
+
+    public void setPadding_left(int padding_left) {
+        this.padding_left = padding_left;
+    }
+
+    public int getPadding_top() {
+        return padding_top;
+    }
+
+    public void setPadding_top(int padding_top) {
+        this.padding_top = padding_top;
+    }
+
+    public int getPadding_right() {
+        return padding_right;
+    }
+
+    public void setPadding_right(int padding_right) {
+        this.padding_right = padding_right;
+    }
+
+    public int getPadding_bottom() {
+        return padding_bottom;
+    }
+
+    public void setPadding_bottom(int padding_bottom) {
+        this.padding_bottom = padding_bottom;
     }
 
     @Override

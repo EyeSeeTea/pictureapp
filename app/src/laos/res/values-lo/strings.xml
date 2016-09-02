@@ -123,7 +123,7 @@
 <string name="option_counter">"ການຄ້າງຫ້ອງທີ່: "</string>
 <string name="option_confirm">"ທາງເລືອກຢືນຢັນ"</string>
 <string name="monitor_row_title_act_stockout">"ຈໍານວນບໍ່ຮັບການປິ່ນປົວ (ACT stockout) "</string>
-<string name="monitor_row_title_rdt_stockout">"ຢາໝົດ"</string>
+<string name="monitor_row_title_rdt_stockout">"ຈໍານວນບໍ່ໄດ້ທົດສອບ (ຢາໝົດ)"</string>
 <string name="monitor_row_title_treatment">"ຈໍານວນຂອງການສົ່ງຕໍ່ (ການປິ່ນປົວ)"</string>
 <string name="monitor_row_title_rdt_testing">"ຈໍານວນຂອງການສົ່ງຕໍ່ (ການທົດສອບ RDT)"</string>
 <string name="review_title">ກະລຸນາກວດສອບກ່ອນທີ່ຈະ</string>

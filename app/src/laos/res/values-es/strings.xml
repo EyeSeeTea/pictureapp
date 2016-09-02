@@ -121,8 +121,8 @@
 <string name="option_counter">"Repeticiones: "</string>
 <string name="option_confirm">"Confirmar opción"</string>
 <string name="monitor_row_title_act_stockout">Número no tratadas (falta de existencias ACT)</string>
-<string name="monitor_row_title_rdt_stockout">Rdt desabastecido</string>
-<string name="monitor_row_title_treatment">Número de referencias (tratamiento)</string>
+<string name="monitor_row_title_rdt_stockout">úmero no probado (Rdt desabastecido)</string>
+<string name="monitor_row_title_treatment">Número de referencias (Tratamiento)</string>
 <string name="monitor_row_title_rdt_testing">Número de referencias (pruebas RDT)</string>
 <string name="review_title">Por favor, compruebe</string>
 <string name="review_subtitle">Transmisión</string>

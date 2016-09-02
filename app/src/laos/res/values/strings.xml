@@ -121,8 +121,8 @@
 <string name="option_counter">"Repetitions: "</string>
 <string name="option_confirm">"Confirm option"</string>
 <string name="monitor_row_title_act_stockout">Number not treated (ACT stockout)</string>
-<string name="monitor_row_title_rdt_stockout">Rdt stockout</string>
-<string name="monitor_row_title_treatment">Number of referrals (treatment)</string>
+<string name="monitor_row_title_rdt_stockout">Number not tested (Rdt stockout)</string>
+<string name="monitor_row_title_treatment">Number of referrals (Treatment)</string>
 <string name="monitor_row_title_rdt_testing">Number of referrals (RDT testing)</string>
 <string name="review_title">Please check before</string>
 <string name="review_subtitle">Transmission</string>

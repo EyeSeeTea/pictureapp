@@ -7,7 +7,6 @@
     <string name="monitor_row_title_act6x2" translatable="false">ACT6x2</string>
     <string name="monitor_row_title_act6x3" translatable="false">ACT6x3</string>
     <string name="monitor_row_title_act6x4" translatable="false">ACT6x4</string>
-    <string name="monitor_row_title_combined_act" translatable="false">Combined ACT</string>
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>

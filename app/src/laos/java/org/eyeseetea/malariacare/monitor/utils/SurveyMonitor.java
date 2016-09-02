@@ -68,21 +68,6 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     final static Long ID_OPTION_SPECIE_PFPV =12l;
 
     /**
-     * Id of severe reason option
-     */
-    private final static Long ID_OPTION_SEVERE=3l;
-
-    /**
-     * Id of pregnant reason option
-     */
-    private final static Long ID_OPTION_PREGNANT=4l;
-
-    /**
-     * Id of refused reason option
-     */
-    private final static Long ID_OPTION_DENIED=5l;
-
-    /**
      * Id of rdt stockout reason option
      */
     private final static Long ID_OPTION_RDT_STOCKOUT =5l;
@@ -90,7 +75,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     /**
      * Id of Combined act treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_COMBINEDACT=22l;
+    private final static Long ID_OPTION_TREATMENT_REFERER_HOSPITAL=21l;
 
     /**
      * Id of ACT6x1 treatment option
@@ -161,31 +146,26 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Tells if the given survey is not tested
      * @return
      */
-    public boolean isSubmission() {
+    public boolean isRDTTesting() {
         return findValue(ID_QUESTION_RDT, ID_OPTION_RDT_NOT_TESTED)!=null;
     }
 
-    public boolean isSevere() {
-        return findValue(ID_QUESTION_REASON, ID_OPTION_SEVERE)!=null;
+    public boolean isTreatment() {
+        if(isReferral() || findValue(ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_REFERER_HOSPITAL)!=null) {
+             return true;
+        }
+        else {
+            return false;
+        }
     }
 
 
-    public boolean isPregnant() {
-        return findValue(ID_QUESTION_REASON, ID_OPTION_PREGNANT)!=null;
-    }
-
-
-    public boolean isDenied() {
-        return findValue(ID_QUESTION_REASON, ID_OPTION_DENIED)!=null;
+    public boolean isACTStockout() {
+        return findValue(ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_REFERER_HOSPITAL)!=null;
     }
 
     public boolean isRDTStockout() {
         return findValue(ID_QUESTION_REASON, ID_OPTION_RDT_STOCKOUT)!=null;
-    }
-
-
-    public boolean isCombinedACT() {
-        return findOption(ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_COMBINEDACT);
     }
     public boolean isACT6x4() {
         return findOption(ID_QUESTION_TREATMENT,ID_OPTION_TREATMENT_ACT6X4);

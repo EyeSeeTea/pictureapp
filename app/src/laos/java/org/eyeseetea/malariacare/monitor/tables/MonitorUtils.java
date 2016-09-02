@@ -7,20 +7,18 @@ import org.eyeseetea.malariacare.monitor.rows.ACT6x1RowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.ACT6x2RowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.ACT6x3RowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.ACT6x4RowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.CombinedACTRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.DeniedRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.ACTStockoutRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.RDTStockoutRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.NegativeRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PfPvRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PfRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PositiveRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PositivityRateRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.PregnantRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PvRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.RDTRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.ReferralRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.SevereRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.SubmissionRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.TreatmentRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.RDTTestingRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.SuspectedRowBuilder;
 
 import java.util.ArrayList;
@@ -43,7 +41,6 @@ public class MonitorUtils extends AMonitorUtils {
         rowBuilders.add(new ACT6x2RowBuilder(context));
         rowBuilders.add(new ACT6x3RowBuilder(context));
         rowBuilders.add(new ACT6x4RowBuilder(context));
-        rowBuilders.add(new CombinedACTRowBuilder(context));
         return rowBuilders;
     }
 
@@ -58,11 +55,10 @@ public class MonitorUtils extends AMonitorUtils {
         rowBuilders.add(new ReferralRowBuilder(context));
         rowBuilders.add(new NegativeRowBuilder(context));
         rowBuilders.add(new PositivityRateRowBuilder(context));
-        rowBuilders.add(new SubmissionRowBuilder(context));
-        rowBuilders.add(new SevereRowBuilder(context));
-        rowBuilders.add(new PregnantRowBuilder(context));
-        rowBuilders.add(new DeniedRowBuilder(context));
+        rowBuilders.add(new RDTTestingRowBuilder(context));
+        rowBuilders.add(new TreatmentRowBuilder(context));
         rowBuilders.add(new RDTStockoutRowBuilder(context));
+        rowBuilders.add(new ACTStockoutRowBuilder(context));
         return rowBuilders;
     }
 }

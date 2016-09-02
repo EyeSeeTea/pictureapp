@@ -48,6 +48,10 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     /**
      * Id of not tested
      */
+    final static Long ID_OPTION_RDT_TESTED =1l;
+    /**
+     * Id of not tested
+     */
     final static Long ID_OPTION_RDT_NOT_TESTED =2l;
     /**
      * Id of negative  specie option
@@ -103,7 +107,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * @return
      */
     public boolean isSuspected(){
-        return (isPositive() || isNegative());
+        return (isTested() || isNotTested());
     }
 
     /**
@@ -120,6 +124,13 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     public boolean isNotTested(){
         return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_NOT_TESTED)!=null;
+    }
+    /**
+     * Tells if the given survey is not tested
+     * @return
+     */
+    public boolean isTested(){
+        return findValue(ID_QUESTION_RDT,ID_OPTION_RDT_TESTED)!=null;
     }
     /**
      * Tells if the given survey is negative

@@ -16,6 +16,6 @@ public class TestedRowBuilder extends CounterRowBuilder {
     }
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isSuspected())?1:0;
+        return (surveyMonitor.isTested())?1:0;
     }
 }

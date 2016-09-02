@@ -70,7 +70,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     /**
      * Id of rdt stockout reason option
      */
-    private final static Long ID_OPTION_RDT_STOCKOUT =5l;
+    private final static Long ID_OPTION_RDT_STOCKOUT =6l;
 
     /**
      * Id of Combined act treatment option

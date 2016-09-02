@@ -86,9 +86,10 @@
 <string name="monitor_row_title_period">"Période de temps"</string>
 <string name="monitor_row_title_week">"Semaine"</string>
 <string name="monitor_row_title_suspected">"Les cas suspects"</string>
-<string name="monitor_row_title_positive">"Positif"</string>
+<string name="monitor_row_title_positive">"Les cas Positifs"</string>
 <string name="monitor_row_title_negative">"Négatif"</string>
 <string name="monitor_row_title_not_tested">"Pas testé"</string>
+<string name="monitor_row_title_tested">"testé"</string>
 <string name="monitor_row_title_referral">"Referral"</string>
 <string name="monitor_row_title_asmq">"AS/MQ"</string>
 <string name="monitor_row_title_rdts">"RDTs"</string>

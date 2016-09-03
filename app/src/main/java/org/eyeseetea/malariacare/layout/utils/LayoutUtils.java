@@ -36,6 +36,7 @@ import android.widget.ListView;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
 import java.util.List;
 
@@ -119,5 +120,20 @@ public class LayoutUtils {
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
         Log.d("measureScreen", metrics.toString());
         return Math.round(metrics.heightPixels*metrics.density);
+    }
+
+
+
+    public static int getPixelsByWidthPercent(int percent){
+        return calculatePercent(percent,Math.round(PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().widthPixels*PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().density));
+    }
+
+    public static int getPixelsByHeightPercent(int percent){
+        return calculatePercent(percent,Math.round(PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().heightPixels*PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().density));
+    }
+
+    private static int calculatePercent(int percent, int total) {
+        int pixels=(total*percent)/100;
+        return pixels;
     }
 }

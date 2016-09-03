@@ -37,10 +37,8 @@ public class Migration9AddOptionPadding extends BaseMigration {
     @Override
     public void migrate(SQLiteDatabase database) {
         postMigrationRequired=true;
-        MigrationTools.addColumn(database, OptionAttribute.class, "padding_left", "Integer");
-        MigrationTools.addColumn(database, OptionAttribute.class, "padding_top", "Integer");
-        MigrationTools.addColumn(database, OptionAttribute.class, "padding_right", "Integer");
-        MigrationTools.addColumn(database, OptionAttribute.class, "padding_bottom", "Integer");
+        MigrationTools.addColumn(database, OptionAttribute.class, "text_margin", "String");
+        MigrationTools.addColumn(database, OptionAttribute.class, "image_margin", "String");
     }
 
     @Override
@@ -59,7 +57,7 @@ public class Migration9AddOptionPadding extends BaseMigration {
         //Data? Add new default data
         if(instance.hasData()) {
             try {
-                PopulateDB.addOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
+                PopulateDB.updateOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {
                 e.printStackTrace();
             }

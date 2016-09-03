@@ -166,10 +166,16 @@ public class PopulateDB {
                             optionAttribute.setText_size(Integer.valueOf(line[5]));
                         else
                             optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
+
                         if(line.length>6 && !line[6].equals(""))
-                            optionAttribute.setPadding((line[6]));
+                            optionAttribute.setText_margin((line[6]));
                         else {
-                            optionAttribute.setPadding(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
+                            optionAttribute.setText_margin(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
+                        }
+                        if(line.length>7 && !line[7].equals(""))
+                            optionAttribute.setImage_margin((line[7]));
+                        else {
+                            optionAttribute.setImage_margin(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
                         }
                         optionAttribute.save();
                         optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
@@ -359,7 +365,7 @@ public class PopulateDB {
         reader.close();
     }
 
-    public static void addOptionAttributes(AssetManager assetManager) throws IOException  {
+    public static void updateOptionAttributes(AssetManager assetManager) throws IOException  {
         List<Option> options = Option.getAllOptions();
         //Reset inner references
         cleanInnerLists();
@@ -387,9 +393,14 @@ public class PopulateDB {
             else
                 optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
             if(line.length>6 && !line[6].equals(""))
-                optionAttribute.setPadding((line[6]));
+                optionAttribute.setText_margin((line[6]));
             else {
-                optionAttribute.setPadding(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
+                optionAttribute.setText_margin(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
+            }
+            if(line.length>7 && !line[7].equals(""))
+                optionAttribute.setImage_margin((line[7]));
+            else {
+                optionAttribute.setImage_margin(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
             }
             optionAttribute.save();
             optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
@@ -401,54 +412,6 @@ public class PopulateDB {
         while ((line = readerOptions.readNext()) != null) {
             for(Option option:options) {
                 if (option.getCode().equals(line[1])){
-                    if (!line[5].equals("")) {
-                        option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
-                        option.save();
-                    }
-                    break;
-                }
-            }
-        }
-        reader.close();
-    }
-
-    public static void addOptionTextSize(AssetManager assetManager) throws IOException  {
-        List<Option> options = Option.getAllOptions();
-        //Reset inner references
-        cleanInnerLists();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(OPTION_ATTRIBUTES_CSV)), SEPARATOR, QUOTECHAR);
-        CSVReader readerOptions = new CSVReader(new InputStreamReader(assetManager.open(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
-        //Remove bad optionAttributes.
-        Delete.tables(OptionAttribute.class);
-        String[] line;
-
-        //save new optionattributes
-        while ((line = reader.readNext()) != null) {
-            OptionAttribute optionAttribute = new OptionAttribute();
-            optionAttribute.setBackground_colour(line[1]);
-            optionAttribute.setPath(line[2]);
-            if(line.length>3 && !line[3].equals(""))
-                optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
-            else
-                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_HORIZONTAL_ALIGNMENT);
-            if(line.length>4 && !line[4].equals(""))
-                optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
-            else
-                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
-            if(line.length>5 && !line[5].equals(""))
-                optionAttribute.setText_size(Integer.valueOf(line[5]));
-            else
-                optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
-            optionAttribute.save();
-            optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
-        }
-
-        line=null;
-
-        //Save new optionattributes for each question
-        while ((line = readerOptions.readNext()) != null) {
-            for(Option option:options) {
-                if (option.getCode().equals(line[1])) {
                     if (!line[5].equals("")) {
                         option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
                         option.save();

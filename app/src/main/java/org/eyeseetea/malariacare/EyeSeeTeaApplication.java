@@ -77,8 +77,6 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         Migration2Database.postMigrate();
         Migration3AddQuestionColumn.postMigrate();
         Migration4AddQuestionVisibleColumn.postMigrate();
-        Migration5AddOptionAttributeColumns.postMigrate();
-        Migration6AddOptionTextSizeColumn.postMigrate();
         Migration7AddQuestionPathAttributeColumn.postMigrate();
         Migration8UpdateOptionNames.postMigrate();
         Migration9AddOptionPadding.postMigrate();

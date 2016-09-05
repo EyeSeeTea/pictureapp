@@ -61,6 +61,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
+import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -1048,6 +1049,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //it is compared by uid because comparing by question it could be not equal by the same question.
         while(!isMoveToQuestion.getUid().equals(navigationController.getCurrentQuestion().getUid())) {
             next();
+            skipReminder();
         }
         notifyDataSetChanged();
     }
@@ -1061,10 +1063,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             next();
             Question question = navigationController.getCurrentQuestion();
             value = question.getValueBySession();
+            skipReminder();
         }while(value!=null && !isDone(value));
         notifyDataSetChanged();
     }
 
+    private void skipReminder() {
+        for(QuestionRelation relation:navigationController.getCurrentQuestion().getQuestionRelations())
+            if(relation.isAReminder())
+                next();
+    }
 
 
 }

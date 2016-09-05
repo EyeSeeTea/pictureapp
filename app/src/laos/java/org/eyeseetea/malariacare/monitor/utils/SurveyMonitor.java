@@ -118,7 +118,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * @return
      */
     public boolean isSuspected(){
-        return (isPositive() || isNegative());
+        return (isRated() || isNotTested());
     }
 
     /**

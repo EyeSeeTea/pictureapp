@@ -8,13 +8,12 @@ public class PhoneMask {
     /**
      * Formatted telephone mask: (xxx) xxx-xxx = 9 (020) xxxx-xxxx = 11  (030) xxx-xxxx = 10
      */
-    public static final String FORMATTED_PHONENUMBER_MASK = "(\\(020\\) \\d{4}-\\d{3})|(\\(030\\) \\d{3}-\\d{4})|(\\(\\d{3}\\) \\d{3}-\\d{3})";
+    public static final String FORMATTED_PHONENUMBER_MASK = "^((\\(020\\) ?\\d{4}-?\\d{3})|(\\(030\\) ?\\d{3}-?\\d{4})|(\\((?!020)(?!030)\\d{3}\\) ?\\d{3}-?\\d{3}))$";
 
     /**
      * Plain telephone mask: xxxxxxxxx = 9 020xxxxxxxx = 11  030xxxxxxx = 10
      */
-    public static final String PLAIN_PHONENUMBER_MASK = "(((020)\\d{8})|((030)\\d{7})|\\d{9})";
-
+    public static final String PLAIN_PHONENUMBER_MASK = "^(((020)\\d{8})|((030)\\d{7})|((?!020|030)\\d{3}\\d{6}))$";
     /**
      * Formats number according to mask (xxx) xxx-xxx = 9 (020) xxxx-xxxx = 11  (030) xxx-xxxx = 10
      * @param phoneValue

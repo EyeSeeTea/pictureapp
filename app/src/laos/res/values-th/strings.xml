@@ -127,4 +127,5 @@
 <string name="monitor_row_title_submission">"การยอม"</string>
 <string name="review_title">กรุณาตรวจสอบก่อน</string>
 <string name="review_subtitle">การส่งผ่าน</string>
+<string name="not_tested">ไม่ได้ทดสอบ</string>
 </resources>

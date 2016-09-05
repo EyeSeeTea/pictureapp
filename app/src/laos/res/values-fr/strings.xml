@@ -127,4 +127,5 @@
 <string name="monitor_row_title_submission">Soumission</string>
 <string name="review_title">"S'il vous plaît vérifier avant"</string>
 <string name="review_subtitle">Transmission</string>
+<string name="not_tested">"Pas testé"</string>
 </resources>

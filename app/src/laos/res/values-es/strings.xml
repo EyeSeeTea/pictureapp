@@ -127,4 +127,5 @@
 <string name="monitor_row_title_submission">Aceptado</string>
 <string name="review_title">Por favor, compruebe</string>
 <string name="review_subtitle">Transmisión</string>
+<string name="not_tested">No probado</string>
 </resources>

@@ -23,8 +23,8 @@
 <string name="survey_info_exit_delete">"La evaluación en marcha será eliminada"</string>
 <string name="survey_title_completed">"Evaluacion finalizada"</string>
 <string name="survey_info_completed">"La evaluacion ha sido completada correctamente"</string>
-<string name="exception_org_unit_not_valid">"El código de salida no está activo para el programa . Contacto PSI en el 123456789"</string>
-<string name="exception_org_unit_banned">"El código está cerrado o bloqueado . Contacto PSI en el 123456789"</string>
+<string name="exception_org_unit_not_valid">"El código de salida no está activo para el programa . Contacto PSI en el 011 771 811"</string>
+<string name="exception_org_unit_banned">"El código está cerrado o bloqueado . Contacto PSI en el 011 771 811"</string>
 <string name="dynamic_error_phone_format">"El télefono dado no esta bien formateado ( 0NN NNN NNN{N} )"</string>
 <string name="dynamic_error_age">"La edad no es válida"</string>
 <string name="title_activity_settings">"Configuración"</string>

@@ -23,10 +23,8 @@
 <string name="survey_info_exit_delete">"ການສໍາຫຼວດແມ່ນຢູ່ໃນຄວາມຄືບຫນ້າແລະຈະໄດ້ຮັບການຍົກເລີກ,"</string>
 <string name="survey_title_completed">"ໂພສິ້ນສຸດລົງ con"</string>
 <string name="survey_info_completed">"ການສໍາຫຼວດໄດ້ຮັບການສໍາເລັດສົບຜົນສໍາເລັດ"</string>
-<string name="exception_org_unit_not_valid">"ລະຫັດທີ່ໃຫ້ບໍລິການບໍ່ຖືກຕ້ອງ.
-ຕິດຕໍ່ຈໍານວນ PSC SI 123456789 "</string>
-<string name="exception_org_unit_banned">"ບ່ອນທີ່ການບໍລິການໄດ້ປິດ.
-ຕິດຕໍ່ຈໍານວນ PSC SI 123456789 "</string>
+<string name="exception_org_unit_not_valid">"Outlet ລະຫັດບໍ່ຖືກຕ້ອງ. ຕິດຕໍ່ PSI ທີ່ 011 771 811"</string>
+<string name="exception_org_unit_banned">"Outlet ຖືກປິດຫຼືຖືກສະກັດ. ຕິດຕໍ່ PSI ທີ່ 011 771 811"</string>
 <string name="dynamic_error_phone_format">"ຫມາຍເລກໂທລະສັບ ທີ່ບໍ່ຖືກຕ້ອງ  ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
 <string name="dynamic_error_age">"ບໍ່ຖືກຕ້ອງ"</string>
 <string name="title_activity_settings">"ການກໍານົດ"</string>

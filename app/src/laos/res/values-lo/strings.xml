@@ -86,9 +86,10 @@
 <string name="monitor_row_title_period">"ໄລຍະເວລາ"</string>
 <string name="monitor_row_title_week">"ອາທິດ"</string>
 <string name="monitor_row_title_suspected">"ກໍລະນີຂອງສົງໄສວ່າ"</string>
-<string name="monitor_row_title_positive">"ໃນທາງບວກ"</string>
+<string name="monitor_row_title_positive">"ກໍລະນີໃນທາງບວກ"</string>
 <string name="monitor_row_title_negative">"ທາງລົບ"</string>
 <string name="monitor_row_title_not_tested">"ບໍ່ໄດ້ທົດສອບ"</string>
+<string name="monitor_row_title_tested">"ການທົດສອບ"</string>
 <string name="monitor_row_title_referral">"ການເຊື່ອມໂຍງກັບການ"</string>
 <string name="monitor_row_title_asmq">"ຢາຊູແອັດ Meng Florida,"</string>
 <string name="monitor_row_title_rdts">"RDTs Test"</string>
@@ -120,11 +121,10 @@
 <string name="font_size_level4_title">"ຂະຫນາດໃຫຍ່ທີ່ດີທີ່ສຸດ"</string>
 <string name="option_counter">"ການຄ້າງຫ້ອງທີ່: "</string>
 <string name="option_confirm">"ທາງເລືອກຢືນຢັນ"</string>
-<string name="monitor_row_title_denied">"ຄົນເຈັບປະຕິເສດ "</string>
-<string name="monitor_row_title_rdt_stockout">"ຢາໝົດ"</string>
-<string name="monitor_row_title_pregnant">"ຄົນເຈັບຖືພາ"</string>
-<string name="monitor_row_title_severe">"ຄົນເຈັບເປັນໄຂ້ຮ້າຍແຮງ"</string>
-<string name="monitor_row_title_submission">"ນຳສົ່ງ"</string>
+<string name="monitor_row_title_act_stockout">"ຈໍານວນບໍ່ຮັບການປິ່ນປົວ (ACT stockout) "</string>
+<string name="monitor_row_title_rdt_stockout">"ຈໍານວນບໍ່ໄດ້ທົດສອບ (ຢາໝົດ)"</string>
+<string name="monitor_row_title_treatment">"ຈໍານວນຂອງການສົ່ງຕໍ່ (ການປິ່ນປົວ)"</string>
+<string name="monitor_row_title_rdt_testing">"ຈໍານວນຂອງການສົ່ງຕໍ່ (ການທົດສອບ RDT)"</string>
 <string name="review_title">ກະລຸນາກວດສອບກ່ອນທີ່ຈະ</string>
 <string name="review_subtitle">ລະບົບສາຍສົ່ງ</string>
 <string name="not_tested">ບໍ່ໄດ້ທົດສອບ</string>

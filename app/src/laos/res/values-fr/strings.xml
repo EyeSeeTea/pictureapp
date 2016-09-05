@@ -86,9 +86,10 @@
 <string name="monitor_row_title_period">"Période de temps"</string>
 <string name="monitor_row_title_week">"Semaine"</string>
 <string name="monitor_row_title_suspected">"Les cas suspects"</string>
-<string name="monitor_row_title_positive">"Positif"</string>
+<string name="monitor_row_title_positive">"Les cas Positifs"</string>
 <string name="monitor_row_title_negative">"Négatif"</string>
 <string name="monitor_row_title_not_tested">"Pas testé"</string>
+<string name="monitor_row_title_tested">"testé"</string>
 <string name="monitor_row_title_referral">"Referral"</string>
 <string name="monitor_row_title_asmq">"AS/MQ"</string>
 <string name="monitor_row_title_rdts">"RDTs"</string>
@@ -120,11 +121,10 @@
 <string name="font_size_level4_title">"Extra grand"</string>
 <string name="option_counter">"Répétitions: "</string>
 <string name="option_confirm">"Confirmer option"</string>
-<string name="monitor_row_title_denied">"Refusé"</string>
-<string name="monitor_row_title_rdt_stockout">Rdt rupture de stock</string>
-<string name="monitor_row_title_pregnant">Enceinte</string>
-<string name="monitor_row_title_severe">"Sévère"</string>
-<string name="monitor_row_title_submission">Soumission</string>
+<string name="monitor_row_title_act_stockout">"Numéro non traitée (ACT rupture de stock)"</string>
+<string name="monitor_row_title_rdt_stockout">"Nombre non testé (Rdt rupture de stock)</string>
+<string name="monitor_row_title_treatment">"Nombre de références (Traitement)"</string>
+<string name="monitor_row_title_rdt_testing">"Nombre de références (test TDR)"</string>
 <string name="review_title">"S'il vous plaît vérifier avant"</string>
 <string name="review_subtitle">Transmission</string>
 <string name="not_tested">"Pas testé"</string>

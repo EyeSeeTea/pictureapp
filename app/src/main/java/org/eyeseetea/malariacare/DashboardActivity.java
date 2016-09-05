@@ -500,11 +500,8 @@ public class DashboardActivity extends BaseActivity {
                 });
         msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
-                if(isReviewFragmentActive())
-                    hideReview();
-                else {
-                    DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(0).getQuestion());
-                }
+                DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(0).getQuestion());
+                hideReview();
             }
         });
 

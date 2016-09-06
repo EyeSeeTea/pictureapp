@@ -889,7 +889,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         bottom=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getMarginBottomFor(optionAttribute.getImage_margin()));
 
         if(left+top+right+bottom>1) {
-            Log.d(TAG,"image Marging "+left+","+top+","+right+","+bottom)
+            Log.d(TAG,"image Marging "+left+","+top+","+right+","+bottom);
             FrameLayout.LayoutParams myImageLayout = (FrameLayout.LayoutParams) imageView.getLayoutParams();
             myImageLayout.setMargins(left,top,right,bottom);
             imageView.setLayoutParams(myImageLayout);

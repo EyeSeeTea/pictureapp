@@ -37,7 +37,7 @@ public class Migration9AddOptionPadding extends BaseMigration {
     @Override
     public void migrate(SQLiteDatabase database) {
         postMigrationRequired=true;
-        MigrationTools.addColumn(database, OptionAttribute.class, "text_margin", "String");
+        MigrationTools.addColumn(database, OptionAttribute.class, "text_padding", "String");
         MigrationTools.addColumn(database, OptionAttribute.class, "image_margin", "String");
     }
 

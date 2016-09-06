@@ -54,7 +54,7 @@ public class OptionAttribute extends BaseModel {
     int text_size;
 
     @Column
-    String text_margin;
+    String text_padding;
 
     @Column
     String image_margin;
@@ -217,12 +217,12 @@ public class OptionAttribute extends BaseModel {
         return (verticalGravity | horizontalGravity);
     }
 
-    public String getText_margin(){
-        return text_margin;
+    public String getText_padding(){
+        return text_padding;
     }
 
-    public void setText_margin(String text_margin){
-        this.text_margin = text_margin;
+    public void setText_padding(String text_padding){
+        this.text_padding = text_padding;
     }
 
     public String getImage_margin(){
@@ -233,30 +233,30 @@ public class OptionAttribute extends BaseModel {
         this.image_margin = image_margin;
     }
 
-    public int getMarginLeftFor(String margin) {
-        return getMargin(margin, 0);
+    public int getLeftFrom(String value) {
+        return getValueFromArray(value, 0);
     }
 
-    public int getMarginTopFor(String margin) {
-        return getMargin(margin, 1);
+    public int getTopFrom(String value) {
+        return getValueFromArray(value, 1);
     }
 
-    public int getMarginRightFor(String margin) {
-        return getMargin(margin, 2);
+    public int getRightFrom(String value) {
+        return getValueFromArray(value, 2);
     }
 
-    public int getMarginBottomFor(String margin) {
-        return getMargin(margin, 3);
+    public int getBottomFrom(String value) {
+        return getValueFromArray(value, 3);
     }
 
-    private int getMargin(String margin, int position) {
-        int padding=0;
+    private int getValueFromArray(String array, int position) {
+        int value=0;
         try{
-            padding=Integer.parseInt(margin.split(",")[position]);
+            value=Integer.parseInt(array.split(",")[position]);
         }catch (Exception e){
 
         }
-        return padding;
+        return value;
     }
     @Override
     public boolean equals(Object o) {

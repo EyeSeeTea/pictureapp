@@ -542,10 +542,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             textOption.setVisibility(View.GONE);
         }
         int left,top,right,bottom;
-        left= LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getMarginLeftFor(optionAttribute.getText_margin()));
-        top=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getMarginTopFor((optionAttribute.getText_margin())));
-        right=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getMarginRightFor((optionAttribute.getText_margin())));
-        bottom=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getMarginBottomFor(optionAttribute.getText_margin()));
+        left= LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getLeftFrom(optionAttribute.getText_padding()));
+        top=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getTopFrom((optionAttribute.getText_padding())));
+        right=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getRightFrom((optionAttribute.getText_padding())));
+        bottom=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getBottomFrom(optionAttribute.getText_padding()));
         if(left+top+right+bottom>1) {
             Log.d(TAG,"textPadding "+left+","+top+","+right+","+bottom);
             FrameLayout.LayoutParams myImageLayout = (FrameLayout.LayoutParams) textOption.getLayoutParams();
@@ -883,10 +883,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         OptionAttribute optionAttribute=option.getOptionAttribute();
 
         int left,top,right,bottom;
-        left=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getMarginLeftFor(optionAttribute.getImage_margin()));
-        top=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getMarginTopFor(optionAttribute.getImage_margin()));
-        right=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getMarginRightFor(optionAttribute.getImage_margin()));
-        bottom=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getMarginBottomFor(optionAttribute.getImage_margin()));
+        left=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getLeftFrom(optionAttribute.getImage_margin()));
+        top=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getTopFrom(optionAttribute.getImage_margin()));
+        right=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getRightFrom(optionAttribute.getImage_margin()));
+        bottom=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getBottomFrom(optionAttribute.getImage_margin()));
 
         if(left+top+right+bottom>1) {
             Log.d(TAG,"image Marging "+left+","+top+","+right+","+bottom);

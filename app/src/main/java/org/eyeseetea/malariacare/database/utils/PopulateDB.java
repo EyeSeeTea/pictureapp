@@ -168,9 +168,9 @@ public class PopulateDB {
                             optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
 
                         if(line.length>6 && !line[6].equals(""))
-                            optionAttribute.setText_margin((line[6]));
+                            optionAttribute.setText_padding((line[6]));
                         else {
-                            optionAttribute.setText_margin(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
+                            optionAttribute.setText_padding(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
                         }
                         if(line.length>7 && !line[7].equals(""))
                             optionAttribute.setImage_margin((line[7]));
@@ -393,9 +393,9 @@ public class PopulateDB {
             else
                 optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
             if(line.length>6 && !line[6].equals(""))
-                optionAttribute.setText_margin((line[6]));
+                optionAttribute.setText_padding((line[6]));
             else {
-                optionAttribute.setText_margin(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
+                optionAttribute.setText_padding(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_padding));
             }
             if(line.length>7 && !line[7].equals(""))
                 optionAttribute.setImage_margin((line[7]));

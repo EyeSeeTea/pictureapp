@@ -881,6 +881,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Put image
         putImageInImageView(option.getPath(), imageView);
         OptionAttribute optionAttribute=option.getOptionAttribute();
+
         int left,top,right,bottom;
         left=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getMarginLeftFor(optionAttribute.getImage_margin()));
         top=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getMarginTopFor(optionAttribute.getImage_margin()));
@@ -888,10 +889,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         bottom=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getMarginBottomFor(optionAttribute.getImage_margin()));
 
         if(left+top+right+bottom>1) {
-            Log.d(TAG,"image Marging "+left+","+top+","+right+","+bottom);
-            //invert padding
+            Log.d(TAG,"image Marging "+left+","+top+","+right+","+bottom)
             FrameLayout.LayoutParams myImageLayout = (FrameLayout.LayoutParams) imageView.getLayoutParams();
-            //myImageLayout.gravity=optionAttribute.getGravity();
             myImageLayout.setMargins(left,top,right,bottom);
             imageView.setLayoutParams(myImageLayout);
         }

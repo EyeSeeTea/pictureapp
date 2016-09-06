@@ -20,6 +20,7 @@
 package org.eyeseetea.malariacare.layout.utils;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -35,8 +36,10 @@ import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
+import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
@@ -45,6 +48,7 @@ import java.util.List;
  */
 public class LayoutUtils {
 
+    private final static String TAG=".LayoutUtils";
     public static final int [] rowBackgrounds = {R.drawable.background_even, R.drawable.background_odd};
 
     /**
@@ -124,12 +128,73 @@ public class LayoutUtils {
 
 
 
-    public static int getPixelsByWidthPercent(int percent){
-        return calculatePercent(percent,Math.round(PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().widthPixels*PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().density));
+    /**
+     * This method try to fix the width by value and screen density size. Its not 1:1 in all the screens
+     */
+    public static int getPixelsByWidthPercentFixed(int value) {
+        if(value==0)
+            return 0;
+        Log.d(TAG,"Width value"+value);
+        DisplayMetrics displayMetrics=PreferencesState.getInstance().getContext().getResources().getDisplayMetrics();
+        //fix value by screen size
+        int density= Math.round(displayMetrics.widthPixels*
+                displayMetrics.density);
+        if (density<= Constants.SCREEN_XSMALL) {
+            value += value;
+            Log.d(TAG,"xsmall Width final value"+value);
+        } else if (density<= Constants.SCREEN_MEDIUM) {
+            value += value/4;
+            Log.d(TAG,"medium Width final value"+value);
+        }
+        else if (density<= Constants.SCREEN_LARGE) {
+            value -= value/4;
+            Log.d(TAG,"large Width final value"+value);
+        }else if (density<= Constants.SCREEN_XLARGE) {
+            value -= value/3;
+            Log.d(TAG,"xlarge Width final value"+value);
+        }
+        else {
+            value -= value / 2;
+            Log.d(TAG,"+ xxlarge Width final value"+value);
+        }
+        return calculatePercent(value,Math.round(displayMetrics.widthPixels*displayMetrics.density));
     }
 
-    public static int getPixelsByHeightPercent(int percent){
-        return calculatePercent(percent,Math.round(PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().heightPixels*PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().density));
+    /**
+     * This method try to fix the height by value and screen density size. Its not 1:1 in all the screens
+     */
+    public static int getPixelsByHeightPercentFixed(int value){
+        if(value==0)
+            return 0;
+        Log.d(TAG,"Height value"+value);
+        DisplayMetrics displayMetrics=PreferencesState.getInstance().getContext().getResources().getDisplayMetrics();
+        //fix value by screen size
+        int density=Math.round(displayMetrics.heightPixels*
+                displayMetrics.density);
+        if (density<= Constants.SCREEN_XSMALL) {
+            value += value;
+            Log.d(TAG,"xsmall Height final value"+value);
+        } else if (density<= Constants.SCREEN_MEDIUM) {
+            value += value/3;
+            Log.d(TAG,"medium Height final value"+value);
+        }
+        else if (density<= Constants.SCREEN_LARGE) {
+            value += value/4;
+            Log.d(TAG,"large Height final value"+value);
+        }else if (density<= Constants.SCREEN_XLARGE) {
+            value += value/3;
+            Log.d(TAG,"xlarge Height final value"+value);
+        }
+        else {
+            value += value / 2;
+            Log.d(TAG,"+ xxlarge Height value"+value);
+        }
+
+        Log.d(TAG,"Heigh: "+displayMetrics.heightPixels+" height*density "+(displayMetrics.heightPixels*displayMetrics.density)+" width: "+displayMetrics.widthPixels+" width*density: "+(displayMetrics.widthPixels*displayMetrics.density));
+        Log.d(TAG,"dpiy  "+displayMetrics.ydpi+" dpix "+displayMetrics.xdpi);
+        Log.d(TAG,"densitydpi:  "+displayMetrics.densityDpi+" density: "+displayMetrics.density);
+
+        return calculatePercent(value,Math.round(displayMetrics.heightPixels*displayMetrics.density));
     }
 
     private static int calculatePercent(int percent, int total) {

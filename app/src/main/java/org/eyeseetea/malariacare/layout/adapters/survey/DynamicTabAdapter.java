@@ -542,19 +542,29 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             textOption.setVisibility(View.GONE);
         }
         int left,top,right,bottom;
-        left= LayoutUtils.getPixelsByWidthPercent(optionAttribute.getMarginLeftFor(optionAttribute.getText_margin()));
-        top=LayoutUtils.getPixelsByHeightPercent(optionAttribute.getMarginTopFor((optionAttribute.getText_margin())));
-        right=LayoutUtils.getPixelsByWidthPercent(optionAttribute.getMarginRightFor((optionAttribute.getText_margin())));
-        bottom=LayoutUtils.getPixelsByHeightPercent(optionAttribute.getMarginBottomFor(optionAttribute.getText_margin()));
+        left= LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getMarginLeftFor(optionAttribute.getText_margin()));
+        top=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getMarginTopFor((optionAttribute.getText_margin())));
+        right=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getMarginRightFor((optionAttribute.getText_margin())));
+        bottom=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getMarginBottomFor(optionAttribute.getText_margin()));
         if(left+top+right+bottom>1) {
             Log.d(TAG,"textPadding "+left+","+top+","+right+","+bottom);
-            //textOption.setPadding(left, top, right, bottom);
             FrameLayout.LayoutParams myImageLayout = (FrameLayout.LayoutParams) textOption.getLayoutParams();
-            //myImageLayout.gravity=optionAttribute.getGravity();
             myImageLayout.setMargins(left,top,right,bottom);
             textOption.setLayoutParams(myImageLayout);
+
+            int density=Math.round(PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().heightPixels*
+                    PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().density);
+            //fix textsize if the screen is xsmall.
+            if (density<= Constants.SCREEN_XSMALL) {
+                textOption.setTextSize(TypedValue.COMPLEX_UNIT_SP, optionAttribute.getText_size() / 2);
+            }
+            else {
+                textOption.setTextSize(TypedValue.COMPLEX_UNIT_SP, optionAttribute.getText_size());
+            }
         }
-        textOption.setTextSize(TypedValue.COMPLEX_UNIT_SP, optionAttribute.getText_size());
+        else {
+            textOption.setTextSize(TypedValue.COMPLEX_UNIT_SP, optionAttribute.getText_size());
+        }
     }
 
     private void initWarningValue(TableRow tableRow, Option option) {
@@ -872,13 +882,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         putImageInImageView(option.getPath(), imageView);
         OptionAttribute optionAttribute=option.getOptionAttribute();
         int left,top,right,bottom;
-        left=LayoutUtils.getPixelsByWidthPercent(optionAttribute.getMarginLeftFor(optionAttribute.getImage_margin()));
-        top=LayoutUtils.getPixelsByHeightPercent(optionAttribute.getMarginTopFor(optionAttribute.getImage_margin()));
-        right=LayoutUtils.getPixelsByWidthPercent(optionAttribute.getMarginRightFor(optionAttribute.getImage_margin()));
-        bottom=LayoutUtils.getPixelsByHeightPercent(optionAttribute.getMarginBottomFor(optionAttribute.getImage_margin()));
+        left=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getMarginLeftFor(optionAttribute.getImage_margin()));
+        top=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getMarginTopFor(optionAttribute.getImage_margin()));
+        right=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getMarginRightFor(optionAttribute.getImage_margin()));
+        bottom=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getMarginBottomFor(optionAttribute.getImage_margin()));
 
         if(left+top+right+bottom>1) {
-            Log.d(TAG,"imagemarging "+left+","+top+","+right+","+bottom);
+            Log.d(TAG,"image Marging "+left+","+top+","+right+","+bottom);
             //invert padding
             FrameLayout.LayoutParams myImageLayout = (FrameLayout.LayoutParams) imageView.getLayoutParams();
             //myImageLayout.gravity=optionAttribute.getGravity();

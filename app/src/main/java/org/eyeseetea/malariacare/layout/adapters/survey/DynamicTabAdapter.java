@@ -673,7 +673,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void savePositiveIntValue(EditText numberPicker) {
-        String positiveIntValue = String.valueOf(numberPicker.getText());
+        //The text is truncated as integer(00 to 0, 01 to 1, etc) before re-saved and send as plane text.
+        int positiveIntValueTruncated = Integer.parseInt(String.valueOf(numberPicker.getText()));
+        String positiveIntValue = String.valueOf(positiveIntValueTruncated);
 
         //Required, empty values rejected
         if(checkEditTextNotNull(positiveIntValue)){

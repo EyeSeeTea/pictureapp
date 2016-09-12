@@ -169,6 +169,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         if(PushClient.TAG_DATETIME_CAPTURE!=null && !PushClient.TAG_DATETIME_CAPTURE.equals(""))
             buildAndSaveDataValue(PushClient.TAG_DATETIME_CAPTURE, EventExtended.format(survey.getCompletionDate(), EventExtended.COMPLETION_DATE_FORMAT));
 
+        lastSentDate=newSentDate;
         //save Time Sent
         if(PushClient.TAG_DATETIME_SENT!=null && !PushClient.TAG_DATETIME_SENT.equals(""))
             buildAndSaveDataValue(PushClient.TAG_DATETIME_SENT,  EventExtended.format(newSentDate, EventExtended.COMPLETION_DATE_FORMAT));

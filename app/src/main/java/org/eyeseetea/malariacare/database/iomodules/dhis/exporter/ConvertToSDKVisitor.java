@@ -93,12 +93,15 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         this.context=context;
         surveys = new ArrayList<>();
         events = new ArrayList<>();
+        currentEvent=null;
+        currentSurvey=null;
     }
 
     @Override
     public void visit(Survey survey) throws Exception{
+        this.currentEvent=null;
+        this.currentSurvey=null;
         newSentDate=new Date();
-
         //Precondition
         if(isEmpty(survey)){
             survey.delete();

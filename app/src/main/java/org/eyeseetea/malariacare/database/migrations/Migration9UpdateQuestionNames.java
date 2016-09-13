@@ -19,7 +19,7 @@ import java.io.IOException;
 @Migration(version = 9, databaseName = AppDatabase.NAME)
 public class Migration9UpdateQuestionNames extends BaseMigration {
 
-    private static String TAG=".Migration8";
+    private static String TAG=".Migration9";
 
     private static Migration9UpdateQuestionNames instance;
     private boolean postMigrationRequired;

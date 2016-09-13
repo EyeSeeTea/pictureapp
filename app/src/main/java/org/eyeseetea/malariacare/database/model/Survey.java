@@ -33,7 +33,6 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -643,14 +642,14 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     public boolean isRDT(){
         //refresh values
         getValuesFromDB();
-        return getRDT().equals(PreferencesState.getInstance().getContext().getResources().getString(R.string.rdtPositive));
+        return getRDTName().equals(PreferencesState.getInstance().getContext().getResources().getString(R.string.rdtPositive));
     }
 
     /**
      * Since there are three possible values first question (RDT):'Positive','Negative','Not Tested'
      * @return String
      */
-    public String getRDT() {
+    public String getRDTName() {
         String rdtValue = "";
         if (values == null) {
             values = Value.listAllBySurvey(this);
@@ -667,7 +666,27 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         }
         return rdtValue;
     }
+    /**
+     * Since there are three possible values first question (RDT):'Positive','Negative','Not Tested'
+     * @return String
+     */
+    public String getResultCode() {
+        String rdtValue = "";
+        if (values == null) {
+            values = Value.listAllBySurvey(this);
+        }
 
+        if (values.size() > 0) {
+            for(Value value:values){
+                //Find the RTS option
+                if(value.getOption()!=null && value.getQuestion()!=null && value.getQuestion().getCode().equals(PreferencesState.getInstance().getContext().getString(R.string.Result_code))){
+                    rdtValue = value.getOption().getCode();
+                }
+            }
+
+        }
+        return rdtValue;
+    }
     /**
      * Returns the last surveys (by date) with status put to "In progress"
      * @param limit
@@ -753,13 +772,6 @@ public class Survey extends BaseModel  implements VisitableToSDK {
             setCompletionDate(new Date());
             save();
         }
-    }
-
-    public void updateSurveyState(){
-        //Change status and save mainScore
-        setStatus(Constants.SURVEY_SENT);
-        save();
-        saveMainScore();
     }
 
     public static void removeInProgress() {

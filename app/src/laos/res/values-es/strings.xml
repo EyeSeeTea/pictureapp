@@ -23,8 +23,8 @@
 <string name="survey_info_exit_delete">"La evaluación en marcha será eliminada"</string>
 <string name="survey_title_completed">"Evaluacion finalizada"</string>
 <string name="survey_info_completed">"La evaluacion ha sido completada correctamente"</string>
-<string name="exception_org_unit_not_valid">"El código de salida no está activo para el programa . Contacto PSI en el 123456789"</string>
-<string name="exception_org_unit_banned">"El código está cerrado o bloqueado . Contacto PSI en el 123456789"</string>
+<string name="exception_org_unit_not_valid">"El código de salida no está activo para el programa . Contacto PSI en el 011 771 811"</string>
+<string name="exception_org_unit_banned">"El código está cerrado o bloqueado . Contacto PSI en el 011 771 811"</string>
 <string name="dynamic_error_phone_format">"El télefono dado no esta bien formateado  ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx )"</string>
 <string name="dynamic_error_age">"La edad no es válida"</string>
 <string name="title_activity_settings">"Configuración"</string>
@@ -86,9 +86,10 @@
 <string name="monitor_row_title_period">"Periodo tiempo"</string>
 <string name="monitor_row_title_week">"Semana"</string>
 <string name="monitor_row_title_suspected">"Casos sospechosos"</string>
-<string name="monitor_row_title_positive">"Positivo"</string>
+<string name="monitor_row_title_positive">"Casos positivos"</string>
 <string name="monitor_row_title_negative">"Negativo"</string>
 <string name="monitor_row_title_not_tested">"No testado"</string>
+<string name="monitor_row_title_tested">Testado</string>
 <string name="monitor_row_title_referral">"Referral"</string>
 <string name="monitor_row_title_asmq">"AS/MQ"</string>
 <string name="monitor_row_title_rdts">"RDTs"</string>
@@ -120,11 +121,15 @@
 <string name="font_size_level4_title">"Extra grande"</string>
 <string name="option_counter">"Repeticiones: "</string>
 <string name="option_confirm">"Confirmar opción"</string>
-<string name="monitor_row_title_denied">Denegado</string>
-<string name="monitor_row_title_rdt_stockout">Rdt desabastecido</string>
-<string name="monitor_row_title_pregnant">Embarazada</string>
-<string name="monitor_row_title_severe">Grave</string>
-<string name="monitor_row_title_submission">Aceptado</string>
+<string name="monitor_row_title_act_stockout">Número no tratadas (falta de existencias ACT)</string>
+<string name="monitor_row_title_denied">"Pacientes rechazados"</string>
+<string name="monitor_row_title_rdt_stockout">úmero no probado (Rdt desabastecido)</string>
+<string name="monitor_row_title_pregnant">"Pacientes embarazadas"</string>
+<string name="monitor_row_title_severe">"Pacientes graves"</string>
+<string name="monitor_row_title_treatment">Número de referencias (Tratamiento)</string>
+<string name="monitor_row_title_rdt_testing">Número de referencias (pruebas RDT)</string>
+<string name="monitor_row_title_submission">"Envíos"</string>
 <string name="review_title">Por favor, compruebe</string>
 <string name="review_subtitle">Transmisión</string>
+<string name="not_tested">No probado</string>
 </resources>

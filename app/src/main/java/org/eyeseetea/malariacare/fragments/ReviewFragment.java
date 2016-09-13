@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
@@ -80,6 +81,16 @@ public class ReviewFragment extends Fragment {
     private void drawValue(LinearLayout linearLayout, Value value) {
         TextCard textCard=(TextCard) lInflater.inflate(R.layout.dynamic_review_row,linearLayout,false);
         textCard.setText((value.getOption()!=null)?value.getOption().getCode():value.getValue());
+        if((value.getQuestion()!=null)) {
+            textCard.setTag(value.getQuestion());
+            textCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Question question= (Question)v.getTag();
+                    DashboardActivity.dashboardActivity.hideReview(question);
+                }
+            });
+        }
         if(value.getQuestion()!=null) {
             if(value.getOption()!=null && value.getOption().getBackground_colour()!=null)
                 textCard.setBackgroundColor(Color.parseColor("#" + value.getOption().getBackground_colour()));

@@ -23,7 +23,7 @@
 <string name="survey_info_exit_delete">"The survey in progress will be deleted"</string>
 <string name="survey_title_completed">"Survey completed"</string>
 <string name="survey_info_completed">"The survey has been successfully completed"</string>
-<string name="exception_org_unit_not_valid">"Outlet Code is not valid. Contact PSK at 011 771 811"</string>
+<string name="exception_org_unit_not_valid">"Outlet Code is not valid. Contact PSI at 011 771 811"</string>
 <string name="exception_org_unit_banned">"Outlet is closed or blocked. Contact PSI at 011 771 811"</string>
 <string name="dynamic_error_phone_format">"Invalid format for phone number ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
 <string name="dynamic_error_age">"Invalid age"</string>
@@ -86,9 +86,10 @@
 <string name="monitor_row_title_period">"Period"</string>
 <string name="monitor_row_title_week">"Week"</string>
 <string name="monitor_row_title_suspected">"Suspected cases"</string>
-<string name="monitor_row_title_positive">"Positive"</string>
+<string name="monitor_row_title_positive">"Positive cases"</string>
 <string name="monitor_row_title_negative">"Negative"</string>
 <string name="monitor_row_title_not_tested">"Not tested"</string>
+<string name="monitor_row_title_tested">Tested</string>
 <string name="monitor_row_title_referral">"Referral"</string>
 <string name="monitor_row_title_asmq">"AS/MQ"</string>
 <string name="monitor_row_title_rdts">"RDTs"</string>
@@ -120,11 +121,15 @@
 <string name="font_size_level4_title">"Extra large"</string>
 <string name="option_counter">"Repetitions: "</string>
 <string name="option_confirm">"Confirm option"</string>
-<string name="monitor_row_title_denied">Denied</string>
-<string name="monitor_row_title_rdt_stockout">Rdt stockout</string>
-<string name="monitor_row_title_pregnant">Pregnant</string>
-<string name="monitor_row_title_severe">Severe</string>
-<string name="monitor_row_title_submission">Submission</string>
+<string name="monitor_row_title_act_stockout">Number not treated (ACT stockout)</string>
+<string name="monitor_row_title_denied">"Denied patients"</string>
+<string name="monitor_row_title_rdt_stockout">Number not tested (Rdt stockout)</string>
+<string name="monitor_row_title_pregnant">"Pregnant patients"</string>
+<string name="monitor_row_title_severe">"Severe patients"</string>
+<string name="monitor_row_title_treatment">Number of referrals (Treatment)</string>
+<string name="monitor_row_title_rdt_testing">Number of referrals (RDT testing)</string>
+<string name="monitor_row_title_submission">"Submission"</string>
 <string name="review_title">Please check before</string>
 <string name="review_subtitle">Transmission</string>
+<string name="not_tested">Not tested</string>
 </resources>

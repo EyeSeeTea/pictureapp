@@ -23,10 +23,8 @@
 <string name="survey_info_exit_delete">"ការស្ទង់មតិកំពុងដំណើរការ​ ហើយនឹងត្រូវលុបចោល"</string>
 <string name="survey_title_completed">"ការស្ទង់មតិបានបញ្ចប់់"</string>
 <string name="survey_info_completed">"ការស្ទង់មតិបានបញ្ចប់ដោយជោគជ័យ"</string>
-<string name="exception_org_unit_not_valid">"លេខកូដកន្លែងផ្តល់សេវាមិនត្រឹមត្រូវទេ។
-ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈលេខ១២៣៤៥៦៧៨៩"</string>
-<string name="exception_org_unit_banned">"កន្លែងផ្តល់សេវាត្រូវបានបិទ។
-ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈលេខ១២៣៤៥៦៧៨៩"</string>
+<string name="exception_org_unit_not_valid">"ហាងក្រមមិនត្រឹមត្រូវ។ ការទំនាក់ទំនងនៅ  អង្គការ PSI 011 771 811"</string>
+<string name="exception_org_unit_banned">"ហាងត្រូវបានបិទឬរារាំង។ ការទំនាក់ទំនងនៅ  អង្គការ PSI 011 771 811"</string>
 <string name="dynamic_error_phone_format">"បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ  ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
 <string name="dynamic_error_age">"អាយុមិនត្រឹមត្រូវ"</string>
 <string name="title_activity_settings">"ការកំនត់"</string>
@@ -88,9 +86,10 @@
 <string name="monitor_row_title_period">"រយៈពេល"</string>
 <string name="monitor_row_title_week">"សប្តាហ៍"</string>
 <string name="monitor_row_title_suspected">"ករណីសង្ស័យ"</string>
-<string name="monitor_row_title_positive">"វិជ្ជមាន"</string>
+<string name="monitor_row_title_positive">"ករណីវិជ្ជមាន"</string>
 <string name="monitor_row_title_negative">"អវិជ្ជមាន"</string>
 <string name="monitor_row_title_not_tested">"មិនបានធ្វើតេស្ត"</string>
+<string name="monitor_row_title_tested">"ធ្វើតេស្ត"</string>
 <string name="monitor_row_title_referral">"ធ្វើកាបេញ្ជូន"</string>
 <string name="monitor_row_title_asmq">"ឱសថអាតេស៊ុយណាត​ ម៉េហ្លូគីន"</string>
 <string name="monitor_row_title_rdts">"តេស្ត RDTs"</string>
@@ -122,11 +121,15 @@
 <string name="font_size_level4_title">"ធំបំផុត"</string>
 <string name="option_counter">"ការធ្វើឡើងវិញ:"</string>
 <string name="option_confirm">"អះអាងជម្រើស"</string>
-<string name="monitor_row_title_denied">"បដិសេធ"</string>
-<string name="monitor_row_title_rdt_stockout">" គ្រឿងញៀន "</string>
-<string name="monitor_row_title_pregnant">"មានផ្ទៃពោះ "</string>
-<string name="monitor_row_title_severe">" ធ្ងន់ធ្ងរ "</string>
-<string name="monitor_row_title_submission">" ការដាក់"</string>
+<string name="monitor_row_title_act_stockout">"ចំនួនមិនបានព្យាបាល (stockout ACT)"</string>
+<string name="monitor_row_title_denied">"អ្នកជំងឺបានបដិសេធ"</string>
+<string name="monitor_row_title_rdt_stockout">"លេខមិនបានសាកល្បង (គ្រឿងញៀន )"</string>
+<string name="monitor_row_title_pregnant">"អ្នកជំងឺដែលមានផ្ទៃពោះ"</string>
+<string name="monitor_row_title_severe">"អ្នកជំងឺធ្ងន់ធ្ងរ"</string>
+<string name="monitor_row_title_treatment">"ចំនួននៃការបញ្ជូន (ការព្យាបាល)"</string>
+<string name="monitor_row_title_rdt_testing">"ចំនួននៃការបញ្ជូន (ការធ្វើតេស្ត RDT)"</string>
+<string name="monitor_row_title_submission">"ការដាក់ស្នើ"</string>
 <string name="review_title">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>
 <string name="review_subtitle">ធ្វើការបញ្ជូន</string>
+<string name="not_tested">មិនបានសាកល្បង</string>
 </resources>

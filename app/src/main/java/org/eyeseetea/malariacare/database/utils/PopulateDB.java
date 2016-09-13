@@ -390,7 +390,7 @@ public class PopulateDB {
         //Save new optionattributes for each question
         while ((line = readerOptions.readNext()) != null) {
             for(Option option:options) {
-                if (option.getCode().equals(line[1])){
+                if(String.valueOf(option.getId_option()).equals(line[0])){
                     if (!line[5].equals("")) {
                         option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
                         option.save();
@@ -438,7 +438,7 @@ public class PopulateDB {
         //Save new optionattributes for each question
         while ((line = readerOptions.readNext()) != null) {
             for(Option option:options) {
-                if (option.getCode().equals(line[1])) {
+                if(String.valueOf(option.getId_option()).equals(line[0])){
                     if (!line[5].equals("")) {
                         option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
                         option.save();

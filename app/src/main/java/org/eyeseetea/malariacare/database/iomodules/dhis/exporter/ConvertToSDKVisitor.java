@@ -87,8 +87,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      * The generated event
      */
     Event currentEvent;
-    Date lastSentDate;
-    Date newSentDate;
+
     ConvertToSDKVisitor(Context context){
         this.context=context;
         surveys = new ArrayList<>();
@@ -101,14 +100,14 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     public void visit(Survey survey) throws Exception{
         this.currentEvent=null;
         this.currentSurvey=null;
-        newSentDate=new Date();
+
         //Precondition
         if(isEmpty(survey)){
             survey.delete();
             return;
         }
 
-        if(lastSentDate!=null && lastSentDate.equals(newSentDate)) {
+        if(Survey.countSurveysByCompletiondate(survey.getCompletionDate())>1) {
             return;
         }
         //Turn survey into an event
@@ -169,10 +168,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         if(PushClient.TAG_DATETIME_CAPTURE!=null && !PushClient.TAG_DATETIME_CAPTURE.equals(""))
             buildAndSaveDataValue(PushClient.TAG_DATETIME_CAPTURE, EventExtended.format(survey.getCompletionDate(), EventExtended.COMPLETION_DATE_FORMAT));
 
-        lastSentDate=newSentDate;
         //save Time Sent
         if(PushClient.TAG_DATETIME_SENT!=null && !PushClient.TAG_DATETIME_SENT.equals(""))
-            buildAndSaveDataValue(PushClient.TAG_DATETIME_SENT,  EventExtended.format(newSentDate, EventExtended.COMPLETION_DATE_FORMAT));
+            buildAndSaveDataValue(PushClient.TAG_DATETIME_SENT,  EventExtended.format(new Date(), EventExtended.COMPLETION_DATE_FORMAT));
     }
 
     /**

@@ -959,4 +959,12 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         }
         return null;
     }
+
+    public static int countSurveysByCompletiondate(Date completionDate) {
+
+        return (int) new Select().count()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.COMPLETIONDATE).eq(completionDate))
+                .count();
+    }
 }

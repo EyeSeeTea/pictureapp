@@ -122,9 +122,13 @@
 <string name="option_counter">"ការធ្វើឡើងវិញ:"</string>
 <string name="option_confirm">"អះអាងជម្រើស"</string>
 <string name="monitor_row_title_act_stockout">"ចំនួនមិនបានព្យាបាល (stockout ACT)"</string>
+<string name="monitor_row_title_denied">"អ្នកជំងឺបានបដិសេធ"</string>
 <string name="monitor_row_title_rdt_stockout">"លេខមិនបានសាកល្បង (គ្រឿងញៀន )"</string>
+<string name="monitor_row_title_pregnant">"អ្នកជំងឺដែលមានផ្ទៃពោះ"</string>
+<string name="monitor_row_title_severe">"អ្នកជំងឺធ្ងន់ធ្ងរ"</string>
 <string name="monitor_row_title_treatment">"ចំនួននៃការបញ្ជូន (ការព្យាបាល)"</string>
 <string name="monitor_row_title_rdt_testing">"ចំនួននៃការបញ្ជូន (ការធ្វើតេស្ត RDT)"</string>
+<string name="monitor_row_title_submission">"ការដាក់ស្នើ"</string>
 <string name="review_title">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>
 <string name="review_subtitle">ធ្វើការបញ្ជូន</string>
 <string name="not_tested">មិនបានសាកល្បង</string>

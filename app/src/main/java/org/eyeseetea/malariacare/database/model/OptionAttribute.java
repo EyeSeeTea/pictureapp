@@ -53,6 +53,13 @@ public class OptionAttribute extends BaseModel {
     @Column
     int text_size;
 
+    @Column
+    String text_padding;
+
+    @Column
+    String image_margin;
+
+
     /**
      * Constant that reflects a left alignment
      */
@@ -210,6 +217,47 @@ public class OptionAttribute extends BaseModel {
         return (verticalGravity | horizontalGravity);
     }
 
+    public String getText_padding(){
+        return text_padding;
+    }
+
+    public void setText_padding(String text_padding){
+        this.text_padding = text_padding;
+    }
+
+    public String getImage_margin(){
+        return image_margin;
+    }
+
+    public void setImage_margin(String image_margin){
+        this.image_margin = image_margin;
+    }
+
+    public int getLeftFrom(String value) {
+        return getValueFromArray(value, 0);
+    }
+
+    public int getTopFrom(String value) {
+        return getValueFromArray(value, 1);
+    }
+
+    public int getRightFrom(String value) {
+        return getValueFromArray(value, 2);
+    }
+
+    public int getBottomFrom(String value) {
+        return getValueFromArray(value, 3);
+    }
+
+    private int getValueFromArray(String array, int position) {
+        int value=0;
+        try{
+            value=Integer.parseInt(array.split(",")[position]);
+        }catch (Exception e){
+
+        }
+        return value;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

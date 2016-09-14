@@ -97,6 +97,7 @@ public class SurveyFragment extends Fragment{
      * Actual layout to be accessible in the fragment
      */
     RelativeLayout llLayout;
+    public DynamicTabAdapter dinamicTabAdapter;
 
 
     @Override
@@ -442,7 +443,7 @@ public class SurveyFragment extends Fragment{
          */
         private ITabAdapter buildAdapter(Tab tab){
             if (tab.isDynamicTab())
-                return new DynamicTabAdapter(tab,getActivity());
+                return dinamicTabAdapter=new DynamicTabAdapter(tab,getActivity());
 
             return null;
         }

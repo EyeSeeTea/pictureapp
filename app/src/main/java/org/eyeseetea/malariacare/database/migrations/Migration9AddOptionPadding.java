@@ -4,31 +4,28 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Migration;
-import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
-import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
 import java.io.IOException;
 
 /**
- * Created by idelcano on 14/06/2016.
+ * Created by idelcano on 01/09/2016.
  */
-@Migration(version = 7, databaseName = AppDatabase.NAME)
-public class Migration7AddQuestionPathAttributeColumn extends BaseMigration {
+@Migration(version = 9, databaseName = AppDatabase.NAME)
+public class Migration9AddOptionPadding extends BaseMigration {
 
-    private static String TAG=".Migration7";
+    private static String TAG=".Migration8";
 
-    private static Migration7AddQuestionPathAttributeColumn instance;
+    private static Migration9AddOptionPadding instance;
     private boolean postMigrationRequired;
 
-    public Migration7AddQuestionPathAttributeColumn() {
+    public Migration9AddOptionPadding() {
         super();
         instance = this;
         postMigrationRequired=false;
@@ -40,7 +37,8 @@ public class Migration7AddQuestionPathAttributeColumn extends BaseMigration {
     @Override
     public void migrate(SQLiteDatabase database) {
         postMigrationRequired=true;
-        MigrationTools.addColumn(database, Question.class, "path", "String");
+        MigrationTools.addColumn(database, OptionAttribute.class, "text_padding", "String");
+        MigrationTools.addColumn(database, OptionAttribute.class, "image_margin", "String");
     }
 
     @Override
@@ -59,7 +57,7 @@ public class Migration7AddQuestionPathAttributeColumn extends BaseMigration {
         //Data? Add new default data
         if(instance.hasData()) {
             try {
-                PopulateDB.addImagePathQuestions(PreferencesState.getInstance().getContext().getAssets());
+                PopulateDB.updateOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {
                 e.printStackTrace();
             }

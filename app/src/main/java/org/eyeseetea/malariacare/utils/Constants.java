@@ -73,6 +73,10 @@ public class Constants {
             FONTS_LARGE = "large",
             FONTS_XLARGE = "xlarge",
             FONTS_SYSTEM = "system";
+    public static final int SCREEN_XSMALL = 320,
+            SCREEN_MEDIUM = 1510,
+            SCREEN_LARGE=1794,
+            SCREEN_XLARGE=4710;
 
     public static final int MAX_ITEMS_IN_DASHBOARD = 5;
 

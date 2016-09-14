@@ -34,6 +34,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,7 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
@@ -70,6 +72,7 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
@@ -536,15 +539,39 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void setTextSettings(TextCard textOption, Option currentOption) {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
-        if (currentOption.getOptionAttribute().hasHorizontalAlignment() && currentOption.getOptionAttribute().hasVerticalAlignment())
+        OptionAttribute optionAttribute=currentOption.getOptionAttribute();
+        if (optionAttribute.hasHorizontalAlignment() && optionAttribute.hasVerticalAlignment())
         {
             textOption.setText(currentOption.getCode());
-            textOption.setGravity(currentOption.getOptionAttribute().getGravity());
+            textOption.setGravity(optionAttribute.getGravity());
         }
         else{
             textOption.setVisibility(View.GONE);
         }
-        textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
+        int left,top,right,bottom;
+        left= LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getLeftFrom(optionAttribute.getText_padding()));
+        top=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getTopFrom((optionAttribute.getText_padding())));
+        right=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getRightFrom((optionAttribute.getText_padding())));
+        bottom=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getBottomFrom(optionAttribute.getText_padding()));
+        if(left+top+right+bottom>1) {
+            Log.d(TAG,"textPadding "+left+","+top+","+right+","+bottom);
+            FrameLayout.LayoutParams myImageLayout = (FrameLayout.LayoutParams) textOption.getLayoutParams();
+            myImageLayout.setMargins(left,top,right,bottom);
+            textOption.setLayoutParams(myImageLayout);
+
+            int density=Math.round(PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().heightPixels*
+                    PreferencesState.getInstance().getContext().getResources().getDisplayMetrics().density);
+            //fix textsize if the screen is xsmall.
+            if (density<= Constants.SCREEN_XSMALL) {
+                textOption.setTextSize(TypedValue.COMPLEX_UNIT_SP, optionAttribute.getText_size() / 2);
+            }
+            else {
+                textOption.setTextSize(TypedValue.COMPLEX_UNIT_SP, optionAttribute.getText_size());
+            }
+        }
+        else {
+            textOption.setTextSize(TypedValue.COMPLEX_UNIT_SP, optionAttribute.getText_size());
+        }
     }
 
     private void initWarningValue(TableRow tableRow, Option option) {
@@ -860,6 +887,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         ImageView imageView= (ImageView) button.getChildAt(0);
         //Put image
         putImageInImageView(option.getPath(), imageView);
+        OptionAttribute optionAttribute=option.getOptionAttribute();
+
+        int left,top,right,bottom;
+        left=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getLeftFrom(optionAttribute.getImage_margin()));
+        top=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getTopFrom(optionAttribute.getImage_margin()));
+        right=LayoutUtils.getPixelsByWidthPercentFixed(optionAttribute.getRightFrom(optionAttribute.getImage_margin()));
+        bottom=LayoutUtils.getPixelsByHeightPercentFixed(optionAttribute.getBottomFrom(optionAttribute.getImage_margin()));
+
+        if(left+top+right+bottom>1) {
+            Log.d(TAG,"image Marging "+left+","+top+","+right+","+bottom);
+            FrameLayout.LayoutParams myImageLayout = (FrameLayout.LayoutParams) imageView.getLayoutParams();
+            myImageLayout.setMargins(left,top,right,bottom);
+            imageView.setLayoutParams(myImageLayout);
+        }
         //Associate option
         button.setTag(option);
 
@@ -868,7 +909,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             button.setEnabled(false);
             return;
         }
-
         //Add button to listener
         swipeTouchListener.addClickableView(button);
 

@@ -35,6 +35,7 @@ import org.eyeseetea.malariacare.database.migrations.Migration5AddOptionAttribut
 import org.eyeseetea.malariacare.database.migrations.Migration6AddOptionTextSizeColumn;
 import org.eyeseetea.malariacare.database.migrations.Migration7AddQuestionPathAttributeColumn;
 import org.eyeseetea.malariacare.database.migrations.Migration8UpdateOptionNames;
+import org.eyeseetea.malariacare.database.migrations.Migration9AddOptionPadding;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Match$Table;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
@@ -76,10 +77,9 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         Migration2Database.postMigrate();
         Migration3AddQuestionColumn.postMigrate();
         Migration4AddQuestionVisibleColumn.postMigrate();
-        Migration5AddOptionAttributeColumns.postMigrate();
-        Migration6AddOptionTextSizeColumn.postMigrate();
         Migration7AddQuestionPathAttributeColumn.postMigrate();
         Migration8UpdateOptionNames.postMigrate();
+        Migration9AddOptionPadding.postMigrate();
     }
 
     private void createDBIndexes(){

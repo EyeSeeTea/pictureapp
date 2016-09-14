@@ -271,6 +271,13 @@ public class Survey extends BaseModel  implements VisitableToSDK {
 
 
     /**
+     * Checks if the survey has been in conflict
+     * @return true|false
+     */
+    public boolean isConflict(){
+        return Constants.SURVEY_CONFLICT==this.status;
+    }
+    /**
      * Checks if the survey has been completed or not
      * @return true|false
      */
@@ -493,7 +500,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      */
     public void updateSurveyStatus(){
         //Sent surveys are not updated
-        if(this.isSent() || this.isHide()){
+        if(this.isSent() || this.isHide() || this.isConflict()){
             return;
         }
 
@@ -533,6 +540,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     public static List<Survey> getAllUnsentSurveys() {
         return new Select().from(Survey.class)
                 .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
+                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_CONFLICT))
                 .orderBy(Survey$Table.EVENTDATE)
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }
@@ -962,5 +970,13 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 return value.getQuestion();
         }
         return null;
+    }
+
+    public static int countSurveysByCompletiondate(Date completionDate) {
+
+        return (int) new Select().count()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.COMPLETIONDATE).eq(completionDate))
+                .count();
     }
 }

@@ -45,49 +45,6 @@ public class BaseSurveyMonitor {
         return this.survey;
     }
 
-
-    /**
-     * Id of first question (positive, negative, not tested)
-     */
-    final static Long ID_QUESTION_RDT=1l;
-
-    /**
-     * Id of specie question(test result)
-     */
-    final static Long ID_QUESTION_SPECIE =5l;
-
-    /**
-     * Id of positive rdt option
-     */
-    final static Long ID_OPTION_RDT_POSITIVE=1l;
-
-
-
-    /**
-     * Tells if the given survey has Pf specie
-     * @return
-     */
-    public boolean isPf(){
-        return findValue(ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PF)!=null;
-    }
-
-    /**
-     * Tells if the given survey has Pv specie
-     * @return
-     */
-    public boolean isPv(){
-        return findValue(ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PV)!=null;
-    }
-
-    /**
-     * Tells if the given survey has Pf/Pv (mixed)  specie
-     * @return
-     */
-    public boolean isPfPv(){
-        return findValue(ID_QUESTION_SPECIE, SurveyMonitor.ID_OPTION_SPECIE_PFPV)!=null;
-    }
-
-
     /**
      * Looks for the value with the given question + option
      * @param idQuestion

@@ -390,7 +390,7 @@ public class PopulateDB {
         //Save new optionattributes for each question
         while ((line = readerOptions.readNext()) != null) {
             for(Option option:options) {
-                if (option.getCode().equals(line[1])){
+                if(String.valueOf(option.getId_option()).equals(line[0])){
                     if (!line[5].equals("")) {
                         option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
                         option.save();
@@ -438,7 +438,7 @@ public class PopulateDB {
         //Save new optionattributes for each question
         while ((line = readerOptions.readNext()) != null) {
             for(Option option:options) {
-                if (option.getCode().equals(line[1])) {
+                if(String.valueOf(option.getId_option()).equals(line[0])){
                     if (!line[5].equals("")) {
                         option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
                         option.save();
@@ -460,9 +460,33 @@ public class PopulateDB {
         //Save new option name for each option
         while ((line = reader.readNext()) != null) {
             for(Option option:options) {
-                if(option.getCode().equals(line[1])){
+                if(String.valueOf(option.getId_option()).equals(line[0])){
+                    option.setCode(line[1]);
                     option.setName(line[2]);
                     option.save();
+                    break;
+                }
+            }
+        }
+        reader.close();
+    }
+
+    public static void updateQuestionNameAndForms(AssetManager assetManager) throws IOException {
+        List<Question> questions = Question.getAllQuestions();
+        //Reset inner references
+        cleanInnerLists();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)), SEPARATOR, QUOTECHAR);
+
+        String line[];
+        //Save new option name for each option
+        while ((line = reader.readNext()) != null) {
+            for(Question question:questions) {
+                if(question.getUid().equals(line[5])){
+                    question.setCode(line[1]);
+                    question.setDe_name(line[2]);
+                    question.setShort_name(line[3]);
+                    question.setForm_name(line[4]);
+                    question.save();
                     break;
                 }
             }

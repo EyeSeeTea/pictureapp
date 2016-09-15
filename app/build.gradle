@@ -59,7 +59,7 @@ android {
     productFlavors {
         cambodia {
             applicationId 'org.eyeseetea.surveillance_kh_bb'
-            versionName "1.2.5"
+            versionName "1.2.6"
             buildConfigField "boolean", "reviewScreen", "false"
         }
         laos {

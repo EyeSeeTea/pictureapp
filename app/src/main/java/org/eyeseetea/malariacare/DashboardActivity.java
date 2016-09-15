@@ -495,6 +495,8 @@ public class DashboardActivity extends BaseActivity {
                 .setCancelable(false)
                 .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
+                            Survey survey=Session.getSurvey();
+                            survey.updateSurveyStatus();
                             closeSurveyFragment();
                     }
                 });

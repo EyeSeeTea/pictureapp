@@ -20,7 +20,7 @@ import java.io.IOException;
 @Migration(version = 10, databaseName = AppDatabase.NAME)
 public class Migration10UpdateOptions extends BaseMigration {
 
-    private static String TAG = ".Migration9";
+    private static String TAG = ".Migration10";
 
     private static Migration10UpdateOptions instance;
     private boolean postMigrationRequired;

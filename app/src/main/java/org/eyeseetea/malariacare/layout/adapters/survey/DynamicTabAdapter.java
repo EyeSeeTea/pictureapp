@@ -680,15 +680,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void savePositiveIntValue(EditText numberPicker) {
-        //The text is truncated as integer ( 00-0 , 01-1 , etc. ) before save and send as string.
-        Integer positiveIntValue = Integer.parseInt(String.valueOf(numberPicker.getText()));
+        String valueAsText=String.valueOf(numberPicker.getText());
 
         //Required, empty values rejected
-        if(checkEditTextNotNull(positiveIntValue.toString())){
+        if(checkEditTextNotNull(valueAsText)){
             numberPicker.setError(context.getString(R.string.dynamic_error_age));
             isClicked=false;
             return;
         }
+
+        //The text is truncated as integer ( 00-0 , 01-1 , etc. ) before save and send as string.
+        Integer positiveIntValue = Integer.parseInt(valueAsText);
 
         navigationController.isMovingToForward=true;
         Question question = navigationController.getCurrentQuestion();

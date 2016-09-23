@@ -450,7 +450,7 @@ public class PopulateDB {
         reader.close();
     }
 
-    public static void updateOptionNames(AssetManager assetManager) throws IOException  {
+    public static void updateOptions(AssetManager assetManager) throws IOException  {
         List<Option> options = Option.getAllOptions();
         //Reset inner references
         cleanInnerLists();

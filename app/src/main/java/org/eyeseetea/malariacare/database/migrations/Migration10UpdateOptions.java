@@ -17,7 +17,7 @@ import java.io.IOException;
  * Created by idelcano on 23/09/2016.
  */
 
-@Migration(version = 10, databaseName = AppDatabase.NAME)
+@Migration(version = 9, databaseName = AppDatabase.NAME)
 public class Migration10UpdateOptions extends BaseMigration {
 
     private static String TAG = ".Migration10";
@@ -56,6 +56,7 @@ public class Migration10UpdateOptions extends BaseMigration {
         if (instance.hasData()) {
             try {
                 PopulateDB.updateOptions(PreferencesState.getInstance().getContext().getAssets());
+                PopulateDB.addOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {
                 e.printStackTrace();
             }

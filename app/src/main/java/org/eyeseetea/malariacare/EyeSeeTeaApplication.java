@@ -28,6 +28,7 @@ import com.crashlytics.android.Crashlytics;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.index.Index;
 
+import org.eyeseetea.malariacare.database.migrations.Migration10UpdateOptionAttributes;
 import org.eyeseetea.malariacare.database.migrations.Migration2Database;
 import org.eyeseetea.malariacare.database.migrations.Migration3AddQuestionColumn;
 import org.eyeseetea.malariacare.database.migrations.Migration4AddQuestionVisibleColumn;
@@ -80,6 +81,7 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         Migration6AddOptionTextSizeColumn.postMigrate();
         Migration7AddQuestionPathAttributeColumn.postMigrate();
         Migration9UpdateOptionAndQuestions.postMigrate();
+        Migration10UpdateOptionAttributes.postMigrate();
     }
 
     private void createDBIndexes(){

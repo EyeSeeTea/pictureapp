@@ -64,7 +64,7 @@ android {
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
-            versionName "1.0.2"
+            versionName "1.0.3"
             buildConfigField "boolean","reviewScreen", "true"
         }
     }

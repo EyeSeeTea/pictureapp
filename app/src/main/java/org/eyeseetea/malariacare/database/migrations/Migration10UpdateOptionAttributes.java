@@ -17,15 +17,15 @@ import java.io.IOException;
  * Created by idelcano on 23/09/2016.
  */
 
-@Migration(version = 9, databaseName = AppDatabase.NAME)
-public class Migration10UpdateOptions extends BaseMigration {
+@Migration(version = 10, databaseName = AppDatabase.NAME)
+public class Migration10UpdateOptionAttributes extends BaseMigration {
 
     private static String TAG = ".Migration10";
 
-    private static Migration10UpdateOptions instance;
+    private static Migration10UpdateOptionAttributes instance;
     private boolean postMigrationRequired;
 
-    public Migration10UpdateOptions() {
+    public Migration10UpdateOptionAttributes() {
         super();
         instance = this;
         postMigrationRequired = false;
@@ -55,7 +55,6 @@ public class Migration10UpdateOptions extends BaseMigration {
         //Data? Add new default data
         if (instance.hasData()) {
             try {
-                PopulateDB.updateOptions(PreferencesState.getInstance().getContext().getAssets());
                 PopulateDB.addOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {
                 e.printStackTrace();

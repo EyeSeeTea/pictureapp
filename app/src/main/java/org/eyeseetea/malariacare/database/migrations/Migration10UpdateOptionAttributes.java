@@ -53,13 +53,14 @@ public class Migration10UpdateOptionAttributes extends BaseMigration {
 
 
         //Data? Add new default data
-        if (instance.hasData()) {
-            try {
-                PopulateDB.addOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+
+        //if (instance.hasData()) {
+            //try {
+                //PopulateDB.addOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
+            //} catch (IOException e) {
+                //e.printStackTrace();
+            //}
+        //}
 
         //This operation wont be done again
         instance.postMigrationRequired = false;

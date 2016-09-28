@@ -376,7 +376,7 @@ public class PopulateDB {
             if(line.length>4 && !line[4].equals(""))
                 optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
             else
-                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+                optionAttribute.setVertical_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
             if(line.length>5 && !line[5].equals(""))
                 optionAttribute.setText_size(Integer.valueOf(line[5]));
             else
@@ -424,7 +424,7 @@ public class PopulateDB {
             if(line.length>4 && !line[4].equals(""))
                 optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
             else
-                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+                optionAttribute.setVertical_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
             if(line.length>5 && !line[5].equals(""))
                 optionAttribute.setText_size(Integer.valueOf(line[5]));
             else
@@ -471,7 +471,7 @@ public class PopulateDB {
         reader.close();
     }
 
-    public static void updateQuestionNameAndForms(AssetManager assetManager) throws IOException {
+    public static void updateQuestions(AssetManager assetManager) throws IOException {
         List<Question> questions = Question.getAllQuestions();
         //Reset inner references
         cleanInnerLists();
@@ -486,6 +486,14 @@ public class PopulateDB {
                     question.setDe_name(line[2]);
                     question.setShort_name(line[3]);
                     question.setForm_name(line[4]);
+                    //Update necessary from migration3
+                    question.setTotalQuestions(Integer.valueOf(line[13]));
+                    //Update necessary from migration4
+                    question.setVisible(Integer.valueOf(line[14]));
+                    //Update necessary from migration7
+                    if(line.length>15 && !line[15].equals("")) {
+                        question.setPath(line[15]);
+                    }
                     question.save();
                     break;
                 }

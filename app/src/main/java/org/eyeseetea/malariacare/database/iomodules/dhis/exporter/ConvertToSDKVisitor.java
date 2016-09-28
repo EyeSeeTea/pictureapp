@@ -182,18 +182,18 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      * @return
      */
     private Event buildEvent(Survey survey)throws Exception{
-        Event currentEvent=new Event();
+        Event event=new Event();
 
-        currentEvent.setStatus(Event.STATUS_COMPLETED);
-        currentEvent.setFromServer(false);
-        currentEvent.setOrganisationUnitId(getSafeOrgUnitUID(survey));
-        currentEvent.setProgramId(survey.getTabGroup().getProgram().getUid());
-        currentEvent.setProgramStageId(survey.getTabGroup().getUid());
-        currentEvent=updateEventLocation(survey,currentEvent);
-        currentEvent=updateEventDates(survey, currentEvent);
-        Log.d(TAG, "Saving event " + currentEvent.toString());
-        currentEvent.save();
-        return currentEvent;
+        event.setStatus(Event.STATUS_COMPLETED);
+        event.setFromServer(false);
+        event.setOrganisationUnitId(getSafeOrgUnitUID(survey));
+        event.setProgramId(survey.getTabGroup().getProgram().getUid());
+        event.setProgramStageId(survey.getTabGroup().getUid());
+        event=updateEventLocation(survey,event);
+        event=updateEventDates(survey, event);
+        Log.d(TAG, "Saving event " + event.toString());
+        event.save();
+        return event;
     }
 
     private String getSafeOrgUnitUID(Survey survey){

@@ -104,7 +104,6 @@ public class ProgressActivity extends Activity {
 
     ProgressBar progressBar;
     TextView textView;
-    boolean pullAfterPushInProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,16 +198,7 @@ public class ProgressActivity extends Activity {
      * Launches a pull or push according to an intent extra
      */
     private void launchAction(){
-
-        //Clear flag
-        pullAfterPushInProgress=false;
-
-        //Push or Pull according to extra param from intent
-        if(isAPush()){
-            launchPush();
-        }else {
             launchPull();
-        }
     }
 
     /**
@@ -304,9 +294,6 @@ public class ProgressActivity extends Activity {
                             return;
                         }
 
-                        //Start pull after push
-                        pullAfterPushInProgress = true;
-
                         launchPull();
 
                         return;
@@ -353,11 +340,6 @@ public class ProgressActivity extends Activity {
      * @return
      */
     private boolean isAPush() {
-        //A push before pull
-        if(pullAfterPushInProgress){
-            return false;
-        }
-
         //Check intent params
         Intent intent=getIntent();
         //Not a pull -> is a Push

@@ -94,6 +94,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         }
 
         if(Survey.countSurveysByCompletiondate(survey.getCompletionDate())>1) {
+            Log.d(TAG, String.format("Delete repeated survey", survey.toString()));
             survey.delete();
             return;
         }
@@ -112,7 +113,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
 
         if(Survey.countSurveysByCompletiondate(survey.getCompletionDate())>1) {
+            Log.d(TAG, String.format("Delete repeated survey", survey.toString()));
             survey.delete();
+            event.delete();
             return;
         }
 
@@ -254,7 +257,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      * @param importSummaryMap
      */
     public void saveSurveyStatus(Map<Long,ImportSummary> importSummaryMap){
-        Log.d(TAG, String.format("%d surveys savedSurveyStatus", surveys.size()));
+        Log.d(TAG, String.format("ImportSummary %d surveys savedSurveyStatus", surveys.size()));
         for(int i=0;i<surveys.size();i++){
             Survey iSurvey=surveys.get(i);
             Event iEvent=events.get(i);
@@ -268,7 +271,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                     if(failedUids != null && failedUids.size()>0){
                         iSurvey.setStatus(Constants.SURVEY_CONFLICT);
                         for(String uid:failedUids) {
-                            Log.d(TAG, "PUSH process...Conflict in "+uid+" dataElement. Survey: "+iSurvey.getId_survey());
+                            Log.d(TAG, "PUSH process...ImportSummary Conflict in "+uid+" dataElement. Survey: "+iSurvey.getId_survey());
                         }
                     }
                 }
@@ -277,7 +280,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 iSurvey.setStatus(Constants.SURVEY_SENT);
                 iSurvey.saveMainScore();
                 iSurvey.save();
-                Log.d("DpBlank", "Saving suvey as completed " + iSurvey);
+                Log.d("DpBlank", "ImportSummary Saving survey as completed " + iSurvey + " event "+ iEvent.getUid());
             }
             //Generated event must be remove too
             iEvent.delete();

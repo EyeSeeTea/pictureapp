@@ -35,7 +35,7 @@ import org.eyeseetea.malariacare.database.migrations.Migration4AddQuestionVisibl
 import org.eyeseetea.malariacare.database.migrations.Migration5AddOptionAttributeColumns;
 import org.eyeseetea.malariacare.database.migrations.Migration6AddOptionTextSizeColumn;
 import org.eyeseetea.malariacare.database.migrations.Migration7AddQuestionPathAttributeColumn;
-import org.eyeseetea.malariacare.database.migrations.Migration9UpdateOptionAndQuestions;
+import org.eyeseetea.malariacare.database.migrations.Migration11ModifyValuesLastMigration;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Match$Table;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
@@ -75,13 +75,14 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         FlowManager.init(this, "_EyeSeeTeaDB");
         createDBIndexes();
         Migration2Database.postMigrate();
-        Migration3AddQuestionColumn.postMigrate();
-        Migration4AddQuestionVisibleColumn.postMigrate();
-        Migration5AddOptionAttributeColumns.postMigrate();
-        Migration6AddOptionTextSizeColumn.postMigrate();
-        Migration7AddQuestionPathAttributeColumn.postMigrate();
-        Migration9UpdateOptionAndQuestions.postMigrate();
-        Migration10UpdateOptionAttributes.postMigrate();
+        //this migration is moved to last migration
+        //Migration3AddQuestionColumn.postMigrate();
+        //Migration4AddQuestionVisibleColumn.postMigrate();
+        //Migration5AddOptionAttributeColumns.postMigrate();
+        //Migration6AddOptionTextSizeColumn.postMigrate();
+        //Migration7AddQuestionPathAttributeColumn.postMigrate();
+        //Migration10UpdateOptionAttributes.postMigrate();
+        Migration11ModifyValuesLastMigration.postMigrate();
     }
 
     private void createDBIndexes(){

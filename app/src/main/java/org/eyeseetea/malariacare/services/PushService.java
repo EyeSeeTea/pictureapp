@@ -58,11 +58,6 @@ public class PushService extends IntentService {
     public static final String PENDING_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.PushService.PENDING_SURVEYS_ACTION";
 
     /**
-     * List of surveys that are going to be pushed
-     */
-    List<Survey> surveys;
-
-    /**
      * Tag for logging
      */
     public static final String TAG = ".PushService";
@@ -130,7 +125,7 @@ public class PushService extends IntentService {
 
         //Fixme the method getAllUnsentSurveys returns all the surveys not sent(completed, inprogres, and hide)
         //Select surveys from sql
-        surveys = Survey.getAllSurveysToBeSent();
+        List <Survey> surveys = Survey.getAllSurveysToBeSent();
 
         //No surveys to send -> done
         if(surveys==null || surveys.isEmpty()){
@@ -146,7 +141,7 @@ public class PushService extends IntentService {
 
         //Push according to current server version
         if(ServerAPIController.isAPIServer()){
-            pushByAPI();
+            //pushByAPI();
         }else{
             pushBySDK();
         }
@@ -159,6 +154,9 @@ public class PushService extends IntentService {
     private void pushByAPI(){
         Log.i(TAG, "pushByAPI");
         PushClient pushClient=new PushClient(getApplicationContext());
+
+        List <Survey> surveys = Survey.getAllSurveysToBeSent();
+
         for(Survey survey : surveys){
             //Prepare for sending current survey
             pushClient.setSurvey(survey);
@@ -211,6 +209,8 @@ public class PushService extends IntentService {
     private void callPushBySDK(){
 
         List<Survey> filteredSurveys = new ArrayList<>();
+        List <Survey> surveys = Survey.getAllSurveysToBeSent();
+
         //Check surveys not in progress
         for (Survey survey: surveys){
 

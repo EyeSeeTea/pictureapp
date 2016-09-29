@@ -199,9 +199,6 @@ public class PushClient {
     }
 
     public void updateSurveyState(){
-        //Change status
-        this.survey.setStatus(Constants.SURVEY_SENT);
-        this.survey.save();
 
         //Reload data using service
         Intent surveysIntent=new Intent(activity, SurveyService.class);

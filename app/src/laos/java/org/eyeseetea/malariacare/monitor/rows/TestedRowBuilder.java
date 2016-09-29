@@ -5,16 +5,17 @@ import android.content.Context;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 
-/**
- * Created by idelcano on 21/07/2016.
- */
-public class SevereRowBuilder extends CounterRowBuilder {
 
-    public SevereRowBuilder(Context context){
-        super(context, context.getString(R.string.monitor_row_title_severe));
+/**
+ * Created by arrizabalaga on 26/02/16.
+ */
+public class TestedRowBuilder extends CounterRowBuilder {
+
+    public TestedRowBuilder(Context context){
+        super(context, context.getString(R.string.monitor_row_title_tested));
     }
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isSevere())?1:0;
+        return (surveyMonitor.isTested())?1:0;
     }
 }

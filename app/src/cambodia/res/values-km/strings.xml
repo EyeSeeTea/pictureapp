@@ -24,9 +24,9 @@
 <string name="survey_title_completed">"ការស្ទង់មតិបានបញ្ចប់់"</string>
 <string name="survey_info_completed">"ការស្ទង់មតិបានបញ្ចប់ដោយជោគជ័យ"</string>
 <string name="exception_org_unit_not_valid">"លេខកូដកន្លែងផ្តល់សេវាមិនត្រឹមត្រូវទេ។
-ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈលេខ១២៣៤៥៦៧៨៩"</string>
+ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈ011 771 811"</string>
 <string name="exception_org_unit_banned">"កន្លែងផ្តល់សេវាត្រូវបានបិទ។
-ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈលេខ១២៣៤៥៦៧៨៩"</string>
+ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈ011 771 811"</string>
 <string name="dynamic_error_phone_format">"បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ ( 0NN NNN NNN{N} )"</string>
 <string name="dynamic_error_age">"អាយុមិនត្រឹមត្រូវ"</string>
 <string name="title_activity_settings">"ការកំនត់"</string>

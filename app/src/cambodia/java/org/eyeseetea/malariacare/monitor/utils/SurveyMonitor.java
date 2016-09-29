@@ -19,7 +19,6 @@
 package org.eyeseetea.malariacare.monitor.utils;
 
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Value;
 
 /**
  * Decorator that tells if a survey has specific info
@@ -31,50 +30,89 @@ public class SurveyMonitor extends BaseSurveyMonitor{
         super(survey);
     }
 
+
+    /**
+     * Id of first question (positive, negative, not tested)
+     */
+    final static Long ID_QUESTION_RDT=1l;
+
+    /**
+     * Id of positive rdt option of question rdt
+     */
+    final static Long ID_OPTION_RDT_POSITIVE=1l;
+
+    /**
+     * Id of negative rdt option of question rdt
+     */
+    final static Long ID_OPTION_RDT_NEGATIVE=2l;
+    /**
+     * Id of specie question(test result)
+     */
+    final static Long ID_QUESTION_SPECIE =5l;
+
+    /**
+     * Id of not tested rdt option of question specie
+     */
+    private final static Long ID_OPTION_RDT_NOT_TESTED=3l;
+
+    /**
+     * Id of pv specie option of question specie
+     */
+    final static Long ID_OPTION_SPECIE_PF =9l;
+    /**
+     * Id of pv specie option of question specie
+     */
+    final static Long ID_OPTION_SPECIE_PV =10l;
+
+    /**
+     * Id of pf/pv (mixed) specie option of question specie
+     */
+    final static Long ID_OPTION_SPECIE_PFPV =11l;
+
+
     /**
      * Id of treatment question
      */
     final static Long ID_QUESTION_TREATMENT=6l;
 
     /**
-     * Id of negative rdt option
-     */
-    final static Long ID_OPTION_RDT_NEGATIVE=2l;
-
-    /**
-     * Id of not tested rdt option
-     */
-    private final static Long ID_OPTION_RDT_NOT_TESTED=3l;
-
-    /**
-     * Id of pv specie option
-     */
-    final static Long ID_OPTION_SPECIE_PF =9l;
-    /**
-     * Id of pv specie option
-     */
-    final static Long ID_OPTION_SPECIE_PV =10l;
-
-    /**
-     * Id of pf/pv (mixed) specie option
-     */
-    final static Long ID_OPTION_SPECIE_PFPV =11l;
-
-    /**
-     * Id of referral treatment option
+     * Id of referral treatment optionof treatment question
      */
     final static Long ID_OPTION_TREATMENT_REFERRAL=14l;
 
     /**
-     * Id of ASMQ treatment option
+     * Id of ASMQ treatment optionof treatment question
      */
     private final static Long ID_OPTION_TREATMENT_ASMQ =13l;
 
     /**
-     * Id of DHA-PIP treatment option
+     * Id of DHA-PIP treatment option of treatment question
      */
     private final static Long ID_OPTION_TREATMENT_DHA_PIP=12l;
 
+    /**
+     * Tells if the given survey has Pf specie
+     * @return
+     */
+    public boolean isPf(){
+        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PF)!=null;
+    }
+
+    /**
+     * Tells if the given survey has Pv specie
+     * @return
+     */
+    public boolean isPv(){
+        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PV)!=null;
+    }
+
+    /**
+     * Tells if the given survey has Pf/Pv (mixed)  specie
+     * @return
+     */
+    public boolean isPfPv(){
+        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV)!=null;
+    }
 
     public boolean isRated() {
         return (isPositive() || isNegative());

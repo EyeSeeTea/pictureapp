@@ -92,10 +92,14 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         this.context=context;
         surveys = new ArrayList<>();
         events = new ArrayList<>();
+        currentEvent=null;
+        currentSurvey=null;
     }
 
     @Override
     public void visit(Survey survey) throws Exception{
+        this.currentEvent=null;
+        this.currentSurvey=null;
 
         //Precondition
         if(isEmpty(survey)){
@@ -103,6 +107,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             return;
         }
 
+        if(Survey.countSurveysByCompletiondate(survey.getCompletionDate())>1) {
+            return;
+        }
         //Turn survey into an event
         this.currentSurvey=survey;
 
@@ -291,24 +298,24 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             if(hasImportSummaryErrors(importSummary)){
 
                 //Some error while pushing should be done again
-                iSurvey.setStatus(Constants.SURVEY_COMPLETED);
                 if(failedItem!=null) {
                     List<String> failedUids=getFailedUidQuestion(failedItem.getErrorMessage());
-                    for(String uid:failedUids) {
-                        Log.d(TAG, "PUSH process...Conflict in "+uid+" dataElement. Survey: "+iSurvey.getId_survey());
+                    if(failedUids != null && failedUids.size()>0){
                         iSurvey.setStatus(Constants.SURVEY_CONFLICT);
+                        for(String uid:failedUids) {
+                            Log.d(TAG, "PUSH process...Conflict in "+uid+" dataElement. Survey: "+iSurvey.getId_survey());
+                        }
                     }
                 }
                 iSurvey.save();
-
-                //Generated event must be remove too
-                iEvent.delete();
             }else{
                 iSurvey.setStatus(Constants.SURVEY_SENT);
                 iSurvey.saveMainScore();
                 iSurvey.save();
                 Log.d("DpBlank", "Saving suvey as completed " + iSurvey);
             }
+            //Generated event must be remove too
+            iEvent.delete();
         }
     }
 

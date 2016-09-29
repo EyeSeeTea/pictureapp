@@ -34,6 +34,7 @@ import android.widget.TabHost;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.TabGroup;
@@ -46,15 +47,13 @@ import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
-import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.io.IOException;
-import android.graphics.drawable.Drawable;
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabWidget;
-import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -70,6 +69,13 @@ public class DashboardActivity extends BaseActivity {
     String currentTab;
     String currentTabName;
     private boolean reloadOnResume=true;
+    /**
+     * Move to that question from reviewfragment
+     */
+    public static Question moveToQuestion;
+    /**
+     * Flag that controls the fragment change animations
+     */
     boolean isMoveToLeft;
     /**
      * Flags required to decide if the survey must be deleted or not on pause the surveyFragment
@@ -120,7 +126,7 @@ public class DashboardActivity extends BaseActivity {
                 if(isSurveyFragmentActive())
                     onSurveyBackPressed();
                 if(isReviewFragmentActive())
-                    exitReview(null);
+                    exitReviewOnChangeTab(null);
                if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
                     currentTabName=getString(R.string.assess);
                     tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.light_grey));
@@ -467,9 +473,41 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the exit Review button
      */
     public void exitReview(View view) {
+        showDone();
+    }
+
+    /**
+     * Called when the user clicks in other tab
+     */
+    public void exitReviewOnChangeTab(View view) {
         ScoreRegister.clear();
         beforeExit();
         closeReviewFragment();
+    }
+
+    /**
+     * Show a final dialog to announce the survey is over
+     */
+    public void showDone(){
+        AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(this)
+                .setTitle(R.string.survey_title_completed)
+                .setMessage(R.string.survey_info_completed)
+                .setCancelable(false)
+                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                            Survey survey=Session.getSurvey();
+                            survey.updateSurveyStatus();
+                            closeSurveyFragment();
+                    }
+                });
+        msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int arg1) {
+                DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(0).getQuestion());
+                hideReview();
+            }
+        });
+
+        msgConfirmation.create().show();
     }
 
     /**
@@ -504,6 +542,13 @@ public class DashboardActivity extends BaseActivity {
         initSurvey();
     }
 
+    /**
+     * This method hide the reviewFragment restoring the Assess tab with the active SurveyFragment
+     */
+    public void hideReview(Question question) {
+        moveToQuestion =question;
+        hideReview();
+    }
     /**
      * This method hide the reviewFragment restoring the Assess tab with the active SurveyFragment
      */

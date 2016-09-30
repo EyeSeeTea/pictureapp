@@ -21,7 +21,11 @@
 package org.eyeseetea.malariacare.services;
 
 import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.squareup.okhttp.HttpUrl;
@@ -30,6 +34,7 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -40,6 +45,7 @@ import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 /**
  * A service that runs pushing process for pending surveys.
@@ -56,6 +62,11 @@ public class PushService extends IntentService {
      * Name of 'push all pending surveys' action
      */
     public static final String PENDING_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.PushService.PENDING_SURVEYS_ACTION";
+
+    /**
+     * Name of 'push all pending surveys' action
+     */
+    public static final String PENDING_QUARENTINE_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.PushService.PENDING_QUARENTINE_SURVEYS_ACTION";
 
     /**
      * Tag for logging
@@ -105,16 +116,30 @@ public class PushService extends IntentService {
             return;
         }
 
-        Log.d("DpBlank", "Push in Progress" + PushController.getInstance().isPushInProgress());
+        Log.d(TAG, "Push in Progress" + PushController.getInstance().isPushInProgress());
 
-        if (PushController.getInstance().isPushInProgress()){
-            return;
+        int quarantineSurveys=Survey.countQuarantineSurveys();
+        if(quarantineSurveys>1){
+            Log.d(TAG,"Push in progres is active!!!!");
+            if(quarantineSurveys>1){
+                Log.d(TAG,"Quarentine"+quarantineSurveys);
+            }else{
+                Log.d(TAG,"0 quarentine surveys");
+            }
         }
 
         //Launch push according to current server
         pushAllPendingSurveys();
     }
 
+    private class FixQuarentineSurveys extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            return null;
+        }
+    }
     /**
      * Push all pending surveys
      */
@@ -143,7 +168,7 @@ public class PushService extends IntentService {
         if(ServerAPIController.isAPIServer()){
             //pushByAPI();
         }else{
-            pushBySDK();
+        pushBySDK();
         }
 
     }

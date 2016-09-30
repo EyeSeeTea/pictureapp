@@ -278,6 +278,13 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         return Constants.SURVEY_CONFLICT==this.status;
     }
     /**
+     * Checks if the survey has been in conflict
+     * @return true|false
+     */
+    public boolean isQuarantine(){
+        return Constants.SURVEY_QUARANTINE==this.status;
+    }
+    /**
      * Checks if the survey has been completed or not
      * @return true|false
      */
@@ -568,6 +575,15 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 .orderBy(false, Survey$Table.EVENTDATE).queryList();
     }
 
+    /**
+     * Returns all the surveys with status put to "quarantine"
+     * @return
+     */
+    public static List<Survey> getAllQuarantineSurveys() {
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .orderBy(false, Survey$Table.EVENTDATE).queryList();
+    }
     /**
      * Returns all the surveys with status put to "Sent"
      * @return

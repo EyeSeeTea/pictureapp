@@ -30,6 +30,7 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.network.ResponseHolder;
@@ -137,6 +138,10 @@ public class PushController {
             PopulateDB.wipeSDKData();
 
             convertToSDK(surveys);
+
+            for(Survey survey:surveys){
+                survey.setStatus(Constants.SURVEY_QUARANTINE);
+            }
 
             //Asks sdk to push localdata
             postProgress(context.getString(R.string.progress_push_posting_survey));

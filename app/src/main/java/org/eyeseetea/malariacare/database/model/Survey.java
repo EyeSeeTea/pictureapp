@@ -585,6 +585,17 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 .orderBy(false, Survey$Table.EVENTDATE).queryList();
     }
     /**
+     * Returns all the surveys with status put to "quarantine"
+     * @return
+     */
+    public static int countQuarantineSurveys() {
+        return (int) new Select().count()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .count();
+    }
+
+    /**
      * Returns all the surveys with status put to "Sent"
      * @return
      */

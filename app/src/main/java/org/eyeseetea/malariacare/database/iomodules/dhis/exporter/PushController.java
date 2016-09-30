@@ -141,6 +141,7 @@ public class PushController {
 
             for(Survey survey:surveys){
                 survey.setStatus(Constants.SURVEY_QUARANTINE);
+                survey.save();
             }
 
             //Asks sdk to push localdata

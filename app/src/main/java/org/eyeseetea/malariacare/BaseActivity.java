@@ -78,6 +78,10 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         initView(savedInstanceState);
+        if(PushController.getInstance().isPushInProgress()) {
+            Toast.makeText(this,"Error pushing. Creating app",Toast.LENGTH_LONG);
+            PushController.getInstance().setPushInProgress(false);
+        }
         alarmPush = new AlarmPushReceiver();
         alarmPush.setPushAlarm(this);
     }

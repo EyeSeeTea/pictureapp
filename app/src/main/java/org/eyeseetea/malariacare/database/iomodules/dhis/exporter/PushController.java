@@ -20,6 +20,8 @@
 package org.eyeseetea.malariacare.database.iomodules.dhis.exporter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.squareup.otto.Subscribe;
@@ -29,6 +31,7 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressSt
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
@@ -62,14 +65,21 @@ public class PushController {
 
 
     public boolean isPushInProgress() {
+        if(pushInProgress==null){
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
+            pushInProgress=sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getString(R.string.is_pushing_key), false);
+        }
         return pushInProgress;
     }
 
     public void setPushInProgress(boolean pushInProgress) {
-        this.pushInProgress = pushInProgress;
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(PreferencesState.getInstance().getContext().getResources().getString(R.string.is_pushing_key), pushInProgress); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
     }
 
-    private boolean pushInProgress = false;
+    private Boolean pushInProgress = null;
 
 
     /**

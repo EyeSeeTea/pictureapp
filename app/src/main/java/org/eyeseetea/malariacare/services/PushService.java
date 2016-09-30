@@ -23,6 +23,7 @@ package org.eyeseetea.malariacare.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
@@ -39,6 +40,7 @@ import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,7 +62,7 @@ public class PushService extends IntentService {
     /**
      * Tag for logging
      */
-    public static final String TAG = ".PushService";
+    public static final String TAG = ".PushServicePUSH";
 
 
 
@@ -85,6 +87,7 @@ public class PushService extends IntentService {
     @Override
     public void onDestroy(){
         Log.d(TAG, "onDestroy");
+        Toast.makeText(this, "Push in progress", Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 
@@ -101,17 +104,20 @@ public class PushService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         //Ignore wrong actions
+        Log.d(TAG, "AlarmPushReceiver handle"+new Date().toString());
         if(!PENDING_SURVEYS_ACTION.equals(intent.getStringExtra(SERVICE_METHOD))){
             return;
         }
 
         Log.d("DpBlank", "Push in Progress" + PushController.getInstance().isPushInProgress());
 
+        Log.d(TAG,"Check push in progress" + PushController.getInstance().isPushInProgress()+ "Date"+new Date().toString());
         if (PushController.getInstance().isPushInProgress()){
             return;
         }
 
         //Launch push according to current server
+        Log.d(TAG, "AlarmPushReceiver push"+new Date().toString());
         pushAllPendingSurveys();
     }
 
@@ -120,8 +126,10 @@ public class PushService extends IntentService {
      */
     private void pushAllPendingSurveys() {
         Log.d(TAG, "pushAllPendingSurveys (Thread:" + Thread.currentThread().getId() + ")");
+        Log.d(TAG,"Check set push in progress to true. "+ "Date"+new Date().toString());
 
         PushController.getInstance().setPushInProgress(true);
+
 
         //Fixme the method getAllUnsentSurveys returns all the surveys not sent(completed, inprogres, and hide)
         //Select surveys from sql
@@ -140,11 +148,13 @@ public class PushService extends IntentService {
         }
 
         //Push according to current server version
-        if(ServerAPIController.isAPIServer()){
+        //if(ServerAPIController.isAPIServer()){
             //pushByAPI();
-        }else{
-            pushBySDK();
-        }
+        //}else{
+        pushBySDK();
+
+        Log.d(TAG, "AlarmPushReceiver pushing "+new Date().toString());
+        //}
 
     }
 

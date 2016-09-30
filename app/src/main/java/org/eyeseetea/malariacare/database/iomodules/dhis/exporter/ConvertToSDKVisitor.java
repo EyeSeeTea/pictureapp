@@ -61,7 +61,7 @@ import java.util.Map;
  */
 public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
-    private final static String TAG=".ConvertToSDKVisitor";
+    private final static String TAG=".ConvertToSDKVisitorPUSH";
 
     /**
      * Context required to recover magic UID for mainScore dataElements

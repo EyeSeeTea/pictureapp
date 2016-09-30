@@ -54,6 +54,7 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.InputStream;
@@ -68,6 +69,8 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected static String TAG=".BaseActivity";
 
+    private AlarmPushReceiver alarmPush;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -75,6 +78,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         initView(savedInstanceState);
+        alarmPush = new AlarmPushReceiver();
+        alarmPush.setPushAlarm(this);
     }
 
     /**
@@ -358,4 +363,9 @@ public abstract class BaseActivity extends ActionBarActivity {
         Log.d("." + this.getClass().getSimpleName(), message);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        alarmPush.cancelPushAlarm(this);
+    }
 }

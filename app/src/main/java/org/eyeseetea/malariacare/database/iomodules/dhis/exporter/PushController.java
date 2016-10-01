@@ -65,11 +65,8 @@ public class PushController {
 
 
     public boolean isPushInProgress() {
-        if(pushInProgress==null){
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
-            pushInProgress=sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getString(R.string.is_pushing_key), false);
-        }
-        return pushInProgress;
+        return sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getString(R.string.is_pushing_key), false);
     }
 
     public void setPushInProgress(boolean pushInProgress) {
@@ -78,8 +75,6 @@ public class PushController {
         prefEditor.putBoolean(PreferencesState.getInstance().getContext().getResources().getString(R.string.is_pushing_key), pushInProgress); // set your default value here (could be empty as well)
         prefEditor.commit(); // finally save changes
     }
-
-    private Boolean pushInProgress = null;
 
 
     /**

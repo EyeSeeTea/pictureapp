@@ -212,6 +212,9 @@ public class PushService extends IntentService {
 
     @Subscribe
     public void callbackLoginPrePush(NetworkJob.NetworkJobResult<ResourceType> result) {
+        Log.d(TAG, "callbackLoginPrePush  "+PushController.getInstance().isPushInProgress());
+
+
         if(!PushController.getInstance().isPushInProgress())
             return;
         Log.d(TAG, "callbackLoginPrePush");

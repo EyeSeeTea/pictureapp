@@ -34,6 +34,7 @@ import com.squareup.okhttp.Response;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
+import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
@@ -68,6 +69,12 @@ public class PushClient {
      */
     private static final String DHIS_PUSH_API="/api/events";
 
+    /**
+     * Endpoint sending events
+     */
+    private static final String DHIS_CHECK_EVENT_API="/api/events.json??program=%s&orgUnit=%s&startDate=%s&endDate=%s&pageSize=%s";
+
+    private static final String DHIS_CHECK_TOTAL_EVENTS_API="/api/events.json?program=%s&orgUnit=%s&startDate=%s&endDate=%s&totalPages=true";
     /**
      * Content type request: json + utf8
      */
@@ -132,6 +139,90 @@ public class PushClient {
         String url= PreferencesState.getInstance().getDhisURL();
         if(url!=null || !("".equals(url))){
             DHIS_SERVER=url;
+        }
+    }
+
+    public static void checkSurvey(Survey survey) {
+        try {
+            Response response = null;
+
+            final String DHIS_URL = PreferencesState.getInstance().getDhisURL();
+            String program = survey.getProgram().getUid();
+            String orgUnit = OrgUnit.findUIDByName(PreferencesState.getInstance().getOrgUnit());
+            String startDate = EventExtended.format(survey.getEventDate(),EventExtended.AMERICAN_DATE_FORMAT);
+            String endDate = EventExtended.format(new Date(survey.getEventDate().getTime()+(8*24*60*60*1000)),EventExtended.AMERICAN_DATE_FORMAT);
+            String url =String.format(DHIS_URL + DHIS_CHECK_TOTAL_EVENTS_API,program,orgUnit,startDate,endDate);
+            Log.d(TAG,url);
+            url = ServerAPIController.encodeBlanks(url);
+            OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+            BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
+            client.setAuthenticator(basicAuthenticator);
+
+            Request request = new Request.Builder()
+                    .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                    .url(url)
+                    .get()
+                    .build();
+
+            response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+            JSONObject events=new JSONObject(response.body().string());
+            int totalEvents= events.getJSONObject("pager").getInt("total");
+            if(totalEvents>events.getJSONObject("pager").getInt("pageSize")) {
+                checkSurvey(survey, totalEvents + "");
+            }
+            else{
+                checkJsonEvents(events.getJSONArray("events"), survey);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static void checkJsonEvents(JSONArray events, Survey survey) {
+        Log.d(TAG,events.toString());
+        Log.d(TAG,survey.getEventDate().toString());
+    }
+
+    public static  void checkSurvey(Survey survey, String totalEvents) {
+        try {
+            Response response = null;
+
+            final String DHIS_URL = PreferencesState.getInstance().getDhisURL();
+            String program = survey.getProgram().getUid();
+            String orgUnit = OrgUnit.findUIDByName(PreferencesState.getInstance().getOrgUnit());
+            String startDate = EventExtended.format(survey.getEventDate(),EventExtended.AMERICAN_DATE_FORMAT);
+            String endDate = EventExtended.format(new Date(survey.getEventDate().getTime()+(8*24*60*60*1000)),EventExtended.AMERICAN_DATE_FORMAT);
+            String url =String.format(DHIS_URL + DHIS_CHECK_EVENT_API,program,orgUnit,startDate,endDate,totalEvents);
+            Log.d(TAG,url);
+            url = ServerAPIController.encodeBlanks(url);
+            OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+            BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
+            client.setAuthenticator(basicAuthenticator);
+
+            Request request = new Request.Builder()
+                    .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                    .url(url)
+                    .get()
+                    .build();
+
+            response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+
+            JSONArray allEvents=new JSONObject(response.body().string()).getJSONArray("events");
+
+            checkJsonEvents(allEvents, survey);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 

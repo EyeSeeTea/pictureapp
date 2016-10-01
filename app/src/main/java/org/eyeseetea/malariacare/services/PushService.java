@@ -122,6 +122,10 @@ public class PushService extends IntentService {
         if(quarantineSurveys>1){
             Log.d(TAG,"Push in progres is active!!!!");
             if(quarantineSurveys>1){
+                List<Survey> surveys=Survey.getAllQuarantineSurveys();
+                for(Survey survey:surveys){
+                    PushClient.checkSurvey(survey);
+                }
                 Log.d(TAG,"Quarentine"+quarantineSurveys);
             }else{
                 Log.d(TAG,"0 quarentine surveys");

@@ -86,6 +86,13 @@ public class PopulateDB {
             QUESTION_OPTIONS_CSV,
             QUESTION_THRESHOLDS_CSV);
 
+    private static final List<String> tables2updateQuestions = Arrays.asList(
+            OPTIONS_CSV,
+            QUESTIONS_CSV,
+            QUESTION_RELATIONS_CSV,
+            MATCHES,
+            QUESTION_OPTIONS_CSV);
+
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
     private static final String TAG = "PopulateDB";
@@ -492,5 +499,132 @@ public class PopulateDB {
             }
         }
         reader.close();
+    }public static void addNotTestedRemminder(AssetManager assetManager) throws IOException{
+        //Reset inner references
+        cleanInnerLists();
+        List <Option> actualOptions = Option.getAllOptions();
+        List <Question> actualQuestions = Question.getAllQuestions();
+
+        questionList = new LinkedHashMap<Integer, Question>();
+        optionAttributeList = new LinkedHashMap<Integer, OptionAttribute>();
+        optionList = new LinkedHashMap<Integer, Option>();
+        questionRelationList = new LinkedHashMap();
+        matchList = new LinkedHashMap();
+        int updateQRFromPosition=24;
+        int updateMatchFromPosition=25;
+        int updateQOFromPosition=51;
+        int QRRow=0;
+        int MatchRow=0;
+        int QORow=0;
+        for (String table : tables2updateQuestions) {
+            Log.i(TAG, "Loading csv: " + table);
+            CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(table)), SEPARATOR, QUOTECHAR);
+
+            String[] line;
+            while ((line = reader.readNext()) != null) {
+                boolean isNew=true;
+                switch (table) {
+                    case OPTIONS_CSV:
+                        //Ignore if the option already exists.
+                        for (Option option : actualOptions) {
+                            if (String.valueOf(option.getId_option()).equals(line[0])) {
+                                isNew = false;
+                            }
+                        }
+                        Option option;
+                        if (isNew) {
+                            option = new Option();
+                            option.setCode(line[1]);
+                            option.setName(line[2]);
+                            option.setFactor(Float.valueOf(line[3]));
+                            option.setAnswer(Answer.findById(Long.valueOf(line[4])));
+                            if (line[5] != null && !line[5].isEmpty()) {
+                                option.setOptionAttribute(OptionAttribute.findById(Long.valueOf(line[5])));
+                            }
+                            option.save();
+                        }
+                        else {
+                            option=Option.findById(Float.valueOf(line[0]));
+                        }
+                        optionList.put(Integer.valueOf(line[0]), option);
+                        break;
+                    case QUESTIONS_CSV:
+                        //Ignore if the question already exists.
+                        for(Question question:actualQuestions){
+                            if(String.valueOf(question.getId_question()).equals(line[0])) {
+                                isNew=false;
+                            }
+                        }
+                        Question question;
+                        if(isNew) {
+                            question = new Question();
+                            question.setCode(line[1]);
+                            question.setDe_name(line[2]);
+                            question.setShort_name(line[3]);
+                            question.setForm_name(line[4]);
+                            question.setUid(line[5]);
+                            question.setOrder_pos(Integer.valueOf(line[6]));
+                            question.setNumerator_w(Float.valueOf(line[7]));
+                            question.setDenominator_w(Float.valueOf(line[8]));
+                            question.setHeader(Header.findById(Long.valueOf(line[9])));
+                            if (!line[10].equals("")) {
+                                question.setAnswer(Answer.findById(Long.valueOf(line[10])));
+                            }
+                            if (!line[11].equals("")) {
+                                question.setQuestion(questionList.get(Integer.valueOf(line[11])));
+                            }
+                            question.setOutput(Integer.valueOf(line[12]));
+                            question.setTotalQuestions(Integer.valueOf(line[13]));
+                            question.setVisible(Integer.valueOf(line[14]));
+                            if (line.length > 15 && !line[15].equals("")) {
+                                question.setPath((line[15]));
+                            }
+                            question.save();
+                        }
+                        else{
+                            question=Question.findByUID(line[5]);
+                        }
+
+                        questionList.put(Integer.valueOf(line[0]), question);
+                        break;
+                    case QUESTION_RELATIONS_CSV:
+                        //Ignore if the option already exists.
+                        QRRow++;
+                        if(updateQRFromPosition>QRRow) {
+                                break;
+                        }
+                        QuestionRelation questionRelation = new QuestionRelation();
+                        questionRelation.setOperation(Integer.valueOf(line[1]));
+                        questionRelation.setQuestion(questionList.get(Integer.valueOf(line[2])));
+                        questionRelation.save();
+                        questionRelationList.put(Integer.valueOf(line[0]), questionRelation);
+                        break;
+                    case MATCHES:
+                        //Ignore if the match already exists.
+                        MatchRow++;
+                        if(updateMatchFromPosition>MatchRow) {
+                            break;
+                        }
+                        Match match = new Match();
+                        match.setQuestionRelation(questionRelationList.get(Integer.valueOf(line[1])));
+                        match.save();
+                        matchList.put(Integer.valueOf(line[0]), match);
+                        break;
+                    case QUESTION_OPTIONS_CSV:
+                        //Ignore if the question option already exists.
+                        QORow++;
+                        if(updateQOFromPosition>QORow) {
+                            break;
+                        }
+                        QuestionOption questionOption = new QuestionOption();
+                        questionOption.setQuestion(questionList.get(Integer.valueOf(line[1])));
+                        questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
+                        if (!line[3].equals(""))
+                            questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
+                        questionOption.save();
+                        break;
+                }
+            }
+        }
     }
 }

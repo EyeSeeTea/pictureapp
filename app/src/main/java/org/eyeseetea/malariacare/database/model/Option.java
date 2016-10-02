@@ -239,4 +239,10 @@ public class Option extends BaseModel {
     public static List<Option> getAllOptions() {
         return new Select().from(Option.class).queryList();
     }
+
+    public static Option findById(Float id) {
+        return new Select()
+                .from(Option.class)
+                .where(Condition.column(Option$Table.ID_OPTION).eq(id)).querySingle();
+    }
 }

@@ -124,4 +124,10 @@ public class Answer extends BaseModel {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+    public static Answer findById(Long id) {
+        return new Select()
+                .from(Answer.class)
+                .where(Condition.column(Answer$Table.ID_ANSWER).eq(id)).querySingle();
+    }
 }

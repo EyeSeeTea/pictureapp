@@ -223,4 +223,7 @@ public class QuestionOption extends BaseModel {
                 '}';
     }
 
+    public static List<QuestionOption> listAll() {
+        return new Select().all().from(QuestionOption.class).queryList();
+    }
 }

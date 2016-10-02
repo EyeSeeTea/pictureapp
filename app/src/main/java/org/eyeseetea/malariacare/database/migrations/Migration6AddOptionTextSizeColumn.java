@@ -61,14 +61,15 @@ public class Migration6AddOptionTextSizeColumn extends BaseMigration {
         }
 
 
+        //this migration is moved to last migration
         //Data? Add new default data
-        if(instance.hasData()) {
+        /*if(instance.hasData()) {
             try {
                 PopulateDB.addOptionTextSize(PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         //This operation wont be done again
         instance.postMigrationRequired=false;

@@ -82,14 +82,14 @@ public class Migration3AddQuestionColumn extends BaseMigration {
         //this migration is moved to last migration
 
         //Data? Add new default data
-        //if(instance.hasData()) {
-            //List<Question> questions = Question.getAllQuestions();
-            //try {
-                //PopulateDB.addTotalQuestions(PreferencesState.getInstance().getContext().getAssets(), questions);
-            //} catch (IOException e) {
-                //e.printStackTrace();
-            //}
-        //}
+        /*if(instance.hasData()) {
+            List<Question> questions = Question.getAllQuestions();
+            try {
+                PopulateDB.addTotalQuestions(PreferencesState.getInstance().getContext().getAssets(), questions);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }*/
 
         //This operation wont be done again
         instance.postMigrationRequired=false;

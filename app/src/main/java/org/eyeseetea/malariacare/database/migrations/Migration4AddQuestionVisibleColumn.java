@@ -63,16 +63,16 @@ public class Migration4AddQuestionVisibleColumn extends BaseMigration {
 
 
         //Data? Add new default data
-        //if(instance.hasData()) {
+        /*if(instance.hasData()) {
 
             //this migration is moved to last migration
-            //List<Question> questions = Question.getAllQuestions();
-            //try {
-            //PopulateDB.addVisibleQuestions(PreferencesState.getInstance().getContext().getAssets(), questions);
-            //} catch (IOException e) {
-            //e.printStackTrace();
-            //}
-        //}
+            List<Question> questions = Question.getAllQuestions();
+            try {
+            PopulateDB.addVisibleQuestions(PreferencesState.getInstance().getContext().getAssets(), questions);
+            } catch (IOException e) {
+            e.printStackTrace();
+            }
+        }*/
 
         //This operation wont be done again
         instance.postMigrationRequired=false;

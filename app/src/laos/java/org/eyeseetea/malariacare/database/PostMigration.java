@@ -22,7 +22,6 @@ public class PostMigration {
         Migration5AddOptionAttributeColumns.postMigrate();
         Migration6AddOptionTextSizeColumn.postMigrate();
         Migration7AddQuestionPathAttributeColumn.postMigrate();
-        Migration10UpdateOptionAttributes.postMigrate();
         Migration12AddQuestionReminder.postMigrate();
     }
 }

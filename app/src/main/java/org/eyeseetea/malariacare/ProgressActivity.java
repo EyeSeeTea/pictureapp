@@ -23,9 +23,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -157,7 +155,7 @@ public class ProgressActivity extends Activity {
 
     private void prepareUI(){
         progressBar=(ProgressBar)findViewById(R.id.pull_progress);
-        progressBar.setMax(isAPush() ? MAX_PUSH_STEPS : MAX_PULL_STEPS);
+        progressBar.setMax(isNotAPull() ? MAX_PUSH_STEPS : MAX_PULL_STEPS);
         textView=(TextView)findViewById(R.id.pull_text);
         final Button button = (Button) findViewById(R.id.cancelPullButton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -206,7 +204,7 @@ public class ProgressActivity extends Activity {
      * @param msg
      */
     private void showException(String msg){
-        final boolean isAPush=isAPush();
+        final boolean isAPush= isNotAPull();
         String title=getDialogTitle(isAPush);
 
         new AlertDialog.Builder(this)
@@ -247,21 +245,20 @@ public class ProgressActivity extends Activity {
      *
      */
     private void showAndMoveOn() {
-        final boolean isAPush=isAPush();
+        final boolean isAPush= isNotAPull();
 
         //Annotate pull is done
         if(!isAPush) {
             //If is not active, we need restart the process
             if(!PULL_IS_ACTIVE) {
                 try{
-                    Dhis2Application.bus.unregister(this);}
-                catch(Exception e) {
+                    Dhis2Application.bus.unregister(this);
+                } catch(Exception e) {
+                    e.printStackTrace();
                 }
                 finishAndGo(LoginActivity.class);
                 return;
             }
-            else
-            annotateFirstPull(true);
         }
 
         //Show final step -> done
@@ -278,7 +275,7 @@ public class ProgressActivity extends Activity {
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
                         //Pull -> Settings
-                        if (!isAPush()) {
+                        if (!isNotAPull()) {
                             //Move back to setting with extras
                             Intent intent = new Intent(ProgressActivity.this,SettingsActivity.class);
                             intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER, true);
@@ -312,7 +309,7 @@ public class ProgressActivity extends Activity {
      * @return
      */
     private int getDoneMessage(){
-        boolean isAPush=isAPush();
+        boolean isAPush= isNotAPull();
 
         //Pull
         if(!isAPush){
@@ -328,18 +325,11 @@ public class ProgressActivity extends Activity {
         return R.string.dialog_push_success;
     }
 
-    private void annotateFirstPull(boolean value) {
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putBoolean(getString(R.string.pull_metadata), value);
-//        editor.commit();
-    }
-
     /**
      * Tells if a push is required
      * @return
      */
-    private boolean isAPush() {
+    private boolean isNotAPull() {
         //Check intent params
         Intent intent=getIntent();
         //Not a pull -> is a Push
@@ -362,7 +352,6 @@ public class ProgressActivity extends Activity {
     }
 
     private void launchPull(){
-        annotateFirstPull(false);
         progressBar.setProgress(0);
         progressBar.setMax(MAX_PULL_STEPS);
         PullController.getInstance().pull(this);
@@ -372,7 +361,6 @@ public class ProgressActivity extends Activity {
      * Launches a push using the PushController according to the intent params
      */
     private void launchPush(){
-        annotateFirstPull(true);
         progressBar.setProgress(0);
         progressBar.setMax(MAX_PUSH_STEPS);
 

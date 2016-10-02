@@ -25,5 +25,6 @@ public class PostMigration {
         Migration7AddQuestionPathAttributeColumn.postMigrate();
         Migration9UpdateOptionAndQuestions.postMigrate();
         Migration10UpdateOptionAttributes.postMigrate();
+        Migration11ModifyValuesLastMigration
     }
 }

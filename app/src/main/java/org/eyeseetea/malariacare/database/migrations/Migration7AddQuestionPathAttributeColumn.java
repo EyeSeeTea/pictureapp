@@ -63,13 +63,14 @@ public class Migration7AddQuestionPathAttributeColumn extends BaseMigration {
 
 
         //Data? Add new default data
-        if(instance.hasData()) {
-            try {
-                PopulateDB.addImagePathQuestions(PreferencesState.getInstance().getContext().getAssets());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        //this migration is moved to last migration
+        //if(instance.hasData()) {
+            //try {
+                //PopulateDB.addImagePathQuestions(PreferencesState.getInstance().getContext().getAssets());
+            //} catch (IOException e) {
+                //e.printStackTrace();
+            //}
+        //}
 
         //This operation wont be done again
         instance.postMigrationRequired=false;

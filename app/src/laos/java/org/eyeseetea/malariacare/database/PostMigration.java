@@ -8,7 +8,6 @@ import org.eyeseetea.malariacare.database.migrations.Migration4AddQuestionVisibl
 import org.eyeseetea.malariacare.database.migrations.Migration5AddOptionAttributeColumns;
 import org.eyeseetea.malariacare.database.migrations.Migration6AddOptionTextSizeColumn;
 import org.eyeseetea.malariacare.database.migrations.Migration7AddQuestionPathAttributeColumn;
-import org.eyeseetea.malariacare.database.migrations.Migration9UpdateOptionAndQuestions;
 
 /**
  * Created by idelcano on 29/09/2016.
@@ -23,8 +22,6 @@ public class PostMigration {
         Migration5AddOptionAttributeColumns.postMigrate();
         Migration6AddOptionTextSizeColumn.postMigrate();
         Migration7AddQuestionPathAttributeColumn.postMigrate();
-        Migration9UpdateOptionAndQuestions.postMigrate();
-        Migration10UpdateOptionAttributes.postMigrate();
         Migration12AddQuestionReminder.postMigrate();
     }
 }

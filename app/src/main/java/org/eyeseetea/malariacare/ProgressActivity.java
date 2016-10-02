@@ -132,7 +132,7 @@ public class ProgressActivity extends Activity {
             Dhis2Application.bus.unregister(this);
             Dhis2Application.bus.register(this);
         }
-        launchAction();
+        launchPull();
     }
 
     @Override
@@ -155,7 +155,7 @@ public class ProgressActivity extends Activity {
 
     private void prepareUI(){
         progressBar=(ProgressBar)findViewById(R.id.pull_progress);
-        progressBar.setMax(isNotAPull() ? MAX_PUSH_STEPS : MAX_PULL_STEPS);
+        progressBar.setMax(MAX_PULL_STEPS);
         textView=(TextView)findViewById(R.id.pull_text);
         final Button button = (Button) findViewById(R.id.cancelPullButton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -193,19 +193,11 @@ public class ProgressActivity extends Activity {
     }
 
     /**
-     * Launches a pull or push according to an intent extra
-     */
-    private void launchAction(){
-            launchPull();
-    }
-
-    /**
      * Shows a dialog with the given message y move to login after showing error
      * @param msg
      */
     private void showException(String msg){
-        final boolean isAPush= isNotAPull();
-        String title=getDialogTitle(isAPush);
+        String title=getDialogTitle();
 
         new AlertDialog.Builder(this)
                 .setCancelable(false)
@@ -214,16 +206,9 @@ public class ProgressActivity extends Activity {
                 .setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        //A crash during a push might be recoverable -> dashboard
-                        if (isAPush) {
-                            Log.d(TAG, "Push crashed, moving to dashboard...");
-                            finishAndGo(DashboardActivity.class);
-                        } else {
-                            //A crash during a pull requires to start from scratch -> logout
-                            Log.d(TAG, "Logging out from sdk...");
-                            DhisService.logOutUser(ProgressActivity.this);
-                        }
+                        //A crash during a pull requires to start from scratch -> logout
+                        Log.d(TAG, "Logging out from sdk...");
+                        DhisService.logOutUser(ProgressActivity.this);
                     }
                 })
                 .create()
@@ -245,10 +230,10 @@ public class ProgressActivity extends Activity {
      *
      */
     private void showAndMoveOn() {
-        final boolean isAPush= isNotAPull();
+        final boolean isAPull = isAPull();
 
         //Annotate pull is done
-        if(!isAPush) {
+        if(isAPull) {
             //If is not active, we need restart the process
             if(!PULL_IS_ACTIVE) {
                 try{
@@ -264,7 +249,7 @@ public class ProgressActivity extends Activity {
         //Show final step -> done
         step(getString(R.string.progress_pull_done));
 
-        String title=getDialogTitle(isAPush);
+        String title=getDialogTitle();
 
         final int msg=getDoneMessage();
 
@@ -275,7 +260,7 @@ public class ProgressActivity extends Activity {
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
                         //Pull -> Settings
-                        if (!isNotAPull()) {
+                        if (isAPull()) {
                             //Move back to setting with extras
                             Intent intent = new Intent(ProgressActivity.this,SettingsActivity.class);
                             intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER, true);
@@ -309,10 +294,10 @@ public class ProgressActivity extends Activity {
      * @return
      */
     private int getDoneMessage(){
-        boolean isAPush= isNotAPull();
+        boolean isAPull = isAPull();
 
         //Pull
-        if(!isAPush){
+        if(isAPull){
             return R.string.dialog_pull_success;
         }
 
@@ -329,11 +314,11 @@ public class ProgressActivity extends Activity {
      * Tells if a push is required
      * @return
      */
-    private boolean isNotAPull() {
+    private boolean isAPull() {
         //Check intent params
         Intent intent=getIntent();
         //Not a pull -> is a Push
-        return (intent!=null && intent.getIntExtra(TYPE_OF_ACTION,ACTION_PULL)!=ACTION_PULL);
+        return (intent!=null && intent.getIntExtra(TYPE_OF_ACTION,ACTION_PULL)==ACTION_PULL);
     }
 
 
@@ -346,8 +331,8 @@ public class ProgressActivity extends Activity {
         return (intent!=null && intent.getIntExtra(TYPE_OF_ACTION,ACTION_PULL)==ACTION_PUSH_BEFORE_PULL);
     }
 
-    private String getDialogTitle(boolean isAPush){
-        int stringId=isAPush?R.string.dialog_title_push_response:R.string.dialog_title_pull_response;
+    private String getDialogTitle(){
+        int stringId=R.string.dialog_title_pull_response;
         return getString(stringId);
     }
 
@@ -355,31 +340,6 @@ public class ProgressActivity extends Activity {
         progressBar.setProgress(0);
         progressBar.setMax(MAX_PULL_STEPS);
         PullController.getInstance().pull(this);
-    }
-
-    /**
-     * Launches a push using the PushController according to the intent params
-     */
-    private void launchPush(){
-        progressBar.setProgress(0);
-        progressBar.setMax(MAX_PUSH_STEPS);
-
-        List<Survey> surveys=findSurveysToPush();
-        PushController.getInstance().push(this, surveys);
-    }
-
-    /**
-     * Find the surveys that are going to be pushed
-     * @return
-     */
-    private List<Survey> findSurveysToPush(){
-        if(hasAPullAfterPush()){
-            return Survey.getAllUnsentSurveys();
-        }
-
-        List<Survey> surveys=new ArrayList<>();
-        surveys.add(Session.getSurvey());
-        return surveys;
     }
 
     @Subscribe

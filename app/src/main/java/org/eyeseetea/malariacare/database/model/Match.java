@@ -28,6 +28,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.hisp.dhis.android.sdk.controllers.metadata.MetaDataController;
 
 import java.util.List;
 
@@ -147,5 +148,9 @@ public class Match extends BaseModel {
                 "id_match=" + id_match +
                 ", id_question_relation=" + id_question_relation +
                 '}';
+    }
+
+    public static List<Match> listAll() {
+        return new Select().all().from(Match.class).queryList();
     }
 }

@@ -28,14 +28,7 @@ import com.crashlytics.android.Crashlytics;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.index.Index;
 
-import org.eyeseetea.malariacare.database.migrations.Migration10UpdateOptionAttributes;
-import org.eyeseetea.malariacare.database.migrations.Migration2Database;
-import org.eyeseetea.malariacare.database.migrations.Migration3AddQuestionColumn;
-import org.eyeseetea.malariacare.database.migrations.Migration4AddQuestionVisibleColumn;
-import org.eyeseetea.malariacare.database.migrations.Migration5AddOptionAttributeColumns;
-import org.eyeseetea.malariacare.database.migrations.Migration6AddOptionTextSizeColumn;
-import org.eyeseetea.malariacare.database.migrations.Migration7AddQuestionPathAttributeColumn;
-import org.eyeseetea.malariacare.database.migrations.Migration9UpdateOptionAndQuestions;
+import org.eyeseetea.malariacare.database.PostMigration;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Match$Table;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
@@ -74,14 +67,7 @@ public class EyeSeeTeaApplication extends Dhis2Application {
 
         FlowManager.init(this, "_EyeSeeTeaDB");
         createDBIndexes();
-        Migration2Database.postMigrate();
-        Migration3AddQuestionColumn.postMigrate();
-        Migration4AddQuestionVisibleColumn.postMigrate();
-        Migration5AddOptionAttributeColumns.postMigrate();
-        Migration6AddOptionTextSizeColumn.postMigrate();
-        Migration7AddQuestionPathAttributeColumn.postMigrate();
-        Migration9UpdateOptionAndQuestions.postMigrate();
-        Migration10UpdateOptionAttributes.postMigrate();
+        PostMigration.launchPostMigration();
     }
 
     private void createDBIndexes(){

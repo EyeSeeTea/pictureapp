@@ -110,6 +110,10 @@ public class PushService extends IntentService {
 
         SurveyChecker.launchQuarantineChecker();
 
+        if (PushController.getInstance().isPushInProgress()){
+            return;
+        }
+
         //Launch push according to current server
         pushAllPendingSurveys();
     }
@@ -138,11 +142,11 @@ public class PushService extends IntentService {
         }
 
         //Push according to current server version
-        if(ServerAPIController.isAPIServer()){
+        //if(ServerAPIController.isAPIServer()){
             //pushByAPI();
-        }else{
+        //}else{
         pushBySDK();
-        }
+        //}
 
     }
 

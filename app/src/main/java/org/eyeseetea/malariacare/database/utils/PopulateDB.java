@@ -87,6 +87,7 @@ public class PopulateDB {
             QUESTION_THRESHOLDS_CSV);
 
     private static final List<String> tables2updateQuestions = Arrays.asList(
+            OPTION_ATTRIBUTES_CSV,
             OPTIONS_CSV,
             QUESTIONS_CSV,
             QUESTION_RELATIONS_CSV,
@@ -532,6 +533,24 @@ public class PopulateDB {
             while ((line = reader.readNext()) != null) {
                 boolean isNew=true;
                 switch (table) {
+                    case OPTION_ATTRIBUTES_CSV:
+                        OptionAttribute optionAttribute = new OptionAttribute();
+                        optionAttribute.setBackground_colour(line[1]);
+                        optionAttribute.setPath(line[2]);
+                        if(line.length>3 && !line[3].equals(""))
+                            optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
+                        else
+                            optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_HORIZONTAL_ALIGNMENT);
+                        if(line.length>4 && !line[4].equals(""))
+                            optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
+                        else
+                            optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+                        if(line.length>5 && !line[5].equals(""))
+                            optionAttribute.setText_size(Integer.valueOf(line[5]));
+                        else
+                            optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
+                        optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
+                        break;
                     case OPTIONS_CSV:
                         //Ignore if the option already exists.
                         for (Option option : actualOptions) {
@@ -547,10 +566,12 @@ public class PopulateDB {
                             option.setFactor(Float.valueOf(line[3]));
                             option.setAnswer(Answer.findById(Long.valueOf(line[4])));
                             if (line[5] != null && !line[5].isEmpty()) {
-                                OptionAttribute optionAttribute= OptionAttribute.findById(Long.valueOf(line[5]));
-                                    if(optionAttribute!=null) {
-                                        option.setOptionAttribute(optionAttribute);
+                                OptionAttribute localOptionAttribute= OptionAttribute.findById(Long.valueOf(line[5]));
+                                    if(localOptionAttribute==null) {
+                                        localOptionAttribute = optionAttributeList.get(Integer.valueOf(line[5]));
+                                        localOptionAttribute.save();
                                     }
+                                option.setOptionAttribute(localOptionAttribute);
                             }
                             option.save();
                         }

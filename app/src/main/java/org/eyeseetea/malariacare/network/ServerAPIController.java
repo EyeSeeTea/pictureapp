@@ -143,7 +143,7 @@ public class ServerAPIController {
     /**
      * Max surveys that can be sent ...
      */
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=12130;
+    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR=30;
 
     /**
      * ... In an hour

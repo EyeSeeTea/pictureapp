@@ -34,7 +34,7 @@ public class SurveyChecker {
     private static final String DHIS_CHECK_EVENT_API="/api/events.json??program=%s&orgUnit=%s&startDate=%s&endDate=%s&skipPaging=true&fields=event,orgUnit,dueDate,program,href,status,eventDate,orgUnitName,created,completedDate,lastUpdated,completedBy,dataValues";
 
     /**
-     * Launch a new thread to checks all the quarentine surveys
+     * Launch a new thread to checks all the quarantine surveys
      */
     public static void launchQuarantineChecker(){
         Thread t = new Thread() {
@@ -42,12 +42,12 @@ public class SurveyChecker {
             public void run() {
                 try {
                     int quarantineSurveysSize= Survey.countQuarantineSurveys();
-                    Log.d(TAG,"Quarentine size: "+quarantineSurveysSize);
+                    Log.d(TAG,"Quarantine size: "+quarantineSurveysSize);
                     if(quarantineSurveysSize>1){
                         checkAllQuarantineSurveys();
                     }
                 } finally {
-                    Log.d(TAG,"Quarentine thread finished");
+                    Log.d(TAG,"Quarantine thread finished");
                 }
             }
         };
@@ -55,13 +55,13 @@ public class SurveyChecker {
     }
 
     /**
-     * Get events filtered by program orgunit and between dates.
+     * Get events filtered by program orgUnit and between dates.
      */
     public static List<Event> getEvents(String program, String orgUnit, Date minDate, Date maxDate) {
         try {
             Response response;
 
-            final String DHIS_URL = PreferencesState.getInstance().getDhisURL();
+            String DHIS_URL = PreferencesState.getInstance().getDhisURL();
             String startDate = EventExtended.format(minDate,EventExtended.AMERICAN_DATE_FORMAT);
             String endDate = EventExtended.format(new Date(maxDate.getTime()+(8*24*60*60*1000)),EventExtended.AMERICAN_DATE_FORMAT);
             String url =String.format(DHIS_URL + DHIS_CHECK_EVENT_API,program,orgUnit,startDate,endDate);
@@ -114,13 +114,13 @@ public class SurveyChecker {
                     }
                 }
                 if(isSent){
-                    Log.d(TAG, "Set quarentine survey as sent" + survey.getId_survey());
+                    Log.d(TAG, "Set quarantine survey as sent" + survey.getId_survey());
                     survey.setStatus(Constants.SURVEY_SENT);
                 }
                 else{
                     //when one survey haven't a completion date repeated in the server, this survey is not in the server.
                     //This survey is set as "completed" and will be send in the future.
-                    Log.d(TAG, "Set quarentine survey as completed" + survey.getId_survey());
+                    Log.d(TAG, "Set quarantine survey as completed" + survey.getId_survey());
                     survey.setStatus(Constants.SURVEY_COMPLETED);
                 }
                 survey.save();

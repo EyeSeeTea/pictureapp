@@ -39,6 +39,7 @@ import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.network.ResponseHolder;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.models.ImportSummary;
+import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -174,6 +175,10 @@ public class PushController {
                         return;
                     }
 
+                    if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
+                        Log.e(TAG, "onSendDataFinished wrong subscribe(login)");
+                        return;
+                    }
                     //Error while pulling
                     if (result.getResponseHolder() != null && result.getResponseHolder().getApiException() != null) {
                         Log.e(TAG, result.getResponseHolder().getApiException().getMessage());

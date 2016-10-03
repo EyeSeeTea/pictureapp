@@ -17,15 +17,15 @@ import java.io.IOException;
  * Created by idelcano on 29/09/2016.
  */
 
-@Migration(version = 12, databaseName = AppDatabase.NAME)
-public class Migration12AddQuestionReminder extends BaseMigration {
+@Migration(version = 14, databaseName = AppDatabase.NAME)
+public class Migration14AddQuestionReminder extends BaseMigration {
 
     private static String TAG = ".Migration12";
 
-    private static Migration12AddQuestionReminder instance;
+    private static Migration14AddQuestionReminder instance;
     private boolean postMigrationRequired;
 
-    public Migration12AddQuestionReminder() {
+    public Migration14AddQuestionReminder() {
         super();
         instance = this;
         postMigrationRequired = false;

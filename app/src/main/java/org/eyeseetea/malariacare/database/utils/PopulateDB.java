@@ -547,7 +547,10 @@ public class PopulateDB {
                             option.setFactor(Float.valueOf(line[3]));
                             option.setAnswer(Answer.findById(Long.valueOf(line[4])));
                             if (line[5] != null && !line[5].isEmpty()) {
-                                option.setOptionAttribute(OptionAttribute.findById(Long.valueOf(line[5])));
+                                OptionAttribute optionAttribute= OptionAttribute.findById(Long.valueOf(line[5]));
+                                    if(optionAttribute!=null) {
+                                        option.setOptionAttribute(optionAttribute);
+                                    }
                             }
                             option.save();
                         }

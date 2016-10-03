@@ -8,6 +8,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Survey;
@@ -26,14 +27,39 @@ import java.util.List;
  * Created by idelcano on 03/10/2016.
  */
 
-public class CheckSurveys {
+public class SurveyChecker {
 
     private static String TAG=".CheckSurveys";
 
     private static final String DHIS_CHECK_EVENT_API="/api/events.json??program=%s&orgUnit=%s&startDate=%s&endDate=%s&skipPaging=true&fields=event,orgUnit,dueDate,program,href,status,eventDate,orgUnitName,created,completedDate,lastUpdated,completedBy,dataValues";
 
+    /**
+     * Launch a new thread to checks all the quarentine surveys
+     */
+    public static void launchQuarentineChecker(){
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    int quarantineSurveysSize= Survey.countQuarantineSurveys();
+                    Log.d(TAG,"Quarentine size: "+quarantineSurveysSize);
+                    if(quarantineSurveysSize>1){
+                        if(quarantineSurveysSize>1){
+                            checkAllQuarantineSurveys();
+                        }
+                    }
+                } finally {
+                    Log.d(TAG,"Quarentine thread finished");
+                }
+            }
+        };
+        t.start();
+    }
 
-    public static List<Event> checkSurvey(String program, String orgUnit, Date minDate, Date maxDate) {
+    /**
+     * Get events filtered by program orgunit and between dates.
+     */
+    public static List<Event> getEvents(String program, String orgUnit, Date minDate, Date maxDate) {
         try {
             Response response;
 
@@ -43,18 +69,8 @@ public class CheckSurveys {
             String url =String.format(DHIS_URL + DHIS_CHECK_EVENT_API,program,orgUnit,startDate,endDate);
             Log.d(TAG,url);
             url = ServerAPIController.encodeBlanks(url);
-            OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
 
-            BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
-            client.setAuthenticator(basicAuthenticator);
-
-            Request request = new Request.Builder()
-                    .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
-                    .url(url)
-                    .get()
-                    .build();
-
-            response = client.newCall(request).execute();
+            response = ServerAPIController.executeCall(null, url, "GET");
             if (!response.isSuccessful()) {
                 Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
                 throw new IOException(response.message());
@@ -71,13 +87,17 @@ public class CheckSurveys {
         }
     }
 
-    public static void checkAllQuarentineSurveys() {
+    /**
+     * Download the related events. and checks all the quarantine surveys.
+     * If a survey is in the server, the survey should be set as sent. Else, the survey should be set as completed and it will be resend.
+     */
+    public static void checkAllQuarantineSurveys() {
         List<Survey> quarantineSurveys=Survey.getAllQuarantineSurveys();
         Date minDate=Survey.getMinQuarantineEventDate();
         Date maxDate=Survey.getMaxQuarantineEventDate();
         String program = quarantineSurveys.get(0).getProgram().getUid();
         String orgUnit = OrgUnit.findUIDByName(PreferencesState.getInstance().getOrgUnit());
-        List<Event> events= CheckSurveys.checkSurvey(program, orgUnit, minDate, maxDate);
+        List<Event> events= getEvents(program, orgUnit, minDate, maxDate);
         if(events!=null) {
             for (Survey survey : quarantineSurveys) {
                 boolean isSent=false;

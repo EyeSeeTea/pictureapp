@@ -21,11 +21,7 @@
 package org.eyeseetea.malariacare.services;
 
 import android.app.IntentService;
-import android.app.Service;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.squareup.okhttp.HttpUrl;
@@ -33,24 +29,18 @@ import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
-import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.network.CheckSurveys;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
-import org.hisp.dhis.android.sdk.persistence.models.Event;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
-import org.json.JSONArray;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Timer;
 
 /**
  * A service that runs pushing process for pending surveys.
@@ -67,11 +57,6 @@ public class PushService extends IntentService {
      * Name of 'push all pending surveys' action
      */
     public static final String PENDING_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.PushService.PENDING_SURVEYS_ACTION";
-
-    /**
-     * Name of 'push all pending surveys' action
-     */
-    public static final String PENDING_QUARENTINE_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.PushService.PENDING_QUARENTINE_SURVEYS_ACTION";
 
     /**
      * Tag for logging
@@ -123,26 +108,10 @@ public class PushService extends IntentService {
 
         Log.d(TAG, "Push in Progress" + PushController.getInstance().isPushInProgress());
 
-        int quarantineSurveysSize=Survey.countQuarantineSurveys();
-        if(quarantineSurveysSize>1){
-            Log.d(TAG,"Push in progres is active!!!!");
-            Log.d(TAG,"Quarentine size: "+quarantineSurveysSize);
-            if(quarantineSurveysSize>1){
-                CheckSurveys.checkAllQuarentineSurveys();
-            }
-        }
+        SurveyChecker.launchQuarentineChecker();
 
         //Launch push according to current server
         pushAllPendingSurveys();
-    }
-
-    private class FixQuarentineSurveys extends AsyncTask<String, Void, Void> {
-
-        @Override
-        protected Void doInBackground(String... params) {
-
-            return null;
-        }
     }
     /**
      * Push all pending surveys

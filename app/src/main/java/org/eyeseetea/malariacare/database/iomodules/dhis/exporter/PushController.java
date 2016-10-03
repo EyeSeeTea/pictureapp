@@ -175,7 +175,7 @@ public class PushController {
                         return;
                     }
 
-                    if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
+                    if(result!=null && result.getResourceType() != null && result.getResourceType().equals(ResourceType.USERS)) {
                         Log.e(TAG, "onSendDataFinished wrong subscribe(login)");
                         return;
                     }

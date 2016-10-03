@@ -1024,4 +1024,11 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 .querySingle();
         return survey.getEventDate();
     }
+
+    public static List<Survey> getAllSendingSurveys() {
+        return new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENDING))
+                .queryList();
+    }
 }

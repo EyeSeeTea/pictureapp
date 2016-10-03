@@ -55,9 +55,11 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.InputStream;
+import java.util.List;
 
 
 public abstract class BaseActivity extends ActionBarActivity {
@@ -79,7 +81,11 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         initView(savedInstanceState);
         if(PushController.getInstance().isPushInProgress()) {
-            Log.d(TAG,"Error pushing. Creating app");
+            List<Survey> surveys=Survey.getAllSendingSurveys();
+            Log.d(TAG,"The app was closed in the middle of a push.");
+            for(Survey survey:surveys){
+                survey.setStatus(Constants.SURVEY_QUARANTINE);
+            }
             PushController.getInstance().setPushInProgress(false);
         }
         alarmPush = new AlarmPushReceiver();

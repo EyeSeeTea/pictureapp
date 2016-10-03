@@ -108,7 +108,7 @@ public class PushService extends IntentService {
 
         Log.d(TAG, "Push in Progress" + PushController.getInstance().isPushInProgress());
 
-        SurveyChecker.launchQuarentineChecker();
+        SurveyChecker.launchQuarantineChecker();
 
         //Launch push according to current server
         pushAllPendingSurveys();

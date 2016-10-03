@@ -36,7 +36,7 @@ public class SurveyChecker {
     /**
      * Launch a new thread to checks all the quarentine surveys
      */
-    public static void launchQuarentineChecker(){
+    public static void launchQuarantineChecker(){
         Thread t = new Thread() {
             @Override
             public void run() {
@@ -44,9 +44,7 @@ public class SurveyChecker {
                     int quarantineSurveysSize= Survey.countQuarantineSurveys();
                     Log.d(TAG,"Quarentine size: "+quarantineSurveysSize);
                     if(quarantineSurveysSize>1){
-                        if(quarantineSurveysSize>1){
-                            checkAllQuarantineSurveys();
-                        }
+                        checkAllQuarantineSurveys();
                     }
                 } finally {
                     Log.d(TAG,"Quarentine thread finished");

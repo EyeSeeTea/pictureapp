@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="questionHeaderColor">#b4d550</color>
+    <color name="questionHeaderTextColor">#207a3c</color>
+    <color name="questionLayoutBackground">#14b2be</color>
+    <color name="dynamicProgressBarColor">#f78f38</color>
+    <color name="intColor">#FFFFFF</color>
+</resources>

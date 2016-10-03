@@ -67,6 +67,11 @@ android {
             versionName "1.0.3"
             buildConfigField "boolean","reviewScreen", "true"
         }
+        myanmar {
+            applicationId 'org.eyeseetea.surveillance_mm_bb'
+            versionName "1.0.0"
+            buildConfigField "boolean","reviewScreen", "true"
+        }
     }
     
     lintOptions {

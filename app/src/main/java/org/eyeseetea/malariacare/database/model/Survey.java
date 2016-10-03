@@ -1006,4 +1006,22 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 .where(Condition.column(Survey$Table.COMPLETIONDATE).eq(completionDate))
                 .count();
     }
+
+    public static Date getMinQuarantineEventDate() {
+        Survey survey= new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .orderBy(true, Survey$Table.EVENTDATE)
+                .querySingle();
+        return survey.getEventDate();
+    }
+
+    public static Date getMaxQuarantineEventDate() {
+        Survey survey= new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .orderBy(false, Survey$Table.EVENTDATE)
+                .querySingle();
+        return survey.getEventDate();
+    }
 }

@@ -1,0 +1,112 @@
+package org.eyeseetea.malariacare.network;
+
+import android.util.Log;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
+import org.eyeseetea.malariacare.database.model.OrgUnit;
+import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.utils.Constants;
+import org.hisp.dhis.android.sdk.controllers.wrappers.EventsWrapper;
+import org.hisp.dhis.android.sdk.persistence.models.DataValue;
+import org.hisp.dhis.android.sdk.persistence.models.Event;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by idelcano on 03/10/2016.
+ */
+
+public class CheckSurveys {
+
+    private static String TAG=".CheckSurveys";
+
+    private static final String DHIS_CHECK_EVENT_API="/api/events.json??program=%s&orgUnit=%s&startDate=%s&endDate=%s&skipPaging=true&fields=event,orgUnit,dueDate,program,href,status,eventDate,orgUnitName,created,completedDate,lastUpdated,completedBy,dataValues";
+
+
+    public static List<Event> checkSurvey(String program, String orgUnit, Date minDate, Date maxDate) {
+        try {
+            Response response;
+
+            final String DHIS_URL = PreferencesState.getInstance().getDhisURL();
+            String startDate = EventExtended.format(minDate,EventExtended.AMERICAN_DATE_FORMAT);
+            String endDate = EventExtended.format(new Date(maxDate.getTime()+(8*24*60*60*1000)),EventExtended.AMERICAN_DATE_FORMAT);
+            String url =String.format(DHIS_URL + DHIS_CHECK_EVENT_API,program,orgUnit,startDate,endDate);
+            Log.d(TAG,url);
+            url = ServerAPIController.encodeBlanks(url);
+            OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+            BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
+            client.setAuthenticator(basicAuthenticator);
+
+            Request request = new Request.Builder()
+                    .header(basicAuthenticator.AUTHORIZATION_HEADER, basicAuthenticator.getCredentials())
+                    .url(url)
+                    .get()
+                    .build();
+
+            response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+            JSONObject events=new JSONObject(response.body().string());
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.convertValue(mapper.readTree(events.toString()), JsonNode.class);
+
+            return EventsWrapper.getEvents(jsonNode);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void checkAllQuarentineSurveys() {
+        List<Survey> quarantineSurveys=Survey.getAllQuarantineSurveys();
+        Date minDate=Survey.getMinQuarantineEventDate();
+        Date maxDate=Survey.getMaxQuarantineEventDate();
+        String program = quarantineSurveys.get(0).getProgram().getUid();
+        String orgUnit = OrgUnit.findUIDByName(PreferencesState.getInstance().getOrgUnit());
+        List<Event> events= CheckSurveys.checkSurvey(program, orgUnit, minDate, maxDate);
+        if(events!=null) {
+            for (Survey survey : quarantineSurveys) {
+                boolean isSent=false;
+                for (Event event : events) {
+                    for (DataValue dataValue : event.getDataValues()) {
+                        if (dataValue.getDataElement().equals(PushClient.TAG_DATETIME_CAPTURE)) {
+                            if (dataValue.getValue().equals(EventExtended.format(survey.getCompletionDate(), EventExtended.COMPLETION_DATE_FORMAT))) {
+                                Log.d(TAG, "Found survey" + survey.getId_survey() + "date " + survey.getCompletionDate() + "dateevent" + dataValue.getValue());
+                                isSent = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (isSent) {
+                        break;
+                    }
+                }
+                if(isSent){
+                    Log.d(TAG, "Set quarentine survey as sent" + survey.getId_survey());
+                    survey.setStatus(Constants.SURVEY_SENT);
+                }
+                else{
+                    //when one survey haven't a completion date repeated in the server, this survey is not in the server.
+                    //This survey is set as "completed" and will be send in the future.
+                    Log.d(TAG, "Set quarentine survey as completed" + survey.getId_survey());
+                    survey.setStatus(Constants.SURVEY_COMPLETED);
+                }
+                survey.save();
+            }
+        }
+    }
+}

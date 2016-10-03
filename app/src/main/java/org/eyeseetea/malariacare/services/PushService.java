@@ -33,17 +33,22 @@ import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
+import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.network.CheckSurveys;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
+import org.hisp.dhis.android.sdk.persistence.models.Event;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 
@@ -118,17 +123,12 @@ public class PushService extends IntentService {
 
         Log.d(TAG, "Push in Progress" + PushController.getInstance().isPushInProgress());
 
-        int quarantineSurveys=Survey.countQuarantineSurveys();
-        if(quarantineSurveys>1){
+        int quarantineSurveysSize=Survey.countQuarantineSurveys();
+        if(quarantineSurveysSize>1){
             Log.d(TAG,"Push in progres is active!!!!");
-            if(quarantineSurveys>1){
-                List<Survey> surveys=Survey.getAllQuarantineSurveys();
-                for(Survey survey:surveys){
-                    PushClient.checkSurvey(survey);
-                }
-                Log.d(TAG,"Quarentine"+quarantineSurveys);
-            }else{
-                Log.d(TAG,"0 quarentine surveys");
+            Log.d(TAG,"Quarentine size: "+quarantineSurveysSize);
+            if(quarantineSurveysSize>1){
+                CheckSurveys.checkAllQuarentineSurveys();
             }
         }
 

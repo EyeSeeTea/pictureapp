@@ -41,7 +41,6 @@ import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.models.ImportSummary;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,7 +146,7 @@ public class PushController {
             convertToSDK(surveys);
 
             for(Survey survey:surveys){
-                survey.setStatus(Constants.SURVEY_QUARANTINE);
+                survey.setStatus(Constants.SURVEY_SENDING);
                 survey.save();
             }
 

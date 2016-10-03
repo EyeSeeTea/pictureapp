@@ -142,11 +142,11 @@ public class PushService extends IntentService {
         }
 
         //Push according to current server version
-        //if(ServerAPIController.isAPIServer()){
+        if(ServerAPIController.isAPIServer()){
             //pushByAPI();
-        //}else{
+        }else{
         pushBySDK();
-        //}
+        }
 
     }
 

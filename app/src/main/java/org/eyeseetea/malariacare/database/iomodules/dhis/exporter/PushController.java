@@ -36,7 +36,6 @@ import org.hisp.dhis.android.sdk.network.ResponseHolder;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.models.ImportSummary;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +65,6 @@ public class PushController {
     }
 
     public void setPushInProgress(boolean pushInProgress) {
-        Log.d(TAG,"AlarmPush push in progress "+ new Date().toString()+"Old value:"+this.pushInProgress+" new value "+pushInProgress);
         this.pushInProgress = pushInProgress;
     }
 
@@ -139,8 +137,6 @@ public class PushController {
             PopulateDB.wipeSDKData();
 
             convertToSDK(surveys);
-
-            convertir a cuarentena
 
             //Asks sdk to push localdata
             postProgress(context.getString(R.string.progress_push_posting_survey));

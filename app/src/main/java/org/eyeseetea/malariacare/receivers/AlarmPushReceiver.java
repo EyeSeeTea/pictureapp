@@ -31,14 +31,12 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.services.SurveyService;
 
-import java.util.Date;
-
 /**
  * Created by rhardjono on 20/09/2015.
  */
 public class AlarmPushReceiver extends BroadcastReceiver {
 
-    public static final String TAG = ".AlarmPushReceiverPUSH";
+    public static final String TAG = ".AlarmPushReceiver";
 
     //TODO: period has to be parameterized
     private static final long SECONDS = 1000;
@@ -47,7 +45,7 @@ public class AlarmPushReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive"+new Date().toString());
+        Log.d(TAG, "onReceive");
 
         Intent pushIntent=new Intent(context, PushService.class);
         pushIntent.putExtra(SurveyService.SERVICE_METHOD, PushService.PENDING_SURVEYS_ACTION);
@@ -56,7 +54,7 @@ public class AlarmPushReceiver extends BroadcastReceiver {
 
 
     public void setPushAlarm(Context context) {
-            Log.d(TAG, "setPushAlarm"+new Date().toString());
+            Log.d(TAG, "setPushAlarm");
 
             long pushPeriod = Long.parseLong(context.getString(R.string.PUSH_PERIOD));
             AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -71,7 +69,7 @@ public class AlarmPushReceiver extends BroadcastReceiver {
     }
 
     public static void cancelPushAlarm(Context context) {
-            Log.d(TAG, "cancelPushAlarm"+new Date().toString());
+            Log.d(TAG, "cancelPushAlarm");
 
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent(context, AlarmPushReceiver.class);

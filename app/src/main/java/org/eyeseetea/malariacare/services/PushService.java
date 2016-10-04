@@ -33,6 +33,7 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
@@ -105,7 +106,9 @@ public class PushService extends IntentService {
             return;
         }
 
-        Log.d("DpBlank", "Push in Progress" + PushController.getInstance().isPushInProgress());
+        Log.d(TAG, "Push in Progress" + PushController.getInstance().isPushInProgress());
+
+        SurveyChecker.launchQuarantineChecker();
 
         if (PushController.getInstance().isPushInProgress()){
             return;
@@ -114,7 +117,6 @@ public class PushService extends IntentService {
         //Launch push according to current server
         pushAllPendingSurveys();
     }
-
     /**
      * Push all pending surveys
      */
@@ -143,7 +145,7 @@ public class PushService extends IntentService {
         if(ServerAPIController.isAPIServer()){
             //pushByAPI();
         }else{
-            pushBySDK();
+        pushBySDK();
         }
 
     }
@@ -187,6 +189,9 @@ public class PushService extends IntentService {
 
     @Subscribe
     public void callbackLoginPrePush(NetworkJob.NetworkJobResult<ResourceType> result) {
+        Log.d(TAG, "callbackLoginPrePush  "+PushController.getInstance().isPushInProgress());
+
+
         if(!PushController.getInstance().isPushInProgress())
             return;
         Log.d(TAG, "callbackLoginPrePush");

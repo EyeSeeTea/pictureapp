@@ -29,18 +29,15 @@ import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
-import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.ShowException;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.Event;
@@ -152,15 +149,15 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     private void buildControlDataElements(Survey survey, Event event) {
         //save phonemetadata
         PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
-        buildAndSaveDataValue(PushClient.TAG_PHONEMETADA,phoneMetaData.getPhone_metaData(),event);
+        buildAndSaveDataValue(PushClient.PHONEMETADA_UID,phoneMetaData.getPhone_metaData(),event);
 
         //save Time capture
-        if(PushClient.TAG_DATETIME_CAPTURE!=null && !PushClient.TAG_DATETIME_CAPTURE.equals(""))
-            buildAndSaveDataValue(PushClient.TAG_DATETIME_CAPTURE, EventExtended.format(survey.getCompletionDate(), EventExtended.COMPLETION_DATE_FORMAT),event);
+        if(PushClient.DATETIME_CAPTURE_UID !=null && !PushClient.DATETIME_CAPTURE_UID.equals(""))
+            buildAndSaveDataValue(PushClient.DATETIME_CAPTURE_UID, EventExtended.format(survey.getCompletionDate(), EventExtended.COMPLETION_DATE_FORMAT),event);
 
         //save Time Sent
-        if(PushClient.TAG_DATETIME_SENT!=null && !PushClient.TAG_DATETIME_SENT.equals(""))
-            buildAndSaveDataValue(PushClient.TAG_DATETIME_SENT,  EventExtended.format(new Date(), EventExtended.COMPLETION_DATE_FORMAT),event);
+        if(PushClient.DATETIME_SENT_UID !=null && !PushClient.DATETIME_SENT_UID.equals(""))
+            buildAndSaveDataValue(PushClient.DATETIME_SENT_UID,  EventExtended.format(new Date(), EventExtended.COMPLETION_DATE_FORMAT),event);
     }
 
     /**
@@ -261,6 +258,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         for(int i=0;i<surveys.size();i++){
             Survey iSurvey=surveys.get(i);
             Event iEvent=events.get(i);
+            iSurvey.setStatus(Constants.SURVEY_COMPLETED);
             ImportSummary importSummary=importSummaryMap.get(iEvent.getLocalId());
             FailedItem failedItem= hasConflict(iEvent.getLocalId());
             if(hasImportSummaryErrors(importSummary)){

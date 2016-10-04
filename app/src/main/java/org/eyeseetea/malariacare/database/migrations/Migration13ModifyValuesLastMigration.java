@@ -14,21 +14,20 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import java.io.IOException;
 
 /**
- * Created by idelcano on 29/09/2016.
+ * Created by idelcano on 03/08/2016.
  */
+@Migration(version = 13, databaseName = AppDatabase.NAME)
+public class Migration13ModifyValuesLastMigration extends BaseMigration {
 
-@Migration(version = 12, databaseName = AppDatabase.NAME)
-public class Migration12AddQuestionReminder extends BaseMigration {
+    private static String TAG=".Migration13";
 
-    private static String TAG = ".Migration12";
-
-    private static Migration12AddQuestionReminder instance;
+    private static Migration13ModifyValuesLastMigration instance;
     private boolean postMigrationRequired;
 
-    public Migration12AddQuestionReminder() {
+    public Migration13ModifyValuesLastMigration() {
         super();
         instance = this;
-        postMigrationRequired = false;
+        postMigrationRequired=false;
     }
 
     public void onPreMigrate() {
@@ -36,7 +35,7 @@ public class Migration12AddQuestionReminder extends BaseMigration {
 
     @Override
     public void migrate(SQLiteDatabase database) {
-        postMigrationRequired = true;
+        postMigrationRequired=true;
     }
 
     @Override
@@ -44,33 +43,34 @@ public class Migration12AddQuestionReminder extends BaseMigration {
     }
 
 
-    public static void postMigrate() {
+    public static void postMigrate(){
         //Migration NOT required -> done
-        Log.d(TAG, "Post migrate");
-        if (!instance.postMigrationRequired) {
+        Log.d(TAG,"Post migrate");
+        if(!instance.postMigrationRequired){
             return;
         }
 
 
         //Data? Add new default data
-        if (instance.hasData()) {
+        if(instance.hasData()) {
             try {
-                PopulateDB.addNotTestedRemminder(PreferencesState.getInstance().getContext().getAssets());
+                PopulateDB.addOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
+                PopulateDB.updateOptionNames(PreferencesState.getInstance().getContext().getAssets());
+                PopulateDB.updateQuestions(PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         //This operation wont be done again
-        instance.postMigrationRequired = false;
+        instance.postMigrationRequired=false;
     }
 
     /**
      * Checks if the current db has data or not
-     *
      * @return
      */
     private boolean hasData() {
-        return Program.getFirstProgram() != null;
+        return Program.getFirstProgram()!=null;
     }
 }

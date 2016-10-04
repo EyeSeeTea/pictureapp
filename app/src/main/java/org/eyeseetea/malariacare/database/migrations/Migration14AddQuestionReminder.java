@@ -14,18 +14,18 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import java.io.IOException;
 
 /**
- * Created by idelcano on 23/09/2016.
+ * Created by idelcano on 29/09/2016.
  */
 
-@Migration(version = 10, databaseName = AppDatabase.NAME)
-public class Migration10UpdateOptionAttributes extends BaseMigration {
+@Migration(version = 14, databaseName = AppDatabase.NAME)
+public class Migration14AddQuestionReminder extends BaseMigration {
 
-    private static String TAG = ".Migration10";
+    private static String TAG = ".Migration12";
 
-    private static Migration10UpdateOptionAttributes instance;
+    private static Migration14AddQuestionReminder instance;
     private boolean postMigrationRequired;
 
-    public Migration10UpdateOptionAttributes() {
+    public Migration14AddQuestionReminder() {
         super();
         instance = this;
         postMigrationRequired = false;
@@ -53,10 +53,9 @@ public class Migration10UpdateOptionAttributes extends BaseMigration {
 
 
         //Data? Add new default data
-
         if (instance.hasData()) {
             try {
-                PopulateDB.addOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
+                PopulateDB.addNotTestedRemminder(PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {
                 e.printStackTrace();
             }

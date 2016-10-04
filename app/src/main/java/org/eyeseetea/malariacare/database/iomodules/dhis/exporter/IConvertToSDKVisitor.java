@@ -25,6 +25,4 @@ import org.eyeseetea.malariacare.database.model.Value;
 
 public interface IConvertToSDKVisitor {
     void visit(Survey survey) throws Exception;
-    void visit(CompositeScore compositeScore);
-    void visit(Value value);
 }

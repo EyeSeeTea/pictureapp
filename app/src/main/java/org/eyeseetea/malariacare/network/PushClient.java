@@ -90,15 +90,15 @@ public class PushClient {
     /**
      * Hardcoded UID for dataElement PhoneMetaData
      */
-    public static String TAG_PHONEMETADA="RuNZUhiAmlv";
+    public static String PHONEMETADA_UID ="RuNZUhiAmlv";
     /**
      * Hardcoded UID for dataElement DATETIME CAPTURE
      */
-    public static String TAG_DATETIME_CAPTURE="qWMb2UM2ikL";
+    public static String DATETIME_CAPTURE_UID ="qWMb2UM2ikL";
     /**
      * Hardcoded UID for dataElement DATETIME SENT
      */
-    public static String TAG_DATETIME_SENT="aBahytzj2u0";
+    public static String DATETIME_SENT_UID ="aBahytzj2u0";
 
     Survey survey;
     Activity activity;
@@ -293,11 +293,11 @@ public class PushClient {
         }
 
         PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
-        values.put(prepareDataElementValue(TAG_PHONEMETADA, phoneMetaData.getPhone_metaData()));
-        if(TAG_DATETIME_CAPTURE!=null && !TAG_DATETIME_CAPTURE.equals(""))
-            values.put(prepareDataElementValue(TAG_DATETIME_CAPTURE, EventExtended.format(survey.getCompletionDate(),EventExtended.AMERICAN_DATE_FORMAT)));
-        if(TAG_DATETIME_SENT!=null && !TAG_DATETIME_SENT.equals(""))
-            values.put(prepareDataElementValue(TAG_DATETIME_SENT, EventExtended.format(new Date(),EventExtended.AMERICAN_DATE_FORMAT)));
+        values.put(prepareDataElementValue(PHONEMETADA_UID, phoneMetaData.getPhone_metaData()));
+        if(DATETIME_CAPTURE_UID !=null && !DATETIME_CAPTURE_UID.equals(""))
+            values.put(prepareDataElementValue(DATETIME_CAPTURE_UID, EventExtended.format(survey.getCompletionDate(),EventExtended.AMERICAN_DATE_FORMAT)));
+        if(DATETIME_SENT_UID !=null && !DATETIME_SENT_UID.equals(""))
+            values.put(prepareDataElementValue(DATETIME_SENT_UID, EventExtended.format(new Date(),EventExtended.AMERICAN_DATE_FORMAT)));
         return values;
     }
 

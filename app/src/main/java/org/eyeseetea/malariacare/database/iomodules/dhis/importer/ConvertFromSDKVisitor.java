@@ -19,11 +19,6 @@
 
 package org.eyeseetea.malariacare.database.iomodules.dhis.importer;
 
-import android.util.Log;
-
-import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
-import com.raizlabs.android.dbflow.runtime.transaction.process.SaveModelTransaction;
-
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
@@ -44,8 +39,6 @@ import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.Event;
 import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
 import org.hisp.dhis.android.sdk.persistence.models.UserAccount;
-import org.hisp.dhis.android.sdk.persistence.models.meta.DbOperation;
-import org.hisp.dhis.android.sdk.utils.DbUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -184,7 +177,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         }
 
         //Phone metadata -> ignore
-        if(PushClient.TAG_PHONEMETADA.equals(questionUID)){
+        if(PushClient.PHONEMETADA_UID.equals(questionUID)){
             return;
         }
 

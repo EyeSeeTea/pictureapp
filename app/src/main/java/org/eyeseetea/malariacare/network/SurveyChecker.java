@@ -4,11 +4,8 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Survey;
@@ -98,33 +95,54 @@ public class SurveyChecker {
         List<Event> events= getEvents(program, orgUnit, minDate, maxDate);
         if(events!=null) {
             for (Survey survey : quarantineSurveys) {
-                boolean isSent=false;
-                for (Event event : events) {
-                    for (DataValue dataValue : event.getDataValues()) {
-                        if (dataValue.getDataElement().equals(PushClient.TAG_DATETIME_CAPTURE)) {
-                            if (dataValue.getValue().equals(EventExtended.format(survey.getCompletionDate(), EventExtended.COMPLETION_DATE_FORMAT))) {
-                                Log.d(TAG, "Found survey" + survey.getId_survey() + "date " + survey.getCompletionDate() + "dateevent" + dataValue.getValue());
-                                isSent = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (isSent) {
-                        break;
-                    }
-                }
-                if(isSent){
-                    Log.d(TAG, "Set quarantine survey as sent" + survey.getId_survey());
-                    survey.setStatus(Constants.SURVEY_SENT);
-                }
-                else{
-                    //when one survey haven't a completion date repeated in the server, this survey is not in the server.
-                    //This survey is set as "completed" and will be send in the future.
-                    Log.d(TAG, "Set quarantine survey as completed" + survey.getId_survey());
-                    survey.setStatus(Constants.SURVEY_COMPLETED);
-                }
-                survey.save();
+                updateQuarantineSurveysStatus(events, survey);
             }
         }
+    }
+
+    /**
+     * Given a list of events, check for the presence of that survey among the events, and update
+     * consequently their status. If the survey exist (checked by completion date) then it's
+     * considered as sent, otherwise it will be considered as just completed and awaiting to be sent
+     * @param events
+     * @param survey
+     */
+    private static void updateQuarantineSurveysStatus(List<Event> events, Survey survey) {
+        boolean isSent=false;
+        for (Event event : events) {
+            isSent = surveyDateExistsInEventTimeCaptureControlDE(survey, event);
+            if (isSent) {
+                break;
+            }
+        }
+        if(isSent){
+            Log.d(TAG, "Set quarantine survey as sent" + survey.getId_survey());
+            survey.setStatus(Constants.SURVEY_SENT);
+        }
+        else{
+            //When the completion date for a survey is not present in the server, this survey is not in the server.
+            //This survey is set as "completed" and will be send in the future.
+            Log.d(TAG, "Set quarantine survey as completed" + survey.getId_survey());
+            survey.setStatus(Constants.SURVEY_COMPLETED);
+        }
+        survey.save();
+    }
+
+    /**
+     * Given an event, check through all its DVs if the survey completion date is present in the
+     * event in the form of the control DE "Time Capture" whose UID is hardcoded
+     * @param survey
+     * @param event
+     * @return
+     */
+    private static boolean surveyDateExistsInEventTimeCaptureControlDE(Survey survey, Event event) {
+        for (DataValue dataValue : event.getDataValues()) {
+            if (dataValue.getDataElement().equals(PushClient.DATETIME_CAPTURE_UID)
+                    && dataValue.getValue().equals(EventExtended.format(survey.getCompletionDate(), EventExtended.COMPLETION_DATE_FORMAT))) {
+                Log.d(TAG, "Found survey" + survey.getId_survey() + "date " + survey.getCompletionDate() + "dateevent" + dataValue.getValue());
+                return true;
+            }
+        }
+        return false;
     }
 }

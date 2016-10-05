@@ -293,10 +293,9 @@ public class QuestionNode {
      */
     private QuestionNode nextBySibling(){
         //NO sibling ->nowhere to go
-        if(this.sibling==null){
+        if(this.sibling==null || question.getHeader().getTab().getType()==Constants.TAB_WRAP_QUESTIONS){
             return null;
         }
-
         return this.sibling;
     }
 

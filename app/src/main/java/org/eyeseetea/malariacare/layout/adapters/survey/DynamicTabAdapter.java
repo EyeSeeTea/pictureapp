@@ -40,6 +40,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +48,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -59,6 +61,7 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
@@ -76,6 +79,7 @@ import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -393,7 +397,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + context.getString(R.string.specific_language_font));
         headerView.setTypeface(tf);
-        headerView.setText(question.getForm_name());
+        boolean wrapQuestions=question.getHeader().getTab().getType()==Constants.TAB_WRAP_QUESTIONS;
+        if(wrapQuestions){
+            headerView.setText(question.getHeader().getTab().getName());
+        }
+        else{
+            headerView.setText(question.getForm_name());
+        }
 
         //question image
         if(question.getPath()!=null && !question.getPath().equals("")) {
@@ -413,125 +423,160 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         TableLayout tableLayout=(TableLayout)rowView.findViewById(R.id.options_table);
 
         TableRow tableRow=null;
-        int typeQuestion=question.getOutput();
+        List<Question> screenQuestions= new ArrayList<>();
+        if(wrapQuestions) {
+            screenQuestions = question.getQuestionsByTab(question.getHeader().getTab());
+        }
+        else{
+            screenQuestions.add(question);
+        }
         swipeTouchListener.clearClickableViews();
-        switch (typeQuestion){
-            case Constants.IMAGES_2:
-            case Constants.IMAGES_4:
-            case Constants.IMAGES_6:
-                List<Option> options = question.getAnswer().getOptions();
-                for(int i=0;i<options.size();i++){
-                    Option currentOption = options.get(i);
-                    int optionID=R.id.option2;
-                    int counterID=R.id.counter2;
-                    int mod=i%2;
-                    //First item per row requires a new row
-                    if(mod==0){
-                        tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row,tableLayout,false);
+        for(Question screenQuestion:screenQuestions) {
+            int typeQuestion = screenQuestion.getOutput();
+            switch (typeQuestion) {
+                case Constants.IMAGES_2:
+                case Constants.IMAGES_4:
+                case Constants.IMAGES_6:
+                    List<Option> options = screenQuestion.getAnswer().getOptions();
+                    for (int i = 0; i < options.size(); i++) {
+                        Option currentOption = options.get(i);
+                        int optionID = R.id.option2;
+                        int counterID = R.id.counter2;
+                        int mod = i % 2;
+                        //First item per row requires a new row
+                        if (mod == 0) {
+                            tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
+                            tableLayout.addView(tableRow);
+                            optionID = R.id.option1;
+                            counterID = R.id.counter1;
+                        }
+                        //Add counter value if possible
+                        addCounterValue(screenQuestion, currentOption, tableRow, counterID);
+
+                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
+                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                        setTextSettings(textOption, currentOption);
+                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                        initOptionButton(frameLayout, currentOption, value);
+                    }
+                    break;
+                case Constants.IMAGES_3:
+                    List<Option> opts = screenQuestion.getAnswer().getOptions();
+                    for (int i = 0; i < opts.size(); i++) {
+
+                        Option currentOption = opts.get(i);
+
+                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_singleitem, tableLayout, false);
                         tableLayout.addView(tableRow);
-                        optionID=R.id.option1;
-                        counterID=R.id.counter1;
+
+                        //Add counter value if possible
+                        addCounterValue(screenQuestion, currentOption, tableRow, R.id.counter1);
+
+                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(0);
+                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                        setTextSettings(textOption, currentOption);
+
+                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                        initOptionButton(frameLayout, currentOption, value);
                     }
-                    //Add counter value if possible                   
-                    addCounterValue(question,currentOption,tableRow,counterID);
+                    break;
+                case Constants.IMAGES_5:
+                    List<Option> answerOptions = screenQuestion.getAnswer().getOptions();
+                    for (int i = 0; i < answerOptions.size(); i++) {
+                        Option currentOption = answerOptions.get(i);
+                        int counterID = R.id.counter2;
 
-                    FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
-                    TextCard textOption = (TextCard) frameLayout.getChildAt(1);
-                    setTextSettings(textOption,currentOption);
-                    frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+                        int mod = i % 2;
+                        //First item per row requires a new row
+                        if (mod == 0) {
+                            //Every new row admits 2 options
+                            tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
+                            tableLayout.addView(tableRow);
+                            counterID = R.id.counter1;
+                        }
 
-                    initOptionButton(frameLayout, currentOption, value);
-                }
-                break;
-            case Constants.IMAGES_3:
-                List<Option> opts = question.getAnswer().getOptions();
-                for(int i=0;i<opts.size();i++){
+                        //Add counter value if possible
+                        addCounterValue(screenQuestion, currentOption, tableRow, counterID);
 
-                    Option currentOption = opts.get(i);
+                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
+                        if (i == 4) {
+                            TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f);
+                            //remove the innecesary second imageview.
+                            tableRow.removeViewAt(mod + 1);
+                            frameLayout.setLayoutParams(params);
+                        }
+                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
-                    tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem,tableLayout,false);
+                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                        setTextSettings(textOption, currentOption);
+
+
+                        initOptionButton(frameLayout, currentOption, value);
+                    }
+                    break;
+                case Constants.REMINDER:
+                case Constants.WARNING:
+                    ((TextView) rowView.findViewById(R.id.dynamic_progress_text)).setText("");
+                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_question_text, tableLayout, false);
                     tableLayout.addView(tableRow);
+                    List<QuestionOption> questionOptions = screenQuestion.getQuestionOption();
+                    //Question "header" is in the first option in Options.csv
+                    if (questionOptions != null && questionOptions.size() > 0) {
+                        initWarningText(tableRow, questionOptions.get(0).getOption());
+                    }
 
-                    //Add counter value if possible
-                    addCounterValue(question,currentOption,tableRow,R.id.counter1);
-
-                    FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(0);
-                    TextCard textOption = (TextCard) frameLayout.getChildAt(1);
-                    setTextSettings(textOption,currentOption);
-
-                    frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
-
-                    initOptionButton(frameLayout, currentOption, value);
-                }
-                break;
-            case Constants.IMAGES_5:
-                List<Option> answerOptions = question.getAnswer().getOptions();
-                for(int i=0;i<answerOptions.size();i++) {
-                    Option currentOption = answerOptions.get(i);
-                    int counterID=R.id.counter2;
-
-                    int mod = i % 2;
-                    //First item per row requires a new row
-                    if (mod == 0) {
-                        //Every new row admits 2 options
-                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
+                    //Question "button" is in the second option in Options.csv
+                    if (questionOptions != null && questionOptions.size() > 1) {
+                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_confirm_yes, tableLayout, false);
                         tableLayout.addView(tableRow);
-                        counterID=R.id.counter1;
+                        initWarningValue(tableRow, questionOptions.get(1).getOption());
+                        int paddingSize = (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_padding);
+                        tableRow.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
                     }
-
-                    //Add counter value if possible
-                    addCounterValue(question,currentOption,tableRow,counterID);
-
-                    FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
-                    if (i == 4) {
-                        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1f);
-                        //remove the innecesary second imageview.
-                        tableRow.removeViewAt(mod+1);
-                        frameLayout.setLayoutParams(params);
-                    }
-                    frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
-
-                    TextCard textOption = (TextCard) frameLayout.getChildAt(1);
-                    setTextSettings(textOption,currentOption);
-
-
-                    initOptionButton(frameLayout, currentOption, value);
-                }
-                break;
-            case Constants.REMINDER:
-            case Constants.WARNING:
-                ((TextView) rowView.findViewById(R.id.dynamic_progress_text)).setText("");
-                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_question_text, tableLayout, false);
-                tableLayout.addView(tableRow);
-                List<QuestionOption> questionOptions= question.getQuestionOption();
-                //Question "header" is in the first option in Options.csv
-                if(questionOptions!=null && questionOptions.size()>0) {
-                    initWarningText(tableRow, questionOptions.get(0).getOption());
-                }
-
-                //Question "button" is in the second option in Options.csv
-                if( questionOptions!=null && questionOptions.size()>1) {
-                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_confirm_yes, tableLayout, false);
+                    break;
+                case Constants.PHONE:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                     tableLayout.addView(tableRow);
-                    initWarningValue(tableRow,  questionOptions.get(1).getOption());
-                    int paddingSize= (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_padding);
-                    tableRow.setPadding(paddingSize,paddingSize,paddingSize,paddingSize);
-                }
-
-                break;
-            case Constants.PHONE:
-                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
-                tableLayout.addView(tableRow);
-                initPhoneValue(tableRow, value);
-                break;
-            case Constants.POSITIVE_INT:
-                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_positiveint_row, tableLayout, false);
-                tableLayout.addView(tableRow);
-                initPositiveIntValue(tableRow, value);
-                break;
+                    initPhoneValue(tableRow, value);
+                    break;
+                case Constants.POSITIVE_INT:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_positiveint_row, tableLayout, false);
+                    tableLayout.addView(tableRow);
+                    initPositiveIntValue(tableRow, value);
+                    break;
+                case Constants.LONG_TEXT:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_long_text_row, tableLayout, false);
+                    ((TextCard)tableRow.findViewById(R.id.dynamic_header_text)).setText(screenQuestion.getForm_name());
+                    tableLayout.addView(tableRow);
+                    initLongTextValue(tableRow, value);
+                    break;
+                case Constants.SHORT_TEXT:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_short_text_row, tableLayout, false);
+                    ((TextCard)tableRow.findViewById(R.id.dynamic_header_text)).setText(screenQuestion.getForm_name());
+                    tableLayout.addView(tableRow);
+                    initShortTextValue(tableRow, value);
+                    break;
+                case Constants.DROPDOWN_LIST:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_dropdown_row, tableLayout, false);
+                    ((TextCard)tableRow.findViewById(R.id.dynamic_header_text)).setText(screenQuestion.getForm_name());
+                    tableLayout.addView(tableRow);
+                    initDropdownValue(tableRow, value);
+                    break;
+            }
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    private void initShortTextValue(TableRow tableRow, Value value) {
+    }
+
+    private void initLongTextValue(TableRow tableRow, Value value) {
+    }
+
+    private void initDropdownValue(TableRow tableRow, Value value) {
     }
 
     private void setTextSettings(TextCard textOption, Option currentOption) {

@@ -202,6 +202,7 @@ public class PopulateDB {
                         question.setHeader(headerList.get(Integer.valueOf(line[9])));
                         if (!line[10].equals(""))
                             question.setAnswer(answerList.get(Integer.valueOf(line[10])));
+                        //The parent is obsolete!!! Is necessary use the question relations.
                         if (!line[11].equals(""))
                             question.setQuestion(questionList.get(Integer.valueOf(line[11])));
                         question.setOutput(Integer.valueOf(line[12]));

@@ -9,4 +9,7 @@
 9;'ReminderHospital'
 10;'Phone'
 11;'Label'
-12;'Patient'
+12;'Patient Name'
+13;'Patient Phone'
+14;'Patient Residence'
+15;'Patient other'

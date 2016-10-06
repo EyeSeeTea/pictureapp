@@ -42,6 +42,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,13 +50,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -69,10 +67,12 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
@@ -80,7 +80,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import utils.PhoneMask;
 
@@ -553,8 +552,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }else {
                         tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                     }
-                    tableLayout.addView(tableRow);
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initPhoneValue(tableRow, value, tabType);
+                    tableLayout.addView(tableRow);
                     break;
                 case Constants.POSITIVE_INT:
                     if(isMultipleQuestionTab(tabType)){
@@ -563,33 +563,38 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }else {
                         tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_positiveint_row, tableLayout, false);
                     }
-                    tableLayout.addView(tableRow);
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initPositiveIntValue(tableRow, value, tabType);
                     //The positive int starts empty and is not validate.
                     failedValidations++;
+                    tableLayout.addView(tableRow);
                     break;
                 case Constants.INT:
-                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_positiveint_row, tableLayout, false);
-                    tableLayout.addView(tableRow);
+                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_int_row, tableLayout, false);
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initIntValue(tableRow, value);
+                    tableLayout.addView(tableRow);
                     break;
                 case Constants.LONG_TEXT:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_long_text_row, tableLayout, false);
                     ((TextCard)tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
-                    tableLayout.addView(tableRow);
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initLongTextValue(tableRow, value);
+                    tableLayout.addView(tableRow);
                     break;
                 case Constants.SHORT_TEXT:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_short_text_row, tableLayout, false);
                     ((TextCard)tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
-                    tableLayout.addView(tableRow);
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initShortTextValue(tableRow, value);
+                    tableLayout.addView(tableRow);
                     break;
                 case Constants.DROPDOWN_LIST:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_dropdown_row, tableLayout, false);
                     ((TextCard)tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
+                    initDropdownValue(tableRow, screenQuestion, value);
                     tableLayout.addView(tableRow);
-                    initDropdownValue(tableRow, value);
                     break;
             }
         }
@@ -599,6 +604,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    private TableRow populateSpinner(TableRow tableRow, Question question) {
+        Spinner dropdown_list = (Spinner)tableRow.findViewById(R.id.answer);
+        // In case the option is selected, we will need to show num/dems
+        List<Option> optionList = new ArrayList<>(question.getAnswer().getOptions());
+        optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
+        dropdown_list.setAdapter(new OptionArrayAdapter(context, optionList));
+        return tableRow;
     }
 
     private View createMultipleQuestionsTabButton(TableRow tableButtonRow) {
@@ -727,7 +741,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(!isMultipleQuestionTab(tabType)) {
             button = (Button) tableRow.findViewById(R.id.dynamic_positiveInt_btn);
         }
-        final EditText numberPicker = (EditText)tableRow.findViewById(R.id.positiveInt_edit);
+        final EditText numberPicker = (EditText)tableRow.findViewById(R.id.answer);
 
         //Without setMinValue, setMaxValue, setValue in this order, the setValue is not displayed in the screen.
         numberPicker.setFilters(new InputFilter[]{
@@ -739,41 +753,41 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(value!=null){
             numberPicker.setText(value.getValue());
         }
-
         if (!readOnly) {
             if(isMultipleQuestionTab(tabType)) {
                 numberPicker.addTextChangedListener(new TextWatcher() {
                     boolean isValid;
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if(isValid){
+                        Log.d("onTextChanged", "after "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
+                        if(validatePositiveIntValue(s.toString())){
                             //Save the numberpicker value in the DB, and continue to the next screen.
                             savePositiveIntValue(numberPicker);
                         }
                     }
-
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start,
-                                                  int count, int after) {
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                         boolean isValidChangedText=validatePositiveIntValue(s.toString());
+                        Log.d("onTextChanged", "bef "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
                         if(isValid!=isValidChangedText){
-                            isValid=isValidChangedText;
                             if(isValidChangedText){
-                                failedValidations++;
-
-                            }
-                            else{
                                 failedValidations--;
                             }
+                            else{
+                                failedValidations++;
+                            }
                         }
+                        isValid=isValidChangedText;
                     }
                     @Override
-                    public void onTextChanged(CharSequence s, int start,
-                                              int before, int count) {
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        Log.d("onTextChanged", "text "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
                     }
                 });
-            }
-            else{
+            }else{
                 //Save the numberpicker value in the DB, and continue to the next screen.
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -798,7 +812,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             //Add button to listener
             swipeTouchListener.addClickableView(button);
         }
-
         //Take focus and open keyboard
         openKeyboard(numberPicker);
     }
@@ -807,17 +820,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return tabType == Constants.TAB_MULTI_QUESTION;
     }
 
-    private boolean clickPhoneValue(EditText editText) {
+    private boolean clickPhoneValue(EditCard editCard) {
         //Hide keypad
         hideKeyboard(PreferencesState.getInstance().getContext());
-        String valueAsText=String.valueOf(editText.getText());
+        String valueAsText=String.valueOf(editCard.getText());
         boolean isValid=validatePhoneValue(valueAsText);
         if(isValid){
             navigationController.isMovingToForward=true;
-            savePhoneValue(editText);
+            saveValue(editCard);
         }
         else {
-            editText.setError(context.getString(R.string.dynamic_error_phone_format));
+            editCard.setError(context.getString(R.string.dynamic_error_phone_format));
         }
         return isValid;
     }
@@ -829,13 +842,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             return false;
         }
         return true;
-    }
-
-    private void savePhoneValue(EditText editText) {
-        String phoneValue = editText.getText().toString();
-
-        Question question = navigationController.getCurrentQuestion();
-        ReadWriteDB.saveValuesText(question, phoneValue);
     }
 
     private boolean clickPositiveIntValue(EditText editText) {
@@ -862,31 +868,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return true;
     }
 
-    private void savePositiveIntValue(EditText numberPicker) {
-        String valueAsText=String.valueOf(numberPicker.getText());
-
-        //The text is truncated as integer ( 00-0 , 01-1 , etc. ) before save and send as string.
-        Integer positiveIntValue = Integer.parseInt(valueAsText);
-
-        Question question = navigationController.getCurrentQuestion();
-        ReadWriteDB.saveValuesText(question, positiveIntValue.toString());
-    }
-
     /**
      * Inits editText and button to view/edit the phone number
      * @param tableRow
      * @param value
      */
     private void initPhoneValue(TableRow tableRow, Value value, int tabType){
-
-        final EditText editText=(EditText)tableRow.findViewById(R.id.phone_edit);
+        final EditCard editCard=(EditCard)tableRow.findViewById(R.id.answer);
         //Has value? show it
         if(value!=null){
-            editText.setText(value.getValue());
+            editCard.setText(value.getValue());
         }
-
-
-
         Button button = null;
         if(!isMultipleQuestionTab(tabType)) {
             button = (Button) tableRow.findViewById(R.id.row_phone_btn);
@@ -894,34 +886,37 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Editable? add listener
         if(!readOnly){
             if(isMultipleQuestionTab(tabType)) {
-                editText.addTextChangedListener(new TextWatcher() {
+                editCard.addTextChangedListener(new TextWatcher() {
+                    //the default value is valid
                     boolean isValid=true;
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if(isValid){
+                        Log.d("onTextChanged", "after "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
+                        if(validatePhoneValue(s.toString())){
                             //Save the numberpicker value in the DB, and continue to the next screen.
-                            savePhoneValue(editText);
+                            saveValue(editCard);
                         }
                     }
-
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start,
-                                                  int count, int after) {
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        Log.d("onTextChanged", "bef "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
                         boolean isValidChangedText=validatePhoneValue(s.toString());
                         if(isValid!=isValidChangedText){
                             isValid=isValidChangedText;
                             if(isValidChangedText){
-                                failedValidations++;
-
+                                failedValidations--;
                             }
                             else{
-                                failedValidations--;
+                                failedValidations++;
                             }
                         }
                     }
                     @Override
-                    public void onTextChanged(CharSequence s, int start,
-                                              int before, int count) {
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        Log.d("onTextChanged", "text "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
                     }
                 });
             }else {
@@ -933,15 +928,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             return;
                         isClicked = true;
                         View parentView = (View) v.getParent();
-                        EditText editText = (EditText) parentView.findViewById(R.id.phone_edit);
-                        if(clickPhoneValue(editText)){
+                        EditCard editCard = (EditCard) parentView.findViewById(R.id.answer);
+                        if(clickPhoneValue(editCard)){
                             finishOrNext();
                         }
                     }
                 });
             }
         }else{
-            editText.setEnabled(false);
+            editCard.setEnabled(false);
             if(!isMultipleQuestionTab(tabType)) {
                 button.setEnabled(false);
             }
@@ -951,20 +946,142 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             //Add button to listener
             swipeTouchListener.addClickableView(button);
         }
-
         //Take focus and open keyboard
-        openKeyboard(editText);
+        openKeyboard(editCard);
     }
-    private void initIntValue(TableRow row, Value value) {
+    
+    private void initIntValue(TableRow row,Value value) {
+        final EditCard numberPicker = (EditCard) row.findViewById(R.id.answer);
+
+        //Has value? show it
+        if(value!=null){
+            numberPicker.setText(value.getValue());
+        }
+
+        if (!readOnly) {
+            numberPicker.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        //Save the numberpicker value in the DB, and continue to the next screen.
+                        saveValue(numberPicker);
+                    }
+                });
+        }else{
+            numberPicker.setEnabled(false);
+        }
+        //Take focus and open keyboard
+        openKeyboard(numberPicker);
     }
+
+    private void addTagQuestion(Question question, View viewById) {
+        viewById.setTag(question);
+    }
+
 
     private void initShortTextValue(TableRow row, Value value) {
+        final EditCard numberPicker = (EditCard)row.findViewById(R.id.answer);
+        //Has value? show it
+        if(value!=null){
+            numberPicker.setText(value.getValue());
+        }
+
+        if (!readOnly) {
+            numberPicker.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //Save the numberpicker value in the DB, and continue to the next screen.
+                    ReadWriteDB.saveValuesText((Question)numberPicker.getTag(), String.valueOf(s));
+                }
+            });
+        }else{
+            numberPicker.setEnabled(false);
+        }
+        //Take focus and open keyboard
+        openKeyboard(numberPicker);
     }
 
     private void initLongTextValue(TableRow row, Value value) {
+        final EditCard numberPicker = (EditCard)row.findViewById(R.id.answer);
+
+        //Has value? show it
+        if(value!=null){
+            numberPicker.setText(value.getValue());
+        }
+
+        if (!readOnly) {
+            numberPicker.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //Save the numberpicker value in the DB, and continue to the next screen.
+                    ReadWriteDB.saveValuesText((Question)numberPicker.getTag(), String.valueOf(s));
+                }
+            });
+        }else{
+            numberPicker.setEnabled(false);
+        }
+        //Take focus and open keyboard
+        openKeyboard(numberPicker);
+    }
+    private void initDropdownValue(TableRow row, Question screenQuestion, Value value) {
+        row = populateSpinner(row, screenQuestion);
+        Spinner dropdown = (Spinner)row.findViewById(R.id.answer);
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                final Option option = (Option) parent.getItemAtPosition(position);
+                if(option==null || option.getCode()==null){
+                    //remove value if exist?
+                }else {
+                    Question question=(Question)parent.getTag();
+                    ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
+                }}
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        if(value!=null && value.getValue()!=null) {
+            for (int i = 0; i < dropdown.getAdapter().getCount(); i++) {
+                if (dropdown.getItemAtPosition(i).equals(value.getOption())) {
+                    dropdown.setSelection(i);
+                    break;
+                }
+            }
+        }
     }
 
-    private void initDropdownValue(TableRow row, Value value) {
+    private void savePositiveIntValue(EditText numberPicker) {
+        String valueAsText=String.valueOf(numberPicker.getText());
+
+        //The text is truncated as integer ( 00-0 , 01-1 , etc. ) before save and send as string.
+        Integer positiveIntValue = Integer.parseInt(valueAsText);
+        ReadWriteDB.saveValuesText((Question) numberPicker.getTag(), positiveIntValue.toString());
+    }
+
+    private void saveValue(EditCard editCard) {
+        ReadWriteDB.saveValuesText((Question)editCard.getTag(), editCard.getText().toString());
     }
 
     private void openKeyboard(final EditText editText){
@@ -984,13 +1101,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         return false;
                     isClicked=true;
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        EditText editText= ((EditText) v);
-                        if(v.getId()==R.id.positiveInt_edit){
+                        EditCard editText= ((EditCard) v);
+                        if(v.getId()==R.id.answer){
                             if(clickPositiveIntValue(editText)) {
                                 finishOrNext();
                             }
                         }
-                        else if(v.getId()==R.id.phone_edit) {
+                        else if(v.getId()==R.id.answer) {
                             if(clickPhoneValue(editText)){
                                 finishOrNext();
                             }
@@ -1004,30 +1121,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             });
         }
     }
-
-    /**
-     * Checks if the given string corresponds a correct phone number for the current country (by locale)
-     * @param phoneValue
-     * @return true|false
-     */
-    private boolean checkPhoneNumberByCountry(String phoneValue){
-
-        //Empty  is ok
-        if (phoneValue == null || "".equals(phoneValue)) {
-            phoneValue = "";
-        }
-
-        Phonenumber.PhoneNumber phoneNumber = null;
-        try {
-            Locale locale = context.getResources().getConfiguration().locale;
-            phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, locale.getCountry());
-        } catch (NumberParseException e) {
-            return false;
-        }
-        return PhoneNumberUtil.getInstance().isValidNumber(phoneNumber);
-    }
-
-
+    
     /**
      * Checks if edit text is not null:
      * @param editValue
@@ -1046,7 +1140,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param option
      */
     private void initOptionButton(FrameLayout button, Option option, Value value){
-
         // value = null --> first time calling initOptionButton
         //Highlight button
         if (value != null && value.getValue().equals(option.getName())) {
@@ -1239,7 +1332,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
-
     /**
      * When the user click in a value in the review fragment the navigationController should go to related question
      */
@@ -1272,6 +1364,4 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if(relation.isAReminder())
                 next();
     }
-
-
 }

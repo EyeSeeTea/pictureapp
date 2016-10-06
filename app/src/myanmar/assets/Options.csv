@@ -29,6 +29,7 @@
 29;'ຖ້າທ່ານພົບເຊື້ອ Pv ຫຼື Pf+Pv, ໃຫ້ຢາ Coartem ແລະ ສົ່ງຕໍ່';'Remminder text';0;11;26
 30;'ກວດຕໍ່';'Warning button';0;11;27
 31;'ກະລຸນານຳສົ່ງຄົນເຈັບໄປສະຖານທີ່ປິ່ນປົວຂອງພາກລັດທີ່ໃກ້ທີ່ສຸດ ຖ້າຫາກວ່າຄົນເຈັບເປັນໄຂ້ມາລາເຣຍຮ້າຍແຮງ, ຄົນເຈັບຖືພາ ຫຼື ເຈ້ຍຈຸ່ມໝົດ';'Remminder text';0;11;26
+32;'ສົ່ງ';'Remminder button';0;11;27
 32;'Oviedo';'Dropdown example';0;15;27
 33;'Gijon';'Dropdown example';0;15;27
 34;'Llanes';'Dropdown example';0;15;27

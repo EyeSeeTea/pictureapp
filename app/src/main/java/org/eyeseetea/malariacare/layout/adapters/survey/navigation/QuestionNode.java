@@ -6,7 +6,6 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.Remind
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.StatusChecker;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.WarningStatusChecker;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.hisp.dhis.android.sdk.persistence.models.Constant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -293,7 +292,7 @@ public class QuestionNode {
      */
     private QuestionNode nextBySibling(){
         //NO sibling ->nowhere to go
-        if(this.sibling==null || question.getHeader().getTab().getType()==Constants.TAB_WRAP_QUESTIONS){
+        if(this.sibling==null || question.getHeader().getTab().getType()==Constants.TAB_MULTI_QUESTION){
             return null;
         }
         return this.sibling;

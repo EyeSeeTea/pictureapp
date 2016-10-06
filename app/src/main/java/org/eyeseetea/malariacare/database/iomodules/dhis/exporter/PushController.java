@@ -20,6 +20,8 @@
 package org.eyeseetea.malariacare.database.iomodules.dhis.exporter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.squareup.otto.Subscribe;
@@ -29,12 +31,15 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressSt
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.network.ResponseHolder;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.models.ImportSummary;
+import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,14 +66,16 @@ public class PushController {
 
 
     public boolean isPushInProgress() {
-        return pushInProgress;
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
+        return sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getString(R.string.is_pushing_key), false);
     }
 
     public void setPushInProgress(boolean pushInProgress) {
-        this.pushInProgress = pushInProgress;
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(PreferencesState.getInstance().getContext().getResources().getString(R.string.is_pushing_key), pushInProgress); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
     }
-
-    private boolean pushInProgress = false;
 
 
     /**
@@ -138,6 +145,11 @@ public class PushController {
 
             convertToSDK(surveys);
 
+            for(Survey survey:surveys){
+                survey.setStatus(Constants.SURVEY_SENDING);
+                survey.save();
+            }
+
             //Asks sdk to push localdata
             postProgress(context.getString(R.string.progress_push_posting_survey));
             Log.d(TAG, "Pushing survey data to server...");
@@ -163,6 +175,10 @@ public class PushController {
                         return;
                     }
 
+                    if(result!=null && result.getResourceType() != null && result.getResourceType().equals(ResourceType.USERS)) {
+                        Log.e(TAG, "onSendDataFinished wrong subscribe(login)");
+                        return;
+                    }
                     //Error while pulling
                     if (result.getResponseHolder() != null && result.getResponseHolder().getApiException() != null) {
                         Log.e(TAG, result.getResponseHolder().getApiException().getMessage());

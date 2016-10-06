@@ -101,4 +101,6 @@
 
     <string name="default_option_text_size" translatable="false">24</string>
 
+    <string name="is_pushing_key" translatable="false">ispushing</string>
+
 </resources>

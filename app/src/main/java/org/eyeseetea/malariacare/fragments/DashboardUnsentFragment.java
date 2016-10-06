@@ -65,8 +65,6 @@ public class DashboardUnsentFragment extends ListFragment {
     private SurveyReceiver surveyReceiver;
     private List<Survey> surveys;
     protected IDashboardAdapter adapter;
-    private static int index = 0;
-    private AlarmPushReceiver alarmPush;
 
     public DashboardUnsentFragment(){
         this.adapter = Session.getAdapterUncompleted();
@@ -92,7 +90,6 @@ public class DashboardUnsentFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         Log.d(TAG, "onCreate");
-        alarmPush = new AlarmPushReceiver();
         super.onCreate(savedInstanceState);
     }
 
@@ -314,16 +311,6 @@ public class DashboardUnsentFragment extends ListFragment {
         setListShown(true);
     }
 
-    public void manageSurveysAlarm(List<Survey> newListSurveys){
-        Log.d(TAG, "manageSurveysAlarm (Thread: " + Thread.currentThread().getId() + "): " + newListSurveys.size());
-        if(!newListSurveys.isEmpty()) {
-            //Survey.removeInProgress();
-            alarmPush.setPushAlarm(getActivity());
-        }else{
-            alarmPush.cancelPushAlarm(getActivity());
-        }
-    }
-
 
     /**
      * Inner private class that receives the result from the service
@@ -354,8 +341,6 @@ public class DashboardUnsentFragment extends ListFragment {
                 // Set the variable that establish the unsent list is shown or not
                 if (unsentHeight >= screenHeight) Session.setFullOfUnsent(getActivity());
                 else Session.setNotFullOfUnsent(getActivity());
-
-                manageSurveysAlarm(surveysUnsentFromService);
             }
         }
     }

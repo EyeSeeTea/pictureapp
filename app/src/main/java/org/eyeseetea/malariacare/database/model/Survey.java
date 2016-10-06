@@ -278,6 +278,13 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         return Constants.SURVEY_CONFLICT==this.status;
     }
     /**
+     * Checks if the survey has been in conflict
+     * @return true|false
+     */
+    public boolean isQuarantine(){
+        return Constants.SURVEY_QUARANTINE==this.status;
+    }
+    /**
      * Checks if the survey has been completed or not
      * @return true|false
      */
@@ -566,6 +573,26 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         return new Select().from(Survey.class)
                 .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
                 .orderBy(false, Survey$Table.EVENTDATE).queryList();
+    }
+
+    /**
+     * Returns all the surveys with status put to "quarantine"
+     * @return
+     */
+    public static List<Survey> getAllQuarantineSurveys() {
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .orderBy(false, Survey$Table.EVENTDATE).queryList();
+    }
+    /**
+     * Returns all the surveys with status put to "quarantine"
+     * @return
+     */
+    public static int countQuarantineSurveys() {
+        return (int) new Select().count()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .count();
     }
 
     /**
@@ -978,5 +1005,30 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 .from(Survey.class)
                 .where(Condition.column(Survey$Table.COMPLETIONDATE).eq(completionDate))
                 .count();
+    }
+
+    public static Date getMinQuarantineEventDate() {
+        Survey survey= new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .orderBy(true, Survey$Table.EVENTDATE)
+                .querySingle();
+        return survey.getEventDate();
+    }
+
+    public static Date getMaxQuarantineEventDate() {
+        Survey survey= new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .orderBy(false, Survey$Table.EVENTDATE)
+                .querySingle();
+        return survey.getEventDate();
+    }
+
+    public static List<Survey> getAllSendingSurveys() {
+        return new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENDING))
+                .queryList();
     }
 }

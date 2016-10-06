@@ -151,6 +151,12 @@ public class QuestionNode {
         //Siblings share same parent
         this.sibling.parentNode=this.parentNode;
     }
+    /**
+     * gets the next sibling (same parent question)
+     */
+    public QuestionNode getSibling(){
+        return this.sibling;
+    }
 
     /**
      * Sets the previous sibling
@@ -292,7 +298,7 @@ public class QuestionNode {
      */
     private QuestionNode nextBySibling(){
         //NO sibling ->nowhere to go
-        if(this.sibling==null || question.getHeader().getTab().getType()==Constants.TAB_MULTI_QUESTION){
+        if(this.sibling==null){
             return null;
         }
         return this.sibling;

@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -280,8 +281,19 @@ public class NavigationController {
             Log.d(TAG,String.format("findNext(%s)-> Initial movement",option==null?"":option.getCode()));
             return this.rootNode;
         }
-
-        QuestionNode nextNode=getCurrentNode().next(option);
+        Question actualQuestion = getCurrentNode().getQuestion();
+        QuestionNode nextNode;
+        nextNode = getCurrentNode().next(option);
+        if(actualQuestion.getHeader().getTab().getType() == Constants.TAB_MULTI_QUESTION) {
+            while(nextNode!=null && nextNode.getQuestion().getHeader().getTab().equals(actualQuestion.getHeader().getTab())){
+                if(nextNode.getSibling()==null) {
+                    nextNode = null;
+                }
+                else {
+                    nextNode = nextNode.next();
+                }
+            }
+        }
 
         //Survey finished -> No more questions
         if(nextNode==null){

@@ -397,8 +397,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         // We get values from DB and put them in Session
         if(Session.getSurvey()!=null)
             Session.getSurvey().getValuesFromDB();
-        // Se get the value from Session
-        Value value=question.getValueBySession();
 
         //Question
         TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
@@ -442,6 +440,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         swipeTouchListener.clearClickableViews();
         for(Question screenQuestion:screenQuestions) {
+            // Se get the value from Session
+            Value value=screenQuestion.getValueBySession();
             int typeQuestion = screenQuestion.getOutput();
             switch (typeQuestion) {
                 case Constants.IMAGES_2:
@@ -566,8 +566,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initPositiveIntValue(tableRow, value, tabType);
-                    //The positive int starts empty and is not validate.
-                    failedValidations++;
                     tableLayout.addView(tableRow);
                     break;
                 case Constants.INT:
@@ -757,42 +755,42 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (!readOnly) {
             if(isMultipleQuestionTab(tabType)) {
                 numberPicker.addTextChangedListener(new TextWatcher() {
-                    boolean isValid;
+                    Boolean isValid;
                     @Override
                     public void afterTextChanged(Editable s) {
-                        Log.d("onTextChanged", "after "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
-                        Log.d("onTextChanged", "total: " + failedValidations);
-                        boolean isValidChangedText=validatePositiveIntValue(s.toString());
-                        Log.d("onTextChanged", "bef "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
-                        Log.d("onTextChanged", "total: " + failedValidations);
-                        if(isValid!=isValidChangedText){
-                            if(isValidChangedText){
-                                failedValidations++;
-                            }
-                            else{
+                        boolean isValidNewValue = validatePositiveIntValue(s.toString());
+                        if(isValid==null || isValid!=isValidNewValue) {
+                            if(isValidNewValue){
                                 failedValidations--;
                             }
+                            else{
+                                failedValidations++;
+                            }
                         }
-                        isValid=isValidChangedText;
-                        if(validatePositiveIntValue(s.toString())){
-                            //Save the numberpicker value in the DB, and continue to the next screen.
+                        if(isValidNewValue){
                             savePositiveIntValue(numberPicker);
+                            numberPicker.setTag(R.id.TAG_VALIDATION_OLD_VALUE, s.toString());
+                        } else if(numberPicker.getText().equals("")){
+                            ReadWriteDB.deleteValue((Question) numberPicker.getTag());
+                            numberPicker.setTag(R.id.TAG_VALIDATION_OLD_VALUE, null);
                         }
+                        Log.d("onTextChanged", "end "+ s.toString() + " bool: "  + validatePositiveIntValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
                     }
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        Question question= (Question)numberPicker.getTag();
-                        if(question.getValueBySession()!=null) {
-                            isValid = validatePhoneValue(question.getValueBySession().getValue());
-                        }
-                        else{
-                            isValid=false;
+                        Log.d("onTextChanged", "text "+ s.toString() + " bool: "  + validatePositiveIntValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
+                        Object oldValue= numberPicker.getTag(R.id.TAG_VALIDATION_OLD_VALUE);
+                        if(oldValue==null) {
+                            //The positiveInt with null value is valid
+                            isValid = null;
+                        } else {
+                            isValid = validatePositiveIntValue(oldValue.toString());
                         }
                     }
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        Log.d("onTextChanged", "text "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
-                        Log.d("onTextChanged", "total: " + failedValidations);
                     }
                 });
             }else{
@@ -808,6 +806,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         }
                     }
                 });
+            }
+            if(isMultipleQuestionTab(tabType) && value==null){
+                failedValidations++;
             }
         }else{
             numberPicker.setEnabled(false);
@@ -895,44 +896,39 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(!readOnly){
             if(isMultipleQuestionTab(tabType)) {
                 editCard.addTextChangedListener(new TextWatcher() {
-                    //the default value is valid
-                    boolean isValid=true;
+                    boolean isValid;
                     @Override
                     public void afterTextChanged(Editable s) {
-                        Log.d("onTextChanged", "after "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
-                        Log.d("onTextChanged", "total: " + failedValidations);
-                        boolean isValidChangedText=validatePhoneValue(s.toString());
-                        if(isValid!=isValidChangedText){
-                            isValid=isValidChangedText;
-                            if(isValidChangedText){
-                                failedValidations++;
-                            }
-                            else{
+                        boolean isValidNewValue = validatePhoneValue(s.toString());
+                        if(isValid!=isValidNewValue) {
+                            if(isValidNewValue){
                                 failedValidations--;
                             }
+                            else{
+                                failedValidations++;
+                            }
                         }
-                        if(validatePhoneValue(s.toString())){
-                            //Save the numberpicker value in the DB, and continue to the next screen.
+                        if(isValidNewValue){
                             saveValue(editCard);
                         }
+                        editCard.setTag(R.id.TAG_VALIDATION_OLD_VALUE, s.toString());
+                        Log.d("onTextChanged", "end "+ s.toString() + " bool: "  + validatePhoneValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
                     }
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        Log.d("onTextChanged", "bef "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
+                        Log.d("onTextChanged", "text "+ s.toString() + " bool: "  + validatePhoneValue(s.toString()));
                         Log.d("onTextChanged", "total: " + failedValidations);
-                        Question question= (Question)editCard.getTag();
-                        if(question.getValueBySession()!=null) {
-                            isValid = validatePhoneValue(question.getValueBySession().getValue());
-                        }
-                        else{
-                            //no value is valid in a phone
-                            isValid=true;
+                        Object oldValue = editCard.getTag(R.id.TAG_VALIDATION_OLD_VALUE);
+                        if(oldValue==null) {
+                            //The phone with null value is valid
+                            isValid = true;
+                        } else {
+                            isValid = validatePhoneValue(oldValue.toString());
                         }
                     }
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        Log.d("onTextChanged", "text "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
-                        Log.d("onTextChanged", "total: " + failedValidations);
                     }
                 });
             }else {
@@ -1065,13 +1061,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                final Option option = (Option) parent.getItemAtPosition(position);
-                if(option==null || option.getCode()==null){
-                    //remove value if exist?
-                }else {
-                    Question question=(Question)parent.getTag();
-                    ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
-                }}
+                Option option = (Option) parent.getItemAtPosition(position);
+                Question question = (Question) parent.getTag();
+                ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
+            }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -1080,7 +1073,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         });
         if(value!=null && value.getValue()!=null) {
             for (int i = 0; i < dropdown.getAdapter().getCount(); i++) {
-                if (dropdown.getItemAtPosition(i).equals(value.getOption())) {
+                Option option=(Option)dropdown.getItemAtPosition(i);
+                if (option.equals(value.getOption())) {
                     dropdown.setSelection(i);
                     break;
                 }

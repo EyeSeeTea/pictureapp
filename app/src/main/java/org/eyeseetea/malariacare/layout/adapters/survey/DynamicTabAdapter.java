@@ -71,6 +71,7 @@ import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
@@ -308,7 +309,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         ReadWriteDB.saveValuesDDL(question, selectedOption, value);
         darkenNonSelected(view, selectedOption);
-        highlightSelection(view, selectedOption);
+        LayoutUtils.highlightSelection(view, selectedOption);
         finishOrNext();
     }
 
@@ -328,7 +329,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     //We dont want the user to click anything else
                     Option otherOption=(Option)childItem.getTag();
                     if(selectedOption.getId_option() != otherOption.getId_option()){
-                        overshadow((FrameLayout) childItem);
+                        LayoutUtils.overshadow((FrameLayout) childItem);
                     }
                 }
             }
@@ -761,6 +762,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     public void afterTextChanged(Editable s) {
                         Log.d("onTextChanged", "after "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
                         Log.d("onTextChanged", "total: " + failedValidations);
+                        boolean isValidChangedText=validatePositiveIntValue(s.toString());
+                        Log.d("onTextChanged", "bef "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
+                        if(isValid!=isValidChangedText){
+                            if(isValidChangedText){
+                                failedValidations++;
+                            }
+                            else{
+                                failedValidations--;
+                            }
+                        }
+                        isValid=isValidChangedText;
                         if(validatePositiveIntValue(s.toString())){
                             //Save the numberpicker value in the DB, and continue to the next screen.
                             savePositiveIntValue(numberPicker);
@@ -768,18 +781,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        boolean isValidChangedText=validatePositiveIntValue(s.toString());
-                        Log.d("onTextChanged", "bef "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
-                        Log.d("onTextChanged", "total: " + failedValidations);
-                        if(isValid!=isValidChangedText){
-                            if(isValidChangedText){
-                                failedValidations--;
-                            }
-                            else{
-                                failedValidations++;
-                            }
+                        Question question= (Question)numberPicker.getTag();
+                        if(question.getValueBySession()!=null) {
+                            isValid = validatePhoneValue(question.getValueBySession().getValue());
                         }
-                        isValid=isValidChangedText;
+                        else{
+                            isValid=false;
+                        }
                     }
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -893,6 +901,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     public void afterTextChanged(Editable s) {
                         Log.d("onTextChanged", "after "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
                         Log.d("onTextChanged", "total: " + failedValidations);
+                        boolean isValidChangedText=validatePhoneValue(s.toString());
+                        if(isValid!=isValidChangedText){
+                            isValid=isValidChangedText;
+                            if(isValidChangedText){
+                                failedValidations++;
+                            }
+                            else{
+                                failedValidations--;
+                            }
+                        }
                         if(validatePhoneValue(s.toString())){
                             //Save the numberpicker value in the DB, and continue to the next screen.
                             saveValue(editCard);
@@ -902,15 +920,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                         Log.d("onTextChanged", "bef "+ s.toString() + " bool: " + isValid + validatePositiveIntValue(s.toString()));
                         Log.d("onTextChanged", "total: " + failedValidations);
-                        boolean isValidChangedText=validatePhoneValue(s.toString());
-                        if(isValid!=isValidChangedText){
-                            isValid=isValidChangedText;
-                            if(isValidChangedText){
-                                failedValidations--;
-                            }
-                            else{
-                                failedValidations++;
-                            }
+                        Question question= (Question)editCard.getTag();
+                        if(question.getValueBySession()!=null) {
+                            isValid = validatePhoneValue(question.getValueBySession().getValue());
+                        }
+                        else{
+                            //no value is valid in a phone
+                            isValid=true;
                         }
                     }
                     @Override
@@ -1143,9 +1159,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         // value = null --> first time calling initOptionButton
         //Highlight button
         if (value != null && value.getValue().equals(option.getName())) {
-            highlightSelection(button, option);
+            LayoutUtils.highlightSelection(button, option);
         } else if (value != null) {
-            overshadow(button);
+            LayoutUtils.overshadow(button);
         }
 
         //the button is a framelayout that contains a imageview
@@ -1178,55 +1194,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             e.printStackTrace();
         }
     }
-
-    /**
-     * @param view
-     * @param option
-     */
-    private void highlightSelection(View view, Option option){
-        Drawable selectedBackground = context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
-        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {    //JELLY_BEAN=API16
-            view.setBackground(selectedBackground);
-        } else {
-            view.setBackgroundDrawable(selectedBackground);
-        }
-
-        if(option!=null) {
-            GradientDrawable bgShape = (GradientDrawable) view.getBackground();
-            String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
-            bgShape.setColor(Color.parseColor("#" + backGColor));
-            bgShape.setStroke(3, Color.WHITE);
-        }
-
-        //the view is a framelayout that contains a imageview
-        ImageView imageView;
-        if(view instanceof FrameLayout){
-            FrameLayout f = (FrameLayout) view;
-            imageView= (ImageView) f.getChildAt(0);
-        }else{
-            imageView = (ImageView)view;
-        }
-
-        imageView.clearColorFilter();
-    }
-
-    /**
-     * Puts a sort of dark shadow over the given view
-     * @param view
-     */
-    private void overshadow(FrameLayout view){
-        //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
-        view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
-        ImageView imageView = (ImageView) view.getChildAt(0);
-        imageView.setColorFilter(Color.parseColor("#805a595b"));
-
-        Drawable bg = view.getBackground();
-        if(bg instanceof GradientDrawable) {
-            GradientDrawable bgShape = (GradientDrawable)bg;
-            bgShape.setStroke(0, 0);
-        }
-    }
-
     /**
      * Advance to the next question with delay applied or finish survey according to question and value.
      */

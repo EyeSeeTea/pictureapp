@@ -362,7 +362,8 @@ public class Question extends BaseModel {
         this.id_answer = id_answer;
         this.answer = null;
     }
-
+    //Is necessary use the question relations.
+    @Deprecated
     public Question getQuestion() {
         if (question == null) {
             question = new Select()
@@ -373,6 +374,7 @@ public class Question extends BaseModel {
         return question;
     }
 
+    @Deprecated
     public void setQuestion(Question question) {
         this.question = question;
         this.id_parent = (question != null) ? question.getId_question() : null;

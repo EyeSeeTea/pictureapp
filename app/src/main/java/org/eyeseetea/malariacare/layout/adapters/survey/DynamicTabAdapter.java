@@ -762,12 +762,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         else if(!isValidNewValue){
                             //if the value is not valid, in the positiveInteger it only happends when a user erase the text and it's always is necessary the increment of failedValidations.
                             failedValidations++;
-                            numberPicker.setError(context.getString(R.string.dynamic_error_age));
                         }
                         if(isValidNewValue){
                             savePositiveIntValue(numberPicker);
                         } else if(!validatePositiveIntValue(s.toString())){
                             ReadWriteDB.deleteValue((Question) numberPicker.getTag());
+                            numberPicker.setError(context.getString(R.string.dynamic_error_age));
                         }
                         numberPicker.setTag(R.id.TAG_VALIDATION_OLD_VALUE, s.toString());
                         Log.d("onTextChanged", "end "+ s.toString() + " bool: "  + validatePhoneValue(s.toString()));
@@ -901,11 +901,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             }
                             else{
                                 failedValidations++;
-                                editCard.setError(context.getString(R.string.dynamic_error_phone_format));
                             }
                         }
                         if(isValidNewValue){
                             saveValue(editCard);
+                        }else{
+                            editCard.setError(context.getString(R.string.dynamic_error_phone_format));
                         }
                         editCard.setTag(R.id.TAG_VALIDATION_OLD_VALUE, s.toString());
                         Log.d("onTextChanged", "end "+ s.toString() + " bool: "  + validatePhoneValue(s.toString()));

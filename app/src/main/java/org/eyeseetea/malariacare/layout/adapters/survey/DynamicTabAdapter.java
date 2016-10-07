@@ -34,6 +34,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -44,8 +45,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -79,6 +82,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import utils.PhoneMask;
+
+import static org.eyeseetea.malariacare.fragments.ReviewFragment.TAG;
 
 /**
  * Created by Jose on 21/04/2015.
@@ -128,8 +133,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Flag that indicates the number of failed validations by the active screen in multiquestion tabs
      */
     public static int failedValidations;
-
-
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
@@ -222,9 +225,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     //Hide keypad
                     hideKeyboard(listView.getContext(), listView);
-
                     next();
                 }
+            }
+
+            /**
+             * Adds a clickable view
+             * @param view
+             */
+            public void addScrollView(ScrollView view){
+                super.addScrollView(scrollView);
+                scrollView=view;
             }
         };
 
@@ -260,7 +271,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         });
 
         //Show confirm on full screen
-        rootView .findViewById(R.id.options_table).setVisibility(View.GONE);
+        rootView .findViewById(R.id.dynamic_tab_options_table).setVisibility(View.GONE);
         rootView .findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
 
         //Show question image in counter alert
@@ -293,7 +304,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void removeConfirmCounter(View view){
-        view.getRootView().findViewById(R.id.options_table).setVisibility(View.VISIBLE);
+        view.getRootView().findViewById(R.id.dynamic_tab_options_table).setVisibility(View.VISIBLE);
         view.getRootView().findViewById(R.id.confirm_table).setVisibility(View.GONE);
     }
 
@@ -422,19 +433,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         progressView.setProgress(navigationController.getCurrentPage()+1);
         progressText.setText(getLocaleProgressStatus(progressView.getProgress(), progressView.getMax()));
 
-        //Options
-        TableLayout tableLayout=(TableLayout)rowView.findViewById(R.id.options_table);
-
+        TableLayout tableLayout=null;
         TableRow tableRow=null;
         TableRow tableButtonRow=null;
         List<Question> screenQuestions= new ArrayList<>();
+
+        swipeTouchListener.clearClickableViews();
         if(isMultipleQuestionTab(tabType)) {
+            tableLayout=(TableLayout)rowView.findViewById(R.id.multi_question_options_table);
+            (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             screenQuestions = question.getQuestionsByTab(question.getHeader().getTab());
+            swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(R.id.scrolled_table)).findViewById(R.id.table_scroll));
         }
         else{
+            tableLayout=(TableLayout)rowView.findViewById(R.id.dynamic_tab_options_table);
+            (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);
             screenQuestions.add(question);
         }
-        swipeTouchListener.clearClickableViews();
         for(Question screenQuestion:screenQuestions) {
             // Se get the value from Session
             Value value=screenQuestion.getValueBySession();

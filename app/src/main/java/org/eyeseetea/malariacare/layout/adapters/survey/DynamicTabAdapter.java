@@ -27,6 +27,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -34,18 +35,17 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -71,8 +71,10 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBui
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.EditCard;
+import org.eyeseetea.malariacare.views.ShowException;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
@@ -83,7 +85,7 @@ import java.util.List;
 
 import utils.PhoneMask;
 
-import static org.eyeseetea.malariacare.fragments.ReviewFragment.TAG;
+import static android.R.attr.codes;
 
 /**
  * Created by Jose on 21/04/2015.
@@ -603,7 +605,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_dropdown_row, tableLayout, false);
                     ((TextCard)tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
-                    initDropdownValue(tableRow, screenQuestion, value);
+                    tableRow = populateSpinnerFromOptions(tableRow, screenQuestion);
+                    initDropdownValue(tableRow, value);
+                    tableLayout.addView(tableRow);
+                    break;
+                case Constants.DROPDOWN_OU_LIST:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_dropdown_row, tableLayout, false);
+                    ((TextCard)tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
+                    tableRow = populateSpinnerFromQuery(tableRow, screenQuestion);
                     tableLayout.addView(tableRow);
                     break;
             }
@@ -616,7 +626,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return rowView;
     }
 
-    private TableRow populateSpinner(TableRow tableRow, Question question) {
+    private TableRow populateSpinnerFromQuery(TableRow tableRow, Question question) {
+        Spinner dropdown_list = (Spinner)tableRow.findViewById(R.id.answer);
+        // In case the option is selected, we will need to show num/dems
+        try {
+            GetOrgUnitsAsync getOrgUnitsAsynctask = new GetOrgUnitsAsync(context);
+            getOrgUnitsAsynctask.execute(dropdown_list).get();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Log.e(TAG, "Cannot findOrgUnitsFromServer: " + ex.getMessage());
+        }
+        return tableRow;
+    }
+    private TableRow populateSpinnerFromOptions(TableRow tableRow, Question question) {
         Spinner dropdown_list = (Spinner)tableRow.findViewById(R.id.answer);
         // In case the option is selected, we will need to show num/dems
         List<Option> optionList = new ArrayList<>(question.getAnswer().getOptions());
@@ -1065,8 +1087,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Take focus and open keyboard
         openKeyboard(numberPicker);
     }
-    private void initDropdownValue(TableRow row, Question screenQuestion, Value value) {
-        row = populateSpinner(row, screenQuestion);
+    private void initDropdownValue(TableRow row,Value value) {
         Spinner dropdown = (Spinner)row.findViewById(R.id.answer);
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -1335,4 +1356,49 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if(relation.isAReminder())
                 next();
     }
+
+    public class GetOrgUnitsAsync extends AsyncTask<Spinner, Void, String[]> {
+
+        Context context;
+        Spinner spinner;
+        ArrayList list;
+        public GetOrgUnitsAsync(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String[] doInBackground(Spinner... params) {
+            spinner= params[0];
+            boolean validServer=false;
+            String[] results = {""};
+            //Reload preferences to ensure asking right server
+            PreferencesState.getInstance().reloadPreferences();
+            String serverUrl=PreferencesState.getInstance().getDhisURL();
+            //Ask server via API
+            if(ServerAPIController.isValidProgram(serverUrl))
+                results = ServerAPIController.pullOrgUnitsNotBannedCodes(serverUrl);
+            else {
+                ShowException.showError(R.string.dialog_error_push_no_uid);
+            }
+            list= new ArrayList();
+            list.add("");
+            for(String result:results){
+                list.add(result);
+            }
+            return new String[0];
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+            super.onPostExecute(strings);
+            ArrayAdapter<String> orgUnitsAdapter = new ArrayAdapter<String>(context,
+                    android.R.layout.simple_spinner_item, list);
+            spinner.setAdapter(orgUnitsAdapter);
+        }
+    }
+
 }

@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.database;
 
-import org.eyeseetea.malariacare.database.migrations.Migration10UpdateOptionAttributes;
-import org.eyeseetea.malariacare.database.migrations.Migration12AddQuestionReminder;
 import org.eyeseetea.malariacare.database.migrations.Migration2Database;
 import org.eyeseetea.malariacare.database.migrations.Migration3AddQuestionColumn;
 import org.eyeseetea.malariacare.database.migrations.Migration4AddQuestionVisibleColumn;
@@ -22,6 +20,5 @@ public class PostMigration {
         Migration5AddOptionAttributeColumns.postMigrate();
         Migration6AddOptionTextSizeColumn.postMigrate();
         Migration7AddQuestionPathAttributeColumn.postMigrate();
-        Migration12AddQuestionReminder.postMigrate();
     }
 }

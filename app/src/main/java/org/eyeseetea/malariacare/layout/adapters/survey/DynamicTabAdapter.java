@@ -26,11 +26,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -755,38 +751,37 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (!readOnly) {
             if(isMultipleQuestionTab(tabType)) {
                 numberPicker.addTextChangedListener(new TextWatcher() {
-                    Boolean isValid;
                     @Override
                     public void afterTextChanged(Editable s) {
                         boolean isValidNewValue = validatePositiveIntValue(s.toString());
-                        if(isValid==null || isValid!=isValidNewValue) {
-                            if(isValidNewValue){
-                                failedValidations--;
-                            }
-                            else{
-                                failedValidations++;
-                            }
+                        Object oldValue= numberPicker.getTag(R.id.TAG_VALIDATION_OLD_VALUE);
+                        //if the oldValue is null or not validated value, and the new value is correct, we need decrement the failedValidations variable.
+                        if(oldValue==null || (!validatePositiveIntValue(oldValue.toString()) && isValidNewValue)){
+                            failedValidations--;
+                        }
+                        else if(!isValidNewValue){
+                            //if the value is not valid, in the positiveInteger it only happends when a user erase the text and it's always is necessary the increment of failedValidations.
+                            failedValidations++;
+                            numberPicker.setError(context.getString(R.string.dynamic_error_age));
                         }
                         if(isValidNewValue){
                             savePositiveIntValue(numberPicker);
-                            numberPicker.setTag(R.id.TAG_VALIDATION_OLD_VALUE, s.toString());
-                        } else if(numberPicker.getText().equals("")){
+                        } else if(!validatePositiveIntValue(s.toString())){
                             ReadWriteDB.deleteValue((Question) numberPicker.getTag());
-                            numberPicker.setTag(R.id.TAG_VALIDATION_OLD_VALUE, null);
                         }
-                        Log.d("onTextChanged", "end "+ s.toString() + " bool: "  + validatePositiveIntValue(s.toString()));
+                        numberPicker.setTag(R.id.TAG_VALIDATION_OLD_VALUE, s.toString());
+                        Log.d("onTextChanged", "end "+ s.toString() + " bool: "  + validatePhoneValue(s.toString()));
                         Log.d("onTextChanged", "total: " + failedValidations);
                     }
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        Log.d("onTextChanged", "text "+ s.toString() + " bool: "  + validatePositiveIntValue(s.toString()));
-                        Log.d("onTextChanged", "total: " + failedValidations);
                         Object oldValue= numberPicker.getTag(R.id.TAG_VALIDATION_OLD_VALUE);
-                        if(oldValue==null) {
-                            //The positiveInt with null value is valid
-                            isValid = null;
-                        } else {
-                            isValid = validatePositiveIntValue(oldValue.toString());
+                        if(oldValue==null){
+                            Question question= (Question)numberPicker.getTag();
+                            Value value= question.getValueBySession();
+                            if(value!=null) {
+                                numberPicker.setTag(R.id.TAG_VALIDATION_OLD_VALUE,value.getValue());
+                            }
                         }
                     }
                     @Override
@@ -906,6 +901,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             }
                             else{
                                 failedValidations++;
+                                editCard.setError(context.getString(R.string.dynamic_error_phone_format));
                             }
                         }
                         if(isValidNewValue){
@@ -917,8 +913,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        Log.d("onTextChanged", "text "+ s.toString() + " bool: "  + validatePhoneValue(s.toString()));
-                        Log.d("onTextChanged", "total: " + failedValidations);
                         Object oldValue = editCard.getTag(R.id.TAG_VALIDATION_OLD_VALUE);
                         if(oldValue==null) {
                             //The phone with null value is valid

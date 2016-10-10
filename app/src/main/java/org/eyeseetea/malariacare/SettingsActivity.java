@@ -916,6 +916,7 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
     }
 
     Intent prepareIntent(){
+        ProgressActivity.PULL_CANCEL =true;
         String extraKey = changingOrgUnit?SettingsActivity.SETTINGS_CHANGING_ORGUNIT:SettingsActivity.SETTINGS_CHANGING_SERVER;
         Intent intent = new Intent(activity,LoginActivity.class);
         intent.putExtra(extraKey,true);

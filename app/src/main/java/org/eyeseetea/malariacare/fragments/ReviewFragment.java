@@ -1,31 +1,24 @@
 package org.eyeseetea.malariacare.fragments;
 
 import android.app.Fragment;
-import android.app.ListFragment;
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AReviewAdapter;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentSentAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
-import org.eyeseetea.malariacare.views.TextCard;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -49,14 +49,6 @@ public class ReviewFragment extends Fragment {
 
         initAdapter();
         initListView(view);
-
-        view.setOnTouchListener(new SwipeTouchListener(view.getContext()) {
-            @Override
-            public void onSwipeRight() {
-                DashboardActivity.dashboardActivity.hideReview();
-            }
-        });
-
         return view;
     }
 
@@ -114,13 +106,5 @@ public class ReviewFragment extends Fragment {
 
         //remove spaces between rows in the listview
         listView.setDividerHeight(0);
-
-        //Adds SwipeTouchListener to go close the reviewfragment and go back
-        listView.setOnTouchListener(new SwipeTouchListener(view.getContext()) {
-            @Override
-            public void onSwipeRight() {
-                DashboardActivity.dashboardActivity.hideReview();
-            }
-        });
     }
 }

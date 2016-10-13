@@ -129,7 +129,7 @@
 <string name="monitor_row_title_submission">"Submission"</string>
 <string name="review_title">"Please check before submitting."</string>
 <string name="review_subtitle">"To change a response, click on it below to go back and complete the survey."</string>
-    <string name="monitor_row_title_tested">"Tested"</string>
+<string name="monitor_row_title_tested">"Tested"</string>
 <string name="monitor_row_title_act_stockout">"ACT stockout (number not treated)"</string>
 <string name="monitor_row_title_treatment">"Number of referrals (Treatment)"</string>
 <string name="monitor_row_title_rdt_testing">"Number of referrals (RDT)"</string>

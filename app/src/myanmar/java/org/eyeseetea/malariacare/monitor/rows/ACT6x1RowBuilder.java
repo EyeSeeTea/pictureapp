@@ -8,14 +8,14 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 /**
  * Created by idelcano on 21/07/2016.
  */
-public class SubmissionRowBuilder extends CounterRowBuilder {
+public class ACT6x1RowBuilder extends CounterRowBuilder {
 
-    public SubmissionRowBuilder(Context context){
-        super(context, context.getString(R.string.monitor_row_title_submission));
+    public ACT6x1RowBuilder(Context context){
+        super(context, context.getString(R.string.monitor_row_title_act6x1));
     }
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isSubmission())?1:0;
+        return (surveyMonitor.isACT6x1())?1:0;
     }
 }

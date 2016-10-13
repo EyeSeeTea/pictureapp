@@ -54,9 +54,12 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.InputStream;
+import java.util.List;
 
 
 public abstract class BaseActivity extends ActionBarActivity {
@@ -68,6 +71,8 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected static String TAG=".BaseActivity";
 
+    private AlarmPushReceiver alarmPush;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -75,6 +80,17 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         initView(savedInstanceState);
+        if(PushController.getInstance().isPushInProgress()) {
+            List<Survey> surveys=Survey.getAllSendingSurveys();
+            Log.d(TAG,"The app was closed in the middle of a push. Surveys sending: "+surveys.size());
+            for(Survey survey:surveys){
+                survey.setStatus(Constants.SURVEY_QUARANTINE);
+                survey.save();
+            }
+            PushController.getInstance().setPushInProgress(false);
+        }
+        alarmPush = new AlarmPushReceiver();
+        alarmPush.setPushAlarm(this);
     }
 
     /**
@@ -358,4 +374,9 @@ public abstract class BaseActivity extends ActionBarActivity {
         Log.d("." + this.getClass().getSimpleName(), message);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        alarmPush.cancelPushAlarm(this);
+    }
 }

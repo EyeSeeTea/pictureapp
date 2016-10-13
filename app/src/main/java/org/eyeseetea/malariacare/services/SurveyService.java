@@ -142,11 +142,11 @@ public class SurveyService extends IntentService {
         List<Survey> sentSurveys=new ArrayList<Survey>();
         for(Survey survey:surveys){
             //fixme this is to ALL_UNSENT_SURVEYS_ACTION but in the service exclusive fot ALL_UNSENT_SURVEY_ACTION we sent other list(!isSent but hide too)
-            if(!survey.isSent() && !survey.isHide() ){
+            if(!survey.isSent() && !survey.isHide() && !survey.isConflict()){
                 Log.d(TAG,"SurveyStatusUnSent:"+survey.getStatus() + "");
                 unsentSurveys.add(survey);
                 survey.getAnsweredQuestionRatio();
-            }else if (survey.isSent() && !survey.isHide()){
+            }else if ((survey.isSent() || survey.isConflict()) && !survey.isHide()){
                 Log.d(TAG,"SurveyStatusSentNotHide:"+survey.getStatus() + "");
                 sentSurveys.add(survey);
             }
@@ -176,7 +176,7 @@ public class SurveyService extends IntentService {
 
         //Load %completion in every survey (it takes a while so it can NOT be done in UI Thread)
         for(Survey survey:surveys){
-            if(!survey.isSent() && !survey.isHide() ){
+            if(!survey.isSent() && !survey.isHide() && !survey.isConflict() ){
                 survey.getAnsweredQuestionRatio();
                 unsentSurveys.add(survey);
             }

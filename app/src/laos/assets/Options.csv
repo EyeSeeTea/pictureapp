@@ -9,7 +9,7 @@
 9;'Negative';'Negative';0;5;9
 10;'Pf';'Pf';0;5;10
 11;'Pv';'Pv';0;5;11
-12;'Mixed';'Mixed';0;5;12
+12;'Mixed';'Pf+Pv';0;5;12
 13;'Invalid';'Invalid';0;5;13
 14;'Please try again';'Repeat';0;6;
 15;'Not bad check';'Ignore';0;6;
@@ -26,5 +26,7 @@
 26;'Not bad check';'Counter button';0;11;23
 27;'Treatment selected does not match patient’s age';'Warning text';0;11;24
 28;'Please re-check';'Warning button';0;11;25
-29;'If you find a Pv or PfPv case, give Coartem and refer.';'Remminder text';0;11;26
-30;'Continue';'Warning button';0;11;27
+29;'If you find a Pv or PfPv case, give Coartem and refer.';'Remminder Hospital text';0;11;26
+30;'Continue';'Remminder Hospital button';0;11;27
+31;'ກະລຸນານຳສົ່ງຄົນເຈັບໄປສະຖານທີ່ປິ່ນປົວຂອງພາກລັດທີ່ໃກ້ທີ່ສຸດ ຖ້າຫາກວ່າຄົນເຈັບເປັນໄຂ້ມາລາເຣຍຮ້າຍແຮງ, ຄົນເຈັບຖືພາ ຫຼື ເຈ້ຍຈຸ່ມໝົດ';'Remminder not tested text';0;11;26
+32;'ສົ່ງ';'Remminder Not tested button';0;11;27

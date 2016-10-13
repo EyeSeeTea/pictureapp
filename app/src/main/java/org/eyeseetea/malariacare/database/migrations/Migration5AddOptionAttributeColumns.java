@@ -65,14 +65,15 @@ public class Migration5AddOptionAttributeColumns extends BaseMigration {
         }
 
 
+        //this migration is moved to last migration
         //Data? Add new default data
-        if(instance.hasData()) {
+        /*if(instance.hasData()) {
             try {
                 PopulateDB.addOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         //This operation wont be done again
         instance.postMigrationRequired=false;

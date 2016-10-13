@@ -86,6 +86,14 @@ public class PopulateDB {
             QUESTION_OPTIONS_CSV,
             QUESTION_THRESHOLDS_CSV);
 
+    private static final List<String> tables2updateQuestions = Arrays.asList(
+            OPTION_ATTRIBUTES_CSV,
+            OPTIONS_CSV,
+            QUESTIONS_CSV,
+            QUESTION_RELATIONS_CSV,
+            MATCHES,
+            QUESTION_OPTIONS_CSV);
+
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
     private static final String TAG = "PopulateDB";
@@ -376,7 +384,7 @@ public class PopulateDB {
             if(line.length>4 && !line[4].equals(""))
                 optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
             else
-                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+                optionAttribute.setVertical_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
             if(line.length>5 && !line[5].equals(""))
                 optionAttribute.setText_size(Integer.valueOf(line[5]));
             else
@@ -390,7 +398,7 @@ public class PopulateDB {
         //Save new optionattributes for each question
         while ((line = readerOptions.readNext()) != null) {
             for(Option option:options) {
-                if (option.getCode().equals(line[1])){
+                if(String.valueOf(option.getId_option()).equals(line[0])){
                     if (!line[5].equals("")) {
                         option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
                         option.save();
@@ -424,7 +432,7 @@ public class PopulateDB {
             if(line.length>4 && !line[4].equals(""))
                 optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
             else
-                optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+                optionAttribute.setVertical_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
             if(line.length>5 && !line[5].equals(""))
                 optionAttribute.setText_size(Integer.valueOf(line[5]));
             else
@@ -438,7 +446,7 @@ public class PopulateDB {
         //Save new optionattributes for each question
         while ((line = readerOptions.readNext()) != null) {
             for(Option option:options) {
-                if (option.getCode().equals(line[1])) {
+                if(String.valueOf(option.getId_option()).equals(line[0])){
                     if (!line[5].equals("")) {
                         option.setOptionAttribute(optionAttributeList.get(Integer.valueOf(line[5])));
                         option.save();
@@ -460,7 +468,8 @@ public class PopulateDB {
         //Save new option name for each option
         while ((line = reader.readNext()) != null) {
             for(Option option:options) {
-                if(option.getCode().equals(line[1])){
+                if(String.valueOf(option.getId_option()).equals(line[0])){
+                    option.setCode(line[1]);
                     option.setName(line[2]);
                     option.save();
                     break;
@@ -468,5 +477,186 @@ public class PopulateDB {
             }
         }
         reader.close();
+    }
+
+    public static void updateQuestions(AssetManager assetManager) throws IOException {
+        List<Question> questions = Question.getAllQuestions();
+        //Reset inner references
+        cleanInnerLists();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)), SEPARATOR, QUOTECHAR);
+
+        String line[];
+        //Save new option name for each option
+        while ((line = reader.readNext()) != null) {
+            for(Question question:questions) {
+                if(question.getUid().equals(line[5])){
+                    question.setCode(line[1]);
+                    question.setDe_name(line[2]);
+                    question.setShort_name(line[3]);
+                    question.setForm_name(line[4]);
+                    //Update necessary from migration3
+                    question.setTotalQuestions(Integer.valueOf(line[13]));
+                    //Update necessary from migration4
+                    question.setVisible(Integer.valueOf(line[14]));
+                    //Update necessary from migration7
+                    if(line.length>15 && !line[15].equals("")) {
+                        question.setPath(line[15]);
+                    }
+                    question.save();
+                    break;
+                }
+            }
+        }
+        reader.close();
+    }public static void addNotTestedRemminder(AssetManager assetManager) throws IOException{
+        //Reset inner references
+        cleanInnerLists();
+        List <Option> actualOptions = Option.getAllOptions();
+        List <Question> actualQuestions = Question.getAllQuestions();
+
+        questionList = new LinkedHashMap<Integer, Question>();
+        optionAttributeList = new LinkedHashMap<Integer, OptionAttribute>();
+        optionList = new LinkedHashMap<Integer, Option>();
+        questionRelationList = new LinkedHashMap();
+        matchList = new LinkedHashMap();
+        int updateQRFromPosition=24;
+        int updateMatchFromPosition=25;
+        int updateQOFromPosition=51;
+        int QRRow=0;
+        int MatchRow=0;
+        int QORow=0;
+        for (String table : tables2updateQuestions) {
+            Log.i(TAG, "Loading csv: " + table);
+            CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(table)), SEPARATOR, QUOTECHAR);
+
+            String[] line;
+            while ((line = reader.readNext()) != null) {
+                boolean isNew=true;
+                switch (table) {
+                    case OPTION_ATTRIBUTES_CSV:
+                        OptionAttribute optionAttribute = new OptionAttribute();
+                        optionAttribute.setBackground_colour(line[1]);
+                        optionAttribute.setPath(line[2]);
+                        if(line.length>3 && !line[3].equals(""))
+                            optionAttribute.setHorizontal_alignment(Integer.valueOf(line[3]));
+                        else
+                            optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_HORIZONTAL_ALIGNMENT);
+                        if(line.length>4 && !line[4].equals(""))
+                            optionAttribute.setVertical_alignment(Integer.valueOf(line[4]));
+                        else
+                            optionAttribute.setHorizontal_alignment(OptionAttribute.DEFAULT_VERTICAL_ALIGNMENT);
+                        if(line.length>5 && !line[5].equals(""))
+                            optionAttribute.setText_size(Integer.valueOf(line[5]));
+                        else
+                            optionAttribute.setText_size(Integer.parseInt(PreferencesState.getInstance().getContext().getResources().getString(R.string.default_option_text_size)));
+                        optionAttributeList.put(Integer.valueOf(line[0]), optionAttribute);
+                        break;
+                    case OPTIONS_CSV:
+                        //Ignore if the option already exists.
+                        for (Option option : actualOptions) {
+                            if (String.valueOf(option.getId_option()).equals(line[0])) {
+                                isNew = false;
+                            }
+                        }
+                        Option option;
+                        if (isNew) {
+                            option = new Option();
+                            option.setCode(line[1]);
+                            option.setName(line[2]);
+                            option.setFactor(Float.valueOf(line[3]));
+                            option.setAnswer(Answer.findById(Long.valueOf(line[4])));
+                            if (line[5] != null && !line[5].isEmpty()) {
+                                OptionAttribute localOptionAttribute= OptionAttribute.findById(Long.valueOf(line[5]));
+                                    if(localOptionAttribute==null) {
+                                        localOptionAttribute = optionAttributeList.get(Integer.valueOf(line[5]));
+                                        localOptionAttribute.save();
+                                    }
+                                option.setOptionAttribute(localOptionAttribute);
+                            }
+                            option.save();
+                        }
+                        else {
+                            option=Option.findById(Float.valueOf(line[0]));
+                        }
+                        optionList.put(Integer.valueOf(line[0]), option);
+                        break;
+                    case QUESTIONS_CSV:
+                        //Ignore if the question already exists.
+                        for(Question question:actualQuestions){
+                            if(String.valueOf(question.getId_question()).equals(line[0])) {
+                                isNew=false;
+                            }
+                        }
+                        Question question;
+                        if(isNew) {
+                            question = new Question();
+                            question.setCode(line[1]);
+                            question.setDe_name(line[2]);
+                            question.setShort_name(line[3]);
+                            question.setForm_name(line[4]);
+                            question.setUid(line[5]);
+                            question.setOrder_pos(Integer.valueOf(line[6]));
+                            question.setNumerator_w(Float.valueOf(line[7]));
+                            question.setDenominator_w(Float.valueOf(line[8]));
+                            question.setHeader(Header.findById(Long.valueOf(line[9])));
+                            if (!line[10].equals("")) {
+                                question.setAnswer(Answer.findById(Long.valueOf(line[10])));
+                            }
+                            if (!line[11].equals("")) {
+                                question.setQuestion(questionList.get(Integer.valueOf(line[11])));
+                            }
+                            question.setOutput(Integer.valueOf(line[12]));
+                            question.setTotalQuestions(Integer.valueOf(line[13]));
+                            question.setVisible(Integer.valueOf(line[14]));
+                            if (line.length > 15 && !line[15].equals("")) {
+                                question.setPath((line[15]));
+                            }
+                            question.save();
+                        }
+                        else{
+                            question=Question.findByUID(line[5]);
+                        }
+
+                        questionList.put(Integer.valueOf(line[0]), question);
+                        break;
+                    case QUESTION_RELATIONS_CSV:
+                        //Ignore if the option already exists.
+                        QRRow++;
+                        if(updateQRFromPosition>QRRow) {
+                                break;
+                        }
+                        QuestionRelation questionRelation = new QuestionRelation();
+                        questionRelation.setOperation(Integer.valueOf(line[1]));
+                        questionRelation.setQuestion(questionList.get(Integer.valueOf(line[2])));
+                        questionRelation.save();
+                        questionRelationList.put(Integer.valueOf(line[0]), questionRelation);
+                        break;
+                    case MATCHES:
+                        //Ignore if the match already exists.
+                        MatchRow++;
+                        if(updateMatchFromPosition>MatchRow) {
+                            break;
+                        }
+                        Match match = new Match();
+                        match.setQuestionRelation(questionRelationList.get(Integer.valueOf(line[1])));
+                        match.save();
+                        matchList.put(Integer.valueOf(line[0]), match);
+                        break;
+                    case QUESTION_OPTIONS_CSV:
+                        //Ignore if the question option already exists.
+                        QORow++;
+                        if(updateQOFromPosition>QORow) {
+                            break;
+                        }
+                        QuestionOption questionOption = new QuestionOption();
+                        questionOption.setQuestion(questionList.get(Integer.valueOf(line[1])));
+                        questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
+                        if (!line[3].equals(""))
+                            questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
+                        questionOption.save();
+                        break;
+                }
+            }
+        }
     }
 }

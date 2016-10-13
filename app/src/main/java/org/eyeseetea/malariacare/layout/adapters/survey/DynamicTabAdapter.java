@@ -61,6 +61,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
+import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -136,7 +137,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(!readOnly){
             Question question=navigationController.getCurrentQuestion();
             if(question.getValueBySession()!=null) {
-                goToLastQuestion();
+                if(DashboardActivity.moveToQuestion !=null){
+                    goToQuestion(DashboardActivity.moveToQuestion);
+                    DashboardActivity.moveToQuestion =null;
+                }
+                else
+                    goToLastQuestion();
             }
         }
 
@@ -152,6 +158,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         navigationController.setTotalPages(totalPages);
         isClicked=false;
     }
+
 
     private NavigationController initNavigationController(Tab tab) {
         NavigationController navigationController = NavigationBuilder.getInstance().buildController(tab);
@@ -673,18 +680,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void savePositiveIntValue(EditText numberPicker) {
-        String positiveIntValue = String.valueOf(numberPicker.getText());
+        String valueAsText=String.valueOf(numberPicker.getText());
 
         //Required, empty values rejected
-        if(checkEditTextNotNull(positiveIntValue)){
+        if(checkEditTextNotNull(valueAsText)){
             numberPicker.setError(context.getString(R.string.dynamic_error_age));
             isClicked=false;
             return;
         }
 
+        //The text is truncated as integer ( 00-0 , 01-1 , etc. ) before save and send as string.
+        Integer positiveIntValue = Integer.parseInt(valueAsText);
+
         navigationController.isMovingToForward=true;
         Question question = navigationController.getCurrentQuestion();
-        ReadWriteDB.saveValuesText(question, positiveIntValue);
+        ReadWriteDB.saveValuesText(question, positiveIntValue.toString());
         finishOrNext();
     }
 
@@ -940,7 +950,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Value value = question.getValueBySession();
                 if (isDone(value)) {
                     navigationController.isMovingToForward=false;
-                    showDone();
+                    if(!Session.getSurvey().isRDT() || !BuildConfig.reviewScreen)
+                        showDone();
+                    else {
+                        DashboardActivity.dashboardActivity.showReviewFragment();
+                        hideKeyboard(PreferencesState.getInstance().getContext());
+                        isClicked = false;
+                    }
                     return;
                 }
                 next();
@@ -949,24 +965,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Show a final dialog to announce the survey is over
+     * Show a final dialog to announce the survey is over without reviewfragment.
      */
     private void showDone(){
         final Activity activity=(Activity)context;
-        AlertDialog.Builder msgConfirmation = new AlertDialog.Builder((activity))
-            .setTitle(R.string.survey_title_completed)
-            .setMessage(R.string.survey_info_completed)
-            .setCancelable(false)
-            .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int arg1) {
-                    hideKeyboard(PreferencesState.getInstance().getContext());
-                    if(Session.getSurvey().isRDT() && BuildConfig.reviewScreen)
-                        DashboardActivity.dashboardActivity.showReviewFragment();
-                    else
+        AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
+                .setTitle(R.string.survey_title_completed)
+                .setMessage(R.string.survey_info_completed)
+                .setCancelable(false)
+                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        hideKeyboard(PreferencesState.getInstance().getContext());
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
-                    isClicked=false;
-                }
-            });
+                        isClicked=false;
+                    }
+                });
         msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 hideKeyboard(PreferencesState.getInstance().getContext());
@@ -1030,6 +1043,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
+
+    /**
+     * When the user click in a value in the review fragment the navigationController should go to related question
+     */
+    private void goToQuestion(Question isMoveToQuestion) {
+        navigationController.first();
+        //it is compared by uid because comparing by question it could be not equal by the same question.
+        while(!isMoveToQuestion.getUid().equals(navigationController.getCurrentQuestion().getUid())) {
+            next();
+            skipReminder();
+        }
+        notifyDataSetChanged();
+    }
     /**
      * When the user swip back from review fragment the navigationController should go to the last question
      */
@@ -1040,10 +1066,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             next();
             Question question = navigationController.getCurrentQuestion();
             value = question.getValueBySession();
+            skipReminder();
         }while(value!=null && !isDone(value));
         notifyDataSetChanged();
     }
 
+    private void skipReminder() {
+        for(QuestionRelation relation:navigationController.getCurrentQuestion().getQuestionRelations())
+            if(relation.isAReminder())
+                next();
+    }
 
 
 }

@@ -33,6 +33,7 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
@@ -56,11 +57,6 @@ public class PushService extends IntentService {
      * Name of 'push all pending surveys' action
      */
     public static final String PENDING_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.PushService.PENDING_SURVEYS_ACTION";
-
-    /**
-     * List of surveys that are going to be pushed
-     */
-    List<Survey> surveys;
 
     /**
      * Tag for logging
@@ -110,7 +106,9 @@ public class PushService extends IntentService {
             return;
         }
 
-        Log.d("DpBlank", "Push in Progress" + PushController.getInstance().isPushInProgress());
+        Log.d(TAG, "Push in Progress" + PushController.getInstance().isPushInProgress());
+
+        SurveyChecker.launchQuarantineChecker();
 
         if (PushController.getInstance().isPushInProgress()){
             return;
@@ -119,7 +117,6 @@ public class PushService extends IntentService {
         //Launch push according to current server
         pushAllPendingSurveys();
     }
-
     /**
      * Push all pending surveys
      */
@@ -130,7 +127,7 @@ public class PushService extends IntentService {
 
         //Fixme the method getAllUnsentSurveys returns all the surveys not sent(completed, inprogres, and hide)
         //Select surveys from sql
-        surveys = Survey.getAllSurveysToBeSent();
+        List <Survey> surveys = Survey.getAllSurveysToBeSent();
 
         //No surveys to send -> done
         if(surveys==null || surveys.isEmpty()){
@@ -146,9 +143,9 @@ public class PushService extends IntentService {
 
         //Push according to current server version
         if(ServerAPIController.isAPIServer()){
-            pushByAPI();
+            //pushByAPI();
         }else{
-            pushBySDK();
+        pushBySDK();
         }
 
     }
@@ -159,6 +156,9 @@ public class PushService extends IntentService {
     private void pushByAPI(){
         Log.i(TAG, "pushByAPI");
         PushClient pushClient=new PushClient(getApplicationContext());
+
+        List <Survey> surveys = Survey.getAllSurveysToBeSent();
+
         for(Survey survey : surveys){
             //Prepare for sending current survey
             pushClient.setSurvey(survey);
@@ -189,6 +189,9 @@ public class PushService extends IntentService {
 
     @Subscribe
     public void callbackLoginPrePush(NetworkJob.NetworkJobResult<ResourceType> result) {
+        Log.d(TAG, "callbackLoginPrePush  "+PushController.getInstance().isPushInProgress());
+
+
         if(!PushController.getInstance().isPushInProgress())
             return;
         Log.d(TAG, "callbackLoginPrePush");
@@ -211,6 +214,8 @@ public class PushService extends IntentService {
     private void callPushBySDK(){
 
         List<Survey> filteredSurveys = new ArrayList<>();
+        List <Survey> surveys = Survey.getAllSurveysToBeSent();
+
         //Check surveys not in progress
         for (Survey survey: surveys){
 

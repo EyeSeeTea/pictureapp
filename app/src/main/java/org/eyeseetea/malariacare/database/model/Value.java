@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
-public class Value extends BaseModel  implements VisitableToSDK {
+public class Value extends BaseModel {
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -256,11 +256,6 @@ public class Value extends BaseModel  implements VisitableToSDK {
 
         //Check if both matches
         return idQuestion==this.id_question;
-    }
-
-    @Override
-    public void accept(IConvertToSDKVisitor IConvertToSDKVisitor) {
-        IConvertToSDKVisitor.visit(this);
     }
 
     @Override

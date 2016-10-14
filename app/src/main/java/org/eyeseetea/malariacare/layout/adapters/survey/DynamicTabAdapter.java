@@ -27,7 +27,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -40,7 +39,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -71,10 +69,8 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBui
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
-import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.EditCard;
-import org.eyeseetea.malariacare.views.ShowException;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
@@ -84,8 +80,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import utils.PhoneMask;
-
-import static android.R.attr.codes;
 
 /**
  * Created by Jose on 21/04/2015.
@@ -109,6 +103,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     Tab tab;
 
     LayoutInflater lInflater;
+
+    TableLayout tableLayout = null;
 
     private final Context context;
 
@@ -433,7 +429,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         progressView.setProgress(navigationController.getCurrentPage() + 1);
         progressText.setText(getLocaleProgressStatus(progressView.getProgress(), progressView.getMax()));
 
-        TableLayout tableLayout = null;
         TableRow tableRow = null;
         TableRow tableButtonRow = null;
         List<Question> screenQuestions = new ArrayList<>();
@@ -451,8 +446,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         for (Question screenQuestion : screenQuestions) {
             // Se get the value from Session
-            if(screenQuestion.isHiddenBySurvey(Session.getSurvey()))
-                continue;
+            int visibility=View.GONE;
+            if(!screenQuestion.isHiddenBySurvey(Session.getSurvey()) || !isMultipleQuestionTab(tabType))
+                visibility=View.VISIBLE;
             Value value = screenQuestion.getValueBySession();
             int typeQuestion = screenQuestion.getOutput();
             switch (typeQuestion) {
@@ -567,6 +563,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initPhoneValue(tableRow, value, tabType);
+                    tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
                 case Constants.POSITIVE_INT:
@@ -578,12 +575,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initPositiveIntValue(tableRow, value, tabType);
+                    tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
                 case Constants.INT:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_int_row, tableLayout, false);
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initIntValue(tableRow, value);
+                    tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
                 case Constants.LONG_TEXT:
@@ -591,6 +590,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initLongTextValue(tableRow, value);
+                    tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
                 case Constants.SHORT_TEXT:
@@ -598,21 +598,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initShortTextValue(tableRow, value);
+                    tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
                 case Constants.DROPDOWN_LIST:
-                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_dropdown_row, tableLayout, false);
-                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
-                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
-                    tableRow = populateSpinnerFromOptions(tableRow, screenQuestion);
-                    initDropdownValue(tableRow, value);
-                    tableLayout.addView(tableRow);
-                    break;
                 case Constants.DROPDOWN_OU_LIST:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_dropdown_row, tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     tableRow = populateSpinnerFromOptions(tableRow, screenQuestion);
+                    initDropdownValue(tableRow, value);
+                    tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
             }
@@ -1042,7 +1038,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     //Save the numberpicker value in the DB, and continue to the next screen.
-                    ReadWriteDB.saveValuesText((Question) numberPicker.getTag(), String.valueOf(s));
+                    Question question = (Question) numberPicker.getTag();
+                    ReadWriteDB.saveValuesText(question, String.valueOf(s));
+                    showOrHideChildren(question);
                 }
             });
         } else {
@@ -1087,10 +1085,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Spinner dropdown = (Spinner) row.findViewById(R.id.answer);
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
                 Option option = (Option) parent.getItemAtPosition(position);
                 Question question = (Question) parent.getTag();
                 ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
+                showOrHideChildren(question);
             }
 
             @Override
@@ -1109,16 +1108,69 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
+    private void showOrHideChildren(Question question) {
+        if(question.hasChildren()){
+            for(int i = 0, j = tableLayout.getChildCount(); i < j; i++) {
+                View view = tableLayout.getChildAt(i);
+                if (view instanceof TableRow) {
+                    TableRow row = (TableRow) view;
+                    View answerView= view.findViewById(R.id.answer);
+                    if(answerView==null)
+                        continue;
+                    Question rowQuestion = (Question)answerView.getTag();
+                    List<Question> questionChildren = question.getChildren();
+                    for(Question childQuestion:questionChildren){
+                        //if the table row question is777 child of the modified question...
+                        if(childQuestion.getId_question().equals(rowQuestion.getId_question())){
+                            if (rowQuestion.isHiddenBySurvey(Session.getSurvey())) {
+                                ReadWriteDB.deleteValue(rowQuestion);
+                                row.setVisibility(View.GONE);
+                            }else{
+                                row.setVisibility(View.VISIBLE);
+                                if(rowQuestion.getValueBySession()==null) {
+                                    showDefaultValue(row, rowQuestion);
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void showDefaultValue(TableRow tableRow, Question rowQuestion) {
+        switch(rowQuestion.getOutput()) {
+            case Constants.PHONE:
+            case Constants.POSITIVE_INT:
+            case Constants.INT:
+            case Constants.LONG_TEXT:
+            case Constants.SHORT_TEXT:
+                final EditCard editCard = (EditCard) tableRow.findViewById(R.id.answer);
+                editCard.setText("");
+                break;
+            case Constants.DROPDOWN_LIST:
+            case Constants.DROPDOWN_OU_LIST:
+                Spinner dropdown = (Spinner) tableRow.findViewById(R.id.answer);
+                dropdown.setSelection(0);
+                break;
+        }
+    }
+
     private void savePositiveIntValue(EditText numberPicker) {
         String valueAsText = String.valueOf(numberPicker.getText());
 
         //The text is truncated as integer ( 00-0 , 01-1 , etc. ) before save and send as string.
         Integer positiveIntValue = Integer.parseInt(valueAsText);
-        ReadWriteDB.saveValuesText((Question) numberPicker.getTag(), positiveIntValue.toString());
+        Question question = (Question) numberPicker.getTag();
+        ReadWriteDB.saveValuesText(question, positiveIntValue.toString());
+        showOrHideChildren(question);
     }
 
     private void saveValue(EditCard editCard) {
-        ReadWriteDB.saveValuesText((Question) editCard.getTag(), editCard.getText().toString());
+        Question question = (Question) editCard.getTag();
+        ReadWriteDB.saveValuesText(question, editCard.getText().toString());
+        showOrHideChildren(question);
     }
 
     private void openKeyboard(final EditText editText) {

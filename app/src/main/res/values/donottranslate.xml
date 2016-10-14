@@ -15,7 +15,7 @@
     <item name="dhis_user" type="string" translatable="false">dhis_user</item>
     <item name="dhis_password" type="string" translatable="false">dhis_password</item>
     <item name="org_unit" type="string" translatable="false">org_unit</item>
-    <item name="pull_metadata" type="string" translatable="false">pull_metadata</item>
+
 
     <string name="PUSH_PERIOD" translatable="false">10</string>
 

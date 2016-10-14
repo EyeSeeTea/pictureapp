@@ -21,6 +21,7 @@ package org.eyeseetea.malariacare.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
@@ -56,16 +57,6 @@ public class ServerAPIController {
     private static final String TAG="ServerAPIController";
 
     /**
-     * Hardcoded username via API
-     */
-    static final String DHIS_USERNAME="KHMCS";
-
-    /**
-     * Hardcoded password via API
-     */
-    static final String DHIS_PASSWORD="KHMCSadmin1";
-
-    /**
      * Tag for version data in json response
      */
     public static final String TAG_VERSION = "version";
@@ -99,11 +90,6 @@ public class ServerAPIController {
      * Date format to the closedDate attribute
      */
     private static final String DATE_CLOSED_DATE_FORMAT = "yyyy-MM-dd";
-
-    /**
-     * Default Server
-     */
-    private static String DHIS_SERVER ="https://www.psi-mis.org";
 
     /**
      * Endpoint to retrieve server info (including version)
@@ -169,6 +155,8 @@ public class ServerAPIController {
      */
     private static String programUID;
 
+    private static org.hisp.dhis.android.sdk.network.Credentials sdkCredentials;
+
     /**
      * Returns current serverUrl
      * @return
@@ -202,8 +190,12 @@ public class ServerAPIController {
      * @return
      */
     public static org.hisp.dhis.android.sdk.network.Credentials getSDKCredentials(){
-        return new org.hisp.dhis.android.sdk.network.Credentials(DHIS_USERNAME,DHIS_PASSWORD);
+        if(sdkCredentials==null){
+            sdkCredentials=new org.hisp.dhis.android.sdk.network.Credentials(getUserPush(),getPassPush());
+        }
+        return sdkCredentials;
     }
+
 
     /**
      * Returns the version of the default server
@@ -211,7 +203,7 @@ public class ServerAPIController {
      * @return
      */
     public static String getServerVersion(){
-        return getServerVersion(DHIS_SERVER);
+        return getServerVersion(PreferencesState.getInstance().getDhisURL());
     }
 
     /**
@@ -349,7 +341,7 @@ public class ServerAPIController {
             return false;
         }
         boolean valid=getProgramUID()!=null && getProgramUID().equals(programUIDInServer);
-        Log.d(TAG, String.format("isValidProgram(%s) -> %b", url, valid));
+        Log.d(TAG, String.format("isValidProgram(%s) -> %b (Thread: %d)", url, valid, Thread.currentThread().getId()));
         return valid;
     }
 
@@ -799,6 +791,17 @@ public class ServerAPIController {
         }
     }
 
+
+    @NonNull
+    static String getUserPush() {
+        return PreferencesState.getInstance().getContext().getResources().getString(R.string.user_push);
+    }
+
+    @NonNull
+    static String getPassPush() {
+        return PreferencesState.getInstance().getContext().getResources().getString(R.string.pass_push);
+    }
+
 }
 
 /**
@@ -810,7 +813,8 @@ class BasicAuthenticator implements Authenticator {
     private String credentials;
 
     BasicAuthenticator(){
-        credentials = Credentials.basic(ServerAPIController.DHIS_USERNAME, ServerAPIController.DHIS_PASSWORD);
+
+        credentials = Credentials.basic(ServerAPIController.getUserPush(), ServerAPIController.getPassPush());
     }
 
     @Override

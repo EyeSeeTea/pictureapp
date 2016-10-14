@@ -46,6 +46,9 @@ import android.widget.TextView;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
+import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
@@ -99,7 +102,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * Intent extra param that states that the login is being done due to an attempt to change the server
      */
     public static final String SETTINGS_CHANGING_SERVER="SETTINGS_CHANGING_SERVER";
-
     /**
      * Intent extra param that states that the EULA has been accepted
      */
@@ -264,8 +266,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * @param url
      */
     public void initPopulateOrgUnitsByServerVersion(String url){
-        CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this);
-        serverVersionAsync.execute(url);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
+        if(sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
+            CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this);
+            serverVersionAsync.execute(url);
+        }
     }
 
     public void callbackPopulateOrgUnitsByServerVersion(ServerInfo serverInfo){
@@ -277,8 +282,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * Launches an async task that resolved the current server version when the org unit has changed.
      */
     private void initReloadByServerVersionWhenOrgUnitChanged() {
-        CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this,true,true);
-        serverVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
+        if(sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
+            CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this, true, true);
+            serverVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
+        }
     }
 
 
@@ -307,13 +315,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             return;
         }
 
-        //Server version not supported -> Error
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.dhis_url_error)
-                .setMessage(R.string.dhis_url_error_bad_version)
-                .setNeutralButton(android.R.string.yes, null)
-                .create()
-                .show();
+        showServerError(serverVersion);
     }
 
     /**
@@ -321,8 +323,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * @param url
      */
     private void initReloadByServerVersionWhenUrlChanged(String url) {
-        CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this,true);
-        serverVersionAsync.execute(url);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
+        if(sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
+            Log.d(TAG, "init reload server version when url changed");
+            CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this, true);
+            serverVersionAsync.execute(url);
+        }
     }
 
     /**
@@ -341,19 +347,36 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         PreferencesState.getInstance().saveStringPreference(R.string.org_unit,"");
 
         String serverVersion=serverInfo.getVersion();
-
+        Log.d(TAG, "SDK pull start");
         //2.20 -> reload orgunits from server via api
         if(ServerAPIController.isAPIVersion(serverVersion)){
+            Log.d(TAG, "Api pull start");
             autoCompleteEditTextPreference.pullOrgUnits(Constants.DHIS_API_SERVER);
             return;
         }
 
         //2.21, 2.22 -> pull orgunits + surveys
         if(Constants.DHIS_SDK_221_SERVER.equals(serverVersion) || Constants.DHIS_SDK_222_SERVER.equals(serverVersion)){
+            Log.d(TAG, "SDK pull start");
             initLoginPrePull(serverInfo);
             return;
         }
+        showServerError(serverVersion);
 
+
+    }
+
+    private void showServerError(String serverVersion) {
+        //Other error like: Too many follow-up requests: 21
+        if("".equals(serverVersion)){
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.dhis_url_error)
+                    .setMessage(R.string.dhis_url_error_generic)
+                    .setNeutralButton(android.R.string.yes, null)
+                    .create()
+                    .show();
+            return;
+        }
         //Server version not supported -> Error
         new AlertDialog.Builder(this)
                 .setTitle(R.string.dhis_url_error)
@@ -369,13 +392,16 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      */
     private void initLoginPrePull(ServerInfo serverInfo){
         HttpUrl serverUri = HttpUrl.parse(serverInfo.getUrl());
+        Log.d(TAG, "Server url "+serverUri);
         DhisService.logInUser(serverUri, ServerAPIController.getSDKCredentials());
     }
 
     @Subscribe
     public void callbackLoginPrePull(NetworkJob.NetworkJobResult<ResourceType> result) {
+        if(PushController.getInstance().isPushInProgress())
+            return;
         //Nothing to check
-        if(result==null || !result.getResourceType().equals(ResourceType.USERS)){
+        if(result==null || result.getResourceType()==null || !result.getResourceType().equals(ResourceType.USERS)){
             return;
         }
 
@@ -736,13 +762,22 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         protected void onPostExecute(ServerInfo serverInfo) {
 
             //OrgUnit has change -> init pull (orgunits not reloaded)
+            Log.d(TAG,"org unit changed:"+pullRequired);
             if(orgUnitChanged){
                 callbackReloadByServerVersionWhenOrgUnitChanged(serverInfo);
                 return;
             }
-
+            Log.d(TAG,"pull required:"+pullRequired);
+            //FIXME: review the "pullRequired" variable. There's an inconsistency if we need to make a pull even when pullRequired is false
             //Url has change -> init pull (orgunits reloaded)
             if(pullRequired) {
+                callbackReloadByServerVersionWhenUrlChanged(serverInfo);
+                //if the server was changed in the first loging it need be set as false
+                PreferencesState.getInstance().setIsNewServerUrl(false);
+                return;
+            } else if(PreferencesState.getInstance().isNewServerUrl()){
+                //Url has change on autentication -> init pull (orgunits reloaded)
+                PreferencesState.getInstance().setIsNewServerUrl(false);
                 callbackReloadByServerVersionWhenUrlChanged(serverInfo);
                 return;
             }
@@ -755,6 +790,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "On activity result");
         if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_ON_EULA_ACCEPTED) {
             if (data.hasExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE)) {
                 Log.d(TAG, "Executing onActivityResult:");
@@ -825,6 +861,7 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle(context.getString(titleId))
                 .setMessage(linkedMessage)
+                .setCancelable(false)
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -872,7 +909,6 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
         activity.finish();
         activity.startActivity(intent);
     }
-
     void launchLoginOnEulaAccepted(){
         Intent intent = prepareIntent();
         intent.putExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, true);

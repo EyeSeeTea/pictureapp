@@ -32,9 +32,8 @@ public class PfRowBuilder extends CounterRowBuilder {
     public PfRowBuilder(Context context){
         super(context, context.getString(R.string.monitor_row_title, context.getString(R.string.pf)));
     }
-
     @Override
-    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isPf();
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isPf())?1:0;
     }
 }

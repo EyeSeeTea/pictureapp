@@ -42,13 +42,26 @@ public class QuestionRelation extends BaseModel {
 
     private static final String TAG = ".QuestionRelation";
     /**
+     * Constant that reflects a match relationship
+     */
+    public static final int MATCH=0;
+    /**
      * Constant that reflects a parent child relationship
      */
     public static final int PARENT_CHILD=1;
     /**
-     * Constant that reflects a match relationship
+     * Constant that reflects a counter relationship
      */
-    public static final int MATCH=0;
+    public static final int COUNTER=2;
+    /**
+     * Constant that reflects a warning (validation) relationship
+     */
+    public static final int WARNING=3;
+
+    /**
+     * Constant that reflects a reminder (something that shows up only if a current value is XX for some related question) relationship
+     */
+    public static final int REMINDER=4;
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -134,11 +147,51 @@ public class QuestionRelation extends BaseModel {
     public List<Match> getMatches() {
         if(matches==null) {
             this.matches = new Select().from(Match.class)
-                    .indexedBy(Constants.MATCH_IDX)
+                    .indexedBy(Constants.MATCH_QUESTION_RELATION_IDX)
                     .where(Condition.column(Match$Table.ID_QUESTION_RELATION).eq(this.getId_question_relation()))
                     .queryList();
         }
         return this.matches;
+    }
+
+    /**
+     * Returns if this operation is a Match relationship
+     * @return
+     */
+    public boolean isAMatch(){
+        return this.operation==MATCH;
+    }
+
+    /**
+     * Returns if this operation is a ParentChild relationship
+     * @return
+     */
+    public boolean isAParentChild(){
+        return this.operation==PARENT_CHILD;
+    }
+
+    /**
+     * Returns if this operation is a Counter relationship
+     * @return
+     */
+    public boolean isACounter(){
+        return this.operation==COUNTER;
+    }
+
+    /**
+     * Returns if this operation is a Warning relationship
+     * @return
+     */
+    public boolean isAWarning(){
+        return this.operation==WARNING;
+    }
+
+    /**
+     * Returns if this operation is a Reminder relationship
+     * @return
+     */
+    public boolean isAReminder(){
+        return this.operation==REMINDER;
     }
 
     @Override
@@ -169,5 +222,9 @@ public class QuestionRelation extends BaseModel {
                 ", id_question=" + id_question +
                 ", operation=" + operation +
                 '}';
+    }
+
+    public static List<QuestionRelation> listAll() {
+        return new Select().all().from(QuestionRelation.class).queryList();
     }
 }

@@ -1,0 +1,14 @@
+1;'RDT';'LA MAL SRV - RDT test result';;'ຄົນເຈັບໄດ້ຮັບການກວດເລືອດບໍ່?';'pTZpMcKg1CY';1;0;0;1;1;0;14;2;0
+2;'Reason';'LA MAL SRV - Reason NOT tested RDT';;'ເປັນຫຍັງຄົນເຈັບຈຶ່ງບໍ່ໄດ້ຮັບການກວດເລືອດ?';'Elrozkdzh3r';1;0;0;1;2;0;14;2;1
+3;'Gender';'LA MAL SRV - Gender';;'ເພດ';'lNcuFJPKhp9';1;0;0;1;3;0;10;4;1
+4;'Age';'LA MAL SRV - Age';;'ອາຍຸ';'qQngeCbT4uI';2;0;0;1;4;0;6;4;1
+5;'Result';'LA MAL SRV - RDT test result';;'ຜົນການກວດເລືອດ';'FPNbkUi9D55';3;0;0;1;5;0;14;4;0
+6;'ConfirmInvalid';'Confirm invalid';' ';'ຜົນໄດ້ຮັບບໍ່ຖືກ';'R53JBYOhcQM';4;0;0;1;6;0;16;6;0;'question_images/p9_rdt_test.png'
+7;'WarningBaby';'Treatment warning baby';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';5;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
+8;'WarningKid';'Treatment warning kid';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';6;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
+9;'WarningTeen';'Treatment warning teenager';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';7;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
+10;'WarningAdult';'Treatment warning adult';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';8;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
+11;'Treatment';'LA MAL SRV - Treatment';;'ຂະໜາດຢາປິ່ນປົວໄຂ້ມາລາເຣຍ';'TzL693oH3D9';9;0;0;1;8;0;12;6;1
+12;'ReminderHospital';'Reminder hospital';' ';'ນຳສົ່ງ';'xxx';10;0;0;1;9;0;18;6;0;'question_images/p8_rdt_all.png'
+13;'Phone';'LA MAL SRV - Client telephone';'ກະລຸນາພິມເບີໂທຂອງຄົນເຈັບໃສ່';'ກະລຸນາພິມເບີໂທຂອງຄົນເຈັບໃສ່';'fnT1JoHmO94';11;0;0;1;10;0;13;6;0;'question_images/p13_phone.png'
+14;'ReminderNotTested';'Reminder Not Tested';'';'ນຳສົ່ງ';'xxx';10;0;0;1;9;0;18;6;0;''

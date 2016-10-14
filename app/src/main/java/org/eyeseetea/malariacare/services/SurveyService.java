@@ -141,11 +141,12 @@ public class SurveyService extends IntentService {
         List<Survey> unsentSurveys=new ArrayList<Survey>();
         List<Survey> sentSurveys=new ArrayList<Survey>();
         for(Survey survey:surveys){
-            if(!survey.isSent() && !survey.isHide() ){
+            //fixme this is to ALL_UNSENT_SURVEYS_ACTION but in the service exclusive fot ALL_UNSENT_SURVEY_ACTION we sent other list(!isSent but hide too)
+            if(!survey.isSent() && !survey.isHide() && !survey.isConflict()){
                 Log.d(TAG,"SurveyStatusUnSent:"+survey.getStatus() + "");
                 unsentSurveys.add(survey);
                 survey.getAnsweredQuestionRatio();
-            }else if (survey.isSent() && !survey.isHide()){
+            }else if ((survey.isSent() || survey.isConflict()) && !survey.isHide()){
                 Log.d(TAG,"SurveyStatusSentNotHide:"+survey.getStatus() + "");
                 sentSurveys.add(survey);
             }
@@ -171,14 +172,18 @@ public class SurveyService extends IntentService {
 
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllUnsentSurveys();
+        List<Survey> unsentSurveys=new ArrayList<Survey>();
 
         //Load %completion in every survey (it takes a while so it can NOT be done in UI Thread)
         for(Survey survey:surveys){
-            survey.getAnsweredQuestionRatio();
+            if(!survey.isSent() && !survey.isHide() && !survey.isConflict() ){
+                survey.getAnsweredQuestionRatio();
+                unsentSurveys.add(survey);
+            }
         }
 
         //Since intents does NOT admit NON serializable as values we use Session instead
-        Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION,surveys);
+        Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION,unsentSurveys);
 
         //Returning result to anyone listening
         Intent resultIntent= new Intent(ALL_UNSENT_SURVEYS_ACTION);

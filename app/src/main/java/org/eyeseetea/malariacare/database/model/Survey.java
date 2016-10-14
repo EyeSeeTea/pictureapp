@@ -28,9 +28,11 @@ import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -203,10 +205,12 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         this.user = null;
     }
 
+    @Deprecated
     public Date getCreationDate() {
         return creationDate;
     }
 
+    @Deprecated
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
@@ -219,10 +223,12 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         this.completionDate=completionDate;
     }
 
+    @Deprecated
     public Date getEventDate() {
         return eventDate;
     }
 
+    @Deprecated
     public void setEventDate(Date eventDate) {
         this.eventDate = eventDate;
     }
@@ -268,6 +274,20 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     }
 
 
+    /**
+     * Checks if the survey has been in conflict
+     * @return true|false
+     */
+    public boolean isConflict(){
+        return Constants.SURVEY_CONFLICT==this.status;
+    }
+    /**
+     * Checks if the survey has been in conflict
+     * @return true|false
+     */
+    public boolean isQuarantine(){
+        return Constants.SURVEY_QUARANTINE==this.status;
+    }
     /**
      * Checks if the survey has been completed or not
      * @return true|false
@@ -375,6 +395,17 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     }
 
     /**
+     * Returns the list of answered values from this survey
+     * @return
+     */
+    public List<Value> getValuesFromDB(){
+        values = new Select()
+                .from(Value.class)
+                .where(Condition.column(Value$Table.ID_SURVEY)
+                        .eq(this.getId_survey())).queryList();
+        return values;
+    }
+    /**
      * Returns the list of previous schedules for this survey
      * @return
      */
@@ -427,51 +458,48 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     private SurveyAnsweredRatio reloadSurveyAnsweredRatio(){
 
         SurveyAnsweredRatio surveyAnsweredRatio;
-        //Negative or Not Tested
-        if(!this.isRDT()){
-            surveyAnsweredRatio = new SurveyAnsweredRatio(1,1);
-        }else{
-            //Positive
-            int numRequired = Question.countRequiredByProgram(this.getTabGroup());
-            int numOptional = (int)countNumOptionalQuestionsToAnswer();
-            int numAnswered = Value.countBySurvey(this);
-            surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired+numOptional, numAnswered);
+        //First parent is always required and not calculated.
+        int numRequired=1;
+        //Add children required by each parent (value+question)
+        Survey survey =Survey.findById(id_survey);
+        for (Value value : survey.getValuesFromDB()) {
+            numRequired += Question.countChildrenByOptionValue(value.getId_option());
         }
+        int numOptional = (int) countNumOptionalQuestionsAnswered();
+        int numAnswered = Value.countBySurvey(this);
+        surveyAnsweredRatio=new SurveyAnsweredRatio(numRequired+numOptional, numAnswered);
 
         SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);
         return surveyAnsweredRatio;
     }
 
     /**
-     * Return the number of child questions that should be answered according to the values of the parent questions.
+     * Return the number of optional questions like a counter by survey
      * @return
      */
-    private long countNumOptionalQuestionsToAnswer(){
-        long numOptionalQuestions = new Select().count().from(Question.class).as("q")
-                .join(QuestionRelation.class, Join.JoinType.LEFT).as("qr")
-                .on(
-                        Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION))
-                                .eq(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)))
-                .join(Match.class, Join.JoinType.LEFT).as("m")
-                .on(
-                        Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION_RELATION))
-                                .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION)))
-                .join(QuestionOption.class, Join.JoinType.LEFT).as("qo")
+    private long countNumOptionalQuestionsAnswered(){
+        long numOptionalQuestions = new Select().count().from(QuestionOption.class).as("qo")
+                .join(Match.class, Join.JoinType.INNER).as("m")
                 .on(
                         Condition.column(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH))
                                 .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH)))
-                .join(Value.class, Join.JoinType.LEFT).as("v")
+
+                .join(QuestionRelation.class, Join.JoinType.INNER).as("qr")
+                .on(
+                        Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION_RELATION))
+                                .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION)))
+                .join(Value.class, Join.JoinType.INNER).as("v")
                 .on(
                         Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_QUESTION))
-                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_QUESTION)),
-                        Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_OPTION))
-                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_OPTION)))
-                    //Parent Child relationship
-                .where(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(1))
-                        //For the given survey
+                                .eq(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)))
+                .join(Question.class, Join.JoinType.INNER).as("q")
+                .on(
+                        Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION))
+                                .eq(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)))
+                //Type of question-> Counter
+                .where(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).eq(Constants.COUNTER))
+                //For the given survey
                 .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY)).eq(this.getId_survey()))
-                        //The child question requires an answer
-                .and(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(Constants.NO_ANSWER))
                 .count();
 
         //Parent with the right value -> not hidden
@@ -483,7 +511,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      */
     public void updateSurveyStatus(){
         //Sent surveys are not updated
-        if(this.isSent() || this.isHide()){
+        if(this.isSent() || this.isHide() || this.isConflict()){
             return;
         }
 
@@ -523,6 +551,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     public static List<Survey> getAllUnsentSurveys() {
         return new Select().from(Survey.class)
                 .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
+                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_CONFLICT))
                 .orderBy(Survey$Table.EVENTDATE)
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }
@@ -547,7 +576,38 @@ public class Survey extends BaseModel  implements VisitableToSDK {
     public static List<Survey> getAllSentSurveys() {
         return new Select().from(Survey.class)
                 .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
-                .orderBy(false, Survey$Table.COMPLETIONDATE).queryList();
+                .orderBy(false, Survey$Table.EVENTDATE).queryList();
+    }
+
+    /**
+     * Returns all the surveys with status put to "quarantine"
+     * @return
+     */
+    public static List<Survey> getAllQuarantineSurveys() {
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .orderBy(false, Survey$Table.EVENTDATE).queryList();
+    }
+    /**
+     * Returns all the surveys with status put to "quarantine"
+     * @return
+     */
+    public static int countQuarantineSurveys() {
+        return (int) new Select().count()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .count();
+    }
+
+    /**
+     * Returns all the surveys with status put to "Sent"
+     * @return
+     */
+    public static List<Survey> getAllSurveysToBeSent() {
+        return new Select().from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_COMPLETED))
+                .orderBy(Survey$Table.EVENTDATE)
+                .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }
 
     /**
@@ -601,9 +661,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      */
     public static List<Survey> getAllUncompletedSurveys() {
         return new Select().from(Survey.class)
-                .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
-                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_HIDE))
-                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_COMPLETED))
+                .where(Condition.column(Survey$Table.STATUS).is(Constants.SURVEY_IN_PROGRESS))
                 .orderBy(Survey$Table.EVENTDATE)
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }
@@ -613,38 +671,53 @@ public class Survey extends BaseModel  implements VisitableToSDK {
      * @return true|false
      */
     public boolean isRDT(){
-        if(values==null){
-            values=Value.listAllBySurvey(this);
-        }
-
-        Boolean hasValues = !(values==null || values.isEmpty());
-        if(hasValues){
-            Value rdtValue=values.get(0);
-            return rdtValue.isAPositive();
-        }
-
-        return true;
-
+        //refresh values
+        getValuesFromDB();
+        return getRDTName().equals(PreferencesState.getInstance().getContext().getResources().getString(R.string.rdtPositive));
     }
 
     /**
      * Since there are three possible values first question (RDT):'Positive','Negative','Not Tested'
      * @return String
      */
-    public String getRDT() {
+    public String getRDTName() {
         String rdtValue = "";
         if (values == null) {
             values = Value.listAllBySurvey(this);
         }
 
         if (values.size() > 0) {
-            Value firstValue = values.get(0);
-            if (firstValue.getOption() != null)
-                rdtValue = firstValue.getOption().getName();
+            for(Value value:values){
+                //Find the RTS option
+                if(value.getOption()!=null && value.getQuestion()!=null && value.getQuestion().getCode().equals(PreferencesState.getInstance().getContext().getString(R.string.RDT_code))){
+                    rdtValue = value.getOption().getName();
+                }
+            }
+
         }
         return rdtValue;
     }
+    /**
+     * Since there are three possible values first question (RDT):'Positive','Negative','Not Tested'
+     * @return String
+     */
+    public String getResultCode() {
+        String rdtValue = "";
+        if (values == null) {
+            values = Value.listAllBySurvey(this);
+        }
 
+        if (values.size() > 0) {
+            for(Value value:values){
+                //Find the RTS option
+                if(value.getOption()!=null && value.getQuestion()!=null && value.getQuestion().getCode().equals(PreferencesState.getInstance().getContext().getString(R.string.Result_code))){
+                    rdtValue = value.getOption().getCode();
+                }
+            }
+
+        }
+        return rdtValue;
+    }
     /**
      * Returns the last surveys (by date) with status put to "In progress"
      * @param limit
@@ -732,13 +805,6 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         }
     }
 
-    public void updateSurveyState(){
-        //Change status and save mainScore
-        setStatus(Constants.SURVEY_SENT);
-        save();
-        saveMainScore();
-    }
-
     public static void removeInProgress() {
         List<Survey> inProgressSurvey= getAllUncompletedSurveys();
         for(int i=inProgressSurvey.size()-1;i>=0;i--){
@@ -758,41 +824,43 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         Iterator<Value> iterator=values.iterator();
 
         String valuesStr="";
-        boolean valid = true;
 
         //Define a filter to select which values will be turned into string by code_question
-        List<String> codeQuestionFilter = new ArrayList<String>() {{
-            add("Specie");  //4
-            add("Sex");     //2
-            add("Age");     //3
-        }};
+        List<Question> questions=Question.getAllQuestions();
+        List<String> codeQuestionFilter = new ArrayList<String>();
+
+        for(Question question:questions){
+            if(question.isVisible()){
+                codeQuestionFilter.add(question.getCode());
+            }
+        }
 
         Map map = new HashMap();
-        while(iterator.hasNext() && valid){
+        while(iterator.hasNext()){
             Value value = iterator.next();
+            //The control dataelements not have questions and its should be ignored
+            if(value.getQuestion()==null || value.getValue()==null){
+                continue;
+            }
             String qCode = value.getQuestion().getCode();
 
-            // RDT is the first field: if it is not Positive no values are shown
-            if(("RDT").equals(qCode) && !value.isAPositive()){
-                valid = false;
-            }else{
-                if(codeQuestionFilter.contains(qCode)) {
+             if(codeQuestionFilter.contains(qCode)) {
                     String val = (value.getOption()!=null)?value.getOption().getCode():value.getValue();
-                    map.put(qCode, val);
+                    if(val!=null)
+                        map.put(qCode, val);
                 }
             }
-        }
-
-        if(valid) {
             //Sort values
             for(int i=0; i<codeQuestionFilter.size(); i++){
-                valuesStr += map.get(codeQuestionFilter.get(i));
-                if (i < codeQuestionFilter.size()-1) {
-                    valuesStr += ", ";
+                if(map.get(codeQuestionFilter.get(i))!=null) {
+                    valuesStr += map.get(codeQuestionFilter.get(i));
+                    if (i < codeQuestionFilter.size() - 1) {
+                        valuesStr += ", ";
+                    }
                 }
             }
-        }
-
+        if(valuesStr.endsWith(", "))
+            valuesStr=valuesStr.substring(0,valuesStr.lastIndexOf(", "));
         return valuesStr;
     }
 
@@ -806,6 +874,64 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         return new Select().from(Survey.class)
                 .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
                 .and(Condition.column(Survey$Table.EVENTDATE).greaterThanOrEq(minDateForMonitor)).queryList();
+    }
+
+
+    public String printValues() {
+        String valuesString = "Survey values: ";
+        if(getValuesFromDB()!=null)
+            for(Value value:values){
+                valuesString += "Value: " + value.getValue();
+                if(value.getOption()!=null)
+                    valuesString+= " Option: " + value.getOption().getName();
+                if(value.getQuestion()!=null)
+                    valuesString+=" Question: " + value.getQuestion().getDe_name() + "\n";
+            }
+        return valuesString;
+    }
+
+
+    /**
+     * This method removes the children question values from when a parent question is removed
+     * @return
+     */
+    public void removeChildrenValuesFromQuestionRecursively(Question question) {
+        List<Value> values= getValuesFromDB();
+        List<Question> questionChildren=question.getChildren();
+        for (int i=values.size()-1;i>0;i--) {
+            //This loop removes the Counter questions. We should include here the Warning or Reminder questions if is necessary in the future.
+            for(QuestionRelation questionRelation:question.getQuestionRelations()) {
+                if(questionRelation.isACounter()) {
+                    if(questionRelation.getQuestion().equals(question)) {
+                        removeValue(values.get(i));
+                        break;
+                    }
+                }
+            }
+            //This loop removes recursively the values on the children question
+            if(questionChildren.contains(values.get(i).getQuestion())){
+                removeValue(values.get(i));
+                for(Question child: questionChildren) {
+                    removeChildrenValuesFromQuestionRecursively(child);
+                }
+            }
+        }
+    }
+    /**
+     * Finds a survey by its ID
+     * @param id_survey
+     * @return
+     */
+    public static Survey findById(Long id_survey){
+        return new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.ID_SURVEY)
+                        .eq(id_survey))
+                .querySingle();
+    }
+
+    private static void removeValue(Value value) {
+        value.delete();
     }
 
     @Override
@@ -868,4 +994,45 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 '}';
     }
 
+    public Question findLastSavedQuestion() {
+        List<Value> values=getValuesFromDB();
+        for(Value value:values){
+            if(value.getQuestion()!=null && !value.getQuestion().hasChildren())
+                return value.getQuestion();
+        }
+        return null;
+    }
+
+    public static int countSurveysByCompletiondate(Date completionDate) {
+
+        return (int) new Select().count()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.COMPLETIONDATE).eq(completionDate))
+                .count();
+    }
+
+    public static Date getMinQuarantineEventDate() {
+        Survey survey= new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .orderBy(true, Survey$Table.EVENTDATE)
+                .querySingle();
+        return survey.getEventDate();
+    }
+
+    public static Date getMaxQuarantineEventDate() {
+        Survey survey= new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_QUARANTINE))
+                .orderBy(false, Survey$Table.EVENTDATE)
+                .querySingle();
+        return survey.getEventDate();
+    }
+
+    public static List<Survey> getAllSendingSurveys() {
+        return new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENDING))
+                .queryList();
+    }
 }

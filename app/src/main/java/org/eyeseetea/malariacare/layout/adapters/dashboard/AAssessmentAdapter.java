@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.layout.SurveyInfoUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.views.TextCard;
 
@@ -61,35 +62,26 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         rowView.setTag(survey.getId_survey());
 
 
-        //Completion Date
-        TextCard completionDate = (TextCard) rowView.findViewById(R.id.completionDate);
-        if(survey.getCompletionDate()!=null){
+        //Event Date
+        TextCard eventDate = (TextCard) rowView.findViewById(R.id.completionDate);
+        if(survey.getEventDate()!=null){
             //it show dd/mm/yy in europe, mm/dd/yy in america, etc.
             DateFormat formatter=DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Resources.getSystem().getConfiguration().locale);
 
-            completionDate.setText(formatter.format(survey.getCompletionDate()));
+            eventDate.setText(formatter.format(survey.getEventDate()));
         }
 
         //RDT
         TextCard rdt = (TextCard) rowView.findViewById(R.id.rdt);
         //Since there are three possible values first question (RDT):'Yes','No','Cancel'
         //rdt.setText(survey.isRDT()?"+":"-");
-        String rdtValueFromDB = survey.getRDT();
-        String rdtValue = (rdtValueFromDB.equals("")) ? getContext().getResources().getString(R.string.unrecognized_option) : rdtValueFromDB;
-        String rdtSymbol = rdtValue;
-        if(rdtValue.equals(getContext().getResources().getString(R.string.rdtPositive))){
-            rdtSymbol = getContext().getResources().getString(R.string.symbolPlus);
-        }else if(rdtValue.equals(getContext().getResources().getString(R.string.rdtNegative))){
-            rdtSymbol = getContext().getResources().getString(R.string.symbolMinus);
-        }else if(rdtValue.equals(getContext().getResources().getString(R.string.rdtNotTested))){
-            rdtSymbol = getContext().getResources().getString(R.string.symbolCross);
-        }
-        rdt.setText(rdtSymbol);
+
+        rdt.setText(SurveyInfoUtils.getRDTSymbol(context, survey));
 
         //INFO
         TextCard info = (TextCard) rowView.findViewById(R.id.info);
         //Load a font which support Khmer character
-        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + "KhmerOS.ttf");
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" +  context.getString(R.string.specific_language_font));
         info.setTypeface(tf);
 
         info.setText(survey.getValuesToString());

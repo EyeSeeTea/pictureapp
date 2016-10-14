@@ -32,9 +32,8 @@ public class ReferralRowBuilder extends CounterRowBuilder {
     public ReferralRowBuilder(Context context){
         super(context, context.getString(R.string.monitor_row_title, context.getString(R.string.monitor_row_title_referral)));
     }
-
     @Override
-    protected boolean hasToIncrement(SurveyMonitor surveyMonitor) {
-        return surveyMonitor.isReferral();
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isReferral())?1:0;
     }
 }

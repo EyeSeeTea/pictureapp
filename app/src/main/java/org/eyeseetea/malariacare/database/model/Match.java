@@ -27,6 +27,8 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.utils.Constants;
+import org.hisp.dhis.android.sdk.controllers.metadata.MetaDataController;
 
 import java.util.List;
 
@@ -60,7 +62,7 @@ public class Match extends BaseModel {
     public List<QuestionOption> getQuestionOptions() {
         if(questionOptions==null){
             this.questionOptions = new Select().from(QuestionOption.class)
-                    .indexedBy("QuestionOption_id_question")
+                    .indexedBy(Constants.QUESTION_OPTION_MATCH_IDX)
                     .where(Condition.column(QuestionOption$Table.ID_MATCH).eq(this.getId_match()))
                     .queryList();
         }
@@ -80,7 +82,6 @@ public class Match extends BaseModel {
             if(id_question_relation==null) return null;
             questionRelation = new Select()
                     .from(QuestionRelation.class)
-                    .indexedBy("QuestionRelation_operation")
                     .where(Condition.column(QuestionRelation$Table.ID_QUESTION_RELATION)
                             .is(id_question_relation)).querySingle();
         }
@@ -95,6 +96,31 @@ public class Match extends BaseModel {
     public void setQuestionRelation(Long id_question_relation){
         this.id_question_relation = id_question_relation;
         this.questionRelation = null;
+    }
+
+    /**
+     * Returns the threshold associated with this questionoption
+     * @return
+     */
+    public QuestionThreshold getQuestionThreshold(){
+        //Find threshold with this match
+        return new Select().from(QuestionThreshold.class)
+                .where(Condition.column(Match$Table.ID_MATCH)
+                        .is(id_match)).querySingle();
+    }
+
+    /**
+     * Returns the question from QuestionRelation for this match with the given operationType
+     * @param operationType
+     * @return
+     */
+    public Question getQuestionFromRelationWithType(int operationType){
+        QuestionRelation questionRelation = this.getQuestionRelation();
+        if(questionRelation==null || questionRelation.getOperation()!=operationType){
+            return null;
+        }
+
+        return questionRelation.getQuestion();
     }
 
     @Override
@@ -122,5 +148,9 @@ public class Match extends BaseModel {
                 "id_match=" + id_match +
                 ", id_question_relation=" + id_question_relation +
                 '}';
+    }
+
+    public static List<Match> listAll() {
+        return new Select().all().from(Match.class).queryList();
     }
 }

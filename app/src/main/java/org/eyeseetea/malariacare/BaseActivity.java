@@ -41,9 +41,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.TabGroup;
@@ -52,9 +54,12 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.InputStream;
+import java.util.List;
 
 
 public abstract class BaseActivity extends ActionBarActivity {
@@ -66,6 +71,8 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected static String TAG=".BaseActivity";
 
+    private AlarmPushReceiver alarmPush;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -73,6 +80,17 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         initView(savedInstanceState);
+        if(PushController.getInstance().isPushInProgress()) {
+            List<Survey> surveys=Survey.getAllSendingSurveys();
+            Log.d(TAG,"The app was closed in the middle of a push. Surveys sending: "+surveys.size());
+            for(Survey survey:surveys){
+                survey.setStatus(Constants.SURVEY_QUARANTINE);
+                survey.save();
+            }
+            PushController.getInstance().setPushInProgress(false);
+        }
+        alarmPush = new AlarmPushReceiver();
+        alarmPush.setPushAlarm(this);
     }
 
     /**
@@ -97,7 +115,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (program != null) {
             android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
             LayoutUtils.setActionBarLogo(actionBar);
-            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), program.getName());
+            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), this.getResources().getString(R.string.app_name));
         }
     }
 
@@ -122,16 +140,15 @@ public abstract class BaseActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_settings:
                 debugMessage("User asked for settings");
-                goSettings();
+                if(PushController.getInstance().isPushInProgress()) {
+                    Log.d(TAG,"Click in settings true "+PushController.getInstance().isPushInProgress());
+                    Toast.makeText(this, R.string.toast_push_is_pushing, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Log.d(TAG,"Click in settings false "+PushController.getInstance().isPushInProgress());
+                    goSettings();
+                }
                 break;
-            case R.id.action_monitoring:
-                debugMessage("User asked for monitor");
-                goMonitor();
-                break;
-//            case R.id.action_license:
-//                debugMessage("User asked for license");
-//                showAlertWithMessage(R.string.settings_menu_licence, R.raw.gpl);
-//                break;
             case R.id.action_about:
                 debugMessage("User asked for about");
                 showAlertWithHtmlMessageAndLastCommit(R.string.settings_menu_about, R.raw.about, BaseActivity.this);
@@ -193,33 +210,9 @@ public abstract class BaseActivity extends ActionBarActivity {
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
-    protected void goMonitor(){
-        startActivity(new Intent(this, MonitorActivity.class));
-    }
-
-    public void newSurvey(View v){
-        TabGroup tabGroup = new Select().from(TabGroup.class).querySingle();
-        // Put new survey in session
-        Survey survey = new Survey(null, tabGroup, Session.getUser());
-        survey.save();
-        Session.setSurvey(survey);
-
-//        SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
-//        LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
-//
-//        Intent targetActivityIntent = new Intent(this,DashboardActivity.class);
-//        finish();
-//        startActivity(targetActivityIntent);
-
-        //Look for coordinates
-        prepareLocationListener(survey);
-
-        //Call Survey Activity
-        finishAndGo(SurveyActivity.class);
-    }
 
 
-    private void prepareLocationListener(Survey survey){
+    public void prepareLocationListener(Survey survey){
 
         SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
         LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
@@ -381,4 +374,9 @@ public abstract class BaseActivity extends ActionBarActivity {
         Log.d("." + this.getClass().getSimpleName(), message);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        alarmPush.cancelPushAlarm(this);
+    }
 }

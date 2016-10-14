@@ -153,7 +153,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         survey.setStatus(Constants.SURVEY_SENT);
         //Set dates
         survey.setCreationDate(sdkEventExtended.getCreationDate());
-        survey.setCompletionDate(sdkEventExtended.getCompletionDate());
+        survey.setCompletionDate(sdkEventExtended.getEventDate());
         survey.setEventDate(sdkEventExtended.getEventDate());
         survey.setScheduledDate(sdkEventExtended.getScheduledDate());
         //Set fks

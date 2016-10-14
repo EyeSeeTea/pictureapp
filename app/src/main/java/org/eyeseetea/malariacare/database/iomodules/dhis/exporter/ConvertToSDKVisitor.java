@@ -216,7 +216,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
         //Creation date is null because it is used by sdk to POST|PUT we always POST a new survey
         event.setLastUpdated(EventExtended.format(survey.getCompletionDate()));
-        event.setEventDate(EventExtended.format(survey.getEventDate()));
+        event.setEventDate(EventExtended.format(survey.getCompletionDate()));
         event.setDueDate(EventExtended.format(survey.getScheduledDate()));
         return event;
     }

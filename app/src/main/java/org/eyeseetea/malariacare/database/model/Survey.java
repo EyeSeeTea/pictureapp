@@ -205,10 +205,12 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         this.user = null;
     }
 
+    @Deprecated
     public Date getCreationDate() {
         return creationDate;
     }
 
+    @Deprecated
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
@@ -221,10 +223,12 @@ public class Survey extends BaseModel  implements VisitableToSDK {
         this.completionDate=completionDate;
     }
 
+    @Deprecated
     public Date getEventDate() {
         return eventDate;
     }
 
+    @Deprecated
     public void setEventDate(Date eventDate) {
         this.eventDate = eventDate;
     }

@@ -9,16 +9,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.AReviewAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
-import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +92,7 @@ public class ReviewFragment extends Fragment {
     private void initListView(View view) {
         //inflate headers
         View header = lInflater.inflate(this.adapter.getHeaderLayout(), null, false);
-        View subHeader = lInflater.inflate(((AReviewAdapter) this.adapter).getSubHeaderLayout(), null, false);
+        View subHeader = lInflater.inflate(((ReviewScreenAdapter) this.adapter).getSubHeaderLayout(), null, false);
 
         ListView listView = (ListView) view.findViewById(R.id.review_list);
 

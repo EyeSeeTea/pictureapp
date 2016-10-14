@@ -66,8 +66,8 @@ android {
             buildConfigField "boolean", "reviewScreen", "false"
         }
         laos {
-            applicationId 'org.eyeseetea.surveillance_la_bb'
-            versionName "1.0.4"
+            applicationId 'org.eyeseetea.surveillance_la_english_bb'
+            versionName "1.0.5"
             buildConfigField "boolean","reviewScreen", "true"
         }
         myanmar {

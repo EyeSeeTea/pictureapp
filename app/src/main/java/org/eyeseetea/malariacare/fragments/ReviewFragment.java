@@ -1,24 +1,23 @@
 package org.eyeseetea.malariacare.fragments;
 
 import android.app.Fragment;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +26,8 @@ import java.util.List;
 public class ReviewFragment extends Fragment {
 
     public static final String TAG = ".ReviewFragment";
-
+    private List<Value> values;
+    protected IDashboardAdapter adapter;
     LayoutInflater lInflater;
 
     @Override
@@ -43,66 +43,10 @@ public class ReviewFragment extends Fragment {
         this.lInflater = LayoutInflater.from(getActivity().getApplicationContext());
         View view = inflater.inflate(R.layout.review_layout,
                 container, false);
-        initValues(view);
-        view.setOnTouchListener(new SwipeTouchListener(view.getContext()) {
-            @Override
-            public void onSwipeRight() {
-                DashboardActivity.dashboardActivity.hideReview();
-            }
-        });
+
+        initAdapter();
+        initListView(view);
         return view;
-    }
-
-    /**
-     * Inflate a TextCard inside a linearLayout for each value
-     * @param view
-     */
-    private void initValues(View view) {
-        Survey survey= Session.getSurvey();
-        List<Value> values = survey.getValuesFromDB();
-        LinearLayout linearLayout=(LinearLayout)view.findViewById(R.id.options_review_table);
-        for(Value value:values) {
-            boolean isReviewValue=true;
-            for(QuestionRelation questionRelation:value.getQuestion().getQuestionRelations()){
-                if(questionRelation.isACounter() || questionRelation.isAReminder() || questionRelation.isAWarning())
-                    isReviewValue=false;
-            }
-            if(isReviewValue)
-                drawValue(linearLayout, value);
-        }
-    }
-
-
-    /**
-     * Inflate the linearlayout to add the values
-     * @param linearLayout
-     * @param value
-     */
-    private void drawValue(LinearLayout linearLayout, Value value) {
-        TextCard textCard=(TextCard) lInflater.inflate(R.layout.dynamic_review_row,linearLayout,false);
-        textCard.setText((value.getOption()!=null)?value.getOption().getCode():value.getValue());
-        if((value.getQuestion()!=null)) {
-            textCard.setTag(value.getQuestion());
-            textCard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Question question= (Question)v.getTag();
-                    DashboardActivity.dashboardActivity.hideReview(question);
-                }
-            });
-        }
-        if(value.getQuestion()!=null) {
-            if(value.getOption()!=null && value.getOption().getBackground_colour()!=null)
-                textCard.setBackgroundColor(Color.parseColor("#" + value.getOption().getBackground_colour()));
-            linearLayout.addView(textCard);
-        }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        Log.d(TAG, "onActivityCreated");
-        super.onActivityCreated(savedInstanceState);
-
     }
 
     @Override
@@ -115,5 +59,49 @@ public class ReviewFragment extends Fragment {
     public void onStop() {
         Log.d(TAG, "onStop");
         super.onStop();
+    }
+
+    /**
+     * Inits reviewfragment adapter.
+     */
+    private void initAdapter() {
+        values = getReviewValues();
+        ReviewScreenAdapter adapterInSession = new ReviewScreenAdapter(this.values,lInflater, getActivity());
+        this.adapter = adapterInSession;
+    }
+
+    private List<Value> getReviewValues() {
+        List<Value> reviewValues = new ArrayList<>();
+        Survey survey = Session.getSurvey();
+        List<Value> allValues = survey.getValuesFromDB();
+        for(Value value:allValues) {
+            boolean isReviewValue=true;
+            for(QuestionRelation questionRelation:value.getQuestion().getQuestionRelations()){
+                if(questionRelation.isACounter() || questionRelation.isAReminder() || questionRelation.isAWarning())
+                    isReviewValue=false;
+            }
+            if(isReviewValue)
+                reviewValues.add(value);
+        }
+        return reviewValues;
+    }
+
+    /**
+     * Initializes the listview component, adding a listener for swiping right
+     */
+    private void initListView(View view) {
+        //inflate headers
+        View header = lInflater.inflate(this.adapter.getHeaderLayout(), null, false);
+        View subHeader = lInflater.inflate(((ReviewScreenAdapter) this.adapter).getSubHeaderLayout(), null, false);
+
+        ListView listView = (ListView) view.findViewById(R.id.review_list);
+
+        //set headers and list in the listview
+        listView.addHeaderView(header);
+        listView.addHeaderView(subHeader);
+        listView.setAdapter((BaseAdapter) adapter);
+
+        //remove spaces between rows in the listview
+        listView.setDividerHeight(0);
     }
 }

@@ -85,6 +85,13 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+       SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+      if  (sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.dhis_demo_user), false)) {
+          startActivity(new Intent(LoginActivity.this,
+                  ((Dhis2Application) getApplication()).getMainActivity()));
+
+          finish();
+      }
 
        if (User.getLoggedUser() != null && !ProgressActivity.PULL_CANCEL ) {
             startActivity(new Intent(LoginActivity.this,
@@ -101,7 +108,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         //Readonly
         //serverText.setEnabled(false);
 
-       SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
        EditText passwordEditText = (EditText) findViewById(R.id.password);
        EditText usernameEditText = (EditText) findViewById(R.id.username);
        if (sharedPreferences.getString(getResources().getString(R.string.dhis_user),"").isEmpty()) {
@@ -167,10 +174,13 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
                EditText serverEditText = (EditText) findViewById(R.id.server_url);
                PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
+
                super.onClick(v);
            }
 
        } else if (v.getId()==R.id.login_demo_button) {
+           SharedPreferences.Editor sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+           sharedPreferences.putBoolean(getApplicationContext().getResources().getString(R.string.dhis_demo_user), true).commit();
            finish();
            startActivity(new Intent(this, DashboardActivity.class));
        }
@@ -199,7 +209,8 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         EditText usernameEditText = (EditText) findViewById(R.id.username);
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, usernameEditText.getText().toString());
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, passwordEditText.getText().toString());
-
+        SharedPreferences.Editor sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+        sharedPreferences.putBoolean(getApplicationContext().getResources().getString(R.string.dhis_demo_user), false).commit();
 
         finish();
         startActivity(new Intent(this, ProgressActivity.class));

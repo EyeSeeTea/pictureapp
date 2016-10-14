@@ -24,11 +24,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
@@ -308,6 +310,8 @@ public abstract class BaseActivity extends ActionBarActivity {
                     public void onClick(DialogInterface arg0, int arg1) {
                         //finish activity and go to login
                        // DhisService.logOutUser(activity);
+                        SharedPreferences.Editor sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+                        sharedPreferences.putBoolean(getApplicationContext().getResources().getString(R.string.dhis_demo_user), false).commit();
                         User.clearLoggedUser();
                          finish();
 

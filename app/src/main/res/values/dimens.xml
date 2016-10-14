@@ -52,5 +52,7 @@
     <dimen name="input_number_edit_text">32dp</dimen>
     <dimen name="input_number_edit_text_phone">22dp</dimen>
 
+    <!--Text size for review headers and rows-->
+    <dimen name="default_review_fragment_font_size">24dp</dimen>
 
 </resources>

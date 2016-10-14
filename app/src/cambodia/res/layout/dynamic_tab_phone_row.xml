@@ -28,7 +28,7 @@
             app:tFontName="@string/condensed_font_name"
             />
         <Button
-            android:id="@+id/dynamic_phone_btn"
+            android:id="@+id/row_phone_btn"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="0.4"

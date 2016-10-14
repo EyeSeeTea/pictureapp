@@ -410,6 +410,12 @@ public class Question extends BaseModel {
         return new Select().all().from(Question.class).queryList();
     }
 
+    public static List<Question> getAllQuestionsWithOrgUnitDropdownList() {
+        return new Select().from(Question.class)
+                .where(Condition.column(Question$Table.OUTPUT).eq(Constants.DROPDOWN_OU_LIST))
+                .queryList();
+    }
+
     public boolean hasParent() {
         if (parent == null) {
             long countChildQuestionRelations = new Select().count().from(QuestionRelation.class)

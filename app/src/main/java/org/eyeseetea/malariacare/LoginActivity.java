@@ -19,25 +19,41 @@
 
 package org.eyeseetea.malariacare;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.Preference;
+
 import android.preference.PreferenceManager;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
+import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
+import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
+
+import java.io.InputStream;
 
 /**
  * Login Screen.
@@ -61,24 +77,41 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      */
     private String password;
 
-    @Override
+   @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Populate server with the current value
+
+       if (User.getLoggedUser() != null && !ProgressActivity.PULL_CANCEL ) {
+            startActivity(new Intent(LoginActivity.this,
+                   ((Dhis2Application) getApplication()).getMainActivity()));
+
+           finish();
+
+
+       }
+       ProgressActivity.PULL_CANCEL =false;
+           //Populate server with the current value
         EditText serverText = (EditText) findViewById(org.hisp.dhis.android.sdk.R.id.server_url);
         serverText.setText(ServerAPIController.getServerUrl());
         //Readonly
         //serverText.setEnabled(false);
 
-        //Username, Password blanks to force real login
-        EditText usernameEditText = (EditText) findViewById(R.id.username);
-        usernameEditText.setText("");
-        EditText passwordEditText = (EditText) findViewById(R.id.password);
-        passwordEditText.setText("");
+       SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+       EditText passwordEditText = (EditText) findViewById(R.id.password);
+       EditText usernameEditText = (EditText) findViewById(R.id.username);
+       if (sharedPreferences.getString("","").isEmpty()) {
+           usernameEditText.setText("");
+
+           passwordEditText.setText("");
+       } else {
+           usernameEditText.setText(sharedPreferences.getString(getResources().getString(R.string.dhis_user), ""));
+           passwordEditText.setText(sharedPreferences.getString(getResources().getString(R.string.dhis_password), ""));
+       }
+
     }
 
-    @Override
+     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return null;
     }
@@ -95,6 +128,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     @Override
     public void onClick(View v) {
+
         // Save dhis URL and establish in preferences, so it will be used to make the pull
         EditText serverEditText = (EditText) findViewById(R.id.server_url);
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
@@ -114,7 +148,12 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     private void goSettingsWithRightExtras(){
 
-        Intent intent = new Intent(LoginActivity.this,SettingsActivity.class);
+        EditText passwordEditText = (EditText) findViewById(R.id.password);
+        EditText usernameEditText = (EditText) findViewById(R.id.username);
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, usernameEditText.getText().toString());
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, passwordEditText.getText().toString());
+
+        Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
         intent = propagateExtraAndResult(intent);
 
         finish();
@@ -155,7 +194,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      * a preference is set so the app will remind between different executions
      * @return
      */
-    private boolean isEulaAccepted(){
+     private boolean isEulaAccepted(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         return sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), false);
     }
@@ -173,7 +212,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      * Get from the preferences the server setting
      * @return
      */
-    private String getServerFromPreferences(){
+     private String getServerFromPreferences(){
         return PreferencesState.getInstance().getDhisURL();
     }
 
@@ -196,19 +235,19 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
      */
     public void onBackPressed(){
-        finishAndGo(DashboardActivity.class);
+       finish();
+        //finishAndGo(DashboardActivity.class);
     }
 
     /**
      * Finish current activity and launches an activity with the given class
      * @param targetActivityClass Given target activity class
      */
-    public void finishAndGo(Class targetActivityClass){
+     public void finishAndGo(Class targetActivityClass){
         Intent targetActivityIntent = new Intent(this,targetActivityClass);
         finish();
         startActivity(targetActivityIntent);
     }
 }
-
 
 

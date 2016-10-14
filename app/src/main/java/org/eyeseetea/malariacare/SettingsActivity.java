@@ -918,6 +918,8 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
                     public void onClick(DialogInterface arg0, int arg1) {
                         //finish activity and go to login
                        // DhisService.logOutUser(activity);
+                        SharedPreferences.Editor sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity).edit();
+                        sharedPreferences.putBoolean(activity.getResources().getString(R.string.dhis_demo_user), false).commit();
                         User.clearLoggedUser();
 
                         Intent intent = prepareIntent();

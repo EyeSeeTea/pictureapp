@@ -53,6 +53,7 @@ import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
+import org.hisp.dhis.android.sdk.persistence.models.Dashboard;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 import java.io.InputStream;
@@ -132,44 +133,47 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     @Override
     public void onClick(final View v) {
 
+       if (v.getId()==R.id.login_button) {
+
+           if (!isEulaAccepted()) {
 
 
-       if (!isEulaAccepted()) {
+               InputStream message = getResources().openRawResource(R.raw.eula);
+               String stringMessage = Utils.convertFromInputStreamToString(message).toString();
+               final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
+               Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+
+               AlertDialog dialog = new AlertDialog.Builder(this)
+                       .setTitle(getString(R.string.settings_menu_eula))
+                       .setMessage(linkedMessage)
+                       .setCancelable(false)
+                       .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int which) {
+
+                               EditText serverEditText = (EditText) findViewById(R.id.server_url);
+                               PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
+                               setEulaAccepted();
+                               eulaAccepted(v);
+
+                           }
+                       })
+                       .setNegativeButton(android.R.string.no, null).create();
+               dialog.show();
+               ((TextView) dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
 
 
-           InputStream message = getResources().openRawResource(R.raw.eula);
-           String stringMessage = Utils.convertFromInputStreamToString(message).toString();
-           final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
-           Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+           } else   {
 
-           AlertDialog dialog = new AlertDialog.Builder(this)
-                   .setTitle(getString(R.string.settings_menu_eula))
-                   .setMessage(linkedMessage)
-                   .setCancelable(false)
-                   .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                       @Override
-                       public void onClick(DialogInterface dialog, int which) {
+               EditText serverEditText = (EditText) findViewById(R.id.server_url);
+               PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
+               super.onClick(v);
+           }
 
-                           EditText serverEditText = (EditText) findViewById(R.id.server_url);
-                           PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
-                           setEulaAccepted();
-                           eulaAccepted(v);
-
-                       }
-                   })
-                   .setNegativeButton(android.R.string.no, null).create();
-           dialog.show();
-           ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
-
-
-
-        } else {
-
-           EditText serverEditText = (EditText) findViewById(R.id.server_url);
-           PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
-           super.onClick(v);
-        }
-
+       } else if (v.getId()==R.id.login_demo_button) {
+           finish();
+           startActivity(new Intent(this, DashboardActivity.class));
+       }
         // Save dhis URL and establish in preferences, so it will be used to make the pull
 
     }

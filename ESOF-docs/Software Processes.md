@@ -6,7 +6,7 @@
 2. [QIS Malaria Case Surveillance](#malaria)
 3. [Activity](#activity)
 4. [Development Process](#development)
-    1. [Iterative development and delivery](#idd)
+    1. [Incremental development and delivery](#idd)
     2. [Opinion](#opinion)
 5. [Contributors](#contributors)
 

@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:gravity="center"
             android:layout_gravity="center_horizontal"
-            android:text="@string/send"
+            android:text="@android:string/ok"
             android:textColor="@color/intColor"
             android:layout_margin="10dp"
             app:tDimension="@string/font_size_level2"

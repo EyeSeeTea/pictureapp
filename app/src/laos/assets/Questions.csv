@@ -1,14 +1,14 @@
-1;'RDT';'LA MAL SRV - RDT test result';;'Has the patient been tested?';'pTZpMcKg1CY';1;0;0;1;1;0;14;2;0
-2;'Reason';'LA MAL SRV - Reason NOT tested RDT';;'Why the patient was not tested?';'Elrozkdzh3r';1;0;0;1;2;0;14;2;1
+1;'RDT';'LA MAL SRV - RDT test result';;'Was the patient tested?';'pTZpMcKg1CY';1;0;0;1;1;0;14;2;0
+2;'Reason';'LA MAL SRV - Reason NOT tested RDT';;'Reason not tested';'Elrozkdzh3r';1;0;0;1;2;0;14;2;1
 3;'Gender';'LA MAL SRV - Gender';;'Gender';'lNcuFJPKhp9';1;0;0;1;3;0;10;4;1
 4;'Age';'LA MAL SRV - Age';;'Age';'qQngeCbT4uI';2;0;0;1;4;0;6;4;1
-5;'Result';'LA MAL SRV - RDT test result';;'Result of blood test';'FPNbkUi9D55';3;0;0;1;5;0;14;4;0
+5;'Result';'LA MAL SRV - RDT test result';;'RDT result';'FPNbkUi9D55';3;0;0;1;5;0;14;4;0
 6;'ConfirmInvalid';'Confirm invalid';' ';'Invalid Result';'R53JBYOhcQM';4;0;0;1;6;0;16;6;0;'question_images/p9_rdt_test.png'
 7;'WarningBaby';'Treatment warning baby';' ';'Wrong Treatment';'xxx';5;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
 8;'WarningKid';'Treatment warning kid';' ';'Wrong Treatment';'xxx';6;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
 9;'WarningTeen';'Treatment warning teenager';' ';'Wrong Treatment';'xxx';7;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
 10;'WarningAdult';'Treatment warning adult';' ';'Wrong Treatment';'xxx';8;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
 11;'Treatment';'LA MAL SRV - Treatment';;'Type of malaria treatment';'TzL693oH3D9';9;0;0;1;8;0;12;6;1
-12;'ReminderHospital';'Reminder hospital';' ';'Submission';'xxx';10;0;0;1;9;0;18;6;0;'question_images/p8_rdt_all.png'
+12;'ReminderHospital';'Reminder hospital';' ';'Refer';'xxx';10;0;0;1;9;0;18;6;0;'question_images/p8_rdt_all.png'
 13;'Phone';'LA MAL SRV - Client telephone';' ';'Patient telephone number';'fnT1JoHmO94';11;0;0;1;10;0;13;6;0;'question_images/p13_phone.png'
 14;'ReminderNotTested';'Reminder Not Tested';'';'Refer';'xxx';10;0;0;1;9;0;18;6;0;''

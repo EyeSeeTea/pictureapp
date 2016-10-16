@@ -20,13 +20,13 @@
 20;'ACT 6x4';'ACT 6x4';0;8;17
 21;'Refer patient because out of stock of ACTs';'Referred ACT stockout';0;8;18
 22;'Gave patient combination of ACTs';'Combined blister';0;8;19
-23;'Submission';'ReferHospital';0;9;20
+23;'Refer';'ReferHospital';0;9;20
 24;'Please re-test the patient using a new RDT. Don’t forget to look at the expiration date of the RDT.';'Counter Text';0;11;21
 25;'Please try again.';'Counter button';0;11;22
 26;'Not bad check';'Counter button';0;11;23
-27;'Treatment selected does not match patient’s age';'Warning text';0;11;24
-28;'Please re-check';'Warning button';0;11;25
+27;'ACT dosage selected is not correct for the patient’s age. Please try again.';'Warning text';0;11;24
+28;'Go back';'Warning button';0;11;25
 29;'For Pv or Pf+Pv cases, remember to give the patient correct Coartem dosage then refer to nearest public health facility.';'Remminder Hospital text';0;11;26
-30;'Continue';'Remminder Hospital button';0;11;27
+30;'OK';'Remminder Hospital button';0;11;27
 31;'Please refer the patient to the nearest public health facility.';'Remminder not tested text';0;11;26
-32;'Send';'Remminder Not tested button';0;11;27
+32;'OK';'Remminder Not tested button';0;11;27

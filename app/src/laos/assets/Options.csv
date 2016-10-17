@@ -22,8 +22,8 @@
 22;'Gave patient combination of ACTs';'Combined blister';0;8;19
 23;'Refer';'ReferHospital';0;9;20
 24;'Please re-test the patient using a new RDT. Don’t forget to look at the expiration date of the RDT.';'Counter Text';0;11;21
-25;'Please try again.';'Counter button';0;11;22
-26;'Not bad check';'Counter button';0;11;23
+25;'Repeat RDT.';'Counter button';0;11;22
+26;'Wrong selection-go back';'Counter button';0;11;23
 27;'ACT dosage selected is not correct for the patient’s age. Please try again.';'Warning text';0;11;24
 28;'Go back';'Warning button';0;11;25
 29;'For Pv or Pf+Pv cases, remember to give the patient correct Coartem dosage then refer to nearest public health facility.';'Remminder Hospital text';0;11;26

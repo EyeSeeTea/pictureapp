@@ -284,8 +284,8 @@ public class NavigationController {
         Question actualQuestion = getCurrentNode().getQuestion();
         QuestionNode nextNode;
         nextNode = getCurrentNode().next(option);
-        if(actualQuestion.getHeader().getTab().getType() == Constants.TAB_MULTI_QUESTION) {
-            while(nextNode!=null && nextNode.getQuestion().getHeader().getTab().equals(actualQuestion.getHeader().getTab())){
+        if(actualQuestion.getHeader().getTab().getType() == Constants.TAB_MULTI_QUESTION || nextNode.getQuestion().getOutput()==Constants.HIDDEN) {
+            while(nextNode!=null && (nextNode.getQuestion().getHeader().getTab().equals(actualQuestion.getHeader().getTab()) || nextNode.getQuestion().getOutput()==Constants.HIDDEN)){
                 if(nextNode.getSibling()==null) {
                     nextNode = null;
                 }

@@ -1,1 +1,8 @@
-1;'Other';'Dropdown example';0;4;1
+1;'Other';'Dropdown parent';0;4;1
+2;'Male';'No dataelementM';0;6;2
+3;'Female';'No dataelementF';0;6;3
+4;'Female pregnant';'No dataelementFP';0;6;4
+5;'Hidden';'Female';0;7;5
+6;'Hidden';'Male';0;7;6
+7;'Hidden';'No pregnant';0;8;7
+8;'Hidden';'Pregnant';0;8;8

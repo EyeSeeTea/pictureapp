@@ -27,7 +27,8 @@ public class Constants {
             REMINDER = 18,
             DROPDOWN_OU_LIST = 19,
             IMAGE_3_NO_DATAELEMENT = 20,
-            HIDDEN = 21;
+            HIDDEN = 21,
+            SWITCH = 22;
 
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(

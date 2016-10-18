@@ -617,6 +617,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
+                case Constants.SWITCH:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row, tableLayout, false);
+                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    if(screenQuestion.getPath()!=null && !screenQuestion.getPath().equals("")) {
+                        ImageView imageView= ((ImageView) tableRow.findViewById(R.id.questionImage));
+                        imageView.setVisibility(View.VISIBLE);
+                        putImageInImageView(screenQuestion.getPath(), imageView);
+                    }
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
+                    initShortTextValue(tableRow, value);
+                    tableRow.setVisibility(visibility);
+                    tableLayout.addView(tableRow);
             }
         }
         if (isMultipleQuestionTab(tabType)) {

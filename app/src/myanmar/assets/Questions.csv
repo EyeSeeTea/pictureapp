@@ -6,3 +6,6 @@
 6;'Code: QS';'';'';'Patient Sex';'6VV1JoHmO94';6;0;0;2;6;0;20;3;0;''
 7;'Code: sex';'';'';'SEX';'7VV1JoHmO94';7;0;0;2;7;0;21;3;0;''
 8;'Code: Pregnant';'';'';'Pregnant';'8VV1JoHmO94';8;0;0;2;8;0;21;3;0;''
+7;'Code: Does fever';'';'';'SEX';'9VV1JoHmO94';9;0;0;3;7;0;22;3;0;'question_images/p4_fever.png'
+7;'Code: Did seek';'';'';'SEX';'10V1JoHmO94';10;0;0;3;7;0;22;3;0;'question_images/p4_seek.png'
+7;'Code: Severe symtoms';'';'';'SEX';'11V1JoHmO94';11;0;0;3;7;0;22;3;0;'question_images/p4_severe.png'

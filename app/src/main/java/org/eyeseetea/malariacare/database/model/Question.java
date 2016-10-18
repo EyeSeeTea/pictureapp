@@ -165,7 +165,7 @@ public class Question extends BaseModel {
     /**
      * Required to create a null Question value to enable caching when you're the last question.
      */
-    private final static Long NULL_SIBLING_ID=-1l;
+    private final static Long NULL_SIBLING_ID=-0l;
 
     Boolean parent;
 
@@ -829,6 +829,18 @@ public class Question extends BaseModel {
     }
 
     /**
+     * Finds a question by its ID
+     *
+     * @param id
+     * @return
+     */
+    public static Question findByID(Long id) {
+        return new Select()
+                .from(Question.class)
+                .where(Condition.column(Question$Table.ID_QUESTION).is(id))
+                .querySingle();
+    }
+    /**
      * Find the first root question in the given tab
      *
      *  This cannot be done due to a dbflow join bug
@@ -846,6 +858,22 @@ public class Question extends BaseModel {
 
         //Take every child question
         List<QuestionRelation> questionRelations = QuestionRelation.listAll();
+
+        if(questionRelations==null || questionRelations.size()==0) {
+            //flow without relations
+            return new Select().from(Question.class).as("q")
+                    .join(Header.class, Join.JoinType.LEFT).as("h")
+                    .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
+                            .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                    .join(Tab.class, Join.JoinType.LEFT).as("t")
+                    .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                            .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                    .where(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                            .eq(tab.getId_tab()))
+                    .and(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.TYPE))
+                            .eq(Constants.TAB_MULTI_QUESTION))
+                    .orderBy(true, Question$Table.ORDER_POS).querySingle();
+        }
         //Build a not in condition
         Iterator<QuestionRelation> questionRelationsIterator = questionRelations.iterator();
         In in = Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)).notIn(Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
@@ -1021,7 +1049,9 @@ public class Question extends BaseModel {
         }
 
         //Child question -> find next children question for same parent
-        Log.d(TAG,String.format("'%s'.getSibling() --calculated--> '%s'",this.getCode(),this.sibling.getCode()));
+        if(this.sibling!=null && this.sibling.getCode()!=null && this.getCode()!=null) {
+            Log.d(TAG, String.format("'%s'.getSibling() --calculated--> '%s'", this.getCode(), this.sibling.getCode()));
+        }
         return this.sibling.isNullQuestion()?null:this.sibling;
 
 
@@ -1067,24 +1097,39 @@ public class Question extends BaseModel {
         //Take every child question
         List<QuestionRelation> questionRelations = QuestionRelation.listAll();
         //Build a not in condition
-        Iterator<QuestionRelation> questionRelationsIterator = questionRelations.iterator();
-        In in = Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)).notIn(Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
-        while (questionRelationsIterator.hasNext()) {
-            in.and(Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
+        In in;
+        if(questionRelations.size()==0) {
+            //Flow without children
+            in = Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)).notIn(Long.toString(this.getId_question()));
+        }else {
+            Iterator<QuestionRelation> questionRelationsIterator = questionRelations.iterator();
+            in = Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)).notIn(Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
+            while (questionRelationsIterator.hasNext()) {
+                in.and(Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
+            }
         }
-
-        this.sibling=new Select().from(Question.class).as("q")
+        //Siblings without parents relations
+        Question questionFromDbFlow = new Select().from(Question.class).as("q")
                 .join(Header.class, Join.JoinType.LEFT).as("h")
                 .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
                         .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
-                .where(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER))
-                        .eq(this.getHeader().getId_header()))
+                .join(Tab.class, Join.JoinType.LEFT).as("t")
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB)))
+                .join(TabGroup.class, Join.JoinType.LEFT).as("tg")
+                .on(Condition.column(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP))
+                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP)))
+                .where(Condition.column(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP))
+                        .eq(this.getHeader().getTab().getTabGroup().getId_tab_group()))
                 .and(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ORDER_POS))
                         .greaterThan(this.getOrder_pos()))
                 .and(in)
                 .orderBy(true, Question$Table.ORDER_POS).querySingle();
         //no question behind this one -> build a null question to use cached value
-        if(this.sibling==null){
+        //Fix question( some fields like the id_question should be overwrite by DBFLOW bug with the questionrelation id_question field
+        if(questionFromDbFlow!=null) {
+            this.sibling=(Question.findByID(questionFromDbFlow.getId_question()));
+        }else if(this.sibling==null){
             this.sibling=buildNullQuestion();
         }
         return this.sibling;
@@ -1185,14 +1230,14 @@ public class Question extends BaseModel {
     public String toString() {
         return "Question{" +
                 "id_question=" + id_question +
-                ", code='" + code + '\'' +
-                ", de_name='" + de_name + '\'' +
-                ", short_name='" + short_name + '\'' +
-                ", form_name='" + form_name + '\'' +
-                ", uid='" + uid + '\'' +
+                ", code='" + code+" " + '\'' +
+                ", de_name='" + de_name+" " + '\'' +
+                ", short_name='" + short_name+" " + '\'' +
+                ", form_name='" + form_name+" " + '\'' +
+                ", uid='" + uid+" " + '\'' +
                 ", order_pos=" + order_pos +
                 ", numerator_w=" + numerator_w +
-                ", feedback='" + feedback + '\'' +
+                ", feedback='" + feedback+" " + '\'' +
                 ", denominator_w=" + denominator_w +
                 ", id_header=" + id_header +
                 ", id_answer=" + id_answer +

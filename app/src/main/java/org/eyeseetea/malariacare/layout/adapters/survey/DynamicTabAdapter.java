@@ -268,7 +268,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         });
 
         //Show confirm on full screen
-        rootView.findViewById(R.id.dynamic_tab_options_table).setVisibility(View.GONE);
+        rootView.findViewById(R.id.no_scrolled_table).setVisibility(View.GONE);
         rootView.findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
 
         //Show question image in counter alert

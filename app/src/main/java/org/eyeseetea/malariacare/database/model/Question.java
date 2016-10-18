@@ -33,6 +33,7 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -695,6 +696,35 @@ public class Question extends BaseModel {
                 .count();
     }
 
+    /**
+     * switch the matches of a no dataelement question with his hidden dataelements.
+     * Only applies to question with options and matches the option position (0)/(1) Match position 1 no match position 0
+     *
+     * @param option
+     * @return
+     */
+    public void switchHiddenMatches(Option option) {
+        if(!hasOutputWithOptions() || !output.equals(Constants.IMAGE_3_NO_DATAELEMENT)){
+            return;
+        }
+        //Find questionoptions
+        for(QuestionOption questionOption:questionOptions){
+            if(questionOption.getMatch().getQuestionRelation().getOperation()!=QuestionRelation.MATCH) {
+                continue;
+            }
+            Question question =questionOption.getQuestion();
+            Option matchOption = questionOption.getOption();
+            Question matchQuestion= questionOption.getMatch().getQuestionRelation().getQuestion();
+            if(!option.getCode().equals(matchOption.getCode())){
+                //No match!
+                ReadWriteDB.saveValuesDDL(question ,matchQuestion.getAnswer().getOptions().get(0), matchQuestion.getValueBySession());
+            }
+            else{
+                //Match!
+                ReadWriteDB.saveValuesDDL(question ,matchQuestion.getAnswer().getOptions().get(1), matchQuestion.getValueBySession());
+            }
+        }
+    }
     /**
      * Checks if this question is triggered according to the current values of the given survey.
      * Only applies to question with answers DROPDOWN_DISABLED

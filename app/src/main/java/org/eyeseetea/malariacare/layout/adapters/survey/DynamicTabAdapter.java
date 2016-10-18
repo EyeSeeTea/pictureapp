@@ -73,6 +73,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
+import org.hisp.dhis.android.sdk.persistence.models.Constant;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -311,7 +312,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (value != null && !readOnly) {
             navigationController.setTotalPages(question.getTotalQuestions());
         }
-        ReadWriteDB.saveValuesDDL(question, selectedOption, value);
+        if(question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)){
+            question.switchHiddenMatches(selectedOption);
+        }else {
+            ReadWriteDB.saveValuesDDL(question, selectedOption, value);
+        }
         darkenNonSelected(view, selectedOption);
         LayoutUtils.highlightSelection(view, selectedOption);
         finishOrNext();
@@ -480,6 +485,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     break;
                 case Constants.IMAGES_3:
+                case Constants.IMAGE_3_NO_DATAELEMENT:
                     List<Option> opts = screenQuestion.getAnswer().getOptions();
                     for (int i = 0; i < opts.size(); i++) {
 
@@ -1088,7 +1094,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
                 Option option = (Option) parent.getItemAtPosition(position);
                 Question question = (Question) parent.getTag();
-                ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
+                if(question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)){
+                    question.switchHiddenMatches(option);
+                }else {
+                    ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
+                }
                 showOrHideChildren(question);
             }
 

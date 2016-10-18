@@ -16,7 +16,7 @@
         >
 
         <org.eyeseetea.malariacare.views.EditCard
-            android:id="@+id/dynamic_positiveInt_edit"
+            android:id="@+id/answer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_text_bottom_border"

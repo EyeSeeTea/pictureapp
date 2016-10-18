@@ -23,7 +23,7 @@
             android:layout_gravity="center_horizontal"
             android:textSize="@dimen/input_number_edit_text_phone"
             android:textColor="@color/intColor"
-            android:id="@+id/dynamic_phone_edit"
+            android:id="@+id/answer"
             android:inputType="phone"
             android:imeOptions="actionDone"
             android:singleLine="true"

@@ -188,6 +188,13 @@ public class Tab extends BaseModel {
         return getType() == Constants.TAB_DYNAMIC_AUTOMATIC_TAB;
     }
 
+    /**
+     * Checks if this tab is a dynamic tab (sort of a wizard)
+     * @return
+     */
+    public boolean isMultiQuestionTab(){
+        return getType() == Constants.TAB_MULTI_QUESTION;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

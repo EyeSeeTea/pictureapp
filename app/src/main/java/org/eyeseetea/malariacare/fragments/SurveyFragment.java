@@ -441,7 +441,7 @@ public class SurveyFragment extends Fragment{
          * @return
          */
         private ITabAdapter buildAdapter(Tab tab){
-            if (tab.isDynamicTab())
+            if (tab.isDynamicTab() || tab.isMultiQuestionTab())
                 return new DynamicTabAdapter(tab,getActivity());
 
             return null;

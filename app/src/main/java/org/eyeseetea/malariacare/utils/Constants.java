@@ -33,6 +33,7 @@ public class Constants {
             RADIO_GROUP_HORIZONTAL,
             RADIO_GROUP_VERTICAL,
             DROPDOWN_LIST_DISABLED,
+            DROPDOWN_OU_LIST,
             IMAGES_2,
             IMAGES_3,
             IMAGES_4,

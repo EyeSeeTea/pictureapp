@@ -265,23 +265,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         //Question "header" is in the first option in Options.csv
-        List<QuestionOption> questionOptions = questionCounter.getQuestionOption();
-        if(questionOptions.get(0)!=null) {
+        List<Option> questionOptions = questionCounter.getAnswer().getOptions();
+        if (questionOptions.get(0) != null) {
             TextCard textCard = (TextCard) rootView.findViewById(R.id.questionTextRow);
-            textCard.setText(questionOptions.get(0).getOption().getCode());
-            textCard.setTextSize(questionOptions.get(0).getOption().getOptionAttribute().getText_size());
+            textCard.setText(questionOptions.get(0).getCode());
+            textCard.setTextSize(questionOptions.get(0).getOptionAttribute().getText_size());
         }
         //Question "confirm button" is in the second option in Options.csv
         if(questionOptions.get(1)!=null) {
             TextCard confirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_yes);
-            confirmTextCard.setText(questionOptions.get(1).getOption().getCode());
-            confirmTextCard.setTextSize(questionOptions.get(1).getOption().getOptionAttribute().getText_size());
+            confirmTextCard.setText(questionOptions.get(1).getCode());
+            confirmTextCard.setTextSize(questionOptions.get(1).getOptionAttribute().getText_size());
         }
         //Question "no confirm button" is in the third option in Options.csv
         if(questionOptions.get(2)!=null) {
             TextCard noConfirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_no);
-            noConfirmTextCard.setText(questionOptions.get(2).getOption().getCode());
-            noConfirmTextCard.setTextSize(questionOptions.get(2).getOption().getOptionAttribute().getText_size());
+            noConfirmTextCard.setText(questionOptions.get(2).getCode());
+            noConfirmTextCard.setTextSize(questionOptions.get(2).getOptionAttribute().getText_size());
         }
 
     }
@@ -503,17 +503,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 ((TextView) rowView.findViewById(R.id.dynamic_progress_text)).setText("");
                 tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_question_text, tableLayout, false);
                 tableLayout.addView(tableRow);
-                List<QuestionOption> questionOptions= question.getQuestionOption();
+                List<Option> questionOptions = question.getAnswer().getOptions();
                 //Question "header" is in the first option in Options.csv
                 if(questionOptions!=null && questionOptions.size()>0) {
-                    initWarningText(tableRow, questionOptions.get(0).getOption());
+                    initWarningText(tableRow, questionOptions.get(0));
                 }
 
                 //Question "button" is in the second option in Options.csv
                 if( questionOptions!=null && questionOptions.size()>1) {
                     tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_confirm_yes, tableLayout, false);
                     tableLayout.addView(tableRow);
-                    initWarningValue(tableRow,  questionOptions.get(1).getOption());
+                    initWarningValue(tableRow,  questionOptions.get(1));
                     int paddingSize= (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_padding);
                     tableRow.setPadding(paddingSize,paddingSize,paddingSize,paddingSize);
                 }

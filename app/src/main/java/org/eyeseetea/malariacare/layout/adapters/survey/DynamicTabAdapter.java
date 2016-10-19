@@ -41,6 +41,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -48,6 +49,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -421,7 +423,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         //question image
-        if (question.getPath() != null && !question.getPath().equals("")) {
+        if (question.getPath() != null && !question.getPath().equals("") && question.hasVisibleHeaderQuestion()) {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.questionImage);
             putImageInImageView(question.getPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
@@ -442,18 +444,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (isMultipleQuestionTab(tabType)) {
             tableLayout = (TableLayout) rowView.findViewById(R.id.multi_question_options_table);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
+            (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
             screenQuestions = question.getQuestionsByTab(question.getHeader().getTab());
             swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(R.id.scrolled_table)).findViewById(R.id.table_scroll));
         } else {
             tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);
+            (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.GONE);
             screenQuestions.add(question);
         }
         for (Question screenQuestion : screenQuestions) {
             // Se get the value from Session
             int visibility=View.GONE;
-            if(!screenQuestion.isHiddenBySurvey(Session.getSurvey()) || !isMultipleQuestionTab(tabType))
-                visibility=View.VISIBLE;
+            if(!screenQuestion.isHiddenBySurvey(Session.getSurvey()) || !isMultipleQuestionTab(tabType)) {
+                visibility = View.VISIBLE;
+            }
             Value value = screenQuestion.getValueBySession();
             int typeQuestion = screenQuestion.getOutput();
             switch (typeQuestion) {
@@ -617,18 +622,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
-                case Constants.SWITCH:
+                case Constants.SWITCH_BUTTON:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row, tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     if(screenQuestion.getPath()!=null && !screenQuestion.getPath().equals("")) {
-                        ImageView imageView= ((ImageView) tableRow.findViewById(R.id.questionImage));
-                        imageView.setVisibility(View.VISIBLE);
-                        putImageInImageView(screenQuestion.getPath(), imageView);
+                            ImageView rowImageView = ((ImageView) tableRow.findViewById(R.id.question_image_row));
+                            rowImageView.setVisibility(View.VISIBLE);
+                            putImageInImageView(screenQuestion.getPath(), rowImageView);
                     }
-                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
-                    initShortTextValue(tableRow, value);
+                    ((TextCard) tableRow.findViewById(R.id.row_switch_yes)).setText(screenQuestion.getAnswer().getOptions().get(0).getCode());
+                    ((TextCard) tableRow.findViewById(R.id.row_switch_no)).setText(screenQuestion.getAnswer().getOptions().get(1).getCode());
+                    Switch switchQuestion=(Switch) tableRow.findViewById(R.id.answer);
+                    addTagQuestion(screenQuestion, switchQuestion);
+                    initSwitchOption(screenQuestion, switchQuestion);
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
+
             }
         }
         if (isMultipleQuestionTab(tabType)) {
@@ -1430,4 +1439,92 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 next();
     }
 
+
+    public class SwitchButtonListener implements CompoundButton.OnCheckedChangeListener{
+
+        private Question question;
+        private Switch switchButton;
+
+        public SwitchButtonListener(Question question, Switch switchButton) {
+            this.question = question;
+            this.switchButton = switchButton;
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(!buttonView.isShown()){
+                return;
+            }
+            saveSwitchOption(question, isChecked);
+        }
+
+    }
+
+    private void initSwitchOption(Question question, Switch switchQuestion) {
+
+        //Take option
+        Option selectedOption=question.getOptionBySession();
+        if(selectedOption==null){
+            saveSwitchOption(question, switchQuestion.isChecked());
+        }
+        else{
+            switchQuestion.setChecked(findSwitchBoolean(question));
+        }
+        switchQuestion.setOnCheckedChangeListener(new SwitchButtonListener(question,switchQuestion));
+    }
+
+    private void saveSwitchOption(Question question, boolean isChecked) {
+        //Take option
+        Option selectedOption=findSwitchOption(question, isChecked);
+        if(selectedOption==null){
+            return;
+        }
+
+        ReadWriteDB.saveValuesDDL(question,selectedOption,question.getValueBySession());
+    }
+    /**
+     * Returns the option selected for the given question and boolean value or by position
+     * @param question
+     * @param isChecked
+     * @return
+     */
+    public static Option findSwitchOption(Question question,boolean isChecked){
+        String expectedCode=String.valueOf(isChecked);
+        //Search "false/true" code in the options
+        for(Option option:question.getAnswer().getOptions()){
+            if(expectedCode.equals(option.getCode())){
+                return option;
+            }
+        }
+        //Search option by position
+        if(isChecked){
+            return question.getAnswer().getOptions().get(1);
+        }
+        else{
+            return question.getAnswer().getOptions().get(0);
+        }
+    }
+    /**
+     * Returns the boolean selected for the given question (by boolean value or position option, position 1=true 0=false)
+     * @param question
+     * @return
+     */
+    public static Boolean findSwitchBoolean(Question question){
+        Value value= question.getValueBySession();
+        if(value.getValue().toLowerCase().equals("true")){
+            return true;
+        }
+        else if(value.getValue().toLowerCase().equals("false")){
+            return false;
+        }
+        else{
+            if(value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())){
+                return true;
+            }
+            else if(value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
+                return false;
+            }
+        }
+        return  false;
+    }
 }

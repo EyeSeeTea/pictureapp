@@ -4,10 +4,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
-        android:id="@+id/questionImage"
+        android:id="@+id/question_image_row"
         android:layout_width="match_parent"
-        android:layout_height="30px"
+        android:layout_height="match_parent"
         android:visibility="gone"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="@dimen/question_padding_image_top" />
+        android:layout_gravity="center_horizontal"  />
 </LinearLayout>

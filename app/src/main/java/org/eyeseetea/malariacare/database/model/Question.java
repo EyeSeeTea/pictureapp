@@ -37,6 +37,7 @@ import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.hisp.dhis.android.sdk.persistence.models.Constant;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1163,6 +1164,14 @@ public class Question extends BaseModel {
                         .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
                 .where(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)).eq(tab.getId_tab()))
                 .queryList();
+    }
+
+    /**
+     * Returns if a question should have the image header visible or not.
+     * @return
+     */
+    public boolean hasVisibleHeaderQuestion() {
+        return output!=Constants.SWITCH_BUTTON;
     }
 
     private static class QuestionOrderComparator implements Comparator {

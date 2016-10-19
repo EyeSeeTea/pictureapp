@@ -1139,27 +1139,13 @@ public class Question extends BaseModel {
             }
         }
         //Siblings without parents relations
-        Question questionFromDbFlow = new Select().from(Question.class).as("q")
-                .join(Header.class, Join.JoinType.LEFT).as("h")
-                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
-                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
-                .join(Tab.class, Join.JoinType.LEFT).as("t")
-                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB))
-                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB)))
-                .join(TabGroup.class, Join.JoinType.LEFT).as("tg")
-                .on(Condition.column(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP))
-                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP)))
-                .where(Condition.column(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP))
-                        .eq(this.getHeader().getTab().getTabGroup().getId_tab_group()))
-                .and(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ORDER_POS))
+        this.sibling= new Select().from(Question.class).as("q")
+                .where(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ORDER_POS))
                         .greaterThan(this.getOrder_pos()))
                 .and(in)
                 .orderBy(true, Question$Table.ORDER_POS).querySingle();
         //no question behind this one -> build a null question to use cached value
-        //Fix question( some fields like the id_question should be overwrite by DBFLOW bug with the questionrelation id_question field
-        if(questionFromDbFlow!=null) {
-            this.sibling=(Question.findByID(questionFromDbFlow.getId_question()));
-        }else if(this.sibling==null){
+        if(this.sibling==null){
             this.sibling=buildNullQuestion();
         }
         return this.sibling;

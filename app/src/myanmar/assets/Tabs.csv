@@ -2,3 +2,5 @@
 2;'Patient Sex';2;1;9
 3;'Patient check-up / Symptoms';3;1;10
 4;'RDT / Indicate Test Result';4;1;9
+5;'Negative Test Result';5;1;9
+6;'Counter';6;1;9

@@ -16,4 +16,9 @@
 16;'Pf';'Pf';0;12;16
 17;'Pv';'Pv';0;12;17
 18;'Pf+Pv';'Pf+Pv';0;12;18
-19;'Invalid';'Invalid';0;12;19
+19;'Invalid';'Invalid';2;12;19
+20;'Negative Test';'Negative Reminder';0;13;20
+21;'Negative Test Send';'Negative Reminder Button';0;13;21
+22;'Counter Header';'Counter H';0;14;22
+23;'Counter First button';'Counter F';0;14;23
+24;'Counter Second button';'Counter S';0;14;24

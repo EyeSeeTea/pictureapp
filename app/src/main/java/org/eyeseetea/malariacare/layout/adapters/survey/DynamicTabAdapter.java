@@ -59,7 +59,6 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
@@ -75,7 +74,6 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
-import org.hisp.dhis.android.sdk.persistence.models.Constant;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -423,7 +421,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         //question image
-        if (question.getPath() != null && !question.getPath().equals("") && question.hasVisibleHeaderQuestion()) {
+        if (question.getPath() != null && !question.getPath().equals("") && !isMultipleQuestionTab(tabType)) {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.questionImage);
             putImageInImageView(question.getPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
@@ -453,6 +451,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.GONE);
             screenQuestions.add(question);
         }
+        Log.d(TAG,"Questions in actual tab: "+screenQuestions.size());
         for (Question screenQuestion : screenQuestions) {
             // Se get the value from Session
             int visibility=View.GONE;
@@ -612,6 +611,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
+                case Constants.QUESTION_LABEL:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_label_row, tableLayout, false);
+                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    if(screenQuestion.getPath()!=null && !screenQuestion.getPath().equals("")) {
+                        ImageView rowImageView = ((ImageView) tableRow.findViewById(R.id.question_image_row));
+                        rowImageView.setVisibility(View.VISIBLE);
+                        putImageInImageView(screenQuestion.getPath(), rowImageView);
+                    }
+                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    tableRow.setVisibility(visibility);
+                    tableLayout.addView(tableRow);
+                    break;
                 case Constants.DROPDOWN_LIST:
                 case Constants.DROPDOWN_OU_LIST:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_dropdown_row, tableLayout, false);
@@ -637,7 +648,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     initSwitchOption(screenQuestion, switchQuestion);
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
-
+                    break;
             }
         }
         if (isMultipleQuestionTab(tabType)) {
@@ -1479,8 +1490,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(selectedOption==null){
             return;
         }
-
         ReadWriteDB.saveValuesDDL(question,selectedOption,question.getValueBySession());
+        showOrHideChildren(question);
     }
     /**
      * Returns the option selected for the given question and boolean value or by position

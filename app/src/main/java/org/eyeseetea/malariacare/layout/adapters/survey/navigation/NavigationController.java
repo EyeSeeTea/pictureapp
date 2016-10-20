@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controller in charge of moving next, previous according to the answers and state of questions.
@@ -297,6 +298,21 @@ public class NavigationController {
 
         //Survey finished -> No more questions
         if(nextNode==null){
+            Map<Long, QuestionCounter> counters= getCurrentNode().getCountersMap();
+            if(counters!=null && counters.size()>0){
+                if(counters.containsKey(option.getId_option())){
+                    QuestionCounter questionCounter= counters.get(option.getId_option());
+                    Integer limit=(int) Math.floor( option.getFactor());
+                    if(questionCounter.isFinish(limit)){
+                        Log.d(TAG,String.format("findNext(%s)-> Survey Counter finished",option==null?"":option.getCode()));
+                        return null;
+                    }
+                    else{
+                        Log.d(TAG,String.format("findNext(%s)-> Survey Counter not finished",option==null?"":option.getCode()));
+                        return getCurrentNode().getPreviousSibling();
+                    }
+                }
+            }
             Log.d(TAG,String.format("findNext(%s)-> Survey finished",option==null?"":option.getCode()));
             return null;
         }

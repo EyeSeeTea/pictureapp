@@ -18,6 +18,8 @@ public class QuestionCounter {
      */
     private Question counterQuestion;
 
+    private final Integer infinite_counter_number=0;
+
     public QuestionCounter(Question counterQuestion){
         this.counterQuestion = counterQuestion;
     }
@@ -29,6 +31,18 @@ public class QuestionCounter {
         Log.i(TAG,String.format("Counter %s updated, current value %d",counterQuestion.getCode(),increasedRepetitions));
     }
 
+    //Limits the counter by a number of failed attempts.
+    public boolean isFinish(Integer limit){
+        String currentRepetitionsStr=ReadWriteDB.readValueQuestion(counterQuestion);
+        Integer actualNumber=toNumber(currentRepetitionsStr);
+        Log.i(TAG,String.format("Counter %s updated, current value %d",counterQuestion.getCode(),actualNumber));
+        if(limit==infinite_counter_number || actualNumber!=limit) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
     private int toNumber(String currentRepetitions){
         if(currentRepetitions==null || currentRepetitions.isEmpty()){
             return 0;

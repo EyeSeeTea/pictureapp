@@ -170,6 +170,7 @@ public class Question extends BaseModel {
     private final static Long NULL_SIBLING_ID=-0l;
 
     Boolean parent;
+    Boolean parentHeader;
 
     public Question() {
     }
@@ -430,6 +431,43 @@ public class Question extends BaseModel {
         return parent;
     }
 
+    public boolean hasParentInSameHeader() {
+        if (parentHeader == null) {
+            parentHeader = false;
+
+            List<Question> questions = Question.getAllQuestionsWithHeader(getHeader());
+            //Only one its itself.
+            if(questions==null || questions.size()<=1) {
+                return false;
+            }
+            //Removes itself
+            for(int i=0;i< questions.size();i++){
+                if(questions.get(i).getUid().equals(this.getUid())){
+                    questions.remove(questions.get(i));
+                }
+            }
+            for(Question question:questions){
+                for(QuestionOption questionOption:question.getQuestionOption()){
+                    Match match = questionOption.getMatch();
+                    QuestionRelation questionRelation = match.getQuestionRelation();
+                    if(questionRelation.getOperation()==QuestionRelation.PARENT_CHILD && questionRelation.getQuestion().getId_question().equals(this.getId_question())){
+                        parentHeader = true;
+                        return parentHeader;
+                    }
+                }
+            }
+        }
+        return parentHeader;
+    }
+
+    private static List<Question> getAllQuestionsWithHeader(Header header) {
+        return new Select()
+                .from(Question.class)
+                .where(Condition.column(Question$Table.ID_HEADER)
+                        .eq(header.getId_header()))
+                .queryList();
+    }
+
     public List<QuestionRelation> getQuestionRelations() {
         if (questionRelations == null) {
             this.questionRelations = new Select()
@@ -502,9 +540,6 @@ public class Question extends BaseModel {
         if (this.children == null) {
 
             //No matches no children
-            if (getId_question() == 74) {
-                Log.d("Question", "testing");
-            }
             List<Match> matches = getMatches();
             if (matches.size() == 0) {
                 this.children = new ArrayList<>();
@@ -650,6 +685,49 @@ public class Question extends BaseModel {
                 .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)).eq(this.getId_question()))
                 .count();
 
+        //Parent with the right value -> not hidden
+        return hasParentOptionActivated > 0 ? false : true;
+    }
+
+    /**
+     * Checks if this question is shown according to the values of the given survey
+     *
+     * @param survey
+     * @return
+     */
+    public boolean isHiddenBySurveyAndHeader(Survey survey) {
+        //No question relations
+        if (!hasParentInSameHeader()) {
+            return false;
+        }
+        long hasParentOptionActivated = new Select().count().from(Value.class).as("v")
+                .join(QuestionOption.class, Join.JoinType.LEFT).as("qo")
+                .on(
+                        Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_QUESTION))
+                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_QUESTION)),
+                        Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_OPTION))
+                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_OPTION)))
+                .join(Match.class, Join.JoinType.LEFT).as("m")
+                .on(
+                        Condition.column(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH))
+                                .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)))
+                .join(QuestionRelation.class, Join.JoinType.LEFT).as("qr")
+                .on(
+                        Condition.column(ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION))
+                                .eq(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION_RELATION)))
+                .join(Question.class, Join.JoinType.LEFT).as("q")
+                .on(
+                        Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION))
+                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_QUESTION)))
+                //Parent child relationship
+                .where(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(1))
+                //For the given survey
+                .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY)).eq(survey.getId_survey()))
+                //The child question in the relationship is 'this'
+                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)).eq(this.getId_question()))
+                //Group parents by header
+                .and(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER)).eq(this.getHeader().getId_header()))
+                .count();
         //Parent with the right value -> not hidden
         return hasParentOptionActivated > 0 ? false : true;
     }
@@ -1171,7 +1249,7 @@ public class Question extends BaseModel {
      * @return
      */
     public boolean hasVisibleHeaderQuestion() {
-        return output!=Constants.SWITCH_BUTTON;
+        return output!=Constants.SWITCH_BUTTON && output!= Constants.QUESTION_LABEL;
     }
 
     private static class QuestionOrderComparator implements Comparator {

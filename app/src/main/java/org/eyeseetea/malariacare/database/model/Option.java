@@ -29,6 +29,8 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
@@ -244,5 +246,35 @@ public class Option extends BaseModel {
         return new Select()
                 .from(Option.class)
                 .where(Condition.column(Option$Table.ID_OPTION).eq(id)).querySingle();
+    }
+
+    /**
+     * Gets the Question of this Option in session
+     *
+     * @return
+     */
+    public Question getQuestionBySession() {
+        return getQuestionBySurvey(Session.getSurvey());
+    }
+    /**
+     * Gets the Question of this Option in the given Survey
+     *
+     * @param survey
+     * @return
+     */
+    public Question getQuestionBySurvey(Survey survey) {
+        if (survey == null) {
+            return null;
+        }
+        List<Value> returnValues = new Select().from(Value.class)
+                .indexedBy(Constants.VALUE_IDX)
+                .where(Condition.column(Value$Table.ID_OPTION).eq(this.getId_option()))
+                .and(Condition.column(Value$Table.ID_SURVEY).eq(survey.getId_survey())).queryList();
+
+        if (returnValues.size() == 0) {
+            return null;
+        } else {
+            return returnValues.get(0).getQuestion();
+        }
     }
 }

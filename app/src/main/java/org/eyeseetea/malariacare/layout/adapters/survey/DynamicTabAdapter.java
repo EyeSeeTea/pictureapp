@@ -54,8 +54,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.raizlabs.android.dbflow.annotation.Table;
-
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -661,6 +659,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return rowView;
     }
 
+    /**
+     * Populat the dropdown (spinners) from question answer options
+     *
+     * @return
+     */
     private TableRow populateSpinnerFromOptions(TableRow tableRow, Question question) {
         Spinner dropdown_list = (Spinner) tableRow.findViewById(R.id.answer);
         // In case the option is selected, we will need to show num/dems
@@ -670,6 +673,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return tableRow;
     }
 
+    /**
+     * Create a button for the question with multiple question tab
+     *
+     * @return
+     */
     private View createMultipleQuestionsTabButton(TableRow tableButtonRow) {
         Button button = (Button) tableButtonRow.findViewById(R.id.multi_question_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
@@ -697,6 +705,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
+    /**
+     * Sets a warning view values in a warning screen
+     *
+     * @return
+     */
     private void initWarningValue(TableRow tableRow, Option option) {
         ImageView errorImage = (ImageView) tableRow.findViewById(R.id.confirm_yes);
         errorImage.setImageResource(R.drawable.option_button);
@@ -884,10 +897,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         openKeyboard(numberPicker);
     }
 
+    /**
+     * Checks if a tab is a multiple question Tab
+     *
+     * @return
+     */
     private boolean isMultipleQuestionTab(int tabType) {
         return tabType == Constants.TAB_MULTI_QUESTION;
     }
 
+    /**
+     * Click, check and save the phone value
+     *
+     * @return
+     */
     private boolean clickPhoneValue(EditCard editCard) {
         //Hide keypad
         hideKeyboard(PreferencesState.getInstance().getContext());
@@ -902,6 +925,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return isValid;
     }
 
+    /**
+     * Validate the phone number
+     *
+     * @return
+     */
     private boolean validatePhoneValue(String valueAsText) {
         //Required, empty values rejected
         if (!PhoneMask.checkPhoneNumberByMask(valueAsText)) {
@@ -911,6 +939,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return true;
     }
 
+    /**
+     * Click, check and save the positive int value
+     *
+     * @return
+     */
     private boolean clickPositiveIntValue(EditText editText) {
         //Hide keypad
         hideKeyboard(PreferencesState.getInstance().getContext());
@@ -1022,6 +1055,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         openKeyboard(editCard);
     }
 
+    /**
+     * Adds listener to the Editcard and sets the default or saved value
+     *
+     * @return
+     */
     private void initIntValue(TableRow row, Value value) {
         final EditCard numberPicker = (EditCard) row.findViewById(R.id.answer);
 
@@ -1053,20 +1091,30 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         openKeyboard(numberPicker);
     }
 
+    /**
+     * Adds question as tag in a view to identify the answers
+     *
+     * @return
+     */
     private void addTagQuestion(Question question, View viewById) {
         viewById.setTag(question);
     }
 
 
+    /**
+     * Adds listener to the Editcard and sets the default or saved value
+     *
+     * @return
+     */
     private void initShortTextValue(TableRow row, Value value) {
-        final EditCard numberPicker = (EditCard) row.findViewById(R.id.answer);
+        final EditCard editCard = (EditCard) row.findViewById(R.id.answer);
         //Has value? show it
         if (value != null) {
-            numberPicker.setText(value.getValue());
+            editCard.setText(value.getValue());
         }
 
         if (!readOnly) {
-            numberPicker.addTextChangedListener(new TextWatcher() {
+            editCard.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void afterTextChanged(Editable s) {
                 }
@@ -1077,29 +1125,34 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    //Save the numberpicker value in the DB, and continue to the next screen.
-                    Question question = (Question) numberPicker.getTag();
+                    //Fixme maybe we need add a way to control the limit of the length
+                    //Save the editCard value in the DB, and continue to the next screen.
+                    Question question = (Question) editCard.getTag();
                     ReadWriteDB.saveValuesText(question, String.valueOf(s));
-                    showOrHideChildren(question);
                 }
             });
         } else {
-            numberPicker.setEnabled(false);
+            editCard.setEnabled(false);
         }
         //Take focus and open keyboard
-        openKeyboard(numberPicker);
+        openKeyboard(editCard);
     }
 
+    /**
+     * Adds listener to the Editcard and sets the default or saved value
+     *
+     * @return
+     */
     private void initLongTextValue(TableRow row, Value value) {
-        final EditCard numberPicker = (EditCard) row.findViewById(R.id.answer);
+        final EditCard editCard = (EditCard) row.findViewById(R.id.answer);
 
         //Has value? show it
         if (value != null) {
-            numberPicker.setText(value.getValue());
+            editCard.setText(value.getValue());
         }
 
         if (!readOnly) {
-            numberPicker.addTextChangedListener(new TextWatcher() {
+            editCard.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void afterTextChanged(Editable s) {
                 }
@@ -1110,17 +1163,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    //Save the numberpicker value in the DB, and continue to the next screen.
-                    ReadWriteDB.saveValuesText((Question) numberPicker.getTag(), String.valueOf(s));
+                    //Save the editCard value in the DB, and continue to the next screen.
+                    Question question = (Question) editCard.getTag();
+                    ReadWriteDB.saveValuesText(question, String.valueOf(s));
                 }
             });
         } else {
-            numberPicker.setEnabled(false);
+            editCard.setEnabled(false);
         }
         //Take focus and open keyboard
-        openKeyboard(numberPicker);
+        openKeyboard(editCard);
     }
 
+    /**
+     * Adds listener to the dropdown and sets the default or saved value
+     *
+     * @return
+     */
     private void initDropdownValue(TableRow row, Value value) {
         Spinner dropdown = (Spinner) row.findViewById(R.id.answer);
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1151,6 +1210,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         }
     }
+    /**
+     * Hide or show the childen question from a given question,  if is necessary  it reloads the children questions values or refreshing the children questions answer component
+     *
+     * @param question is the parent question
+     * @return
+     */
     private void showOrHideChildren(Question question) {
             for(int i = 0, j = tableLayout.getChildCount(); i < j; i++) {
                 View view = tableLayout.getChildAt(i);
@@ -1168,14 +1233,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     if(questionChildren!=null && questionChildren.size()>0) {
                         for (Question childQuestion : questionChildren) {
                             //if the table row question is child of the modified question...
-                            if (toggleChildren(row, rowQuestion, childQuestion)) break;
+                            toggleChild(row, rowQuestion, childQuestion);
                         }
                     }
                 }
             }
     }
 
-    private boolean toggleChildren(TableRow row, Question rowQuestion, Question childQuestion) {
+    /**
+     * find and toggle the child question
+     *
+     * @param row is the child question view
+     * @param rowQuestion is the question in the view
+     * @param childQuestion is the posible child
+     * @return
+     */
+    private boolean toggleChild(TableRow row, Question rowQuestion, Question childQuestion) {
         if (childQuestion.getId_question().equals(rowQuestion.getId_question())) {
             if (rowQuestion.isHiddenBySurveyAndHeader(Session.getSurvey())) {
                 row.setVisibility(View.GONE);
@@ -1189,6 +1262,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return false;
     }
 
+    /**
+     * removes or modify the value with a correct value when the question is hide
+     *
+     * @param rowQuestion is the question in the view
+     * @return
+     */
     private void hideDefaultValue(Question rowQuestion){
         switch(rowQuestion.getOutput()) {
             case Constants.PHONE:
@@ -1205,6 +1284,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 break;
         }
     }
+
+    /**
+     * when a question is shown this method set the correct value.
+     *
+     * @param rowQuestion is the question in the view
+     * @return
+     */
     private void showDefaultValue(TableRow tableRow, Question rowQuestion) {
         if (rowQuestion.getValueBySession() != null) {
             return;
@@ -1235,6 +1321,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
+    /**
+     * Save value from a Positive Integer question in DB and check the children
+     *
+     * @return
+     */
     private void savePositiveIntValue(EditText numberPicker) {
         String valueAsText = String.valueOf(numberPicker.getText());
 
@@ -1245,12 +1336,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         showOrHideChildren(question);
     }
 
+    /**
+     * Save value in DB and check the children
+     *
+     * @return
+     */
     private void saveValue(EditCard editCard) {
         Question question = (Question) editCard.getTag();
         ReadWriteDB.saveValuesText(question, editCard.getText().toString());
         showOrHideChildren(question);
     }
 
+    /**
+     * Open keyboard and add listeners to click/next option.
+     *
+     * @return
+     */
     private void openKeyboard(final EditText editText) {
         if (!readOnly) {
             editText.requestFocus();
@@ -1334,6 +1435,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         resizeTextWidth(button, (TextCard) button.getChildAt(1));
     }
 
+    /**
+     * Sets a image from assets path in a imageView
+     *
+     * @param path path from assets image
+     * @param imageView is the imageView to set the image
+     * @return
+     */
     private void putImageInImageView(String path, ImageView imageView) {
         try {
             if (path == null || path.equals(""))
@@ -1480,6 +1588,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
+
+    /**
+     * Skips the reminder question in the navigation
+     *
+     * @return
+     */
     private void skipReminder() {
         for (QuestionRelation relation : navigationController.getCurrentQuestion().getQuestionRelations())
             if (relation.isAReminder())
@@ -1487,6 +1601,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
 
+    /**
+     * Switch listener to save the switch value
+     *
+     * @return
+     */
     public class SwitchButtonListener implements CompoundButton.OnCheckedChangeListener{
 
         private Question question;
@@ -1507,6 +1626,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     }
 
+    /**
+     * Initialize the default switch value or load the saved value
+     *
+     * @param question is the question in the view
+     * @param switchQuestion is the switch view
+     * @return
+     */
     private void initSwitchOption(Question question, Switch switchQuestion) {
 
         //Take option
@@ -1520,6 +1646,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         switchQuestion.setOnCheckedChangeListener(new SwitchButtonListener(question,switchQuestion));
     }
 
+    /**
+     * Save the switch option and check children questions
+     *
+     * @param question is the question in the view
+     * @param isChecked is the value to be saved
+     * @return
+     */
     private void saveSwitchOption(Question question, boolean isChecked) {
         //Take option
         Option selectedOption=findSwitchOption(question, isChecked);

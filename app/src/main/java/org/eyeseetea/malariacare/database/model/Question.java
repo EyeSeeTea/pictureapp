@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.support.annotation.RequiresPermission;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -796,11 +797,17 @@ public class Question extends BaseModel {
             Question matchQuestion= questionOption.getMatch().getQuestionRelation().getQuestion();
             if(!option.getCode().equals(matchOption.getCode())){
                 //No match!
-                ReadWriteDB.saveValuesDDL(question ,matchQuestion.getAnswer().getOptions().get(0), matchQuestion.getValueBySession());
+                if(option.getQuestionBySession()!=null) {
+                    ReadWriteDB.deleteValue(option.getQuestionBySession());
+                }
+                ReadWriteDB.saveValuesDDL(matchQuestion ,matchQuestion.getAnswer().getOptions().get(0), matchQuestion.getValueBySession());
             }
             else{
                 //Match!
-                ReadWriteDB.saveValuesDDL(question ,matchQuestion.getAnswer().getOptions().get(1), matchQuestion.getValueBySession());
+                if(option.getQuestionBySession()!=null) {
+                    ReadWriteDB.deleteValue(option.getQuestionBySession());
+                }
+                ReadWriteDB.saveValuesDDL(matchQuestion ,matchQuestion.getAnswer().getOptions().get(1), matchQuestion.getValueBySession());
             }
         }
     }

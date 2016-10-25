@@ -36,7 +36,7 @@ The **1.0 version** was released on 18/11/2015 with an addition of **166 commits
 ***
 ##**Development Process** <a name = "development"></a>
 
-![Commit graph](https://scontent-cdg.xx.fbcdn.net/v/t35.0-12/14699537_1402281076466024_1617354272_o.png?oh=cba173d59939e23c7626ea6a4c267410&oe=5805657C)
+![Commit graph](http://www.mediafire.com/convkey/dff8/9obev1qkuobq1g1zg.jpg)
 
 As of today (15/10/2016), we weren't able to get a reply neither from the main contributors and neither from the official website regarding the development process used in this project. Based on what we read about the different types of development processes and the analysis of the several commits, we think that the most adequate one is **Incremental development and delivery**. 
 

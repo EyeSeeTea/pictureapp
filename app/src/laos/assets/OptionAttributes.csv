@@ -11,7 +11,7 @@
 11;'447bbf';'question_images/p7_button_3.png';'3';'3';12
 12;'7da2d6';'question_images/p7_button_4.png';'3';'3';12
 13;'447bbf';'question_images/p7_button_5.png';'3';'3';12
-14;'29B4BC';'';0;0;20
+14;'29B4BC';'';0;0;30
 15;'29B4BC';'';0;0;24
 16;'29B4BC';'';0;0;24
 17;'ffde17';'question_images/p10_act_6x1.png';'3';'3';12
@@ -20,9 +20,9 @@
 20;'aecab6';'question_images/p10_act_6x4.png';'3';'3';12
 21;'7ca3dc';'question_images/p10_refer.png';'3';'3';12
 22;'d7df23';'question_images/p10_mix.png';'3';'3';12
-23;'29B4BC';'question_images/p8_rdt_all.png';0;0;24
-24;'29B4BC';'';0;0;30
-25;'29B4BC';'';0;0;24
-26;'29B4BC';'';0;0;30
-27;'29B4BC';'';0;0;24
+23;'29B4BC';'question_images/p8_rdt_all.png';0;0;30
+24;'29B4BC';'';0;0;24
+25;'29B4BC';'';0;0;30
+26;'29B4BC';'';0;0;24
+27;'29B4BC';'';0;0;30
 28;'29B4BC';'';0;0;24

@@ -147,5 +147,33 @@
 <string name="Question_Title_Phone">Patient telephone number</string>
 <string name="Question_Title_Not_Tested_Reminder">Refer</string>
 
-
+    <string name="Option_Text_Test_Yes">"Yes"</string>
+    <string name="Option_Text_Test_No">"No"</string>
+    <string name="Option_Text_Reason_Severe">"Severe malaria symptoms "</string>
+    <string name="Option_Text_Reason_Pregnant">"Pregnant"</string>
+    <string name="Option_Text_Reason_Refused">"Patient refused"</string>
+    <string name="Option_Text_Reason_StockOut">"RDT Stockout"</string>
+    <string name="Option_Text_Gender_Male">"Male"</string>
+    <string name="Option_Text_Gender_Female">"Female"</string>
+    <string name="Option_Text_Rdt_Negative">"Negative"</string>
+    <string name="Option_Text_Rdt_Pf">"Pf"</string>
+    <string name="Option_Text_Rdt_Pv">"Pv"</string>
+    <string name="Option_Text_Rdt_Mixed">"Pf+Pv"</string>
+    <string name="Option_Text_Rdt_Invalid">"Invalid"</string>
+    <string name="Warning_Text_Invalid">"Please re-test the patient using a new RDT. Don't forget to look at the expiration date of the RDT."</string>
+    <string name="Warning_Button_Ignore_Invalid">"Repeat RDT"</string>
+    <string name="Warning_Button_Ignore_TryAgain">"Wrong selection \n Go back"</string>
+    <string name="Option_Text_Treatment_ACT6x1">"ACT 6x1"</string>
+    <string name="Option_Text_Treatment_ACT6x2">"ACT 6x2"</string>
+    <string name="Option_Text_Treatment_ACT6x3">"ACT 6x3"</string>
+    <string name="Option_Text_Treatment_ACT6x4">"ACT 6x4"</string>
+    <string name="Option_Text_Treatment_Referred">"Refer patient because out of stock of ACTs"</string>
+    <string name="Option_Text_Treatment_Combined">"Gave patient combination of ACTs"</string>
+    <string name="Warning_Button_Refer_Reminder">"ACT dosage selected is not correct for the patient's age. Please try again.  \n Go back."</string>
+    <string name="Warning_Text_Wrong_Treatment">"ACT dosage selected is not correct for the patient's age. Please try again. "</string>
+    <string name="Warning_Text_Button_Wrong_Treatment">"OK"</string>
+    <string name="Warning_Text_Refer_Hospital">"For Pv or Pf+Pv cases, remember to give the patient correct Coartem dosage then refer to nearest public health facility."</string>
+    <string name="Warning_Button_Refer_Hospital">"OK"</string>
+    <string name="Warning_Text_Refer_Not_Tested">"Please refer the patient to the nearest public health facility."</string>
+    <string name="Warning_Button_Refer_Not_Tested">"OK"</string>
 </resources>

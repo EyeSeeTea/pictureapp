@@ -270,19 +270,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         List<Option> questionOptions = questionCounter.getAnswer().getOptions();
         if (questionOptions.get(0) != null) {
             TextCard textCard = (TextCard) rootView.findViewById(R.id.questionTextRow);
-            textCard.setText(questionOptions.get(0).getCode());
+            textCard.setText(questionOptions.get(0).getInternationalizedCode());
             textCard.setTextSize(questionOptions.get(0).getOptionAttribute().getText_size());
         }
         //Question "confirm button" is in the second option in Options.csv
         if(questionOptions.get(1)!=null) {
             TextCard confirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_yes);
-            confirmTextCard.setText(questionOptions.get(1).getCode());
+            confirmTextCard.setText(questionOptions.get(1).getInternationalizedCode());
             confirmTextCard.setTextSize(questionOptions.get(1).getOptionAttribute().getText_size());
         }
         //Question "no confirm button" is in the third option in Options.csv
         if(questionOptions.get(2)!=null) {
             TextCard noConfirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_no);
-            noConfirmTextCard.setText(questionOptions.get(2).getCode());
+            noConfirmTextCard.setText(questionOptions.get(2).getInternationalizedCode());
             noConfirmTextCard.setTextSize(questionOptions.get(2).getOptionAttribute().getText_size());
         }
 
@@ -540,7 +540,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
         if (currentOption.getOptionAttribute().hasHorizontalAlignment() && currentOption.getOptionAttribute().hasVerticalAlignment())
         {
-            textOption.setText(currentOption.getCode());
+            textOption.setText(currentOption.getInternationalizedCode());
             textOption.setGravity(currentOption.getOptionAttribute().getGravity());
         }
         else{
@@ -556,13 +556,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         swipeTouchListener.addClickableView(errorImage);
         //Add text into the button
         TextView okText = (TextView)rootView.findViewById(R.id.textcard_confirm_yes);
-        okText.setText(option.getCode());
+        okText.setText(option.getInternationalizedCode());
         okText.setTextSize(option.getOptionAttribute().getText_size());
     }
 
     private void initWarningText(View rootView, Option option) {
         TextView okText = (TextView)rootView.findViewById(R.id.questionTextRow);
-        okText.setText(option.getCode());
+        okText.setText(option.getInternationalizedCode());
         okText.setTextSize(option.getOptionAttribute().getText_size());
     }
     /**

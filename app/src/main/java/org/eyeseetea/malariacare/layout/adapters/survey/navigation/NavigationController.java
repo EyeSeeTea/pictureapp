@@ -273,11 +273,11 @@ public class NavigationController {
     }
 
     private QuestionNode findNext(Option option){
-        Log.d(TAG,String.format("findNext(%s)...",option==null?"":option.getCode()));
+        Log.d(TAG,String.format("findNext(%s)...",option==null?"":option.getInternationalizedCode()));
 
         //First movement (entering survey)
         if(isInitialMove()){
-            Log.d(TAG,String.format("findNext(%s)-> Initial movement",option==null?"":option.getCode()));
+            Log.d(TAG,String.format("findNext(%s)-> Initial movement",option==null?"":option.getInternationalizedCode()));
             return this.rootNode;
         }
 
@@ -285,12 +285,12 @@ public class NavigationController {
 
         //Survey finished -> No more questions
         if(nextNode==null){
-            Log.d(TAG,String.format("findNext(%s)-> Survey finished",option==null?"":option.getCode()));
+            Log.d(TAG,String.format("findNext(%s)-> Survey finished",option==null?"":option.getInternationalizedCode()));
             return null;
         }
 
         //Return next question
-        Log.d(TAG,String.format("findNext(%s)->%s",option==null?"":option.getCode(),nextNode.getQuestion().getCode()));
+        Log.d(TAG,String.format("findNext(%s)->%s",option==null?"":option.getInternationalizedCode(),nextNode.getQuestion().getCode()));
         return nextNode;
     }
 

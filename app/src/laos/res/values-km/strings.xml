@@ -132,4 +132,16 @@
 <string name="review_title">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>
 <string name="review_subtitle">ធ្វើការបញ្ជូន</string>
 <string name="not_tested">មិនបានសាកល្បង</string>
+
+<string name="Question_Title_RDT">"ត្រូវបានអ្នកជំងឺសាកល្បង?"</string>
+<string name="Question_Title_Reason">"ហេតុផលមិនត្រូវបានធ្វើតេស្ត"</string>
+<string name="Question_Title_Gender">"យែនឌ័រ"</string>
+<string name="Question_Title_Age">"អាយុ"</string>
+<string name="Question_Title_Result">"លទ្ធផល RDT"</string>
+<string name="Question_Title_Invalid">"លទ្ធផលមិនត្រឹមត្រូវ"</string>
+<string name="Question_Title_Wrong_Treatment">"ការព្យាបាលមិនត្រឹមត្រូវ"</string>
+<string name="Question_Title_Treatment">"ប្រភេទនៃការព្យាបាលជំងឺគ្រុនចាញ់"</string>
+<string name="Question_Title_Hospital_Reminder">"យោង"</string>
+<string name="Question_Title_Phone">"លេខទូរស័ព្ទអ្នកជម្ងឺ"</string>
+<string name="Question_Title_Not_Tested_Reminder">"យោង"</string>
 </resources>

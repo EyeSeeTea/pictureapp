@@ -134,4 +134,18 @@
 <string name="monitor_row_title_treatment">"Number of referrals (Treatment)"</string>
 <string name="monitor_row_title_rdt_testing">"Number of referrals (RDT)"</string>
 <string name="not_tested">"Not tested"</string>
+
+<string name="Question_Title_RDT">Was the patient tested?</string>
+<string name="Question_Title_Reason">Reason not tested</string>
+<string name="Question_Title_Gender">Gender</string>
+<string name="Question_Title_Age">Age</string>
+<string name="Question_Title_Result">RDT Result</string>
+<string name="Question_Title_Invalid">Invalid result</string>
+<string name="Question_Title_Wrong_Treatment">Wrong treatment</string>
+<string name="Question_Title_Treatment">Type of malaria treatment</string>
+<string name="Question_Title_Hospital_Reminder">Refer </string>
+<string name="Question_Title_Phone">Patient telephone number</string>
+<string name="Question_Title_Not_Tested_Reminder">Refer</string>
+
+
 </resources>

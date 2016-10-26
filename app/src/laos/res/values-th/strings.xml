@@ -132,4 +132,16 @@
 <string name="review_title">กรุณาตรวจสอบก่อน</string>
 <string name="review_subtitle">การส่งผ่าน</string>
 <string name="not_tested">ไม่ได้ทดสอบ</string>
+
+<string name="Question_Title_RDT">"ได้รับการทดสอบผู้ป่วย?"</string>
+<string name="Question_Title_Reason">"เหตุผลที่จะไม่ผ่านการทดสอบ?"</string>
+<string name="Question_Title_Gender">"เพศ"</string>
+<string name="Question_Title_Age">"อายุ"</string>
+<string name="Question_Title_Result">"ผล RDT"</string>
+<string name="Question_Title_Invalid">"ผลที่ไม่ถูกต้อง"</string>
+<string name="Question_Title_Wrong_Treatment">"การรักษาที่ไม่ถูกต้อง"</string>
+<string name="Question_Title_Treatment">"ประเภทของการรักษาโรคมาลาเรีย"</string>
+<string name="Question_Title_Hospital_Reminder">"อ้างถึง"</string>
+<string name="Question_Title_Phone">"หมายเลขโทรศัพท์ของผู้ป่วย"</string>
+<string name="Question_Title_Not_Tested_Reminder">"อ้างถึง"</string>
 </resources>

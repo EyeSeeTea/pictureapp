@@ -229,7 +229,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Change question x confirm message
         View rootView = view.getRootView();
         final TextCard questionView=(TextCard)rootView.findViewById(R.id.question);
-        questionView.setText(questionCounter.getForm_name());
+        questionView.setText(questionCounter.getInternationalizedForm_name());
         ((TextView) rootView.findViewById(R.id.dynamic_progress_text)).setText("");
         //cancel
         ImageView noView=(ImageView)rootView.findViewById(R.id.confirm_no);
@@ -393,7 +393,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + context.getString(R.string.specific_language_font));
         headerView.setTypeface(tf);
-        headerView.setText(question.getForm_name());
+        headerView.setText(question.getInternationalizedForm_name());
 
         //question image
         if(question.getPath()!=null && !question.getPath().equals("")) {

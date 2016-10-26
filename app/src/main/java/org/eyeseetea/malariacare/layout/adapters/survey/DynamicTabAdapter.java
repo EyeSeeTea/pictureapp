@@ -45,6 +45,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
@@ -71,6 +72,7 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBui
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.views.CustomButton;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
@@ -500,23 +502,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 break;
             case Constants.REMINDER:
             case Constants.WARNING:
+                View rootView = rowView.getRootView();
+                //Show confirm on full screen
+                rootView .findViewById(R.id.options_table).setVisibility(View.GONE);
+                rootView .findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
+                rootView.findViewById(R.id.no_container).setVisibility(View.GONE);
+
                 ((TextView) rowView.findViewById(R.id.dynamic_progress_text)).setText("");
-                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_question_text, tableLayout, false);
-                tableLayout.addView(tableRow);
                 List<Option> questionOptions = question.getAnswer().getOptions();
                 //Question "header" is in the first option in Options.csv
                 if(questionOptions!=null && questionOptions.size()>0) {
-                    initWarningText(tableRow, questionOptions.get(0));
+                    initWarningText(rootView, questionOptions.get(0));
+                }
+                //Question "button" is in the second option in Options.csv
+                if(questionOptions!=null && questionOptions.size()>1) {
+                    initWarningValue(rootView, questionOptions.get(1));
                 }
 
-                //Question "button" is in the second option in Options.csv
-                if( questionOptions!=null && questionOptions.size()>1) {
-                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_confirm_yes, tableLayout, false);
-                    tableLayout.addView(tableRow);
-                    initWarningValue(tableRow,  questionOptions.get(1));
-                    int paddingSize= (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_padding);
-                    tableRow.setPadding(paddingSize,paddingSize,paddingSize,paddingSize);
-                }
 
                 break;
             case Constants.PHONE:
@@ -547,19 +549,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
-    private void initWarningValue(TableRow tableRow, Option option) {
-        ImageView errorImage = (ImageView)tableRow.findViewById(R.id.confirm_yes);
+    private void initWarningValue(View rootView, Option option) {
+        ImageView errorImage = (ImageView)rootView.findViewById(R.id.confirm_yes);
         errorImage.setImageResource(R.drawable.option_button);
         //Add button to listener
         swipeTouchListener.addClickableView(errorImage);
         //Add text into the button
-        TextView okText = (TextView)tableRow.findViewById(R.id.textcard_confirm_yes);
+        TextView okText = (TextView)rootView.findViewById(R.id.textcard_confirm_yes);
         okText.setText(option.getCode());
         okText.setTextSize(option.getOptionAttribute().getText_size());
     }
 
-    private void initWarningText(TableRow tableRow, Option option) {
-        TextView okText = (TextView)tableRow.findViewById(R.id.questionTextRow);
+    private void initWarningText(View rootView, Option option) {
+        TextView okText = (TextView)rootView.findViewById(R.id.questionTextRow);
         okText.setText(option.getCode());
         okText.setTextSize(option.getOptionAttribute().getText_size());
     }

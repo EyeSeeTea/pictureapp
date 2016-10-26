@@ -144,4 +144,33 @@
 <string name="Question_Title_Hospital_Reminder">"យោង"</string>
 <string name="Question_Title_Phone">"លេខទូរស័ព្ទអ្នកជម្ងឺ"</string>
 <string name="Question_Title_Not_Tested_Reminder">"យោង"</string>
+
+<string name="Option_Text_Test_Yes">"ចាស"</string>
+<string name="Option_Text_Test_No">"គ្មាន"</string>
+<string name="Option_Text_Reason_Severe">"រោគសញ្ញានៃជំងឺគ្រុនចាញ់ធ្ងន់ធ្ងរ"</string>
+<string name="Option_Text_Reason_Pregnant">"មានផ្ទៃពោះ"</string>
+<string name="Option_Text_Reason_Refused">"អ្នកជម្ងឺបានបដិសេធ"</string>
+<string name="Option_Text_Reason_StockOut">"RDT Stockout"</string>
+<string name="Option_Text_Gender_Male">"បុរស"</string>
+<string name="Option_Text_Gender_Female">"ស្រី"</string>
+<string name="Option_Text_Rdt_Negative">"អវិជ្ជមាន"</string>
+<string name="Option_Text_Rdt_Pf">"Pf"</string>
+<string name="Option_Text_Rdt_Pv">"Pv"</string>
+<string name="Option_Text_Rdt_Mixed">"Pf+Pv"</string>
+<string name="Option_Text_Rdt_Invalid">"មិនត្រឹមត្រូវ"</string>
+<string name="Warning_Text_Invalid">"សូមសាកល្បងអ្នកជំងឺដោយប្រើ RDT ថ្មី។ កុំភ្លេចទៅមើលនៅកាលបរិច្ឆេទផុតកំណត់នៃ RDT នេះ។"</string>
+<string name="Warning_Button_Ignore_Invalid">"ធ្វើម្តងទៀត RDT"</string>
+<string name="Warning_Button_Ignore_TryAgain">"ការជ្រើសរើសមិនត្រឹមត្រូវ \n ត្រឡប់"</string>
+<string name="Option_Text_Treatment_ACT6x1">"ACT 6x1"</string>
+<string name="Option_Text_Treatment_ACT6x2">"ACT 6x2"</string>
+<string name="Option_Text_Treatment_ACT6x3">"ACT 6x3"</string>
+<string name="Option_Text_Treatment_ACT6x4">"ACT 6x4"</string>
+<string name="Option_Text_Treatment_Referred">"យោងអ្នកជំងឺដោយសារតែការអស់ពីស្តុកអំពើ"</string>
+<string name="Option_Text_Treatment_Combined">"បានផ្ដល់ឱ្យការរួមបញ្ចូលគ្នាអំពើអ្នកជំងឺ"</string>
+<string name="Warning_Text_Wrong_Treatment">"កិតើថាំអំពើដែលបានជ្រើសគឺមិនត្រឹមត្រូវសម្រាប់អាយុរបស់អ្នកជំងឺ។ សូម​ព្យាយាម​ម្ដងទៀត។"</string>
+<string name="Warning_Text_Button_Wrong_Treatment">"យល់ព្រម"</string>
+<string name="Warning_Text_Refer_Hospital">"សម្រាប់ករណី PV ឬ Pf + + PV, ចងចាំដើម្បីផ្តល់ឱ្យនោះអ្នកជំងឺកិត Coartem ត្រឹមត្រូវសំដៅទៅលើមូលដ្ឋានសុខាភិបាលសាធារណៈដែលនៅជិតបំផុត។"</string>
+<string name="Warning_Button_Refer_Hospital">"យល់ព្រម"</string>
+<string name="Warning_Text_Refer_Not_Tested">"សូមមើលអ្នកជំងឺទៅដល់កន្លែងសុខភាពសាធារណៈនៅជិតបំផុត។"</string>
+<string name="Warning_Button_Refer_Not_Tested">"យល់ព្រម"</string>
 </resources>

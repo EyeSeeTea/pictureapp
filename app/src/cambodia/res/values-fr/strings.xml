@@ -9,6 +9,7 @@
 <string name="settings_menu_about">"A propos de cette app"</string>
 <string name="settings_menu_configuration">"Paramètres"</string>
 <string name="settings_menu_licence">"License"</string>
+<string name="settings_select_language">"Choisir la langue"</string>
 <string name="dialog_title_delete_surveys">"Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?"</string>
 <string name="dialog_title_delete_survey">"Supprimer envoyés"</string>
 <string name="dialog_info_delete_survey">"Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?"</string>

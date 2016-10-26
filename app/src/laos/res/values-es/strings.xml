@@ -100,6 +100,7 @@
 <string name="settings_menu_legal">"Legal"</string>
 <string name="settings_menu_copyright">"Copyright"</string>
 <string name="settings_menu_licenses">"Licencias de software"</string>
+<string name="settings_select_language">"Seleccione idioma"</string>
 <string name="settings_menu_eula">"EULA"</string>
 <string name="monitor_row_title_day">"Día"</string>
 <string name="monitor_row_title_month">"Mes"</string>

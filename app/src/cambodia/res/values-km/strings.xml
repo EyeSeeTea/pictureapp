@@ -33,6 +33,7 @@
 <string name="settings_checkbox_customize_fonts">"ប្តូរពុម្ពអក្សរ?"</string>
 <string name="settings_list_font_sizes">"ទំហំពុម្ពអក្សរ"</string>
 <string name="settings_text_dhis_server_url">"DHIS Server URL"</string>
+<string name="settings_select_language">"ជ្រើសរើស​ភាសា"</string>
 <string name="pref_header_general">"General"</string>
 <string name="font_size_level0">"xsmall"</string>
 <string name="font_size_level1">"small"</string>

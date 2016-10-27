@@ -175,7 +175,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.dhis_url)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
 
-        //Hide developer option if is not active in the json
+        //Hide translation option if is not active in gradle variable
         if(!BuildConfig.translations)
             getPreferenceScreen().removePreference(getPreferenceScreen().findPreference(getResources().getString(R.string.language_code)));
 
@@ -576,6 +576,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
 
+
+            if(BuildConfig.translations)
+                setLanguageOptions(findPreference(PreferencesState.getInstance().getContext().getString(R.string.language_code)));
+
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
@@ -584,10 +588,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference(getString(R.string.language_code)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
-            if(BuildConfig.translations)
-                setLanguageOptions(findPreference(PreferencesState.getInstance().getContext().getString(R.string.language_code)));
 
-            //Hide developer option if is not active in the json
+            //Hide translation option if is not active in gradle variable
             if(!BuildConfig.translations)
                 getPreferenceScreen().removePreference(getPreferenceScreen().findPreference(getResources().getString(R.string.language_code)));
             SettingsActivity settingsActivity = (SettingsActivity) getActivity();

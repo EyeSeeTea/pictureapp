@@ -31,7 +31,7 @@
 <string name="settings_checkbox_customize_fonts">"¿Personalizar fuentes?"</string>
 <string name="settings_list_font_sizes">"Tamaño de fuentes"</string>
 <string name="settings_text_dhis_server_url">"URL de servidor DHIS"</string>
-<string name="settings_select_language">"Seleccione idioma"</string>
+<string name="settings_select_language">"Idioma"</string>
 <string name="pref_header_general">"General"</string>
 <string name="font_size_level0">"xsmall"</string>
 <string name="font_size_level1">"small"</string>
@@ -121,4 +121,5 @@
 <string name="font_size_level4_title">"Extra grande"</string>
 <string name="option_counter">"Repeticiones: "</string>
 <string name="option_confirm">"Confirmar opción"</string>
+<string name="system_defined">"sistema definido"</string>
 </resources>

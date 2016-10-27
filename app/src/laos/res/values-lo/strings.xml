@@ -37,7 +37,7 @@
 <string name="settings_checkbox_customize_fonts">"ຂະໜາດຕົວອັກສອນ"</string>
 <string name="settings_list_font_sizes">"ຂະໜາດຕົວອັກສອນ"</string>
 <string name="settings_text_dhis_server_url">"DHIS Server URL"</string>
-<string name="settings_select_language">"ເລືອກພາສາ"</string>
+<string name="settings_select_language">"ພາສາ"</string>
 <string name="pref_header_general">"ທົ່ວໄປ"</string>
 <string name="font_size_level0">"ນ້ອຍສຸດ"</string>
 <string name="font_size_level1">"ນ້ອຍ"</string>
@@ -146,4 +146,5 @@
 <string name="monitor_row_title_treatment">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການປິ່ນປົວ"</string>
 <string name="monitor_row_title_rdt_testing">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການກວດເລືອດດ້ວຍ RDT"</string>
 <string name="not_tested">"ບໍ່ໄດ້ກວດເລືອດ"</string>
+<string name="system_defined">"ລະບົບກໍານົດໄວ້"</string>
 </resources>

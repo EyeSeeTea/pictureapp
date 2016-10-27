@@ -32,7 +32,7 @@
 <string name="settings_checkbox_customize_fonts">"Customize font?"</string>
 <string name="settings_list_font_sizes">"Font size"</string>
 <string name="settings_text_dhis_server_url">"DHIS Server URL"</string>
-<string name="settings_select_language">"Select language"</string>
+<string name="settings_select_language">"Language"</string>
 <string name="pref_header_general">"General"</string>
 <string name="font_size_level0">"xsmall"</string>
 <string name="font_size_level1">"small"</string>
@@ -135,4 +135,5 @@
 <string name="monitor_row_title_treatment">"Number of referrals (Treatment)"</string>
 <string name="monitor_row_title_rdt_testing">"Number of referrals (RDT)"</string>
 <string name="not_tested">"Not tested"</string>
+<string name="system_defined">System defined</string>
 </resources>

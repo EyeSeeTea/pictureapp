@@ -31,7 +31,7 @@
 <string name="settings_checkbox_customize_fonts">"ប្តូរពុម្ពអក្សរ?"</string>
 <string name="settings_list_font_sizes">"ទំហំពុម្ពអក្សរ"</string>
 <string name="settings_text_dhis_server_url">"DHIS Server URL"</string>
-<string name="settings_select_language">"ជ្រើសរើស​ភាសា"</string>
+<string name="settings_select_language">"ភាសា"</string>
 <string name="pref_header_general">"General"</string>
 <string name="font_size_level0">"xsmall"</string>
 <string name="font_size_level1">"small"</string>
@@ -133,4 +133,5 @@
 <string name="review_title">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>
 <string name="review_subtitle">ធ្វើការបញ្ជូន</string>
 <string name="not_tested">មិនបានសាកល្បង</string>
+<string name="system_defined">"ដែលបានកំណត់ប្រព័ន្ធ"</string>
 </resources>

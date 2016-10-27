@@ -27,6 +27,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,15 +41,15 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
-import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
@@ -64,7 +65,9 @@ import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -114,6 +117,13 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     protected void onCreate(Bundle savedInstanceState) {
         Dhis2Application.bus.register(this);
         super.onCreate(savedInstanceState);
+        PreferencesState.getInstance().loadsLanguageInActivity();
+    }
+
+    private void restartActivity() {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
     @Override
@@ -155,12 +165,20 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
 
+
+        if(BuildConfig.translations)
+            setLanguageOptions(getWindowManager(),findPreference(getApplicationContext().getString(R.string.language_code)));
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.font_sizes)));
+        bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.language_code)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.dhis_url)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
+
+        //Hide developer option if is not active in the json
+        if(!BuildConfig.translations)
+            getPreferenceScreen().removePreference(getPreferenceScreen().findPreference(getResources().getString(R.string.language_code)));
 
         // Set the ClickListener to the android:key"remove_sent_surveys" preference.
 
@@ -541,6 +559,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.language_code))) {
+            restartActivity();
+        }
 
     }
 
@@ -561,6 +582,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.font_sizes)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.language_code)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
 
@@ -625,6 +647,33 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
     }
 
+    /**
+     * Sets the application languages and populate the language in the preference
+     *
+     */
+    private static void setLanguageOptions(WindowManager windowManager, Preference preference) {
+        ListPreference listPreference = (ListPreference) preference;
+
+        HashMap<String, String> languages = getAppLanguages(windowManager, R.string.system_defined);
+
+        CharSequence[] newEntries=new CharSequence[languages.size()+1];
+        CharSequence[] newValues=new CharSequence[languages.size()+1];
+        int i=0;
+        newEntries[i]=PreferencesState.getInstance().getContext().getString(R.string.system_defined);
+        newValues[i]="";
+        for(String currentKey : languages.keySet()){
+            i++;
+            String language = languages.get(currentKey);
+            String firstLetter= language.substring(0,1).toUpperCase();
+            language = firstLetter + language.substring(1,language.length());
+            newEntries[i] = language;
+            newValues[i] = currentKey;
+        }
+
+        listPreference.setEntries(newEntries);
+        listPreference.setEntryValues(newValues);
+    }
+
     //asks the user whether to delete the surveys sent
     private static void askRemoveSentSurveys(final Activity activity) {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -645,6 +694,36 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 .setNegativeButton(R.string.no, dialogClickListener).show();
     }
 
+
+    /**
+     * This method finds the existing app translations
+     * @param windowManager
+     * @param stringId this string id should be different in all value-xx/string.xml files. Else the language can be ignored
+     */
+    public static  HashMap<String, String> getAppLanguages(WindowManager windowManager, int stringId) {
+        HashMap<String, String> languages= new HashMap<>();
+        Context context = PreferencesState.getInstance().getContext();
+        DisplayMetrics metrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(metrics);
+        Resources r = context.getResources();
+        Configuration c = r.getConfiguration();
+        String[] loc = r.getAssets().getLocales();
+        for (int i = 0; i < loc.length; i++) {
+            c.locale = new Locale(loc[i]);
+            Resources res = new Resources(context.getAssets(), metrics, c);
+            String s1 = res.getString(stringId);
+            String language = c.locale.getDisplayLanguage();
+            c.locale = new Locale("");
+            Resources res2 = new Resources(context.getAssets(), metrics, c);
+            String s2 = res2.getString(stringId);
+
+            //Compare with the default language
+            if(!s1.equals(s2)){
+                languages.put(loc[i], language);
+            }
+        }
+        return languages;
+    }
 
     private static void removeSentSurveys(Activity activity) {
         Intent surveysIntent=new Intent(activity, SurveyService.class);

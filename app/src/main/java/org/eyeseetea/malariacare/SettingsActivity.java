@@ -43,7 +43,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.squareup.okhttp.HttpUrl;
@@ -167,7 +166,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
 
         if(BuildConfig.translations)
-            setLanguageOptions(getWindowManager(),findPreference(getApplicationContext().getString(R.string.language_code)));
+            setLanguageOptions(findPreference(getApplicationContext().getString(R.string.language_code)));
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
@@ -585,7 +584,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference(getString(R.string.language_code)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
+            if(BuildConfig.translations)
+                setLanguageOptions(findPreference(PreferencesState.getInstance().getContext().getString(R.string.language_code)));
 
+            //Hide developer option if is not active in the json
+            if(!BuildConfig.translations)
+                getPreferenceScreen().removePreference(getPreferenceScreen().findPreference(getResources().getString(R.string.language_code)));
             SettingsActivity settingsActivity = (SettingsActivity) getActivity();
             AutoCompleteEditTextPreference autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
             autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, true));
@@ -651,10 +655,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * Sets the application languages and populate the language in the preference
      *
      */
-    private static void setLanguageOptions(WindowManager windowManager, Preference preference) {
+    private static void setLanguageOptions(Preference preference) {
         ListPreference listPreference = (ListPreference) preference;
 
-        HashMap<String, String> languages = getAppLanguages(windowManager, R.string.system_defined);
+        HashMap<String, String> languages = getAppLanguages(R.string.system_defined);
 
         CharSequence[] newEntries=new CharSequence[languages.size()+1];
         CharSequence[] newValues=new CharSequence[languages.size()+1];
@@ -697,14 +701,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     /**
      * This method finds the existing app translations
-     * @param windowManager
-     * @param stringId this string id should be different in all value-xx/string.xml files. Else the language can be ignored
+     * * @param stringId this string id should be different in all value-xx/string.xml files. Else the language can be ignored
      */
-    public static  HashMap<String, String> getAppLanguages(WindowManager windowManager, int stringId) {
+    public static  HashMap<String, String> getAppLanguages(int stringId) {
         HashMap<String, String> languages= new HashMap<>();
         Context context = PreferencesState.getInstance().getContext();
-        DisplayMetrics metrics = new DisplayMetrics();
-        windowManager.getDefaultDisplay().getMetrics(metrics);
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         Resources r = context.getResources();
         Configuration c = r.getConfiguration();
         String[] loc = r.getAssets().getLocales();

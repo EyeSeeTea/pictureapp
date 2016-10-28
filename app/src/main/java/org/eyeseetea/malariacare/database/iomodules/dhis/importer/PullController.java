@@ -51,6 +51,7 @@ import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 import org.hisp.dhis.android.sdk.utils.api.ProgramType;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,7 +60,7 @@ import java.util.List;
  */
 public class PullController {
     public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
-    public static final int NUMBER_OF_MONTHS=6;
+    public static final int NUMBER_OF_MONTHS=0;
     private final String TAG = ".PullController";
 
     private static PullController instance;
@@ -126,10 +127,14 @@ public class PullController {
             enableMetaDataFlags();
             //Delete previous metadata
             TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
-            if(NUMBER_OF_MONTHS>0) {
-                Calendar month = Calendar.getInstance();
-                month.add(Calendar.MONTH, -NUMBER_OF_MONTHS);
-                TrackerController.setStartDate(EventExtended.format(month.getTime(), EventExtended.AMERICAN_DATE_FORMAT));
+            String selectedDateLimit=PreferencesState.getInstance().getDataLimitedByDate();
+            //Pull No data is selected
+            if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
+                return;
+            }
+            //Limit of data by date is selected
+            if(!selectedDateLimit.equals("")) {
+                TrackerController.setStartDate(EventExtended.format(realDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
             }
             MetaDataController.clearMetaDataLoadedFlags();
             MetaDataController.wipe();
@@ -150,6 +155,23 @@ public class PullController {
             unregister();
             postException(ex);
         }
+    }
+
+    /**
+     * Returns the correct data from the limited date in shared preferences
+     * @param selectedDateLimit
+     */
+    private Date realDateFromString(String selectedDateLimit) {
+        Calendar day = Calendar.getInstance();
+        if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_days))){
+                day.add(Calendar.DAY_OF_YEAR, -6);
+        } else if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_weeks))){
+            day.add(Calendar.WEEK_OF_YEAR, -6);
+        }else if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_months))){
+            day.add(Calendar.MONTH, -6);
+        }
+        Log.d(TAG, "day"+day.toString());
+        return day.getTime();
     }
 
     /**

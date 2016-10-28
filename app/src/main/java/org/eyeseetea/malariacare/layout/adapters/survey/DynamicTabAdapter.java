@@ -262,7 +262,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Show question image in counter alert
         if(questionCounter.getPath()!=null && !questionCounter.getPath().equals("")) {
             ImageView imageView=(ImageView) rootView.findViewById(R.id.questionImageRow);
-            putImageInImageView(questionCounter.getPath(), imageView);
+            putImageInImageView(questionCounter.getInternationalizedPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
         }
 
@@ -400,7 +400,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //question image
         if(question.getPath()!=null && !question.getPath().equals("")) {
             ImageView imageView=(ImageView) rowView.findViewById(R.id.questionImage);
-            putImageInImageView(question.getPath(), imageView);
+            putImageInImageView(question.getInternationalizedPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
         }
 
@@ -864,7 +864,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //the button is a framelayout that contains a imageview
         ImageView imageView= (ImageView) button.getChildAt(0);
         //Put image
-        putImageInImageView(option.getPath(), imageView);
+        putImageInImageView(option.getInternationalizedPath(), imageView);
         //Associate option
         button.setTag(option);
 

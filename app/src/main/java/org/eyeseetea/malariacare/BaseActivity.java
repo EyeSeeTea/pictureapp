@@ -52,6 +52,7 @@ import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.layout.StyleUtils;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -99,23 +100,10 @@ public abstract class BaseActivity extends ActionBarActivity {
     private void initView(Bundle savedInstanceState){
         setTheme(R.style.EyeSeeTheme);
         android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
-        LayoutUtils.setActionBarLogo(actionBar);
+        StyleUtils.setActionBar(actionBar);
 
         if (savedInstanceState == null){
             initTransition();
-        }
-    }
-
-    /**
-     * Adds actionbar to the activity
-     */
-    public void createActionBar(){
-        Program program = Program.getFirstProgram();
-
-        if (program != null) {
-            android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
-            LayoutUtils.setActionBarLogo(actionBar);
-            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), this.getResources().getString(R.string.app_name));
         }
     }
 

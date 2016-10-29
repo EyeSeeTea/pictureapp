@@ -3,6 +3,10 @@
     <color name="questionHeaderColor">#b4d550</color>
     <color name="questionHeaderTextColor">#207a3c</color>
     <color name="questionLayoutBackground">#14b2be</color>
-    <color name="dynamicProgressBarColor">#f78f38</color>
+    <color name="dynamicProgressBarColor">#85ce26</color>
+    <color name="TextFirstColor">#3a1e6d</color>
+    <color name="TextSecondColor">@color/white</color>
     <color name="intColor">#FFFFFF</color>
+    <color name="actionbar_background">#85ce26</color>
+
 </resources>

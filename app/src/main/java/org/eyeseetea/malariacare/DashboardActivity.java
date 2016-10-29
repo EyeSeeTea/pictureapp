@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.TabHost;
@@ -54,6 +55,7 @@ import java.io.IOException;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabWidget;
+import android.widget.TextView;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -94,8 +96,6 @@ public class DashboardActivity extends BaseActivity {
 
         AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
         asyncPopulateDB.execute((Void) null);
-
-        createActionBar();
         dashboardActivity=this;
         setContentView(R.layout.tab_dashboard);
         Survey.removeInProgress();
@@ -159,8 +159,6 @@ public class DashboardActivity extends BaseActivity {
             tabHost.getTabWidget().getChildAt(i).setBackgroundColor(getResources().getColor(color));
         }
     }
-
-
     /**
      * Init the conteiner for all the tabs
      */

@@ -20,11 +20,16 @@
 package org.eyeseetea.malariacare.layout.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -32,10 +37,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -75,6 +84,28 @@ public class LayoutUtils {
                 result = result + 1;
 
         return result;
+    }
+
+
+    public static void setActionBarAppAndUser(ActionBar actionBar) {
+        actionBar.setDisplayShowCustomEnabled(true);
+        Context context = PreferencesState.getInstance().getContext();
+        int color = ContextCompat.getColor(context, R.color.TextFirstColor);
+        String colorString = String.format("%X", color).substring(2);
+        Spanned spannedTitle = Html.fromHtml(String.format("<font color=\"#%s\" size=\"10\"><b>%s</b></font>", colorString , context.getString(R.string.app_name)));
+        color = ContextCompat.getColor(context, R.color.TextSecondColor);
+        colorString = String.format("%X", color).substring(2);
+        Spanned spannedSubTitle = Html.fromHtml(String.format("<font color=\"#%s\"><b>%s</b></font>", colorString , "Volunteer: "+ User.getLoggedUser().getName()+""));
+        actionBar.setCustomView(R.layout.custom_action_bar);
+        TextView title =(TextView) actionBar.getCustomView().findViewById(R.id.action_bar_multititle_title);
+        title.setText(spannedTitle);
+        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" +  context.getString(R.string.light_font));
+        title.setTypeface(tf);
+        TextView subtitle =(TextView) actionBar.getCustomView().findViewById(R.id.action_bar_multititle_subtitle);
+        subtitle.setText(spannedSubTitle);
+         tf = Typeface.createFromAsset(context.getAssets(), "fonts/" +  context.getString(R.string.light_font));
+        subtitle.setTypeface(tf);
+
     }
 
     // Used to setup the usual actionbar with the logo and the app name

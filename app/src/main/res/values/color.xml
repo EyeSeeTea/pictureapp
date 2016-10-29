@@ -18,4 +18,7 @@
     <color name="tab_blue_improve">#00b3e3</color>
 
     <color name="custom_background_grey">#3e3e3f</color>
+    <color name="actionbar_background">@color/navy_blue</color>
+    <color name="text_first_color">@color/black</color>
+    <color name="text_secondary_color">@color/white</color>
 </resources>

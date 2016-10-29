@@ -90,10 +90,10 @@ public class LayoutUtils {
     public static void setActionBarAppAndUser(ActionBar actionBar) {
         actionBar.setDisplayShowCustomEnabled(true);
         Context context = PreferencesState.getInstance().getContext();
-        int color = ContextCompat.getColor(context, R.color.TextFirstColor);
+        int color = ContextCompat.getColor(context, R.color.text_first_color);
         String colorString = String.format("%X", color).substring(2);
         Spanned spannedTitle = Html.fromHtml(String.format("<font color=\"#%s\" size=\"10\"><b>%s</b></font>", colorString , context.getString(R.string.app_name)));
-        color = ContextCompat.getColor(context, R.color.TextSecondColor);
+        color = ContextCompat.getColor(context, R.color.text_first_color);
         colorString = String.format("%X", color).substring(2);
         Spanned spannedSubTitle = Html.fromHtml(String.format("<font color=\"#%s\"><b>%s</b></font>", colorString , "Volunteer: "+ User.getLoggedUser().getName()+""));
         actionBar.setCustomView(R.layout.custom_action_bar);

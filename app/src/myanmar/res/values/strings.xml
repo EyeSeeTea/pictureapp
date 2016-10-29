@@ -132,6 +132,7 @@
 <string name="review_title">Please check before</string>
 <string name="review_subtitle">Transmission</string>
 <string name="not_tested">Not tested</string>
+<string name="no_data">no data</string>
 <string name="last_6_days">last 6 days</string>
 <string name="last_6_weeks">last 6 weeks</string>
 <string name="last_6_months">last 6 months</string>

@@ -145,6 +145,7 @@
 <string name="monitor_row_title_treatment">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການປິ່ນປົວ"</string>
 <string name="monitor_row_title_rdt_testing">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການກວດເລືອດດ້ວຍ RDT"</string>
 <string name="not_tested">"ບໍ່ໄດ້ກວດເລືອດ"</string>
+<string name="no_data">ບໍ່​ມີ​ຂໍ້​ມູນ</string>
 <string name="last_6_days">6 ວັນ</string>
 <string name="last_6_weeks">ທີ່ຜ່ານມາ 6 ອາທິດ</string>
 <string name="last_6_months">ສຸດທ້າຍ 6 ເດືອນທີ່</string>

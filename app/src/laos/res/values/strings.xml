@@ -134,6 +134,7 @@
 <string name="monitor_row_title_treatment">"Number of referrals (Treatment)"</string>
 <string name="monitor_row_title_rdt_testing">"Number of referrals (RDT)"</string>
 <string name="not_tested">"Not tested"</string>
+<string name="no_data">no data</string>
 <string name="last_6_days">last 6 days</string>
 <string name="last_6_weeks">last 6 weeks</string>
 <string name="last_6_months">last 6 months</string>

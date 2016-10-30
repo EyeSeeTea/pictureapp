@@ -5,7 +5,7 @@
 1. [Introdução](#intro)
 2. [Levantamento de requisitos](#elicitation)
 4. [Especificação de requisitos](#specification)
-    1. [Features](#features)
+    1. [Características](#features)
     2. [Casos de utilizacao](#usecases)
     3. [Modelo de dominio](#domainmodel)
 4. [Contribuidores](#contributors)
@@ -32,9 +32,20 @@ O SRS, software requirements specification, é um documento que descreve o siste
 
 
 
-###**Features** <a name="features"></a>
+###**Características** <a name="features"></a>
 
-Relativamente a requisitos não funcionais neste aplicação, como já foi dito anteriormente, a aplicação foi desenvolvida para ser user-friendly e não exigir grande conhecimento de tecnologia por parte do utilizador.
+    -Funcionais:
+    1. Efetuar login no servidor ao iniciar a aplicação.
+    2. Preencher formulário com os valores obtidos no mRDT teste e submeter para o servidor.
+    3. Visualizar os formulários enviados, por enviar e as estatísticas totais.
+    
+    -Não funcionais:
+    1. Open Source.
+    2. Interface simples e amigável.
+    3. Modo offline.
+    4. Idioma da região.
+    5. Compatível com API versão 15+.
+    6. Atualização automática na ligação à internet.
 
 
 

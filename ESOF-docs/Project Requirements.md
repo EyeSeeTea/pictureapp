@@ -51,13 +51,13 @@ O SRS, software requirements specification, é um documento que descreve o siste
 
 ###**Casos de utilização** <a name="usecases"></a>
 
-ACRESCENTAR CASOS DE UTILIZACAO
+![usecase](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/UseCaseDiagram.png?raw=true)
 
 
 
 ###**Modelo de dominio** <a name="domainmodel"></a>
 
-ACRESCENTAR DOMAIN MODEL
+![domainmodel](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/DomainModel.png?raw=true)
 
 
 ****

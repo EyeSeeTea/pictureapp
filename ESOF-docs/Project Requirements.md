@@ -55,7 +55,7 @@ O SRS, software requirements specification, é um documento que descreve o siste
 
 
 
-###**Modelo de dominio** <a name="domainmodel"></a>
+###**Modelo de domínio** <a name="domainmodel"></a>
 
 ![domainmodel](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/DomainModel.png?raw=true)
 

@@ -34,18 +34,18 @@ O SRS, software requirements specification, é um documento que descreve o siste
 
 ###**Características** <a name="features"></a>
 
-    -Funcionais:
-    1. Efetuar login no servidor ao iniciar a aplicação.
-    2. Preencher formulário com os valores obtidos no mRDT teste e submeter para o servidor.
-    3. Visualizar os formulários enviados, por enviar e as estatísticas totais.
+-Funcionais:
+1. Efetuar login no servidor ao iniciar a aplicação.
+2. Preencher formulário com os valores obtidos no mRDT teste e submeter para o servidor.
+3. Visualizar os formulários enviados, por enviar e as estatísticas totais.
     
-    -Não funcionais:
-    1. Open Source.
-    2. Interface simples e amigável.
-    3. Modo offline.
-    4. Idioma da região.
-    5. Compatível com API versão 15+.
-    6. Atualização automática na ligação à internet.
+-Não funcionais:
+1. Open Source.
+2. Interface simples e amigável.
+3. Modo offline.
+4. Idioma da região.
+5. Compatível com API versão 15+.
+6. Atualização automática na ligação à internet.
 
 
 

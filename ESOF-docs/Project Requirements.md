@@ -44,7 +44,7 @@ O SRS, software requirements specification, é um documento que descreve o siste
 2. Interface simples e amigável.
 3. Modo offline.
 4. Idioma da região.
-5. Compatível com API versão 15+.
+5. Compatível com SDK API versão 15+.
 6. Atualização automática na ligação à internet.
 
 

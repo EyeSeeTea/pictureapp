@@ -25,7 +25,7 @@ Relativamente à aplicação QIS Malaria Case Surveillance, não encontramos nen
 
 
 ****
-##**Contributors**<a name="contributors"></a>
+##**Contribuidores**<a name="contributors"></a>
 
 * [Inês Ferreira](https://github.com/inesferreira7)
 * [João Gomes](https://github.com/joaogomes04)

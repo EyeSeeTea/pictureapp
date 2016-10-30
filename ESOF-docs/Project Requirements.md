@@ -4,10 +4,10 @@
 
 1. [Introdução](#intro)
 2. [Levantamento de requisitos](#elicitation)
-3. [Especificação de requisitos](#specification)
-  1.[Features](#features)
-  2.[Casos de utilizacao](#usecases)
-  3.[Modelo de dominio](#domainmodel)
+4. [Especificação de requisitos](#specification)
+    1. [Features](#features)
+    2. [Casos de utilizacao](#usecases)
+    3. [Modelo de dominio](#domainmodel)
 4. [Contribuidores](#contributors)
 
 
@@ -24,8 +24,6 @@ Antes de continuar, queremos acrescentar que voltamos a contactar os contribuido
 
 Relativamente à aplicação QIS Malaria Case Surveillance, não encontramos nenhuma informação clara relativamente a requisitos. No entanto, sabemos que tinha como objetivo ser utilizada por profissionais de saúde para detetar casos de malária no Cambodja e que, por este motivo, a desenharam para ser user-friendly e exigir pouco ou mesmo nenhum conhecimento de tecnologia.
 
-
-****
 
 ****
 ##**Especificação de requisitos** <a name ="specification"></a>

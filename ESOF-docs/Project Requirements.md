@@ -17,12 +17,9 @@ Antes de continuar, queremos acrescentar que voltamos a contactar os contribuido
 
 
 ****
-##**QIS Malaria Case Surveillance** <a name ="malaria"></a>
-The **QIS Malaria Case Surveillance** is an open-source mobile application designed to report positive cases of malaria detected throughout Cambodia in near real-time.
+##**Levantamento de requisitos** <a name ="elicitatiom"></a>
 
-This application is intended to be used by healthcare providers in the field after they have conducted an mRDT (Malaria rapid diagnostic tests).
-
-The application is based on the [QoCapplication](https://github.com/EyeSeeTea/malariapp) which allows to issue automatic generated surveys and retrieve and push information to a wide range of platform such as DHIS2 servers.
+Relativamente à aplicação QIS Malaria Case Surveillance, sabemos que tinha como objetivo ser utilizada por profissionais de saúde para detetar casos de malária no Cambodja. Sabemos também que a desenharam para ser user-friendly e exigir pouco ou mesmo nenhum conhecimento de tecnologia.
 
 
 ***

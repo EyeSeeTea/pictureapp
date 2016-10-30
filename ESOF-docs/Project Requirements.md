@@ -6,8 +6,8 @@
 2. [Levantamento de requisitos](#elicitation)
 4. [Especificação de requisitos](#specification)
     1. [Características](#features)
-    2. [Casos de utilizacao](#usecases)
-    3. [Modelo de dominio](#domainmodel)
+    2. [Casos de utilização](#usecases)
+    3. [Modelo de domínio](#domainmodel)
 4. [Contribuidores](#contributors)
 
 

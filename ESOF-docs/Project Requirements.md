@@ -28,7 +28,7 @@ Relativamente à aplicação QIS Malaria Case Surveillance, não encontramos nen
 ****
 ##**Especificação de requisitos** <a name ="specification"></a>
 
-O SRS, software requirements specification, é um documento que descreve o sistema a ser desenvolvido, estabelecendo requisitos funcionais e não funcionais. Os requisitos funcionais especificam determinado comportamento função, sendo definidos na forma de "O sistema deve fazer <requisito>, enquanto que os requisitos não funcionais especificam critérios para determinar a qualidade do sistema, sendo estes definidos como "O sistema deve ser <requisito>. Deve incluir um conjunto de casos de utilização que descrevem a interação dos utilizadores com o sistema.
+O SRS, software requirements specification, é um documento que descreve o sistema a ser desenvolvido, estabelecendo requisitos funcionais e não funcionais. Os requisitos funcionais especificam determinado comportamento função, sendo definidos na forma de "O sistema deve fazer "<"requisito, enquanto que os requisitos não funcionais especificam critérios para determinar a qualidade do sistema, sendo estes definidos como "O sistema deve ser . Deve incluir um conjunto de casos de utilização que descrevem a interação dos utilizadores com o sistema.
 
 
 

@@ -28,7 +28,11 @@ Relativamente à aplicação QIS Malaria Case Surveillance, não encontramos nen
 ****
 ##**Especificação de requisitos** <a name ="specification"></a>
 
-O SRS, software requirements specification, é um documento que descreve o sistema a ser desenvolvido, estabelecendo requisitos funcionais e não funcionais. Os requisitos funcionais especificam determinado comportamento função, sendo definidos na forma de "O sistema deve fazer -requisito-, enquanto que os requisitos não funcionais especificam critérios para determinar a qualidade do sistema, sendo estes definidos como "O sistema deve ser -requisito-. Deve incluir um conjunto de casos de utilização que descrevem a interação dos utilizadores com o sistema.
+O SRS, software requirements specification, é um documento que descreve o sistema a ser desenvolvido, estabelecendo requisitos funcionais e não funcionais. Os requisitos funcionais especificam determinado comportamento função, sendo definidos na forma de "O sistema deve fazer -requisito-, enquanto que os requisitos não funcionais especificam critérios para determinar a qualidade do sistema, sendo estes definidos como "O sistema deve ser -requisito-. 
+
+Este processo permite uma melhor avaliação dos requisitos antes do design, evitando também um redesign mais tarde. Possibilita também uma estimativa mais realística de custos, riscos e prazos.
+
+Deve incluir um conjunto de casos de utilização que descrevem a interação dos utilizadores com o sistema.
 
 
 
@@ -49,15 +53,19 @@ O SRS, software requirements specification, é um documento que descreve o siste
 
 
 
+
 ###**Casos de utilização** <a name="usecases"></a>
 
 ![usecase](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/UseCaseDiagram.png?raw=true)
 
 
 
+
 ###**Modelo de domínio** <a name="domainmodel"></a>
 
 ![domainmodel](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/DomainModel.png?raw=true)
+
+
 
 
 ****

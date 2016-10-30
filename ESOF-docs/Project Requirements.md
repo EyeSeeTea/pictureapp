@@ -53,7 +53,6 @@ Deve incluir um conjunto de casos de utilização que descrevem a interação do
 
 
 
-
 ###**Casos de utilização** <a name="usecases"></a>
 
 ![usecase](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/UseCaseDiagram.png?raw=true)

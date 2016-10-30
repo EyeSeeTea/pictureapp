@@ -36,7 +36,7 @@ Deve incluir um conjunto de casos de utilização que descrevem a interação do
 
 
 
-###**Características** <a name="features"></a>
+###**Requisitos** <a name="features"></a>
 
 ####**Funcionais:**
 1. Efetuar login no servidor ao iniciar a aplicação.

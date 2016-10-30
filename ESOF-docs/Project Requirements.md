@@ -19,7 +19,7 @@ Antes de continuar, queremos acrescentar que voltamos a contactar os contribuido
 ****
 ##**Levantamento de requisitos** <a name ="elicitatiom"></a>
 
-Relativamente à aplicação QIS Malaria Case Surveillance, sabemos que tinha como objetivo ser utilizada por profissionais de saúde para detetar casos de malária no Cambodja. Sabemos também que a desenharam para ser user-friendly e exigir pouco ou mesmo nenhum conhecimento de tecnologia.
+Relativamente à aplicação QIS Malaria Case Surveillance, não encontramos nenhuma informação clara relativamente a requisitos. No entanto, sabemos que tinha como objetivo ser utilizada por profissionais de saúde para detetar casos de malária no Cambodja e que, por este motivo, a desenharam para ser user-friendly e exigir pouco ou mesmo nenhum conhecimento de tecnologia.
 
 
 ***

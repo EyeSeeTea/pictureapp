@@ -132,4 +132,6 @@
 <string name="review_title">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>
 <string name="review_subtitle">ធ្វើការបញ្ជូន</string>
 <string name="not_tested">មិនបានសាកល្បង</string>
+    <string name="assessment_past_cases">PAST CASES</string>
+    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
 </resources>

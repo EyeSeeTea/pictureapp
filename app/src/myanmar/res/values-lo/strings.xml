@@ -141,4 +141,6 @@
 <string name="review_title">"ກະລຸນາກວດສອບກ່ອນທີ່ຈະ"</string>
 <string name="review_subtitle">"ລະບົບສາຍສົ່ງ"</string>
 <string name="not_tested">ບໍ່ໄດ້ທົດສອບ</string>
+    <string name="assessment_past_cases">PAST CASES</string>
+    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
 </resources>

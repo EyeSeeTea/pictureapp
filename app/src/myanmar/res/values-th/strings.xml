@@ -132,4 +132,6 @@
 <string name="review_title">กรุณาตรวจสอบก่อน</string>
 <string name="review_subtitle">การส่งผ่าน</string>
 <string name="not_tested">ไม่ได้ทดสอบ</string>
+    <string name="assessment_past_cases">PAST CASES</string>
+    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
 </resources>

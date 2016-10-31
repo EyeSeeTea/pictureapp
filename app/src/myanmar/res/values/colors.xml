@@ -2,11 +2,17 @@
 <resources>
     <color name="questionHeaderColor">#b4d550</color>
     <color name="questionHeaderTextColor">#207a3c</color>
-    <color name="questionLayoutBackground">#14b2be</color>
-    <color name="dynamicProgressBarColor">#85ce26</color>
-    <color name="text_first_color">#3a1e6d</color>
+    <color name="questionLayoutBackground">#c9b8c8</color>
+    <color name="dynamicProgressBarColor">#878787</color>
+    <color name="text_first_color">@color/dark_violet</color>
     <color name="text_second_color">@color/white</color>
     <color name="intColor">#FFFFFF</color>
-    <color name="actionbar_background">#85ce26</color>
+    <color name="actionbar_background">#878787</color>
+    <color name="general_background">@color/light_violet</color>
+    <color name="tab_pressed_background">#c9b8c8</color>
+    <color name="tab_unpressed_background">#4d3b4c</color>
 
+    <color name="main_window_background">@color/medium_violet</color>
+    <color name="headerColor">@color/light_violet</color>
+    <color name="fragment_header_text">@color/text_first_color</color>
 </resources>

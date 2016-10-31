@@ -17,4 +17,7 @@ public class StyleUtils {
     public static void setActionBar(android.support.v7.app.ActionBar actionBar){
         LayoutUtils.setActionBarLogo(actionBar);
     }
+    public static void setTabHosts(DashboardActivity dashboardActivity) {
+        dashboardActivity.setTabHostsWithText();
+    }
 }

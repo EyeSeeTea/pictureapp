@@ -94,14 +94,25 @@ public class LayoutUtils {
 
 
     public static void setActionBarAppAndUser(ActionBar actionBar) {
+        actionBar.setLogo(R.drawable.pictureapp_logo);
         actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
         Context context = PreferencesState.getInstance().getContext();
         int color = ContextCompat.getColor(context, R.color.text_first_color);
         String colorString = String.format("%X", color).substring(2);
         Spanned spannedTitle = Html.fromHtml(String.format("<font color=\"#%s\" size=\"10\"><b>%s</b></font>", colorString , context.getString(R.string.app_name)));
-        color = ContextCompat.getColor(context, R.color.text_first_color);
+        color = ContextCompat.getColor(context, R.color.text_second_color);
         colorString = String.format("%X", color).substring(2);
-        Spanned spannedSubTitle = Html.fromHtml(String.format("<font color=\"#%s\"><b>%s</b></font>", colorString , "Volunteer: "+ User.getLoggedUser().getName()+""));
+        User user= User.getLoggedUser();
+        String userName;
+        if(user==null)
+        {
+            userName="";
+        }else{
+            userName=user.getName();
+        }
+        Spanned spannedSubTitle = Html.fromHtml(String.format("<font color=\"#%s\"><b>%s</b></font>", colorString , "Volunteer: "+ userName +""));
         actionBar.setCustomView(R.layout.custom_action_bar);
         TextView title =(TextView) actionBar.getCustomView().findViewById(R.id.action_bar_multititle_title);
         title.setText(spannedTitle);

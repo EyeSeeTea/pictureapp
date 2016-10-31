@@ -1,6 +1,12 @@
 package org.eyeseetea.malariacare.layout;
 
+import android.app.Activity;
+import android.content.Context;
 import android.text.Spanned;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -17,5 +23,9 @@ public class StyleUtils {
 
     public static void setActionBar(android.support.v7.app.ActionBar actionBar) {
         LayoutUtils.setActionBarAppAndUser(actionBar);
+    }
+
+    public static void setTabHosts(DashboardActivity dashboardActivity) {
+        dashboardActivity.setTabHostsWithImages();
     }
 }

@@ -23,7 +23,7 @@
             android:layout_gravity="center_horizontal"
             android:textSize="@dimen/input_number_edit_text_phone"
             android:textColor="@color/intColor"
-            android:id="@+id/dynamic_phone_edit"
+            android:id="@+id/answer"
             android:inputType="phone"
             android:imeOptions="actionDone"
             android:singleLine="true"
@@ -31,8 +31,8 @@
             app:tFontName="@string/condensed_font_name"
             />
         <org.eyeseetea.malariacare.views.CustomButton
-            android:id="@+id/dynamic_phone_btn"
-            android:background="@drawable/integer_bottom_border"
+            android:id="@+id/row_phone_btn"
+            android:background="@drawable/option_button"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:gravity="center"

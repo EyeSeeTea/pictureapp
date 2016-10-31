@@ -8,9 +8,11 @@ import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controller in charge of moving next, previous according to the answers and state of questions.
@@ -280,11 +282,37 @@ public class NavigationController {
             Log.d(TAG,String.format("findNext(%s)-> Initial movement",option==null?"":option.getCode()));
             return this.rootNode;
         }
-
-        QuestionNode nextNode=getCurrentNode().next(option);
+        Question actualQuestion = getCurrentNode().getQuestion();
+        QuestionNode nextNode;
+        nextNode = getCurrentNode().next(option);
+        if(nextNode!=null && (actualQuestion.getHeader().getTab().getType() == Constants.TAB_MULTI_QUESTION || nextNode.getQuestion().getOutput()==Constants.HIDDEN)) {
+            while(nextNode!=null && (nextNode.getQuestion().getHeader().getTab().equals(actualQuestion.getHeader().getTab()) || nextNode.getQuestion().getOutput()==Constants.HIDDEN)){
+                if(nextNode.getSibling()==null) {
+                    nextNode = null;
+                }
+                else {
+                    nextNode = nextNode.next();
+                }
+            }
+        }
 
         //Survey finished -> No more questions
         if(nextNode==null){
+            Map<Long, QuestionCounter> counters= getCurrentNode().getCountersMap();
+            if(counters!=null && counters.size()>0){
+                if(counters.containsKey(option.getId_option())){
+                    QuestionCounter questionCounter= counters.get(option.getId_option());
+                    Integer limit=(int) Math.floor( option.getFactor());
+                    if(questionCounter.isFinish(limit)){
+                        Log.d(TAG,String.format("findNext(%s)-> Survey Counter finished",option==null?"":option.getCode()));
+                        return null;
+                    }
+                    else{
+                        Log.d(TAG,String.format("findNext(%s)-> Survey Counter not finished",option==null?"":option.getCode()));
+                        return getCurrentNode().getPreviousSibling();
+                    }
+                }
+            }
             Log.d(TAG,String.format("findNext(%s)-> Survey finished",option==null?"":option.getCode()));
             return null;
         }

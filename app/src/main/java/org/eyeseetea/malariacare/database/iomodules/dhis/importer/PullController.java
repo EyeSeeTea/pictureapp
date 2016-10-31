@@ -31,7 +31,11 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.OrganisationUnitExtended;
+import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Program;
+import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -50,6 +54,9 @@ import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 import org.hisp.dhis.android.sdk.utils.api.ProgramType;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -176,6 +183,8 @@ public class PullController {
                     //Ok
                     wipeDatabase();
                     convertFromSDK();
+                    //Fixme it should be moved after login
+                    convertOUinOptions();
                     if (ProgressActivity.PULL_IS_ACTIVE) {
                         Log.d(TAG, "PULL process...OK");
                     }
@@ -189,6 +198,33 @@ public class PullController {
                 }
             }
         }.start();
+    }
+
+    private void convertOUinOptions() {
+        List<Question> questions= Question.getAllQuestionsWithOrgUnitDropdownList();
+        //remove older values, but not the especial "other" option
+        for(Question question:questions) {
+            List<Option> options = question.getAnswer().getOptions();
+            for(Option option:options){
+                if(QuestionOption.findByQuestionAndOption(question,option).size()==0){
+                    option.delete();
+                }
+            }
+        }
+
+        //Generate the orgUnits options for each question with orgunit dropdown list
+        if(questions.size()>0) {
+            List<OrgUnit> orgUnits=OrgUnit.getAllOrgUnit();
+            for (OrgUnit orgUnit:orgUnits){
+                for(Question question:questions) {
+                    Option option= new Option();
+                    option.setAnswer(question.getAnswer());
+                    option.setName(orgUnit.getUid());
+                    option.setCode(orgUnit.getName());
+                    option.save();
+                }
+            }
+        }
     }
 
     /**

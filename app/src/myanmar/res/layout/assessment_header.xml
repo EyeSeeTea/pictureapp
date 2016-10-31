@@ -47,7 +47,7 @@
             android:text="@string/assessment_past_cases"
             android:id="@+id/idHeader"
             android:background="@drawable/background_header"
-            android:textColor="@color/fragment_header_text"
+            android:textColor="@color/fragment_header_title"
             android:gravity="center"
             android:padding="5dip"
             android:layout_weight="0.5"
@@ -55,7 +55,6 @@
             app:tDimension="@string/font_size_level1"
             app:tFontName="@string/condensed_font_name"/>
             <!--android:textSize="@dimen/dashboard_text_size"-->
-
         <View
             android:layout_width="3dip"
             android:layout_height="match_parent"
@@ -69,7 +68,7 @@
             android:textAppearance="?android:textAppearanceSmall"
             android:text="@string/assessment_connectivity"
             android:background="@drawable/background_header"
-            android:textColor="@color/fragment_header_text"
+            android:textColor="@color/fragment_header_subtitle"
             android:gravity="center"
             android:padding="5dip"
             android:layout_weight="0.5"

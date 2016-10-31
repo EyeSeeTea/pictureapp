@@ -44,6 +44,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -65,6 +66,7 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.layout.ActionUtils;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
@@ -206,24 +208,28 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * Swipe right listener moves to previous question
              */
             public void onSwipeRight() {
-                Log.d(TAG, "onSwipeRight(previous)");
+                if (ActionUtils.isSwipActionActive()) {
+                    Log.d(TAG, "onSwipeRight(previous)");
 
-                //Hide keypad
-                hideKeyboard(listView.getContext(), listView);
+                    //Hide keypad
+                    hideKeyboard(listView.getContext(), listView);
 
-                previous();
+                    previous();
+                }
             }
 
             /**
              * Swipe left listener moves to next question
              */
             public void onSwipeLeft() {
-                Log.d(TAG, "onSwipeLeft(next)");
-                if (readOnly || navigationController.isNextAllowed()) {
+                if (ActionUtils.isSwipActionActive()) {
+                    Log.d(TAG, "onSwipeLeft(next)");
+                    if (readOnly || navigationController.isNextAllowed()) {
 
-                    //Hide keypad
-                    hideKeyboard(listView.getContext(), listView);
-                    next();
+                        //Hide keypad
+                        hideKeyboard(listView.getContext(), listView);
+                        next();
+                    }
                 }
             }
 
@@ -590,7 +596,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.INT:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_int_row, tableLayout, false);
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
-                    initIntValue(tableRow, value);
+                    initIntValue(tableRow, value, tabType);
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
@@ -598,7 +604,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_long_text_row, tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
-                    initLongTextValue(tableRow, value);
+                    initLongTextValue(tableRow, value, tabType);
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
@@ -606,7 +612,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_short_text_row, tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
-                    initShortTextValue(tableRow, value);
+                    initShortTextValue(tableRow, value, tabType);
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
@@ -651,9 +657,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;
             }
         }
-        if (isMultipleQuestionTab(tabType)) {
-            tableButtonRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_button_row, tableLayout, false);
-            tableLayout.addView(createMultipleQuestionsTabButton(tableButtonRow));
+        if (ActionUtils.isButtonNavigationActive()) {
+            tableButtonRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_navigation_buttons, tableLayout, false);
+            tableLayout.addView(createNavigationButtonsBackButton(tableButtonRow));
         }
         rowView.requestLayout();
         return rowView;
@@ -674,12 +680,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Create a button for the question with multiple question tab
+     * Create a buttons for navigate.
      *
      * @return
      */
-    private View createMultipleQuestionsTabButton(TableRow tableButtonRow) {
-        Button button = (Button) tableButtonRow.findViewById(R.id.multi_question_btn);
+    private View createNavigationButtonsBackButton(TableRow tableButtonRow) {
+        ImageButton button = (ImageButton) tableButtonRow.findViewById(R.id.right_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -690,9 +696,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
             }
         });
+        button = (ImageButton) tableButtonRow.findViewById(R.id.left_btn);
+        //Save the numberpicker value in the DB, and continue to the next screen.
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    previous();
+            }
+        });
         return tableButtonRow;
     }
-
 
     private void setTextSettings(TextCard textOption, Option currentOption) {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
@@ -892,9 +905,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (!isMultipleQuestionTab(tabType)) {
             //Add button to listener
             swipeTouchListener.addClickableView(button);
+            //Take focus and open keyboard
+            openKeyboard(numberPicker);
         }
-        //Take focus and open keyboard
-        openKeyboard(numberPicker);
     }
 
     /**
@@ -1050,9 +1063,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (!isMultipleQuestionTab(tabType)) {
             //Add button to listener
             swipeTouchListener.addClickableView(button);
+            //Take focus and open keyboard
+            openKeyboard(editCard);
         }
-        //Take focus and open keyboard
-        openKeyboard(editCard);
     }
 
     /**
@@ -1060,7 +1073,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      *
      * @return
      */
-    private void initIntValue(TableRow row, Value value) {
+    private void initIntValue(TableRow row, Value value,  int tabType) {
         final EditCard numberPicker = (EditCard) row.findViewById(R.id.answer);
 
         //Has value? show it
@@ -1087,8 +1100,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } else {
             numberPicker.setEnabled(false);
         }
-        //Take focus and open keyboard
-        openKeyboard(numberPicker);
+        if (!isMultipleQuestionTab(tabType)) {
+            //Take focus and open keyboard
+            openKeyboard(numberPicker);
+        }
     }
 
     /**
@@ -1106,7 +1121,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      *
      * @return
      */
-    private void initShortTextValue(TableRow row, Value value) {
+    private void initShortTextValue(TableRow row, Value value, int tabType) {
         final EditCard editCard = (EditCard) row.findViewById(R.id.answer);
         //Has value? show it
         if (value != null) {
@@ -1134,8 +1149,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } else {
             editCard.setEnabled(false);
         }
-        //Take focus and open keyboard
-        openKeyboard(editCard);
+        if (!isMultipleQuestionTab(tabType)) {
+            //Take focus and open keyboard
+            openKeyboard(editCard);
+        }
     }
 
     /**
@@ -1143,7 +1160,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      *
      * @return
      */
-    private void initLongTextValue(TableRow row, Value value) {
+    private void initLongTextValue(TableRow row, Value value, int tabType) {
         final EditCard editCard = (EditCard) row.findViewById(R.id.answer);
 
         //Has value? show it
@@ -1171,8 +1188,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } else {
             editCard.setEnabled(false);
         }
-        //Take focus and open keyboard
-        openKeyboard(editCard);
+        if (!isMultipleQuestionTab(tabType)) {
+            //Take focus and open keyboard
+            openKeyboard(editCard);
+        }
     }
 
     /**
@@ -1359,6 +1378,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 @Override
                 public void run() {
                     //Show keypad
+                    Question question= (Question)editText.getTag();
+                    if(isMultipleQuestionTab(question.getHeader().getTab().getType())) {
+                        return;
+                    }
                     showKeyboard(context, editText);
                 }
             }, 300);

@@ -15,22 +15,7 @@
         android:paddingRight="@dimen/question_padding"
         >
         <include layout="@layout/row_header_item"></include>
-        <org.eyeseetea.malariacare.views.EditCard
-            android:id="@+id/answer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_bottom_border"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal"
-            android:textSize="@dimen/input_number_edit_text_phone"
-            android:textColor="@color/intColor"
-            android:inputType="textShortMessage"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
-            app:tDimension="@string/font_size_level2"
-            app:tFontName="@string/condensed_font_name"
-            />
+        <include layout="@layout/short_text_item"></include>
     </LinearLayout>
 
 </TableRow>

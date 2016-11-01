@@ -19,10 +19,14 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -86,6 +90,12 @@ public class User extends BaseModel {
                             .eq(this.getId_user())).queryList();
         }
         return surveys;
+    }
+
+    public static User clearLoggedUser(){
+
+        new Delete().from(User.class).query();
+        return null;
     }
 
     public static User getLoggedUser(){

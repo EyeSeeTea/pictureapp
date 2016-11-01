@@ -49,6 +49,7 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
@@ -275,6 +276,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     public void callbackPopulateOrgUnitsByServerVersion(ServerInfo serverInfo){
         Log.d(TAG, "callbackPopulateOrgUnitsByServerVersion " + serverInfo.getVersion());
+
+
+
+
         autoCompleteEditTextPreference.pullOrgUnits(serverInfo.getVersion());
     }
 
@@ -877,9 +882,9 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
     public boolean onPreferenceClick(Preference preference) {
 
         //Login already done -> move on
-        if(isLoginDone()){
+       /* if(isLoginDone()){
             return false;
-        }
+        }*/
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 
@@ -905,9 +910,31 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
      * Launches Login activity with the right extra params
      */
     void launchLoginPreChange(){
-        Intent intent = prepareIntent();
-        activity.finish();
-        activity.startActivity(intent);
+
+        new AlertDialog.Builder(activity)
+                .setTitle(activity.getString(R.string.settings_menu_logout))
+                .setMessage(activity.getString(R.string.dialog_content_dhis_preference_login))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        //finish activity and go to login
+                       // DhisService.logOutUser(activity);
+                        SharedPreferences.Editor sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity).edit();
+                        sharedPreferences.putBoolean(activity.getResources().getString(R.string.dhis_demo_user), false).commit();
+                        User.clearLoggedUser();
+
+                        Intent intent = prepareIntent();
+                       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        activity.finish();
+                        activity.startActivity(intent);
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).create().show();
+
     }
     void launchLoginOnEulaAccepted(){
         Intent intent = prepareIntent();
@@ -919,6 +946,8 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
         String extraKey = changingOrgUnit?SettingsActivity.SETTINGS_CHANGING_ORGUNIT:SettingsActivity.SETTINGS_CHANGING_SERVER;
         Intent intent = new Intent(activity,LoginActivity.class);
         intent.putExtra(extraKey,true);
+
         return intent;
+
     }
 }

@@ -2,6 +2,5 @@
 <resources>
         <style name="EyeSeeTheme.OverFlow" >
                 <item name="android:src">@drawable/custom_dots</item>
-                <item name="android:background">#85ce26</item>
         </style>
 </resources>

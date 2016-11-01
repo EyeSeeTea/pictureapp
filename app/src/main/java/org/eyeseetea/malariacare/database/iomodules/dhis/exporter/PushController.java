@@ -191,8 +191,8 @@ public class PushController {
                     Log.d(TAG, "Updating pushed survey data...");
                     converter.saveSurveyStatus(getImportSummaryMap(result));
 
-                    Log.d(TAG, "Checking if server must be closed...");
-                    ServerAPIController.banOrgUnitIfRequired();
+                  //  Log.d(TAG, "Checking if server must be closed...");
+                   // ServerAPIController.banOrgUnitIfRequired();
 
                     Log.d(TAG, "PUSH process...OK");
 

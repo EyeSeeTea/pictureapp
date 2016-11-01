@@ -20,8 +20,10 @@
 package org.eyeseetea.malariacare.database.iomodules.dhis.exporter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -254,35 +256,57 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      * @param importSummaryMap
      */
     public void saveSurveyStatus(Map<Long,ImportSummary> importSummaryMap){
-        Log.d(TAG, String.format("ImportSummary %d surveys savedSurveyStatus", surveys.size()));
-        for(int i=0;i<surveys.size();i++){
-            Survey iSurvey=surveys.get(i);
-            Event iEvent=events.get(i);
-            iSurvey.setStatus(Constants.SURVEY_COMPLETED);
-            ImportSummary importSummary=importSummaryMap.get(iEvent.getLocalId());
-            FailedItem failedItem= hasConflict(iEvent.getLocalId());
-            if(hasImportSummaryErrors(importSummary)){
 
-                //Some error while pushing should be done again
-                if(failedItem!=null) {
-                    List<String> failedUids=getFailedUidQuestion(failedItem.getErrorMessage());
-                    if(failedUids != null && failedUids.size()>0){
-                        iSurvey.setStatus(Constants.SURVEY_CONFLICT);
-                        for(String uid:failedUids) {
-                            Log.d(TAG, "PUSH process...ImportSummary Conflict in "+uid+" dataElement. Survey: "+iSurvey.getId_survey());
-                        }
-                    }
-                }
-                iSurvey.save();
-            }else{
+        Log.d(TAG, String.format("ImportSummary %d surveys savedSurveyStatus", surveys.size()));
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if  (sharedPreferences.getBoolean("dhis_demo_user", false)) {
+            for (int i = 0; i < surveys.size(); i++) {
+                Survey iSurvey = surveys.get(i);
+                Event iEvent = events.get(i);
+
                 iSurvey.setStatus(Constants.SURVEY_SENT);
                 iSurvey.saveMainScore();
                 iSurvey.save();
-                Log.d("DpBlank", "ImportSummary Saving survey as completed " + iSurvey + " event "+ iEvent.getUid());
+                Log.d("DpBlank", "ImportSummary Saving survey as completed " + iSurvey + " event " + iEvent.getUid());
+
+                iEvent.delete();
+
             }
-            //Generated event must be remove too
-            iEvent.delete();
+            } else {
+
+
+            for (int i = 0; i < surveys.size(); i++) {
+                Survey iSurvey = surveys.get(i);
+                Event iEvent = events.get(i);
+                iSurvey.setStatus(Constants.SURVEY_COMPLETED);
+                ImportSummary importSummary = importSummaryMap.get(iEvent.getLocalId());
+                FailedItem failedItem = hasConflict(iEvent.getLocalId());
+                if (hasImportSummaryErrors(importSummary)) {
+
+                    //Some error while pushing should be done again
+                    if (failedItem != null) {
+                        List<String> failedUids = getFailedUidQuestion(failedItem.getErrorMessage());
+                        if (failedUids != null && failedUids.size() > 0) {
+                            iSurvey.setStatus(Constants.SURVEY_CONFLICT);
+                            for (String uid : failedUids) {
+                                Log.d(TAG, "PUSH process...ImportSummary Conflict in " + uid + " dataElement. Survey: " + iSurvey.getId_survey());
+                            }
+                        }
+                    }
+                    iSurvey.save();
+                } else {
+                    iSurvey.setStatus(Constants.SURVEY_SENT);
+                    iSurvey.saveMainScore();
+                    iSurvey.save();
+                    Log.d("DpBlank", "ImportSummary Saving survey as completed " + iSurvey + " event " + iEvent.getUid());
+                }
+                //Generated event must be remove too
+                iEvent.delete();
+            }
+
+
         }
+
     }
 
     /**

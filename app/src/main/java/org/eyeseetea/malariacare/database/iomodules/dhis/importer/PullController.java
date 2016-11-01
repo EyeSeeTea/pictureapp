@@ -50,6 +50,7 @@ import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 import org.hisp.dhis.android.sdk.utils.api.ProgramType;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -58,6 +59,7 @@ import java.util.List;
  */
 public class PullController {
     public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
+    public static final int NUMBER_OF_MONTHS=6;
     private final String TAG = ".PullController";
 
     private static PullController instance;
@@ -124,6 +126,11 @@ public class PullController {
             enableMetaDataFlags();
             //Delete previous metadata
             TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
+            if(NUMBER_OF_MONTHS>0) {
+                Calendar month = Calendar.getInstance();
+                month.add(Calendar.MONTH, -NUMBER_OF_MONTHS);
+                TrackerController.setStartDate(EventExtended.format(month.getTime(), EventExtended.AMERICAN_DATE_FORMAT));
+            }
             MetaDataController.clearMetaDataLoadedFlags();
             MetaDataController.wipe();
             //Fixme delete the events

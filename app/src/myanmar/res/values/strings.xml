@@ -133,6 +133,7 @@
 <string name="review_subtitle">Transmission</string>
 <string name="not_tested">Not tested</string>
     <string name="assessment_past_cases">PAST CASES</string>
+    <string name="assessment_new_cases">NEW CASES</string>
     <string name="assessment_connectivity">Data awaiting internet connectivity</string>
     <string name="positive_hint">Name, Details</string>
 </resources>

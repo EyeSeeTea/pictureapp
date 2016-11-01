@@ -16,12 +16,12 @@
         android:orientation="horizontal">
 
         <org.eyeseetea.malariacare.views.TextCard
-            android:id="@+id/question"
+            android:id="@+id/question_title"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/assessment_past_cases"
-            android:textColor="@color/fragment_header_title"
+            android:text="@string/assessment_new_cases"
+            android:textColor="@color/question_header_title"
             android:padding="5dip"
             android:layout_weight="0.5"
             android:layout_gravity="center"
@@ -40,12 +40,11 @@
             android:layout_marginTop="10dp"/>
 
         <org.eyeseetea.malariacare.views.TextCard
-            android:id="@+id/question_subtitle"
+            android:id="@+id/question"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:textAppearance="?android:textAppearanceSmall"
-            android:text="@string/assessment_connectivity"
-            android:textColor="@color/fragment_header_subtitle"
+            android:textColor="@color/question_header_subtitle"
             android:gravity="center"
             android:padding="5dip"
             android:layout_weight="0.5"

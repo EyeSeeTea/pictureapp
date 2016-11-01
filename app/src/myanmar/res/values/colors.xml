@@ -14,7 +14,9 @@
     <color name="main_window_background">@color/medium_violet</color>
     <color name="headerColor">@color/light_violet</color>
     <color name="fragment_header_title">@color/text_first_color</color>
-    <color name="fragment_header_subtitle">@color/white</color>
+    <color name="fragment_header_subtitle">@color/white</color>medium_light_violet
+    <color name="question_header_title">@color/text_first_color</color>
+    <color name="question_header_subtitle">@color/medium_light_violet</color>
     <color name="hint">@color/medium_violet</color>
     <color name="intColor">@color/dark_violet</color>
 </resources>

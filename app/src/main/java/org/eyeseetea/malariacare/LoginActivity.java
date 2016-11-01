@@ -19,25 +19,43 @@
 
 package org.eyeseetea.malariacare;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.Preference;
+
 import android.preference.PreferenceManager;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
+import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
+import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
+
+import java.io.InputStream;
 
 /**
  * Login Screen.
@@ -61,24 +79,42 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      */
     private String password;
 
-    @Override
+
+   @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Populate server with the current value
+
+       if (User.getLoggedUser() != null && !ProgressActivity.PULL_CANCEL ) {
+            startActivity(new Intent(LoginActivity.this,
+                   ((Dhis2Application) getApplication()).getMainActivity()));
+
+           finish();
+
+
+       }
+       ProgressActivity.PULL_CANCEL =false;
+           //Populate server with the current value
         EditText serverText = (EditText) findViewById(org.hisp.dhis.android.sdk.R.id.server_url);
         serverText.setText(ServerAPIController.getServerUrl());
         //Readonly
         //serverText.setEnabled(false);
 
-        //Username, Password blanks to force real login
-        EditText usernameEditText = (EditText) findViewById(R.id.username);
-        usernameEditText.setText("");
-        EditText passwordEditText = (EditText) findViewById(R.id.password);
-        passwordEditText.setText("");
+       SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+       EditText passwordEditText = (EditText) findViewById(R.id.password);
+       EditText usernameEditText = (EditText) findViewById(R.id.username);
+       if (sharedPreferences.getString(getResources().getString(R.string.dhis_user),"").isEmpty()) {
+           usernameEditText.setText("");
+
+           passwordEditText.setText("");
+       } else {
+           usernameEditText.setText(sharedPreferences.getString(getResources().getString(R.string.dhis_user), ""));
+           passwordEditText.setText(sharedPreferences.getString(getResources().getString(R.string.dhis_password), ""));
+       }
+
     }
 
-    @Override
+     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return null;
     }
@@ -94,10 +130,51 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
+
+
+
+       if (!isEulaAccepted()) {
+
+
+           InputStream message = getResources().openRawResource(R.raw.eula);
+           String stringMessage = Utils.convertFromInputStreamToString(message).toString();
+           final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
+           Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+
+           AlertDialog dialog = new AlertDialog.Builder(this)
+                   .setTitle(getString(R.string.settings_menu_eula))
+                   .setMessage(linkedMessage)
+                   .setCancelable(false)
+                   .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+
+                           EditText serverEditText = (EditText) findViewById(R.id.server_url);
+                           PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
+                           setEulaAccepted();
+                           eulaAccepted(v);
+
+                       }
+                   })
+                   .setNegativeButton(android.R.string.no, null).create();
+           dialog.show();
+           ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+
+
+
+        } else {
+
+           EditText serverEditText = (EditText) findViewById(R.id.server_url);
+           PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
+           super.onClick(v);
+        }
+
         // Save dhis URL and establish in preferences, so it will be used to make the pull
-        EditText serverEditText = (EditText) findViewById(R.id.server_url);
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
+
+    }
+
+    public void eulaAccepted(View v) {
         super.onClick(v);
     }
 
@@ -114,12 +191,23 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     private void goSettingsWithRightExtras(){
 
-        Intent intent = new Intent(LoginActivity.this,SettingsActivity.class);
-        intent = propagateExtraAndResult(intent);
+        EditText passwordEditText = (EditText) findViewById(R.id.password);
+        EditText usernameEditText = (EditText) findViewById(R.id.username);
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, usernameEditText.getText().toString());
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, passwordEditText.getText().toString());
+
 
         finish();
-        if(!getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false))
-            startActivity(intent);
+        startActivity(new Intent(this, ProgressActivity.class));
+
+
+
+      //  Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
+      //  intent = propagateExtraAndResult(intent);
+
+      //  finish();
+       // if(!getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false))
+          //  startActivity(intent);
     }
 
     private Intent propagateExtraAndResult(Intent intent){
@@ -155,9 +243,14 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      * a preference is set so the app will remind between different executions
      * @return
      */
-    private boolean isEulaAccepted(){
+     private boolean isEulaAccepted(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         return sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), false);
+    }
+
+    private void setEulaAccepted(){
+        SharedPreferences.Editor sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+        sharedPreferences.putBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), true).commit();
     }
 
     /**
@@ -173,7 +266,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      * Get from the preferences the server setting
      * @return
      */
-    private String getServerFromPreferences(){
+     private String getServerFromPreferences(){
         return PreferencesState.getInstance().getDhisURL();
     }
 
@@ -196,19 +289,24 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
      */
     public void onBackPressed(){
-        finishAndGo(DashboardActivity.class);
+       finish();
+        //finishAndGo(DashboardActivity.class);
     }
 
     /**
      * Finish current activity and launches an activity with the given class
      * @param targetActivityClass Given target activity class
      */
-    public void finishAndGo(Class targetActivityClass){
+     public void finishAndGo(Class targetActivityClass){
         Intent targetActivityIntent = new Intent(this,targetActivityClass);
         finish();
         startActivity(targetActivityIntent);
     }
-}
 
+
+
+
+
+}
 
 

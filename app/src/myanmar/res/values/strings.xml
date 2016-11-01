@@ -132,4 +132,10 @@
 <string name="review_title">Please check before</string>
 <string name="review_subtitle">Transmission</string>
 <string name="not_tested">Not tested</string>
+    <string name="settings_menu_logout">"Logout"</string>
+    <string name="dialog_content_dhis_preference_login">"Changing the server needs to re-login. Every not-sent survey will be deleted. Are you sure you wat to continue?"</string>
+    <string name="dialog_content_dhis_preference_logout">"If you exit the system, all the not sent data will be deleted. Do you still want to exit?"</string>
+
+
+
 </resources>

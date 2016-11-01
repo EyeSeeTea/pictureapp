@@ -32,5 +32,6 @@
                 android:orderInCategory="105" />
         </menu>
     </item>
-
+    <item android:id="@+id/action_logout" android:title="Logout"
+        android:orderInCategory="106"/>
 </menu>

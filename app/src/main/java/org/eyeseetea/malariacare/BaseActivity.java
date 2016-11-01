@@ -22,11 +22,14 @@ package org.eyeseetea.malariacare;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.text.SpannableString;
@@ -39,24 +42,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.TabGroup;
+import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.hisp.dhis.android.sdk.controllers.DhisService;
 
 import java.io.InputStream;
 import java.util.List;
@@ -69,7 +69,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      */
     public static final String SETTINGS_CALLER_ACTIVITY = "SETTINGS_CALLER_ACTIVITY";
 
-    protected static String TAG=".BaseActivity";
+    protected static String TAG = ".BaseActivity";
 
     private AlarmPushReceiver alarmPush;
 
@@ -80,10 +80,10 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         initView(savedInstanceState);
-        if(PushController.getInstance().isPushInProgress()) {
-            List<Survey> surveys=Survey.getAllSendingSurveys();
-            Log.d(TAG,"The app was closed in the middle of a push. Surveys sending: "+surveys.size());
-            for(Survey survey:surveys){
+        if (PushController.getInstance().isPushInProgress()) {
+            List<Survey> surveys = Survey.getAllSendingSurveys();
+            Log.d(TAG, "The app was closed in the middle of a push. Surveys sending: " + surveys.size());
+            for (Survey survey : surveys) {
                 survey.setStatus(Constants.SURVEY_QUARANTINE);
                 survey.save();
             }
@@ -96,12 +96,12 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Common styling
      */
-    private void initView(Bundle savedInstanceState){
+    private void initView(Bundle savedInstanceState) {
         setTheme(R.style.EyeSeeTheme);
         android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
         LayoutUtils.setActionBarLogo(actionBar);
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             initTransition();
         }
     }
@@ -109,7 +109,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Adds actionbar to the activity
      */
-    public void createActionBar(){
+    public void createActionBar() {
         Program program = Program.getFirstProgram();
 
         if (program != null) {
@@ -140,12 +140,11 @@ public abstract class BaseActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_settings:
                 debugMessage("User asked for settings");
-                if(PushController.getInstance().isPushInProgress()) {
-                    Log.d(TAG,"Click in settings true "+PushController.getInstance().isPushInProgress());
+                if (PushController.getInstance().isPushInProgress()) {
+                    Log.d(TAG, "Click in settings true " + PushController.getInstance().isPushInProgress());
                     Toast.makeText(this, R.string.toast_push_is_pushing, Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Log.d(TAG,"Click in settings false "+PushController.getInstance().isPushInProgress());
+                } else {
+                    Log.d(TAG, "Click in settings false " + PushController.getInstance().isPushInProgress());
                     goSettings();
                 }
                 break;
@@ -169,6 +168,10 @@ public abstract class BaseActivity extends ActionBarActivity {
                 debugMessage("Go back");
                 onBackPressed();
                 break;
+            case R.id.action_logout:
+                debugMessage("User asked for Logout");
+                clikLogout();
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -178,17 +181,17 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
      */
-    public void onBackPressed(){
+    public void onBackPressed() {
         finishAndGo(DashboardActivity.class);
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         Intent intent;
         intent = (getCallingActivity() != null) ? new Intent(getCallingActivity().getClassName()) : getIntent();
 
-        if (intent.getStringExtra("activity") != null && getCallingActivity() != null && intent.getStringExtra("activity").equals("settings")){
+        if (intent.getStringExtra("activity") != null && getCallingActivity() != null && intent.getStringExtra("activity").equals("settings")) {
             Log.i(".onResume", "coming from settings");
             overridePendingTransition(0, 0);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -204,15 +207,14 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    protected void goSettings(){
-        Intent intentSettings=new Intent(this,SettingsActivity.class);
+    protected void goSettings() {
+        Intent intentSettings = new Intent(this, SettingsActivity.class);
         intentSettings.putExtra(SETTINGS_CALLER_ACTIVITY, this.getClass());
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
 
-
-    public void prepareLocationListener(Survey survey){
+    public void prepareLocationListener(Survey survey) {
 
         SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
         LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
@@ -220,6 +222,16 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Log.d(TAG, "requestLocationUpdates via NETWORK");
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         }
         else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -285,6 +297,28 @@ public abstract class BaseActivity extends ActionBarActivity {
         final SpannableString linkedMessage = new SpannableString(Html.fromHtml(Utils.convertFromInputStreamToString(message).toString()));
         Linkify.addLinks(linkedMessage, Linkify.ALL);
         showAlert(titleId, linkedMessage);
+    }
+
+    private void clikLogout(){
+
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.settings_menu_logout))
+                .setMessage(getString(R.string.dialog_content_dhis_preference_logout))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        //finish activity and go to login
+                       // DhisService.logOutUser(activity);
+                        User.clearLoggedUser();
+                         finish();
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).create().show();
+
     }
 
     /**

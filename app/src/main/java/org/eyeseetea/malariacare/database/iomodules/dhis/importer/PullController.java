@@ -132,11 +132,23 @@ public class PullController {
             //Pull new metadata
             postProgress(context.getString(R.string.progress_pull_downloading));
             PreferencesState.getInstance().reloadPreferences();
-            //all pull of datas needs a orgunit, and all pull of metadata have a null orgunit.
-            if(PreferencesState.getInstance().getOrgUnit().equals("")) {
+
+            MetaDataController.clearMetaDataLoadedFlags();
+            MetaDataController.wipe();
+
+            TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
+            String selectedDateLimit=PreferencesState.getInstance().getDataLimitedByDate();
+            //Pull No data is selected
+
+            //Limit of data by date is selected
+            if(!selectedDateLimit.equals("")) {
+                TrackerController.setStartDate(EventExtended.format(realDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
+            }
+
+            if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
                 pullMetaData();
-            }else {
-                pullData();
+            }else{
+                pullComplete();
             }
         } catch (Exception ex) {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());
@@ -145,33 +157,18 @@ public class PullController {
         }
     }
 
-    private void pullData() {
-        TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
-        String selectedDateLimit=PreferencesState.getInstance().getDataLimitedByDate();
-        //Pull No data is selected
-
-        //Limit of data by date is selected
-        if(!selectedDateLimit.equals("")) {
-            TrackerController.setStartDate(EventExtended.format(realDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
-        }
-        if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
-            postFinish();
-            unregister();
-            return;
-        }
+    private void pullMetaData() {
         try {
-            job = DhisService.loadDataValues(context);
+            job = DhisService.loadMetaData(context);
         } catch (Exception ex) {
             Log.e(TAG, "pullS: " + ex.getLocalizedMessage());
             postException(ex);
         }
     }
 
-    private void pullMetaData() {
-        MetaDataController.clearMetaDataLoadedFlags();
-        MetaDataController.wipe();
+    private void pullComplete() {
         try {
-            job = DhisService.loadMetaData(context);
+            job = DhisService.loadData(context);
         } catch (Exception ex) {
             Log.e(TAG, "pullS: " + ex.getLocalizedMessage());
             ex.printStackTrace();

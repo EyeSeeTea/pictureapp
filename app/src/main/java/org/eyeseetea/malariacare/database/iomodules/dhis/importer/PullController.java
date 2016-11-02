@@ -353,7 +353,7 @@ public class PullController {
 
     //Returns true if the pull thead is finish
     public boolean finishPullJob() {
-        if (JobExecutor.isJobRunning(job.getJobId())) {
+        if (job!=null && JobExecutor.isJobRunning(job.getJobId())) {
             Log.d(TAG, "Job " + job.getJobId() + " is running");
             job.cancel(true);
             try {

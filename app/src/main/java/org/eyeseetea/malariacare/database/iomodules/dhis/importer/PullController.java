@@ -126,34 +126,55 @@ public class PullController {
             //Enabling resources to pull
             enableMetaDataFlags();
             //Delete previous metadata
-            TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
-            String selectedDateLimit=PreferencesState.getInstance().getDataLimitedByDate();
-            //Pull No data is selected
-            if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
-                return;
-            }
-            //Limit of data by date is selected
-            if(!selectedDateLimit.equals("")) {
-                TrackerController.setStartDate(EventExtended.format(realDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
-            }
-            MetaDataController.clearMetaDataLoadedFlags();
-            MetaDataController.wipe();
-            //Fixme delete the events
+
             Log.d(TAG,"Delete sdk db");
             PopulateDB.wipeSDKData();
-
             //Pull new metadata
             postProgress(context.getString(R.string.progress_pull_downloading));
-            try {
-                job = DhisService.loadData(context);
-            } catch (Exception ex) {
-                Log.e(TAG, "pullS: " + ex.getLocalizedMessage());
-                ex.printStackTrace();
+            PreferencesState.getInstance().reloadPreferences();
+            //all pull of datas needs a orgunit, and all pull of metadata have a null orgunit.
+            if(PreferencesState.getInstance().getOrgUnit().equals("")) {
+                pullMetaData();
+            }else {
+                pullData();
             }
         } catch (Exception ex) {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());
             unregister();
             postException(ex);
+        }
+    }
+
+    private void pullData() {
+        TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
+        String selectedDateLimit=PreferencesState.getInstance().getDataLimitedByDate();
+        //Pull No data is selected
+
+        //Limit of data by date is selected
+        if(!selectedDateLimit.equals("")) {
+            TrackerController.setStartDate(EventExtended.format(realDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
+        }
+        if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
+            return;
+        }
+        try {
+            job = DhisService.loadDataValues(context);
+        } catch (Exception ex) {
+            Log.e(TAG, "pullS: " + ex.getLocalizedMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    private void pullMetaData() {
+        MetaDataController.clearMetaDataLoadedFlags();
+        MetaDataController.wipe();
+        try {
+            job = DhisService.loadMetaData(context);
+            return;
+        } catch (Exception ex) {
+            Log.e(TAG, "pullS: " + ex.getLocalizedMessage());
+            ex.printStackTrace();
+            return;
         }
     }
 
@@ -170,7 +191,6 @@ public class PullController {
         }else if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_months))){
             day.add(Calendar.MONTH, -6);
         }
-        Log.d(TAG, "day"+day.toString());
         return day.getTime();
     }
 

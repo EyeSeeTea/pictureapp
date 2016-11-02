@@ -123,6 +123,8 @@ public class PullController {
 
             //Register for event bus
             register();
+            //clear flags
+            clearPullFlags(PreferencesState.getInstance().getContext());
             //Enabling resources to pull
             enableMetaDataFlags();
             //Delete previous metadata
@@ -155,6 +157,11 @@ public class PullController {
             unregister();
             postException(ex);
         }
+    }
+
+    private void clearPullFlags(Context context) {
+        LoadingController.clearLoadFlag(context, ResourceType.ASSIGNEDPROGRAMS);
+        LoadingController.clearLoadFlag(context, ResourceType.ASSIGNEDPROGRAMSWITHOUTEXTRAS);
     }
 
     private void pullMetaData() {
@@ -196,7 +203,7 @@ public class PullController {
      * Enables loading all metadata
      */
     private void enableMetaDataFlags() {
-        LoadingController.enableLoading(context, ResourceType.ASSIGNEDPROGRAMS);
+        LoadingController.enableLoading(context, ResourceType.ASSIGNEDPROGRAMSWITHOUTEXTRAS);
         LoadingController.enableLoading(context, ResourceType.PROGRAMS);
         LoadingController.enableLoading(context, ResourceType.OPTIONSETS);
         LoadingController.enableLoading(context, ResourceType.EVENTS);

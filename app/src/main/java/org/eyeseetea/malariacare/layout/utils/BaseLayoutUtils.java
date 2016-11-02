@@ -22,7 +22,6 @@ package org.eyeseetea.malariacare.layout.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -35,9 +34,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -50,14 +47,13 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 /**
  * Created by Jose on 22/02/2015.
  */
-public class LayoutUtils {
+public class BaseLayoutUtils {
 
     public static final int [] rowBackgrounds = {R.drawable.background_even, R.drawable.background_odd};
 
@@ -77,7 +73,7 @@ public class LayoutUtils {
 
     // Given a index, this method return a background color
     public static int calculateBackgrounds(int index) {
-        return LayoutUtils.rowBackgrounds[index % LayoutUtils.rowBackgrounds.length];
+        return rowBackgrounds[index % rowBackgrounds.length];
     }
 
     public static int getNumberOfQuestionParentsHeader(Header header) {
@@ -90,39 +86,6 @@ public class LayoutUtils {
                 result = result + 1;
 
         return result;
-    }
-
-
-    public static void setActionBarAppAndUser(ActionBar actionBar) {
-        actionBar.setLogo(R.drawable.pictureapp_logo);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayUseLogoEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        Context context = PreferencesState.getInstance().getContext();
-        int color = ContextCompat.getColor(context, R.color.text_first_color);
-        String colorString = String.format("%X", color).substring(2);
-        Spanned spannedTitle = Html.fromHtml(String.format("<font color=\"#%s\" size=\"10\"><b>%s</b></font>", colorString , context.getString(R.string.app_name)));
-        color = ContextCompat.getColor(context, R.color.text_second_color);
-        colorString = String.format("%X", color).substring(2);
-        User user= User.getLoggedUser();
-        String userName;
-        if(user==null)
-        {
-            userName="";
-        }else{
-            userName=user.getName();
-        }
-        Spanned spannedSubTitle = Html.fromHtml(String.format("<font color=\"#%s\"><b>%s</b></font>", colorString , "Volunteer: "+ userName +""));
-        actionBar.setCustomView(R.layout.custom_action_bar);
-        TextView title =(TextView) actionBar.getCustomView().findViewById(R.id.action_bar_multititle_title);
-        title.setText(spannedTitle);
-        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" +  context.getString(R.string.light_font));
-        title.setTypeface(tf);
-        TextView subtitle =(TextView) actionBar.getCustomView().findViewById(R.id.action_bar_multititle_subtitle);
-        subtitle.setText(spannedSubTitle);
-         tf = Typeface.createFromAsset(context.getAssets(), "fonts/" +  context.getString(R.string.light_font));
-        subtitle.setTypeface(tf);
-
     }
 
     // Used to setup the usual actionbar with the logo and the app name

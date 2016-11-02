@@ -23,9 +23,9 @@
     <color name="light_violet">#c9b8c8</color>
     <color name="light_grey_violet">#878787</color>
     <color name="myanmar_grey">#e7e7e7</color>
-
+    <color name="black_grey_violet">#3e3e3f</color>
     <color name="main_window_background">@color/light_grey</color>
-    <color name="custom_background_grey">#3e3e3f</color>
+    <color name="custom_background_grey">@color/black_grey_violet</color>
     <color name="actionbar_background">@color/navy_blue</color>
     <color name="text_first_color">@color/black</color>
     <color name="text_secondary_color">@color/white</color>

@@ -50,8 +50,8 @@ import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
-import org.eyeseetea.malariacare.layout.StyleUtils;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.io.IOException;
@@ -59,7 +59,6 @@ import java.io.IOException;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabWidget;
-import android.widget.TextView;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -110,7 +109,7 @@ public class DashboardActivity extends BaseActivity {
         }
         initTabHost(savedInstanceState);
         /* set tabs in order */
-        StyleUtils.setTabHosts(this);
+        LayoutUtils.setTabHosts(this);
 
         //set the tabs background as transparent
         setTabsBackgroundColor(R.color.tab_unpressed_background);

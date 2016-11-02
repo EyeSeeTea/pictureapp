@@ -4,39 +4,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/footer_navigation_size"
+        android:padding="10dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:weightSum="1"
         >
 
-        <ImageButton
-            android:id="@+id/left_btn"
-            android:layout_height="wrap_content"
-            android:layout_width="0px"
-            android:layout_weight="0.1"
-            android:layout_gravity="left"
-            android:src="@drawable/back_button"
-            android:background="@color/transparent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerInside"
-            android:enabled="true"
-            />
+    <Button
+        android:id="@+id/left_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:background="@drawable/back_background_button"
+        android:textColor="@color/dark_violet"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:drawableLeft="@drawable/back_button"
+        />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.8"/>
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 
-        <ImageButton
-                android:id="@+id/right_btn"
-                android:layout_height="wrap_content"
-                android:layout_width="0px"
-                android:layout_weight="0.1"
-                android:layout_gravity="right"
-                android:src="@drawable/next_button"
-                android:background="@color/transparent"
-                android:adjustViewBounds="true"
-                android:scaleType="centerInside"
-                android:enabled="true"
-                />
-    </LinearLayout>
+    <Button
+        android:id="@+id/right_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="siguiente"
+        android:background="@drawable/next_background_button"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:drawableRight="@drawable/next_button"  />
+
+</LinearLayout>

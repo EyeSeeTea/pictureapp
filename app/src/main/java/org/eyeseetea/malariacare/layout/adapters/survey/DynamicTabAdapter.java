@@ -583,7 +583,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.PHONE:
                     if (isMultipleQuestionTab(tabType)) {
                         tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_phone_row, tableLayout, false);
-                        tableRow.addView(lInflater.inflate(R.layout.horizontal_view_item, tableLayout, false));
                         ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     } else {
                         tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
@@ -596,7 +595,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.POSITIVE_INT:
                     if (isMultipleQuestionTab(tabType)) {
                         tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_positive_int_row, tableLayout, false);
-                        tableRow.addView(lInflater.inflate(R.layout.horizontal_view_item, tableLayout, false));
                         ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     } else {
                         tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_positiveint_row, tableLayout, false);
@@ -608,7 +606,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;
                 case Constants.INT:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_int_row, tableLayout, false);
-                    tableRow.addView(lInflater.inflate(R.layout.horizontal_view_item, tableLayout, false));
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initIntValue(tableRow, value, tabType);
                     tableRow.setVisibility(visibility);
@@ -616,7 +613,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;
                 case Constants.LONG_TEXT:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_long_text_row, tableLayout, false);
-                    tableRow.addView(lInflater.inflate(R.layout.horizontal_view_item, tableLayout, false));
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initLongTextValue(tableRow, value, tabType);
@@ -625,7 +621,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;
                 case Constants.SHORT_TEXT:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_short_text_row, tableLayout, false);
-                    tableRow.addView(lInflater.inflate(R.layout.horizontal_view_item, tableLayout, false));
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initShortTextValue(tableRow, value, tabType);
@@ -634,7 +629,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;
                 case Constants.QUESTION_LABEL:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_label_row, tableLayout, false);
-                    tableRow.addView(lInflater.inflate(R.layout.horizontal_view_item, tableLayout, false));
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     if(screenQuestion.getPath()!=null && !screenQuestion.getPath().equals("")) {
                         ImageView rowImageView = ((ImageView) tableRow.findViewById(R.id.question_image_row));
@@ -648,7 +642,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.DROPDOWN_LIST:
                 case Constants.DROPDOWN_OU_LIST:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_dropdown_row, tableLayout, false);
-                    tableRow.addView(lInflater.inflate(R.layout.horizontal_view_item, tableLayout, false));
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     tableRow = populateSpinnerFromOptions(tableRow, screenQuestion);
@@ -658,7 +651,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;
                 case Constants.SWITCH_BUTTON:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row, tableLayout, false);
-                    tableRow.addView(lInflater.inflate(R.layout.horizontal_view_item, tableLayout, false));
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     if(screenQuestion.getPath()!=null && !screenQuestion.getPath().equals("")) {
                             ImageView rowImageView = ((ImageView) tableRow.findViewById(R.id.question_image_row));
@@ -700,7 +692,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @return
      */
     private View createNavigationButtonsBackButton(View navigationButtonsHolder) {
-        ImageButton button = (ImageButton) navigationButtonsHolder.findViewById(R.id.right_btn);
+        Button button = (Button) navigationButtonsHolder.findViewById(R.id.right_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -711,7 +703,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
             }
         });
-        button = (ImageButton) navigationButtonsHolder.findViewById(R.id.left_btn);
+        button = (Button) navigationButtonsHolder.findViewById(R.id.left_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
         button.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -155,13 +155,15 @@ public class PullController {
             TrackerController.setStartDate(EventExtended.format(realDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
         }
         if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
+            postFinish();
+            unregister();
             return;
         }
         try {
             job = DhisService.loadDataValues(context);
         } catch (Exception ex) {
             Log.e(TAG, "pullS: " + ex.getLocalizedMessage());
-            ex.printStackTrace();
+            postException(ex);
         }
     }
 
@@ -170,7 +172,6 @@ public class PullController {
         MetaDataController.wipe();
         try {
             job = DhisService.loadMetaData(context);
-            return;
         } catch (Exception ex) {
             Log.e(TAG, "pullS: " + ex.getLocalizedMessage());
             ex.printStackTrace();

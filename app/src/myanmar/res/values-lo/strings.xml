@@ -141,9 +141,14 @@
 <string name="review_title">"ກະລຸນາກວດສອບກ່ອນທີ່ຈະ"</string>
 <string name="review_subtitle">"ລະບົບສາຍສົ່ງ"</string>
 <string name="not_tested">ບໍ່ໄດ້ທົດສອບ</string>
+<<<<<<< HEAD
 <string name="no_data">ບໍ່​ມີ​ຂໍ້​ມູນ</string>
 <string name="last_6_days">6 ວັນ</string>
 <string name="last_6_weeks">ທີ່ຜ່ານມາ 6 ອາທິດ</string>
 <string name="last_6_months">ສຸດທ້າຍ 6 ເດືອນທີ່</string>
 <string name="download">Download:</string>
+=======
+    <string name="demo_login">ການສາທິດ</string>
+
+>>>>>>> 854c81c... Add possibility to customize LoginActivity, only Myanmar variant customize it adding demo button
 </resources>

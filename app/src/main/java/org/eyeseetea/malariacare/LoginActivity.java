@@ -29,8 +29,12 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+<<<<<<< HEAD
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+=======
+import android.view.ViewGroup;
+>>>>>>> 854c81c... Add possibility to customize LoginActivity, only Myanmar variant customize it adding demo button
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,6 +42,8 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.layout.customization.ILoginActivityCustomization;
+import org.eyeseetea.malariacare.layout.customization.LoginActivityCustomization;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
@@ -80,6 +86,8 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         usernameEditText.setText("");
         EditText passwordEditText = (EditText) findViewById(R.id.password);
         passwordEditText.setText("");
+
+        customizeLogin();
     }
 
     private void initDataDownloadPeriodDropdown() {
@@ -154,6 +162,11 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
                 onLoginFail(result.getResponseHolder().getApiException());
             }
         }
+    }
+
+    private void customizeLogin() {
+        ILoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization();
+        loginActivityCustomization.customize(this);
     }
 
     private void goSettingsWithRightExtras(){

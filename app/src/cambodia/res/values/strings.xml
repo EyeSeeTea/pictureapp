@@ -120,4 +120,9 @@
 <string name="font_size_level4_title">"Extra large"</string>
 <string name="option_counter">"Repetitions: "</string>
 <string name="option_confirm">"Confirm option"</string>
+<string name="no_data">no data</string>
+<string name="last_6_days">last 6 days</string>
+<string name="last_6_weeks">last 6 weeks</string>
+<string name="last_6_months">last 6 months</string>
+<string name="download">Download:</string>
 </resources>

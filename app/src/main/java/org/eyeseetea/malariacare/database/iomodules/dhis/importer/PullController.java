@@ -138,17 +138,16 @@ public class PullController {
 
             TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
             String selectedDateLimit=PreferencesState.getInstance().getDataLimitedByDate();
-            //Pull No data is selected
 
             //Limit of data by date is selected
             if(!selectedDateLimit.equals("")) {
-                TrackerController.setStartDate(EventExtended.format(realDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
+                TrackerController.setStartDate(EventExtended.format(getDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
             }
 
             if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
                 pullMetaData();
             }else{
-                pullComplete();
+                pullMetaDataAndData();
             }
         } catch (Exception ex) {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());
@@ -166,7 +165,7 @@ public class PullController {
         }
     }
 
-    private void pullComplete() {
+    private void pullMetaDataAndData() {
         try {
             job = DhisService.loadData(context);
         } catch (Exception ex) {
@@ -180,10 +179,10 @@ public class PullController {
      * Returns the correct data from the limited date in shared preferences
      * @param selectedDateLimit
      */
-    private Date realDateFromString(String selectedDateLimit) {
+    private Date getDateFromString(String selectedDateLimit) {
         Calendar day = Calendar.getInstance();
         if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_days))){
-                day.add(Calendar.DAY_OF_YEAR, -6);
+            day.add(Calendar.DAY_OF_YEAR, -6);
         } else if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_weeks))){
             day.add(Calendar.WEEK_OF_YEAR, -6);
         }else if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_months))){

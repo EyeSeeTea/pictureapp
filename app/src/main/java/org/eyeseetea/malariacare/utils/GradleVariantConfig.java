@@ -15,7 +15,7 @@ import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
  */
 
 public class GradleVariantConfig {
-    public static boolean isSwipActionActive(){
+    public static boolean isSwipeActionActive(){
         if(BuildConfig.activeSwipeNavigator)
             return true;
         return false;

@@ -212,7 +212,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * Swipe right listener moves to previous question
              */
             public void onSwipeRight() {
-                if (GradleVariantConfig.isSwipActionActive()) {
+                if (GradleVariantConfig.isSwipeActionActive()) {
                     Log.d(TAG, "onSwipeRight(previous)");
 
                     //Hide keypad
@@ -226,7 +226,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * Swipe left listener moves to next question
              */
             public void onSwipeLeft() {
-                if (GradleVariantConfig.isSwipActionActive()) {
+                if (GradleVariantConfig.isSwipeActionActive()) {
                     Log.d(TAG, "onSwipeLeft(next)");
                     if (readOnly || navigationController.isNextAllowed()) {
 

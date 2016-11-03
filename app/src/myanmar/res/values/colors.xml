@@ -11,7 +11,7 @@
     <color name="tab_pressed_background">@color/light_violet</color>
     <color name="tab_unpressed_background">#4d3b4c</color>
 
-    <color name="main_window_background">@color/medium_violet</color>
+    <color name="main_window_background">@color/light_violet</color>
     <color name="headerColor">@color/light_violet</color>
     <color name="fragment_header_title">@color/text_first_color</color>
     <color name="fragment_header_subtitle">@color/white</color>medium_light_violet

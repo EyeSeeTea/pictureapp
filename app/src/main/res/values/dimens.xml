@@ -56,7 +56,8 @@
     <dimen name="default_review_fragment_font_size">24dp</dimen>
 
     <dimen name="footer_navigation_size">30dp</dimen>
-
+    <dimen name="top_separator_line">6dp</dimen>
+    <dimen name="plus_button">2dp</dimen>
 
 
 </resources>

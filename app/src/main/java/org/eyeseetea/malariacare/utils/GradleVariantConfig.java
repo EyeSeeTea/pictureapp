@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.layout;
+package org.eyeseetea.malariacare.utils;
 
 import android.util.Log;
 import android.view.View;
@@ -14,7 +14,7 @@ import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
  * Created by idelcano on 31/10/2016.
  */
 
-public class ActionUtils {
+public class GradleVariantConfig {
     public static boolean isSwipActionActive(){
         if(BuildConfig.activeSwipeNavigator)
             return true;

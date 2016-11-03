@@ -16,16 +16,12 @@
     <!-- Base application theme. -->
     <style name="EyeSeeTheme" parent="Theme.AppCompat.Light">
         <!--<item name="windowActionBar">false</item>-->
+        <!-- its the default theme. Look in the styles.xml in the variant if you should change some theme default value-->
         <item name="colorPrimary">@color/actionbar_background</item>
         <item name="colorPrimaryDark">@color/dark_navy_blue</item>
         <item name="android:windowBackground" >@color/main_window_background</item>
         <item name="logo">@drawable/pictureapp_logo</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:actionOverflowButtonStyle">@style/EyeSeeTheme.OverFlow</item>
-    </style>
-
-    <style name="EyeSeeTheme.OverFlow" >
-        <item name="android:actionOverflowButtonStyle">@style/Widget.AppCompat.Light.ActionButton.Overflow</item>
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

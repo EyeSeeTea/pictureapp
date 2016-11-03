@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+        <style name="EyeSeeTheme" parent="Theme.AppCompat.Light">
+        <!--<item name="windowActionBar">false</item>-->
+        <item name="colorPrimary">@color/actionbar_background</item>
+        <item name="colorPrimaryDark">@color/dark_navy_blue</item>
+        <item name="android:windowBackground" >@color/main_window_background</item>
+        <item name="logo">@drawable/pictureapp_logo</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:actionOverflowButtonStyle">@style/EyeSeeTheme.OverFlow</item>
+        </style>
         <style name="EyeSeeTheme.OverFlow" >
                 <item name="android:src">@drawable/custom_dots</item>
         </style>

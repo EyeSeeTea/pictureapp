@@ -44,9 +44,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -67,13 +65,13 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.ActionUtils;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
@@ -214,7 +212,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * Swipe right listener moves to previous question
              */
             public void onSwipeRight() {
-                if (ActionUtils.isSwipActionActive()) {
+                if (GradleVariantConfig.isSwipActionActive()) {
                     Log.d(TAG, "onSwipeRight(previous)");
 
                     //Hide keypad
@@ -228,7 +226,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * Swipe left listener moves to next question
              */
             public void onSwipeLeft() {
-                if (ActionUtils.isSwipActionActive()) {
+                if (GradleVariantConfig.isSwipActionActive()) {
                     Log.d(TAG, "onSwipeLeft(next)");
                     if (readOnly || navigationController.isNextAllowed()) {
 
@@ -464,7 +462,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //this method removes all the clicable views
         swipeTouchListener.clearClickableViews();
         navigationButtonHolder =  rowView.findViewById(R.id.multi_question_tab_navigation_buttons);
-        if(navigationController!=null) {
+        if(GradleVariantConfig.isButtonNavigationActive()) {
             createNavigationButtonsBackButton(navigationButtonHolder);
         }
         Log.d(TAG,"Questions in actual tab: "+screenQuestions.size());
@@ -692,7 +690,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @return
      */
     private View createNavigationButtonsBackButton(View navigationButtonsHolder) {
-        Button button = (Button) navigationButtonsHolder.findViewById(R.id.right_btn);
+        Button button = (Button) navigationButtonsHolder.findViewById(R.id.next_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -703,7 +701,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
             }
         });
-        button = (Button) navigationButtonsHolder.findViewById(R.id.left_btn);
+        button = (Button) navigationButtonsHolder.findViewById(R.id.back_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
         button.setOnClickListener(new View.OnClickListener() {
             @Override

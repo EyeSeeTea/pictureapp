@@ -9,35 +9,14 @@
         android:orientation="horizontal"
         >
 
-    <Button
-        android:id="@+id/left_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:background="@drawable/back_background_button"
-        android:textColor="@color/dark_violet"
-        android:adjustViewBounds="true"
-        android:scaleType="centerInside"
-        android:drawableLeft="@drawable/back_button"
-        />
+
+    <include layout="@layout/back_button"></include>
 
     <Space
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/right_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:text="siguiente"
-        android:background="@drawable/next_background_button"
-        android:adjustViewBounds="true"
-        android:scaleType="centerInside"
-        android:drawableRight="@drawable/next_button"  />
+    <include layout="@layout/next_button"></include>
 
 </LinearLayout>

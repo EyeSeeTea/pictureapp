@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.database;
 
 import org.eyeseetea.malariacare.database.migrations.Migration13ModifyValuesLastMigration;
+import org.eyeseetea.malariacare.database.migrations.Migration15AddOptionAttributeColumns;
 
 /**
  * Created by idelcano on 29/09/2016.
@@ -9,6 +10,6 @@ import org.eyeseetea.malariacare.database.migrations.Migration13ModifyValuesLast
 public class PostMigration {
 
     public static void launchPostMigration() {
-        Migration13ModifyValuesLastMigration.postMigrate();
+        Migration15AddOptionAttributeColumns.postMigrate();
     }
 }

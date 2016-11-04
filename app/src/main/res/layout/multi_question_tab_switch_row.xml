@@ -63,9 +63,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:switchMinWidth="56dp"
+                android:thumb="@drawable/thumb"
+                android:track="@drawable/track"
                 android:textOn=""
-                android:textOff=""
-                android:checked="true">
+                android:textOff="">
             </Switch>
         <org.eyeseetea.malariacare.views.TextCard
             android:layout_width="wrap_content"

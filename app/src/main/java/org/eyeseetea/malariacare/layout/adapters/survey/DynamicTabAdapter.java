@@ -461,7 +461,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         //this method removes all the clicable views
         swipeTouchListener.clearClickableViews();
-        navigationButtonHolder =  rowView.findViewById(R.id.multi_question_tab_navigation_buttons);
+        navigationButtonHolder =  rowView.findViewById(R.id.snackbar);
         if(GradleVariantConfig.isButtonNavigationActive()) {
             createNavigationButtonsBackButton(navigationButtonHolder);
         }
@@ -655,8 +655,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             rowImageView.setVisibility(View.VISIBLE);
                             putImageInImageView(screenQuestion.getPath(), rowImageView);
                     }
-                    ((TextCard) tableRow.findViewById(R.id.row_switch_yes)).setText(screenQuestion.getAnswer().getOptions().get(0).getCode());
-                    ((TextCard) tableRow.findViewById(R.id.row_switch_no)).setText(screenQuestion.getAnswer().getOptions().get(1).getCode());
+                    ((TextCard) tableRow.findViewById(R.id.row_switch_true)).setText(screenQuestion.getAnswer().getOptions().get(0).getCode());
+                    ((TextCard) tableRow.findViewById(R.id.row_switch_false)).setText(screenQuestion.getAnswer().getOptions().get(1).getCode());
                     Switch switchView=(Switch) tableRow.findViewById(R.id.answer);
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initSwitchOption(screenQuestion, switchView);
@@ -1304,7 +1304,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 ReadWriteDB.deleteValue(rowQuestion);
                 break;
             case Constants.SWITCH_BUTTON:
-                saveSwitchOption(rowQuestion, true);
+                //the 0 option is the left option and is false in the switch, the 1 option is the right option and is true
+                boolean isChecked = false;
+                if(rowQuestion.getAnswer().getOptions().get(1).getOptionAttribute().getDefaultOption()==1) {
+                    isChecked = true;
+                }
+                saveSwitchOption(rowQuestion, isChecked);
                 break;
         }
     }
@@ -1337,8 +1342,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Switch switchView=(Switch)tableRow.findViewById(R.id.answer);
                 Option selectedOption=rowQuestion.getOptionBySession();
                 if(selectedOption==null){
-                    //Fixme true is the default value
-                    saveSwitchOption(rowQuestion, true);
+                    //the 0 option is the left option and is false in the switch, the 1 option is the right option and is true
+                    boolean isChecked = false;
+                    if(rowQuestion.getAnswer().getOptions().get(1).getOptionAttribute().getDefaultOption()==1) {
+                        isChecked = true;
+                    }
+                    saveSwitchOption(rowQuestion, isChecked);
+                    switchView.setChecked(isChecked);
+                    break;
                 }
                 switchView.setChecked(findSwitchBoolean(rowQuestion));
                 break;
@@ -1666,7 +1677,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Take option
         Option selectedOption=question.getOptionBySession();
         if(selectedOption==null){
-            saveSwitchOption(question, switchQuestion.isChecked());
+            //the 0 option is the right option and is true in the switch, the 1 option is the left option and is false
+            boolean isDefaultOption = false;
+            boolean switchValue = false;
+            if(question.getAnswer().getOptions().get(0).getOptionAttribute().getDefaultOption()==1) {
+                selectedOption=question.getAnswer().getOptions().get(0);
+                isDefaultOption = true;
+                switchValue = true;
+            }
+            else if(question.getAnswer().getOptions().get(1).getOptionAttribute().getDefaultOption()==1) {
+                selectedOption=question.getAnswer().getOptions().get(1);
+                isDefaultOption = true;
+                switchValue = false;
+            }
+            if(isDefaultOption) {
+                switchQuestion.setChecked(switchValue);
+                ReadWriteDB.saveValuesDDL(question, selectedOption, null);
+            }
         }
         else{
             switchQuestion.setChecked(findSwitchBoolean(question));
@@ -1697,19 +1724,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @return
      */
     public static Option findSwitchOption(Question question,boolean isChecked){
-        String expectedCode=String.valueOf(isChecked);
-        //Search "false/true" code in the options
-        for(Option option:question.getAnswer().getOptions()){
-            if(expectedCode.equals(option.getCode())){
-                return option;
-            }
-        }
         //Search option by position
         if(isChecked){
-            return question.getAnswer().getOptions().get(1);
+            return question.getAnswer().getOptions().get(0);
         }
         else{
-            return question.getAnswer().getOptions().get(0);
+            return question.getAnswer().getOptions().get(1);
         }
     }
     /**
@@ -1719,19 +1739,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public static Boolean findSwitchBoolean(Question question){
         Value value= question.getValueBySession();
-        if(value.getValue().toLowerCase().equals("true")){
+        if(value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())){
             return true;
         }
-        else if(value.getValue().toLowerCase().equals("false")){
+        else if(value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())) {
             return false;
-        }
-        else{
-            if(value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())){
-                return true;
-            }
-            else if(value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
-                return false;
-            }
         }
         return  false;
     }

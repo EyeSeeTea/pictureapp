@@ -54,6 +54,10 @@ public class OptionAttribute extends BaseModel {
     @Column
     int text_size;
 
+    @Column
+    int default_option;
+
+
     /**
      * Constant that reflects a left alignment
      */
@@ -142,6 +146,14 @@ public class OptionAttribute extends BaseModel {
         this.text_size = size;
     }
 
+    public int getDefaultOption() {
+        return default_option;
+    }
+
+    public void setDefaultOption(int default_option) {
+        this.default_option = default_option;
+    }
+
     public int getHorizontal_alignment() {
         return horizontal_alignment;
     }
@@ -221,6 +233,8 @@ public class OptionAttribute extends BaseModel {
         if (id_option_attribute != that.id_option_attribute) return false;
         if (horizontal_alignment != that.horizontal_alignment) return false;
         if (vertical_alignment != that.vertical_alignment) return false;
+        if (text_size != that.text_size) return false;
+        if (default_option != that.default_option) return false;
         if (background_colour != null ? !background_colour.equals(that.background_colour) : that.background_colour != null)
             return false;
         return path != null ? path.equals(that.path) : that.path == null;
@@ -234,6 +248,8 @@ public class OptionAttribute extends BaseModel {
         result = 31 * result + (path != null ? path.hashCode() : 0);
         result = 31 * result + horizontal_alignment;
         result = 31 * result + vertical_alignment;
+        result = 31 * result + text_size;
+        result = 31 * result + default_option;
         return result;
     }
 
@@ -243,8 +259,10 @@ public class OptionAttribute extends BaseModel {
                 "id_option_attribute=" + id_option_attribute +
                 ", background_colour='" + background_colour + '\'' +
                 ", path='" + path + '\'' +
-                ", horizontal_alignment='" + horizontal_alignment + '\'' +
-                ", vertical_alignment='" + vertical_alignment + '\'' +
+                ", horizontal_alignment=" + horizontal_alignment +
+                ", vertical_alignment=" + vertical_alignment +
+                ", text_size=" + text_size +
+                ", default_option=" + default_option +
                 '}';
     }
 

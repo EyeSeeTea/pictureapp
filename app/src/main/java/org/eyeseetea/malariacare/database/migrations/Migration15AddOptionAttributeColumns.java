@@ -4,9 +4,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Migration;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
+import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -14,17 +17,18 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import java.io.IOException;
 
 /**
- * Created by idelcano on 03/08/2016.
+ * Created by idelcano on 14/06/2016.
  */
-@Migration(version = 19, databaseName = AppDatabase.NAME)
-public class Migration13ModifyValuesLastMigration extends BaseMigration {
+@Migration(version = 15, databaseName = AppDatabase.NAME)
+public class Migration15AddOptionAttributeColumns extends BaseMigration {
 
-    private static String TAG=".Migration13";
+    private static String TAG=".Migration5";
+    public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
 
-    private static Migration13ModifyValuesLastMigration instance;
+    private static Migration15AddOptionAttributeColumns instance;
     private boolean postMigrationRequired;
 
-    public Migration13ModifyValuesLastMigration() {
+    public Migration15AddOptionAttributeColumns() {
         super();
         instance = this;
         postMigrationRequired=false;
@@ -35,11 +39,17 @@ public class Migration13ModifyValuesLastMigration extends BaseMigration {
 
     @Override
     public void migrate(SQLiteDatabase database) {
-        postMigrationRequired=true;
+        postMigrationRequired=false;
+        addColumn(database, OptionAttribute.class, "default_option", "Integer");
     }
 
     @Override
     public void onPostMigrate() {
+    }
+
+    public static void addColumn(SQLiteDatabase database, Class model, String columnName, String type) {
+        ModelAdapter myAdapter = FlowManager.getModelAdapter(model);
+        database.execSQL(String.format(ALTER_TABLE_ADD_COLUMN, myAdapter.getTableName(), columnName, type));
     }
 
 
@@ -51,17 +61,15 @@ public class Migration13ModifyValuesLastMigration extends BaseMigration {
         }
 
 
+        //this migration is moved to last migration
         //Data? Add new default data
         if(instance.hasData()) {
             try {
                 PopulateDB.addOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
-                PopulateDB.updateOptionNames(PreferencesState.getInstance().getContext().getAssets());
-                PopulateDB.updateQuestions(PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
         //This operation wont be done again
         instance.postMigrationRequired=false;
     }

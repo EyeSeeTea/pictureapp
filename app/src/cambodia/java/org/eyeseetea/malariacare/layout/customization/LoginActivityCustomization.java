@@ -5,9 +5,8 @@ import android.view.ViewGroup;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 
-public class LoginActivityCustomization implements ILoginActivityCustomization{
+public class LoginActivityCustomization{
 
-    @Override
     public void customize(LoginActivity loginActivity) {
         //Cambodia has no customization
     }

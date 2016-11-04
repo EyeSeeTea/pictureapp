@@ -42,7 +42,6 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.layout.customization.ILoginActivityCustomization;
 import org.eyeseetea.malariacare.layout.customization.LoginActivityCustomization;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
@@ -165,7 +164,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     }
 
     private void customizeLogin() {
-        ILoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization();
+        LoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization();
         loginActivityCustomization.customize(this);
     }
 

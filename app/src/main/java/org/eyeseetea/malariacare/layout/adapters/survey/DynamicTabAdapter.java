@@ -27,6 +27,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -1487,7 +1488,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 return;
             InputStream inputStream = context.getAssets().open(path);
             Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-            imageView.setImageBitmap(bmp);
+            imageView.setImageDrawable(new BitmapDrawable(context.getResources(), bmp));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -132,6 +132,11 @@
 <string name="review_title">Por favor, compruebe</string>
 <string name="review_subtitle">Transmisión</string>
 <string name="not_tested">No probado</string>
+<string name="no_data">Sin datos</string>
+<string name="last_6_days">Últimos 6 dias</string>
+<string name="last_6_weeks">Últimas 6 semanas</string>
+<string name="last_6_months">Últimos 6 meses</string>
+<string name="download">Descarga:</string>
     <string name="assessment_past_cases">PAST CASES</string>
     <string name="assessment_new_cases">NEW CASES</string>
     <string name="assessment_connectivity">Data awaiting internet connectivity</string>

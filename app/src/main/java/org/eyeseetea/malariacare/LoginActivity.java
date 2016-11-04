@@ -25,12 +25,15 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
@@ -38,6 +41,8 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
+
+import java.util.ArrayList;
 
 /**
  * Login Screen.
@@ -64,18 +69,57 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initDataDownloadPeriodDropdown();
 
         //Populate server with the current value
         EditText serverText = (EditText) findViewById(org.hisp.dhis.android.sdk.R.id.server_url);
         serverText.setText(ServerAPIController.getServerUrl());
-        //Readonly
-        //serverText.setEnabled(false);
 
         //Username, Password blanks to force real login
         EditText usernameEditText = (EditText) findViewById(R.id.username);
         usernameEditText.setText("");
         EditText passwordEditText = (EditText) findViewById(R.id.password);
         passwordEditText.setText("");
+    }
+
+    private void initDataDownloadPeriodDropdown() {
+        if(!BuildConfig.loginDataDownloadPeriod) {
+            return;
+        }
+        //Add left text for the spinner "title"
+        findViewById(R.id.date_spinner_container).setVisibility(View.VISIBLE);
+        TextView textView = (TextView) findViewById(R.id.data_text_view);
+        textView.setText(R.string.download);
+
+        //add options
+        ArrayList<String> dataLimitOptions = new ArrayList<>();
+        dataLimitOptions.add(getString(R.string.no_data));
+        dataLimitOptions.add(getString(R.string.last_6_days));
+        dataLimitOptions.add(getString(R.string.last_6_weeks));
+        dataLimitOptions.add(getString(R.string.last_6_months));
+
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dataLimitOptions);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        //add spinner
+        Spinner spinner = (Spinner) findViewById(R.id.data_spinner);
+        spinner.setVisibility(View.VISIBLE);
+        spinner.setAdapter(spinnerArrayAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,int pos, long id) {
+                PreferencesState.getInstance().setDataLimitedByDate(spinnerArrayAdapter.getItem(pos).toString());
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        //select the selected option or default no data option
+        String dateLimit = PreferencesState.getInstance().getDataLimitedByDate();
+        if(dateLimit.equals("")) {
+            spinner.setSelection(spinnerArrayAdapter.getPosition(getString(R.string.no_data)));
+        } else {
+            spinner.setSelection(spinnerArrayAdapter.getPosition(dateLimit));
+        }
     }
 
     @Override

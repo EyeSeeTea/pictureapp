@@ -64,16 +64,22 @@ android {
             applicationId 'org.eyeseetea.surveillance_kh_bb'
             versionName "1.2.7"
             buildConfigField "boolean", "reviewScreen", "false"
+            buildConfigField "boolean", "activeSwipeNavigator", "true"
+            buildConfigField "boolean", "activeButtonNavigator", "false"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
             versionName "1.0.6"
             buildConfigField "boolean","reviewScreen", "true"
+            buildConfigField "boolean", "activeSwipeNavigator", "true"
+            buildConfigField "boolean", "activeButtonNavigator", "false"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
             versionName "1.0.0"
             buildConfigField "boolean","reviewScreen", "true"
+            buildConfigField "boolean", "activeSwipeNavigator", "false"
+            buildConfigField "boolean", "activeButtonNavigator", "true"
         }
     }
     

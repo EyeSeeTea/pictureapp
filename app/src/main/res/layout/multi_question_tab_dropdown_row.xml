@@ -20,10 +20,11 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/headerColor"
             android:backgroundTintMode="add"
+            android:layout_margin="@dimen/input_edit_text_margin"
+            android:paddingLeft="@dimen/input_edit_text_left_padding"
+            android:paddingRight="@dimen/input_edit_text_right_padding"
             android:gravity="right"
             android:paddingBottom="2dip"
-            android:paddingLeft="2dip"
-            android:paddingRight="20dip"
             android:paddingTop="2dip"
             android:spinnerMode="dropdown" />
     </LinearLayout>

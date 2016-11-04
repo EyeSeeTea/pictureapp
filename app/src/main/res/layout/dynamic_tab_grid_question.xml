@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/multi_question_tab_navigation_buttons"
+        android:layout_above="@+id/snackbar"
         android:orientation="vertical">
 
         <!--Question-->
@@ -57,7 +57,7 @@
             <!--Question-->
     </LinearLayout>
 
-    <include layout="@layout/multi_question_tab_navigation_buttons"></include>
+    <include layout="@layout/snakbar"></include>
     <!--Horizontal Progress bar + text-->
     <RelativeLayout
         android:id="@+id/dynamic_footer"

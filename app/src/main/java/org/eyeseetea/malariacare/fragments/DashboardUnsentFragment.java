@@ -30,6 +30,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -329,7 +330,7 @@ public class DashboardUnsentFragment extends ListFragment {
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveys(surveysUnsentFromService);
-
+                LayoutUtils.setDivider(getListView());
                 // Measure the screen height
                 int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
 

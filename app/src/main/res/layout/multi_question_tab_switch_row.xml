@@ -20,6 +20,7 @@
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:paddingLeft="@dimen/question_padding_all"
                     android:adjustViewBounds="true"
                     android:scaleType="centerInside"
                     android:layout_weight="0.25"   />
@@ -28,7 +29,6 @@
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.75"
-                    android:background="@drawable/edit_text_bottom_border"
                     android:textSize="@dimen/input_number_edit_text_phone"
                     android:textColor="@color/intColor"
                     android:id="@+id/row_header_text"
@@ -49,29 +49,30 @@
         <org.eyeseetea.malariacare.views.TextCard
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_bottom_border"
             android:textSize="@dimen/input_number_edit_text_phone"
             android:textColor="@color/intColor"
-            android:id="@+id/row_switch_yes"
+            android:id="@+id/row_switch_false"
             app:tDimension="@string/font_size_level1"
             app:tFontName="@string/condensed_font_name"
             android:paddingRight="@dimen/question_padding_all"
             android:paddingLeft="@dimen/question_padding_all"
             />
-        <Switch
-            android:id="@+id/answer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:checked="true">
-        </Switch>
+            <Switch
+                android:id="@+id/answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:switchMinWidth="56dp"
+                android:textOn=""
+                android:textOff=""
+                android:checked="true">
+            </Switch>
         <org.eyeseetea.malariacare.views.TextCard
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_bottom_border"
             android:textSize="@dimen/input_number_edit_text_phone"
             android:textColor="@color/intColor"
-            android:id="@+id/row_switch_no"
+            android:id="@+id/row_switch_true"
             app:tDimension="@string/font_size_level1"
             app:tFontName="@string/condensed_font_name"
             android:paddingRight="@dimen/question_padding_all"

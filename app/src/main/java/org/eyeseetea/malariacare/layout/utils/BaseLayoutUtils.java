@@ -180,4 +180,6 @@ public class BaseLayoutUtils {
         }
     }
 
+    public static void setDivider(ListView listView) {
+    }
 }

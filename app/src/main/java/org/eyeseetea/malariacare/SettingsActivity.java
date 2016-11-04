@@ -162,7 +162,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.dhis_url)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
         //Hide developer option if is not active in the json
-        if(!BuildConfig.isDeveloperOptionsActive())
+        if(!BuildConfig.developerOptions)
             getPreferenceScreen().removePreference(getPreferenceScreen().findPreference(getResources().getString(R.string.developer_option)));
 
         // Set the ClickListener to the android:key"remove_sent_surveys" preference.
@@ -566,6 +566,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference(getString(R.string.font_sizes)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
+
+            if(!BuildConfig.developerOptions)
+                getPreferenceScreen().removePreference(getPreferenceScreen().findPreference(getResources().getString(R.string.developer_option)));
 
             SettingsActivity settingsActivity = (SettingsActivity) getActivity();
             AutoCompleteEditTextPreference autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));

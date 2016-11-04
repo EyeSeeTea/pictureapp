@@ -1,21 +1,14 @@
 package org.eyeseetea.malariacare.database.utils;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.utils.AUtils;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Database;
 
 import java.io.BufferedWriter;
@@ -25,7 +18,8 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.util.Random;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -98,9 +92,9 @@ public class ExportData {
             bw.write(Session.getPhoneMetaData().getPhone_metaData()+"\n");
             bw.write("Version code: "+ BuildConfig.VERSION_CODE+"\n");
             bw.write("Version name: "+ BuildConfig.VERSION_NAME+"\n");
-            bw.write("Aplication Id: "+ BuildConfig.APPLICATION_ID+"\n");
+            bw.write("Application Id: "+ BuildConfig.APPLICATION_ID+"\n");
             bw.write("Build type: "+ BuildConfig.BUILD_TYPE+"\n");
-            bw.write("Hash: "+ AUtils.getCommitHash(activity));
+            bw.write("Hash: "+ Utils.getCommitHash(activity));
 
             bw.close();
             fw.close();
@@ -242,10 +236,8 @@ public class ExportData {
         emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
                 new String[] { "" });
 
-        Random r = new Random();
-
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                "Local db " + r.nextInt());
+                "Local "+ PreferencesState.getInstance().getContext().getString(R.string.app_name)+" db " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime()) );
         //sets file as readable for external apps
         data.setReadable(true,false);
         Log.d(TAG,data.toURI()+"");

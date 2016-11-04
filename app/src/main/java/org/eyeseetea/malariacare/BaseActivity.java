@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
@@ -49,6 +50,7 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.TabGroup;
+import org.eyeseetea.malariacare.database.utils.ExportData;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -175,7 +177,7 @@ public abstract class BaseActivity extends ActionBarActivity {
                 break;
             case R.id.export_db:
                 debugMessage("Export db");
-                Intent emailIntent=ExportData.dumpAndSendToAIntent(this);
+                Intent emailIntent= ExportData.dumpAndSendToAIntent(this);
                 if(emailIntent!=null)
                     startActivityForResult(emailIntent,DUMP_REQUEST_CODE);
                 break;
@@ -187,7 +189,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if(!PreferencesState.getInstance().isDevelopOptionActive() || !BuildConfig.developerOptions()) {
+        if(!PreferencesState.getInstance().isDevelopOptionActive() || !BuildConfig.developerOptions) {
             MenuItem item = menu.findItem(R.id.export_db);
             item.setVisible(false);
         }

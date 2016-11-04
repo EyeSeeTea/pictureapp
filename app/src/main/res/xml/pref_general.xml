@@ -91,5 +91,9 @@
             android:positiveButtonText="@null" />
 
     </PreferenceCategory>
-
+    <CheckBoxPreference
+        android:key="@string/developer_option"
+        android:title="@string/developer_option_title"
+        android:summary="@string/developer_option_summary"
+        android:defaultValue="false" />
 </PreferenceScreen>

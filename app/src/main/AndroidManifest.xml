@@ -48,7 +48,16 @@
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="org.eyeseetea.malariacare.database.model" />
-
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:name="org.eyeseetea.malariacare.utils.DBProvider"
+            android:authorities="org.eyeseetea.malariacare.database.utils.ExportData"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <activity
             android:name=".DashboardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

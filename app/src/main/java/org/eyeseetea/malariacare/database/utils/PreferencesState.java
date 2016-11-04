@@ -261,4 +261,12 @@ public class PreferencesState {
     public void setDataLimitedByDate(String value){
         saveStringPreference(R.string.data_limited_by_date, value);
     }
+    /**
+     +     * Inits hidePlanningTab flag according to preferences
+     +     * @return
+     +     */
+    public boolean isDevelopOptionActive(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
+        return sharedPreferences.getBoolean(instance.getContext().getString(R.string.developer_option), false);
+    }
 }

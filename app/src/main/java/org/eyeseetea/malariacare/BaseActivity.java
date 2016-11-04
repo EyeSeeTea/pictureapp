@@ -70,6 +70,10 @@ public abstract class BaseActivity extends ActionBarActivity {
     public static final String SETTINGS_CALLER_ACTIVITY = "SETTINGS_CALLER_ACTIVITY";
 
     protected static String TAG=".BaseActivity";
+    /**
+     * Extra param to annotate the activity to return after settings
+     */
+    private static final int DUMP_REQUEST_CODE=0;
 
     private AlarmPushReceiver alarmPush;
 
@@ -169,10 +173,33 @@ public abstract class BaseActivity extends ActionBarActivity {
                 debugMessage("Go back");
                 onBackPressed();
                 break;
+            case R.id.export_db:
+                debugMessage("Export db");
+                Intent emailIntent=ExportData.dumpAndSendToAIntent(this);
+                if(emailIntent!=null)
+                    startActivityForResult(emailIntent,DUMP_REQUEST_CODE);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if(!PreferencesState.getInstance().isDevelopOptionActive() || !BuildConfig.developerOptions()) {
+            MenuItem item = menu.findItem(R.id.export_db);
+            item.setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        if ((requestCode == DUMP_REQUEST_CODE)){
+            ExportData.removeDumpIfExist(this);
+        }
     }
 
     /**

@@ -34,7 +34,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -45,7 +44,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -82,8 +80,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import utils.PhoneMask;
-
-import static org.eyeseetea.malariacare.fragments.ReviewFragment.TAG;
 
 /**
  * Created by Jose on 21/04/2015.
@@ -610,7 +606,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         if(isMultipleQuestionTab(tabType)) {
             tableButtonRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_button_row, tableLayout, false);
-            tableLayout.addView(createMultipleQuestionsTabButton(tableButtonRow));
+            tableLayout.addView(createMultipleQuestionsNextButton(tableButtonRow));
         }
         rowView.requestLayout();
         return rowView;
@@ -625,7 +621,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return tableRow;
     }
 
-    private View createMultipleQuestionsTabButton(TableRow tableButtonRow) {
+    private View createMultipleQuestionsNextButton(TableRow tableButtonRow) {
         Button button = (Button) tableButtonRow.findViewById(R.id.multi_question_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
         button.setOnClickListener(new View.OnClickListener() {
@@ -643,12 +639,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void setTextSettings(TextCard textOption, Option currentOption) {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
-        if (currentOption.getOptionAttribute().hasHorizontalAlignment() && currentOption.getOptionAttribute().hasVerticalAlignment())
-        {
+        if (currentOption.getOptionAttribute().hasHorizontalAlignment() && currentOption.getOptionAttribute().hasVerticalAlignment()) {
             textOption.setText(currentOption.getCode());
             textOption.setGravity(currentOption.getOptionAttribute().getGravity());
-        }
-        else{
+        } else {
             textOption.setVisibility(View.GONE);
         }
         textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
@@ -913,14 +907,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         if(isValid!=isValidNewValue) {
                             if(isValidNewValue){
                                 failedValidations--;
-                            }
-                            else{
+                            } else {
                                 failedValidations++;
                             }
                         }
+
                         if(isValidNewValue){
                             saveValue(editCard);
-                        }else{
+                        } else {
                             editCard.setError(context.getString(R.string.dynamic_error_phone_format));
                         }
                         editCard.setTag(R.id.TAG_VALIDATION_OLD_VALUE, s.toString());

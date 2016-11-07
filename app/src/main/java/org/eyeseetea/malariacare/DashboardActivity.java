@@ -611,19 +611,7 @@ public class DashboardActivity extends BaseActivity {
 
             getSurveysFromService();
         }
-
-        /**
-         * Add user to table and session
-         */
-/*        private void initUser(){
-            user=new User(DUMMY_USER,DUMMY_USER);
-            User userdb=User.existUser(user);
-            if(userdb!=null)
-            user=userdb;
-            else
-            user.save();
-        }*/
-
+        
         private void initDataIfRequired() throws IOException {
             if (new Select().count().from(Tab.class).count()!=0) {
                 Log.i(TAG, "DB Already loaded, showing surveys...");

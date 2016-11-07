@@ -72,6 +72,10 @@ public class PopulateDB {
     public static final String QUESTION_RELATIONS_CSV="QuestionRelations.csv";
     public static final String QUESTION_THRESHOLDS_CSV="QuestionThresholds.csv";
 
+    public static final String ORG_UNIT_LEVEL_CSV="OrgUnitLevel.csv";
+    public static final String ORG_UNIT_CSV="OrgUnit.csv";
+
+
     private static final List<String> tables2populate = Arrays.asList(
             PROGRAMS_CSV,
             TAB_GROUPS_CSV,
@@ -94,6 +98,11 @@ public class PopulateDB {
             MATCHES,
             QUESTION_OPTIONS_CSV);
 
+    private static final List<String> tables2populateDummy = Arrays.asList(
+            ORG_UNIT_LEVEL_CSV,
+            ORG_UNIT_CSV);
+
+
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
     private static final String TAG = "PopulateDB";
@@ -108,6 +117,9 @@ public class PopulateDB {
     static Map<Integer, Answer> answerList = new LinkedHashMap<Integer, Answer>();
     static Map<Integer, QuestionRelation> questionRelationList = new LinkedHashMap();
     static Map<Integer, Match> matchList = new LinkedHashMap();
+
+    static Map<Integer, OrgUnitLevel> orgUnitLevelList = new LinkedHashMap();
+    static Map<Integer, OrgUnit> orgUnitList = new LinkedHashMap();
 
     public static void populateDB(AssetManager assetManager) throws IOException {
 
@@ -252,10 +264,39 @@ public class PopulateDB {
         cleanInnerLists();
     }
 
-    /**
-     * Used for testing purposes
-     */
-    public static void populateDummyData(){
+    public static void populateDummyData(AssetManager assetManager)throws IOException {
+        //Reset inner references
+        cleanDummyLists();
+
+        for (String table : tables2populateDummy) {
+            Log.i(TAG,"Loading csv: "+table);
+            CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(table)), SEPARATOR, QUOTECHAR);
+
+            String[] line;
+            while ((line = reader.readNext()) != null) {
+                switch (table) {
+                    case ORG_UNIT_LEVEL_CSV:
+                        OrgUnitLevel orgUnitLevel = new OrgUnitLevel();
+                        orgUnitLevel.setName(line[1]);
+                        orgUnitLevel.save();
+                        orgUnitLevelList.put(Integer.valueOf(line[0]), orgUnitLevel);
+                        break;
+                    case ORG_UNIT_CSV:
+                        OrgUnit orgUnit = new OrgUnit();
+                        orgUnit.setUid(line[1]);
+                        orgUnit.setName(line[2]);
+                        orgUnit.setOrgUnit(Long.valueOf(line[3]));
+                        orgUnit.setOrgUnitLevel(orgUnitLevelList.get(Integer.valueOf(line[4])));
+                        orgUnit.save();
+                        orgUnitList.put(Integer.valueOf(line[0]), orgUnit);
+                        break;
+                }
+            }
+            reader.close();
+        }
+        //Free references since the maps are static
+        cleanDummyLists();
+
     }
 
     private static void cleanInnerLists(){
@@ -269,6 +310,11 @@ public class PopulateDB {
         answerList.clear();
         questionRelationList.clear();
         matchList.clear();
+    }
+
+    private static void cleanDummyLists(){
+        orgUnitLevelList.clear();
+        orgUnitList.clear();
     }
 
     /**

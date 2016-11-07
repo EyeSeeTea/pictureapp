@@ -41,13 +41,24 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.database.model.OrgUnit;
+import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.customization.LoginActivityCustomization;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
+import org.hisp.dhis.android.sdk.persistence.models.Dashboard;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
+import org.hisp.dhis.android.sdk.ui.views.FontButton;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import static org.eyeseetea.malariacare.database.model.OrgUnit.getAllOrgUnit;
+import static org.eyeseetea.malariacare.database.model.User.createDummyUser;
 
 /**
  * Login Screen.
@@ -71,22 +82,27 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      */
     private String password;
 
+    EditText serverText;
+    EditText usernameEditText;
+    EditText passwordEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initDataDownloadPeriodDropdown();
 
         //Populate server with the current value
-        EditText serverText = (EditText) findViewById(org.hisp.dhis.android.sdk.R.id.server_url);
+        serverText = (EditText) findViewById(R.id.server_url);
         serverText.setText(ServerAPIController.getServerUrl());
 
         //Username, Password blanks to force real login
-        EditText usernameEditText = (EditText) findViewById(R.id.username);
+        usernameEditText = (EditText) findViewById(R.id.username);
         usernameEditText.setText("");
-        EditText passwordEditText = (EditText) findViewById(R.id.password);
+        passwordEditText = (EditText) findViewById(R.id.password);
         passwordEditText.setText("");
 
-        customizeLogin();
+        LoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization();
+        loginActivityCustomization.customize(this);
     }
 
     private void initDataDownloadPeriodDropdown() {
@@ -146,10 +162,15 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     @Override
     public void onClick(View v) {
-        // Save dhis URL and establish in preferences, so it will be used to make the pull
-        EditText serverEditText = (EditText) findViewById(R.id.server_url);
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
+        saveServerUrlInPreferences();
+
         super.onClick(v);
+    }
+
+    private void saveServerUrlInPreferences() {
+        // Save dhis URL and establish in preferences, so it will be used to make the pull
+        serverText = (EditText) findViewById(R.id.server_url);
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverText.getText().toString());
     }
 
     @Subscribe
@@ -161,11 +182,6 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
                 onLoginFail(result.getResponseHolder().getApiException());
             }
         }
-    }
-
-    private void customizeLogin() {
-        LoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization();
-        loginActivityCustomization.customize(this);
     }
 
     private void goSettingsWithRightExtras(){

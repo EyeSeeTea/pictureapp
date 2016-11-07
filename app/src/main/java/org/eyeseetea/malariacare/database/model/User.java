@@ -134,4 +134,19 @@ public class User extends BaseModel {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+    private static final String DUMMY_USER="user";
+
+    public static User createDummyUser(){
+        User dummyUser=new User(DUMMY_USER,DUMMY_USER);
+
+        User userdb=User.existUser(dummyUser);
+
+        if(userdb!=null)
+            dummyUser=userdb;
+        else
+            dummyUser.save();
+
+        return dummyUser;
+    }
 }

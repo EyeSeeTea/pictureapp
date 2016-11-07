@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:layout="http://schemas.android.com/tools"
     android:background="@color/questionLayoutBackground">
 
     <!--Horizontal Progress bar + text-->
@@ -78,12 +79,9 @@
                 android:layout_height="0px"
                 android:layout_weight="0.8"
                 android:orientation="vertical">
-                <!--Options as a N x 2 grid-->
-                <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/options_table"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:measureWithLargestChild="false"></TableLayout>
+                <include layout="@layout/scrolled_table"></include>
+                <include layout="@layout/no_scrolled_table"></include>
+
 
                 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/confirm_table"

@@ -53,7 +53,8 @@ public class Constants {
             TAB_ADHERENCE = 6,
             TAB_IQATAB = 7,
             TAB_REPORTING = 8,
-            TAB_DYNAMIC_AUTOMATIC_TAB = 9;
+            TAB_DYNAMIC_AUTOMATIC_TAB = 9,
+            TAB_MULTI_QUESTION = 10;
 
     //FIXME So far the special sub type of composite scores is treated by name
     public static final String COMPOSITE_SCORE_TAB_NAME = "Composite Scores";

@@ -362,7 +362,8 @@ public class Question extends BaseModel {
         this.id_answer = id_answer;
         this.answer = null;
     }
-
+    //Is necessary use the question relations.
+    @Deprecated
     public Question getQuestion() {
         if (question == null) {
             question = new Select()
@@ -373,6 +374,7 @@ public class Question extends BaseModel {
         return question;
     }
 
+    @Deprecated
     public void setQuestion(Question question) {
         this.question = question;
         this.id_parent = (question != null) ? question.getId_question() : null;
@@ -1080,6 +1082,20 @@ public class Question extends BaseModel {
             this.sibling=buildNullQuestion();
         }
         return this.sibling;
+    }
+
+    public List<Question> getQuestionsByTab(Tab tab) {
+        //Select question from questionrelation where operator=1 and id_match in (..)
+        return new Select().from(Question.class).as("q")
+                //Question + QuestioRelation
+                .join(Header.class, Join.JoinType.LEFT).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                .join(Tab.class,Join.JoinType.LEFT).as("t")
+                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                .where(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)).eq(tab.getId_tab()))
+                .queryList();
     }
 
     private static class QuestionOrderComparator implements Comparator {

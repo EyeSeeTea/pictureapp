@@ -14,20 +14,18 @@
         android:paddingLeft="@dimen/question_padding"
         android:paddingRight="@dimen/question_padding"
         >
-        <include layout="@layout/phone_item"></include>
-        <org.eyeseetea.malariacare.views.CustomButton
-            android:id="@+id/row_phone_btn"
-            android:background="@drawable/integer_bottom_border"
+        <include layout="@layout/row_header_item"></include>
+        <org.eyeseetea.malariacare.views.EditCard
+            android:id="@+id/answer"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_weight="0.5"
+            android:paddingRight="@dimen/question_padding_all"
+            android:paddingLeft="@dimen/question_padding_all"
             android:gravity="center"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/send"
-            android:layout_margin="10dp"
-            android:textColor="@color/intColor"
-            app:tDimension="@string/font_size_level2"
-            app:tFontName="@string/specific_language_font"
-            />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:inputType="number"
+            ></org.eyeseetea.malariacare.views.EditCard>
     </LinearLayout>
 
 </TableRow>

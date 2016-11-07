@@ -26,13 +26,11 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -40,6 +38,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,13 +46,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -67,17 +64,20 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import utils.PhoneMask;
 
@@ -124,6 +124,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Flag that indicates if the actual question option is clicked to prevent multiple clicks.
      */
     public static boolean isClicked;
+
+    /**
+     * Flag that indicates the number of failed validations by the active screen in multiquestion tabs
+     */
+    public static int failedValidations;
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
@@ -216,9 +221,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     //Hide keypad
                     hideKeyboard(listView.getContext(), listView);
-
                     next();
                 }
+            }
+
+            /**
+             * Adds a clickable view
+             * @param view
+             */
+            public void addScrollView(ScrollView view){
+                super.addScrollView(scrollView);
+                scrollView=view;
             }
         };
 
@@ -254,7 +267,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         });
 
         //Show confirm on full screen
-        rootView .findViewById(R.id.options_table).setVisibility(View.GONE);
+        rootView .findViewById(R.id.dynamic_tab_options_table).setVisibility(View.GONE);
         rootView .findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
 
         //Show question image in counter alert
@@ -287,7 +300,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void removeConfirmCounter(View view){
-        view.getRootView().findViewById(R.id.options_table).setVisibility(View.VISIBLE);
+        view.getRootView().findViewById(R.id.dynamic_tab_options_table).setVisibility(View.VISIBLE);
         view.getRootView().findViewById(R.id.confirm_table).setVisibility(View.GONE);
     }
 
@@ -299,7 +312,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         ReadWriteDB.saveValuesDDL(question, selectedOption, value);
         darkenNonSelected(view, selectedOption);
-        highlightSelection(view, selectedOption);
+        LayoutUtils.highlightSelection(view, selectedOption);
         finishOrNext();
     }
 
@@ -319,7 +332,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     //We dont want the user to click anything else
                     Option otherOption=(Option)childItem.getTag();
                     if(selectedOption.getId_option() != otherOption.getId_option()){
-                        overshadow((FrameLayout) childItem);
+                        LayoutUtils.overshadow((FrameLayout) childItem);
                     }
                 }
             }
@@ -375,6 +388,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        //init validation control(used only in multiquestions tabs)
+        failedValidations=0;
+
         //Inflate the layout
         View rowView = lInflater.inflate(R.layout.dynamic_tab_grid_question, parent, false);
 
@@ -384,8 +400,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         // We get values from DB and put them in Session
         if(Session.getSurvey()!=null)
             Session.getSurvey().getValuesFromDB();
-        // Se get the value from Session
-        Value value=question.getValueBySession();
 
         //Question
         TextCard headerView=(TextCard) rowView.findViewById(R.id.question);
@@ -393,7 +407,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + context.getString(R.string.specific_language_font));
         headerView.setTypeface(tf);
-        headerView.setText(question.getForm_name());
+        int tabType=question.getHeader().getTab().getType();
+        if(isMultipleQuestionTab(tabType)){
+            headerView.setText(question.getHeader().getTab().getName());
+        }
+        else{
+            headerView.setText(question.getForm_name());
+        }
 
         //question image
         if(question.getPath()!=null && !question.getPath().equals("")) {
@@ -409,139 +429,220 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         progressView.setProgress(navigationController.getCurrentPage()+1);
         progressText.setText(getLocaleProgressStatus(progressView.getProgress(), progressView.getMax()));
 
-        //Options
-        TableLayout tableLayout=(TableLayout)rowView.findViewById(R.id.options_table);
-
+        TableLayout tableLayout=null;
         TableRow tableRow=null;
-        int typeQuestion=question.getOutput();
+        TableRow tableButtonRow=null;
+        List<Question> screenQuestions= new ArrayList<>();
+
         swipeTouchListener.clearClickableViews();
-        switch (typeQuestion){
-            case Constants.IMAGES_2:
-            case Constants.IMAGES_4:
-            case Constants.IMAGES_6:
-                List<Option> options = question.getAnswer().getOptions();
-                for(int i=0;i<options.size();i++){
-                    Option currentOption = options.get(i);
-                    int optionID=R.id.option2;
-                    int counterID=R.id.counter2;
-                    int mod=i%2;
-                    //First item per row requires a new row
-                    if(mod==0){
-                        tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row,tableLayout,false);
+        if(isMultipleQuestionTab(tabType)) {
+            tableLayout=(TableLayout)rowView.findViewById(R.id.multi_question_options_table);
+            (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
+            screenQuestions = question.getQuestionsByTab(question.getHeader().getTab());
+            swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(R.id.scrolled_table)).findViewById(R.id.table_scroll));
+        }
+        else{
+            tableLayout=(TableLayout)rowView.findViewById(R.id.dynamic_tab_options_table);
+            (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);
+            screenQuestions.add(question);
+        }
+        for(Question screenQuestion:screenQuestions) {
+            // Se get the value from Session
+            Value value=screenQuestion.getValueBySession();
+            int typeQuestion = screenQuestion.getOutput();
+            switch (typeQuestion) {
+                case Constants.IMAGES_2:
+                case Constants.IMAGES_4:
+                case Constants.IMAGES_6:
+                    List<Option> options = screenQuestion.getAnswer().getOptions();
+                    for (int i = 0; i < options.size(); i++) {
+                        Option currentOption = options.get(i);
+                        int optionID = R.id.option2;
+                        int counterID = R.id.counter2;
+                        int mod = i % 2;
+                        //First item per row requires a new row
+                        if (mod == 0) {
+                            tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
+                            tableLayout.addView(tableRow);
+                            optionID = R.id.option1;
+                            counterID = R.id.counter1;
+                        }
+                        //Add counter value if possible
+                        addCounterValue(screenQuestion, currentOption, tableRow, counterID);
+
+                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
+                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                        setTextSettings(textOption, currentOption);
+                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                        initOptionButton(frameLayout, currentOption, value);
+                    }
+                    break;
+                case Constants.IMAGES_3:
+                    List<Option> opts = screenQuestion.getAnswer().getOptions();
+                    for (int i = 0; i < opts.size(); i++) {
+
+                        Option currentOption = opts.get(i);
+
+                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_singleitem, tableLayout, false);
                         tableLayout.addView(tableRow);
-                        optionID=R.id.option1;
-                        counterID=R.id.counter1;
+
+                        //Add counter value if possible
+                        addCounterValue(screenQuestion, currentOption, tableRow, R.id.counter1);
+
+                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(0);
+                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                        setTextSettings(textOption, currentOption);
+
+                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+
+                        initOptionButton(frameLayout, currentOption, value);
                     }
-                    //Add counter value if possible                   
-                    addCounterValue(question,currentOption,tableRow,counterID);
+                    break;
+                case Constants.IMAGES_5:
+                    List<Option> answerOptions = screenQuestion.getAnswer().getOptions();
+                    for (int i = 0; i < answerOptions.size(); i++) {
+                        Option currentOption = answerOptions.get(i);
+                        int counterID = R.id.counter2;
 
-                    FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
-                    TextCard textOption = (TextCard) frameLayout.getChildAt(1);
-                    setTextSettings(textOption,currentOption);
-                    frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
+                        int mod = i % 2;
+                        //First item per row requires a new row
+                        if (mod == 0) {
+                            //Every new row admits 2 options
+                            tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
+                            tableLayout.addView(tableRow);
+                            counterID = R.id.counter1;
+                        }
 
-                    initOptionButton(frameLayout, currentOption, value);
-                }
-                break;
-            case Constants.IMAGES_3:
-                List<Option> opts = question.getAnswer().getOptions();
-                for(int i=0;i<opts.size();i++){
+                        //Add counter value if possible
+                        addCounterValue(screenQuestion, currentOption, tableRow, counterID);
 
-                    Option currentOption = opts.get(i);
+                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
+                        if (i == 4) {
+                            TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f);
+                            //remove the unnecessary second imageview.
+                            tableRow.removeViewAt(mod + 1);
+                            frameLayout.setLayoutParams(params);
+                        }
+                        frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
 
-                    tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_singleitem,tableLayout,false);
+                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                        setTextSettings(textOption, currentOption);
+
+
+                        initOptionButton(frameLayout, currentOption, value);
+                    }
+                    break;
+                case Constants.REMINDER:
+                case Constants.WARNING:
+                    ((TextView) rowView.findViewById(R.id.dynamic_progress_text)).setText("");
+                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_question_text, tableLayout, false);
                     tableLayout.addView(tableRow);
+                    List<QuestionOption> questionOptions = screenQuestion.getQuestionOption();
+                    //Question "header" is in the first option in Options.csv
+                    if (questionOptions != null && questionOptions.size() > 0) {
+                        initWarningText(tableRow, questionOptions.get(0).getOption());
+                    }
 
-                    //Add counter value if possible
-                    addCounterValue(question,currentOption,tableRow,R.id.counter1);
-
-                    FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(0);
-                    TextCard textOption = (TextCard) frameLayout.getChildAt(1);
-                    setTextSettings(textOption,currentOption);
-
-                    frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
-
-                    initOptionButton(frameLayout, currentOption, value);
-                }
-                break;
-            case Constants.IMAGES_5:
-                List<Option> answerOptions = question.getAnswer().getOptions();
-                for(int i=0;i<answerOptions.size();i++) {
-                    Option currentOption = answerOptions.get(i);
-                    int counterID=R.id.counter2;
-
-                    int mod = i % 2;
-                    //First item per row requires a new row
-                    if (mod == 0) {
-                        //Every new row admits 2 options
-                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row, tableLayout, false);
+                    //Question "button" is in the second option in Options.csv
+                    if (questionOptions != null && questionOptions.size() > 1) {
+                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_confirm_yes, tableLayout, false);
                         tableLayout.addView(tableRow);
-                        counterID=R.id.counter1;
+                        initWarningValue(tableRow, questionOptions.get(1).getOption());
+                        int paddingSize = (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_padding);
+                        tableRow.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
                     }
-
-                    //Add counter value if possible
-                    addCounterValue(question,currentOption,tableRow,counterID);
-
-                    FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
-                    if (i == 4) {
-                        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1f);
-                        //remove the innecesary second imageview.
-                        tableRow.removeViewAt(mod+1);
-                        frameLayout.setLayoutParams(params);
+                    break;
+                case Constants.PHONE:
+                    if(isMultipleQuestionTab(tabType)){
+                        tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_phone_row, tableLayout, false);
+                        ((TextCard)tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    }else {
+                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
                     }
-                    frameLayout.setBackgroundColor(Color.parseColor("#" + currentOption.getBackground_colour()));
-
-                    TextCard textOption = (TextCard) frameLayout.getChildAt(1);
-                    setTextSettings(textOption,currentOption);
-
-
-                    initOptionButton(frameLayout, currentOption, value);
-                }
-                break;
-            case Constants.REMINDER:
-            case Constants.WARNING:
-                ((TextView) rowView.findViewById(R.id.dynamic_progress_text)).setText("");
-                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_row_question_text, tableLayout, false);
-                tableLayout.addView(tableRow);
-                List<QuestionOption> questionOptions= question.getQuestionOption();
-                //Question "header" is in the first option in Options.csv
-                if(questionOptions!=null && questionOptions.size()>0) {
-                    initWarningText(tableRow, questionOptions.get(0).getOption());
-                }
-
-                //Question "button" is in the second option in Options.csv
-                if( questionOptions!=null && questionOptions.size()>1) {
-                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_confirm_yes, tableLayout, false);
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
+                    initPhoneValue(tableRow, value, tabType);
                     tableLayout.addView(tableRow);
-                    initWarningValue(tableRow,  questionOptions.get(1).getOption());
-                    int paddingSize= (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_padding);
-                    tableRow.setPadding(paddingSize,paddingSize,paddingSize,paddingSize);
-                }
-
-                break;
-            case Constants.PHONE:
-                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_phone_row, tableLayout, false);
-                tableLayout.addView(tableRow);
-                initPhoneValue(tableRow, value);
-                break;
-            case Constants.POSITIVE_INT:
-                tableRow=(TableRow)lInflater.inflate(R.layout.dynamic_tab_positiveint_row, tableLayout, false);
-                tableLayout.addView(tableRow);
-                initPositiveIntValue(tableRow, value);
-                break;
+                    break;
+                case Constants.POSITIVE_INT:
+                    if(isMultipleQuestionTab(tabType)){
+                        tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_positive_int_row, tableLayout, false);
+                        ((TextCard)tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    }else {
+                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_positiveint_row, tableLayout, false);
+                    }
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
+                    initPositiveIntValue(tableRow, value, tabType);
+                    tableLayout.addView(tableRow);
+                    break;
+                case Constants.INT:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_int_row, tableLayout, false);
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
+                    initIntValue(tableRow, value);
+                    tableLayout.addView(tableRow);
+                    break;
+                case Constants.LONG_TEXT:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_long_text_row, tableLayout, false);
+                    ((TextCard)tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
+                    initLongTextValue(tableRow, value);
+                    tableLayout.addView(tableRow);
+                    break;
+                case Constants.SHORT_TEXT:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_short_text_row, tableLayout, false);
+                    ((TextCard)tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
+                    initShortTextValue(tableRow, value);
+                    tableLayout.addView(tableRow);
+                    break;
+                case Constants.DROPDOWN_LIST:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_dropdown_row, tableLayout, false);
+                    ((TextCard)tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
+                    initDropdownValue(tableRow, screenQuestion, value);
+                    tableLayout.addView(tableRow);
+                    break;
+            }
+        }
+        if(isMultipleQuestionTab(tabType)) {
+            tableButtonRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_button_row, tableLayout, false);
+            tableLayout.addView(createMultipleQuestionsNextButton(tableButtonRow));
         }
         rowView.requestLayout();
         return rowView;
     }
 
+    private TableRow populateSpinner(TableRow tableRow, Question question) {
+        Spinner dropdown_list = (Spinner)tableRow.findViewById(R.id.answer);
+        // In case the option is selected, we will need to show num/dems
+        List<Option> optionList = new ArrayList<>(question.getAnswer().getOptions());
+        optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
+        dropdown_list.setAdapter(new OptionArrayAdapter(context, optionList));
+        return tableRow;
+    }
+
+    private View createMultipleQuestionsNextButton(TableRow tableButtonRow) {
+        Button button = (Button) tableButtonRow.findViewById(R.id.multi_question_btn);
+        //Save the numberpicker value in the DB, and continue to the next screen.
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Questions with failed validation "+failedValidations);
+                if(failedValidations==0){
+                    finishOrNext();
+                }
+            }
+        });
+        return tableButtonRow;
+    }
+
+
     private void setTextSettings(TextCard textOption, Option currentOption) {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
-        if (currentOption.getOptionAttribute().hasHorizontalAlignment() && currentOption.getOptionAttribute().hasVerticalAlignment())
-        {
+        if (currentOption.getOptionAttribute().hasHorizontalAlignment() && currentOption.getOptionAttribute().hasVerticalAlignment()) {
             textOption.setText(currentOption.getCode());
             textOption.setGravity(currentOption.getOptionAttribute().getGravity());
-        }
-        else{
+        } else {
             textOption.setVisibility(View.GONE);
         }
         textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
@@ -639,10 +740,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param tableRow
      * @param value
      */
-    private void initPositiveIntValue(TableRow tableRow, Value value){
-        Button button=(Button)tableRow.findViewById(R.id.dynamic_positiveInt_btn);
-
-        final EditText numberPicker = (EditText)tableRow.findViewById(R.id.dynamic_positiveInt_edit);
+    private void initPositiveIntValue(TableRow tableRow, Value value, int tabType){
+        Button button = null;
+        if(!isMultipleQuestionTab(tabType)) {
+            button = (Button) tableRow.findViewById(R.id.dynamic_positiveInt_btn);
+        }
+        final EditText numberPicker = (EditText)tableRow.findViewById(R.id.answer);
 
         //Without setMinValue, setMaxValue, setValue in this order, the setValue is not displayed in the screen.
         numberPicker.setFilters(new InputFilter[]{
@@ -654,48 +757,128 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(value!=null){
             numberPicker.setText(value.getValue());
         }
-
         if (!readOnly) {
-            //Save the numberpicker value in the DB, and continue to the next screen.
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(isClicked)
-                        return;
-                    isClicked=true;
-                    savePositiveIntValue(numberPicker);
-                }
-            });
-
+            if(isMultipleQuestionTab(tabType)) {
+                numberPicker.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        boolean isValidNewValue = validatePositiveIntValue(s.toString());
+                        Object oldValue= numberPicker.getTag(R.id.TAG_VALIDATION_OLD_VALUE);
+                        //if the oldValue is null or not validated value, and the new value is correct, we need decrement the failedValidations variable.
+                        if(oldValue==null || (!validatePositiveIntValue(oldValue.toString()) && isValidNewValue)){
+                            failedValidations--;
+                        }
+                        else if(!isValidNewValue){
+                            //if the value is not valid, in the positiveInteger it only happends when a user erase the text and it's always is necessary the increment of failedValidations.
+                            failedValidations++;
+                        }
+                        if(isValidNewValue){
+                            savePositiveIntValue(numberPicker);
+                        } else if(!validatePositiveIntValue(s.toString())){
+                            ReadWriteDB.deleteValue((Question) numberPicker.getTag());
+                            numberPicker.setError(context.getString(R.string.dynamic_error_age));
+                        }
+                        numberPicker.setTag(R.id.TAG_VALIDATION_OLD_VALUE, s.toString());
+                        Log.d("onTextChanged", "end "+ s.toString() + " bool: "  + validatePhoneValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
+                    }
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        Object oldValue= numberPicker.getTag(R.id.TAG_VALIDATION_OLD_VALUE);
+                        if(oldValue==null){
+                            Question question= (Question)numberPicker.getTag();
+                            Value value= question.getValueBySession();
+                            if(value!=null) {
+                                numberPicker.setTag(R.id.TAG_VALIDATION_OLD_VALUE,value.getValue());
+                            }
+                        }
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
+            }else{
+                //Save the numberpicker value in the DB, and continue to the next screen.
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (isClicked)
+                            return;
+                        isClicked = true;
+                        if(clickPositiveIntValue(numberPicker)) {
+                            finishOrNext();
+                        }
+                    }
+                });
+            }
+            if(isMultipleQuestionTab(tabType) && value==null){
+                failedValidations++;
+            }
         }else{
             numberPicker.setEnabled(false);
-            button.setEnabled(false);
+            if(!isMultipleQuestionTab(tabType)) {
+                button.setEnabled(false);
+            }
         }
 
-        //Add button to listener
-        swipeTouchListener.addClickableView(button);
-
+        if(!isMultipleQuestionTab(tabType)) {
+            //Add button to listener
+            swipeTouchListener.addClickableView(button);
+        }
         //Take focus and open keyboard
         openKeyboard(numberPicker);
     }
 
-    private void savePositiveIntValue(EditText numberPicker) {
-        String valueAsText=String.valueOf(numberPicker.getText());
+    private boolean isMultipleQuestionTab(int tabType) {
+        return tabType == Constants.TAB_MULTI_QUESTION;
+    }
 
+    private boolean clickPhoneValue(EditCard editCard) {
+        //Hide keypad
+        hideKeyboard(PreferencesState.getInstance().getContext());
+        String valueAsText=String.valueOf(editCard.getText());
+        boolean isValid=validatePhoneValue(valueAsText);
+        if(isValid){
+            navigationController.isMovingToForward=true;
+            saveValue(editCard);
+        }
+        else {
+            editCard.setError(context.getString(R.string.dynamic_error_phone_format));
+        }
+        return isValid;
+    }
+
+    private boolean validatePhoneValue(String valueAsText) {
+        //Required, empty values rejected
+        if(!PhoneMask.checkPhoneNumberByMask(valueAsText)){
+            isClicked=false;
+            return false;
+        }
+        return true;
+    }
+
+    private boolean clickPositiveIntValue(EditText editText) {
+        //Hide keypad
+        hideKeyboard(PreferencesState.getInstance().getContext());
+        String valueAsText=String.valueOf(editText.getText());
+        boolean isValid=validatePositiveIntValue(valueAsText);
+        if(isValid){
+            navigationController.isMovingToForward=true;
+            savePositiveIntValue(editText);
+        }
+        else {
+            editText.setError(context.getString(R.string.dynamic_error_age));
+        }
+        return isValid;
+    }
+
+    private boolean validatePositiveIntValue(String valueAsText) {
         //Required, empty values rejected
         if(checkEditTextNotNull(valueAsText)){
-            numberPicker.setError(context.getString(R.string.dynamic_error_age));
             isClicked=false;
-            return;
+            return false;
         }
-
-        //The text is truncated as integer ( 00-0 , 01-1 , etc. ) before save and send as string.
-        Integer positiveIntValue = Integer.parseInt(valueAsText);
-
-        navigationController.isMovingToForward=true;
-        Question question = navigationController.getCurrentQuestion();
-        ReadWriteDB.saveValuesText(question, positiveIntValue.toString());
-        finishOrNext();
+        return true;
     }
 
     /**
@@ -703,79 +886,216 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param tableRow
      * @param value
      */
-    private void initPhoneValue(TableRow tableRow, Value value){
-        Button button=(Button)tableRow.findViewById(R.id.dynamic_phone_btn);
-        final EditText editText=(EditText)tableRow.findViewById(R.id.dynamic_phone_edit);
-        final Context ctx = tableRow.getContext();
+    private void initPhoneValue(TableRow tableRow, Value value, int tabType){
+        final EditCard editCard=(EditCard)tableRow.findViewById(R.id.answer);
+        //Has value? show it
+        if(value!=null){
+            editCard.setText(value.getValue());
+        }
+        Button button = null;
+        if(!isMultipleQuestionTab(tabType)) {
+            button = (Button) tableRow.findViewById(R.id.row_phone_btn);
+        }
+        //Editable? add listener
+        if(!readOnly){
+            if(isMultipleQuestionTab(tabType)) {
+                editCard.addTextChangedListener(new TextWatcher() {
+                    boolean isValid;
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        boolean isValidNewValue = validatePhoneValue(s.toString());
+                        if(isValid!=isValidNewValue) {
+                            if(isValidNewValue){
+                                failedValidations--;
+                            } else {
+                                failedValidations++;
+                            }
+                        }
+
+                        if(isValidNewValue){
+                            saveValue(editCard);
+                        } else {
+                            editCard.setError(context.getString(R.string.dynamic_error_phone_format));
+                        }
+                        editCard.setTag(R.id.TAG_VALIDATION_OLD_VALUE, s.toString());
+                        Log.d("onTextChanged", "end "+ s.toString() + " bool: "  + validatePhoneValue(s.toString()));
+                        Log.d("onTextChanged", "total: " + failedValidations);
+                    }
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        Object oldValue = editCard.getTag(R.id.TAG_VALIDATION_OLD_VALUE);
+                        if(oldValue==null) {
+                            //The phone with null value is valid
+                            isValid = true;
+                        } else {
+                            isValid = validatePhoneValue(oldValue.toString());
+                        }
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
+            }else {
+                //Validate format on button click
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (isClicked)
+                            return;
+                        isClicked = true;
+                        View parentView = (View) v.getParent();
+                        EditCard editCard = (EditCard) parentView.findViewById(R.id.answer);
+                        if(clickPhoneValue(editCard)){
+                            finishOrNext();
+                        }
+                    }
+                });
+            }
+        }else{
+            editCard.setEnabled(false);
+            if(!isMultipleQuestionTab(tabType)) {
+                button.setEnabled(false);
+            }
+        }
+
+        if(!isMultipleQuestionTab(tabType)) {
+            //Add button to listener
+            swipeTouchListener.addClickableView(button);
+        }
+        //Take focus and open keyboard
+        openKeyboard(editCard);
+    }
+    
+    private void initIntValue(TableRow row,Value value) {
+        final EditCard numberPicker = (EditCard) row.findViewById(R.id.answer);
 
         //Has value? show it
         if(value!=null){
-            editText.setText(value.getValue());
+            numberPicker.setText(value.getValue());
         }
 
-        //Editable? add listener
-        if(!readOnly){
-
-            //Try to format on done
-            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        if (!readOnly) {
+            numberPicker.addTextChangedListener(new TextWatcher() {
                 @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if(isClicked)
-                        return false;
-                    isClicked=true;
-                    if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        String phoneValue = editText.getText().toString();
-                        if (PhoneMask.checkPhoneNumberByMask(phoneValue)) {
-                            editText.setText(PhoneMask.formatPhoneNumber(phoneValue));
-                        }
-                        savePhoneValue(editText);
-                    }
-                    return false;
+                public void afterTextChanged(Editable s) {
                 }
-            });
 
-            //Validate format on button click
-            button.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    if(isClicked)
-                        return;
-                    isClicked=true;
-                    View parentView = (View) v.getParent();
-                    EditText editText = (EditText) parentView.findViewById(R.id.dynamic_phone_edit);
-                    savePhoneValue(editText);
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        //Save the numberpicker value in the DB, and continue to the next screen.
+                        saveValue(numberPicker);
+                    }
+                });
+        }else{
+            numberPicker.setEnabled(false);
+        }
+        //Take focus and open keyboard
+        openKeyboard(numberPicker);
+    }
+
+    private void addTagQuestion(Question question, View viewById) {
+        viewById.setTag(question);
+    }
+
+
+    private void initShortTextValue(TableRow row, Value value) {
+        final EditCard numberPicker = (EditCard)row.findViewById(R.id.answer);
+        //Has value? show it
+        if(value!=null){
+            numberPicker.setText(value.getValue());
+        }
+
+        if (!readOnly) {
+            numberPicker.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //Save the numberpicker value in the DB, and continue to the next screen.
+                    ReadWriteDB.saveValuesText((Question)numberPicker.getTag(), String.valueOf(s));
                 }
             });
         }else{
-            editText.setEnabled(false);
-            button.setEnabled(false);
+            numberPicker.setEnabled(false);
         }
-
-        //Add button to listener
-        swipeTouchListener.addClickableView(button);
-
         //Take focus and open keyboard
-        openKeyboard(editText);
+        openKeyboard(numberPicker);
     }
 
-    private void savePhoneValue(EditText editText) {
+    private void initLongTextValue(TableRow row, Value value) {
+        final EditCard numberPicker = (EditCard)row.findViewById(R.id.answer);
 
-        String phoneValue = editText.getText().toString();
-        //Check phone ok
-        if(!PhoneMask.checkPhoneNumberByMask(phoneValue)){
-            editText.setError(context.getString(R.string.dynamic_error_phone_format));
-            isClicked=false;
-            return;
+        //Has value? show it
+        if(value!=null){
+            numberPicker.setText(value.getValue());
         }
 
-        navigationController.isMovingToForward=true;
-        String value=editText.getText().toString();
-        //Hide keypad
-        hideKeyboard(PreferencesState.getInstance().getContext());
-        editText.setText(value);
-        Question question = navigationController.getCurrentQuestion();
-        ReadWriteDB.saveValuesText(question, phoneValue);
-        finishOrNext();
+        if (!readOnly) {
+            numberPicker.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //Save the numberpicker value in the DB, and continue to the next screen.
+                    ReadWriteDB.saveValuesText((Question)numberPicker.getTag(), String.valueOf(s));
+                }
+            });
+        }else{
+            numberPicker.setEnabled(false);
+        }
+        //Take focus and open keyboard
+        openKeyboard(numberPicker);
+    }
+    private void initDropdownValue(TableRow row, Question screenQuestion, Value value) {
+        row = populateSpinner(row, screenQuestion);
+        Spinner dropdown = (Spinner)row.findViewById(R.id.answer);
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Option option = (Option) parent.getItemAtPosition(position);
+                Question question = (Question) parent.getTag();
+                ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        if(value!=null && value.getValue()!=null) {
+            for (int i = 0; i < dropdown.getAdapter().getCount(); i++) {
+                Option option=(Option)dropdown.getItemAtPosition(i);
+                if (option.equals(value.getOption())) {
+                    dropdown.setSelection(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void savePositiveIntValue(EditText numberPicker) {
+        String valueAsText=String.valueOf(numberPicker.getText());
+
+        //The text is truncated as integer ( 00-0 , 01-1 , etc. ) before save and send as string.
+        Integer positiveIntValue = Integer.parseInt(valueAsText);
+        ReadWriteDB.saveValuesText((Question) numberPicker.getTag(), positiveIntValue.toString());
+    }
+
+    private void saveValue(EditCard editCard) {
+        ReadWriteDB.saveValuesText((Question)editCard.getTag(), editCard.getText().toString());
     }
 
     private void openKeyboard(final EditText editText){
@@ -795,10 +1115,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         return false;
                     isClicked=true;
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        if(v.getId()==R.id.dynamic_positiveInt_edit)
-                            savePositiveIntValue((EditText) v);
-                        else if(v.getId()==R.id.dynamic_phone_edit)
-                            savePhoneValue((EditText)v);
+                        EditCard editText= ((EditCard) v);
+                        if(v.getId()==R.id.answer){
+                            if(clickPositiveIntValue(editText)) {
+                                finishOrNext();
+                            }
+                        }
+                        else if(v.getId()==R.id.answer) {
+                            if(clickPhoneValue(editText)){
+                                finishOrNext();
+                            }
+                        }
                         return true;
                     }
                     else {
@@ -808,30 +1135,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             });
         }
     }
-
-    /**
-     * Checks if the given string corresponds a correct phone number for the current country (by locale)
-     * @param phoneValue
-     * @return true|false
-     */
-    private boolean checkPhoneNumberByCountry(String phoneValue){
-
-        //Empty  is ok
-        if (phoneValue == null || "".equals(phoneValue)) {
-            phoneValue = "";
-        }
-
-        Phonenumber.PhoneNumber phoneNumber = null;
-        try {
-            Locale locale = context.getResources().getConfiguration().locale;
-            phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, locale.getCountry());
-        } catch (NumberParseException e) {
-            return false;
-        }
-        return PhoneNumberUtil.getInstance().isValidNumber(phoneNumber);
-    }
-
-
+    
     /**
      * Checks if edit text is not null:
      * @param editValue
@@ -850,13 +1154,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @param option
      */
     private void initOptionButton(FrameLayout button, Option option, Value value){
-
         // value = null --> first time calling initOptionButton
         //Highlight button
         if (value != null && value.getValue().equals(option.getName())) {
-            highlightSelection(button, option);
+            LayoutUtils.highlightSelection(button, option);
         } else if (value != null) {
-            overshadow(button);
+            LayoutUtils.overshadow(button);
         }
 
         //the button is a framelayout that contains a imageview
@@ -889,55 +1192,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             e.printStackTrace();
         }
     }
-
-    /**
-     * @param view
-     * @param option
-     */
-    private void highlightSelection(View view, Option option){
-        Drawable selectedBackground = context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
-        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {    //JELLY_BEAN=API16
-            view.setBackground(selectedBackground);
-        } else {
-            view.setBackgroundDrawable(selectedBackground);
-        }
-
-        if(option!=null) {
-            GradientDrawable bgShape = (GradientDrawable) view.getBackground();
-            String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
-            bgShape.setColor(Color.parseColor("#" + backGColor));
-            bgShape.setStroke(3, Color.WHITE);
-        }
-
-        //the view is a framelayout that contains a imageview
-        ImageView imageView;
-        if(view instanceof FrameLayout){
-            FrameLayout f = (FrameLayout) view;
-            imageView= (ImageView) f.getChildAt(0);
-        }else{
-            imageView = (ImageView)view;
-        }
-
-        imageView.clearColorFilter();
-    }
-
-    /**
-     * Puts a sort of dark shadow over the given view
-     * @param view
-     */
-    private void overshadow(FrameLayout view){
-        //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
-        view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
-        ImageView imageView = (ImageView) view.getChildAt(0);
-        imageView.setColorFilter(Color.parseColor("#805a595b"));
-
-        Drawable bg = view.getBackground();
-        if(bg instanceof GradientDrawable) {
-            GradientDrawable bgShape = (GradientDrawable)bg;
-            bgShape.setStroke(0, 0);
-        }
-    }
-
     /**
      * Advance to the next question with delay applied or finish survey according to question and value.
      */
@@ -1043,7 +1297,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
-
     /**
      * When the user click in a value in the review fragment the navigationController should go to related question
      */
@@ -1076,6 +1329,4 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if(relation.isAReminder())
                 next();
     }
-
-
 }

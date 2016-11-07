@@ -29,12 +29,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-<<<<<<< HEAD
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-=======
 import android.view.ViewGroup;
->>>>>>> 854c81c... Add possibility to customize LoginActivity, only Myanmar variant customize it adding demo button
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -101,6 +98,10 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         passwordEditText = (EditText) findViewById(R.id.password);
         passwordEditText.setText("");
 
+        customizeLogin();
+    }
+
+    private void customizeLogin() {
         LoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization();
         loginActivityCustomization.customize(this);
     }

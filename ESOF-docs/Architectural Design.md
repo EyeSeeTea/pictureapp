@@ -21,9 +21,9 @@ Numa primeira fase, serão apresentados alguns conceitos que consideramos pertin
 Posteriormente, serão apresentadas as quatros vistas constituintes do modelo de vistas acima referido, com diagramas respetivos:
    
    - Vista lógica - diagrama de pacotes;
-    - Vista de desenvolvimento - diagrama de componentes;
-    - Vista de deployment - diagrama de deployment;
-    - Vista de processo - diagrama de atividade;
+   - Vista de desenvolvimento - diagrama de componentes;
+   - Vista de deployment - diagrama de deployment;
+   - Vista de processo - diagrama de atividade;
 
 O "+1" refere-se à vista de casos de usos, sendo que o diagrama referente a esta vista está implementado no relatório anterior (meter hiperligaçao para o outro relatorio).
 

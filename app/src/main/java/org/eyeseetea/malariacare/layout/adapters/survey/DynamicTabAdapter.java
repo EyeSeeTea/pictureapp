@@ -1214,21 +1214,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * @return
      */
     private void showOrHideChildren(Question question) {
-        if(question.hasChildren()){
-            for(int i = 0, j = tableLayout.getChildCount(); i < j; i++) {
+        if(question.hasChildren()) {
+            for (int i = 0, j = tableLayout.getChildCount(); i < j; i++) {
                 View view = tableLayout.getChildAt(i);
                 if (view instanceof TableRow) {
                     TableRow row = (TableRow) view;
-                    View answerView= view.findViewById(R.id.answer);
-                    if(answerView==null) {
+                    View answerView = view.findViewById(R.id.answer);
+                    if (answerView == null) {
                         continue;
                     }
-                    Question rowQuestion = (Question)answerView.getTag();
-                    if(rowQuestion==null){
+                    Question rowQuestion = (Question) answerView.getTag();
+                    if (rowQuestion == null) {
                         continue;
                     }
                     List<Question> questionChildren = question.getChildren();
-                    if(questionChildren!=null && questionChildren.size()>0) {
+                    if (questionChildren != null && questionChildren.size() > 0) {
                         for (Question childQuestion : questionChildren) {
                             //if the table row question is child of the modified question...
                             toggleChild(row, rowQuestion, childQuestion);
@@ -1236,6 +1236,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                 }
             }
+        }
     }
 
     /**

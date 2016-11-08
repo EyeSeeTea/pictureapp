@@ -31,7 +31,11 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.OrganisationUnitExtended;
+import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Program;
+import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -229,6 +233,8 @@ public class PullController {
                     //Ok
                     wipeDatabase();
                     convertFromSDK();
+                    //Fixme it should be moved after login
+                    convertOUinOptions();
                     if (ProgressActivity.PULL_IS_ACTIVE) {
                         Log.d(TAG, "PULL process...OK");
                     }
@@ -242,6 +248,43 @@ public class PullController {
                 }
             }
         }.start();
+    }
+
+    private void convertOUinOptions() {
+        List<Question> questions= Question.getAllQuestionsWithOrgUnitDropdownList();
+        //remove older values, but not the especial "other" option
+        for(Question question:questions) {
+            List<Option> options = question.getAnswer().getOptions();
+            removeOldValues(question, options);
+        }
+
+        if(questions.size()==0) {
+            return;
+        }
+
+        //Generate the orgUnits options for each question with orgunit dropdown list
+        List<OrgUnit> orgUnits=OrgUnit.getAllOrgUnit();
+        for (OrgUnit orgUnit:orgUnits){
+            addOUOptionToQuestions(questions, orgUnit);
+        }
+    }
+
+    private void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
+        for(Question question:questions) {
+            Option option= new Option();
+            option.setAnswer(question.getAnswer());
+            option.setName(orgUnit.getUid());
+            option.setCode(orgUnit.getName());
+            option.save();
+        }
+    }
+
+    private void removeOldValues(Question question, List<Option> options) {
+        for(Option option:options){
+            if(QuestionOption.findByQuestionAndOption(question,option).size()==0){
+                option.delete();
+            }
+        }
     }
 
     /**

@@ -1081,8 +1081,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Take focus and open keyboard
         openKeyboard(numberPicker);
     }
-    private void initDropdownValue(TableRow row, Question screenQuestion, Value value) {
-        row = populateSpinner(row, screenQuestion);
+    private void initDropdownValue(TableRow row, Value value) {
         Spinner dropdown = (Spinner)row.findViewById(R.id.answer);
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

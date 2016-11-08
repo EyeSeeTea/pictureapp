@@ -54,9 +54,8 @@ import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 import org.hisp.dhis.android.sdk.utils.api.ProgramType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,6 +64,7 @@ import java.util.List;
  */
 public class PullController {
     public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
+    public static final int NUMBER_OF_MONTHS=0;
     private final String TAG = ".PullController";
 
     private static PullController instance;
@@ -127,23 +127,33 @@ public class PullController {
 
             //Register for event bus
             register();
+            //clear flags
+            clearPullFlags(PreferencesState.getInstance().getContext());
             //Enabling resources to pull
             enableMetaDataFlags();
             //Delete previous metadata
-            TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
-            MetaDataController.clearMetaDataLoadedFlags();
-            MetaDataController.wipe();
-            //Fixme delete the events
+
             Log.d(TAG,"Delete sdk db");
             PopulateDB.wipeSDKData();
-
             //Pull new metadata
             postProgress(context.getString(R.string.progress_pull_downloading));
-            try {
-                job = DhisService.loadData(context);
-            } catch (Exception ex) {
-                Log.e(TAG, "pullS: " + ex.getLocalizedMessage());
-                ex.printStackTrace();
+            PreferencesState.getInstance().reloadPreferences();
+
+            MetaDataController.clearMetaDataLoadedFlags();
+            MetaDataController.wipe();
+
+            TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
+            String selectedDateLimit=PreferencesState.getInstance().getDataLimitedByDate();
+
+            //Limit of data by date is selected
+            if(!selectedDateLimit.equals("")) {
+                TrackerController.setStartDate(EventExtended.format(getDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
+            }
+
+            if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
+                pullMetaData();
+            }else{
+                pullMetaDataAndData();
             }
         } catch (Exception ex) {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());
@@ -152,11 +162,51 @@ public class PullController {
         }
     }
 
+    private void clearPullFlags(Context context) {
+        LoadingController.clearLoadFlag(context, ResourceType.ASSIGNEDPROGRAMS);
+        LoadingController.clearLoadFlag(context, ResourceType.ASSIGNEDPROGRAMSWITHOUTEXTRAS);
+    }
+
+    private void pullMetaData() {
+        try {
+            job = DhisService.loadMetaData(context);
+        } catch (Exception ex) {
+            Log.e(TAG, "pullS: " + ex.getLocalizedMessage());
+            postException(ex);
+        }
+    }
+
+    private void pullMetaDataAndData() {
+        try {
+            job = DhisService.loadData(context);
+        } catch (Exception ex) {
+            Log.e(TAG, "pullS: " + ex.getLocalizedMessage());
+            ex.printStackTrace();
+            return;
+        }
+    }
+
+    /**
+     * Returns the correct data from the limited date in shared preferences
+     * @param selectedDateLimit
+     */
+    private Date getDateFromString(String selectedDateLimit) {
+        Calendar day = Calendar.getInstance();
+        if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_days))){
+            day.add(Calendar.DAY_OF_YEAR, -6);
+        } else if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_weeks))){
+            day.add(Calendar.WEEK_OF_YEAR, -6);
+        }else if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_months))){
+            day.add(Calendar.MONTH, -6);
+        }
+        return day.getTime();
+    }
+
     /**
      * Enables loading all metadata
      */
     private void enableMetaDataFlags() {
-        LoadingController.enableLoading(context, ResourceType.ASSIGNEDPROGRAMS);
+        LoadingController.enableLoading(context, ResourceType.ASSIGNEDPROGRAMSWITHOUTEXTRAS);
         LoadingController.enableLoading(context, ResourceType.PROGRAMS);
         LoadingController.enableLoading(context, ResourceType.OPTIONSETS);
         LoadingController.enableLoading(context, ResourceType.EVENTS);
@@ -205,24 +255,34 @@ public class PullController {
         //remove older values, but not the especial "other" option
         for(Question question:questions) {
             List<Option> options = question.getAnswer().getOptions();
-            for(Option option:options){
-                if(QuestionOption.findByQuestionAndOption(question,option).size()==0){
-                    option.delete();
-                }
-            }
+            removeOldValues(question, options);
+        }
+
+        if(questions.size()==0) {
+            return;
         }
 
         //Generate the orgUnits options for each question with orgunit dropdown list
-        if(questions.size()>0) {
-            List<OrgUnit> orgUnits=OrgUnit.getAllOrgUnit();
-            for (OrgUnit orgUnit:orgUnits){
-                for(Question question:questions) {
-                    Option option= new Option();
-                    option.setAnswer(question.getAnswer());
-                    option.setName(orgUnit.getUid());
-                    option.setCode(orgUnit.getName());
-                    option.save();
-                }
+        List<OrgUnit> orgUnits=OrgUnit.getAllOrgUnit();
+        for (OrgUnit orgUnit:orgUnits){
+            addOUOptionToQuestions(questions, orgUnit);
+        }
+    }
+
+    private void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
+        for(Question question:questions) {
+            Option option= new Option();
+            option.setAnswer(question.getAnswer());
+            option.setName(orgUnit.getUid());
+            option.setCode(orgUnit.getName());
+            option.save();
+        }
+    }
+
+    private void removeOldValues(Question question, List<Option> options) {
+        for(Option option:options){
+            if(QuestionOption.findByQuestionAndOption(question,option).size()==0){
+                option.delete();
             }
         }
     }
@@ -360,7 +420,7 @@ public class PullController {
 
     //Returns true if the pull thead is finish
     public boolean finishPullJob() {
-        if (JobExecutor.isJobRunning(job.getJobId())) {
+        if (job!=null && JobExecutor.isJobRunning(job.getJobId())) {
             Log.d(TAG, "Job " + job.getJobId() + " is running");
             job.cancel(true);
             try {

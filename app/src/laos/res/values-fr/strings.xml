@@ -132,4 +132,9 @@
 <string name="review_title">"S'il vous plaît vérifier avant"</string>
 <string name="review_subtitle">Transmission</string>
 <string name="not_tested">"Pas testé"</string>
+<string name="no_data">pas de données</string>
+<string name="last_6_days">les 6 derniers jours</string>
+<string name="last_6_weeks">dernières 6 semaines </string>
+<string name="last_6_months"> les 6 derniers mois</string>
+<string name="download">Téléchargement:</string>
 </resources>

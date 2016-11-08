@@ -62,18 +62,21 @@ android {
     productFlavors {
         cambodia {
             applicationId 'org.eyeseetea.surveillance_kh_bb'
-            versionName "1.2.7"
+            versionName "1.2.8"
             buildConfigField "boolean", "reviewScreen", "false"
+            buildConfigField "boolean", "loginDataDownloadPeriod", "true"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
-            versionName "1.0.5"
+            versionName "1.0.6"
             buildConfigField "boolean","reviewScreen", "true"
+            buildConfigField "boolean", "loginDataDownloadPeriod", "false"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
             versionName "1.0.0"
             buildConfigField "boolean","reviewScreen", "true"
+            buildConfigField "boolean", "loginDataDownloadPeriod", "false"
         }
     }
     

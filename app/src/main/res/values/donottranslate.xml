@@ -102,5 +102,6 @@
     <string name="default_option_text_size" translatable="false">24</string>
 
     <string name="is_pushing_key" translatable="false">ispushing</string>
+    <string name="data_limited_by_date" translatable="false">data_limited_by_date</string>
 
 </resources>

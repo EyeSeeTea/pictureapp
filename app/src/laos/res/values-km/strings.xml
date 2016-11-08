@@ -132,4 +132,9 @@
 <string name="review_title">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>
 <string name="review_subtitle">ធ្វើការបញ្ជូន</string>
 <string name="not_tested">មិនបានសាកល្បង</string>
+<string name="no_data">គ្មាន​ទិន្នន័យ</string>
+<string name="last_6_days"> ចុងក្រោយ 6 ថ្ងៃ</string>
+<string name="last_6_weeks">ចុងក្រោយ 6 សប្តាហ៍</string>
+<string name="last_6_months"> 6 ខែចុង</string>
+<string name="download"> ទាញយក:</string>
 </resources>

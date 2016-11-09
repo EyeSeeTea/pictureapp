@@ -19,6 +19,9 @@
 
 package org.eyeseetea.malariacare.layout.adapters.survey;
 
+import static org.eyeseetea.malariacare.database.model.Option.DOESNT_MATCH_POSITION;
+import static org.eyeseetea.malariacare.database.model.Option.MATCH_POSITION;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -357,7 +360,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if(!question.hasOutputWithOptions() || !question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)){
             return;
         }
-        //Find questionoptions
+        //Find QuestionOptions
         for(QuestionOption questionOption:question.getQuestionOption()){
             if(questionOption.getMatch().getQuestionRelation().getOperation()!=QuestionRelation.MATCH) {
                 continue;
@@ -365,22 +368,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             Option matchOption = questionOption.getOption();
             Question matchQuestion= questionOption.getMatch().getQuestionRelation().getQuestion();
-            if(!option.getCode().equals(matchOption.getCode())){
-                //No match!
-                if(option.getQuestionBySession()!=null) {
-                    ReadWriteDB.deleteValue(option.getQuestionBySession());
-                }
-                ReadWriteDB.saveValuesDDL(matchQuestion ,matchQuestion.getAnswer().getOptions().get(0), matchQuestion.getValueBySession());
-            }
-            else{
-                //Match!
-                if(option.getQuestionBySession()!=null) {
-                    ReadWriteDB.deleteValue(option.getQuestionBySession());
-                }
-                ReadWriteDB.saveValuesDDL(matchQuestion ,matchQuestion.getAnswer().getOptions().get(1), matchQuestion.getValueBySession());
-            }
+
+            switchHiddenMatch(question, option, matchQuestion, matchOption);
         }
     }
+
+    private void switchHiddenMatch(Question question, Option option, Question matchQuestion, Option matchOption){
+        int optionPosition = (option.getCode().equals(matchOption.getCode())) ? MATCH_POSITION : DOESNT_MATCH_POSITION;
+
+        if(option.getQuestionBySession()!=null) {
+            ReadWriteDB.deleteValue(option.getQuestionBySession());
+        }
+        ReadWriteDB.saveValuesDDL(matchQuestion ,matchQuestion.getAnswer().getOptions().get(optionPosition), matchQuestion.getValueBySession());
+    }
+
+
 
 
     public Tab getTab() {

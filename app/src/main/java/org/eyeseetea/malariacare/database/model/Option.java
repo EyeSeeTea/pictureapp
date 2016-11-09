@@ -40,6 +40,9 @@ public class Option extends BaseModel {
     //FIXME A 'Yes' answer shows children questions, this should be configurable by some additional attribute in Option
     public static final String CHECKBOX_YES_OPTION="Yes";
 
+    public static final int DOESNT_MATCH_POSITION = 0;
+    public static final int MATCH_POSITION = 1;
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_option;

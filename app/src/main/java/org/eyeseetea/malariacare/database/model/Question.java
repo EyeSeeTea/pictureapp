@@ -990,6 +990,7 @@ public class Question extends BaseModel {
     }
 
     public boolean hasParentInSameHeader() {
+        //FIXME: this method is by hand doing something that might be done with a DB query
         if (parentHeader == null) {
             parentHeader = false;
 
@@ -998,12 +999,10 @@ public class Question extends BaseModel {
             if (questions == null || questions.size() <= 1) {
                 return false;
             }
+
             //Removes itself
-            for (int i = 0; i < questions.size(); i++) {
-                if (questions.get(i).getUid().equals(this.getUid())) {
-                    questions.remove(questions.get(i));
-                }
-            }
+            questions.remove(this);
+
             for (Question question : questions) {
                 for (QuestionOption questionOption : question.getQuestionOption()) {
                     Match match = questionOption.getMatch();

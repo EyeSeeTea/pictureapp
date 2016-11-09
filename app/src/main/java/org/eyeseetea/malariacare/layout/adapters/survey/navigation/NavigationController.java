@@ -299,22 +299,16 @@ public class NavigationController {
         //Survey finished -> No more questions
         if(nextNode==null){
             Map<Long, QuestionCounter> counters= getCurrentNode().getCountersMap();
-            if(counters!=null && counters.size()>0){
-                if(counters.containsKey(option.getId_option())){
-                    QuestionCounter questionCounter= counters.get(option.getId_option());
-                    Integer limit=(int) Math.floor( option.getFactor());
-                    if(questionCounter.isFinish(limit)){
-                        Log.d(TAG,String.format("findNext(%s)-> Survey Counter finished",option==null?"":option.getCode()));
-                        return null;
-                    }
-                    else{
-                        Log.d(TAG,String.format("findNext(%s)-> Survey Counter not finished",option==null?"":option.getCode()));
-                        return getCurrentNode().getPreviousSibling();
-                    }
-                }
+            if(counters==null || counters.size()==0) {
+                Log.d(TAG,String.format("findNext(%s)-> Survey finished",option==null?"":option.getCode()));
+                return null;
             }
-            Log.d(TAG,String.format("findNext(%s)-> Survey finished",option==null?"":option.getCode()));
-            return null;
+            if(counters.containsKey(option.getId_option())){
+                QuestionCounter questionCounter= counters.get(option.getId_option());
+                Integer limit=(int) Math.floor( option.getFactor());
+                Log.d(TAG,String.format("findNext(%s)-> Survey(%s)finished", option==null ? "" : option.getCode(), (questionCounter.isFinish(limit)) ? " " : " not "));
+                return (questionCounter.isFinish(limit)) ? null : getCurrentNode().getPreviousSibling();
+            }
         }
 
         //Return next question

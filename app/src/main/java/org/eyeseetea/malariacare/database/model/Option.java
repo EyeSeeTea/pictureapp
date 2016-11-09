@@ -271,10 +271,6 @@ public class Option extends BaseModel {
                 .where(Condition.column(Value$Table.ID_OPTION).eq(this.getId_option()))
                 .and(Condition.column(Value$Table.ID_SURVEY).eq(survey.getId_survey())).queryList();
 
-        if (returnValues.size() == 0) {
-            return null;
-        } else {
-            return returnValues.get(0).getQuestion();
-        }
+        return (returnValues.size() == 0) ? null : returnValues.get(0).getQuestion();
     }
 }

@@ -314,7 +314,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             navigationController.setTotalPages(question.getTotalQuestions());
         }
         if(question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)){
-            question.switchHiddenMatches(selectedOption);
+            switchHiddenMatches(question, selectedOption);
         }else {
             ReadWriteDB.saveValuesDDL(question, selectedOption, value);
         }
@@ -342,6 +342,42 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         LayoutUtils.overshadow((FrameLayout) childItem);
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * switch the matches of a no dataelement question with his hidden dataelements.
+     * Only applies to question with options and matches the option position (0)/(1) Match position 1 no match position 0
+     *
+     * @param option
+     * @return
+     */
+    public void switchHiddenMatches(Question question, Option option) {
+        if(!question.hasOutputWithOptions() || !question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)){
+            return;
+        }
+        //Find questionoptions
+        for(QuestionOption questionOption:question.getQuestionOption()){
+            if(questionOption.getMatch().getQuestionRelation().getOperation()!=QuestionRelation.MATCH) {
+                continue;
+            }
+
+            Option matchOption = questionOption.getOption();
+            Question matchQuestion= questionOption.getMatch().getQuestionRelation().getQuestion();
+            if(!option.getCode().equals(matchOption.getCode())){
+                //No match!
+                if(option.getQuestionBySession()!=null) {
+                    ReadWriteDB.deleteValue(option.getQuestionBySession());
+                }
+                ReadWriteDB.saveValuesDDL(matchQuestion ,matchQuestion.getAnswer().getOptions().get(0), matchQuestion.getValueBySession());
+            }
+            else{
+                //Match!
+                if(option.getQuestionBySession()!=null) {
+                    ReadWriteDB.deleteValue(option.getQuestionBySession());
+                }
+                ReadWriteDB.saveValuesDDL(matchQuestion ,matchQuestion.getAnswer().getOptions().get(1), matchQuestion.getValueBySession());
             }
         }
     }
@@ -1185,7 +1221,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Option option = (Option) parent.getItemAtPosition(position);
                 Question question = (Question) parent.getTag();
                 if(question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)){
-                    question.switchHiddenMatches(option);
+                    switchHiddenMatches(question, option);
                 }else {
                     ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
                 }
@@ -1197,6 +1233,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             }
         });
+
         if (value != null && value.getValue() != null) {
             for (int i = 0; i < dropdown.getAdapter().getCount(); i++) {
                 Option option = (Option) dropdown.getItemAtPosition(i);

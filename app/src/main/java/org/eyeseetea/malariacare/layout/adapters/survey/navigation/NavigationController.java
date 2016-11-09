@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controller in charge of moving next, previous according to the answers and state of questions.
@@ -284,8 +285,8 @@ public class NavigationController {
         Question actualQuestion = getCurrentNode().getQuestion();
         QuestionNode nextNode;
         nextNode = getCurrentNode().next(option);
-        if(actualQuestion.getHeader().getTab().getType() == Constants.TAB_MULTI_QUESTION) {
-            while(nextNode!=null && nextNode.getQuestion().getHeader().getTab().equals(actualQuestion.getHeader().getTab())){
+        if(nextNode!=null && (actualQuestion.getHeader().getTab().getType() == Constants.TAB_MULTI_QUESTION || nextNode.getQuestion().getOutput()==Constants.HIDDEN)) {
+            while(nextNode!=null && (nextNode.getQuestion().getHeader().getTab().equals(actualQuestion.getHeader().getTab()) || nextNode.getQuestion().getOutput()==Constants.HIDDEN)){
                 if(nextNode.getSibling()==null) {
                     nextNode = null;
                 }
@@ -297,8 +298,17 @@ public class NavigationController {
 
         //Survey finished -> No more questions
         if(nextNode==null){
-            Log.d(TAG,String.format("findNext(%s)-> Survey finished",option==null?"":option.getCode()));
-            return null;
+            Map<Long, QuestionCounter> counters= getCurrentNode().getCountersMap();
+            if(counters==null || counters.size()==0) {
+                Log.d(TAG,String.format("findNext(%s)-> Survey finished",option==null?"":option.getCode()));
+                return null;
+            }
+            if(counters.containsKey(option.getId_option())){
+                QuestionCounter questionCounter= counters.get(option.getId_option());
+                Integer limit=(int) Math.floor( option.getFactor());
+                Log.d(TAG,String.format("findNext(%s)-> Survey(%s)finished", option==null ? "" : option.getCode(), (questionCounter.isMaxCounterLimit(limit)) ? " " : " not "));
+                return (questionCounter.isMaxCounterLimit(limit)) ? null : getCurrentNode().getPreviousSibling();
+            }
         }
 
         //Return next question

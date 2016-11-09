@@ -19,6 +19,9 @@
 
 package org.eyeseetea.malariacare.layout.adapters.survey;
 
+import static org.eyeseetea.malariacare.database.model.Option.DOESNT_MATCH_POSITION;
+import static org.eyeseetea.malariacare.database.model.Option.MATCH_POSITION;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -41,6 +44,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -48,6 +52,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -279,23 +284,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         //Question "header" is in the first option in Options.csv
-        List<QuestionOption> questionOptions = questionCounter.getQuestionOption();
+        List<Option> questionOptions = questionCounter.getAnswer().getOptions();
         if (questionOptions.get(0) != null) {
             TextCard textCard = (TextCard) rootView.findViewById(R.id.questionTextRow);
-            textCard.setText(questionOptions.get(0).getOption().getCode());
-            textCard.setTextSize(questionOptions.get(0).getOption().getOptionAttribute().getText_size());
+            textCard.setText(questionOptions.get(0).getCode());
+            textCard.setTextSize(questionOptions.get(0).getOptionAttribute().getText_size());
         }
         //Question "confirm button" is in the second option in Options.csv
         if (questionOptions.get(1) != null) {
             TextCard confirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_yes);
-            confirmTextCard.setText(questionOptions.get(1).getOption().getCode());
-            confirmTextCard.setTextSize(questionOptions.get(1).getOption().getOptionAttribute().getText_size());
+            confirmTextCard.setText(questionOptions.get(1).getCode());
+            confirmTextCard.setTextSize(questionOptions.get(1).getOptionAttribute().getText_size());
         }
         //Question "no confirm button" is in the third option in Options.csv
         if (questionOptions.get(2) != null) {
             TextCard noConfirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_no);
-            noConfirmTextCard.setText(questionOptions.get(2).getOption().getCode());
-            noConfirmTextCard.setTextSize(questionOptions.get(2).getOption().getOptionAttribute().getText_size());
+            noConfirmTextCard.setText(questionOptions.get(2).getCode());
+            noConfirmTextCard.setTextSize(questionOptions.get(2).getOptionAttribute().getText_size());
         }
 
     }
@@ -311,7 +316,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (value != null && !readOnly) {
             navigationController.setTotalPages(question.getTotalQuestions());
         }
-        ReadWriteDB.saveValuesDDL(question, selectedOption, value);
+        if(question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)){
+            switchHiddenMatches(question, selectedOption);
+        }else {
+            ReadWriteDB.saveValuesDDL(question, selectedOption, value);
+        }
         darkenNonSelected(view, selectedOption);
         LayoutUtils.highlightSelection(view, selectedOption);
         finishOrNext();
@@ -339,6 +348,41 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         }
     }
+
+    /**
+     * switch the matches of a no dataelement question with his hidden dataelements.
+     * Only applies to question with options and matches the option position (0)/(1) Match position 1 no match position 0
+     *
+     * @param option
+     * @return
+     */
+    public void switchHiddenMatches(Question question, Option option) {
+        if(!question.hasOutputWithOptions() || !question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)){
+            return;
+        }
+        //Find QuestionOptions
+        for(QuestionOption questionOption:question.getQuestionOption()){
+            if(questionOption.getMatch().getQuestionRelation().getOperation()!=QuestionRelation.MATCH) {
+                continue;
+            }
+
+            Option matchOption = questionOption.getOption();
+            Question matchQuestion= questionOption.getMatch().getQuestionRelation().getQuestion();
+
+            switchHiddenMatch(question, option, matchQuestion, matchOption);
+        }
+    }
+
+    private void switchHiddenMatch(Question question, Option option, Question matchQuestion, Option matchOption){
+        int optionPosition = (option.getCode().equals(matchOption.getCode())) ? MATCH_POSITION : DOESNT_MATCH_POSITION;
+
+        if(option.getQuestionBySession()!=null) {
+            ReadWriteDB.deleteValue(option.getQuestionBySession());
+        }
+        ReadWriteDB.saveValuesDDL(matchQuestion ,matchQuestion.getAnswer().getOptions().get(optionPosition), matchQuestion.getValueBySession());
+    }
+
+
 
 
     public Tab getTab() {
@@ -397,7 +441,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         rowView.getLayoutParams().height = parent.getHeight();
         rowView.requestLayout();
-        Question question = (Question) this.getItem(position);
+        Question questionItem = (Question) this.getItem(position);
         // We get values from DB and put them in Session
         if (Session.getSurvey() != null)
             Session.getSurvey().getValuesFromDB();
@@ -408,17 +452,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" + context.getString(R.string.specific_language_font));
         headerView.setTypeface(tf);
-        int tabType = question.getHeader().getTab().getType();
+        int tabType = questionItem.getHeader().getTab().getType();
         if (isMultipleQuestionTab(tabType)) {
-            headerView.setText(question.getHeader().getTab().getName());
+            headerView.setText(questionItem.getHeader().getTab().getName());
         } else {
-            headerView.setText(question.getForm_name());
+            headerView.setText(questionItem.getForm_name());
         }
 
         //question image
-        if (question.getPath() != null && !question.getPath().equals("")) {
+        if (questionItem.getPath() != null && !questionItem.getPath().equals("") && questionItem.hasVisibleHeaderQuestion()) {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.questionImage);
-            putImageInImageView(question.getPath(), imageView);
+            putImageInImageView(questionItem.getPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
         }
 
@@ -437,18 +481,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (isMultipleQuestionTab(tabType)) {
             tableLayout = (TableLayout) rowView.findViewById(R.id.multi_question_options_table);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
-            screenQuestions = question.getQuestionsByTab(question.getHeader().getTab());
+            (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
+            screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
             swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(R.id.scrolled_table)).findViewById(R.id.table_scroll));
         } else {
             tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);
-            screenQuestions.add(question);
+            (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.GONE);
+            screenQuestions.add(questionItem);
         }
+        Log.d(TAG,"Questions in actual tab: "+screenQuestions.size());
         for (Question screenQuestion : screenQuestions) {
             // Se get the value from Session
             int visibility=View.GONE;
-            if(!screenQuestion.isHiddenBySurvey(Session.getSurvey()) || !isMultipleQuestionTab(tabType))
-                visibility=View.VISIBLE;
+            if(!screenQuestion.isHiddenBySurveyAndHeader(Session.getSurvey()) || !isMultipleQuestionTab(tabType)) {
+                visibility = View.VISIBLE;
+            }
             Value value = screenQuestion.getValueBySession();
             int typeQuestion = screenQuestion.getOutput();
             switch (typeQuestion) {
@@ -480,6 +528,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     break;
                 case Constants.IMAGES_3:
+                case Constants.IMAGE_3_NO_DATAELEMENT:
                     List<Option> opts = screenQuestion.getAnswer().getOptions();
                     for (int i = 0; i < opts.size(); i++) {
 
@@ -601,6 +650,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
+                case Constants.QUESTION_LABEL:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_label_row, tableLayout, false);
+                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    if(screenQuestion.getPath()!=null && !screenQuestion.getPath().equals("")) {
+                        ImageView rowImageView = ((ImageView) tableRow.findViewById(R.id.question_image_row));
+                        rowImageView.setVisibility(View.VISIBLE);
+                        putImageInImageView(screenQuestion.getPath(), rowImageView);
+                    }
+                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    tableRow.setVisibility(visibility);
+                    tableLayout.addView(tableRow);
+                    break;
                 case Constants.DROPDOWN_LIST:
                 case Constants.DROPDOWN_OU_LIST:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_dropdown_row, tableLayout, false);
@@ -610,6 +671,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     initDropdownValue(tableRow, value);
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
+                    break;
+                case Constants.SWITCH_BUTTON:
+                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row, tableLayout, false);
+                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
+                    if(screenQuestion.getPath()!=null && !screenQuestion.getPath().equals("")) {
+                            ImageView rowImageView = ((ImageView) tableRow.findViewById(R.id.question_image_row));
+                            rowImageView.setVisibility(View.VISIBLE);
+                            putImageInImageView(screenQuestion.getPath(), rowImageView);
+                    }
+                    ((TextCard) tableRow.findViewById(R.id.row_switch_yes)).setText(screenQuestion.getAnswer().getOptions().get(0).getCode());
+                    ((TextCard) tableRow.findViewById(R.id.row_switch_no)).setText(screenQuestion.getAnswer().getOptions().get(1).getCode());
+                    Switch switchView=(Switch) tableRow.findViewById(R.id.answer);
+                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
+                    initSwitchOption(screenQuestion, switchView);
+                    tableRow.setVisibility(visibility);
+                    tableLayout.addView(tableRow);
+                    showOrHideChildren(screenQuestion);
                     break;
             }
         }
@@ -621,6 +699,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return rowView;
     }
 
+    /**
+     * Populat the dropdown (spinners) from question answer options
+     *
+     * @return
+     */
     private TableRow populateSpinnerFromOptions(TableRow tableRow, Question question) {
         Spinner dropdown_list = (Spinner) tableRow.findViewById(R.id.answer);
         // In case the option is selected, we will need to show num/dems
@@ -630,6 +713,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return tableRow;
     }
 
+    /**
+     * Create a button for the question with multiple question tab
+     *
+     * @return
+     */
     private View createMultipleQuestionsNextButton(TableRow tableButtonRow) {
         Button button = (Button) tableButtonRow.findViewById(R.id.multi_question_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
@@ -657,6 +745,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
+    /**
+     * Sets a warning view values in a warning screen
+     *
+     * @return
+     */
     private void initWarningValue(TableRow tableRow, Option option) {
         ImageView errorImage = (ImageView) tableRow.findViewById(R.id.confirm_yes);
         errorImage.setImageResource(R.drawable.option_button);
@@ -844,10 +937,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         openKeyboard(numberPicker);
     }
 
+    /**
+     * Checks if a tab is a multiple question Tab
+     *
+     * @return
+     */
     private boolean isMultipleQuestionTab(int tabType) {
         return tabType == Constants.TAB_MULTI_QUESTION;
     }
 
+    /**
+     * Click, check and save the phone value
+     *
+     * @return
+     */
     private boolean clickPhoneValue(EditCard editCard) {
         //Hide keypad
         hideKeyboard(PreferencesState.getInstance().getContext());
@@ -862,6 +965,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return isValid;
     }
 
+    /**
+     * Validate the phone number
+     *
+     * @return
+     */
     private boolean validatePhoneValue(String valueAsText) {
         //Required, empty values rejected
         if (!PhoneMask.checkPhoneNumberByMask(valueAsText)) {
@@ -871,6 +979,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return true;
     }
 
+    /**
+     * Click, check and save the positive int value
+     *
+     * @return
+     */
     private boolean clickPositiveIntValue(EditText editText) {
         //Hide keypad
         hideKeyboard(PreferencesState.getInstance().getContext());
@@ -982,6 +1095,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         openKeyboard(editCard);
     }
 
+    /**
+     * Adds listener to the Editcard and sets the default or saved value
+     *
+     * @return
+     */
     private void initIntValue(TableRow row, Value value) {
         final EditCard numberPicker = (EditCard) row.findViewById(R.id.answer);
 
@@ -1013,11 +1131,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         openKeyboard(numberPicker);
     }
 
+    /**
+     * Adds question as tag in a view to identify the answers
+     *
+     * @return
+     */
     private void addTagQuestion(Question question, View viewById) {
         viewById.setTag(question);
     }
 
 
+    /**
+     * Adds listener to the Editcard and sets the default or saved value
+     *
+     * @return
+     */
     private void initShortTextValue(TableRow row, Value value) {
         final EditCard numberPicker = (EditCard) row.findViewById(R.id.answer);
         //Has value? show it
@@ -1070,8 +1198,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    //Save the numberpicker value in the DB, and continue to the next screen.
-                    ReadWriteDB.saveValuesText((Question) numberPicker.getTag(), String.valueOf(s));
+                    //Save the editCard value in the DB, and continue to the next screen.
+                    Question question = (Question) numberPicker.getTag();
+                    ReadWriteDB.saveValuesText(question, String.valueOf(s));
                 }
             });
         } else {
@@ -1081,6 +1210,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         openKeyboard(numberPicker);
     }
 
+    /**
+     * Adds listener to the dropdown and sets the default or saved value
+     *
+     * @return
+     */
     private void initDropdownValue(TableRow row, Value value) {
         Spinner dropdown = (Spinner) row.findViewById(R.id.answer);
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1088,7 +1222,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
                 Option option = (Option) parent.getItemAtPosition(position);
                 Question question = (Question) parent.getTag();
-                ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
+                if(question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)){
+                    switchHiddenMatches(question, option);
+                }else {
+                    ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
+                }
                 showOrHideChildren(question);
             }
 
@@ -1097,6 +1235,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             }
         });
+
         if (value != null && value.getValue() != null) {
             for (int i = 0; i < dropdown.getAdapter().getCount(); i++) {
                 Option option = (Option) dropdown.getItemAtPosition(i);
@@ -1107,31 +1246,31 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         }
     }
-
+    /**
+     * Hide or show the childen question from a given question,  if is necessary  it reloads the children questions values or refreshing the children questions answer component
+     *
+     * @param question is the parent question
+     * @return
+     */
     private void showOrHideChildren(Question question) {
-        if(question.hasChildren()){
-            for(int i = 0, j = tableLayout.getChildCount(); i < j; i++) {
+        if(question.hasChildren()) {
+            for (int i = 0, j = tableLayout.getChildCount(); i < j; i++) {
                 View view = tableLayout.getChildAt(i);
                 if (view instanceof TableRow) {
                     TableRow row = (TableRow) view;
-                    View answerView= view.findViewById(R.id.answer);
-                    if(answerView==null)
+                    View answerView = view.findViewById(R.id.answer);
+                    if (answerView == null) {
                         continue;
-                    Question rowQuestion = (Question)answerView.getTag();
+                    }
+                    Question rowQuestion = (Question) answerView.getTag();
+                    if (rowQuestion == null) {
+                        continue;
+                    }
                     List<Question> questionChildren = question.getChildren();
-                    for(Question childQuestion:questionChildren){
-                        //if the table row question is777 child of the modified question...
-                        if(childQuestion.getId_question().equals(rowQuestion.getId_question())){
-                            if (rowQuestion.isHiddenBySurvey(Session.getSurvey())) {
-                                ReadWriteDB.deleteValue(rowQuestion);
-                                row.setVisibility(View.GONE);
-                            }else{
-                                row.setVisibility(View.VISIBLE);
-                                if(rowQuestion.getValueBySession()==null) {
-                                    showDefaultValue(row, rowQuestion);
-                                }
-                            }
-                            break;
+                    if (questionChildren != null && questionChildren.size() > 0) {
+                        for (Question childQuestion : questionChildren) {
+                            //if the table row question is child of the modified question...
+                            toggleChild(row, rowQuestion, childQuestion);
                         }
                     }
                 }
@@ -1139,7 +1278,61 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
+    /**
+     * find and toggle the child question
+     *
+     * @param row is the child question view
+     * @param rowQuestion is the question in the view
+     * @param childQuestion is the posible child
+     * @return
+     */
+    private boolean toggleChild(TableRow row, Question rowQuestion, Question childQuestion) {
+        if (childQuestion.getId_question().equals(rowQuestion.getId_question())) {
+            if (rowQuestion.isHiddenBySurveyAndHeader(Session.getSurvey())) {
+                row.setVisibility(View.GONE);
+                hideDefaultValue(rowQuestion);
+            } else {
+                row.setVisibility(View.VISIBLE);
+                showDefaultValue(row, rowQuestion);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * removes or modify the value with a correct value when the question is hide
+     *
+     * @param rowQuestion is the question in the view
+     * @return
+     */
+    private void hideDefaultValue(Question rowQuestion){
+        switch(rowQuestion.getOutput()) {
+            case Constants.PHONE:
+            case Constants.POSITIVE_INT:
+            case Constants.INT:
+            case Constants.LONG_TEXT:
+            case Constants.SHORT_TEXT:
+            case Constants.DROPDOWN_LIST:
+            case Constants.DROPDOWN_OU_LIST:
+                ReadWriteDB.deleteValue(rowQuestion);
+                break;
+            case Constants.SWITCH_BUTTON:
+                saveSwitchOption(rowQuestion, true);
+                break;
+        }
+    }
+
+    /**
+     * when a question is shown this method set the correct value.
+     *
+     * @param rowQuestion is the question in the view
+     * @return
+     */
     private void showDefaultValue(TableRow tableRow, Question rowQuestion) {
+        if (rowQuestion.getValueBySession() != null) {
+            return;
+        }
         switch(rowQuestion.getOutput()) {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
@@ -1154,9 +1347,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Spinner dropdown = (Spinner) tableRow.findViewById(R.id.answer);
                 dropdown.setSelection(0);
                 break;
+            case Constants.SWITCH_BUTTON:
+                Switch switchView=(Switch)tableRow.findViewById(R.id.answer);
+                Option selectedOption=rowQuestion.getOptionBySession();
+                if(selectedOption==null){
+                    //Fixme true is the default value
+                    saveSwitchOption(rowQuestion, true);
+                }
+                switchView.setChecked(findSwitchBoolean(rowQuestion));
+                break;
         }
     }
 
+    /**
+     * Save value from a Positive Integer question in DB and check the children
+     *
+     * @return
+     */
     private void savePositiveIntValue(EditText numberPicker) {
         String valueAsText = String.valueOf(numberPicker.getText());
 
@@ -1167,12 +1374,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         showOrHideChildren(question);
     }
 
+    /**
+     * Save value in DB and check the children
+     *
+     * @return
+     */
     private void saveValue(EditCard editCard) {
         Question question = (Question) editCard.getTag();
         ReadWriteDB.saveValuesText(question, editCard.getText().toString());
         showOrHideChildren(question);
     }
 
+    /**
+     * Open keyboard and add listeners to click/next option.
+     *
+     * @return
+     */
     private void openKeyboard(final EditText editText) {
         if (!readOnly) {
             editText.requestFocus();
@@ -1256,6 +1473,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         resizeTextWidth(button, (TextCard) button.getChildAt(1));
     }
 
+    /**
+     * Sets a image from assets path in a imageView
+     *
+     * @param path path from assets image
+     * @param imageView is the imageView to set the image
+     * @return
+     */
     private void putImageInImageView(String path, ImageView imageView) {
         try {
             if (path == null || path.equals(""))
@@ -1402,10 +1626,123 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
+
+    /**
+     * Skips the reminder question in the navigation
+     *
+     * @return
+     */
     private void skipReminder() {
         for (QuestionRelation relation : navigationController.getCurrentQuestion().getQuestionRelations())
             if (relation.isAReminder())
                 next();
     }
 
+
+    /**
+     * Switch listener to save the switch value
+     *
+     * @return
+     */
+    public class SwitchButtonListener implements CompoundButton.OnCheckedChangeListener{
+
+        private Question question;
+        private Switch switchButton;
+
+        public SwitchButtonListener(Question question, Switch switchButton) {
+            this.question = question;
+            this.switchButton = switchButton;
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(!buttonView.isShown()){
+                return;
+            }
+            saveSwitchOption(question, isChecked);
+        }
+
+    }
+
+    /**
+     * Initialize the default switch value or load the saved value
+     *
+     * @param question is the question in the view
+     * @param switchQuestion is the switch view
+     * @return
+     */
+    private void initSwitchOption(Question question, Switch switchQuestion) {
+
+        //Take option
+        Option selectedOption=question.getOptionBySession();
+        if(selectedOption==null){
+            saveSwitchOption(question, switchQuestion.isChecked());
+        }
+        else{
+            switchQuestion.setChecked(findSwitchBoolean(question));
+        }
+        switchQuestion.setOnCheckedChangeListener(new SwitchButtonListener(question,switchQuestion));
+    }
+
+    /**
+     * Save the switch option and check children questions
+     *
+     * @param question is the question in the view
+     * @param isChecked is the value to be saved
+     * @return
+     */
+    private void saveSwitchOption(Question question, boolean isChecked) {
+        //Take option
+        Option selectedOption=findSwitchOption(question, isChecked);
+        if(selectedOption==null){
+            return;
+        }
+        ReadWriteDB.saveValuesDDL(question,selectedOption,question.getValueBySession());
+        showOrHideChildren(question);
+    }
+    /**
+     * Returns the option selected for the given question and boolean value or by position
+     * @param question
+     * @param isChecked
+     * @return
+     */
+    public static Option findSwitchOption(Question question,boolean isChecked){
+        String expectedCode=String.valueOf(isChecked);
+        //Search "false/true" code in the options
+        for(Option option:question.getAnswer().getOptions()){
+            if(expectedCode.equals(option.getCode())){
+                return option;
+            }
+        }
+        //Search option by position
+        if(isChecked){
+            return question.getAnswer().getOptions().get(1);
+        }
+        else{
+            return question.getAnswer().getOptions().get(0);
+        }
+    }
+    /**
+     * Returns the boolean selected for the given question (by boolean value or position option, position 1=true 0=false)
+     * @param question
+     * @return
+     */
+    public static Boolean findSwitchBoolean(Question question){
+        Value value= question.getValueBySession();
+        if(value.getValue().toLowerCase().equals("true")){
+            return true;
+        }
+        else if(value.getValue().toLowerCase().equals("false")){
+            return false;
+        }
+        else{
+            if(value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())){
+                return true;
+            }
+            else if(value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
+                return false;
+            }
+        }
+        return  false;
+    }
 }

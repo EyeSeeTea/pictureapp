@@ -25,7 +25,11 @@ public class Constants {
             COUNTER = 16,
             WARNING = 17,
             REMINDER = 18,
-            DROPDOWN_OU_LIST = 19;
+            DROPDOWN_OU_LIST = 19,
+            IMAGE_3_NO_DATAELEMENT = 20,
+            HIDDEN = 21,
+            SWITCH_BUTTON = 22,
+            QUESTION_LABEL = 23;
 
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
@@ -38,7 +42,8 @@ public class Constants {
             IMAGES_3,
             IMAGES_4,
             IMAGES_5,
-            IMAGES_6);
+            IMAGES_6,
+            IMAGE_3_NO_DATAELEMENT);
 
 
     public static final String DEFAULT_SELECT_OPTION = "";

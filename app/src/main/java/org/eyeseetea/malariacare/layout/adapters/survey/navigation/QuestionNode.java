@@ -324,5 +324,7 @@ public class QuestionNode {
         return true;
     }
 
-
+    public Map<Long,QuestionCounter> getCountersMap(){
+        return counters;
+    }
 }

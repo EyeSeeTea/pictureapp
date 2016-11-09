@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
@@ -47,8 +48,6 @@ import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
-import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
@@ -134,14 +133,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         setupSimplePreferencesScreen();
     }
 
-    void setAutoCompleteEditTextPreference(AutoCompleteEditTextPreference autoCompleteEditTextPreference){
-        this.autoCompleteEditTextPreference=autoCompleteEditTextPreference;
-    }
-
-    public AutoCompleteEditTextPreference getAutoCompleteEditTextPreference(){
-        return this.autoCompleteEditTextPreference;
-    }
-
     /**
      * Shows the simplified settings UI if the device configuration if the
      * device configuration dictates that a simplified, single-pane UI should be
@@ -164,29 +155,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         // Set the ClickListener to the android:key"remove_sent_surveys" preference.
 
-        autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
-        autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this,true));
-        autoCompleteEditTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+        AutoCompleteEditTextPreference orgUnitPreference = (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
+        PreferenceCategory preferenceCategory = (PreferenceCategory) findPreference(getString(R.string.pref_cat_server));
 
-                //Save preference new value
-                PreferencesState.getInstance().saveStringPreference(R.string.org_unit, newValue.toString());
-
-                // Now, manually update it's value to next value
-                // Now, if you click on the item, you'll see the value you've just set here
-                preference.setSummary(newValue.toString());
-
-                //Reload preference in memory
-                PreferencesState.getInstance().reloadPreferences();
-
-                //Reload orgunits according to server version
-                initReloadByServerVersionWhenOrgUnitChanged();
-
-                return true;
-
-            }
-        });
+        configureOrgUnitPreference(orgUnitPreference,preferenceCategory);
 
 //        Preference removeSentPreference = (Preference)findPreference(getApplicationContext().getString(R.string.remove_sent_surveys));
 //        removeSentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -226,6 +198,38 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         //XXX Open preference that was being edited, (to review)
         //openClickedPreference();
+    }
+
+    private void configureOrgUnitPreference(AutoCompleteEditTextPreference orgUnitPreference,PreferenceCategory preferenceCategory ) {
+        this.autoCompleteEditTextPreference = orgUnitPreference;
+
+        if (BuildConfig.selectOrgUnitInSettings) {
+            autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this, true));
+            autoCompleteEditTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                    //Save preference new value
+                    PreferencesState.getInstance().saveStringPreference(R.string.org_unit, newValue.toString());
+
+                    // Now, manually update it's value to next value
+                    // Now, if you click on the item, you'll see the value you've just set here
+                    preference.setSummary(newValue.toString());
+
+                    //Reload preference in memory
+                    PreferencesState.getInstance().reloadPreferences();
+
+                    //Reload orgunits according to server version
+                    initReloadByServerVersionWhenOrgUnitChanged();
+
+                    return true;
+
+                }
+            });
+        }
+        else{
+            preferenceCategory.removePreference(autoCompleteEditTextPreference);
+        }
     }
 
     /**
@@ -565,30 +569,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
 
             SettingsActivity settingsActivity = (SettingsActivity) getActivity();
-            AutoCompleteEditTextPreference autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
-            autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, true));
-            autoCompleteEditTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-                    //Save preference new value
-                    PreferencesState.getInstance().saveStringPreference(R.string.org_unit, newValue.toString());
+            AutoCompleteEditTextPreference orgUnitPreference = (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
+            PreferenceCategory preferenceCategory = (PreferenceCategory) findPreference(getString(R.string.pref_cat_server));
 
-                    // Now, manually update it's value to next value
-                    // Now, if you click on the item, you'll see the value you've just set here
-                    preference.setSummary(newValue.toString());
-
-                    //Reload preference in memory
-                    PreferencesState.getInstance().reloadPreferences();
-
-                    //Reload orgunits according to server version
-                    ((SettingsActivity) getActivity()).initReloadByServerVersionWhenOrgUnitChanged();
-
-                    return true;
-
-                }
-            });
-            settingsActivity.setAutoCompleteEditTextPreference(autoCompleteEditTextPreference);
+            settingsActivity.configureOrgUnitPreference(orgUnitPreference,preferenceCategory);
 
 //            Preference removeSentPreference = (Preference)findPreference(getString(R.string.remove_sent_surveys));
 //            removeSentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

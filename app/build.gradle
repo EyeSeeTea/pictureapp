@@ -66,6 +66,7 @@ android {
             buildConfigField "boolean", "reviewScreen", "false"
             buildConfigField "boolean", "loginDataDownloadPeriod", "true"
             buildConfigField "boolean", "multiuser", "false"
+            buildConfigField "boolean", "selectOrgUnitInSettings", "true"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
@@ -73,6 +74,7 @@ android {
             buildConfigField "boolean","reviewScreen", "true"
             buildConfigField "boolean", "loginDataDownloadPeriod", "false"
             buildConfigField "boolean", "multiuser", "false"
+            buildConfigField "boolean", "selectOrgUnitInSettings", "true"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
@@ -80,6 +82,7 @@ android {
             buildConfigField "boolean","reviewScreen", "true"
             buildConfigField "boolean", "loginDataDownloadPeriod", "false"
             buildConfigField "boolean", "multiuser", "true"
+            buildConfigField "boolean", "selectOrgUnitInSettings", "false"
         }
     }
     

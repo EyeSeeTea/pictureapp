@@ -26,24 +26,18 @@ public class QuestionCounter {
 
     public void increaseRepetitions(){
         String currentRepetitionsStr=ReadWriteDB.readValueQuestion(counterQuestion);
-        Integer increasedRepetitions=toNumber(currentRepetitionsStr)+1;
+        Integer increasedRepetitions= toInteger(currentRepetitionsStr)+1;
         ReadWriteDB.saveValuesText(counterQuestion,increasedRepetitions.toString());
         Log.i(TAG,String.format("Counter %s updated, current value %d",counterQuestion.getCode(),increasedRepetitions));
     }
 
     //Limits the counter by a number of failed attempts.
-    public boolean isFinish(Integer limit){
-        String currentRepetitionsStr=ReadWriteDB.readValueQuestion(counterQuestion);
-        Integer actualNumber=toNumber(currentRepetitionsStr);
-        Log.i(TAG,String.format("Counter %s updated, current value %d",counterQuestion.getCode(),actualNumber));
-        if(limit==infinite_counter_number || actualNumber!=limit) {
-            return false;
-        }
-        else {
-            return true;
-        }
+    public boolean isMaxCounterLimit(Integer limit){
+        Integer currentRepetitions=toInteger(ReadWriteDB.readValueQuestion(counterQuestion));
+        Log.i(TAG,String.format("Counter %s updated, current value %d",counterQuestion.getCode(),currentRepetitions));
+        return !(limit==infinite_counter_number || currentRepetitions!=limit);
     }
-    private int toNumber(String currentRepetitions){
+    private int toInteger(String currentRepetitions){
         if(currentRepetitions==null || currentRepetitions.isEmpty()){
             return 0;
         }
@@ -53,7 +47,5 @@ public class QuestionCounter {
             Log.e(TAG,String.format("Counter %s cannot be updated, current value '%s' not a integer",counterQuestion.getCode(),currentRepetitions));
             return 0;
         }
-
     }
-
 }

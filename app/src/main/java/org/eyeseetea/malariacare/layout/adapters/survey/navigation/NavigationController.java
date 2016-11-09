@@ -306,8 +306,8 @@ public class NavigationController {
             if(counters.containsKey(option.getId_option())){
                 QuestionCounter questionCounter= counters.get(option.getId_option());
                 Integer limit=(int) Math.floor( option.getFactor());
-                Log.d(TAG,String.format("findNext(%s)-> Survey(%s)finished", option==null ? "" : option.getCode(), (questionCounter.isFinish(limit)) ? " " : " not "));
-                return (questionCounter.isFinish(limit)) ? null : getCurrentNode().getPreviousSibling();
+                Log.d(TAG,String.format("findNext(%s)-> Survey(%s)finished", option==null ? "" : option.getCode(), (questionCounter.isMaxCounterLimit(limit)) ? " " : " not "));
+                return (questionCounter.isMaxCounterLimit(limit)) ? null : getCurrentNode().getPreviousSibling();
             }
         }
 

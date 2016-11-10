@@ -175,4 +175,9 @@
 <string name="Warning_Button_Refer_Hospital">"OK"</string>
 <string name="Warning_Text_Refer_Not_Tested">"Please refer the patient to the nearest public health facility."</string>
 <string name="Warning_Button_Refer_Not_Tested">"OK"</string>
+<string name="no_data">no data</string>
+<string name="last_6_days">last 6 days</string>
+<string name="last_6_weeks">last 6 weeks</string>
+<string name="last_6_months">last 6 months</string>
+<string name="download">Download:</string>
 </resources>

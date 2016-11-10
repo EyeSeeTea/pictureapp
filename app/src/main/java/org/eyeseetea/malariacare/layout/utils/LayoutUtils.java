@@ -22,7 +22,10 @@ package org.eyeseetea.malariacare.layout.utils;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.util.DisplayMetrics;
@@ -30,11 +33,14 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
+import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 
 import java.util.List;
@@ -120,4 +126,53 @@ public class LayoutUtils {
         Log.d("measureScreen", metrics.toString());
         return Math.round(metrics.heightPixels*metrics.density);
     }
+
+    /**
+     * @param view
+     * @param option
+     */
+    public static void highlightSelection(View view, Option option){
+        Drawable selectedBackground = view.getContext().getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
+        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {    //JELLY_BEAN=API16
+            view.setBackground(selectedBackground);
+        } else {
+            view.setBackgroundDrawable(selectedBackground);
+        }
+
+        if(option!=null) {
+            GradientDrawable bgShape = (GradientDrawable) view.getBackground();
+            String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
+            bgShape.setColor(Color.parseColor("#" + backGColor));
+            bgShape.setStroke(3, Color.WHITE);
+        }
+
+        //the view is a framelayout that contains a imageview
+        ImageView imageView;
+        if(view instanceof FrameLayout){
+            FrameLayout f = (FrameLayout) view;
+            imageView= (ImageView) f.getChildAt(0);
+        }else{
+            imageView = (ImageView)view;
+        }
+
+        imageView.clearColorFilter();
+    }
+
+    /**
+     * Puts a sort of dark shadow over the given view
+     * @param view
+     */
+    public static void overshadow(FrameLayout view){
+        //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
+        view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
+        ImageView imageView = (ImageView) view.getChildAt(0);
+        imageView.setColorFilter(Color.parseColor("#805a595b"));
+
+        Drawable bg = view.getBackground();
+        if(bg instanceof GradientDrawable) {
+            GradientDrawable bgShape = (GradientDrawable)bg;
+            bgShape.setStroke(0, 0);
+        }
+    }
+
 }

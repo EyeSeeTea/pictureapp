@@ -173,4 +173,9 @@
 <string name="Warning_Button_Refer_Hospital">"D'accord"</string>
 <string name="Warning_Text_Refer_Not_Tested">"S'il vous plaît se référer le patient à l'établissement de santé publique le plus proche."</string>
 <string name="Warning_Button_Refer_Not_Tested">"D'accord"</string>
+<string name="no_data">pas de données</string>
+<string name="last_6_days">les 6 derniers jours</string>
+<string name="last_6_weeks">dernières 6 semaines </string>
+<string name="last_6_months"> les 6 derniers mois</string>
+<string name="download">Téléchargement:</string>
 </resources>

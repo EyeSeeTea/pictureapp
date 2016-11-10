@@ -1,1 +1,9 @@
-1;'Tab-LA MAL - Surveillance App';1;1;9
+1;'Patient Profile: Name, Phone, Residence';1;1;10
+2;'Patient Sex';2;1;9
+3;'Patient check-up / Symptoms';3;1;10
+4;'RDT / Indicate Test Result';4;1;9
+5;'Negative Test Result';5;1;9
+6;'Counter';6;1;9
+7;'Treatment / Give ACT strip and Primaquine tablets, selecting the drugs given to the patient';7;1;9
+8;'Patient advice / Explain to patient';8;1;10
+9;'Follow-up Questions';9;1;10

@@ -173,4 +173,9 @@
 <string name="Warning_Button_Refer_Hospital">"ตกลง"</string>
 <string name="Warning_Text_Refer_Not_Tested">"โปรดดูผู้ป่วยไปยังสถานที่สุขภาพของประชาชนที่อยู่ใกล้ที่สุด"</string>
 <string name="Warning_Button_Refer_Not_Tested">"ตกลง"</string>
+<string name="no_data">ไม่มีข้อมูล</string>
+<string name="last_6_days"> 6 วันที่ผ่านมา </string>
+<string name="last_6_weeks">ล่าสุด 6 สัปดาห์ที่ผ่านมา</string>
+<string name="last_6_months">6 เดือน </string>
+<string name="download">ดาวน์โหลด:</string>
 </resources>

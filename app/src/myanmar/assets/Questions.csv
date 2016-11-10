@@ -1,14 +1,22 @@
-1;'RDT';'LA MAL SRV - RDT test result';;'ຄົນເຈັບໄດ້ຮັບການກວດເລືອດບໍ່?';'pTZpMcKg1CY';1;0;0;1;1;0;14;2;0
-2;'Reason';'LA MAL SRV - Reason NOT tested RDT';;'ເປັນຫຍັງຄົນເຈັບຈຶ່ງບໍ່ໄດ້ຮັບການກວດເລືອດ?';'Elrozkdzh3r';1;0;0;1;2;0;14;2;1
-3;'Gender';'LA MAL SRV - Gender';;'ເພດ';'lNcuFJPKhp9';1;0;0;1;3;0;10;4;1
-4;'Age';'LA MAL SRV - Age';;'ອາຍຸ';'qQngeCbT4uI';2;0;0;1;4;0;6;4;1
-5;'Result';'LA MAL SRV - RDT test result';;'ຜົນການກວດເລືອດ';'FPNbkUi9D55';3;0;0;1;5;0;14;4;0
-6;'ConfirmInvalid';'Confirm invalid';' ';'ຜົນໄດ້ຮັບບໍ່ຖືກ';'R53JBYOhcQM';4;0;0;1;6;0;16;6;0;'question_images/p9_rdt_test.png'
-7;'WarningBaby';'Treatment warning baby';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';5;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
-8;'WarningKid';'Treatment warning kid';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';6;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
-9;'WarningTeen';'Treatment warning teenager';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';7;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
-10;'WarningAdult';'Treatment warning adult';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';8;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
-11;'Treatment';'LA MAL SRV - Treatment';;'ຂະໜາດຢາປິ່ນປົວໄຂ້ມາລາເຣຍ';'TzL693oH3D9';9;0;0;1;8;0;12;6;1
-12;'ReminderHospital';'Reminder hospital';' ';'ນຳສົ່ງ';'xxx';10;0;0;1;9;0;18;6;0;'question_images/p8_rdt_all.png'
-13;'Phone';'LA MAL SRV - Client telephone';'ກະລຸນາພິມເບີໂທຂອງຄົນເຈັບໃສ່';'ກະລຸນາພິມເບີໂທຂອງຄົນເຈັບໃສ່';'fnT1JoHmO94';11;0;0;1;10;0;13;6;0;'question_images/p13_phone.png'
-14;'ReminderNotTested';'Reminder Not Tested';'';'ນຳສົ່ງ';'xxx';10;0;0;1;9;0;18;6;0;''
+1;'Code: PN';'';'';'Patient Name';'2XX1JoHmO94';1;0;0;1;1;0;4;8;0;''
+2;'Code: PA';'';'';'Patient Age';'2XX1JoHmO94';2;0;0;1;2;0;6;8;0;''
+3;'Code: PP';'';'';'Patient Phone';'3ZZ1JoHmO94';3;0;0;1;3;0;13;8;0;''
+4;'Code: PR';'';'';'Patient Residence Village';'4YY1JoHmO94';4;0;0;1;4;0;19;8;0;''
+5;'Code: PO';'';'';'If other, enter location';'5VV1JoHmO94';5;0;0;1;5;0;4;8;0;''
+6;'Code: QS';'';'';'Patient Sex';'6VV1JoHmO94';6;0;0;2;6;0;20;8;0;''
+7;'Code: sex';'';'';'SEX';'7VV1JoHmO94';7;0;0;2;7;0;21;8;0;''
+8;'Code: Pregnant';'';'';'Pregnant';'8VV1JoHmO94';8;0;0;2;8;0;21;8;0;''
+9;'Code: Does fever';'';'';'Does the patient have fever? Measured through thermometer or feeling the body';'9VV1JoHmO94';9;0;0;3;9;0;22;8;0;'question_images/p4_fever.png'
+10;'Code: Did seek';'';'';'Did the patient seek care? Within 24 hours of onset of fever or other symptoms?';'10V1JoHmO94';10;0;0;3;10;0;22;8;0;'question_images/p4_seek.png'
+11;'Code: Severe symptoms';'';'';'Severe symptoms? Is patient unconscious or having bleeding, jaundice or severe pallor?';'11V1JoHmO94';11;0;0;3;11;0;22;8;0;'question_images/p4_severe.png'
+12;'Code: RDT';'';'';'RDT / Indicate Test Result';'12V1JoHmO94';12;0;0;4;12;0;14;8;0;
+13;'Code: RDT NEGATIVE';'';'';'Negative test Question title';'13V1JoHmO94';13;0;0;5;13;0;18;8;0;'question_images/p5_negative.png'
+14;'ConfirmInvalid';'';'';'ConfirmInvalid';'15V1JoHmO94';12;0;0;6;14;0;16;8;0;'question_images/p5_negative.png'
+15;'Code: Treat';'';'';'Treatment';'16V1JoHmO94';1;0;0;7;15;0;14;8;0;
+16;'Code: Vomiting';'';'';'Vomiting Measured through thermometer or feeling the body';'17V1JoHmO94';2;0;0;8;16;0;23;8;0;'question_images/p7_vomiting.png'
+17;'Code: Taking m';'';'';'Taking medication with food Within 24 hours of onset of fever or other symptoms';'18V1JoHmO94';3;0;0;8;17;0;23;8;0;'question_images/p7_taking.png'
+18;'Code: Side ef';'';'';'Side effects If you have dark coloured urine, stop taking your Primaquine and go to the nearest healt center';'19V1JoHmO94';4;0;0;8;18;0;23;8;0;'question_images/p7_side_effects.png'
+19;'Code: When to get';'';'';'When to get help If you do not feel better within 3 days or start to feel much worse, go to the nearest health facility for further care';'20V1JoHmO94';5;0;0;8;19;0;23;8;0;'question_images/p7_help.png'
+20;'Code: travelling';'';'';'Travelling Has the patient travelled overnight away from home within the previous two weeks';'21V1JoHmO94';6;0;0;9;20;0;22;8;0;'question_images/p8_travelling.png'
+21;'Code: LLIN Q1';'';'';'LLIN Did the patient sleep under a LLIN last night';'22V1JoHmO94';7;0;0;9;21;0;22;8;0;'question_images/p8_llin1.png'
+22;'Code: LLIN Q2';'';'';'LLIN Does the patient\'s household own a LLIN?';'23V1JoHmO94';8;0;0;9;22;0;22;8;0;'question_images/p8_llin2.png'

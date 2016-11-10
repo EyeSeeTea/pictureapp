@@ -36,7 +36,7 @@ public class OptionArrayAdapter extends AddlArrayAdapter<Option> {
     }
 
     @Override public void drawText(TextCard textCard, Option option) {
-        textCard.setText(option.getName());
+        textCard.setText(option.getCode());
     }
 
 }

@@ -2,18 +2,23 @@ package org.eyeseetea.malariacare.layout.listeners;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.HorizontalScrollView;
+import android.widget.ScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.eyeseetea.malariacare.fragments.ReviewFragment.TAG;
+
 /**
  * Created by idelcano on 14/06/2016.
  */
-public class SwipeTouchListener implements View.OnTouchListener {
-
+public class SwipeTouchListener implements View.OnTouchListener  {
+    public static ScrollView scrollView;
     /**
      * Custom gesture detector
      */
@@ -34,6 +39,8 @@ public class SwipeTouchListener implements View.OnTouchListener {
      * Delegates any touch into the our custom gesture detector
      */
     public boolean onTouch(View v, MotionEvent event) {
+        if(scrollView!=null)
+            scrollView.onTouchEvent(event);
         return gestureDetector.onTouchEvent(event);
     }
 
@@ -45,6 +52,13 @@ public class SwipeTouchListener implements View.OnTouchListener {
         clickableViews.add(view);
     }
 
+    /**
+     * Adds a clickable view
+     * @param view
+     */
+    public void addScrollView(ScrollView view){
+        scrollView=view;
+    }
     /**
      * Clears the list of clickable items
      */

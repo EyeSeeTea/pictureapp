@@ -276,6 +276,15 @@ public class PreferencesState {
         prefEditor.commit(); // finally save changes
     }
 
+    public String getDataLimitedByDate() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
+        return sharedPreferences.getString(instance.getContext().getString(R.string.data_limited_by_date), "");
+    }
+
+    public void setDataLimitedByDate(String value){
+        saveStringPreference(R.string.data_limited_by_date, value);
+    }
+
     public void loadsLanguageInActivity() {
         if(languageCode.equals("")) {
             return;

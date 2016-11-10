@@ -134,4 +134,9 @@
 <string name="review_subtitle">การส่งผ่าน</string>
 <string name="not_tested">ไม่ได้ทดสอบ</string>
 <string name="system_defined">"ระบบกำหนดไว้"</string>
+<string name="no_data">ไม่มีข้อมูล</string>
+<string name="last_6_days"> 6 วันที่ผ่านมา </string>
+<string name="last_6_weeks">ล่าสุด 6 สัปดาห์ที่ผ่านมา</string>
+<string name="last_6_months">6 เดือน </string>
+<string name="download">ดาวน์โหลด:</string>
 </resources>

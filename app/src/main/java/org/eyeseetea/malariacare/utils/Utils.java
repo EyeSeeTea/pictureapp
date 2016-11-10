@@ -26,6 +26,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,6 +84,17 @@ public class Utils {
         }
 
         return result;
+    }
+
+
+    public static String getInternationalizedString(String name) {
+        Context context=PreferencesState.getInstance().getContext();
+        int identifier = context.getResources().getIdentifier(name, "string", context.getPackageName());
+        //if the id is 0 it not exist.
+        if(identifier!=0) {
+            name = context.getString(identifier);
+        }
+        return name;
     }
 
     public static String getCommitHash(Context context){

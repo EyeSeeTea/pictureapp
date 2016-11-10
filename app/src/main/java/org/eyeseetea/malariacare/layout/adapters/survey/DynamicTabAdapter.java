@@ -29,7 +29,11 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -48,6 +52,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -56,6 +61,10 @@ import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -75,6 +84,7 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationCon
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.views.CustomButton;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
@@ -83,6 +93,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import utils.PhoneMask;
 
@@ -247,8 +258,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void showConfirmCounter(final View view, final Option selectedOption, final Question question, Question questionCounter) {
         //Change question x confirm message
         View rootView = view.getRootView();
-        final TextCard questionView = (TextCard) rootView.findViewById(R.id.question);
-        questionView.setText(questionCounter.getForm_name());
+        final TextCard questionView=(TextCard)rootView.findViewById(R.id.question);
+        questionView.setText(questionCounter.getInternationalizedForm_name());
         ((TextView) rootView.findViewById(R.id.dynamic_progress_text)).setText("");
         //cancel
         ImageView noView = (ImageView) rootView.findViewById(R.id.confirm_no);
@@ -287,19 +298,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         List<Option> questionOptions = questionCounter.getAnswer().getOptions();
         if (questionOptions.get(0) != null) {
             TextCard textCard = (TextCard) rootView.findViewById(R.id.questionTextRow);
-            textCard.setText(questionOptions.get(0).getCode());
+            textCard.setText(questionOptions.get(0).getInternationalizedCode());
             textCard.setTextSize(questionOptions.get(0).getOptionAttribute().getText_size());
         }
         //Question "confirm button" is in the second option in Options.csv
         if (questionOptions.get(1) != null) {
             TextCard confirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_yes);
-            confirmTextCard.setText(questionOptions.get(1).getCode());
+            confirmTextCard.setText(questionOptions.get(1).getInternationalizedCode());
             confirmTextCard.setTextSize(questionOptions.get(1).getOptionAttribute().getText_size());
         }
         //Question "no confirm button" is in the third option in Options.csv
         if (questionOptions.get(2) != null) {
             TextCard noConfirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_no);
-            noConfirmTextCard.setText(questionOptions.get(2).getCode());
+            noConfirmTextCard.setText(questionOptions.get(2).getInternationalizedCode());
             noConfirmTextCard.setTextSize(questionOptions.get(2).getOptionAttribute().getText_size());
         }
 
@@ -454,9 +465,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         headerView.setTypeface(tf);
         int tabType = questionItem.getHeader().getTab().getType();
         if (isMultipleQuestionTab(tabType)) {
-            headerView.setText(questionItem.getHeader().getTab().getName());
+            headerView.setText(questionItem.getHeader().getTab().getInternationalizedName());
         } else {
-            headerView.setText(questionItem.getForm_name());
+            headerView.setText(questionItem.getInternationalizedForm_name());
         }
 
         //question image
@@ -579,30 +590,30 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         TextCard textOption = (TextCard) frameLayout.getChildAt(1);
                         setTextSettings(textOption, currentOption);
 
+                    initOptionButton(frameLayout, currentOption, value);
+                }
+                break;
+            case Constants.REMINDER:
+            case Constants.WARNING:
+                View rootView = rowView.getRootView();
+                //Show confirm on full screen
+                rootView .findViewById(R.id.dynamic_tab_options_table).setVisibility(View.GONE);
+                rootView .findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
+                rootView.findViewById(R.id.no_container).setVisibility(View.GONE);
 
-                        initOptionButton(frameLayout, currentOption, value);
-                    }
-                    break;
-                case Constants.REMINDER:
-                case Constants.WARNING:
-                    ((TextView) rowView.findViewById(R.id.dynamic_progress_text)).setText("");
-                    tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_question_text, tableLayout, false);
-                    tableLayout.addView(tableRow);
-                    List<QuestionOption> questionOptions = screenQuestion.getQuestionOption();
-                    //Question "header" is in the first option in Options.csv
-                    if (questionOptions != null && questionOptions.size() > 0) {
-                        initWarningText(tableRow, questionOptions.get(0).getOption());
-                    }
+                ((TextView) rowView.findViewById(R.id.dynamic_progress_text)).setText("");
+                List<Option> questionOptions = questionItem.getAnswer().getOptions();
+                //Question "header" is in the first option in Options.csv
+                if(questionOptions!=null && questionOptions.size()>0) {
+                    initWarningText(rootView, questionOptions.get(0));
+                }
+                //Question "button" is in the second option in Options.csv
+                if(questionOptions!=null && questionOptions.size()>1) {
+                    initWarningValue(rootView, questionOptions.get(1));
+                }
 
-                    //Question "button" is in the second option in Options.csv
-                    if (questionOptions != null && questionOptions.size() > 1) {
-                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_confirm_yes, tableLayout, false);
-                        tableLayout.addView(tableRow);
-                        initWarningValue(tableRow, questionOptions.get(1).getOption());
-                        int paddingSize = (int) PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.question_padding);
-                        tableRow.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
-                    }
-                    break;
+
+                break;
                 case Constants.PHONE:
                     if (isMultipleQuestionTab(tabType)) {
                         tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_phone_row, tableLayout, false);
@@ -736,8 +747,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void setTextSettings(TextCard textOption, Option currentOption) {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in donottranslate laos file.
-        if (currentOption.getOptionAttribute().hasHorizontalAlignment() && currentOption.getOptionAttribute().hasVerticalAlignment()) {
-            textOption.setText(currentOption.getCode());
+        if (currentOption.getOptionAttribute().hasHorizontalAlignment() && currentOption.getOptionAttribute().hasVerticalAlignment())
+        {
+            textOption.setText(currentOption.getInternationalizedCode());
             textOption.setGravity(currentOption.getOptionAttribute().getGravity());
         } else {
             textOption.setVisibility(View.GONE);
@@ -745,25 +757,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
-    /**
-     * Sets a warning view values in a warning screen
-     *
-     * @return
-     */
-    private void initWarningValue(TableRow tableRow, Option option) {
-        ImageView errorImage = (ImageView) tableRow.findViewById(R.id.confirm_yes);
+    private void initWarningValue(View rootView, Option option) {
+        ImageView errorImage = (ImageView)rootView.findViewById(R.id.confirm_yes);
         errorImage.setImageResource(R.drawable.option_button);
         //Add button to listener
         swipeTouchListener.addClickableView(errorImage);
         //Add text into the button
-        TextView okText = (TextView) tableRow.findViewById(R.id.textcard_confirm_yes);
-        okText.setText(option.getCode());
+        TextView okText = (TextView)rootView.findViewById(R.id.textcard_confirm_yes);
+        okText.setText(option.getInternationalizedCode());
         okText.setTextSize(option.getOptionAttribute().getText_size());
     }
 
-    private void initWarningText(TableRow tableRow, Option option) {
-        TextView okText = (TextView) tableRow.findViewById(R.id.questionTextRow);
-        okText.setText(option.getCode());
+    private void initWarningText(View rootView, Option option) {
+        TextView okText = (TextView)rootView.findViewById(R.id.questionTextRow);
+        okText.setText(option.getInternationalizedCode());
         okText.setTextSize(option.getOptionAttribute().getText_size());
     }
 
@@ -1427,6 +1434,29 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
+     * Checks if the given string corresponds a correct phone number for the current country (by locale)
+     * @param phoneValue
+     * @return true|false
+     */
+    private boolean checkPhoneNumberByCountry(String phoneValue){
+
+        //Empty  is ok
+        if (phoneValue == null || "".equals(phoneValue)) {
+            phoneValue = "";
+        }
+
+        Phonenumber.PhoneNumber phoneNumber = null;
+        try {
+            Locale locale = context.getResources().getConfiguration().locale;
+            phoneNumber = PhoneNumberUtil.getInstance().parse(phoneValue, locale.getCountry());
+        } catch (NumberParseException e) {
+            return false;
+        }
+        return PhoneNumberUtil.getInstance().isValidNumber(phoneNumber);
+    }
+
+
+    /**
      * Checks if edit text is not null:
      *
      * @param editValue
@@ -1489,6 +1519,54 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             imageView.setImageBitmap(bmp);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param view
+     * @param option
+     */
+    private void highlightSelection(View view, Option option){
+        Drawable selectedBackground = context.getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
+        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {    //JELLY_BEAN=API16
+            view.setBackground(selectedBackground);
+        } else {
+            view.setBackgroundDrawable(selectedBackground);
+        }
+
+        if(option!=null) {
+            GradientDrawable bgShape = (GradientDrawable) view.getBackground();
+            String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
+            bgShape.setColor(Color.parseColor("#" + backGColor));
+            bgShape.setStroke(3, Color.WHITE);
+        }
+
+        //the view is a framelayout that contains a imageview
+        ImageView imageView;
+        if(view instanceof FrameLayout){
+            FrameLayout f = (FrameLayout) view;
+            imageView= (ImageView) f.getChildAt(0);
+        }else{
+            imageView = (ImageView)view;
+        }
+
+        imageView.clearColorFilter();
+    }
+
+    /**
+     * Puts a sort of dark shadow over the given view
+     * @param view
+     */
+    private void overshadow(FrameLayout view){
+        //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
+        view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
+        ImageView imageView = (ImageView) view.getChildAt(0);
+        imageView.setColorFilter(Color.parseColor("#805a595b"));
+
+        Drawable bg = view.getBackground();
+        if(bg instanceof GradientDrawable) {
+            GradientDrawable bgShape = (GradientDrawable)bg;
+            bgShape.setStroke(0, 0);
         }
     }
 

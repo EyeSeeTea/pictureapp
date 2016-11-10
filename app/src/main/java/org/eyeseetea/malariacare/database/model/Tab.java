@@ -29,6 +29,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.List;
 
@@ -77,6 +78,10 @@ public class Tab extends BaseModel {
 
     public String getName() {
         return name;
+    }
+
+    public String getInternationalizedName(){
+        return Utils.getInternationalizedString(name);
     }
 
     public void setName(String name) {

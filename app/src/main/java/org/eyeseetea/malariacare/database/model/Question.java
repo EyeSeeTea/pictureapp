@@ -36,6 +36,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -407,6 +408,11 @@ public class Question extends BaseModel {
     public String getForm_name() {
         return form_name;
     }
+
+    public String getInternationalizedForm_name() {
+        return Utils.getInternationalizedString(form_name);
+    }
+
 
     public void setForm_name(String form_name) {
         this.form_name = form_name;

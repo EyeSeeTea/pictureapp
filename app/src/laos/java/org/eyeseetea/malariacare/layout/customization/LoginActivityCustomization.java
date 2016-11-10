@@ -4,6 +4,6 @@ import org.eyeseetea.malariacare.LoginActivity;
 
 public class LoginActivityCustomization {
 
-    public void customize(LoginActivity loginActivity){
+    public void onCreate(LoginActivity loginActivity){
     }
 }

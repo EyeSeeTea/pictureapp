@@ -12,6 +12,8 @@ import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.hisp.dhis.android.sdk.ui.views.FontButton;
 
 import java.io.IOException;
@@ -20,7 +22,7 @@ import java.util.List;
 public class LoginActivityCustomization {
     private String TAG = ".loginCustomization";
 
-    public void customize(LoginActivity loginActivity){
+    public void onCreate(LoginActivity loginActivity){
         addDemoButton(loginActivity);
     }
 
@@ -34,17 +36,28 @@ public class LoginActivityCustomization {
         demoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Log.i(TAG, "Creating demo login from login ...");
+                LoginUseCase loginUseCase = new LoginUseCase();
+
+                Credentials demoCrededentials = Credentials.createDemoCredentials();
+
+                loginUseCase.execute(demoCrededentials,loginActivity);
+
+/*
                 saveDemoServerInPreferences(loginActivity);
 
                 createDummyUser();
 
                 createDummyDataInDB(loginActivity);
+*/
 
                 loginActivity.finishAndGo(DashboardActivity.class);
             }
         });
     }
 
+    /*
     private void createDummyDataInDB(LoginActivity loginActivity) {
         List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
 
@@ -59,7 +72,7 @@ public class LoginActivityCustomization {
         }
     }
 
-    private void createDummyUser() {
+/   private void createDummyUser() {
         Log.i(TAG, "Creating demo user ...");
         User dummyUser = User.createDummyUser();
         Session.setUser(dummyUser);
@@ -70,5 +83,5 @@ public class LoginActivityCustomization {
 
         Log.i(TAG, "saving  dhis_url preference " + demoUrlServer.toString());
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, demoUrlServer.toString());
-    }
+    }*/
 }

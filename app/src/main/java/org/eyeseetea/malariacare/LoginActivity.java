@@ -55,7 +55,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.eyeseetea.malariacare.database.model.OrgUnit.getAllOrgUnit;
-import static org.eyeseetea.malariacare.database.model.User.createDummyUser;
 
 /**
  * Login Screen.
@@ -83,9 +82,14 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     EditText usernameEditText;
     EditText passwordEditText;
 
+    LoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        loginActivityCustomization.onCreate(this);
+
         initDataDownloadPeriodDropdown();
 
         //Populate server with the current value
@@ -97,13 +101,6 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         usernameEditText.setText("");
         passwordEditText = (EditText) findViewById(R.id.password);
         passwordEditText.setText("");
-
-        customizeLogin();
-    }
-
-    private void customizeLogin() {
-        LoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization();
-        loginActivityCustomization.customize(this);
     }
 
     private void initDataDownloadPeriodDropdown() {

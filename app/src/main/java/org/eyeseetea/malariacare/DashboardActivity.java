@@ -38,9 +38,10 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.TabGroup;
-import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
@@ -94,7 +95,7 @@ public class DashboardActivity extends BaseActivity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
-        AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB();
+        AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB(this);
         asyncPopulateDB.execute((Void) null);
 
         createActionBar();
@@ -569,17 +570,23 @@ public class DashboardActivity extends BaseActivity {
      */
     public class AsyncPopulateDB extends AsyncTask<Void, Void, Exception> {
 
-        User user;
+        //User user;
+        DashboardActivity dashboardActivity;
 
-         AsyncPopulateDB() {
+         AsyncPopulateDB(DashboardActivity dashboardActivity) {
+             this.dashboardActivity = dashboardActivity;
         }
 
         @Override
         protected Exception doInBackground(Void... params) {
             try {
                 if(!BuildConfig.multiuser) {
-                    Log.i(TAG, "Creating demo user ...");
-                    user = User.createDummyUser();
+                    Log.i(TAG, "Creating demo login from dashboard ...");
+                    LoginUseCase loginUseCase = new LoginUseCase();
+
+                    Credentials demoCrededentials = Credentials.createDemoCredentials();
+
+                    loginUseCase.execute(demoCrededentials,dashboardActivity);
                 }
 
                 initDataIfRequired();
@@ -605,9 +612,6 @@ public class DashboardActivity extends BaseActivity {
                         }).create().show();
                 return;
             }
-            //Success
-            if (user != null)
-                Session.setUser(user);
 
             getSurveysFromService();
         }
@@ -619,7 +623,6 @@ public class DashboardActivity extends BaseActivity {
             }
 
             Log.i(TAG, "DB empty, loading data ...");
-            //PopulateDB.populateDummyData();
             try {
                 PopulateDB.populateDB(getAssets());
             } catch (IOException e) {

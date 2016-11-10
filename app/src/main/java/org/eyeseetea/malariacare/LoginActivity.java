@@ -19,13 +19,20 @@
 
 package org.eyeseetea.malariacare;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,9 +46,11 @@ import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -221,7 +230,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         return PreferencesState.getInstance().getDhisURL();
     }
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
@@ -234,14 +243,16 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
                 return super.onOptionsItemSelected(item);
         }
         return true;
-    }
+    }*/
 
     /**
      * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
-     */
+/*     *//*
     public void onBackPressed(){
-        finishAndGo(DashboardActivity.class);
-    }
+        EditText serverEditText = (EditText) findViewById(R.id.server_url);
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
+        //finishAndGo(DashboardActivity.class);
+    }*/
 
     /**
      * Finish current activity and launches an activity with the given class
@@ -252,6 +263,81 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         finish();
         startActivity(targetActivityIntent);
     }
+
+
+    /**
+     * Shows an alert dialog asking for acceptance of the EULA terms. If ok calls login function, do nothing otherwise
+     * @param titleId
+     * @param rawId
+     * @param context
+     */
+    public void askEula(int titleId, int rawId, final Context context){
+        InputStream message = context.getResources().openRawResource(rawId);
+        String stringMessage = Utils.convertFromInputStreamToString(message).toString();
+        final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
+        Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle(context.getString(titleId))
+                .setMessage(linkedMessage)
+                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        rememberEulaAccepted(context);
+                        loginToDhis(serverUrl,username,password);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).create();
+
+        dialog.show();
+
+        ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    /**
+     * Save a preference to remember that EULA was already accepted
+     * @param context
+     */
+    public void rememberEulaAccepted(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(getString(R.string.eula_accepted), true);
+        editor.commit();
+    }
+
+    /**
+     * User SDK function to login
+     * @param serverUrl
+     * @param username
+     * @param password
+     */
+    public void loginToDhis(String serverUrl, String username, String password){
+        //Delegate real login attempt to parent in sdk
+        super.login(serverUrl, username, password);
+    }
+
+    /**
+     * Ask for EULA acceptance if this is the first time user login to the server, otherwise login
+     * @param serverUrl
+     * @param username
+     * @param password
+     */
+    @Override
+    public void login(String serverUrl, String username, String password) {
+        //This method is overriden to capture credentials data
+        this.serverUrl=serverUrl;
+        this.username=username;
+        this.password=password;
+
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
+            askEula(R.string.settings_menu_eula, R.raw.eula, LoginActivity.this);
+        } else {
+            loginToDhis(serverUrl, username, password);
+        }
+    }
+
 }
 
 

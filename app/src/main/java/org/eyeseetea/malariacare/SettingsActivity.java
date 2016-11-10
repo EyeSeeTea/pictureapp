@@ -37,6 +37,7 @@ import android.util.Log;
 
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.VariantAdapter.SettingsVariantAdapter;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
@@ -68,18 +69,18 @@ public class SettingsActivity extends PreferenceActivity  {
 
     private static final String TAG=".SettingsActivity";
 
+    public SettingsVariantAdapter settingsVariantAdapter = new SettingsVariantAdapter(this);
+
     protected void onCreate(Bundle savedInstanceState) {
-        //Register into sdk bug for listening to logout events
-        Dhis2Application.bus.register(this);
         super.onCreate(savedInstanceState);
+
+        settingsVariantAdapter.onCreate();
     }
 
     @Override
     public void onStop(){
-        try {
-            //Unregister from bus before leaving
-            Dhis2Application.bus.unregister(this);
-        }catch(Exception e){}
+        settingsVariantAdapter.onStop();
+
         super.onStop();
     }
 
@@ -89,25 +90,6 @@ public class SettingsActivity extends PreferenceActivity  {
         super.onPostCreate(savedInstanceState);
 
         setupSimplePreferencesScreen();
-    }
-
-    /**
-     * Logging out from sdk is an async method.
-     * Thus it is required a callback to finish logout gracefully.
-     *
-     * @param uiEvent
-     */
-    @Subscribe
-    public void onLogoutFinished(UiEvent uiEvent){
-        //No event or not a logout event -> done
-        if(uiEvent==null || !uiEvent.getEventType().equals(UiEvent.UiEventType.USER_LOG_OUT)){
-            return;
-        }
-        Log.i(TAG, "Logging out from sdk...OK");
-        Session.logout();
-        Intent loginIntent = new Intent(this,LoginActivity.class);
-        finish();
-        startActivity(loginIntent);
     }
 
     /**
@@ -131,10 +113,10 @@ public class SettingsActivity extends PreferenceActivity  {
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
 
         AutoCompleteEditTextPreference autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
-        autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this));
+        autoCompleteEditTextPreference.setOnPreferenceClickListener(settingsVariantAdapter.getOnPreferenceClickListener());
 
         Preference serverUrlPreference = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
-        serverUrlPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this));
+        serverUrlPreference.setOnPreferenceClickListener(settingsVariantAdapter.getOnPreferenceClickListener());
     }
 
     /**
@@ -252,9 +234,8 @@ public class SettingsActivity extends PreferenceActivity  {
             AutoCompleteEditTextPreference autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
             Preference serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));
 
-            autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity));
-            serverUrlPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity));
-
+            autoCompleteEditTextPreference.setOnPreferenceClickListener(settingsActivity.settingsVariantAdapter.getOnPreferenceClickListener());
+            serverUrlPreference.setOnPreferenceClickListener(settingsActivity.settingsVariantAdapter.getOnPreferenceClickListener());
         }
     }
 
@@ -298,42 +279,4 @@ public class SettingsActivity extends PreferenceActivity  {
         return callerActivity;
     }
 
-}
-
-/**
- * Listener that moves to the LoginActivity before changing DHIS config
- */
-class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceClickListener{
-
-    private static final String TAG="LoginPreferenceListener";
-
-    /**
-     * Reference to the activity so you can use this from the activity or the fragment
-     */
-    SettingsActivity activity;
-
-    LoginRequiredOnPreferenceClickListener(SettingsActivity activity){
-        this.activity=activity;
-    }
-
-    @Override
-    public boolean onPreferenceClick(Preference preference) {
-        new AlertDialog.Builder(activity)
-                .setTitle(activity.getString(R.string.settings_menu_logout_title))
-                .setMessage(activity.getString(R.string.settings_menu_logout_message))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        //finish activity and go to login
-                        Log.i(TAG, "Logging out from sdk...");
-                        DhisService.logOutUser(activity);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                }).create().show();
-        Log.i(TAG, "Returning from dialog -> true");
-        return true;
-    }
 }

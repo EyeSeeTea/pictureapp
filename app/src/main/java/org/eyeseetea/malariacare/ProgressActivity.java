@@ -263,8 +263,8 @@ public class ProgressActivity extends Activity {
                         if (isAPull()) {
                             //Move back to setting with extras
                             Intent intent = new Intent(ProgressActivity.this,SettingsActivity.class);
-                            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER, true);
-                            intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE, true);
+/*                            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER, true);
+                            intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE, true);*/
                             finish();
                             startActivity(intent);
                             return;

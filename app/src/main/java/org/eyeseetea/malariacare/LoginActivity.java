@@ -158,16 +158,16 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     private void goSettingsWithRightExtras(){
 
-        Intent intent = new Intent(LoginActivity.this,SettingsActivity.class);
+/*        Intent intent = new Intent(LoginActivity.this,SettingsActivity.class);
         intent = propagateExtraAndResult(intent);
 
         finish();
         if(!getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false))
-            startActivity(intent);
+            startActivity(intent);*/
     }
 
     private Intent propagateExtraAndResult(Intent intent){
-        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,false)){
+/*        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,false)){
             Log.i(TAG, "propagateExtraAndResult -> Changing orgunit");
             intent.putExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,true);
         }
@@ -190,7 +190,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
             }
         }
 
-        intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);
+        intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);*/
         return intent;
     }
 

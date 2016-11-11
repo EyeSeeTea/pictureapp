@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.VariantAdapter;
+package org.eyeseetea.malariacare.variantadapter;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

@@ -1,11 +1,9 @@
-package org.eyeseetea.malariacare.VariantAdapter;
+package org.eyeseetea.malariacare.variantadapter;
 
 
 import android.preference.Preference;
 
 import org.eyeseetea.malariacare.SettingsActivity;
-
-import static com.google.android.gms.analytics.internal.zzy.s;
 
 public abstract class ASettingsVariantAdapter {
 

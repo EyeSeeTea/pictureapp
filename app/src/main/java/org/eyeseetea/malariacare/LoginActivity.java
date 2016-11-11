@@ -33,8 +33,6 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,13 +42,11 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import org.eyeseetea.malariacare.VariantAdapter.LoginVariantAdapter;
-import org.eyeseetea.malariacare.VariantAdapter.SettingsVariantAdapter;
+import org.eyeseetea.malariacare.variantadapter.LoginVariantAdapter;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
-import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.VariantAdapter;
+package org.eyeseetea.malariacare.variantadapter;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,8 +15,6 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
-
-import static com.google.android.gms.analytics.internal.zzy.i;
 
 public class SettingsVariantAdapter extends ASettingsVariantAdapter {
 

@@ -29,6 +29,7 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.List;
 
@@ -124,6 +125,10 @@ public class OptionAttribute extends BaseModel {
 
     public void setBackground_colour(String background_colour) {
         this.background_colour = background_colour;
+    }
+
+    public String getInternationalizedPath() {
+        return Utils.getInternationalizedString(path);
     }
 
     public String getPath() {

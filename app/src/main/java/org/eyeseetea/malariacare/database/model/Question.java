@@ -462,6 +462,10 @@ public class Question extends BaseModel {
         return path;
     }
 
+    public String getInternationalizedPath() {
+        return Utils.getInternationalizedString(path);
+    }
+
     public void setPath(String path) {
         this.path = path;
     }

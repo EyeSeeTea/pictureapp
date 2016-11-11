@@ -169,6 +169,18 @@ public class Option extends BaseModel {
     }
 
     /**
+     * Getter for extended option attribute 'path' translation in paths.xml
+     * @return
+     */
+    public String getInternationalizedPath() {
+        OptionAttribute optionAttribute = this.getOptionAttribute();
+        if(optionAttribute==null){
+            return null;
+        }
+
+        return optionAttribute.getInternationalizedPath();
+    }
+    /**
      * Getter for extended option attribute 'backgroundColor'
      * @return
      */

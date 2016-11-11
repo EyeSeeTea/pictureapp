@@ -652,13 +652,13 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         int i=0;
         newEntries[i]=PreferencesState.getInstance().getContext().getString(R.string.system_defined);
         newValues[i]="";
-        for(String currentKey : languages.keySet()){
+        for(String language : languages.keySet()){
             i++;
-            String language = languages.get(currentKey);
+            String languageCode = languages.get(language);
             String firstLetter= language.substring(0,1).toUpperCase();
             language = firstLetter + language.substring(1,language.length());
             newEntries[i] = language;
-            newValues[i] = currentKey;
+            newValues[i] = languageCode;
         }
 
         listPreference.setEntries(newEntries);
@@ -708,7 +708,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
             //Compare with the default language
             if(!s1.equals(s2)){
-                languages.put(loc[i], language);
+                    languages.put(language, loc[i]);
             }
         }
         return languages;

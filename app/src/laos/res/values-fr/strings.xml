@@ -151,7 +151,7 @@
 <string name="Option_Text_Reason_Severe">"Symptômes de paludisme grave"</string>
 <string name="Option_Text_Reason_Pregnant">"Enceinte"</string>
 <string name="Option_Text_Reason_Refused">"Patient a refusé"</string>
-<string name="Option_Text_Reason_StockOut">"RDT Rupture de stock"</string>
+<string name="Option_Text_Reason_StockOut">"RDT en rupture de stock"</string>
 <string name="Option_Text_Gender_Male">"Mâle"</string>
 <string name="Option_Text_Gender_Female">"Femelle"</string>
 <string name="Option_Text_Rdt_Negative">"Négatif"</string>

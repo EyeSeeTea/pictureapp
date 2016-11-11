@@ -9,7 +9,7 @@
 9;'Option_Text_Rdt_Negative';'Negative';0;5;9
 10;'Option_Text_Rdt_Pf';'Pf';0;5;10
 11;'Option_Text_Rdt_Pv';'Pv';0;5;11
-12;'Option_Text_Rdt_Mixed';'Pf+Pv';0;5;12
+12;'Option_Text_Rdt_Mixed';'Mixed';0;5;12
 13;'Option_Text_Rdt_Invalid';'Invalid';0;5;13
 14;'Warning_Text_Invalid';'Repeat';0;6;14
 15;'Warning_Button_Ignore_Invalid';'Ignore';0;6;15

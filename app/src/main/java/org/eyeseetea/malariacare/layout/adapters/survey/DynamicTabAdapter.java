@@ -84,6 +84,7 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationCon
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.CustomButton;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
@@ -290,7 +291,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Show question image in counter alert
         if (questionCounter.getPath() != null && !questionCounter.getPath().equals("")) {
             ImageView imageView = (ImageView) rootView.findViewById(R.id.questionImageRow);
-            putImageInImageView(questionCounter.getPath(), imageView);
+            putImageInImageView(questionCounter.getInternationalizedPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
         }
 
@@ -667,7 +668,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     if(screenQuestion.getPath()!=null && !screenQuestion.getPath().equals("")) {
                         ImageView rowImageView = ((ImageView) tableRow.findViewById(R.id.question_image_row));
                         rowImageView.setVisibility(View.VISIBLE);
-                        putImageInImageView(screenQuestion.getPath(), rowImageView);
+                        putImageInImageView(screenQuestion.getInternationalizedPath(), rowImageView);
                     }
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(screenQuestion.getForm_name());
                     tableRow.setVisibility(visibility);
@@ -689,7 +690,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     if(screenQuestion.getPath()!=null && !screenQuestion.getPath().equals("")) {
                             ImageView rowImageView = ((ImageView) tableRow.findViewById(R.id.question_image_row));
                             rowImageView.setVisibility(View.VISIBLE);
-                            putImageInImageView(screenQuestion.getPath(), rowImageView);
+                            putImageInImageView(screenQuestion.getInternationalizedPath(), rowImageView);
                     }
                     ((TextCard) tableRow.findViewById(R.id.row_switch_yes)).setText(screenQuestion.getAnswer().getOptions().get(0).getCode());
                     ((TextCard) tableRow.findViewById(R.id.row_switch_no)).setText(screenQuestion.getAnswer().getOptions().get(1).getCode());
@@ -1205,9 +1206,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    //Save the editCard value in the DB, and continue to the next screen.
-                    Question question = (Question) numberPicker.getTag();
-                    ReadWriteDB.saveValuesText(question, String.valueOf(s));
+                    //Save the numberpicker value in the DB, and continue to the next screen.
+                    ReadWriteDB.saveValuesText((Question) numberPicker.getTag(), String.valueOf(s));
                 }
             });
         } else {
@@ -1487,7 +1487,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //the button is a framelayout that contains a imageview
         ImageView imageView = (ImageView) button.getChildAt(0);
         //Put image
-        putImageInImageView(option.getPath(), imageView);
+        putImageInImageView(option.getInternationalizedPath(), imageView);
         //Associate option
         button.setTag(option);
 
@@ -1514,7 +1514,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         try {
             if (path == null || path.equals(""))
                 return;
-            InputStream inputStream = context.getAssets().open(path);
+            InputStream inputStream = context.getAssets().open(Utils.getInternationalizedString(path));
             Bitmap bmp = BitmapFactory.decodeStream(inputStream);
             imageView.setImageBitmap(bmp);
         } catch (IOException e) {

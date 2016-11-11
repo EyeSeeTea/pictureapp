@@ -1,10 +1,14 @@
 package org.eyeseetea.malariacare.layout.listeners;
 
 
+import static android.R.attr.key;
+import static android.R.attr.settingsActivity;
+
 import android.content.Intent;
 import android.preference.Preference;
 
 import org.eyeseetea.malariacare.LoginActivity;
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 
 /**
@@ -24,9 +28,10 @@ public class LoginRequiredOnPreferenceClickListener implements Preference.OnPref
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        Intent loginIntent = new Intent(activity,LoginActivity.class);
-        //finish();
-        activity.startActivity(loginIntent);
+        if(!activity.getIntent().getBooleanExtra(SettingsActivity.IS_INPROGRESS_SOURCE_ACTIVITY,false)){
+            Intent loginIntent = new Intent(activity,LoginActivity.class);
+            activity.startActivity(loginIntent);
+        }
         return true;
     }
 }

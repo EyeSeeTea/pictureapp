@@ -31,6 +31,7 @@
 <string name="settings_checkbox_customize_fonts">"Customize fonts?"</string>
 <string name="settings_list_font_sizes">"Fonts size"</string>
 <string name="settings_text_dhis_server_url">"DHIS Server URL"</string>
+<string name="settings_select_language">"Language"</string>
 <string name="pref_header_general">"General"</string>
 <string name="font_size_level0">"xsmall"</string>
 <string name="font_size_level1">"small"</string>
@@ -120,4 +121,10 @@
 <string name="font_size_level4_title">"Extra large"</string>
 <string name="option_counter">"Repetitions: "</string>
 <string name="option_confirm">"Confirm option"</string>
+<string name="system_defined">"System defined"</string>
+<string name="no_data">no data</string>
+<string name="last_6_days">last 6 days</string>
+<string name="last_6_weeks">last 6 weeks</string>
+<string name="last_6_months">last 6 months</string>
+<string name="download">Download:</string>
 </resources>

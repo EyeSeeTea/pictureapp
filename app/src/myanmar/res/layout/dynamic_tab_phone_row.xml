@@ -14,25 +14,10 @@
         android:paddingLeft="@dimen/question_padding"
         android:paddingRight="@dimen/question_padding"
         >
-        <org.eyeseetea.malariacare.views.EditCard
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_bottom_border"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal"
-            android:textSize="@dimen/input_number_edit_text_phone"
-            android:textColor="@color/intColor"
-            android:id="@+id/dynamic_phone_edit"
-            android:inputType="phone"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
-            app:tDimension="@string/font_size_level2"
-            app:tFontName="@string/condensed_font_name"
-            />
+        <include layout="@layout/phone_item"></include>
         <org.eyeseetea.malariacare.views.CustomButton
-            android:id="@+id/dynamic_phone_btn"
-            android:background="@drawable/integer_bottom_border"
+            android:id="@+id/row_phone_btn"
+            android:background="@drawable/option_button"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:gravity="center"

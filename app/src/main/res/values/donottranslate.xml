@@ -13,6 +13,7 @@
     <item name="font_sizes" type="string" translatable="false">font_sizes</item>
     <item name="dhis_url" type="string" translatable="false">dhis_url</item>
     <item name="org_unit" type="string" translatable="false">org_unit</item>
+    <item name="language_code" type="string" translatable="false">language_code</item>
 
 
     <string name="PUSH_PERIOD" translatable="false">10</string>
@@ -102,5 +103,6 @@
     <string name="default_option_text_size" translatable="false">24</string>
 
     <string name="is_pushing_key" translatable="false">ispushing</string>
+    <string name="data_limited_by_date" translatable="false">data_limited_by_date</string>
 
 </resources>

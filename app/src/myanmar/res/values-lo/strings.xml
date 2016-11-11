@@ -37,6 +37,7 @@
 <string name="settings_checkbox_customize_fonts">"ກໍານົດຕົວອັກສອນ?"</string>
 <string name="settings_list_font_sizes">"ຂະໜາດຕົວອັກສອນ"</string>
 <string name="settings_text_dhis_server_url">"DHIS Server URL"</string>
+<string name="settings_select_language">"ພາສາ"</string>
 <string name="pref_header_general">"ທົ່ວໄປ"</string>
 <string name="font_size_level0">"ນ້ອຍສຸດ"</string>
 <string name="font_size_level1">"ນ້ອຍ"</string>
@@ -141,4 +142,10 @@
 <string name="review_title">"ກະລຸນາກວດສອບກ່ອນທີ່ຈະ"</string>
 <string name="review_subtitle">"ລະບົບສາຍສົ່ງ"</string>
 <string name="not_tested">ບໍ່ໄດ້ທົດສອບ</string>
+<string name="system_defined">"ລະບົບກໍານົດໄວ້"</string>
+<string name="no_data">ບໍ່​ມີ​ຂໍ້​ມູນ</string>
+<string name="last_6_days">6 ວັນ</string>
+<string name="last_6_weeks">ທີ່ຜ່ານມາ 6 ອາທິດ</string>
+<string name="last_6_months">ສຸດທ້າຍ 6 ເດືອນທີ່</string>
+<string name="download">Download:</string>
 </resources>

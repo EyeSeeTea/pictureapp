@@ -21,13 +21,16 @@ package org.eyeseetea.malariacare.database.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -73,6 +76,11 @@ public class PreferencesState {
      */
     private Map<String, Map<String, Float>> scaleDimensionsMap;
 
+    /**
+     * Active language code;
+     */
+    private static String languageCode;
+
     static Context context;
 
     private PreferencesState(){ }
@@ -92,11 +100,21 @@ public class PreferencesState {
         showNumDen=initShowNumDen();
         orgUnit=initOrgUnit();
         dhisURL=initDhisURL();
+        languageCode=initLanguageCode();
         Log.d(TAG, "reloadPreferences: "
                 + " orgUnit:" + orgUnit
                 + " |dhisURL:" + dhisURL
                 + " |scale:" + scale
                 + " | showNumDen:" + showNumDen);
+    }
+
+    /**
+     * Returns 'language code' from sharedPreferences
+     * @return
+     */
+    private String initLanguageCode(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
+        return sharedPreferences.getString(instance.getContext().getString(R.string.language_code), "");
     }
 
     /**
@@ -241,6 +259,11 @@ public class PreferencesState {
         this.dhisURL = dhisURL;
     }
 
+    public String getLanguageCode(){
+        return languageCode;
+    }
+
+
     /**
      * Saves a value into a preference
      * @param namePreference
@@ -251,5 +274,26 @@ public class PreferencesState {
         SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
         prefEditor.putString(context.getResources().getString(namePreference), value); // set your default value here (could be empty as well)
         prefEditor.commit(); // finally save changes
+    }
+
+    public String getDataLimitedByDate() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
+        return sharedPreferences.getString(instance.getContext().getString(R.string.data_limited_by_date), "");
+    }
+
+    public void setDataLimitedByDate(String value){
+        saveStringPreference(R.string.data_limited_by_date, value);
+    }
+
+    public void loadsLanguageInActivity() {
+        if(languageCode.equals("")) {
+            return;
+        }
+        Resources res = context.getResources();
+        // Change locale settings in the app.
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.locale = new Locale(languageCode);
+        res.updateConfiguration(conf, dm);
     }
 }

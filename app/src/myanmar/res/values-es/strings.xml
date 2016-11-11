@@ -31,6 +31,7 @@
 <string name="settings_checkbox_customize_fonts">"¿Personalizar fuentes?"</string>
 <string name="settings_list_font_sizes">"Tamaño de fuentes"</string>
 <string name="settings_text_dhis_server_url">"URL de servidor DHIS"</string>
+<string name="settings_select_language">"Idioma"</string>
 <string name="pref_header_general">"General"</string>
 <string name="font_size_level0">"xsmall"</string>
 <string name="font_size_level1">"small"</string>
@@ -132,4 +133,10 @@
 <string name="review_title">Por favor, compruebe</string>
 <string name="review_subtitle">Transmisión</string>
 <string name="not_tested">No probado</string>
+<string name="system_defined">Definido por el sistema</string>
+<string name="no_data">Sin datos</string>
+<string name="last_6_days">Últimos 6 dias</string>
+<string name="last_6_weeks">Últimas 6 semanas</string>
+<string name="last_6_months">Últimos 6 meses</string>
+<string name="download">Descarga:</string>
 </resources>

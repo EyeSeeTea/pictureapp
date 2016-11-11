@@ -9,6 +9,7 @@
 <string name="settings_menu_about">"A propos de cette app"</string>
 <string name="settings_menu_configuration">"Paramètres"</string>
 <string name="settings_menu_licence">"License"</string>
+<string name="settings_select_language">"Langue"</string>
 <string name="dialog_title_delete_surveys">"Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?"</string>
 <string name="dialog_title_delete_survey">"Supprimer envoyés"</string>
 <string name="dialog_info_delete_survey">"Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?"</string>
@@ -120,4 +121,10 @@
 <string name="font_size_level4_title">"Extra grand"</string>
 <string name="option_counter">"Répétitions: "</string>
 <string name="option_confirm">"Confirmer option"</string>
+<string name="system_defined">"système défini"</string>
+<string name="no_data">pas de données</string>
+<string name="last_6_days">les 6 derniers jours</string>
+<string name="last_6_weeks">dernières 6 semaines </string>
+<string name="last_6_months"> les 6 derniers mois</string>
+<string name="download">Téléchargement:</string>
 </resources>

@@ -6,7 +6,6 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.Remind
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.StatusChecker;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.WarningStatusChecker;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.hisp.dhis.android.sdk.persistence.models.Constant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -152,6 +151,12 @@ public class QuestionNode {
         //Siblings share same parent
         this.sibling.parentNode=this.parentNode;
     }
+    /**
+     * gets the next sibling (same parent question)
+     */
+    public QuestionNode getSibling(){
+        return this.sibling;
+    }
 
     /**
      * Sets the previous sibling
@@ -296,7 +301,6 @@ public class QuestionNode {
         if(this.sibling==null){
             return null;
         }
-
         return this.sibling;
     }
 
@@ -320,5 +324,7 @@ public class QuestionNode {
         return true;
     }
 
-
+    public Map<Long,QuestionCounter> getCountersMap(){
+        return counters;
+    }
 }

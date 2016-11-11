@@ -1035,4 +1035,6 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENDING))
                 .queryList();
     }
+
+
 }

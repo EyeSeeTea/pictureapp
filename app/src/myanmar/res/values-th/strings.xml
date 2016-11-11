@@ -31,6 +31,7 @@
 <string name="settings_checkbox_customize_fonts">"เพื่อเปลี่ยนแบบอักษร?"</string>
 <string name="settings_list_font_sizes">"ขนาดตัวอักษร"</string>
 <string name="settings_text_dhis_server_url">"DHIS เซิร์ฟเวอร์ URL"</string>
+<string name="settings_select_language">"ภาษา"</string>
 <string name="pref_header_general">"ทั่วไป"</string>
 <string name="font_size_level0">"XSMALL"</string>
 <string name="font_size_level1">"เล็ก"</string>
@@ -132,4 +133,10 @@
 <string name="review_title">กรุณาตรวจสอบก่อน</string>
 <string name="review_subtitle">การส่งผ่าน</string>
 <string name="not_tested">ไม่ได้ทดสอบ</string>
+<string name="system_defined">"ระบบกำหนดไว้"</string>
+<string name="no_data">ไม่มีข้อมูล</string>
+<string name="last_6_days"> 6 วันที่ผ่านมา </string>
+<string name="last_6_weeks">ล่าสุด 6 สัปดาห์ที่ผ่านมา</string>
+<string name="last_6_months">6 เดือน </string>
+<string name="download">ดาวน์โหลด:</string>
 </resources>

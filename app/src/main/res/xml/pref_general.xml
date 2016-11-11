@@ -65,10 +65,10 @@
         android:title="@string/pref_visual"
         android:key="pref_visual">
         <!--<CheckBoxPreference-->
-            <!--android:key="@string/show_num_dems"-->
-            <!--android:title="@string/settings_checkbox_show_num_dems"-->
-            <!--android:summary="@string/settings_checkbox_description_show_num_dems"-->
-            <!--android:defaultValue="false" />-->
+        <!--android:key="@string/show_num_dems"-->
+        <!--android:title="@string/settings_checkbox_show_num_dems"-->
+        <!--android:summary="@string/settings_checkbox_description_show_num_dems"-->
+        <!--android:defaultValue="false" />-->
 
         <!-- A 'parent' preference, which enables/disables child preferences (below)
              when checked/unchecked. -->
@@ -81,7 +81,7 @@
         <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
         <!-- NOTE: RingtonePreference's summary should be set to its value by the activity code. -->
         <ListPreference
-            android:key="font_sizes"
+            android:key="@string/font_sizes"
             android:dependency="@string/customize_fonts"
             android:title="@string/settings_list_font_sizes"
             android:defaultValue="@string/font_size_level2"
@@ -89,7 +89,6 @@
             android:entryValues="@array/settings_array_values_font_sizes"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -100,6 +100,7 @@
 <string name="settings_menu_legal">"Legal"</string>
 <string name="settings_menu_copyright">"Copyright"</string>
 <string name="settings_menu_licenses">"Licencias de software"</string>
+<string name="settings_select_language">"Idioma"</string>
 <string name="settings_menu_eula">"EULA"</string>
 <string name="monitor_row_title_day">"Día"</string>
 <string name="monitor_row_title_month">"Mes"</string>
@@ -173,4 +174,10 @@
 <string name="Warning_Button_Refer_Hospital">"De acuerdo"</string>
 <string name="Warning_Text_Refer_Not_Tested">"Por favor, remitir al paciente al centro de salud pública más cercana."</string>
 <string name="Warning_Button_Refer_Not_Tested">"De acuerdo"</string>
+<string name="system_defined">Definido por el sistema</string>
+<string name="no_data">Sin datos</string>
+<string name="last_6_days">Últimos 6 dias</string>
+<string name="last_6_weeks">Últimas 6 semanas</string>
+<string name="last_6_months">Últimos 6 meses</string>
+<string name="download">Descarga:</string>
 </resources>

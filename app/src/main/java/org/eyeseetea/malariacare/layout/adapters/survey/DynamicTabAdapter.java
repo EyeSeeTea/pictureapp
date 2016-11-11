@@ -598,7 +598,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.WARNING:
                 View rootView = rowView.getRootView();
                 //Show confirm on full screen
-                rootView .findViewById(R.id.dynamic_tab_options_table).setVisibility(View.GONE);
+                rootView .findViewById(R.id.scrolled_table).setVisibility(View.GONE);
+                rootView .findViewById(R.id.no_scrolled_table).setVisibility(View.GONE);
                 rootView .findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
                 rootView.findViewById(R.id.no_container).setVisibility(View.GONE);
 

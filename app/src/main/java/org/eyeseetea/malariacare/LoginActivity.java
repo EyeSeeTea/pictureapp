@@ -50,6 +50,7 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
+import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 import java.io.InputStream;
@@ -85,7 +86,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         initDataDownloadPeriodDropdown();
 
         //Populate server with the current value
-        EditText serverText = (EditText) findViewById(org.hisp.dhis.android.sdk.R.id.server_url);
+        EditText serverText = (EditText) findViewById(R.id.server_url);
         serverText.setText(ServerAPIController.getServerUrl());
 
         //Username, Password blanks to force real login
@@ -150,132 +151,26 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     }
 
-/*    @Override
-    public void onClick(View v) {
-        // Save dhis URL and establish in preferences, so it will be used to make the pull
-        EditText serverEditText = (EditText) findViewById(R.id.server_url);
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
-        super.onClick(v);
-    }*/
-
-    @Subscribe
-    public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
-        if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
-            if(result.getResponseHolder().getApiException() == null) {
-                goSettingsWithRightExtras();
-            } else {
-                onLoginFail(result.getResponseHolder().getApiException());
-            }
-        }
-    }
-
-    private void goSettingsWithRightExtras(){
-
-/*        Intent intent = new Intent(LoginActivity.this,SettingsActivity.class);
-        intent = propagateExtraAndResult(intent);
-
-        finish();
-        if(!getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false))
-            startActivity(intent);*/
-    }
-
-    private Intent propagateExtraAndResult(Intent intent){
-/*        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,false)){
-            Log.i(TAG, "propagateExtraAndResult -> Changing orgunit");
-            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,true);
-        }
-
-        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,false)){
-            Log.i(TAG, "propagateExtraAndResult -> Changing server");
-            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,true);
-        }
-
-        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false)){
-            Log.i(TAG, "propagateExtraAndResult -> EULA accepted, Server overwrite from "+PreferencesState.getInstance().getDhisURL() +" to "+getUserIntroducedServer());
-            PreferencesState.getInstance().setDhisURL(getUserIntroducedServer());
-            setResult(RESULT_OK, intent);
-        } else {
-            if (isEulaAccepted() && !getServerFromPreferences().equals(getUserIntroducedServer())) {
-                Log.i(TAG, "propagateExtraAndResult -> Server changed from "+PreferencesState.getInstance().getDhisURL() +" to "+getUserIntroducedServer());
-                //If the user change the server, the getServerFromPreferents have the old server value only before to call reloadPreferences()
-                PreferencesState.getInstance().reloadPreferences();
-                PreferencesState.getInstance().setIsNewServerUrl(true);
-            }
-        }
-
-        intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);*/
-        return intent;
-    }
-
     /**
-     * Check whether the EULA has already been accepted by the user. When the user accepts the EULA,
-     * a preference is set so the app will remind between different executions
-     * @return
-     */
-    private boolean isEulaAccepted(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        return sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), false);
-    }
-
-    /**
-     * Get from the server textfield what the user introduced
-     * @return
-     */
-    private String getUserIntroducedServer(){
-        EditText serverEditText = (EditText) findViewById(R.id.server_url);
-        return serverEditText.getText().toString();
-    }
-
-    /**
-     * Get from the preferences the server setting
-     * @return
-     */
-    private String getServerFromPreferences(){
-        return PreferencesState.getInstance().getDhisURL();
-    }
-
-/*    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }*/
-
-    /**
-     * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
-/*     */
-    /*
-    public void onBackPressed(){
-        EditText serverEditText = (EditText) findViewById(R.id.server_url);
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
-        //finishAndGo(DashboardActivity.class);
-    }*/
-    
-    /**
-     * LoginActivity does NOT admin going backwads since it is always the first activity.
-     * Thus onBackPressed closes the app
+     * Ask for EULA acceptance if this is the first time user login to the server, otherwise login
+     * @param serverUrl
+     * @param username
+     * @param password
      */
     @Override
-    public void onBackPressed(){
-        loginVariantAdapter.onBackPressed();
-    }
+    public void login(String serverUrl, String username, String password) {
+        //This method is overriden to capture credentials data
+        this.serverUrl=serverUrl;
+        this.username=username;
+        this.password=password;
 
-    /**
-     * Finish current activity and launches an activity with the given class
-     * @param targetActivityClass Given target activity class
-     */
-    public void finishAndGo(Class targetActivityClass){
-        Intent targetActivityIntent = new Intent(this,targetActivityClass);
-        finish();
-        startActivity(targetActivityIntent);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
+            askEula(R.string.settings_menu_eula, R.raw.eula, LoginActivity.this);
+        } else {
+            loginToDhis(serverUrl, username, password);
+        }
     }
 
 
@@ -330,26 +225,50 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         super.login(serverUrl, username, password);
     }
 
+    @Subscribe
+    public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
+        if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
+            if(result.getResponseHolder().getApiException() == null) {
+                saveUserCredentials();
+
+                startActivity(new Intent(this, ProgressActivity.class));
+                finish();
+            } else {
+                onLoginFail(result.getResponseHolder().getApiException());
+            }
+        }
+    }
+
+    private void saveUserCredentials(){
+        loginVariantAdapter.saveUserCredentials(serverUrl,username,password);
+    }
+
     /**
-     * Ask for EULA acceptance if this is the first time user login to the server, otherwise login
-     * @param serverUrl
-     * @param username
-     * @param password
+     * Check whether the EULA has already been accepted by the user. When the user accepts the EULA,
+     * a preference is set so the app will remind between different executions
+     * @return
+     */
+    private boolean isEulaAccepted(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        return sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), false);
+    }
+
+    /**
+     * Get from the server textfield what the user introduced
+     * @return
+     */
+    private String getUserIntroducedServer(){
+        EditText serverEditText = (EditText) findViewById(R.id.server_url);
+        return serverEditText.getText().toString();
+    }
+
+    /**
+     * LoginActivity does NOT admin going backwads since it is always the first activity.
+     * Thus onBackPressed closes the app
      */
     @Override
-    public void login(String serverUrl, String username, String password) {
-        //This method is overriden to capture credentials data
-        this.serverUrl=serverUrl;
-        this.username=username;
-        this.password=password;
-
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
-            askEula(R.string.settings_menu_eula, R.raw.eula, LoginActivity.this);
-        } else {
-            loginToDhis(serverUrl, username, password);
-        }
+    public void onBackPressed(){
+        loginVariantAdapter.onBackPressed();
     }
 
 }

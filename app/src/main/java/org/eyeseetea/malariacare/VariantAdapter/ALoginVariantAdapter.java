@@ -12,4 +12,6 @@ public abstract class ALoginVariantAdapter {
     }
 
     public abstract void onBackPressed();
+
+    public abstract void saveUserCredentials(String serverUrl, String username, String password);
 }

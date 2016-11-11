@@ -13,4 +13,9 @@ public class LoginVariantAdapter extends ALoginVariantAdapter{
     public void onBackPressed() {
         loginActivity.onBackPressed();
     }
+
+    @Override
+    public void saveUserCredentials(String serverUrl, String username, String password) {
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverUrl);
+    }
 }

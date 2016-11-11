@@ -26,6 +26,7 @@ import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
 import com.raizlabs.android.dbflow.runtime.transaction.process.SaveModelTransaction;
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.DataValueExtended;
@@ -145,8 +146,8 @@ public class PullController {
             TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
             String selectedDateLimit=PreferencesState.getInstance().getDataLimitedByDate();
 
-            //Limit of data by date is selected
-            if(!selectedDateLimit.equals("")) {
+            //Limit of data by date if is selected
+            if(BuildConfig.loginDataDownloadPeriod) {
                 TrackerController.setStartDate(EventExtended.format(getDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
             }
 

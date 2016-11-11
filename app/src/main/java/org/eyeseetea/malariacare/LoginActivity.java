@@ -42,7 +42,7 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import org.eyeseetea.malariacare.variantadapter.LoginVariantAdapter;
+import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -74,7 +74,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      */
     private String password;
 
-    public LoginVariantAdapter loginVariantAdapter = new LoginVariantAdapter(this);
+    public LoginActivityStrategy loginVariantAdapter = new LoginActivityStrategy(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

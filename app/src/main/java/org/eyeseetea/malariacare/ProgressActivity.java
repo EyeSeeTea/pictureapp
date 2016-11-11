@@ -32,23 +32,17 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
-import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.variantadapter.LoginVariantAdapter;
-import org.eyeseetea.malariacare.variantadapter.ProgressVariantAdapter;
+import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ProgressActivity extends Activity {
 
-    public ProgressVariantAdapter progressVariantAdapter = new ProgressVariantAdapter(this);
+    public ProgressActivityStrategy progressVariantAdapter = new ProgressActivityStrategy(this);
 
     private static final String TAG=".ProgressActivity";
 

@@ -1,12 +1,12 @@
-package org.eyeseetea.malariacare.variantadapter;
+package org.eyeseetea.malariacare.strategies;
 
 
 import org.eyeseetea.malariacare.LoginActivity;
 
-public abstract class ALoginVariantAdapter {
+public abstract class ALoginActivityStrategy {
     protected LoginActivity loginActivity;
 
-    public ALoginVariantAdapter(LoginActivity loginActivity){
+    public ALoginActivityStrategy(LoginActivity loginActivity){
         this.loginActivity = loginActivity;
     }
 

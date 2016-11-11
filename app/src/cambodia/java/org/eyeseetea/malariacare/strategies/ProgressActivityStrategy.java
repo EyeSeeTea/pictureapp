@@ -1,16 +1,15 @@
-package org.eyeseetea.malariacare.variantadapter;
+package org.eyeseetea.malariacare.strategies;
 
 
 import android.content.Intent;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.SettingsActivity;
 
-public  class ProgressVariantAdapter extends AProgressVariantAdapter{
+public  class ProgressActivityStrategy extends AProgressActivityStrategy {
 
 
-    public ProgressVariantAdapter(ProgressActivity progressActivity) {
+    public ProgressActivityStrategy(ProgressActivity progressActivity) {
         super(progressActivity);
     }
 

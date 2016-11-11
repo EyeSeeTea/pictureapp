@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.variantadapter;
+package org.eyeseetea.malariacare.strategies;
 
 import android.content.Intent;
 
@@ -6,8 +6,8 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
-public class LoginVariantAdapter extends ALoginVariantAdapter{
-    public LoginVariantAdapter(LoginActivity loginActivity) {
+public class LoginActivityStrategy extends ALoginActivityStrategy{
+    public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
     }
 

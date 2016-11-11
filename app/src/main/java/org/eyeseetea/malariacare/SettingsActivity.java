@@ -31,7 +31,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
-import org.eyeseetea.malariacare.variantadapter.SettingsVariantAdapter;
+import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
 
@@ -59,7 +59,7 @@ public class SettingsActivity extends PreferenceActivity  {
 
     private static final String TAG=".SettingsActivity";
 
-    public SettingsVariantAdapter settingsVariantAdapter = new SettingsVariantAdapter(this);
+    public SettingsActivityStrategy settingsVariantAdapter = new SettingsActivityStrategy(this);
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

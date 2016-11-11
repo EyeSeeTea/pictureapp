@@ -1,4 +1,6 @@
-package org.eyeseetea.malariacare.variantadapter;
+package org.eyeseetea.malariacare.strategies;
+
+import static android.R.attr.settingsActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,26 +18,21 @@ import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
-public class SettingsVariantAdapter extends ASettingsVariantAdapter {
+public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
-    private static final String TAG=".SettingsVariantAdapter";
-    LoginRequiredOnPreferenceClickListener loginRequiredOnPreferenceClickListener;
+    private static final String TAG=".SettingsStrategy";
+    LogoutAndLoginRequiredOnPreferenceClickListener loginRequiredOnPreferenceClickListener;
 
-    public SettingsVariantAdapter(SettingsActivity settingsActivity) {
+    public SettingsActivityStrategy(SettingsActivity settingsActivity) {
         super(settingsActivity);
 
-        loginRequiredOnPreferenceClickListener = new LoginRequiredOnPreferenceClickListener(settingsActivity);
+        loginRequiredOnPreferenceClickListener = new LogoutAndLoginRequiredOnPreferenceClickListener(settingsActivity);
     }
 
     @Override
     public void onCreate() {
         //Register into sdk bug for listening to logout events
         Dhis2Application.bus.register(this);
-    }
-
-    @Override
-    public void onPause() {
-
     }
 
     @Override
@@ -73,7 +70,7 @@ public class SettingsVariantAdapter extends ASettingsVariantAdapter {
 /**
  * Listener that moves to the LoginActivity before changing DHIS config
  */
-class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceClickListener{
+class LogoutAndLoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceClickListener{
 
     private static final String TAG="LoginPreferenceListener";
 
@@ -82,7 +79,7 @@ class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceC
      */
     SettingsActivity activity;
 
-    LoginRequiredOnPreferenceClickListener(SettingsActivity activity){
+    LogoutAndLoginRequiredOnPreferenceClickListener(SettingsActivity activity){
         this.activity=activity;
     }
 

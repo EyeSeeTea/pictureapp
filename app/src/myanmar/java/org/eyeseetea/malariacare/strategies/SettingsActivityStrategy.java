@@ -5,6 +5,8 @@ import static android.R.attr.settingsActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.preference.DialogPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.util.Log;
 
@@ -84,7 +86,7 @@ class LogoutAndLoginRequiredOnPreferenceClickListener implements Preference.OnPr
     }
 
     @Override
-    public boolean onPreferenceClick(Preference preference) {
+    public boolean onPreferenceClick(final Preference preference) {
         new AlertDialog.Builder(activity)
                 .setTitle(activity.getString(R.string.settings_menu_logout_title))
                 .setMessage(activity.getString(R.string.settings_menu_logout_message))
@@ -97,6 +99,7 @@ class LogoutAndLoginRequiredOnPreferenceClickListener implements Preference.OnPr
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        ((DialogPreference)preference).getDialog().dismiss();
                         dialog.cancel();
                     }
                 }).create().show();

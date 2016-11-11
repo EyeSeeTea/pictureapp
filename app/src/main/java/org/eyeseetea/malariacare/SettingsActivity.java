@@ -171,15 +171,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.font_sizes)));
-        bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.language_code)));
+        if(BuildConfig.translations)
+            bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.language_code)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.dhis_url)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
 
-        //Hide translation option if is not active in gradle variable
-        if(!BuildConfig.translations)
-            getPreferenceScreen().removePreference(getPreferenceScreen().findPreference(getResources().getString(R.string.language_code)));
 
-        // Set the ClickListener to the android:key"remove_sent_surveys" preference.
 
         autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
         autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this,true));
@@ -204,15 +201,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
             }
         });
-
-//        Preference removeSentPreference = (Preference)findPreference(getApplicationContext().getString(R.string.remove_sent_surveys));
-//        removeSentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-//            @Override
-//            public boolean onPreferenceClick(Preference preference) {
-//                askRemoveSentSurveys();
-//                return true;
-//            }
-//        });
 
         Preference serverUrlPreference = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
         serverUrlPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this, false));
@@ -240,9 +228,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         //Check current server version to populate orgunits
         initPopulateOrgUnitsByServerVersion(PreferencesState.getInstance().getDhisURL());
-
-        //XXX Open preference that was being edited, (to review)
-        //openClickedPreference();
     }
 
     /**

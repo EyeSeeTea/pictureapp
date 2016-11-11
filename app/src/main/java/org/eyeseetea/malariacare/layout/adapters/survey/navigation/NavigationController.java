@@ -311,7 +311,11 @@ public class NavigationController {
         }
 
         //Return next question
-        Log.d(TAG,String.format("findNext(%s)->%s",option==null?"":option.getInternationalizedCode(),nextNode.getQuestion().getCode()));
+        if(nextNode!=null && nextNode.getQuestion()!=null) {
+            Log.d(TAG, String.format("findNext(%s)->%s",
+                    option == null ? "" : option.getInternationalizedCode(),
+                    nextNode.getQuestion().getCode() + ""));
+        }
         return nextNode;
     }
 

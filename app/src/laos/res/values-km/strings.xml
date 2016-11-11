@@ -151,7 +151,7 @@
 <string name="Option_Text_Reason_Severe">"រោគសញ្ញានៃជំងឺគ្រុនចាញ់ធ្ងន់ធ្ងរ"</string>
 <string name="Option_Text_Reason_Pregnant">"មានផ្ទៃពោះ"</string>
 <string name="Option_Text_Reason_Refused">"អ្នកជម្ងឺបានបដិសេធ"</string>
-<string name="Option_Text_Reason_StockOut">"RDT Stockout"</string>
+<string name="Option_Text_Reason_StockOut">"ឧបករណ៏ RDT មិនមាននៅក្នុងស្តុក"</string>
 <string name="Option_Text_Gender_Male">"បុរស"</string>
 <string name="Option_Text_Gender_Female">"ស្រី"</string>
 <string name="Option_Text_Rdt_Negative">"អវិជ្ជមាន"</string>

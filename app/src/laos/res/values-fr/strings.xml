@@ -31,6 +31,7 @@
 <string name="settings_checkbox_customize_fonts">"Personaliser les fonts?"</string>
 <string name="settings_list_font_sizes">"Taille des fonts"</string>
 <string name="settings_text_dhis_server_url">"URL du serveur DHIS"</string>
+<string name="settings_select_language">"Langue"</string>
 <string name="pref_header_general">"General"</string>
 <string name="font_size_level0">"xsmall"</string>
 <string name="font_size_level1">"small"</string>
@@ -173,6 +174,7 @@
 <string name="Warning_Button_Refer_Hospital">"D'accord"</string>
 <string name="Warning_Text_Refer_Not_Tested">"S'il vous plaît se référer le patient à l'établissement de santé publique le plus proche."</string>
 <string name="Warning_Button_Refer_Not_Tested">"D'accord"</string>
+<string name="system_defined">"Système défini"</string>
 <string name="no_data">pas de données</string>
 <string name="last_6_days">les 6 derniers jours</string>
 <string name="last_6_weeks">dernières 6 semaines </string>

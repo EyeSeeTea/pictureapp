@@ -44,6 +44,8 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.VariantAdapter.LoginVariantAdapter;
+import org.eyeseetea.malariacare.VariantAdapter.SettingsVariantAdapter;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -74,6 +76,8 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      * DHIS password (required since push is done natively instead of using sdk)
      */
     private String password;
+
+    public LoginVariantAdapter loginVariantAdapter = new LoginVariantAdapter(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,13 +150,13 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     }
 
-    @Override
+/*    @Override
     public void onClick(View v) {
         // Save dhis URL and establish in preferences, so it will be used to make the pull
         EditText serverEditText = (EditText) findViewById(R.id.server_url);
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
         super.onClick(v);
-    }
+    }*/
 
     @Subscribe
     public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
@@ -247,12 +251,22 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     /**
      * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
-/*     *//*
+/*     */
+    /*
     public void onBackPressed(){
         EditText serverEditText = (EditText) findViewById(R.id.server_url);
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
         //finishAndGo(DashboardActivity.class);
     }*/
+    
+    /**
+     * LoginActivity does NOT admin going backwads since it is always the first activity.
+     * Thus onBackPressed closes the app
+     */
+    @Override
+    public void onBackPressed(){
+        loginVariantAdapter.onBackPressed();
+    }
 
     /**
      * Finish current activity and launches an activity with the given class

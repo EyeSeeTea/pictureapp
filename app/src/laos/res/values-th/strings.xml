@@ -151,7 +151,7 @@
 <string name="Option_Text_Reason_Severe">"อาการโรคมาลาเรียอย่างรุนแรง"</string>
 <string name="Option_Text_Reason_Pregnant">"ตั้งครรภ์"</string>
 <string name="Option_Text_Reason_Refused">"ผู้ป่วยปฏิเสธ"</string>
-<string name="Option_Text_Reason_StockOut">"RDT Stockout"</string>
+<string name="Option_Text_Reason_StockOut">"เซ็นเซอร์ RDT ไม่ได้อยู่ในสต็อก"</string>
 <string name="Option_Text_Gender_Male">"ชาย"</string>
 <string name="Option_Text_Gender_Female">"หญิง"</string>
 <string name="Option_Text_Rdt_Negative">"เชิงลบ"</string>

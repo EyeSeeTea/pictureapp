@@ -43,12 +43,7 @@ public class LayoutUtils extends BaseLayoutUtils {
         colorString = String.format("%X", color).substring(2);
         User user= User.getLoggedUser();
         String userName;
-        if(user==null)
-        {
-            userName="";
-        }else{
-            userName=user.getName();
-        }
+        userName = (user==null) ? "" : user.getName();
         Spanned spannedSubTitle = Html.fromHtml(String.format("<font color=\"#%s\"><b>%s</b></font>", colorString , "Volunteer: "+ userName +""));
         actionBar.setCustomView(R.layout.custom_action_bar);
         TextView title =(TextView) actionBar.getCustomView().findViewById(R.id.action_bar_multititle_title);

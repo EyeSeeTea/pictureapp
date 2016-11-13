@@ -150,7 +150,7 @@ public class PullController {
             String selectedDateLimit=PreferencesState.getInstance().getDataLimitedByDate();
 
             //Limit of data by date is selected
-            if(!selectedDateLimit.equals("")) {
+            if(BuildConfig.loginDataDownloadPeriod) {
                 TrackerController.setStartDate(EventExtended.format(getDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
             }
 
@@ -259,27 +259,38 @@ public class PullController {
         //remove older values, but not the especial "other" option
         for(Question question:questions) {
             List<Option> options = question.getAnswer().getOptions();
-            for(Option option:options){
-                if(QuestionOption.findByQuestionAndOption(question,option).size()==0){
-                    option.delete();
-                }
-            }
+            removeOldValues(question, options);
+        }
+
+        if(questions.size()==0) {
+            return;
         }
 
         //Generate the orgUnits options for each question with orgunit dropdown list
-        if(questions.size()>0) {
-            List<OrgUnit> orgUnits=OrgUnit.getAllOrgUnit();
-            for (OrgUnit orgUnit:orgUnits){
-                for(Question question:questions) {
-                    Option option= new Option();
-                    option.setAnswer(question.getAnswer());
-                    option.setName(orgUnit.getUid());
-                    option.setCode(orgUnit.getName());
-                    option.save();
-                }
+        List<OrgUnit> orgUnits=OrgUnit.getAllOrgUnit();
+        for (OrgUnit orgUnit:orgUnits){
+            addOUOptionToQuestions(questions, orgUnit);
+        }
+    }
+
+    private void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
+        for(Question question:questions) {
+            Option option= new Option();
+            option.setAnswer(question.getAnswer());
+            option.setName(orgUnit.getUid());
+            option.setCode(orgUnit.getName());
+            option.save();
+        }
+    }
+
+    private void removeOldValues(Question question, List<Option> options) {
+        for(Option option:options){
+            if(QuestionOption.findByQuestionAndOption(question,option).size()==0){
+                option.delete();
             }
         }
     }
+
 
     /**
      * Erase data from app database

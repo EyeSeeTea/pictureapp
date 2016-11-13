@@ -229,28 +229,27 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
              * Swipe right listener moves to previous question
              */
             public void onSwipeRight() {
-                if (GradleVariantConfig.isSwipeActionActive()) {
-                    Log.d(TAG, "onSwipeRight(previous)");
-
-                    //Hide keypad
-                    hideKeyboard(listView.getContext(), listView);
-
-                    previous();
+                if (!GradleVariantConfig.isSwipeActionActive()) {
+                    return;
                 }
+                Log.d(TAG, "onSwipeRight(previous)");
+                //Hide keypad
+                hideKeyboard(listView.getContext(), listView);
+                previous();
             }
 
             /**
              * Swipe left listener moves to next question
              */
             public void onSwipeLeft() {
-                if (GradleVariantConfig.isSwipeActionActive()) {
-                    Log.d(TAG, "onSwipeLeft(next)");
-                    if (readOnly || navigationController.isNextAllowed()) {
-
-                        //Hide keypad
-                        hideKeyboard(listView.getContext(), listView);
-                        next();
-                    }
+                if (!GradleVariantConfig.isSwipeActionActive()) {
+                    return;
+                }
+                Log.d(TAG, "onSwipeLeft(next)");
+                if (readOnly || navigationController.isNextAllowed()) {
+                    //Hide keypad
+                    hideKeyboard(listView.getContext(), listView);
+                    next();
                 }
             }
 

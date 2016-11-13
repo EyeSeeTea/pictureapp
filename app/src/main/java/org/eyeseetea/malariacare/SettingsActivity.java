@@ -105,6 +105,7 @@ public class SettingsActivity extends PreferenceActivity  {
 
         AutoCompleteEditTextPreference autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
         autoCompleteEditTextPreference.setOnPreferenceClickListener(settingsVariantAdapter.getOnPreferenceClickListener());
+        autoCompleteEditTextPreference.pullOrgUnits();
 
         Preference serverUrlPreference = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
         serverUrlPreference.setOnPreferenceClickListener(settingsVariantAdapter.getOnPreferenceClickListener());
@@ -224,6 +225,8 @@ public class SettingsActivity extends PreferenceActivity  {
             SettingsActivity settingsActivity = (SettingsActivity)getActivity();
             AutoCompleteEditTextPreference autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
             Preference serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));
+
+            autoCompleteEditTextPreference.pullOrgUnits();
 
             autoCompleteEditTextPreference.setOnPreferenceClickListener(settingsActivity.settingsVariantAdapter.getOnPreferenceClickListener());
             serverUrlPreference.setOnPreferenceClickListener(settingsActivity.settingsVariantAdapter.getOnPreferenceClickListener());

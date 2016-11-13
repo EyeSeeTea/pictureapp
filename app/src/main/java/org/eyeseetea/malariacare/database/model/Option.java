@@ -29,6 +29,9 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
@@ -38,9 +41,13 @@ public class Option extends BaseModel {
     //FIXME A 'Yes' answer shows children questions, this should be configurable by some additional attribute in Option
     public static final String CHECKBOX_YES_OPTION="Yes";
 
+    public static final int DOESNT_MATCH_POSITION = 0;
+    public static final int MATCH_POSITION = 1;
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_option;
+    //Fixme the code is used as name and the name is used as code
     @Column
     String code;
     @Column
@@ -98,6 +105,8 @@ public class Option extends BaseModel {
     }
 
     public String getCode() {return code;}
+
+    public String getInternationalizedCode() {return Utils.getInternationalizedString(code);}
 
     public void setCode(String code) {this.code = code;}
 
@@ -159,6 +168,18 @@ public class Option extends BaseModel {
         return optionAttribute.getPath();
     }
 
+    /**
+     * Getter for extended option attribute 'path' translation in paths.xml
+     * @return
+     */
+    public String getInternationalizedPath() {
+        OptionAttribute optionAttribute = this.getOptionAttribute();
+        if(optionAttribute==null){
+            return null;
+        }
+
+        return optionAttribute.getInternationalizedPath();
+    }
     /**
      * Getter for extended option attribute 'backgroundColor'
      * @return
@@ -244,5 +265,31 @@ public class Option extends BaseModel {
         return new Select()
                 .from(Option.class)
                 .where(Condition.column(Option$Table.ID_OPTION).eq(id)).querySingle();
+    }
+
+    /**
+     * Gets the Question of this Option in session
+     *
+     * @return
+     */
+    public Question getQuestionBySession() {
+        return getQuestionBySurvey(Session.getSurvey());
+    }
+    /**
+     * Gets the Question of this Option in the given Survey
+     *
+     * @param survey
+     * @return
+     */
+    public Question getQuestionBySurvey(Survey survey) {
+        if (survey == null) {
+            return null;
+        }
+        List<Value> returnValues = new Select().from(Value.class)
+                .indexedBy(Constants.VALUE_IDX)
+                .where(Condition.column(Value$Table.ID_OPTION).eq(this.getId_option()))
+                .and(Condition.column(Value$Table.ID_SURVEY).eq(survey.getId_survey())).queryList();
+
+        return (returnValues.size() == 0) ? null : returnValues.get(0).getQuestion();
     }
 }

@@ -711,7 +711,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
             for(Value value:values){
                 //Find the RTS option
                 if(value.getOption()!=null && value.getQuestion()!=null && value.getQuestion().getCode().equals(PreferencesState.getInstance().getContext().getString(R.string.Result_code))){
-                    rdtValue = value.getOption().getCode();
+                    rdtValue = value.getOption().getInternationalizedCode();
                 }
             }
 
@@ -845,7 +845,7 @@ public class Survey extends BaseModel  implements VisitableToSDK {
             String qCode = value.getQuestion().getCode();
 
              if(codeQuestionFilter.contains(qCode)) {
-                    String val = (value.getOption()!=null)?value.getOption().getCode():value.getValue();
+                    String val = (value.getOption()!=null)?value.getOption().getInternationalizedCode():value.getValue();
                     if(val!=null)
                         map.put(qCode, val);
                 }
@@ -1035,4 +1035,6 @@ public class Survey extends BaseModel  implements VisitableToSDK {
                 .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENDING))
                 .queryList();
     }
+
+
 }

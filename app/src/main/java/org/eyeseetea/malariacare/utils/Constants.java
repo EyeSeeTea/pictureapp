@@ -24,7 +24,12 @@ public class Constants {
             IMAGES_5 = 15,
             COUNTER = 16,
             WARNING = 17,
-            REMINDER = 18;
+            REMINDER = 18,
+            DROPDOWN_OU_LIST = 19,
+            IMAGE_3_NO_DATAELEMENT = 20,
+            HIDDEN = 21,
+            SWITCH_BUTTON = 22,
+            QUESTION_LABEL = 23;
 
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
@@ -32,11 +37,13 @@ public class Constants {
             RADIO_GROUP_HORIZONTAL,
             RADIO_GROUP_VERTICAL,
             DROPDOWN_LIST_DISABLED,
+            DROPDOWN_OU_LIST,
             IMAGES_2,
             IMAGES_3,
             IMAGES_4,
             IMAGES_5,
-            IMAGES_6);
+            IMAGES_6,
+            IMAGE_3_NO_DATAELEMENT);
 
 
     public static final String DEFAULT_SELECT_OPTION = "";
@@ -53,7 +60,8 @@ public class Constants {
             TAB_ADHERENCE = 6,
             TAB_IQATAB = 7,
             TAB_REPORTING = 8,
-            TAB_DYNAMIC_AUTOMATIC_TAB = 9;
+            TAB_DYNAMIC_AUTOMATIC_TAB = 9,
+            TAB_MULTI_QUESTION = 10;
 
     //FIXME So far the special sub type of composite scores is treated by name
     public static final String COMPOSITE_SCORE_TAB_NAME = "Composite Scores";

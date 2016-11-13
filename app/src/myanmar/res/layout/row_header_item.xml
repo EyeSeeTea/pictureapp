@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include layout="@layout/bottom_view"></include>
+    <org.eyeseetea.malariacare.views.TextCard
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:gravity="left"
+        android:layout_gravity="left"
+        android:layout_margin="@dimen/input_edit_text_margin"
+        android:paddingLeft="@dimen/input_edit_text_left_padding"
+        android:paddingRight="@dimen/input_edit_text_right_padding"
+        android:textColor="@color/dark_violet"
+        android:id="@+id/row_header_text"
+        android:textSize="@dimen/input_number_edit_text_phone"
+        app:tDimension="@string/font_size_level2"
+        app:tFontName="@string/condensed_font_name"
+        />
+</merge>

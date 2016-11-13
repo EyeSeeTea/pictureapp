@@ -83,7 +83,8 @@ public class Answer extends BaseModel {
             options = new Select()
                     .from(Option.class)
                     .where(Condition.column(Option$Table.ID_ANSWER)
-                            .eq(this.getId_answer())).queryList();
+                            .eq(this.getId_answer()))
+                    .orderBy(Option$Table.ID_OPTION).queryList();
         }
         return options;
     }

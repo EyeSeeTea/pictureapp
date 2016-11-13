@@ -23,9 +23,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:id="@+id/assessment_row"
-    android:background="@drawable/cell_borders"
     android:padding="@dimen/dashboard_row_padding">
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"

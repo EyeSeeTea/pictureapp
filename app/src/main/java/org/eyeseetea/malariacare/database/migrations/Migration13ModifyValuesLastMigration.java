@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  * Created by idelcano on 03/08/2016.
  */
-@Migration(version = 13, databaseName = AppDatabase.NAME)
+@Migration(version = 19, databaseName = AppDatabase.NAME)
 public class Migration13ModifyValuesLastMigration extends BaseMigration {
 
     private static String TAG=".Migration13";

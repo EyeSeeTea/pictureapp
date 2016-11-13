@@ -12,7 +12,6 @@
         android:textColor="@color/intColor"
         android:id="@+id/row_header_text"
         android:inputType="textLongMessage"
-        android:imeOptions="actionDone"
         app:tDimension="@string/font_size_level1"
         app:tFontName="@string/condensed_font_name"
         />

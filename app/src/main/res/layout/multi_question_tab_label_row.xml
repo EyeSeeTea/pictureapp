@@ -8,6 +8,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <include layout="@layout/bottom_view"></include>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,13 +23,14 @@
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:layout_weight="0.25"   />
 
             <org.eyeseetea.malariacare.views.TextCard
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.75"
-                android:background="@drawable/edit_text_bottom_border"
                 android:textSize="@dimen/input_number_edit_text_phone"
                 android:textColor="@color/intColor"
                 android:id="@+id/row_header_text"

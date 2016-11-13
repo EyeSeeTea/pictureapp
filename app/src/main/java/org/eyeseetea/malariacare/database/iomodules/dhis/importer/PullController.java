@@ -55,6 +55,9 @@ import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 import org.hisp.dhis.android.sdk.utils.api.ProgramType;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -146,7 +149,7 @@ public class PullController {
             TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
             String selectedDateLimit=PreferencesState.getInstance().getDataLimitedByDate();
 
-            //Limit of data by date if is selected
+            //Limit of data by date is selected
             if(BuildConfig.loginDataDownloadPeriod) {
                 TrackerController.setStartDate(EventExtended.format(getDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
             }
@@ -287,6 +290,7 @@ public class PullController {
             }
         }
     }
+
 
     /**
      * Erase data from app database

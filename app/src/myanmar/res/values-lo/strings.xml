@@ -148,4 +148,8 @@
 <string name="last_6_weeks">ທີ່ຜ່ານມາ 6 ອາທິດ</string>
 <string name="last_6_months">ສຸດທ້າຍ 6 ເດືອນທີ່</string>
 <string name="download">Download:</string>
+    <string name="assessment_past_cases">PAST CASES</string>
+    <string name="assessment_new_cases">NEW CASES</string>
+    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
+    <string name="positive_hint">Name, Details</string>
 </resources>

@@ -95,7 +95,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     private void initView(Bundle savedInstanceState){
         setTheme(R.style.EyeSeeTheme);
         android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
-        LayoutUtils.setActionBarLogo(actionBar);
+        LayoutUtils.setActionBar(actionBar);
 
         if (savedInstanceState == null){
             initTransition();

@@ -139,4 +139,8 @@
 <string name="last_6_weeks">ចុងក្រោយ 6 សប្តាហ៍</string>
 <string name="last_6_months"> 6 ខែចុង</string>
 <string name="download"> ទាញយក:</string>
+    <string name="assessment_past_cases">PAST CASES</string>
+    <string name="assessment_new_cases">NEW CASES</string>
+    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
+    <string name="positive_hint">Name, Details</string>
 </resources>

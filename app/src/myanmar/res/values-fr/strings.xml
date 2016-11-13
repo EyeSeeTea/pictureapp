@@ -139,4 +139,8 @@
 <string name="last_6_weeks">"dernières 6 semaines"</string>
 <string name="last_6_months"> les 6 derniers mois</string>
 <string name="download">"Téléchargement:"</string>
+    <string name="assessment_past_cases">PAST CASES</string>
+    <string name="assessment_new_cases">NEW CASES</string>
+    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
+    <string name="positive_hint">Name, Details</string>
 </resources>

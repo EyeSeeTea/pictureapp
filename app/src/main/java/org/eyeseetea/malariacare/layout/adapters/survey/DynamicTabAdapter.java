@@ -721,10 +721,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;
             }
         }
-        if (isMultipleQuestionTab(tabType)) {
-            tableButtonRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_button_row, tableLayout, false);
-            tableLayout.addView(createMultipleQuestionsNextButton(tableButtonRow));
-        }
         rowView.requestLayout();
         return rowView;
     }

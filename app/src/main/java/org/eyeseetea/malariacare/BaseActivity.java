@@ -43,8 +43,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
+import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -68,6 +70,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        PreferencesState.getInstance().loadsLanguageInActivity();
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);
@@ -96,6 +99,19 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         if (savedInstanceState == null){
             initTransition();
+        }
+    }
+
+    /**
+     * Adds actionbar to the activity
+     */
+    public void createActionBar(){
+        Program program = Program.getFirstProgram();
+
+        if (program != null) {
+            android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+            LayoutUtils.setActionBarLogo(actionBar);
+            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), this.getResources().getString(R.string.app_name));
         }
     }
 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Option_Tested_True">question_images/p1_true.png</string>
+    <string name="Option_Tested_False">question_images/p1_false.png</string>
+    <string name="Option_Reason_Sick">question_images/p2_sick_fr.png</string>
+    <string name="Option_Reason_Pregnant">question_images/p2_pregnant_fr.png</string>
+    <string name="Option_Reason_Stock">question_images/p2_stop_fr.png</string>
+    <string name="Option_Reason_Box">question_images/p2_box_fr.png</string>
+    <string name="Option_Sex_Male">question_images/p5_male.png</string>
+    <string name="Option_Sex_Female">question_images/p5_female.png</string>
+    <string name="Option_Test_Negative">question_images/p7_button_1.png</string>
+    <string name="Option_Test_PF">question_images/p7_button_2.png</string>
+    <string name="Option_Test_PV">question_images/p7_button_3.png</string>
+    <string name="Option_Test_PFPV">question_images/p7_button_4.png</string>
+    <string name="Option_Test_Invalid">question_images/p7_button_5.png</string>
+    <string name="Option_Treatment_6x1">question_images/p10_act_6x1.png</string>
+    <string name="Option_Treatment_6x2">question_images/p10_act_6x2.png</string>
+    <string name="Option_Treatment_6x3">question_images/p10_act_6x3.png</string>
+    <string name="Option_Treatment_6x4">question_images/p10_act_6x4.png</string>
+    <string name="Option_Treatment_Refer">question_images/p10_refer_fr.png</string>
+    <string name="Option_Treatment_Mix">question_images/p10_mix_fr.png</string>
+    <string name="Option_Treatment_All">question_images/p8_rdt_all.png</string>
+
+    <string name="Question_Invalid_Test">question_images/p9_rdt_test.png</string>
+    <string name="Question_Wrong_Age">question_images/p11_warning.png</string>
+    <string name="Question_Reminder">question_images/p8_rdt_all.png</string>
+    <string name="Question_Phone">question_images/p13_phone.png</string>
+</resources>

@@ -151,16 +151,17 @@ public class BaseLayoutUtils {
             bgShape.setStroke(3, Color.WHITE);
         }
 
-        //the view is a framelayout that contains a imageview
-        ImageView imageView;
+        //the view is a framelayout with a imageview, or a imageview, or a custombutton
+        ImageView imageView = null;
         if(view instanceof FrameLayout){
             FrameLayout f = (FrameLayout) view;
             imageView= (ImageView) f.getChildAt(0);
-        }else{
+        }else if(view instanceof ImageView){
             imageView = (ImageView)view;
         }
-
-        imageView.clearColorFilter();
+        if(imageView!=null) {
+            imageView.clearColorFilter();
+        }
     }
 
     /**

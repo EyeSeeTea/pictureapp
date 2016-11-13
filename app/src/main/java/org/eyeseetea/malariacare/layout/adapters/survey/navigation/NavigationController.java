@@ -275,11 +275,11 @@ public class NavigationController {
     }
 
     private QuestionNode findNext(Option option){
-        Log.d(TAG,String.format("findNext(%s)...",option==null?"":option.getCode()));
+        Log.d(TAG,String.format("findNext(%s)...",option==null?"":option.getInternationalizedCode()));
 
         //First movement (entering survey)
         if(isInitialMove()){
-            Log.d(TAG,String.format("findNext(%s)-> Initial movement",option==null?"":option.getCode()));
+            Log.d(TAG,String.format("findNext(%s)-> Initial movement",option==null?"":option.getInternationalizedCode()));
             return this.rootNode;
         }
         Question actualQuestion = getCurrentNode().getQuestion();
@@ -289,8 +289,7 @@ public class NavigationController {
             while(nextNode!=null && (nextNode.getQuestion().getHeader().getTab().equals(actualQuestion.getHeader().getTab()) || nextNode.getQuestion().getOutput()==Constants.HIDDEN)){
                 if(nextNode.getSibling()==null) {
                     nextNode = null;
-                }
-                else {
+                } else {
                     nextNode = nextNode.next();
                 }
             }
@@ -299,26 +298,24 @@ public class NavigationController {
         //Survey finished -> No more questions
         if(nextNode==null){
             Map<Long, QuestionCounter> counters= getCurrentNode().getCountersMap();
-            if(counters!=null && counters.size()>0){
-                if(counters.containsKey(option.getId_option())){
-                    QuestionCounter questionCounter= counters.get(option.getId_option());
-                    Integer limit=(int) Math.floor( option.getFactor());
-                    if(questionCounter.isFinish(limit)){
-                        Log.d(TAG,String.format("findNext(%s)-> Survey Counter finished",option==null?"":option.getCode()));
-                        return null;
-                    }
-                    else{
-                        Log.d(TAG,String.format("findNext(%s)-> Survey Counter not finished",option==null?"":option.getCode()));
-                        return getCurrentNode().getPreviousSibling();
-                    }
-                }
+            if(counters==null || counters.size()==0) {
+                Log.d(TAG,String.format("findNext(%s)-> Survey finished",option==null?"":option.getInternationalizedCode()));
+                return null;
             }
-            Log.d(TAG,String.format("findNext(%s)-> Survey finished",option==null?"":option.getCode()));
-            return null;
+            if(counters.containsKey(option.getId_option())){
+                QuestionCounter questionCounter= counters.get(option.getId_option());
+                Integer limit=(int) Math.floor( option.getFactor());
+                Log.d(TAG,String.format("findNext(%s)-> Survey(%s)finished", option==null ? "" : option.getInternationalizedCode(), (questionCounter.isMaxCounterLimit(limit)) ? " " : " not "));
+                return (questionCounter.isMaxCounterLimit(limit)) ? null : getCurrentNode().getPreviousSibling();
+            }
         }
 
         //Return next question
-        Log.d(TAG,String.format("findNext(%s)->%s",option==null?"":option.getCode(),nextNode.getQuestion().getCode()));
+        if(nextNode!=null && nextNode.getQuestion()!=null) {
+            Log.d(TAG, String.format("findNext(%s)->%s",
+                    option == null ? "" : option.getInternationalizedCode(),
+                    nextNode.getQuestion().getCode() + ""));
+        }
         return nextNode;
     }
 

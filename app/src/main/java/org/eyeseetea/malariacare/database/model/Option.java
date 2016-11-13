@@ -29,6 +29,7 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -40,9 +41,13 @@ public class Option extends BaseModel {
     //FIXME A 'Yes' answer shows children questions, this should be configurable by some additional attribute in Option
     public static final String CHECKBOX_YES_OPTION="Yes";
 
+    public static final int DOESNT_MATCH_POSITION = 0;
+    public static final int MATCH_POSITION = 1;
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_option;
+    //Fixme the code is used as name and the name is used as code
     @Column
     String code;
     @Column
@@ -100,6 +105,8 @@ public class Option extends BaseModel {
     }
 
     public String getCode() {return code;}
+
+    public String getInternationalizedCode() {return Utils.getInternationalizedString(code);}
 
     public void setCode(String code) {this.code = code;}
 
@@ -161,6 +168,18 @@ public class Option extends BaseModel {
         return optionAttribute.getPath();
     }
 
+    /**
+     * Getter for extended option attribute 'path' translation in paths.xml
+     * @return
+     */
+    public String getInternationalizedPath() {
+        OptionAttribute optionAttribute = this.getOptionAttribute();
+        if(optionAttribute==null){
+            return null;
+        }
+
+        return optionAttribute.getInternationalizedPath();
+    }
     /**
      * Getter for extended option attribute 'backgroundColor'
      * @return
@@ -271,10 +290,6 @@ public class Option extends BaseModel {
                 .where(Condition.column(Value$Table.ID_OPTION).eq(this.getId_option()))
                 .and(Condition.column(Value$Table.ID_SURVEY).eq(survey.getId_survey())).queryList();
 
-        if (returnValues.size() == 0) {
-            return null;
-        } else {
-            return returnValues.get(0).getQuestion();
-        }
+        return (returnValues.size() == 0) ? null : returnValues.get(0).getQuestion();
     }
 }

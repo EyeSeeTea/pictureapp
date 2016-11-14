@@ -25,7 +25,7 @@ Posteriormente, serão apresentadas as quatros vistas constituintes do modelo de
    - Vista de deployment - diagrama de deployment;
    - Vista de processo - diagrama de atividade;
 
-O "+1" refere-se à vista de casos de usos, sendo que o diagrama referente a esta vista está implementado no relatório anterior (meter hiperligaçao para o outro relatorio).
+O "+1" refere-se à vista de casos de usos, sendo que o diagrama referente a esta vista está implementado no [relatório anterior](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Project%20Requirements.md#usecases)
 
 
 

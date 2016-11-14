@@ -139,8 +139,11 @@
 <string name="last_6_weeks">ล่าสุด 6 สัปดาห์ที่ผ่านมา</string>
 <string name="last_6_months">6 เดือน </string>
 <string name="download">ดาวน์โหลด:</string>
-    <string name="assessment_past_cases">PAST CASES</string>
-    <string name="assessment_new_cases">NEW CASES</string>
-    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
-    <string name="positive_hint">Name, Details</string>
+<string name="assessment_past_cases">PAST CASES</string>
+<string name="assessment_new_cases">NEW CASES</string>
+<string name="assessment_connectivity">Data awaiting internet connectivity</string>
+<string name="positive_hint">Name, Details</string>
+<string name="developer_option_summary">คุณลักษณะนี้จะเปิดใช้งานตัวเลือกนักพัฒนา</string>
+<string name="developer_option_title">แสดงตัวเลือกนักพัฒนา</string>
+<string name="export_data_option_title">ฐานข้อมูลการส่งออก</string>
 </resources>

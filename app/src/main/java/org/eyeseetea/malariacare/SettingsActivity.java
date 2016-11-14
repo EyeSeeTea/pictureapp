@@ -49,6 +49,8 @@ import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
+import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
@@ -176,7 +178,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.dhis_url)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
 
-
+        // Set the ClickListener to the android:key"remove_sent_surveys" preference.
 
         autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
         autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this,true));
@@ -575,8 +577,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
 
             //Hide translation option if is not active in gradle variable
-            if(!BuildConfig.translations)
-                getPreferenceScreen().removePreference(getPreferenceScreen().findPreference(getResources().getString(R.string.language_code)));
+            if(BuildConfig.translations)
+                bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.language_code)));
             SettingsActivity settingsActivity = (SettingsActivity) getActivity();
             AutoCompleteEditTextPreference autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
             autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, true));
@@ -603,14 +605,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             });
             settingsActivity.setAutoCompleteEditTextPreference(autoCompleteEditTextPreference);
 
-//            Preference removeSentPreference = (Preference)findPreference(getString(R.string.remove_sent_surveys));
-//            removeSentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-//                 @Override
-//                 public boolean onPreferenceClick(Preference preference) {
-//                     askRemoveSentSurveys(getActivity());
-//                     return true;
-//                 }
-//             });
 
             Preference serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));
             serverUrlPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, false));

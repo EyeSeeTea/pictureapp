@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.eyeseetea.malariacare">
+
+    <application
+        android:name=".EyeSeeTeaApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/pictureapp_logo"
+        android:label="@string/app_name"
+        android:theme="@style/EyeSeeTheme"
+        tools:replace="android:icon">
+
+        <provider
+            android:name="org.eyeseetea.malariacare.database.utils.LADBProvider"
+            android:authorities="org.eyeseetea.malariacare.database.utils.LAExportData"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:node="merge">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>

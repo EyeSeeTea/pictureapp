@@ -296,4 +296,13 @@ public class PreferencesState {
         conf.locale = new Locale(languageCode);
         res.updateConfiguration(conf, dm);
     }
+
+    /**
+    * Inits hidePlanningTab flag according to preferences
+    * @return
+    */
+    public boolean isDevelopOptionActive(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
+        return sharedPreferences.getBoolean(instance.getContext().getString(R.string.developer_option), false);
+    }
 }

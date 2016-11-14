@@ -135,7 +135,7 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
 
         //Sets the value text in the row and add the question as tag.
         TextCard textCard = (TextCard) rowView.findViewById(R.id.review_content_text);
-        textCard.setText((value.getOption() != null) ? value.getOption().getCode() : value.getValue());
+        textCard.setText((value.getOption() != null) ? value.getOption().getInternationalizedCode() : value.getValue());
         if ((value.getQuestion() != null)) {
             textCard.setTag(value.getQuestion());
 

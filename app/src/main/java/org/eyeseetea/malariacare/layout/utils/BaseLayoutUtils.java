@@ -20,35 +20,40 @@
 package org.eyeseetea.malariacare.layout.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Point;
+import android.graphics.Typeface;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
 import java.util.List;
 
 /**
  * Created by Jose on 22/02/2015.
  */
-public class LayoutUtils {
+public class BaseLayoutUtils {
 
     public static final int [] rowBackgrounds = {R.drawable.background_even, R.drawable.background_odd};
 
@@ -68,7 +73,7 @@ public class LayoutUtils {
 
     // Given a index, this method return a background color
     public static int calculateBackgrounds(int index) {
-        return LayoutUtils.rowBackgrounds[index % LayoutUtils.rowBackgrounds.length];
+        return rowBackgrounds[index % rowBackgrounds.length];
     }
 
     public static int getNumberOfQuestionParentsHeader(Header header) {
@@ -146,16 +151,17 @@ public class LayoutUtils {
             bgShape.setStroke(3, Color.WHITE);
         }
 
-        //the view is a framelayout that contains a imageview
-        ImageView imageView;
+        //the view is a framelayout with a imageview, or a imageview, or a custombutton
+        ImageView imageView = null;
         if(view instanceof FrameLayout){
             FrameLayout f = (FrameLayout) view;
             imageView= (ImageView) f.getChildAt(0);
-        }else{
+        }else if(view instanceof ImageView){
             imageView = (ImageView)view;
         }
-
-        imageView.clearColorFilter();
+        if(imageView!=null) {
+            imageView.clearColorFilter();
+        }
     }
 
     /**
@@ -175,4 +181,6 @@ public class LayoutUtils {
         }
     }
 
+    public static void setDivider(ListView listView) {
+    }
 }

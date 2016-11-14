@@ -37,6 +37,7 @@
 <string name="settings_checkbox_customize_fonts">"ຂະໜາດຕົວອັກສອນ"</string>
 <string name="settings_list_font_sizes">"ຂະໜາດຕົວອັກສອນ"</string>
 <string name="settings_text_dhis_server_url">"DHIS Server URL"</string>
+<string name="settings_select_language">"ພາສາ"</string>
 <string name="pref_header_general">"ທົ່ວໄປ"</string>
 <string name="font_size_level0">"ນ້ອຍສຸດ"</string>
 <string name="font_size_level1">"ນ້ອຍ"</string>
@@ -145,6 +146,49 @@
 <string name="monitor_row_title_treatment">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການປິ່ນປົວ"</string>
 <string name="monitor_row_title_rdt_testing">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການກວດເລືອດດ້ວຍ RDT"</string>
 <string name="not_tested">"ບໍ່ໄດ້ກວດເລືອດ"</string>
+
+<string name="Question_Title_RDT">"ການກວດ"</string>
+<string name="Question_Title_Reason">"ບໍ່ຖືກກວດດ້ວຍເຫດຜົນ"</string>
+<string name="Question_Title_Gender">"ເພດ"</string>
+<string name="Question_Title_Age">"ອາຍຸ"</string>
+<string name="Question_Title_Result">"ຜົນການກວດເລືອດ"</string>
+<string name="Question_Title_Invalid">"ຜົນກວດບໍ່ຖືກຕ້ອງ"</string>
+<string name="Question_Title_Wrong_Treatment">"ການປິ່ນປົວບໍ່ຖືກຕ້ອງ"</string>
+<string name="Question_Title_Treatment">"ຂະໜາດຢາປິ່ນປົວໄຂ້ມາລາເຣຍ"</string>
+<string name="Question_Title_Hospital_Reminder">"ນຳສົ່ງ"</string>
+<string name="Question_Title_Phone">"ເບີໂທຂອງຄົນເຈັບ"</string>
+<string name="Question_Title_Not_Tested_Reminder">"ນຳສົ່ງ"</string>
+
+<string name="Option_Text_Test_Yes">"ຖືກກວດ"</string>
+<string name="Option_Text_Test_No">"ບໍ່ຖືກກວດ"</string>
+<string name="Option_Text_Reason_Severe">"ໄຂ້ມາລາເຣຍຮ້າຍແຮງ"</string>
+<string name="Option_Text_Reason_Pregnant">"ຄົນເຈັບຖືພາ"</string>
+<string name="Option_Text_Reason_Refused">"ຄົນເຈັບປະຕິເສດທີ່ຈະກວດ"</string>
+<string name="Option_Text_Reason_StockOut">"ເຈ້ຍຈຸ່ມກວດເລືອດໝົດ"</string>
+<string name="Option_Text_Gender_Male">"ຊາຍ"</string>
+<string name="Option_Text_Gender_Female">"ຍິງ"</string>
+<string name="Option_Text_Rdt_Negative">"ຜົນລົບ"</string>
+<string name="Option_Text_Rdt_Pf">"Pf"</string>
+<string name="Option_Text_Rdt_Pv">"Pv"</string>
+<string name="Option_Text_Rdt_Mixed">"Pf+Pv"</string>
+<string name="Option_Text_Rdt_Invalid">"ທີ່ບໍ່ຖືກຕ້ອງ"</string>
+<string name="Warning_Text_Invalid">"ກວດຄົນເຈັບໂດຍໃຊ້ເຈ້ຍຈຸ່ມກວດເລືອດອັນໃໝ່. ຢ່າລືມກວດເບິ່ງມື້ໝົດອາຍຸຂອງເຈ້ຍຈຸ່ມກວດເລືອດກ່ອນການກວດ"</string>
+<string name="Warning_Button_Ignore_Invalid">"ກະລຸນາລອງອີກຄັ້ງ"</string>
+<string name="Warning_Button_Ignore_TryAgain">"ຖ້າທ່ານກົດຜິດ /n ກັບຄືນ"</string>
+<string name="Option_Text_Treatment_ACT6x1">"ACT 6x1"</string>
+<string name="Option_Text_Treatment_ACT6x2">"ACT 6x2"</string>
+<string name="Option_Text_Treatment_ACT6x3">"ACT 6x3"</string>
+<string name="Option_Text_Treatment_ACT6x4">"ACT 6x4"</string>
+<string name="Option_Text_Treatment_Referred">"ນຳສົ່ງຄົນເຈັບເພາະຢາໝົດ"</string>
+<string name="Option_Text_Treatment_Combined">"ຈັດຢາຕາມຂະໜາດຂ້າງເທິງໃຫ້ຖືກກັບຄົນເຈັບ"</string>
+<string name="Warning_Text_Wrong_Treatment">"ການໃຫ້ຂະໜາດຢາບໍ່ຖືກກັບກຸ່ມອາຍຸຂອງຄົນເຈັບ"</string>
+<string name="Warning_Text_Button_Wrong_Treatment">"ກະລຸນາລອງໃໝ່"</string>
+<string name="Warning_Text_Refer_Hospital">"ຖ້າທ່ານພົບເຊື້ອ Pv ຫຼື Pf+Pv, ໃຫ້ຢາ Coartem ແລະ ສົ່ງຕໍ່"</string>
+<string name="Warning_Button_Refer_Hospital">"ຕໍ່ໄປ"</string>
+<string name="Warning_Text_Refer_Not_Tested">"ກະລຸນານຳສົ່ງຄົນເຈັບໄປສະຖານທີ່ປິ່ນປົວຂອງພາກລັດທີ່ໃກ້ທີ່ສຸດ ຖ້າຫາກວ່າຄົນເຈັບເປັນໄຂ້ມາລາເຣຍຮ້າຍແຮງ, ຄົນເຈັບຖືພາ ຫຼື ເຈ້ຍຈຸ່ມໝົດ"</string>
+<string name="Warning_Button_Refer_Not_Tested">"ສົ່ງ"</string>
+
+<string name="system_defined">"ລະບົບກໍານົດໄວ້"</string>
 <string name="no_data">ບໍ່​ມີ​ຂໍ້​ມູນ</string>
 <string name="last_6_days">6 ວັນ</string>
 <string name="last_6_weeks">ທີ່ຜ່ານມາ 6 ອາທິດ</string>

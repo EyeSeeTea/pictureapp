@@ -61,9 +61,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         Log.i(TAG, "Logging out from sdk...OK");
         Session.logout();
         Intent loginIntent = new Intent(settingsActivity,LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //finish();
+        settingsActivity.finish();
         settingsActivity.startActivity(loginIntent);
     }
 

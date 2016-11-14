@@ -3,11 +3,14 @@ package org.eyeseetea.malariacare.strategies;
 import static android.R.attr.settingsActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.preference.DialogPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 import android.util.Log;
 
 import com.squareup.otto.Subscribe;
@@ -45,7 +48,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         }catch(Exception e){}
     }
 
-
+    @Override
+    public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
+        PreferenceCategory preferenceCategory = (PreferenceCategory) preferenceScreen.findPreference(settingsActivity.getResources().getString(R.string.pref_cat_server));
+        preferenceCategory.removePreference(preferenceScreen.findPreference(settingsActivity.getResources().getString(R.string.org_unit)));
+    }
 
     @Override
     public Preference.OnPreferenceClickListener getOnPreferenceClickListener() {

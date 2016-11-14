@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.content.Intent;
 import android.preference.Preference;
+import android.preference.PreferenceScreen;
 
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.SettingsActivity;
@@ -20,6 +21,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void onCreate() {
+
+    }
+
+    @Override
+    public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
 
     }
 

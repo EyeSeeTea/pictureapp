@@ -17,7 +17,7 @@
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.utils;
+package org.eyeseetea.malariacare.database.utils;
 
 import android.support.v4.content.FileProvider;
 
@@ -27,8 +27,8 @@ import java.io.File;
  * Created by nacho on 05/10/16.
  */
 
-public class DBProvider extends FileProvider {
-    public DBProvider(){
+public class SCMMDBProvider extends FileProvider {
+    public SCMMDBProvider(){
         super();
     }
 }

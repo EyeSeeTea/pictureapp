@@ -18,6 +18,8 @@ public  class ProgressActivityStrategy extends AProgressActivityStrategy{
     public void finishAndGo() {
         Intent intent = new Intent(progressActivity,SettingsActivity.class);
 
+        intent.putExtra(SettingsActivity.IS_INPROGRESS_SOURCE_ACTIVITY,true);
+
         progressActivity.finish();
         progressActivity.startActivity(intent);
     }

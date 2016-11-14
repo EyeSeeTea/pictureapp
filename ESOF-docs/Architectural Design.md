@@ -32,6 +32,11 @@ O "+1" refere-se à vista de casos de usos, sendo que o diagrama referente a est
 ****
 ##**Arquitetura de Software** <a name ="arch"></a>
 
+A arquitetura de software é a organização de um sistema, incorporando as suas componentes e relações entre as mesmas e o ambiente. No geral, trata-se de tomar todas as decisões estruturais fundamentais, cuja mudança depois de implementadas seria dispendiosa.
+Estas decisões são fortemente influenciadas pelos requisitos não funcionais, como performance, segurança, manutenção, entre outros.
+
+Geralmente, os sistemas de software têm uma grande variedade de partes integrantes, que têm interesses diferentes relativamente ao sistema, sendo necessário fazer um balanço destes interesses. De modo a diminuir a complexidade deste processo, separam-se os vários interesses, associando-os em diferentes vistas, como vimos anteriormente com o Modelo de Vistas Arquitetura 4 + 1.
+
 
 
 

@@ -118,6 +118,8 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                 if (!orgUnits) {
                     ShowException.showError(R.string.exception_org_unit_not_valid);
                 }else{
+                    PreferencesState.getInstance().saveStringPreference(R.string.org_unit,value);
+                    PreferencesState.getInstance().reloadPreferences();
                     //Super invokes changeListener
                     callChangeListener(value);
                 }

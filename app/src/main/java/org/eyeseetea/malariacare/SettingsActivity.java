@@ -65,12 +65,12 @@ public class SettingsActivity extends PreferenceActivity implements
 
     private static final String TAG=".SettingsActivity";
 
-    public SettingsActivityStrategy settingsVariantAdapter = new SettingsActivityStrategy(this);
+    public SettingsActivityStrategy mSettingsActivityStrategy = new SettingsActivityStrategy(this);
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        settingsVariantAdapter.onCreate();
+        mSettingsActivityStrategy.onCreate();
         PreferencesState.getInstance().loadsLanguageInActivity();
     }
 
@@ -82,7 +82,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     public void onStop(){
-        settingsVariantAdapter.onStop();
+        mSettingsActivityStrategy.onStop();
 
         super.onStop();
     }
@@ -122,11 +122,13 @@ public class SettingsActivity extends PreferenceActivity implements
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
 
         AutoCompleteEditTextPreference autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
-        autoCompleteEditTextPreference.setOnPreferenceClickListener(settingsVariantAdapter.getOnPreferenceClickListener());
+        autoCompleteEditTextPreference.setOnPreferenceClickListener(mSettingsActivityStrategy.getOnPreferenceClickListener());
         autoCompleteEditTextPreference.pullOrgUnits();
 
         Preference serverUrlPreference = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
-        serverUrlPreference.setOnPreferenceClickListener(settingsVariantAdapter.getOnPreferenceClickListener());
+        serverUrlPreference.setOnPreferenceClickListener(mSettingsActivityStrategy.getOnPreferenceClickListener());
+
+        mSettingsActivityStrategy.setupPreferencesScreen(getPreferenceScreen());
     }
 
     /**
@@ -264,8 +266,10 @@ public class SettingsActivity extends PreferenceActivity implements
 
             autoCompleteEditTextPreference.pullOrgUnits();
 
-            autoCompleteEditTextPreference.setOnPreferenceClickListener(settingsActivity.settingsVariantAdapter.getOnPreferenceClickListener());
-            serverUrlPreference.setOnPreferenceClickListener(settingsActivity.settingsVariantAdapter.getOnPreferenceClickListener());
+            autoCompleteEditTextPreference.setOnPreferenceClickListener(settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
+            serverUrlPreference.setOnPreferenceClickListener(settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
+
+            settingsActivity.mSettingsActivityStrategy.setupPreferencesScreen(getPreferenceScreen());
         }
     }
 

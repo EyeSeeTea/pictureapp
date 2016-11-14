@@ -10,38 +10,20 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 
+/**
+ * Use case where execute actions related when login use case in our app not in sdk
+ */
 public abstract class ALoginUseCase {
 
-    Context context;
+    protected Context context;
 
-    protected abstract void executeCustomActions(Credentials credentials, Context context);
-
-    public void execute(Credentials credentials, Context context ){
-
+    public ALoginUseCase(Context context){
         this.context = context;
-
-        User user = new User(credentials.getUsername(), credentials.getPassword());
-
-        saveUser(user);
-
-        saveCommonCredentials(credentials);
-
-        Session.setUser(user);
-
-        executeCustomActions(credentials,context);
     }
 
-    private void saveUser(User user){
-        User userdb=User.existUser(user);
+    protected abstract void executeActions(Credentials credentials);
 
-        if(userdb!=null)
-            user=userdb;
-        else
-            user.save();
-    }
-
-    private void saveCommonCredentials(Credentials credentials){
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, credentials.getUsername());
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, credentials.getPassword());
+    public void execute(Credentials credentials){
+        executeActions(credentials);
     }
 }

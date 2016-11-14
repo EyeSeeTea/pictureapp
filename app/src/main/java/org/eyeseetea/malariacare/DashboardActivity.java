@@ -610,11 +610,11 @@ public class DashboardActivity extends BaseActivity {
             try {
                 if(!BuildConfig.multiuser) {
                     Log.i(TAG, "Creating demo login from dashboard ...");
-                    LoginUseCase loginUseCase = new LoginUseCase();
+                    LoginUseCase loginUseCase = new LoginUseCase(dashboardActivity);
 
                     Credentials demoCrededentials = Credentials.createDemoCredentials();
 
-                    loginUseCase.execute(demoCrededentials,dashboardActivity);
+                    loginUseCase.execute(demoCrededentials);
                 }
 
                 initDataIfRequired();

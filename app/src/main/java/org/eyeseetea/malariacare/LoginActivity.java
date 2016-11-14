@@ -42,6 +42,8 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.customization.LoginActivityCustomization;
@@ -57,24 +59,17 @@ import java.util.ArrayList;
  * Login Screen.
  * It shows only when the user has an open session.
  */
-public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity {
 
     private static final String TAG = ".LoginActivity";
-    /**
-     * DHIS server URL
-     */
+
     private String serverUrl;
 
-    /**
-     * DHIS username account
-     */
     private String username;
 
-    /**
-     * DHIS password (required since push is done natively instead of using sdk)
-     */
     private String password;
 
+    public LoginUseCase mLoginUseCase = new LoginUseCase(this);
     public LoginActivityStrategy loginActivityStrategy = new LoginActivityStrategy(this);
 
     EditText serverText;
@@ -92,7 +87,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         initDataDownloadPeriodDropdown();
 
         //Populate server with the current value
-        EditText serverText = (EditText) findViewById(R.id.server_url);
+        serverText = (EditText) findViewById(R.id.server_url);
         serverText = (EditText) findViewById(R.id.server_url);
         serverText.setText(ServerAPIController.getServerUrl());
 
@@ -142,22 +137,6 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
             spinner.setSelection(spinnerArrayAdapter.getPosition(dateLimit));
         }
     }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
-
 
     @Override
     public void login(String serverUrl, String username, String password) {
@@ -227,53 +206,21 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         super.login(serverUrl, username, password);
     }
 
-    private void saveServerUrlInPreferences() {
-        // Save dhis URL and establish in preferences, so it will be used to make the pull
-        serverText = (EditText) findViewById(R.id.server_url);
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverText.getText().toString());
-    }
-
     @Subscribe
     public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
         if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
             if(result.getResponseHolder().getApiException() == null) {
-                saveUserCredentials();
+                Credentials credentials = new Credentials(serverUrl,username,password);
+                mLoginUseCase.execute(credentials);
 
-                startActivity(new Intent(this, ProgressActivity.class));
-                finish();
+                finishAndGo(ProgressActivity.class);
             } else {
                 onLoginFail(result.getResponseHolder().getApiException());
             }
         }
     }
 
-    private void saveUserCredentials(){
-        loginActivityStrategy.saveUserCredentials(serverUrl,username,password);
-    }
 
-    /**
-     * Check whether the EULA has already been accepted by the user. When the user accepts the EULA,
-     * a preference is set so the app will remind between different executions
-     * @return
-     */
-    private boolean isEulaAccepted(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        return sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), false);
-    }
-
-    /**
-     * Get from the server textfield what the user introduced
-     * @return
-     */
-    private String getUserIntroducedServer(){
-        EditText serverEditText = (EditText) findViewById(R.id.server_url);
-        return serverEditText.getText().toString();
-    }
-
-    /**
-     * LoginActivity does NOT admin going backwads since it is always the first activity.
-     * Thus onBackPressed closes the app
-     */
     @Override
     public void onBackPressed(){
         loginActivityStrategy.onBackPressed();

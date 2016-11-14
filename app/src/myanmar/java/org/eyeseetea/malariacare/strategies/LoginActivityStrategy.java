@@ -11,6 +11,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
         super(loginActivity);
     }
 
+    /**
+     * LoginActivity does NOT admin going backwads since it is always the first activity.
+     * Thus onBackPressed closes the app
+     */
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);

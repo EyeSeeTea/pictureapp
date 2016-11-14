@@ -23,11 +23,14 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.TabHost;
@@ -39,6 +42,7 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
@@ -48,6 +52,7 @@ import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.io.IOException;
@@ -97,8 +102,6 @@ public class DashboardActivity extends BaseActivity {
 
         AsyncPopulateDB asyncPopulateDB=new AsyncPopulateDB(this);
         asyncPopulateDB.execute((Void) null);
-
-        createActionBar();
         dashboardActivity=this;
         setContentView(R.layout.tab_dashboard);
         Survey.removeInProgress();
@@ -109,12 +112,14 @@ public class DashboardActivity extends BaseActivity {
         }
         initTabHost(savedInstanceState);
         /* set tabs in order */
-        setTab(getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout, getResources().getString(R.string.unsent_button));
-        setTab(getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout, getResources().getString(R.string.sent_button));
-        setTab(getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout, getResources().getString(R.string.monitor_button));
+        LayoutUtils.setTabHosts(this);
 
         //set the tabs background as transparent
-        setTabsBackgroundColor(R.color.white);
+        setTabsBackgroundColor(R.color.tab_unpressed_background);
+
+        //set first tab as selected:
+        tabHost.getTabWidget().getChildAt(0).setBackgroundColor(getResources().getColor(R.color.tab_pressed_background));
+
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
 
             @Override
@@ -122,7 +127,7 @@ public class DashboardActivity extends BaseActivity {
                 /** If current tab is android */
 
                 //set the tabs background as transparent
-                setTabsBackgroundColor(R.color.white);
+                setTabsBackgroundColor(R.color.tab_unpressed_background);
                 currentTab = tabId;
 
                 //If change of tab from surveyFragment or FeedbackFragment they could be closed.
@@ -132,20 +137,19 @@ public class DashboardActivity extends BaseActivity {
                     exitReviewOnChangeTab(null);
                if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
                     currentTabName=getString(R.string.assess);
-                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.light_grey));
+                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.tab_pressed_background));
                     unsentFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_improve))) {
                     currentTabName=getString(R.string.improve);
-                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.light_grey));
+                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.tab_pressed_background));
                     sentFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_monitor))) {
                     currentTabName=getString(R.string.monitor);
-                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.light_grey));
+                    tabHost.getCurrentTabView().setBackgroundColor(getResources().getColor(R.color.tab_pressed_background));
                     monitorFragment.reloadData();
                 }
             }
         });
-
         // init tabHost
         for(int i=0;i<tabHost.getTabWidget().getChildCount();i++){
             tabHost.getTabWidget().getChildAt(i).setFocusable(false);
@@ -156,14 +160,26 @@ public class DashboardActivity extends BaseActivity {
         currentTab=currentTabName;
     }
 
+    public void setTabHostsWithText() {
+        Context context = PreferencesState.getInstance().getContext();
+        setTab(context.getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout, context.getResources().getString(R.string.assess));
+        setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout, context.getResources().getString(R.string.improve));
+        setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout, context.getResources().getString(R.string.monitor));
+    }
+
+    public void setTabHostsWithImages() {
+        Context context = PreferencesState.getInstance().getContext();
+        setTab(context.getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout, context.getResources().getDrawable(R.drawable.assess));
+        setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout, context.getResources().getDrawable(R.drawable.improve));
+        setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout, context.getResources().getDrawable(R.drawable.monitor));
+    }
+
     private void setTabsBackgroundColor(int color) {
         //set the tabs background as transparent
         for(int i=0;i<tabHost.getTabWidget().getChildCount();i++){
             tabHost.getTabWidget().getChildAt(i).setBackgroundColor(getResources().getColor(color));
         }
     }
-
-
     /**
      * Init the conteiner for all the tabs
      */
@@ -181,6 +197,18 @@ public class DashboardActivity extends BaseActivity {
         TabHost.TabSpec tab = tabHost.newTabSpec(tabName);
         tab.setContent(layout);
         tab.setIndicator(text);
+        tabHost.addTab(tab);
+        addTagToLastTab(tabName);
+    }
+    /**
+     * Set tab in tabHost
+     * @param tabName is the name of the tab
+     * @param layout is the id of the layout
+     * */
+    private void setTab(String tabName, int layout, Drawable image) {
+        TabHost.TabSpec tab = tabHost.newTabSpec(tabName);
+        tab.setContent(layout);
+        tab.setIndicator("", image);
         tabHost.addTab(tab);
         addTagToLastTab(tabName);
     }

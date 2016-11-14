@@ -93,7 +93,6 @@ public class Session {
     }
 
     public static synchronized void setUser(User user) {
-        Log.i(TAG, "Creating user in session. " + user.toString());
         Session.user = user;
     }
 
@@ -140,7 +139,11 @@ public class Session {
         for (Survey survey : surveys) {
             survey.delete();
         }
-        Session.getUser().delete();
+        User user = Session.getUser();
+
+        if (user != null)
+            user.delete();
+
         Session.setUser(null);
         Session.setSurvey(null);
         Session.setAdapterUncompleted(null);

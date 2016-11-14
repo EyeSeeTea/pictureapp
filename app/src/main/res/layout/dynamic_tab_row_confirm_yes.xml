@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_weight="1"
-    >
+    android:layout_height="match_parent">
+
     <FrameLayout
-    android:paddingTop="@dimen/dashboard_row_padding"
-    android:paddingBottom="@dimen/dashboard_row_padding"
-    android:layout_height="match_parent"
-    android:layout_weight="0.5"
-    android:scaleType="centerInside">
+        android:paddingTop="@dimen/dashboard_row_padding"
+        android:paddingBottom="@dimen/dashboard_row_padding"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:scaleType="centerInside">
         <ImageView
             android:id="@+id/confirm_yes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_weight="1"
             android:scaleType="fitCenter"
+            android:layout_weight="1"
             android:src="@drawable/option_button"/>
         <org.eyeseetea.malariacare.views.TextCard
             android:id="@+id/textcard_confirm_yes"
@@ -30,6 +31,7 @@
             android:layout_gravity="center"
             android:textColor="@color/white"
             android:textSize="40dp"
-            android:text="@android:string/yes" />
+            android:text="@android:string/yes"
+            />
     </FrameLayout>
-</TableRow>
+</LinearLayout>

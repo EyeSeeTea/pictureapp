@@ -18,8 +18,7 @@ public class LogoutUseCase extends ALogoutUseCase{
 
     @Override
     public void execute() {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, context.getString(R.string.DHIS_DEFAULT_SERVER));
-        PreferencesState.getInstance().reloadPreferences();
+
     }
 
 }

@@ -25,11 +25,11 @@ public class LoginUseCase extends ALoginUseCase{
     public void execute(Credentials credentials) {
         User user = new User(credentials.getUsername(), credentials.getUsername());
 
-        saveUser(user);
-
-        saveCredentials(credentials);
+        User.insertLoggedUser(user);
 
         Session.setUser(user);
+
+        saveCredentials(credentials);
 
        if (credentials.isDemoCredentials()){
            createDummyDataInDB(context);
@@ -41,13 +41,6 @@ public class LoginUseCase extends ALoginUseCase{
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, credentials.getUsername());
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, credentials.getPassword());
         PreferencesState.getInstance().reloadPreferences();
-    }
-
-    private void saveUser(User user){
-        User userDB=User.existUser(user);
-
-        if(userDB==null)
-            user.save();
     }
 
     private void createDummyDataInDB(Context context) {

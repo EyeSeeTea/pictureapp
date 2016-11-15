@@ -6,8 +6,10 @@ import android.util.Log;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
+import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 
 import java.io.IOException;
@@ -21,7 +23,16 @@ public class LoginUseCase extends ALoginUseCase{
 
     @Override
     public void execute(Credentials credentials) {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, credentials.getServerURL());
-        PreferencesState.getInstance().reloadPreferences();
+        if (credentials.isDemoCredentials()) {
+            User user = new User(credentials.getUsername(), credentials.getUsername());
+
+            User.insertLoggedUser(user);
+
+            Session.setUser(user);
+        }
+        else{
+            PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, credentials.getServerURL());
+            PreferencesState.getInstance().reloadPreferences();
+        }
     }
 }

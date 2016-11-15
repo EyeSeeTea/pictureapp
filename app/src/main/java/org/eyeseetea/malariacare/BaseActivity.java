@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare;
 
+import static android.os.Build.VERSION_CODES.M;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -50,6 +52,7 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.strategies.BaseActivityStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
@@ -67,6 +70,8 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected static String TAG=".BaseActivity";
 
     private AlarmPushReceiver alarmPush;
+
+    private BaseActivityStrategy mBaseActivityStrategy = new BaseActivityStrategy(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +130,9 @@ public abstract class BaseActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_general, menu);
+
+        mBaseActivityStrategy.onCreateOptionsMenu(menu);
+
         return true;
     }
 
@@ -166,7 +174,8 @@ public abstract class BaseActivity extends ActionBarActivity {
                 onBackPressed();
                 break;
             default:
-                return super.onOptionsItemSelected(item);
+                if (!mBaseActivityStrategy.onOptionsItemSelected(item))
+                    return super.onOptionsItemSelected(item);
         }
         return true;
     }

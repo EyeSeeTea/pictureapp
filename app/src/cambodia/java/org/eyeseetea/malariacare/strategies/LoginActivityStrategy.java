@@ -18,8 +18,4 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public void onCreate() {
     }
 
-    @Override
-    public void saveUserCredentials(String serverUrl, String username, String password) {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverUrl);
-    }
 }

@@ -1,11 +1,15 @@
 package org.eyeseetea.malariacare.strategies;
 
+import static android.R.attr.settingsActivity;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.BaseActivity;
+import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
@@ -27,8 +31,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
         switch (id) {
             case MENU_ITEM_LOGOUT:
-                Toast.makeText(mBaseActivity, "logout",
-                        Toast.LENGTH_LONG).show();
+                LogoutUseCase logoutUseCase = new LogoutUseCase(mBaseActivity);
+                logoutUseCase.execute();
+                mBaseActivity.finishAndGo(LoginActivity.class);
                 break;
             default:
                 return false;

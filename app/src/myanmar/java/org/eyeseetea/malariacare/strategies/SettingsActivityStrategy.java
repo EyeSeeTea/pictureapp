@@ -19,6 +19,7 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
@@ -66,7 +67,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             return;
         }
         Log.i(TAG, "Logging out from sdk...OK");
-        Session.logout();
+        LogoutUseCase logoutUseCase = new LogoutUseCase(settingsActivity);
+        logoutUseCase.execute();
         Intent loginIntent = new Intent(settingsActivity,LoginActivity.class);
         settingsActivity.finish();
         settingsActivity.startActivity(loginIntent);

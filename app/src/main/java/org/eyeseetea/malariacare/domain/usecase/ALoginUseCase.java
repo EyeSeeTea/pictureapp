@@ -21,9 +21,5 @@ public abstract class ALoginUseCase {
         this.context = context;
     }
 
-    protected abstract void executeActions(Credentials credentials);
-
-    public void execute(Credentials credentials){
-        executeActions(credentials);
-    }
+    public abstract void execute(Credentials credentials);
 }

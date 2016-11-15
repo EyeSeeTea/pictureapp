@@ -20,7 +20,8 @@ public class LoginUseCase extends ALoginUseCase{
     }
 
     @Override
-    protected void executeActions(Credentials credentials) {
+    public void execute(Credentials credentials) {
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, credentials.getServerURL());
+        PreferencesState.getInstance().reloadPreferences();
     }
 }

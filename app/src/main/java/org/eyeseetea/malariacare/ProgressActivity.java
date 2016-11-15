@@ -35,6 +35,7 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
@@ -241,7 +242,8 @@ public class ProgressActivity extends Activity {
             return;
         }
         Log.d(TAG,"Logging out from sdk...OK");
-        Session.logout();
+        LogoutUseCase logoutUseCase = new LogoutUseCase(this);
+        logoutUseCase.execute();
         //Go to login
         finishAndGo(LoginActivity.class);
     }

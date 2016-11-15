@@ -22,7 +22,7 @@ public class LoginUseCase extends ALoginUseCase{
     }
 
     @Override
-    protected void executeActions(Credentials credentials) {
+    public void execute(Credentials credentials) {
         User user = new User(credentials.getUsername(), credentials.getUsername());
 
         saveUser(user);
@@ -40,6 +40,7 @@ public class LoginUseCase extends ALoginUseCase{
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, credentials.getServerURL());
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, credentials.getUsername());
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, credentials.getPassword());
+        PreferencesState.getInstance().reloadPreferences();
     }
 
     private void saveUser(User user){

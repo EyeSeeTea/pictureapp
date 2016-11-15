@@ -48,13 +48,16 @@ Geralmente, os sistemas de software têm uma grande variedade de partes integran
 
 ###**Logical View** <a name="logical"></a>
 
+Esta vista é utilizada pelos arquitetos de design de software para uma análise funcional. Esta vista foca na necessidade de perceber a funcionalidade da a aplicação em termos de elementos estruturais, mecanismos e abstrações-chave, serparação de interesses e distribuição de responsabilidades.
+Esta representação pode ser feita através de um diagrama UML de pacotes, sendo o seguinte diagrama relativamente à aplicação em estudo.
 
+INSERIR DIAGRAMA DE PACOTES
 
 
 
 ###**Development View** <a name="development"></a>
 
-
+Development view abrange as componenentes que dizem respeito à parte física do sistema. O software é dividido em componentes que pode ser desenvolvido e testado pela equipa de desenvolvimento.
 
 
 ###**Deployment View** <a name="deployment"></a>

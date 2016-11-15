@@ -83,6 +83,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         super.onCreate(savedInstanceState);
 
         loginActivityCustomization.onCreate(this);
+        loginActivityStrategy.onCreate();
 
         initDataDownloadPeriodDropdown();
 

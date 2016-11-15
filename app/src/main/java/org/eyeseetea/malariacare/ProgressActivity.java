@@ -115,8 +115,11 @@ public class ProgressActivity extends Activity {
             PULL_CANCEL = true;
             PULL_IS_ACTIVE = false;
             step(getBaseContext().getResources().getString(R.string.cancellingPull));
-            if(PullController.getInstance().finishPullJob())
-                finishAndGo(LoginActivity.class);
+            if(PullController.getInstance().finishPullJob()) {
+                Log.d(TAG, "Logging out from sdk...");
+                DhisService.logOutUser(ProgressActivity.this);
+            }
+                //finishAndGo(LoginActivity.class);
         }
     }
 
@@ -345,6 +348,11 @@ public class ProgressActivity extends Activity {
         Session.logout();
         //Go to login
         finishAndGo(LoginActivity.class);
+    }
+
+    @Override
+    public void onBackPressed(){
+        cancellPull();
     }
 
     /**

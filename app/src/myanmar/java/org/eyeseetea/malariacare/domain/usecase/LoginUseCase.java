@@ -45,7 +45,7 @@ public class LoginUseCase extends ALoginUseCase{
     private void saveUser(User user){
         User userDB=User.existUser(user);
 
-        if(userDB!=null)
+        if(userDB==null)
             user.save();
     }
 

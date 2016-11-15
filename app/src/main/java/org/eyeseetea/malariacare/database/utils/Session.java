@@ -139,7 +139,7 @@ public class Session {
         for (Survey survey : surveys) {
             survey.delete();
         }
-        User user = Session.getUser();
+        User user = User.getLoggedUser();
 
         if (user != null)
             user.delete();

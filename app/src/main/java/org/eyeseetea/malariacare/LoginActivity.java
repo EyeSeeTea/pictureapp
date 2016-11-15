@@ -46,7 +46,6 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.layout.customization.LoginActivityCustomization;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
@@ -76,13 +75,10 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     EditText usernameEditText;
     EditText passwordEditText;
 
-    LoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        loginActivityCustomization.onCreate(this);
         loginActivityStrategy.onCreate();
 
         initDataDownloadPeriodDropdown();

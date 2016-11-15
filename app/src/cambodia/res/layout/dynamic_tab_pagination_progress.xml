@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
     <ProgressBar
         android:id="@+id/dynamic_progress"
         style="@android:style/Widget.ProgressBar.Horizontal"
@@ -24,5 +21,4 @@
         android:background="@color/dynamicProgressBarColor"
         android:paddingLeft="10dip"
         android:text="1/7" />
-
-</RelativeLayout>
+</merge>

@@ -28,6 +28,7 @@ public class LoginUseCase extends ALoginUseCase{
         User.insertLoggedUser(user);
 
         Session.setUser(user);
+        Session.setCredentials(credentials);
 
         saveCredentials(credentials);
 

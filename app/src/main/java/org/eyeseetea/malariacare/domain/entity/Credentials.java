@@ -38,10 +38,6 @@ public class Credentials {
         return this.equals(Credentials.createDemoCredentials());
     }
 
-    public boolean isDummyCredentials(){
-        return this.equals(Credentials.createDemoCredentials());
-    }
-
     public boolean equals(Object o){
         if(o == null) return false;
         if(!(o instanceof Credentials)) return false;

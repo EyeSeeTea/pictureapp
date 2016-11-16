@@ -29,6 +29,7 @@ import android.widget.ListView;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 
@@ -56,6 +57,11 @@ public class Session {
      * The current user
      */
     private static User user;
+
+    /**
+     * The current credentials
+     */
+    private static Credentials sCredentials;
 
     /**
      * The current location
@@ -86,6 +92,14 @@ public class Session {
 
     public static synchronized void setSurvey(Survey survey) {
         Session.survey = survey;
+    }
+
+    public static Credentials getCredentials() {
+        return sCredentials;
+    }
+
+    public static void setCredentials(Credentials credentials) {
+        sCredentials = credentials;
     }
 
     public static User getUser() {

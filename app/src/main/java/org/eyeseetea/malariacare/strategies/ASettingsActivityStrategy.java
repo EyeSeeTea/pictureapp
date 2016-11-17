@@ -17,4 +17,6 @@ public abstract class ASettingsActivityStrategy {
     public abstract void onCreate();
 
     public abstract Preference.OnPreferenceClickListener getOnPreferenceClickListener();
+
+    public abstract Preference.OnPreferenceChangeListener getOnPreferenceChangeListener();
 }

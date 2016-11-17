@@ -59,6 +59,9 @@ import java.util.ArrayList;
 public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity implements LoaderCallbacks<Cursor> {
 
     private static final String TAG = ".LoginActivity";
+
+    public static final String PULL_REQUIRED = "PULL_REQUIRED";
+
     /**
      * DHIS server URL
      */
@@ -74,7 +77,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      */
     private String password;
 
-    public LoginActivityStrategy loginVariantAdapter = new LoginActivityStrategy(this);
+    public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,8 +230,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
             if(result.getResponseHolder().getApiException() == null) {
                 saveUserCredentials();
 
-                startActivity(new Intent(this, ProgressActivity.class));
-                finish();
+                mLoginActivityStrategy.finishAndGo();
             } else {
                 onLoginFail(result.getResponseHolder().getApiException());
             }
@@ -236,7 +238,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     }
 
     private void saveUserCredentials(){
-        loginVariantAdapter.saveUserCredentials(serverUrl,username,password);
+        mLoginActivityStrategy.saveUserCredentials(serverUrl,username,password);
     }
 
     /**
@@ -264,7 +266,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      */
     @Override
     public void onBackPressed(){
-        loginVariantAdapter.onBackPressed();
+        mLoginActivityStrategy.onBackPressed();
     }
 
 }

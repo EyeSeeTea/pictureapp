@@ -3,7 +3,9 @@ package org.eyeseetea.malariacare.strategies;
 import android.content.Intent;
 
 import org.eyeseetea.malariacare.LoginActivity;
+import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy{
@@ -24,5 +26,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverUrl);
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, username);
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, password);
+    }
+
+    @Override
+    public void finishAndGo() {
+        loginActivity.startActivity(new Intent(loginActivity, ProgressActivity.class));
+
+        loginActivity.finish();
     }
 }

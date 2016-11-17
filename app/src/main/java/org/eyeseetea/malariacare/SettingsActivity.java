@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare;
 
+import static android.R.attr.settingsActivity;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -68,7 +70,7 @@ import java.util.Locale;
  */
 public class SettingsActivity extends PreferenceActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
-    public static final String IS_INPROGRESS_SOURCE_ACTIVITY = "IS_INPROGRESS_SOURCE_ACTIVITY";
+    public static final String IS_LOGIN_DONE = "IS_LOGIN_DONE";
     /**
      * Determines whether to always show the simplified settings UI, where
      * settings are presented in a single list. When false, settings are shown
@@ -80,6 +82,9 @@ public class SettingsActivity extends PreferenceActivity implements
     private static final String TAG=".SettingsActivity";
 
     public SettingsActivityStrategy mSettingsActivityStrategy = new SettingsActivityStrategy(this);
+
+    public AutoCompleteEditTextPreference autoCompleteEditTextPreference;
+    public Preference serverUrlPreference;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,14 +140,22 @@ public class SettingsActivity extends PreferenceActivity implements
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.dhis_url)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
 
-        AutoCompleteEditTextPreference autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
+        autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
         autoCompleteEditTextPreference.setOnPreferenceClickListener(mSettingsActivityStrategy.getOnPreferenceClickListener());
         autoCompleteEditTextPreference.pullOrgUnits();
 
-        Preference serverUrlPreference = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
+        serverUrlPreference = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
         serverUrlPreference.setOnPreferenceClickListener(mSettingsActivityStrategy.getOnPreferenceClickListener());
 
         mSettingsActivityStrategy.setupPreferencesScreen(getPreferenceScreen());
+
+        if (mSettingsActivityStrategy.getOnPreferenceChangeListener() != null) {
+            serverUrlPreference.setOnPreferenceChangeListener(
+                    mSettingsActivityStrategy.getOnPreferenceChangeListener());
+
+            autoCompleteEditTextPreference.setOnPreferenceChangeListener(
+                    mSettingsActivityStrategy.getOnPreferenceChangeListener());
+        }
     }
 
     /**
@@ -275,15 +288,23 @@ public class SettingsActivity extends PreferenceActivity implements
             if(!BuildConfig.translations)
                 getPreferenceScreen().removePreference(getPreferenceScreen().findPreference(getResources().getString(R.string.language_code)));
 
-            AutoCompleteEditTextPreference autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
-            Preference serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));
+            settingsActivity.autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
+            settingsActivity.serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));
 
-            autoCompleteEditTextPreference.pullOrgUnits();
+            settingsActivity.autoCompleteEditTextPreference.pullOrgUnits();
 
-            autoCompleteEditTextPreference.setOnPreferenceClickListener(settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
-            serverUrlPreference.setOnPreferenceClickListener(settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
+            settingsActivity.autoCompleteEditTextPreference.setOnPreferenceClickListener(settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
+            settingsActivity.serverUrlPreference.setOnPreferenceClickListener(settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
 
             settingsActivity.mSettingsActivityStrategy.setupPreferencesScreen(getPreferenceScreen());
+
+            if (settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener() != null) {
+                settingsActivity.serverUrlPreference.setOnPreferenceChangeListener(
+                        settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener());
+
+                settingsActivity.autoCompleteEditTextPreference.setOnPreferenceChangeListener(
+                        settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener());
+            }
         }
     }
 

@@ -1,15 +1,15 @@
 package org.eyeseetea.malariacare.layout.listeners;
 
 
-import static android.R.attr.key;
 import static android.R.attr.settingsActivity;
 
 import android.content.Intent;
 import android.preference.Preference;
 
 import org.eyeseetea.malariacare.LoginActivity;
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.hisp.dhis.android.sdk.utils.StringUtils;
+import org.hisp.dhis.android.sdk.utils.support.TextUtils;
 
 /**
  * Listener that moves to the LoginActivity before changing DHIS config
@@ -28,8 +28,13 @@ public class LoginRequiredOnPreferenceClickListener implements Preference.OnPref
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        if(!activity.getIntent().getBooleanExtra(SettingsActivity.IS_INPROGRESS_SOURCE_ACTIVITY,false)){
+        if(!activity.getIntent().getBooleanExtra(SettingsActivity.IS_LOGIN_DONE,false)){
+
+            String orgUnitValue = activity.autoCompleteEditTextPreference.getText();
+
             Intent loginIntent = new Intent(activity,LoginActivity.class);
+            loginIntent.putExtra(LoginActivity.PULL_REQUIRED,orgUnitValue.isEmpty());
+
             activity.startActivity(loginIntent);
         }
         return true;

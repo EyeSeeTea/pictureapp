@@ -62,6 +62,9 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     private static final String TAG = ".LoginActivity";
 
+
+    public static final String PULL_REQUIRED = "PULL_REQUIRED";
+
     private String serverUrl;
 
     private String username;
@@ -69,7 +72,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     private String password;
 
     public LoginUseCase mLoginUseCase = new LoginUseCase(this);
-    public LoginActivityStrategy loginActivityStrategy = new LoginActivityStrategy(this);
+    public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
 
     EditText serverText;
     EditText usernameEditText;
@@ -79,7 +82,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        loginActivityStrategy.onCreate();
+        mLoginActivityStrategy.onCreate();
 
         initDataDownloadPeriodDropdown();
 
@@ -210,7 +213,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
                 Credentials credentials = new Credentials(serverUrl,username,password);
                 mLoginUseCase.execute(credentials);
 
-                finishAndGo(ProgressActivity.class);
+                mLoginActivityStrategy.finishAndGo();
             } else {
                 onLoginFail(result.getResponseHolder().getApiException());
             }
@@ -220,18 +223,9 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     @Override
     public void onBackPressed(){
-        loginActivityStrategy.onBackPressed();
+        mLoginActivityStrategy.onBackPressed();
     }
 
-    /**
-     * Finish current activity and launches an activity with the given class
-     * @param targetActivityClass Given target activity class
-     */
-    public void finishAndGo(Class targetActivityClass){
-        Intent targetActivityIntent = new Intent(this,targetActivityClass);
-        finish();
-        startActivity(targetActivityIntent);
-    }
 }
 
 

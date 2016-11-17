@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
+import static com.google.android.gms.analytics.internal.zzy.d;
+
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +35,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
     @Override
     public void onCreate() {
         if (existsLoggedUser()) {
-            loginActivity.finishAndGo(DashboardActivity.class);
+            finishAndGo(DashboardActivity.class);
         }
         else{
             addDemoButton();
@@ -59,8 +61,19 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
 
                 loginActivity.mLoginUseCase.execute(demoCrededentials);
 
-                loginActivity.finishAndGo(DashboardActivity.class);
+               finishAndGo(DashboardActivity.class);
             }
         });
+    }
+
+    @Override
+    public void finishAndGo() {
+        finishAndGo(ProgressActivity.class);
+    }
+
+    private void finishAndGo(Class targetActivityClass){
+        Intent targetActivityIntent = new Intent(loginActivity,targetActivityClass);
+        loginActivity.finish();
+        loginActivity.startActivity(targetActivityIntent);
     }
 }

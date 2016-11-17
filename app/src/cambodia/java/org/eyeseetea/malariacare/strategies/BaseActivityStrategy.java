@@ -12,6 +12,16 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     @Override
+    public void onStop() {
+
+    }
+
+    @Override
+    public void onCreate() {
+
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu) {
 
     }

@@ -103,6 +103,14 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
         alarmPush = new AlarmPushReceiver();
         alarmPush.setPushAlarm(this);
+
+        mBaseActivityStrategy.onCreate();
+    }
+
+    @Override
+    protected void onStop() {
+        mBaseActivityStrategy.onStop();
+        super.onStop();
     }
 
     /**

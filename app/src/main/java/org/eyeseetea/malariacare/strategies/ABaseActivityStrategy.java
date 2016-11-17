@@ -12,6 +12,9 @@ public abstract class ABaseActivityStrategy {
         this.mBaseActivity = baseActivity;
     }
 
+    public abstract void onStop();
+    public abstract void onCreate();
+
     public abstract void onCreateOptionsMenu(Menu menu);
     public abstract boolean onOptionsItemSelected(MenuItem item);
 }

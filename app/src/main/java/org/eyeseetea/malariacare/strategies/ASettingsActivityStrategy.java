@@ -17,7 +17,10 @@ public abstract class ASettingsActivityStrategy {
 
     public abstract void onStop();
     public abstract void onCreate();
+
     public abstract void setupPreferencesScreen(PreferenceScreen preferenceScreen);
 
     public abstract Preference.OnPreferenceClickListener getOnPreferenceClickListener();
+
+    public abstract Preference.OnPreferenceChangeListener getOnPreferenceChangeListener();
 }

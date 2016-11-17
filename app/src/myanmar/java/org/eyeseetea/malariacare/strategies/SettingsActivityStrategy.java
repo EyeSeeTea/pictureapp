@@ -52,6 +52,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         return loginRequiredOnPreferenceClickListener;
     }
 
+    @Override
+    public Preference.OnPreferenceChangeListener getOnPreferenceChangeListener() {
+        return null;
+    }
+
     @Subscribe
     public void onLogoutFinished(UiEvent uiEvent){
         //No event or not a logout event -> done

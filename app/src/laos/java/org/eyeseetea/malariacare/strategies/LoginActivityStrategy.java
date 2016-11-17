@@ -25,7 +25,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
 
     @Override
     public void finishAndGo() {
-        if(!loginActivity.getIntent().getBooleanExtra(LoginActivity.PULL_REQUIRED,false))
+        if(loginActivity.getIntent().getBooleanExtra(LoginActivity.PULL_REQUIRED,false))
             loginActivity.startActivity(new Intent(loginActivity, ProgressActivity.class));
         else{
             Intent intent = new Intent(loginActivity,SettingsActivity.class);

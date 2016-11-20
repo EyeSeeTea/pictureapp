@@ -85,9 +85,7 @@ Este tipo de diagrama é essencialmente um gráfico de fluxo, mostrando o fluxo 
 
 ![activity](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/process%20view.png?raw=true)
 
-
-
-****
+***
 ##**Contribuidores**<a name="contributors"></a>
 
 * [Inês Ferreira](https://github.com/inesferreira7)

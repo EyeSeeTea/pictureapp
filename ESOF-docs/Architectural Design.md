@@ -59,6 +59,8 @@ Esta representação pode ser feita através de um diagrama UML de pacotes, send
 
 Development view abrange as componenentes que dizem respeito à parte física do sistema. O software é dividido em componentes que pode ser desenvolvido e testado pela equipa de desenvolvimento.
 
+![components](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/ComponentView.png?raw=true)
+
 
 ###**Deployment View** <a name="deployment"></a>
 

@@ -69,7 +69,7 @@ Development view abrange as componenentes que dizem respeito à parte física do
 
 ###**Process View** <a name="process"></a>
 
-
+![activity](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/process%20view.png?raw=true)
 
 
 

@@ -51,7 +51,9 @@ Geralmente, os sistemas de software têm uma grande variedade de partes integran
 Esta vista é utilizada pelos arquitetos de design de software para uma análise funcional. Esta vista foca na necessidade de perceber a funcionalidade da a aplicação em termos de elementos estruturais, mecanismos e abstrações-chave, serparação de interesses e distribuição de responsabilidades.
 Esta representação pode ser feita através de um diagrama UML de pacotes, sendo o seguinte diagrama relativamente à aplicação em estudo.
 
+
 ![logicalview](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/logicalView.png?raw=true)
+
 
 
 
@@ -59,15 +61,27 @@ Esta representação pode ser feita através de um diagrama UML de pacotes, send
 
 Development view abrange as componenentes que dizem respeito à parte física do sistema. O software é dividido em componentes que pode ser desenvolvido e testado pela equipa de desenvolvimento.
 
+
 ![components](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/ComponentView.png?raw=true)
+
+
 
 
 ###**Deployment View** <a name="deployment"></a>
 
+Os diagramas de deployment são usados para representar uma estrutura física (normalmente de hardware), onde um conjunto de artefatos de software sãoinstalados para compor uma configuração de um sistema. 
+
+
 ![deployment](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/deployment%20view.png?raw=true)
 
 
+
+
 ###**Process View** <a name="process"></a>
+
+É com esta vista que são explicados os processos do programa, bem como a comunicação entre eles. Relativamente a esta vista, são feitos os diagramas de atividades.
+Este tipo de diagrama é essencialmente um gráfico de fluxo, mostrando o fluxo de uma atividade para outra. Costumam conter estados de atividade e estados de ação, transições e objetos.
+
 
 ![activity](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/process%20view.png?raw=true)
 

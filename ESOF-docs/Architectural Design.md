@@ -64,7 +64,7 @@ Development view abrange as componenentes que dizem respeito à parte física do
 
 ###**Deployment View** <a name="deployment"></a>
 
-
+![deployment](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/deployment%20view.png?raw=true)
 
 
 ###**Process View** <a name="process"></a>

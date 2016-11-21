@@ -83,7 +83,7 @@ Os diagramas de deployment são usados para representar uma estrutura física (n
 Este tipo de diagrama é essencialmente um gráfico de fluxo, mostrando o fluxo de uma atividade para outra. Costumam conter estados de atividade e estados de ação, transições e objetos.
 
 
-![activity](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/process%20view.png?raw=true)
+![activity](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/Process%20View.png)
 
 ***
 ##**Contribuidores**<a name="contributors"></a>

@@ -127,4 +127,7 @@
 <string name="last_6_weeks">dernières 6 semaines </string>
 <string name="last_6_months"> les 6 derniers mois</string>
 <string name="download">Téléchargement:</string>
+<string name="developer_option_summary">"Cette option active les options de développement"</string>
+<string name="developer_option_title">"Afficher les options développeur"</string>
+<string name="export_data_option_title">"Base de données à l'exportation"</string>
 </resources>

@@ -141,8 +141,12 @@
 <string name="last_6_weeks">last 6 weeks</string>
 <string name="last_6_months">last 6 months</string>
 <string name="download">Download:</string>
-    <string name="assessment_past_cases">PAST CASES</string>
-    <string name="assessment_new_cases">NEW CASES</string>
-    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
-    <string name="positive_hint">Name, Details</string>
+<string name="assessment_past_cases">PAST CASES</string>
+<string name="assessment_new_cases">NEW CASES</string>
+<string name="assessment_connectivity">Data awaiting internet connectivity</string>
+<string name="positive_hint">Name, Details</string>
+<string name="developer_option_summary">This feature activates the developer options</string>
+<string name="developer_option_title">Show developer options</string>
+<string name="export_data_option_title">Export database</string>
+<string name="demo_login">Demo</string>
 </resources>

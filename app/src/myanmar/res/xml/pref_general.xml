@@ -89,5 +89,11 @@
             android:entryValues="@array/settings_array_values_font_sizes"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null" />
+        <CheckBoxPreference
+            android:key="@string/developer_option"
+            android:title="@string/developer_option_title"
+            android:summary="@string/developer_option_summary"
+            android:defaultValue="false" />
     </PreferenceCategory>
+
 </PreferenceScreen>

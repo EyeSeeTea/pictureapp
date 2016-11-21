@@ -32,5 +32,7 @@
                 android:orderInCategory="105" />
         </menu>
     </item>
+    <item android:id="@+id/export_db" android:title="@string/export_data_option_title"
+        android:orderInCategory="106"/>
 
 </menu>

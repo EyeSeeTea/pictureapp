@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
@@ -39,14 +40,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.TabGroup;
+import org.eyeseetea.malariacare.database.utils.ExportData;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -65,6 +72,10 @@ public abstract class BaseActivity extends ActionBarActivity {
     public static final String SETTINGS_CALLER_ACTIVITY = "SETTINGS_CALLER_ACTIVITY";
 
     protected static String TAG=".BaseActivity";
+    /**
+     * Extra param to annotate the activity to return after settings
+     */
+    private static final int DUMP_REQUEST_CODE=0;
 
     private AlarmPushReceiver alarmPush;
 
@@ -165,10 +176,33 @@ public abstract class BaseActivity extends ActionBarActivity {
                 debugMessage("Go back");
                 onBackPressed();
                 break;
+            case R.id.export_db:
+                debugMessage("Export db");
+                Intent emailIntent= ExportData.dumpAndSendToAIntent(this);
+                if(emailIntent!=null)
+                    startActivityForResult(emailIntent,DUMP_REQUEST_CODE);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if(!PreferencesState.getInstance().isDevelopOptionActive() || !BuildConfig.developerOptions) {
+            MenuItem item = menu.findItem(R.id.export_db);
+            item.setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        if ((requestCode == DUMP_REQUEST_CODE)){
+            ExportData.removeDumpIfExist(this);
+        }
     }
 
     /**

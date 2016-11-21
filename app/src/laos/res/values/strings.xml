@@ -182,4 +182,7 @@
 <string name="last_6_weeks">last 6 weeks</string>
 <string name="last_6_months">last 6 months</string>
 <string name="download">Download:</string>
+<string name="developer_option_summary">This feature activates the developer options</string>
+<string name="developer_option_title">Show developer options</string>
+<string name="export_data_option_title">Export database</string>
 </resources>

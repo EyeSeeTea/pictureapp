@@ -60,6 +60,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabWidget;
 
+import static com.google.android.gms.internal.zzng.ex;
+
 public class DashboardActivity extends BaseActivity {
 
     private final static String TAG=".DashboardActivity";
@@ -595,7 +597,6 @@ public class DashboardActivity extends BaseActivity {
      */
     public class AsyncPopulateDB extends AsyncTask<Void, Void, Exception> {
 
-        private static final String DUMMY_USER="user";
         User user;
 
          AsyncPopulateDB() {
@@ -604,7 +605,11 @@ public class DashboardActivity extends BaseActivity {
         @Override
         protected Exception doInBackground(Void... params) {
             try {
-                initUser();
+                if(!BuildConfig.multiuser) {
+                    Log.i(TAG, "Creating demo user ...");
+                    user = User.createDummyUser();
+                }
+
                 initDataIfRequired();
             }catch(Exception ex) {
                 Log.e(TAG, "Error initializing DB: ", ex);
@@ -629,22 +634,12 @@ public class DashboardActivity extends BaseActivity {
                 return;
             }
             //Success
-            Session.setUser(user);
+            if (user != null)
+                Session.setUser(user);
+
             getSurveysFromService();
         }
-
-        /**
-         * Add user to table and session
-         */
-        private void initUser(){
-            user=new User(DUMMY_USER,DUMMY_USER);
-            User userdb=User.existUser(user);
-            if(userdb!=null)
-            user=userdb;
-            else
-            user.save();
-        }
-
+        
         private void initDataIfRequired() throws IOException {
             if (new Select().count().from(Tab.class).count()!=0) {
                 Log.i(TAG, "DB Already loaded, showing surveys...");

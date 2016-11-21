@@ -96,7 +96,7 @@ public class User extends BaseModel {
         return null;
     }
 
-    public static User existUser(User user) {
+    public static User getUserFromDB(User user) {
         List<User> userdb= new Select().from(User.class).queryList();
         for(int i=userdb.size()-1;i>=0;i--){
             if((userdb.get(i).getUid().equals(user.getUid()))&&(userdb.get(i).getName().equals(user.getName())))
@@ -133,5 +133,20 @@ public class User extends BaseModel {
                 ", uid='" + uid + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    private static final String DUMMY_USER="user";
+
+    public static User createDummyUser(){
+        User dummyUser=new User(DUMMY_USER,DUMMY_USER);
+
+        User userdb=User.getUserFromDB(dummyUser);
+
+        if(userdb!=null)
+            dummyUser=userdb;
+        else
+            dummyUser.save();
+
+        return dummyUser;
     }
 }

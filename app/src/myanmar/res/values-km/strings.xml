@@ -146,4 +146,5 @@
 <string name="developer_option_summary">ជម្រើសនេះអនុញ្ញាតជម្រើសអភិវឌ្ឍន៍</string>
 <string name="developer_option_title">អភិវឌ្ឍន៍បង្ហាញជម្រើស</string>
 <string name="export_data_option_title">មូលដ្ឋានទិន្នន័យដែលបាននាំចេញ</string>
+<string name="demo_login">ទស្សនាការបង្ហាញ</string>
 </resources>

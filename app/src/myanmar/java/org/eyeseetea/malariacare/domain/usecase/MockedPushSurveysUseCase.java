@@ -7,7 +7,7 @@ import org.eyeseetea.malariacare.database.model.Survey;
 
 import java.util.List;
 
-public class PushMockUseCase {
+public class MockedPushSurveysUseCase {
     public interface Callback{
         void onPushFinished();
     }

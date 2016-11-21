@@ -1,50 +1,57 @@
 package org.eyeseetea.malariacare.services.strategies;
 
-import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.domain.usecase.PushMockUseCase;
-import org.eyeseetea.malariacare.domain.usecase.PushUseCase;
+import org.eyeseetea.malariacare.domain.usecase.MockedPushSurveysUseCase;
+import org.eyeseetea.malariacare.domain.usecase.PushSurveysUseCase;
+import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy{
     public static final String TAG = ".PushServiceStrategy";
 
-    public PushServiceStrategy(Context context) {
-        super(context);
+    public PushServiceStrategy(PushService pushService) {
+        super(pushService);
     }
 
     @Override
-    public void push(final Callback callback) {
-        if (Session.getCredentials().isDemoCredentials())
-            executePushMock(callback);
-        else
-            executePush(callback);
+    public void push() {
+        if (Session.getCredentials().isDemoCredentials()){
+            Log.d(TAG,"execute mocked push");
+            executeMockedPush();
+        }
+        else {
+            Log.d(TAG,"execute push");
+            executePush();
+        }
     }
 
-    private void executePushMock(final Callback callback) {
-        PushMockUseCase pushMockUseCase = new PushMockUseCase();
+    private void executeMockedPush() {
+        MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase();
 
-        pushMockUseCase.execute(new PushMockUseCase.Callback() {
+        mockedPushSurveysUseCase.execute(new MockedPushSurveysUseCase.Callback() {
             @Override
             public void onPushFinished() {
-                callback.onPushFinished();
+                Log.d(TAG,"onPushMockFinished");
+                mPushService.onPushFinished();
             }
         });
     }
 
-    private void executePush(final Callback callback) {
-        PushUseCase pushUseCase = new PushUseCase(mContext);
+    private void executePush() {
+        PushSurveysUseCase pushUseCase = new PushSurveysUseCase(mPushService);
 
-        pushUseCase.execute(new PushUseCase.Callback() {
+        pushUseCase.execute(new PushSurveysUseCase.Callback() {
             @Override
             public void onPushFinished() {
-                callback.onPushFinished();
+                Log.d(TAG,"onPushFinished");
+                mPushService.onPushFinished();
             }
 
             @Override
             public void onPushError(String message) {
-                callback.onPushError(message);
+                Log.w(TAG, "onPushError: " + message);
+                mPushService.onPushError(message);
             }
         });
     }

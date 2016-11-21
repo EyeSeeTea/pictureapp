@@ -3,16 +3,15 @@ package org.eyeseetea.malariacare.services.strategies;
 
 import android.content.Context;
 
+import org.eyeseetea.malariacare.services.PushService;
+
 public abstract class APushServiceStrategy {
-    public interface Callback{
-        void onPushFinished();
-        void onPushError(String message);
-    }
-    protected Context mContext;
 
-    public APushServiceStrategy(Context context){
-        mContext = context;
+    protected PushService mPushService;
+
+    public APushServiceStrategy(PushService pushService){
+        mPushService = pushService;
     }
 
-    public abstract void push(Callback callback);
+    public abstract void push();
 }

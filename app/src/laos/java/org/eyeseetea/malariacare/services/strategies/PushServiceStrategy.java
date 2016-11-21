@@ -1,28 +1,32 @@
 package org.eyeseetea.malariacare.services.strategies;
 
+import static com.google.android.gms.analytics.internal.zzy.p;
+
 import android.content.Context;
-import org.eyeseetea.malariacare.domain.usecase.PushUseCase;
+
+import org.eyeseetea.malariacare.domain.usecase.PushSurveysUseCase;
+import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy{
     public static final String TAG = ".PushServiceStrategy";
 
-    public PushServiceStrategy(Context context) {
-        super(context);
+    public PushServiceStrategy(PushService pushService) {
+        super(pushService);
     }
 
     @Override
-    public void push(final Callback callback) {
-        PushUseCase pushUseCase = new PushUseCase(mContext);
+    public void push() {
+        PushSurveysUseCase pushSurveysUseCase = new PushSurveysUseCase(mPushService);
 
-        pushUseCase.execute(new PushUseCase.Callback() {
+        pushSurveysUseCase.execute(new PushSurveysUseCase.Callback() {
             @Override
             public void onPushFinished() {
-                callback.onPushFinished();
+                mPushService.onPushFinished();
             }
 
             @Override
             public void onPushError(String message) {
-                callback.onPushError(message);
+                mPushService.onPushError(message);
             }
         });
     }

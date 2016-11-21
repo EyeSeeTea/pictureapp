@@ -80,26 +80,20 @@ public class PushService extends IntentService {
             return;
         }
 
-        mPushServiceStrategy.push(new APushServiceStrategy.Callback() {
-            @Override
-            public void onPushFinished() {
-                reloadDashboard();
-            }
-
-            @Override
-            public void onPushError(String message) {
-                Log.w(TAG, "onPushFinished error: " + message);
-            }
-        });
+        mPushServiceStrategy.push();
     }
 
-    /**
-     * Reloads dashboard via SurveyService
-     */
+    public void onPushFinished() {
+        reloadDashboard();
+    }
+
+    public void onPushError(String message) {
+        Log.w(TAG, "onPushFinished error: " + message);
+    }
+
     private void reloadDashboard(){
         Intent surveysIntent=new Intent(this, SurveyService.class);
         surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
         this.startService(surveysIntent);
     }
-
 }

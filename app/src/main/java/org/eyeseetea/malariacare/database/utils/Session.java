@@ -203,5 +203,4 @@ public class Session {
     public static synchronized void setPhoneMetaData(PhoneMetaData phoneMetaData) {
         Session.phoneMetaData = phoneMetaData;
     }
-
 }

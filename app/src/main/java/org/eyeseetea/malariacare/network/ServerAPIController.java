@@ -21,6 +21,7 @@ package org.eyeseetea.malariacare.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -38,12 +39,17 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.malariacare.views.ShowException;
+import org.hisp.dhis.android.sdk.controllers.wrappers.OrganisationUnitLevelWrapper;
+import org.hisp.dhis.android.sdk.controllers.wrappers.ProgramWrapper;
+import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.Proxy;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -119,7 +125,7 @@ public class ServerAPIController {
     /**
      * Endpoint suffix to retrieve orgUnits
      */
-    private static final String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits";
+    private static final String DHIS_PULL_ORG_UNITS_API=".json?fields=organisationUnits[*]";
     /**
      * Endpoint to patch closeDate to an OrgUnit
      */
@@ -461,8 +467,7 @@ public class ServerAPIController {
             }
 
             //{"organisationUnits":[{}]}
-            JSONObject jsonResponse=parseResponse(response.body().string());
-            JSONArray orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATIONUNITS);
+            JSONArray orgUnitsArray =parseResponse(response.body().string()).getJSONArray(TAG_ORGANISATIONUNITS);
 
             //0 matches -> Error
             if (orgUnitsArray.length()==0){
@@ -479,6 +484,40 @@ public class ServerAPIController {
 
     }
 
+    /**
+     * This method returns a String[] whit the Organitation codes
+     * @throws Exception
+     */
+    public static String[] pullOrgUnitsNotBannedCodes(String url){
+
+        try{
+            String orgUnitsURL  = getDhisOrgUnitsURL(url);
+            Response response=executeCall(null, orgUnitsURL, "GET");
+
+            //Error -> null
+            if(!response.isSuccessful()){
+                Log.e(TAG, "pullOrgUnitsCodes (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+
+            //{"organisationUnits":[{}]}
+            JSONArray orgUnitsArray = parseResponse(response.body().string()).getJSONArray(TAG_ORGANISATIONUNITS);
+            //fixme loop removing the orgunits banned (orgUnitsArray)
+            //mehtod isBanned()
+            //0 matches -> Error
+            if (orgUnitsArray.length()==0){
+                throw new Exception("Found 0 matches");
+            }
+            return Utils.jsonArrayToStringArray(orgUnitsArray, TAG_ID);
+
+        }catch(Exception ex){
+            Log.e(TAG,String.format("pullOrgUnitsCodes(%url): %s",url,ex.getMessage()));
+            String[] value = new String[1];
+            value[0] = "";
+            return value;
+        }
+
+    }
     /**
      * compares the dates of the surveys and checks if the dates are over the limit
      * @param surveyList all the sent surveys

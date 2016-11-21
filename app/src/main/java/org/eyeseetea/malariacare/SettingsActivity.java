@@ -27,6 +27,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -64,7 +66,9 @@ import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -114,6 +118,13 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     protected void onCreate(Bundle savedInstanceState) {
         Dhis2Application.bus.register(this);
         super.onCreate(savedInstanceState);
+        PreferencesState.getInstance().loadsLanguageInActivity();
+    }
+
+    private void restartActivity() {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
     @Override
@@ -155,10 +166,15 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
 
+
+        if(BuildConfig.translations)
+            setLanguageOptions(findPreference(getApplicationContext().getString(R.string.language_code)));
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.font_sizes)));
+        if(BuildConfig.translations)
+            bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.language_code)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.dhis_url)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
 
@@ -188,15 +204,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-//        Preference removeSentPreference = (Preference)findPreference(getApplicationContext().getString(R.string.remove_sent_surveys));
-//        removeSentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-//            @Override
-//            public boolean onPreferenceClick(Preference preference) {
-//                askRemoveSentSurveys();
-//                return true;
-//            }
-//        });
-
         Preference serverUrlPreference = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
         serverUrlPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this, false));
         serverUrlPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -223,9 +230,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         //Check current server version to populate orgunits
         initPopulateOrgUnitsByServerVersion(PreferencesState.getInstance().getDhisURL());
-
-        //XXX Open preference that was being edited, (to review)
-        //openClickedPreference();
     }
 
     /**
@@ -541,6 +545,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.language_code))) {
+            restartActivity();
+        }
 
     }
 
@@ -556,14 +563,22 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
 
+
+            if(BuildConfig.translations)
+                setLanguageOptions(findPreference(PreferencesState.getInstance().getContext().getString(R.string.language_code)));
+
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.font_sizes)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.language_code)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
 
+            //Hide translation option if is not active in gradle variable
+            if(BuildConfig.translations)
+                bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.language_code)));
             SettingsActivity settingsActivity = (SettingsActivity) getActivity();
             AutoCompleteEditTextPreference autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
             autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, true));
@@ -590,14 +605,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             });
             settingsActivity.setAutoCompleteEditTextPreference(autoCompleteEditTextPreference);
 
-//            Preference removeSentPreference = (Preference)findPreference(getString(R.string.remove_sent_surveys));
-//            removeSentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-//                 @Override
-//                 public boolean onPreferenceClick(Preference preference) {
-//                     askRemoveSentSurveys(getActivity());
-//                     return true;
-//                 }
-//             });
 
             Preference serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));
             serverUrlPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, false));
@@ -625,6 +632,33 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
     }
 
+    /**
+     * Sets the application languages and populate the language in the preference
+     *
+     */
+    private static void setLanguageOptions(Preference preference) {
+        ListPreference listPreference = (ListPreference) preference;
+
+        HashMap<String, String> languages = getAppLanguages(R.string.system_defined);
+
+        CharSequence[] newEntries=new CharSequence[languages.size()+1];
+        CharSequence[] newValues=new CharSequence[languages.size()+1];
+        int i=0;
+        newEntries[i]=PreferencesState.getInstance().getContext().getString(R.string.system_defined);
+        newValues[i]="";
+        for(String language : languages.keySet()){
+            i++;
+            String languageCode = languages.get(language);
+            String firstLetter= language.substring(0,1).toUpperCase();
+            language = firstLetter + language.substring(1,language.length());
+            newEntries[i] = language;
+            newValues[i] = languageCode;
+        }
+
+        listPreference.setEntries(newEntries);
+        listPreference.setEntryValues(newValues);
+    }
+
     //asks the user whether to delete the surveys sent
     private static void askRemoveSentSurveys(final Activity activity) {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -645,6 +679,34 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 .setNegativeButton(R.string.no, dialogClickListener).show();
     }
 
+
+    /**
+     * This method finds the existing app translations
+     * * @param stringId this string id should be different in all value-xx/string.xml files. Else the language can be ignored
+     */
+    public static  HashMap<String, String> getAppLanguages(int stringId) {
+        HashMap<String, String> languages= new HashMap<>();
+        Context context = PreferencesState.getInstance().getContext();
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        Resources r = context.getResources();
+        Configuration c = r.getConfiguration();
+        String[] loc = r.getAssets().getLocales();
+        for (int i = 0; i < loc.length; i++) {
+            c.locale = new Locale(loc[i]);
+            Resources res = new Resources(context.getAssets(), metrics, c);
+            String s1 = res.getString(stringId);
+            String language = c.locale.getDisplayLanguage();
+            c.locale = new Locale("");
+            Resources res2 = new Resources(context.getAssets(), metrics, c);
+            String s2 = res2.getString(stringId);
+
+            //Compare with the default language
+            if(!s1.equals(s2)){
+                    languages.put(language, loc[i]);
+            }
+        }
+        return languages;
+    }
 
     private static void removeSentSurveys(Activity activity) {
         Intent surveysIntent=new Intent(activity, SurveyService.class);

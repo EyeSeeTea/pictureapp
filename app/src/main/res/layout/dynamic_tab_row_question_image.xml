@@ -11,5 +11,6 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:layout_gravity="center"
-            android:scaleType="fitCenter" />
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"  />
 </TableRow>

@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="questionHeaderColor">#b4d550</color>
-    <color name="questionHeaderTextColor">#207a3c</color>
-    <color name="questionLayoutBackground">#14b2be</color>
-    <color name="dynamicProgressBarColor">#f78f38</color>
-    <color name="intColor">#FFFFFF</color>
+    <color name="questionHeaderColor">@color/light_violet</color>
+    <color name="questionHeaderTextColor">@color/dark_violet</color>
+    <color name="questionLayoutBackground">@color/myanmar_grey</color>
+    <color name="dynamicProgressBarColor">@color/light_grey_violet</color>
+    <color name="text_first_color">@color/dark_violet</color>
+    <color name="text_second_color">@color/white</color>
+    <color name="actionbar_background">@color/light_grey_violet</color>
+    <color name="general_background">@color/light_violet</color>
+    <color name="tab_pressed_background">@color/light_violet</color>
+    <color name="tab_unpressed_background">#4d3b4c</color>
+
+    <color name="main_window_background">@color/light_violet</color>
+    <color name="headerColor">@color/light_violet</color>
+    <color name="fragment_header_title">@color/text_first_color</color>
+    <color name="fragment_header_subtitle">@color/white</color>medium_light_violet
+    <color name="question_header_title">@color/text_first_color</color>
+    <color name="question_header_subtitle">@color/medium_light_violet</color>
+    <color name="hint">@color/medium_violet</color>
+    <color name="intColor">@color/dark_violet</color>
 </resources>

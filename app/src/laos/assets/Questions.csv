@@ -1,14 +1,14 @@
-1;'RDT';'LA MAL SRV - RDT test result';;'ການກວດ';'pTZpMcKg1CY';1;0;0;1;1;0;14;2;0
-2;'Reason';'LA MAL SRV - Reason NOT tested RDT';;'ບໍ່ຖືກກວດດ້ວຍເຫດຜົນ';'Elrozkdzh3r';1;0;0;1;2;0;14;2;1
-3;'Gender';'LA MAL SRV - Gender';;'ເພດ';'lNcuFJPKhp9';1;0;0;1;3;0;10;4;1
-4;'Age';'LA MAL SRV - Age';;'ອາຍຸ';'qQngeCbT4uI';2;0;0;1;4;0;6;4;1
-5;'Result';'LA MAL SRV - RDT test result';;'ຜົນການກວດເລືອດ';'FPNbkUi9D55';3;0;0;1;5;0;14;4;0
-6;'ConfirmInvalid';'Confirm invalid';' ';'ຜົນກວດບໍ່ຖືກຕ້ອງ';'R53JBYOhcQM';4;0;0;1;6;0;16;6;0;'question_images/p9_rdt_test.png'
-7;'WarningBaby';'Treatment warning baby';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';5;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
-8;'WarningKid';'Treatment warning kid';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';6;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
-9;'WarningTeen';'Treatment warning teenager';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';7;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
-10;'WarningAdult';'Treatment warning adult';' ';'ການປິ່ນປົວບໍ່ຖືກຕ້ອງ';'xxx';8;0;0;1;7;0;17;6;0;'question_images/p11_warning.png'
-11;'Treatment';'LA MAL SRV - Treatment';;'ຂະໜາດຢາປິ່ນປົວໄຂ້ມາລາເຣຍ';'TzL693oH3D9';9;0;0;1;8;0;12;6;1
-12;'ReminderHospital';'Reminder hospital';' ';'ນຳສົ່ງ';'xxx';10;0;0;1;9;0;18;6;0;'question_images/p8_rdt_all.png'
-13;'Phone';'LA MAL SRV - Client telephone';' ';'ເບີໂທຂອງຄົນເຈັບ';'fnT1JoHmO94';11;0;0;1;10;0;13;6;0;'question_images/p13_phone.png'
-14;'ReminderNotTested';'Reminder Not Tested';'';'ນຳສົ່ງ';'xxx';10;0;0;1;9;0;18;6;0;''
+1;'RDT';'LA MAL SRV - RDT test result';;'Question_Title_RDT';'pTZpMcKg1CY';1;0;0;1;1;0;14;2;0
+2;'Reason';'LA MAL SRV - Reason NOT tested RDT';;'Question_Title_Reason';'Elrozkdzh3r';1;0;0;1;2;0;14;2;1
+3;'Gender';'LA MAL SRV - Gender';;'Question_Title_Gender';'lNcuFJPKhp9';1;0;0;1;3;0;10;4;1
+4;'Age';'LA MAL SRV - Age';;'Question_Title_Age';'qQngeCbT4uI';2;0;0;1;4;0;6;4;1
+5;'Result';'LA MAL SRV - RDT test result';;'Question_Title_Result';'FPNbkUi9D55';3;0;0;1;5;0;14;4;0
+6;'ConfirmInvalid';'Confirm invalid';' ';'Question_Title_Invalid';'R53JBYOhcQM';4;0;0;1;6;0;16;6;0;'Question_Invalid_Test'
+7;'WarningBaby';'Treatment warning baby';' ';'Question_Title_Wrong_Treatment';'xxx';5;0;0;1;9;0;17;6;0;'Question_Wrong_Age'
+8;'WarningKid';'Treatment warning kid';' ';'Question_Title_Wrong_Treatment';'xxx';6;0;0;1;9;0;17;6;0;'Question_Wrong_Age'
+9;'WarningTeen';'Treatment warning teenager';' ';'Question_Title_Wrong_Treatment';'xxx';7;0;0;1;9;0;17;6;0;'Question_Wrong_Age'
+10;'WarningAdult';'Treatment warning adult';' ';'Question_Title_Wrong_Treatment';'xxx';8;0;0;1;9;0;17;6;0;'Question_Wrong_Age'
+11;'Treatment';'LA MAL SRV - Treatment';;'Question_Title_Treatment';'TzL693oH3D9';9;0;0;1;7;0;12;6;1
+12;'ReminderHospital';'Reminder hospital';' ';'Question_Title_Hospital_Reminder';'xxx';10;0;0;1;10;0;18;6;0;'Question_Reminder'
+13;'Phone';'LA MAL SRV - Client telephone';' ';'Question_Title_Phone';'fnT1JoHmO94';11;0;0;1;8;0;13;6;0;'Question_Phone'
+14;'ReminderNotTested';'Reminder Not Tested';'';'Question_Title_Not_Tested_Reminder';'xxx';10;0;0;1;11;0;18;6;0;''

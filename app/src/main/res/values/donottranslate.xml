@@ -13,6 +13,7 @@
     <item name="font_sizes" type="string" translatable="false">font_sizes</item>
     <item name="dhis_url" type="string" translatable="false">dhis_url</item>
     <item name="org_unit" type="string" translatable="false">org_unit</item>
+    <item name="language_code" type="string" translatable="false">language_code</item>
 
 
     <string name="PUSH_PERIOD" translatable="false">10</string>
@@ -79,6 +80,9 @@
     <string name="tab_tag_assess" translatable="false">tab_assess</string>
     <string name="tab_tag_improve" translatable="false">tab_improve</string>
     <string name="tab_tag_monitor" translatable="false">tab_monitor</string>
+
+    <item name="developer_option" type="string" translatable="false">show_dev_options</item>
+    <item name="export_data_option" type="string" translatable="false">export_data_option</item>
 
     <string name="assess" translatable="false">Assess - active surveys</string>
     <string name="improve" translatable="false">Improve</string>

@@ -36,6 +36,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,8 +48,19 @@ import java.util.List;
 @Table(databaseName = AppDatabase.NAME)
 public class Question extends BaseModel {
 
+    /**
+     * Constant that reflects a visible question in information
+     */
+    public static final int QUESTION_VISIBLE = 1;
+    /**
+     * Constant that reflects a not visible question in information
+     */
+    public static final int QUESTION_INVISIBLE = 0;
     private static final String TAG = "Question";
-
+    /**
+     * Required to create a null Question value to enable caching when you're the last question.
+     */
+    private final static Long NULL_SIBLING_ID = -0l;
     @Column
     @PrimaryKey(autoincrement = true)
     long id_question;
@@ -68,93 +80,66 @@ public class Question extends BaseModel {
     Float numerator_w;
     @Column
     Float denominator_w;
-
     @Column
     String feedback;
-
     @Column
     Long id_header;
-
     /**
      * Reference to the parent header (loaded lazily)
      */
     Header header;
-
     @Column
     Long id_answer;
-
     /**
      * Reference to the associated answer (loaded lazily)
      */
     Answer answer;
-
     @Column
     Integer output;
-
     @Column
     Long id_parent;
-
     /**
      * Reference to parent question (loaded lazily, DEPRECATED??)
      */
     Question question;
-
     @Column
     Long id_composite_score;
-
-
     @Column
     Integer total_questions;
-
     @Column
     Integer visible;
-
     @Column
     String path;
-
-    /**
-     * Constant that reflects a visible question in information
-     */
-    public static final int QUESTION_VISIBLE=1;
-    /**
-     * Constant that reflects a not visible question in information
-     */
-    public static final int QUESTION_INVISIBLE=0;
     /**
      * Reference to associated compositeScore for this question (loaded lazily)
      */
     CompositeScore compositeScore;
-
     /**
      * List of children questions associated to this question
      */
     List<Question> children;
-
     /**
      * List of values for this question
      */
     List<Value> values;
-
     /**
      * List of questionRelations of this question
      */
     List<QuestionRelation> questionRelations;
-
     /**
      * List of matches of this question
      */
     List<Match> matches;
-
+    Boolean parent;
+    Boolean parentHeader;
     /**
      * List of question Options of this question
      */
     private List<QuestionOption> questionOptions;
-
     /**
      * List of question Thresholds associated with this question
      */
     private List<QuestionThreshold> questionThresholds;
-
     /**
      * Cached reference to next question for this one.
      * No parent: Next question in order
@@ -162,17 +147,13 @@ public class Question extends BaseModel {
      */
     private Question sibling;
 
-    /**
-     * Required to create a null Question value to enable caching when you're the last question.
-     */
-    private final static Long NULL_SIBLING_ID=-1l;
-
-    Boolean parent;
-
     public Question() {
     }
 
-    public Question(String code, String de_name, String short_name, String form_name, String uid, Integer order_pos, Float numerator_w, Float denominator_w, String feedback, Integer output, Header header, Answer answer, Question question, CompositeScore compositeScore) {
+    public Question(String code, String de_name, String short_name, String form_name, String uid,
+            Integer order_pos, Float numerator_w, Float denominator_w, String feedback,
+            Integer output, Header header, Answer answer, Question question,
+            CompositeScore compositeScore) {
         this.code = code;
         this.de_name = de_name;
         this.short_name = short_name;
@@ -191,21 +172,204 @@ public class Question extends BaseModel {
         this.setQuestion(question);
     }
 
+    public static List<Question> getAllQuestions() {
+        return new Select().all().from(Question.class).queryList();
+    }
+
+    public static List<Question> getAllQuestionsWithOrgUnitDropdownList() {
+        return new Select().from(Question.class)
+                .where(Condition.column(Question$Table.OUTPUT).eq(Constants.DROPDOWN_OU_LIST))
+                .queryList();
+    }
+
+    private static List<Question> getAllQuestionsWithHeader(Header header) {
+        return new Select()
+                .from(Question.class)
+                .where(Condition.column(Question$Table.ID_HEADER)
+                        .eq(header.getId_header()))
+                .queryList();
+    }
+
+    /**
+     * Returns all the questions that belongs to a program
+     */
+    public static List<Question> listByTabGroup(TabGroup tabGroup) {
+        if (tabGroup == null || tabGroup.getId_tab_group() == null) {
+            return new ArrayList();
+        }
+
+
+        //return Question.findWithQuery(Question.class, LIST_ALL_BY_PROGRAM, program.getId()
+        // .toString());
+
+
+        return new Select().all().from(Question.class).as("q")
+                .join(Header.class, Join.JoinType.LEFT).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                .join(Tab.class, Join.JoinType.LEFT).as("t")
+                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                .join(TabGroup.class, Join.JoinType.LEFT).as("tg")
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP))
+                        .eq(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP))
+                        .eq(tabGroup.getId_tab_group()))
+                .orderBy(Tab$Table.ORDER_POS)
+                .orderBy(Question$Table.ORDER_POS).queryList();
+
+    }
+
+    public static List<Question> listAllByTabs(List<Tab> tabs) {
+
+        if (tabs == null || tabs.size() == 0) {
+            return new ArrayList();
+        }
+
+        Iterator<Tab> iterator = tabs.iterator();
+        In in = Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)).in(
+                Long.toString(iterator.next().getId_tab()));
+        while (iterator.hasNext()) {
+            in.and(Long.toString(iterator.next().getId_tab()));
+        }
+
+        return new Select().from(Question.class).as("q")
+                .join(Header.class, Join.JoinType.LEFT).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                .join(Tab.class, Join.JoinType.LEFT).as("t")
+                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                .where(in)
+                .orderBy(Tab$Table.ORDER_POS)
+                .orderBy(Question$Table.ORDER_POS).queryList();
+    }
+
+    /**
+     * Finds a question by its UID
+     */
+    public static Question findByUID(String uid) {
+        return new Select()
+                .from(Question.class)
+                .where(Condition.column(Question$Table.UID).is(uid))
+                .querySingle();
+    }
+
+    /**
+     * Finds a question by its ID
+     */
+    public static Question findByID(Long id) {
+        return new Select()
+                .from(Question.class)
+                .where(Condition.column(Question$Table.ID_QUESTION).is(id))
+                .querySingle();
+    }
+
+    /**
+     * Find the first root question in the given tab
+     *
+     * This cannot be done due to a dbflow join bug
+     * select q.*
+     * from question q
+     * left join header h on q.id_header=h.id_header
+     * left join questionrelation qr on q.id_question=qr.id_question
+     * where h.id_tab=1 and qr.id_question is null
+     * order by q.order_pos
+     */
+    public static Question findRootQuestion(Tab tab) {
+
+        //Take every child question
+        List<QuestionRelation> questionRelations = QuestionRelation.listAll();
+
+        if (questionRelations == null || questionRelations.size() == 0) {
+            //flow without relations
+            return new Select().from(Question.class).as("q")
+                    .join(Header.class, Join.JoinType.LEFT).as("h")
+                    .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
+                            .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                    .join(Tab.class, Join.JoinType.LEFT).as("t")
+                    .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                            .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                    .where(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                            .eq(tab.getId_tab()))
+                    .and(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.TYPE))
+                            .eq(Constants.TAB_MULTI_QUESTION))
+                    .orderBy(true, Question$Table.ORDER_POS).querySingle();
+        }
+        //Build a not in condition
+        Iterator<QuestionRelation> questionRelationsIterator = questionRelations.iterator();
+        In in = Condition.column(
+                ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)).notIn(
+                Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
+        while (questionRelationsIterator.hasNext()) {
+            in.and(Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
+        }
+
+        //Look for question not in child and take first one
+
+        return new Select().from(Question.class).as("q")
+                .join(Header.class, Join.JoinType.LEFT).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                .where(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                        .eq(tab.getId_tab()))
+                .and(in)
+                .orderBy(true, Question$Table.ORDER_POS).querySingle();
+    }
+
+    /**
+     * Counts the number of required children questions by a option.
+     */
+    public static int countChildrenByOptionValue(Long id_option) {
+        return (int) new Select().count()
+                .from(Question.class).as("q")
+                .join(QuestionRelation.class, Join.JoinType.INNER).as("qr")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION))
+                        .eq(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)))
+                .join(Match.class, Join.JoinType.INNER).as("ma")
+                .on(Condition.column(
+                        ColumnAlias.columnWithTable("ma", Match$Table.ID_QUESTION_RELATION))
+                        .eq(ColumnAlias.columnWithTable("qr",
+                                QuestionRelation$Table.ID_QUESTION_RELATION)))
+                .join(QuestionOption.class, Join.JoinType.INNER).as("qo")
+                .on(Condition.column(
+                        ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH))
+                        .eq(ColumnAlias.columnWithTable("ma", Match$Table.ID_MATCH)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(
+                        Constants.NO_ANSWER))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(
+                        Constants.COUNTER))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(
+                        Constants.REMINDER))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(
+                        Constants.WARNING))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(
+                        QuestionRelation.PARENT_CHILD))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_OPTION)).eq(
+                        id_option))
+                .count();
+    }
+
     /**
      * Creates a false question that lets cache siblings better
-     * @return
      */
-    private Question buildNullQuestion(){
-        Question noSiblingQuestion=new Question();
+    private Question buildNullQuestion() {
+        Question noSiblingQuestion = new Question();
         noSiblingQuestion.setId_question(NULL_SIBLING_ID);
         return noSiblingQuestion;
     }
 
     /**
      * Tells if this is a mocked null question
-     * @return
      */
-    private boolean isNullQuestion(){
+    private boolean isNullQuestion() {
         return NULL_SIBLING_ID.equals(this.getId_question());
     }
 
@@ -244,6 +408,11 @@ public class Question extends BaseModel {
     public String getForm_name() {
         return form_name;
     }
+
+    public String getInternationalizedForm_name() {
+        return Utils.getInternationalizedString(form_name);
+    }
+
 
     public void setForm_name(String form_name) {
         this.form_name = form_name;
@@ -293,6 +462,10 @@ public class Question extends BaseModel {
         return path;
     }
 
+    public String getInternationalizedPath() {
+        return Utils.getInternationalizedString(path);
+    }
+
     public void setPath(String path) {
         this.path = path;
     }
@@ -308,22 +481,22 @@ public class Question extends BaseModel {
         return header;
     }
 
-    public void setHeader(Header header) {
-        this.header = header;
-        this.id_header = (header != null) ? header.getId_header() : null;
-    }
-
     public void setHeader(Long id_header) {
         this.id_header = id_header;
         this.header = null;
     }
 
-    public void setOutput(Integer output) {
-        this.output = output;
+    public void setHeader(Header header) {
+        this.header = header;
+        this.id_header = (header != null) ? header.getId_header() : null;
     }
 
     public Integer getOutput() {
         return output;
+    }
+
+    public void setOutput(Integer output) {
+        this.output = output;
     }
 
     public Integer getTotalQuestions() {
@@ -335,7 +508,7 @@ public class Question extends BaseModel {
     }
 
     public Boolean isVisible() {
-        return (this.visible==QUESTION_VISIBLE);
+        return (this.visible == QUESTION_VISIBLE);
     }
 
     public void setVisible(Integer visible) {
@@ -353,16 +526,18 @@ public class Question extends BaseModel {
         return answer;
     }
 
-    public void setAnswer(Answer answer) {
-        this.answer = answer;
-        this.id_answer = (answer != null) ? answer.getId_answer() : null;
-    }
-
     public void setAnswer(Long id_answer) {
         this.id_answer = id_answer;
         this.answer = null;
     }
 
+    public void setAnswer(Answer answer) {
+        this.answer = answer;
+        this.id_answer = (answer != null) ? answer.getId_answer() : null;
+    }
+
+    //Is necessary use the question relations.
+    @Deprecated
     public Question getQuestion() {
         if (question == null) {
             question = new Select()
@@ -373,14 +548,15 @@ public class Question extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_parent = (question != null) ? question.getId_question() : null;
-    }
-
     public void setQuestion(Long id_parent) {
         this.id_parent = id_parent;
         this.question = null;
+    }
+
+    @Deprecated
+    public void setQuestion(Question question) {
+        this.question = question;
+        this.id_parent = (question != null) ? question.getId_question() : null;
     }
 
     public CompositeScore getCompositeScore() {
@@ -394,30 +570,15 @@ public class Question extends BaseModel {
         return compositeScore;
     }
 
-    public void setCompositeScore(CompositeScore compositeScore) {
-        this.compositeScore = compositeScore;
-        this.id_composite_score = (compositeScore != null) ? compositeScore.getId_composite_score() : null;
-    }
-
     public void setCompositeScore(Long id_composite_score) {
         this.id_composite_score = id_composite_score;
         this.compositeScore = null;
     }
 
-    public static List<Question> getAllQuestions() {
-        return new Select().all().from(Question.class).queryList();
-    }
-
-    public boolean hasParent() {
-        if (parent == null) {
-            long countChildQuestionRelations = new Select().count().from(QuestionRelation.class)
-                    .indexedBy(Constants.QUESTION_RELATION_QUESTION_IDX)
-                    .where(Condition.column(QuestionRelation$Table.ID_QUESTION).eq(this.getId_question()))
-                    .and(Condition.column(QuestionRelation$Table.OPERATION).eq(QuestionRelation.PARENT_CHILD))
-                    .count();
-            parent = Boolean.valueOf(countChildQuestionRelations > 0);
-        }
-        return parent;
+    public void setCompositeScore(CompositeScore compositeScore) {
+        this.compositeScore = compositeScore;
+        this.id_composite_score =
+                (compositeScore != null) ? compositeScore.getId_composite_score() : null;
     }
 
     public List<QuestionRelation> getQuestionRelations() {
@@ -432,48 +593,16 @@ public class Question extends BaseModel {
         return this.questionRelations;
     }
 
-    public boolean hasQuestionRelations() {
-        return !this.getQuestionRelations().isEmpty();
-    }
-
-    /**
-     * Tells if this question has options or is an open value
-     *
-     * @return
-     */
-    public boolean hasOutputWithOptions() {
-        return Constants.QUESTION_TYPES_WITH_OPTIONS.contains(this.output);
-
-    }
-
     public List<QuestionOption> getQuestionOption() {
 
         if (this.questionOptions == null) {
             this.questionOptions = new Select().from(QuestionOption.class)
                     .indexedBy(Constants.QUESTION_OPTION_QUESTION_IDX)
-                    .where(Condition.column(QuestionOption$Table.ID_QUESTION).eq(this.getId_question()))
+                    .where(Condition.column(QuestionOption$Table.ID_QUESTION).eq(
+                            this.getId_question()))
                     .queryList();
         }
         return this.questionOptions;
-    }
-
-    public boolean hasQuestionOption() {
-        return !this.getQuestionOption().isEmpty();
-    }
-
-    public List<QuestionThreshold> getQuestionThresholds() {
-
-        if (this.questionThresholds == null) {
-            this.questionThresholds= new Select().from(QuestionThreshold.class)
-                    .indexedBy(Constants.QUESTION_THRESHOLDS_QUESTION_IDX)
-                    .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(this.getId_question()))
-                    .queryList();
-        }
-        return this.questionThresholds;
-    }
-
-    public boolean hasQuestionThresholds(){
-        return !this.getQuestionThresholds().isEmpty();
     }
 
     public List<Match> getMatches() {
@@ -482,8 +611,11 @@ public class Question extends BaseModel {
                     .join(QuestionOption.class, Join.JoinType.LEFT).as("qo")
                     .on(
                             Condition.column(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH))
-                                    .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH)))
-                    .where(Condition.column(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_QUESTION)).eq(this.getId_question())).queryList();
+                                    .eq(ColumnAlias.columnWithTable("qo",
+                                            QuestionOption$Table.ID_MATCH)))
+                    .where(Condition.column(
+                            ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_QUESTION)).eq(
+                            this.getId_question())).queryList();
         }
         return matches;
     }
@@ -492,9 +624,6 @@ public class Question extends BaseModel {
         if (this.children == null) {
 
             //No matches no children
-            if (getId_question() == 74) {
-                Log.d("Question", "testing");
-            }
             List<Match> matches = getMatches();
             if (matches.size() == 0) {
                 this.children = new ArrayList<>();
@@ -502,7 +631,8 @@ public class Question extends BaseModel {
             }
 
             Iterator<Match> matchesIterator = matches.iterator();
-            In in = Condition.column(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)).in(Long.toString(matchesIterator.next().getId_match()));
+            In in = Condition.column(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)).in(
+                    Long.toString(matchesIterator.next().getId_match()));
             while (matchesIterator.hasNext()) {
                 in.and(Long.toString(matchesIterator.next().getId_match()));
             }
@@ -511,16 +641,21 @@ public class Question extends BaseModel {
             return new Select().from(Question.class).as("q")
                     //Question + QuestioRelation
                     .join(QuestionRelation.class, Join.JoinType.LEFT).as("qr")
-                    .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION))
-                            .eq(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)))
+                    .on(Condition.column(
+                            ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION))
+                            .eq(ColumnAlias.columnWithTable("qr",
+                                    QuestionRelation$Table.ID_QUESTION)))
                     //+Match
                     .join(Match.class, Join.JoinType.LEFT).as("m")
-                    .on(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION_RELATION))
+                    .on(Condition.column(ColumnAlias.columnWithTable("qr",
+                            QuestionRelation$Table.ID_QUESTION_RELATION))
                             .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION)))
                     //Parent child relationship
                     .where(in)
                     //In clause
-                    .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(QuestionRelation.PARENT_CHILD)).queryList();
+                    .and(Condition.column(
+                            ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(
+                            QuestionRelation.PARENT_CHILD)).queryList();
         }
         return this.children;
     }
@@ -542,8 +677,6 @@ public class Question extends BaseModel {
 
     /**
      * Gets the value of this question in the current survey in session
-     *
-     * @return
      */
     public Value getValueBySession() {
         return this.getValueBySurvey(Session.getSurvey());
@@ -551,9 +684,6 @@ public class Question extends BaseModel {
 
     /**
      * Gets the value of this question in the given Survey
-     *
-     * @param survey
-     * @return
      */
     public Value getValueBySurvey(Survey survey) {
         if (survey == null) {
@@ -573,8 +703,6 @@ public class Question extends BaseModel {
 
     /**
      * Gets the option of this question in the current survey in session
-     *
-     * @return
      */
     public Option getOptionBySession() {
         return this.getOptionBySurvey(Session.getSurvey());
@@ -582,9 +710,6 @@ public class Question extends BaseModel {
 
     /**
      * Gets the option of this question in the given survey
-     *
-     * @param survey
-     * @return
      */
     public Option getOptionBySurvey(Survey survey) {
         if (survey == null) {
@@ -599,49 +724,130 @@ public class Question extends BaseModel {
         return value.getOption();
     }
 
+    /**
+     * Finds the next question to this one according to the order pos and considering children
+     * questions too
+     */
+    public Question getSibling() {
 
-    /*Returns true if the question belongs to a Custom Tab*/
-    public boolean belongsToCustomTab() {
+        //Already calculated
+        if (this.sibling != null) {
+            Log.d(TAG, String.format("'%s'.getSibling() --cached--> '%s'", this.getCode(),
+                    this.sibling.getCode()));
+            return this.sibling;
+        }
 
-        return getHeader().getTab().isACustomTab();
+        //No parent -> just look for first question with upper order
+        if (!this.hasParent()) {
+            getSiblingNoParent();
+        } else {
+            getSiblingWithParent();
+        }
+
+        //Child question -> find next children question for same parent
+        if (this.sibling != null && this.sibling.getCode() != null && this.getCode() != null) {
+            Log.d(TAG, String.format("'%s'.getSibling() --calculated--> '%s'", this.getCode(),
+                    this.sibling.getCode()));
+        }
+        return this.sibling.isNullQuestion() ? null : this.sibling;
+
+
+    }
+
+    private Question getSiblingWithParent() {
+        //Find parent question
+        QuestionOption parentQuestionOption = findParent();
+        if (parentQuestionOption == null) {
+            this.sibling = buildNullQuestion();
+            return this.sibling;
+        }
+        //Find children from parent
+        List<Question> siblings = parentQuestionOption.getQuestion().findChildrenByOption(
+                parentQuestionOption.getOption());
+
+        //Find current position of this
+        int currentPosition = -1;
+        for (int i = 0; i < siblings.size(); i++) {
+            Question iQuestion = siblings.get(i);
+            if (iQuestion.getId_question().equals(this.getId_question())) {
+                currentPosition = i;
+                break;
+            }
+        }
+
+        //Last children question
+        if (currentPosition == siblings.size() - 1) {
+            this.sibling = buildNullQuestion();
+            return this.sibling;
+        }
+        //Return next position
+        this.sibling = siblings.get(currentPosition + 1);
+        return this.sibling;
     }
 
     /**
-     * Checks if this question is shown according to the values of the given survey
-     *
-     * @param survey
-     * @return
+     * Returns next question from same header considering the order.
+     * This should not be a child question.
      */
-    public boolean isHiddenBySurvey(Survey survey) {
-        //No question relations
-        if (!hasParent()) {
-            return false;
-        }
-        long hasParentOptionActivated = new Select().count().from(Value.class).as("v")
-                .join(QuestionOption.class, Join.JoinType.LEFT).as("qo")
-                .on(
-                        Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_QUESTION))
-                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_QUESTION)),
-                        Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_OPTION))
-                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_OPTION)))
-                .join(Match.class, Join.JoinType.LEFT).as("m")
-                .on(
-                        Condition.column(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH))
-                                .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)))
-                .join(QuestionRelation.class, Join.JoinType.LEFT).as("qr")
-                .on(
-                        Condition.column(ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION))
-                                .eq(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION_RELATION)))
-                //Parent child relationship
-                .where(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(1))
-                //For the given survey
-                .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY)).eq(survey.getId_survey()))
-                //The child question in the relationship is 'this'
-                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)).eq(this.getId_question()))
-                .count();
+    private Question getSiblingNoParent() {
 
-        //Parent with the right value -> not hidden
-        return hasParentOptionActivated > 0 ? false : true;
+        //Take every child question
+        List<QuestionRelation> questionRelations = QuestionRelation.listAll();
+        //Build a not in condition
+        In in;
+        if (questionRelations.size() == 0) {
+            //Flow without children
+            in = Condition.column(
+                    ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)).notIn(
+                    Long.toString(this.getId_question()));
+        } else {
+            Iterator<QuestionRelation> questionRelationsIterator = questionRelations.iterator();
+            in = Condition.column(
+                    ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)).notIn(
+                    Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
+            while (questionRelationsIterator.hasNext()) {
+                in.and(Long.toString(
+                        questionRelationsIterator.next().getQuestion().getId_question()));
+            }
+        }
+        //Siblings without parents relations
+        this.sibling = new Select().from(Question.class).as("q")
+                .where(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ORDER_POS))
+                        .greaterThan(this.getOrder_pos()))
+                .and(in)
+                .orderBy(true, Question$Table.ORDER_POS).querySingle();
+        //no question behind this one -> build a null question to use cached value
+        if (this.sibling == null) {
+            this.sibling = buildNullQuestion();
+        }
+        return this.sibling;
+    }
+
+    public List<Question> getQuestionsByTab(Tab tab) {
+        //Select question from questionrelation where operator=1 and id_match in (..)
+        return new Select().from(Question.class).as("q")
+                //Question + QuestioRelation
+                .join(Header.class, Join.JoinType.LEFT).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                .join(Tab.class, Join.JoinType.LEFT).as("t")
+                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                .where(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)).eq(
+                        tab.getId_tab()))
+                .queryList();
+    }
+
+    public List<QuestionThreshold> getQuestionThresholds() {
+
+        if (this.questionThresholds == null) {
+            this.questionThresholds = new Select().from(QuestionThreshold.class)
+                    .indexedBy(Constants.QUESTION_THRESHOLDS_QUESTION_IDX)
+                    .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(
+                            this.getId_question()))
+                    .queryList();
+        }
+        return this.questionThresholds;
     }
 
     /**
@@ -660,39 +866,183 @@ public class Question extends BaseModel {
         return Arrays.asList(num, denum);
     }
 
+    /*Returns true if the question belongs to a Custom Tab*/
+    public boolean belongsToCustomTab() {
+
+        return getHeader().getTab().isACustomTab();
+    }
+
     /**
-     * Counts the number of required children questions by a option.
-     *
-     * @param
-     * @return
+     * Checks if this question is shown according to the values of the given survey
      */
-    public static int countChildrenByOptionValue(Long id_option){
-        return (int) new Select().count()
-                .from(Question.class).as("q")
-                .join(QuestionRelation.class, Join.JoinType.INNER).as("qr")
-                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION))
-                        .eq(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)))
-                .join(Match.class, Join.JoinType.INNER).as("ma")
-                .on(Condition.column(ColumnAlias.columnWithTable("ma", Match$Table.ID_QUESTION_RELATION))
-                        .eq(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION_RELATION)))
-                .join(QuestionOption.class, Join.JoinType.INNER).as("qo")
-                .on(Condition.column(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH))
-                        .eq(ColumnAlias.columnWithTable("ma", Match$Table.ID_MATCH)))
-                .where(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(Constants.NO_ANSWER))
-                .and(Condition.column(ColumnAlias.columnWithTable("q",Question$Table.OUTPUT)).isNot(Constants.COUNTER))
-                .and(Condition.column(ColumnAlias.columnWithTable("q",Question$Table.OUTPUT)).isNot(Constants.REMINDER))
-                .and(Condition.column(ColumnAlias.columnWithTable("q",Question$Table.OUTPUT)).isNot(Constants.WARNING))
-                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(QuestionRelation.PARENT_CHILD))
-                .and(Condition.column(ColumnAlias.columnWithTable("qo",QuestionOption$Table.ID_OPTION)).eq(id_option))
+    public boolean isHiddenBySurvey(Survey survey) {
+        //No question relations
+        if (!hasParent()) {
+            return false;
+        }
+        long hasParentOptionActivated = new Select().count().from(Value.class).as("v")
+                .join(QuestionOption.class, Join.JoinType.LEFT).as("qo")
+                .on(
+                        Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_QUESTION))
+                                .eq(ColumnAlias.columnWithTable("qo",
+                                        QuestionOption$Table.ID_QUESTION)),
+                        Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_OPTION))
+                                .eq(ColumnAlias.columnWithTable("qo",
+                                        QuestionOption$Table.ID_OPTION)))
+                .join(Match.class, Join.JoinType.LEFT).as("m")
+                .on(
+                        Condition.column(
+                                ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH))
+                                .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)))
+                .join(QuestionRelation.class, Join.JoinType.LEFT).as("qr")
+                .on(
+                        Condition.column(
+                                ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION))
+                                .eq(ColumnAlias.columnWithTable("qr",
+                                        QuestionRelation$Table.ID_QUESTION_RELATION)))
+                //Parent child relationship
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(1))
+                //For the given survey
+                .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY)).eq(
+                        survey.getId_survey()))
+                //The child question in the relationship is 'this'
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)).eq(
+                        this.getId_question()))
                 .count();
+
+        //Parent with the right value -> not hidden
+        return hasParentOptionActivated > 0 ? false : true;
+    }
+
+    /**
+     * Checks if this question is shown according to the values of the given survey
+     */
+    public boolean isHiddenBySurveyAndHeader(Survey survey) {
+        //No question relations
+        if (!hasParentInSameHeader()) {
+            return false;
+        }
+        long hasParentOptionActivated = new Select().count().from(Value.class).as("v")
+                .join(QuestionOption.class, Join.JoinType.LEFT).as("qo")
+                .on(
+                        Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_QUESTION))
+                                .eq(ColumnAlias.columnWithTable("qo",
+                                        QuestionOption$Table.ID_QUESTION)),
+                        Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_OPTION))
+                                .eq(ColumnAlias.columnWithTable("qo",
+                                        QuestionOption$Table.ID_OPTION)))
+                .join(Match.class, Join.JoinType.LEFT).as("m")
+                .on(
+                        Condition.column(
+                                ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH))
+                                .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)))
+                .join(QuestionRelation.class, Join.JoinType.LEFT).as("qr")
+                .on(
+                        Condition.column(
+                                ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION))
+                                .eq(ColumnAlias.columnWithTable("qr",
+                                        QuestionRelation$Table.ID_QUESTION_RELATION)))
+                .join(Question.class, Join.JoinType.LEFT).as("q")
+                .on(
+                        Condition.column(
+                                ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION))
+                                .eq(ColumnAlias.columnWithTable("qo",
+                                        QuestionOption$Table.ID_QUESTION)))
+                //Parent child relationship
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(1))
+                //For the given survey
+                .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY)).eq(
+                        survey.getId_survey()))
+                //The child question in the relationship is 'this'
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)).eq(
+                        this.getId_question()))
+                //Group parents by header
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER)).eq(
+                        this.getHeader().getId_header()))
+                .count();
+        //Parent with the right value -> not hidden
+        return hasParentOptionActivated > 0 ? false : true;
+    }
+
+    public boolean hasQuestionOption() {
+        return !this.getQuestionOption().isEmpty();
+    }
+
+    public boolean hasQuestionRelations() {
+        return !this.getQuestionRelations().isEmpty();
+    }
+
+    /**
+     * Tells if this question has options or is an open value
+     */
+    public boolean hasOutputWithOptions() {
+        return Constants.QUESTION_TYPES_WITH_OPTIONS.contains(this.output);
+
+    }
+
+    public boolean hasParent() {
+        if (parent == null) {
+            long countChildQuestionRelations = new Select().count().from(QuestionRelation.class)
+                    .indexedBy(Constants.QUESTION_RELATION_QUESTION_IDX)
+                    .where(Condition.column(QuestionRelation$Table.ID_QUESTION).eq(
+                            this.getId_question()))
+                    .and(Condition.column(QuestionRelation$Table.OPERATION).eq(
+                            QuestionRelation.PARENT_CHILD))
+                    .count();
+            parent = Boolean.valueOf(countChildQuestionRelations > 0);
+        }
+        return parent;
+    }
+
+    public boolean hasParentInSameHeader() {
+        //FIXME: this method is by hand doing something that might be done with a DB query
+        if (parentHeader == null) {
+            parentHeader = false;
+
+            List<Question> questions = Question.getAllQuestionsWithHeader(getHeader());
+            //Only one its itself.
+            if (questions == null || questions.size() <= 1) {
+                return false;
+            }
+
+            //Removes itself
+            questions.remove(this);
+
+            for (Question question : questions) {
+                for (QuestionOption questionOption : question.getQuestionOption()) {
+                    Match match = questionOption.getMatch();
+                    QuestionRelation questionRelation = match.getQuestionRelation();
+                    if (questionRelation.getOperation() == QuestionRelation.PARENT_CHILD
+                            && questionRelation.getQuestion().getId_question().equals(
+                            this.getId_question())) {
+                        parentHeader = true;
+                        return parentHeader;
+                    }
+                }
+            }
+        }
+        return parentHeader;
+    }
+
+    public boolean hasQuestionThresholds() {
+        return !this.getQuestionThresholds().isEmpty();
+    }
+
+    /**
+     * Returns if a question should have the image header visible or not.
+     */
+    public boolean hasVisibleHeaderQuestion() {
+        return output != Constants.SWITCH_BUTTON && output != Constants.QUESTION_LABEL;
     }
 
     /**
      * Checks if this question is triggered according to the current values of the given survey.
      * Only applies to question with answers DROPDOWN_DISABLED
-     *
-     * @param survey
-     * @return
      */
     public boolean isTriggered(Survey survey) {
 
@@ -709,20 +1059,32 @@ public class Question extends BaseModel {
         //Find questionoptions for q1 and q2 and check same match
         List<QuestionOption> questionOptions = new Select().from(QuestionOption.class).as("qo")
                 .join(Match.class, Join.JoinType.LEFT).as("m")
-                .on(Condition.column(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH)).eq(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)))
+                .on(Condition.column(
+                        ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH)).eq(
+                        ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)))
 
                 .join(QuestionRelation.class, Join.JoinType.LEFT).as("qr")
-                .on(Condition.column(ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION)).eq(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION_RELATION)))
+                .on(Condition.column(
+                        ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION)).eq(
+                        ColumnAlias.columnWithTable("qr",
+                                QuestionRelation$Table.ID_QUESTION_RELATION)))
 
                 .join(Value.class, Join.JoinType.LEFT).as("v")
                 .on(
                         Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_QUESTION))
-                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_QUESTION)),
+                                .eq(ColumnAlias.columnWithTable("qo",
+                                        QuestionOption$Table.ID_QUESTION)),
                         Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_OPTION))
-                                .eq(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_OPTION)))
-                .where(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY)).eq(survey.getId_survey()))
-                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)).eq(this.getId_question()))
-                .and(Condition.column(ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(QuestionRelation.MATCH))
+                                .eq(ColumnAlias.columnWithTable("qo",
+                                        QuestionOption$Table.ID_OPTION)))
+                .where(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY)).eq(
+                        survey.getId_survey()))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)).eq(
+                        this.getId_question()))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(
+                        QuestionRelation.MATCH))
                 .queryList();
 
         //No values no match
@@ -738,63 +1100,6 @@ public class Question extends BaseModel {
     }
 
     /**
-     * Returns all the questions that belongs to a program
-     *
-     * @param tabGroup
-     * @return
-     */
-    public static List<Question> listByTabGroup(TabGroup tabGroup) {
-        if (tabGroup == null || tabGroup.getId_tab_group() == null) {
-            return new ArrayList();
-        }
-
-
-        //return Question.findWithQuery(Question.class, LIST_ALL_BY_PROGRAM, program.getId().toString());
-
-
-        return new Select().all().from(Question.class).as("q")
-                .join(Header.class, Join.JoinType.LEFT).as("h")
-                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
-                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
-                .join(Tab.class, Join.JoinType.LEFT).as("t")
-                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
-                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
-                .join(TabGroup.class, Join.JoinType.LEFT).as("tg")
-                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP))
-                        .eq(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP)))
-                .where(Condition.column(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP))
-                        .eq(tabGroup.getId_tab_group()))
-                .orderBy(Tab$Table.ORDER_POS)
-                .orderBy(Question$Table.ORDER_POS).queryList();
-
-    }
-
-    public static List<Question> listAllByTabs(List<Tab> tabs) {
-
-        if (tabs == null || tabs.size() == 0) {
-            return new ArrayList();
-        }
-
-        Iterator<Tab> iterator = tabs.iterator();
-        In in = Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)).in(Long.toString(iterator.next().getId_tab()));
-        while (iterator.hasNext()) {
-            in.and(Long.toString(iterator.next().getId_tab()));
-        }
-
-        return new Select().from(Question.class).as("q")
-                .join(Header.class, Join.JoinType.LEFT).as("h")
-                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
-                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
-                .join(Tab.class, Join.JoinType.LEFT).as("t")
-                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
-                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
-                .where(in)
-                .orderBy(Tab$Table.ORDER_POS)
-                .orderBy(Question$Table.ORDER_POS).queryList();
-    }
-
-
-    /**
      * Checks if this question is scored or not.
      *
      * @return true|false
@@ -808,63 +1113,11 @@ public class Question extends BaseModel {
     }
 
     /**
-     * Finds a question by its UID
-     *
-     * @param uid
-     * @return
-     */
-    public static Question findByUID(String uid) {
-        return new Select()
-                .from(Question.class)
-                .where(Condition.column(Question$Table.UID).is(uid))
-                .querySingle();
-    }
-
-    /**
-     * Find the first root question in the given tab
-     *
-     *  This cannot be done due to a dbflow join bug
-     *  select q.*
-     *  from question q
-     *      left join header h on q.id_header=h.id_header
-     *      left join questionrelation qr on q.id_question=qr.id_question
-     *  where h.id_tab=1 and qr.id_question is null
-     *  order by q.order_pos
-     *
-     * @param tab
-     * @return
-     */
-    public static Question findRootQuestion(Tab tab) {
-
-        //Take every child question
-        List<QuestionRelation> questionRelations = QuestionRelation.listAll();
-        //Build a not in condition
-        Iterator<QuestionRelation> questionRelationsIterator = questionRelations.iterator();
-        In in = Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)).notIn(Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
-        while (questionRelationsIterator.hasNext()) {
-            in.and(Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
-        }
-
-        //Look for question not in child and take first one
-
-        return new Select().from(Question.class).as("q")
-                .join(Header.class, Join.JoinType.LEFT).as("h")
-                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
-                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
-                .where(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
-                        .eq(tab.getId_tab()))
-                .and(in)
-                .orderBy(true, Question$Table.ORDER_POS).querySingle();
-    }
-
-    /**
      * Find the first children question for this question taking into the account the given option
-     * @param option
-     * @return
      */
-    public Question findFirstChildrenByOption(Option option){
-        List<Question> childrenQuestions=findChildrenByOption(option);
-        if(childrenQuestions==null || childrenQuestions.size()==0){
+    public Question findFirstChildrenByOption(Option option) {
+        List<Question> childrenQuestions = findChildrenByOption(option);
+        if (childrenQuestions == null || childrenQuestions.size() == 0) {
             return null;
         }
 
@@ -873,37 +1126,44 @@ public class Question extends BaseModel {
 
     /**
      * Find the children questions for this question taking into the account the given option
-     * @param option
-     * @return
      */
-    public List<Question> findChildrenByOption(Option option){
-        List<Question> childrenQuestions=new ArrayList<>();
+    public List<Question> findChildrenByOption(Option option) {
+        List<Question> childrenQuestions = new ArrayList<>();
         //No option -> no children
-        if(option==null){
+        if (option == null) {
             return childrenQuestions;
         }
 
-        List<QuestionOption> questionOptions=this.getQuestionOption();
+        List<QuestionOption> questionOptions = this.getQuestionOption();
         //No trigger (questionOption) -> no children
-        if(questionOptions==null || questionOptions.size()==0){
+        if (questionOptions == null || questionOptions.size() == 0) {
             return childrenQuestions;
         }
 
         //Navigate to questionRelation to get child questions
-        long optionId=option.getId_option().longValue();
-        for(QuestionOption questionOption:questionOptions){
+        long optionId = option.getId_option().longValue();
+        for (QuestionOption questionOption : questionOptions) {
             //Other options must be discarded
-            long currentOptionId=questionOption.getOption().getId_option().longValue();
-            if(optionId!=currentOptionId){continue;}
-            Match match =questionOption.getMatch();
-            if(match==null){continue;}
+            long currentOptionId = questionOption.getOption().getId_option().longValue();
+            if (optionId != currentOptionId) {
+                continue;
+            }
+            Match match = questionOption.getMatch();
+            if (match == null) {
+                continue;
+            }
 
-            QuestionRelation questionRelation=match.getQuestionRelation();
+            QuestionRelation questionRelation = match.getQuestionRelation();
             //only parent child are interesting for this
-            if(questionRelation==null || questionRelation.getOperation()!=QuestionRelation.PARENT_CHILD){continue;}
+            if (questionRelation == null
+                    || questionRelation.getOperation() != QuestionRelation.PARENT_CHILD) {
+                continue;
+            }
 
-            Question childQuestion=questionRelation.getQuestion();
-            if(childQuestion==null){continue;}
+            Question childQuestion = questionRelation.getQuestion();
+            if (childQuestion == null) {
+                continue;
+            }
             childrenQuestions.add(childQuestion);
         }
 
@@ -916,37 +1176,44 @@ public class Question extends BaseModel {
     /**
      * Find the counter question for this question taking into the account the given option.
      * Only 1 counter question will be activated by option
-     * @param option
-     * @return
      */
-    public Question findCounterByOption(Option option){
+    public Question findCounterByOption(Option option) {
 
         //No option -> no children
-        if(option==null){
+        if (option == null) {
             return null;
         }
 
-        List<QuestionOption> questionOptions=this.getQuestionOption();
+        List<QuestionOption> questionOptions = this.getQuestionOption();
         //No trigger (questionOption) -> no counters
-        if(questionOptions==null || questionOptions.size()==0){
+        if (questionOptions == null || questionOptions.size() == 0) {
             return null;
         }
 
         //Navigate to questionRelation to get child questions
-        long optionId=option.getId_option().longValue();
-        for(QuestionOption questionOption:questionOptions){
+        long optionId = option.getId_option().longValue();
+        for (QuestionOption questionOption : questionOptions) {
             //Other options must be discarded
-            long currentOptionId=questionOption.getOption().getId_option().longValue();
-            if(optionId!=currentOptionId){continue;}
-            Match match =questionOption.getMatch();
-            if(match==null){continue;}
+            long currentOptionId = questionOption.getOption().getId_option().longValue();
+            if (optionId != currentOptionId) {
+                continue;
+            }
+            Match match = questionOption.getMatch();
+            if (match == null) {
+                continue;
+            }
 
-            QuestionRelation questionRelation=match.getQuestionRelation();
+            QuestionRelation questionRelation = match.getQuestionRelation();
             //only COUNTER RELATIONSHIPs are interesting for this
-            if(questionRelation==null || questionRelation.getOperation()!=QuestionRelation.COUNTER){continue;}
+            if (questionRelation == null
+                    || questionRelation.getOperation() != QuestionRelation.COUNTER) {
+                continue;
+            }
 
-            Question childQuestion=questionRelation.getQuestion();
-            if(childQuestion==null){continue;}
+            Question childQuestion = questionRelation.getQuestion();
+            if (childQuestion == null) {
+                continue;
+            }
 
             //Found
             return childQuestion;
@@ -956,22 +1223,24 @@ public class Question extends BaseModel {
     }
 
     /**
-     * Returns a list of questionOptions that activates this question (might be several though it tends to be just one)
-     * @return
+     * Returns a list of questionOptions that activates this question (might be several though it
+     * tends to be just one)
      */
-    public List<QuestionOption> findParents(){
-        List<QuestionOption> parents=new ArrayList<>();
+    public List<QuestionOption> findParents() {
+        List<QuestionOption> parents = new ArrayList<>();
         //No potential parents
-        if(!this.hasParent()){
+        if (!this.hasParent()) {
             return parents;
         }
 
         //Add parents via (questionrelation->match->questionoption->question
         List<QuestionRelation> questionRelations = this.getQuestionRelations();
-        for(QuestionRelation questionRelation:questionRelations){
+        for (QuestionRelation questionRelation : questionRelations) {
             //Only parentchild relationships
-            if(questionRelation.getOperation()!=QuestionRelation.PARENT_CHILD){continue;}
-            for(Match match:questionRelation.getMatches()){
+            if (questionRelation.getOperation() != QuestionRelation.PARENT_CHILD) {
+                continue;
+            }
+            for (Match match : questionRelation.getMatches()) {
                 parents.addAll(match.getQuestionOptions());
             }
         }
@@ -981,117 +1250,16 @@ public class Question extends BaseModel {
 
     /**
      * Returns the first parent candidate.
-     * XXX: This is a shortcut considering that there wont be more than parent but this is not guaranteed
-     * @return
+     * XXX: This is a shortcut considering that there wont be more than parent but this is not
+     * guaranteed
      */
-    public QuestionOption findParent(){
+    public QuestionOption findParent() {
 
-        List<QuestionOption> parents=findParents();
-        if(parents==null || parents.size()==0){
+        List<QuestionOption> parents = findParents();
+        if (parents == null || parents.size() == 0) {
             return null;
         }
         return parents.get(0);
-    }
-
-    /**
-     * Finds the next question to this one according to the order pos and considering children questions too
-     * @return
-     */
-    public Question getSibling(){
-
-        //Already calculated
-        if(this.sibling!=null){
-            Log.d(TAG,String.format("'%s'.getSibling() --cached--> '%s'",this.getCode(),this.sibling.getCode()));
-            return this.sibling;
-        }
-
-        //No parent -> just look for first question with upper order
-        if(!this.hasParent()){
-            getSiblingNoParent();
-        }else{
-            getSiblingWithParent();
-        }
-
-        //Child question -> find next children question for same parent
-        Log.d(TAG,String.format("'%s'.getSibling() --calculated--> '%s'",this.getCode(),this.sibling.getCode()));
-        return this.sibling.isNullQuestion()?null:this.sibling;
-
-
-    }
-
-    private Question getSiblingWithParent() {
-        //Find parent question
-        QuestionOption parentQuestionOption=findParent();
-        if(parentQuestionOption==null){
-            this.sibling= buildNullQuestion();
-            return this.sibling;
-        }
-        //Find children from parent
-        List<Question> siblings=parentQuestionOption.getQuestion().findChildrenByOption(parentQuestionOption.getOption());
-
-        //Find current position of this
-        int currentPosition=-1;
-        for(int i=0;i<siblings.size();i++){
-            Question iQuestion=siblings.get(i);
-            if(iQuestion.getId_question().equals(this.getId_question())){
-                currentPosition=i;
-                break;
-            }
-        }
-
-        //Last children question
-        if(currentPosition==siblings.size()-1){
-            this.sibling= buildNullQuestion();
-            return this.sibling;
-        }
-        //Return next position
-        this.sibling=siblings.get(currentPosition+1);
-        return this.sibling;
-    }
-
-    /**
-     * Returns next question from same header considering the order.
-     * This should not be a child question.
-     * @return
-     */
-    private Question getSiblingNoParent() {
-
-        //Take every child question
-        List<QuestionRelation> questionRelations = QuestionRelation.listAll();
-        //Build a not in condition
-        Iterator<QuestionRelation> questionRelationsIterator = questionRelations.iterator();
-        In in = Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)).notIn(Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
-        while (questionRelationsIterator.hasNext()) {
-            in.and(Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
-        }
-
-        this.sibling=new Select().from(Question.class).as("q")
-                .join(Header.class, Join.JoinType.LEFT).as("h")
-                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
-                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
-                .where(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER))
-                        .eq(this.getHeader().getId_header()))
-                .and(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ORDER_POS))
-                        .greaterThan(this.getOrder_pos()))
-                .and(in)
-                .orderBy(true, Question$Table.ORDER_POS).querySingle();
-        //no question behind this one -> build a null question to use cached value
-        if(this.sibling==null){
-            this.sibling=buildNullQuestion();
-        }
-        return this.sibling;
-    }
-
-    private static class QuestionOrderComparator implements Comparator {
-
-        @Override
-        public int compare(Object o1, Object o2) {
-
-            Question question1 = (Question) o1;
-            Question question2 = (Question) o2;
-
-            return new Integer(question1.getOrder_pos().compareTo(new Integer(question2.getOrder_pos())));
-        }
     }
 
     @Override
@@ -1103,36 +1271,60 @@ public class Question extends BaseModel {
 
         if (id_question != question.id_question) return false;
         if (code != null ? !code.equals(question.code) : question.code != null) return false;
-        if (de_name != null ? !de_name.equals(question.de_name) : question.de_name != null)
+        if (de_name != null ? !de_name.equals(question.de_name) : question.de_name != null) {
             return false;
-        if (short_name != null ? !short_name.equals(question.short_name) : question.short_name != null)
+        }
+        if (short_name != null ? !short_name.equals(question.short_name)
+                : question.short_name != null) {
             return false;
-        if (form_name != null ? !form_name.equals(question.form_name) : question.form_name != null)
+        }
+        if (form_name != null ? !form_name.equals(question.form_name)
+                : question.form_name != null) {
             return false;
+        }
         if (uid != null ? !uid.equals(question.uid) : question.uid != null) return false;
-        if (order_pos != null ? !order_pos.equals(question.order_pos) : question.order_pos != null)
+        if (order_pos != null ? !order_pos.equals(question.order_pos)
+                : question.order_pos != null) {
             return false;
-        if (numerator_w != null ? !numerator_w.equals(question.numerator_w) : question.numerator_w != null)
+        }
+        if (numerator_w != null ? !numerator_w.equals(question.numerator_w)
+                : question.numerator_w != null) {
             return false;
-        if (denominator_w != null ? !denominator_w.equals(question.denominator_w) : question.denominator_w != null)
+        }
+        if (denominator_w != null ? !denominator_w.equals(question.denominator_w)
+                : question.denominator_w != null) {
             return false;
-        if (feedback != null ? !feedback.equals(question.feedback) : question.feedback != null)
+        }
+        if (feedback != null ? !feedback.equals(question.feedback) : question.feedback != null) {
             return false;
-        if (id_header != null ? !id_header.equals(question.id_header) : question.id_header != null)
+        }
+        if (id_header != null ? !id_header.equals(question.id_header)
+                : question.id_header != null) {
             return false;
-        if (id_answer != null ? !id_answer.equals(question.id_answer) : question.id_answer != null)
+        }
+        if (id_answer != null ? !id_answer.equals(question.id_answer)
+                : question.id_answer != null) {
             return false;
-        if (output != null ? !output.equals(question.output) : question.output != null)
+        }
+        if (output != null ? !output.equals(question.output) : question.output != null) {
             return false;
-        if (id_parent != null ? !id_parent.equals(question.id_parent) : question.id_parent != null)
+        }
+        if (id_parent != null ? !id_parent.equals(question.id_parent)
+                : question.id_parent != null) {
             return false;
-        if (path != null ? !path.equals(question.path) : question.path != null)
+        }
+        if (path != null ? !path.equals(question.path) : question.path != null) {
             return false;
-        if (total_questions != null ? !total_questions.equals(question.total_questions) : question.total_questions != null)
+        }
+        if (total_questions != null ? !total_questions.equals(question.total_questions)
+                : question.total_questions != null) {
             return false;
-        if (visible != null ? !visible.equals(question.visible) : question.visible != null)
+        }
+        if (visible != null ? !visible.equals(question.visible) : question.visible != null) {
             return false;
-        return !(id_composite_score != null ? !id_composite_score.equals(question.id_composite_score) : question.id_composite_score != null);
+        }
+        return !(id_composite_score != null ? !id_composite_score.equals(
+                question.id_composite_score) : question.id_composite_score != null);
 
     }
 
@@ -1163,14 +1355,14 @@ public class Question extends BaseModel {
     public String toString() {
         return "Question{" +
                 "id_question=" + id_question +
-                ", code='" + code + '\'' +
-                ", de_name='" + de_name + '\'' +
-                ", short_name='" + short_name + '\'' +
-                ", form_name='" + form_name + '\'' +
-                ", uid='" + uid + '\'' +
+                ", code='" + code + " " + '\'' +
+                ", de_name='" + de_name + " " + '\'' +
+                ", short_name='" + short_name + " " + '\'' +
+                ", form_name='" + form_name + " " + '\'' +
+                ", uid='" + uid + " " + '\'' +
                 ", order_pos=" + order_pos +
                 ", numerator_w=" + numerator_w +
-                ", feedback='" + feedback + '\'' +
+                ", feedback='" + feedback + " " + '\'' +
                 ", denominator_w=" + denominator_w +
                 ", id_header=" + id_header +
                 ", id_answer=" + id_answer +
@@ -1181,5 +1373,18 @@ public class Question extends BaseModel {
                 ", visible=" + visible +
                 ", path=" + path +
                 '}';
+    }
+
+    private static class QuestionOrderComparator implements Comparator {
+
+        @Override
+        public int compare(Object o1, Object o2) {
+
+            Question question1 = (Question) o1;
+            Question question2 = (Question) o2;
+
+            return new Integer(
+                    question1.getOrder_pos().compareTo(new Integer(question2.getOrder_pos())));
+        }
     }
 }

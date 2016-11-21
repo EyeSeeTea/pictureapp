@@ -1,69 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/questionLayoutBackground">
 
-    <!--Horizontal Progress bar + text-->
-    <RelativeLayout
-        android:id="@+id/dynamic_footer"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true">
-
-        <ProgressBar
-            android:id="@+id/dynamic_progress"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:max="10"
-            android:progress="8" />
-
-        <TextView
-            android:id="@+id/dynamic_progress_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@id/dynamic_progress"
-            android:layout_alignLeft="@id/dynamic_progress"
-            android:layout_alignParentRight="false"
-            android:layout_alignRight="@id/dynamic_progress"
-            android:layout_alignTop="@id/dynamic_progress"
-            android:layout_centerVertical="true"
-            android:background="@color/dynamicProgressBarColor"
-            android:paddingLeft="10dip"
-            android:text="1/7" />
-    </RelativeLayout>
 
     <LinearLayout
-        android:layout_above="@id/dynamic_footer"
+        android:id="@+id/dynamic_tab"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/snackbar"
         android:orientation="vertical">
 
         <!--Question-->
-        <org.eyeseetea.malariacare.views.TextCard
-            android:id="@+id/question"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/questionHeaderColor"
-            android:gravity="center"
-            android:lineSpacingMultiplier="1.5"
-            android:paddingBottom="2dip"
-            android:paddingLeft="10dip"
-            android:paddingTop="2dip"
-            android:text="@string/empty_string"
-            android:textColor="@color/questionHeaderTextColor"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:typeface="sans"
-            app:tDimension="@string/font_size_level2"
-            app:tFontName="@string/condensed_font_name" />
-
-        <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        <include layout="@layout/question_header"></include>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
             <ImageView
                 android:id="@+id/questionImage"
                 android:layout_width="match_parent"
@@ -78,14 +33,11 @@
                 android:layout_height="0px"
                 android:layout_weight="0.8"
                 android:orientation="vertical">
-                <!--Options as a N x 2 grid-->
-                <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/options_table"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:measureWithLargestChild="false"></TableLayout>
+                <include layout="@layout/scrolled_table"></include>
+                <include layout="@layout/no_scrolled_table"></include>
 
-                <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+                <TableLayout
                     android:id="@+id/confirm_table"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -100,8 +52,21 @@
                 </TableLayout>
 
             </LinearLayout>
-        </LinearLayout>
     </LinearLayout>
+
+            <!--Question-->
+    </LinearLayout>
+
+    <include layout="@layout/snakbar"></include>
+    <!--Horizontal Progress bar + text-->
+    <RelativeLayout
+        android:id="@+id/dynamic_footer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/footer_navigation_size"
+        android:layout_alignParentBottom="true">
+        <include layout="@layout/progress_bar_row"></include>
+
+    </RelativeLayout>
 
 </RelativeLayout>
 

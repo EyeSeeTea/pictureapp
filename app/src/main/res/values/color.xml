@@ -8,6 +8,7 @@
     <color name="evenRows">#FFE5E5E5</color>
     <color name="navy_blue">#FF1F70C3</color>
     <color name="dark_navy_blue">#FF1D5288</color>
+    <color name="general_background">@color/light_grey</color>
     <color name="light_grey">#FFE5E5E5</color>
     <color name="textFieldColor">#BEBEBE</color>
     <color name="custom_blue_light">#1f70c3</color>
@@ -16,6 +17,19 @@
     <color name="tab_yellow_assess">#dce442</color>
     <color name="tab_green_monitor">#799900</color>
     <color name="tab_blue_improve">#00b3e3</color>
-
-    <color name="custom_background_grey">#3e3e3f</color>
+    <color name="dark_violet">#4d3b4c</color>
+    <color name="medium_violet">#795d77</color>
+    <color name="medium_light_violet">#9c809c</color>
+    <color name="light_violet">#c9b8c8</color>
+    <color name="light_grey_violet">#878787</color>
+    <color name="myanmar_grey">#e7e7e7</color>
+    <color name="black_grey_violet">#3e3e3f</color>
+    <color name="main_window_background">@color/light_grey</color>
+    <color name="custom_background_grey">@color/black_grey_violet</color>
+    <color name="actionbar_background">@color/navy_blue</color>
+    <color name="text_first_color">@color/black</color>
+    <color name="text_secondary_color">@color/white</color>
+    <color name="fragment_header_title_text">@color/white</color>
+    <color name="tab_pressed_background">@color/light_grey</color>
+    <color name="tab_unpressed_background">@color/white</color>
 </resources>

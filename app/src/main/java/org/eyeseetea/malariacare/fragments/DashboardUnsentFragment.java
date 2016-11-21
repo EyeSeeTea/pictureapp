@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Layout;
 import android.util.Log;
@@ -48,9 +49,7 @@ import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListe
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
-import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
-import org.eyeseetea.malariacare.views.TextCard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -331,7 +330,7 @@ public class DashboardUnsentFragment extends ListFragment {
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveys(surveysUnsentFromService);
-
+                LayoutUtils.setDivider(getListView());
                 // Measure the screen height
                 int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
 

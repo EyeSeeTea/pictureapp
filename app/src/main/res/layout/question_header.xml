@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <org.eyeseetea.malariacare.views.TextCard
+        android:id="@+id/question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/questionHeaderColor"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.5"
+        android:paddingBottom="2dip"
+        android:paddingLeft="10dip"
+        android:paddingTop="2dip"
+        android:text="@string/empty_string"
+        android:textColor="@color/questionHeaderTextColor"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:typeface="sans"
+        app:tDimension="@string/font_size_level2"
+        app:tFontName="@string/condensed_font_name" />
+</merge>

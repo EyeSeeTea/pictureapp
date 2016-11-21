@@ -117,7 +117,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     }
 
     private void customizeLogin() {
-        LoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization();
+        LoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization(this);
         loginActivityCustomization.customize(this);
     }
 

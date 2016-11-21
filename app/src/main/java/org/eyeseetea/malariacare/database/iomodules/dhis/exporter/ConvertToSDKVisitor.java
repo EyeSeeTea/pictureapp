@@ -258,6 +258,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         for(int i=0;i<surveys.size();i++){
             Survey iSurvey=surveys.get(i);
             Event iEvent=events.get(i);
+            //Sets all the surveys as completed because the survey has as state: "sending" at this moment and the sending process is finish.
+            iSurvey.setStatus(Constants.SURVEY_COMPLETED);
             ImportSummary importSummary=importSummaryMap.get(iEvent.getLocalId());
             FailedItem failedItem= hasConflict(iEvent.getLocalId());
             if(hasImportSummaryErrors(importSummary)){

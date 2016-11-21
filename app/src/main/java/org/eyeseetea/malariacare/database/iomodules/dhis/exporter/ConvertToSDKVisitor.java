@@ -250,7 +250,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     /**
-     * Saves changes in the survey (supposedly after a successfull push)
+     * Saves changes in the survey (supposedly after a successful push)
      * @param importSummaryMap
      */
     public void saveSurveyStatus(Map<Long,ImportSummary> importSummaryMap){
@@ -258,12 +258,14 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         for(int i=0;i<surveys.size();i++){
             Survey iSurvey=surveys.get(i);
             Event iEvent=events.get(i);
-            iSurvey.setStatus(Constants.SURVEY_COMPLETED);
             ImportSummary importSummary=importSummaryMap.get(iEvent.getLocalId());
             FailedItem failedItem= hasConflict(iEvent.getLocalId());
             if(hasImportSummaryErrors(importSummary)){
+                //Sets the survey status as quarantine to prevent wrong importSummaries (F.E. in network failures).
+                //This survey will be checked again in the future push to prevent the duplicates in the server.
+                iSurvey.setStatus(Constants.SURVEY_QUARANTINE);
 
-                //Some error while pushing should be done again
+                //If the importSummary has a failedItem the survey was saved in the server but never resend, the survey is saved as survey in conflict.
                 if(failedItem!=null) {
                     List<String> failedUids=getFailedUidQuestion(failedItem.getErrorMessage());
                     if(failedUids != null && failedUids.size()>0){
@@ -339,7 +341,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 uid.add(jsonObjectResponse.getString("object"));
             }
         } catch (JSONException e) {
+            Log.d(TAG, "Error import summary response: "+responseData);
             e.printStackTrace();
+            return null;
         }
         if(message!="")
             ShowException.showError(message,PreferencesState.getInstance().getContext());

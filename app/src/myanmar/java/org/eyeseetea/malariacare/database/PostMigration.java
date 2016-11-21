@@ -12,4 +12,5 @@ public class PostMigration {
     public static void launchPostMigration() {
         Migration15AddOptionAttributeColumns.postMigrate();
     }
+
 }

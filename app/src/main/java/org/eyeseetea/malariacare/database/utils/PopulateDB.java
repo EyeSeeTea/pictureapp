@@ -208,11 +208,12 @@ public class PopulateDB {
                             question.setAnswer(answerList.get(Integer.valueOf(line[10])));
                         if (!line[11].equals(""))
                             question.setQuestion(questionList.get(Integer.valueOf(line[11])));
-                        question.setOutput(Integer.valueOf(line[12]));
-                        question.setTotalQuestions(Integer.valueOf(line[13]));
-                        question.setVisible(Integer.valueOf(line[14]));
-                        if(line.length>15 && !line[15].equals(""))
-                            question.setPath((line[15]));
+                        question.setCompulsory(Integer.valueOf(line[12]));
+                        question.setOutput(Integer.valueOf(line[13]));
+                        question.setTotalQuestions(Integer.valueOf(line[14]));
+                        question.setVisible(Integer.valueOf(line[15]));
+                        if(line.length>16 && !line[16].equals(""))
+                            question.setPath((line[16]));
                         question.save();
                         questionList.put(Integer.valueOf(line[0]), question);
                         break;

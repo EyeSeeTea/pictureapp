@@ -146,4 +146,5 @@
 <string name="developer_option_summary">คุณลักษณะนี้จะเปิดใช้งานตัวเลือกนักพัฒนา</string>
 <string name="developer_option_title">แสดงตัวเลือกนักพัฒนา</string>
 <string name="export_data_option_title">ฐานข้อมูลการส่งออก</string>
+<string name="demo_login">การสาธิต</string>
 </resources>

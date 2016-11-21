@@ -98,6 +98,7 @@ public class Session {
     }
 
     public static synchronized void setUser(User user) {
+        Log.i(TAG, "Creating user in session. " + user.toString());
         Session.user = user;
     }
 

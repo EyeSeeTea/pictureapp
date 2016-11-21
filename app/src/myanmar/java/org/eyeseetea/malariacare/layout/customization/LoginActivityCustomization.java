@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.hisp.dhis.android.sdk.ui.views.FontButton;
 
 import java.io.IOException;
@@ -19,6 +20,12 @@ import java.util.List;
 
 public class LoginActivityCustomization {
     private String TAG = ".loginCustomization";
+
+    public LoginActivityStrategy mLoginActivityStrategy;
+
+    public LoginActivityCustomization(LoginActivity loginActivity){
+        mLoginActivityStrategy = new LoginActivityStrategy(loginActivity);
+    }
 
     public void customize(LoginActivity loginActivity){
         addDemoButton(loginActivity);
@@ -40,7 +47,7 @@ public class LoginActivityCustomization {
 
                 createDummyDataInDB(loginActivity);
 
-                loginActivity.finishAndGo(DashboardActivity.class);
+                mLoginActivityStrategy.finishAndGo(DashboardActivity.class);
             }
         });
     }

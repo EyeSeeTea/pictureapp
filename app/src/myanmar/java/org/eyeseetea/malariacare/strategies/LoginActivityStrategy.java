@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.strategies;
 
+import android.app.Activity;
 import android.content.Intent;
 
 import org.eyeseetea.malariacare.LoginActivity;
@@ -28,10 +29,14 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, password);
     }
 
-    @Override
-    public void finishAndGo() {
-        loginActivity.startActivity(new Intent(loginActivity, ProgressActivity.class));
+    public void finishAndGo(Class <? extends Activity> activityClass) {
+        loginActivity.startActivity(new Intent(loginActivity, activityClass));
 
         loginActivity.finish();
+    }
+
+    @Override
+    public void finishAndGo(){
+        finishAndGo(ProgressActivity.class);
     }
 }

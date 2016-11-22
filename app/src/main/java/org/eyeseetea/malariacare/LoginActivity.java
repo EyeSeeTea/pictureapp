@@ -45,13 +45,14 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.customization.LoginActivityCustomization;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
@@ -71,36 +72,31 @@ import static org.eyeseetea.malariacare.database.model.User.createDummyUser;
  * Login Screen.
  * It shows only when the user has an open session.
  */
-public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity {
 
     private static final String TAG = ".LoginActivity";
 
     public static final String PULL_REQUIRED = "PULL_REQUIRED";
 
-    /**
-     * DHIS server URL
-     */
     private String serverUrl;
 
-    /**
-     * DHIS username account
-     */
     private String username;
 
-    /**
-     * DHIS password (required since push is done natively instead of using sdk)
-     */
     private String password;
+
+    public LoginUseCase mLoginUseCase = new LoginUseCase(this);
+    public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
 
     EditText serverText;
     EditText usernameEditText;
     EditText passwordEditText;
 
-    public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mLoginActivityStrategy.onCreate();
+
         initDataDownloadPeriodDropdown();
 
         //Populate server with the current value
@@ -112,13 +108,6 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         usernameEditText.setText("");
         passwordEditText = (EditText) findViewById(R.id.password);
         passwordEditText.setText("");
-
-        customizeLogin();
-    }
-
-    private void customizeLogin() {
-        LoginActivityCustomization loginActivityCustomization = new LoginActivityCustomization(this);
-        loginActivityCustomization.customize(this);
     }
 
     private void initDataDownloadPeriodDropdown() {
@@ -161,27 +150,6 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         }
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
-
-    /**
-     * Ask for EULA acceptance if this is the first time user login to the server, otherwise login
-     * @param serverUrl
-     * @param username
-     * @param password
-     */
     @Override
     public void login(String serverUrl, String username, String password) {
         //This method is overriden to capture credentials data
@@ -254,7 +222,8 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
         if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
             if(result.getResponseHolder().getApiException() == null) {
-                saveUserCredentials();
+                Credentials credentials = new Credentials(serverUrl,username,password);
+                mLoginUseCase.execute(credentials);
 
                 mLoginActivityStrategy.finishAndGo();
             } else {
@@ -263,33 +232,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         }
     }
 
-    private void saveUserCredentials(){
-        mLoginActivityStrategy.saveUserCredentials(serverUrl,username,password);
-    }
 
-    /**
-     * Check whether the EULA has already been accepted by the user. When the user accepts the EULA,
-     * a preference is set so the app will remind between different executions
-     * @return
-     */
-    private boolean isEulaAccepted(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        return sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), false);
-    }
-
-    /**
-     * Get from the server textfield what the user introduced
-     * @return
-     */
-    private String getUserIntroducedServer(){
-        EditText serverEditText = (EditText) findViewById(R.id.server_url);
-        return serverEditText.getText().toString();
-    }
-
-    /**
-     * LoginActivity does NOT admin going backwads since it is always the first activity.
-     * Thus onBackPressed closes the app
-     */
     @Override
     public void onBackPressed(){
         mLoginActivityStrategy.onBackPressed();

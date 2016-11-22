@@ -135,11 +135,6 @@ public class Session {
      * Closes the current session when the user logs out
      */
     public static void logout(){
-        List<Survey> surveys = Survey.getAllUnsentSurveys();
-        for (Survey survey : surveys) {
-            survey.delete();
-        }
-        Session.getUser().delete();
         Session.setUser(null);
         Session.setSurvey(null);
         Session.setAdapterUncompleted(null);

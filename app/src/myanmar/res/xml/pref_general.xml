@@ -41,7 +41,7 @@
     <!--</PreferenceCategory>-->
     <PreferenceCategory
         android:title="@string/pref_server"
-        android:key="pref_server">
+        android:key="@string/pref_cat_server">
         <EditTextPreference
             android:key="@string/dhis_url"
             android:title="@string/settings_text_dhis_server_url"
@@ -87,6 +87,12 @@
             android:defaultValue="@string/font_size_level2"
             android:entries="@array/settings_array_titles_font_sizes"
             android:entryValues="@array/settings_array_values_font_sizes"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null" />
+        <ListPreference
+            android:key="@string/language_code"
+            android:title="@string/settings_select_language"
+            android:defaultValue=""
             android:negativeButtonText="@null"
             android:positiveButtonText="@null" />
         <CheckBoxPreference

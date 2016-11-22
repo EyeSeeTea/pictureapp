@@ -12,7 +12,6 @@ public abstract class ALoginActivityStrategy {
 
     public abstract void onBackPressed();
 
-    public abstract void saveUserCredentials(String serverUrl, String username, String password);
-
     public abstract void finishAndGo();
+    public abstract void onCreate();
 }

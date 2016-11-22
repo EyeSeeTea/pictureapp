@@ -14,6 +14,9 @@
 <string name="settings_menu_about">"ກ່ຽວກັບ"</string>
 <string name="settings_menu_configuration">"ການຕັ້ງຄ່າ"</string>
 <string name="settings_menu_licence">"ການອະນຸຍາດ"</string>
+<string name="settings_menu_logout_title">"ອອກ​ຈາກ​ລະ​ບົບ"</string>
+<string name="settings_menu_logout_message">"ການປ່ຽນແປງເຄື່ອງແມ່ຂ່າຍຫຼືອົງການຈັດຕັ້ງຫນ່ວຍບໍລິການຕ້ອງການທີ່ຈະ Re: ເຂົ້າສູ່ລະບົບ. ທຸກການສໍາຫຼວດບໍ່ສົ່ງຈະໄດ້ຮັບການລຶບ. ທ່ານແນ່ໃຈວ່າທ່ານຕ້ອງການທີ່ຈະສືບຕໍ່?"</string>
+<string name="dashboard_menu_logout_message">"ທຸກການສໍາຫຼວດບໍ່ສົ່ງຈະໄດ້ຮັບການລຶບ. ທ່ານແນ່ໃຈວ່າທ່ານຕ້ອງການທີ່ຈະສືບຕໍ່?"</string>
 <string name="dialog_title_delete_surveys">"ທ່ານແນ່ໃຈບໍ່ທີ່ຈະລຶບຂໍ້ມູນທັງໝົດທີ່ສົ່ງແລ້ວ?"</string>
 <string name="dialog_title_delete_survey">"ລຶບການສຳຫຼວດ"</string>
 <string name="dialog_info_delete_survey">"ທ່ານແນ່ໃຈວ່າຕ້ອງການລຶບການສຳຫຼວດນີ້?"</string>

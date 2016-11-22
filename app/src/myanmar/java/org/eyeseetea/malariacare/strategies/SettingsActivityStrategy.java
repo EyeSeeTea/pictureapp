@@ -3,11 +3,14 @@ package org.eyeseetea.malariacare.strategies;
 import static android.R.attr.settingsActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.preference.DialogPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 import android.util.Log;
 
 import com.squareup.otto.Subscribe;
@@ -16,6 +19,7 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
@@ -45,7 +49,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         }catch(Exception e){}
     }
 
-
+    @Override
+    public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
+        PreferenceCategory preferenceCategory = (PreferenceCategory) preferenceScreen.findPreference(settingsActivity.getResources().getString(R.string.pref_cat_server));
+        preferenceCategory.removePreference(preferenceScreen.findPreference(settingsActivity.getResources().getString(R.string.org_unit)));
+    }
 
     @Override
     public Preference.OnPreferenceClickListener getOnPreferenceClickListener() {
@@ -64,7 +72,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             return;
         }
         Log.i(TAG, "Logging out from sdk...OK");
-        Session.logout();
+        LogoutUseCase logoutUseCase = new LogoutUseCase(settingsActivity);
+        logoutUseCase.execute();
         Intent loginIntent = new Intent(settingsActivity,LoginActivity.class);
         settingsActivity.finish();
         settingsActivity.startActivity(loginIntent);

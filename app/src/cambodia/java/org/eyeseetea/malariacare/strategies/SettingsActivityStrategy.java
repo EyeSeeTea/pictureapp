@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.content.Intent;
 import android.preference.Preference;
+import android.preference.PreferenceScreen;
 import android.support.v7.app.AlertDialog;
 
 import com.squareup.otto.Subscribe;
@@ -36,6 +37,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void onCreate() {
         Dhis2Application.bus.register(this);
+    }
+
+    @Override
+    public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
+
     }
 
     @Override

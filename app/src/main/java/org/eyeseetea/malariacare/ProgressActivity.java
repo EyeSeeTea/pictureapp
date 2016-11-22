@@ -35,6 +35,7 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
@@ -46,48 +47,13 @@ public class ProgressActivity extends Activity {
 
     private static final String TAG=".ProgressActivity";
 
-    /**
-     * Intent param that tells what to do (push, pull or push before pull)
-     */
-    public static final String TYPE_OF_ACTION="TYPE_OF_ACTION";
-
-    /**
-     * Intent param that tells what do before push
-     */
-    public static final String AFTER_ACTION="AFTER_ACTION";
-    /**
-     * To pull data from server
-     */
-    public static final int ACTION_PULL=0;
-
-    /**
-     * To push a single survey to server
-     */
-    public static final int ACTION_PUSH=1;
-
-    /**
-     * To dont show the survey pushed feedback
-     */
-    public static final int DONT_SHOW_FEEDBACK = 1;
-
-    /**
-     * To show the survey pushed feedback
-     */
-    public static final int SHOW_FEEDBACK = 2;
-    /**
-     * To push every unsent data to server before pulling metadata
-     */
-    public static final int ACTION_PUSH_BEFORE_PULL=2;
 
     /**
      * Num of expected steps while pulling
      */
     private static final int MAX_PULL_STEPS=7;
 
-    /**
-     * Num of expected steps while pushing
-     */
-    private static final int MAX_PUSH_STEPS=4;
+
     /**
      * Used for control new steps
      */
@@ -115,8 +81,10 @@ public class ProgressActivity extends Activity {
             PULL_CANCEL = true;
             PULL_IS_ACTIVE = false;
             step(getBaseContext().getResources().getString(R.string.cancellingPull));
-            if(PullController.getInstance().finishPullJob())
-                finishAndGo(LoginActivity.class);
+            if(PullController.getInstance().finishPullJob()) {
+                Log.d(TAG, "Logging out from sdk...");
+                DhisService.logOutUser(ProgressActivity.this);
+            }
         }
     }
 
@@ -228,20 +196,15 @@ public class ProgressActivity extends Activity {
      *
      */
     private void showAndMoveOn() {
-        final boolean isAPull = isAPull();
-
-        //Annotate pull is done
-        if(isAPull) {
-            //If is not active, we need restart the process
-            if(!PULL_IS_ACTIVE) {
-                try{
-                    Dhis2Application.bus.unregister(this);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-                finishAndGo(LoginActivity.class);
-                return;
+        //If is not active, we need restart the process
+        if(!PULL_IS_ACTIVE) {
+            try{
+                Dhis2Application.bus.unregister(this);
+            } catch(Exception e) {
+                e.printStackTrace();
             }
+            finishAndGo(LoginActivity.class);
+            return;
         }
 
         //Show final step -> done
@@ -249,79 +212,16 @@ public class ProgressActivity extends Activity {
 
         String title=getDialogTitle();
 
-        final int msg=getDoneMessage();
-
         new AlertDialog.Builder(this)
                 .setCancelable(false)
                 .setTitle(title)
-                .setMessage(msg)
+                .setMessage(R.string.dialog_pull_success)
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
-                        //Pull -> Settings
-                        if (isAPull()) {
-                            progressVariantAdapter.finishAndGo();
-                            return;
-                        }
-
-                        //Push before pull -> Dashboard
-                        if (!hasAPullAfterPush()){
-                            finishAndGo(DashboardActivity.class);
-                            return;
-                        }
-
-                        launchPull();
-
-                        return;
-
+                        progressVariantAdapter.finishAndGo();
                     }
                 }).create().show();
 
-    }
-
-    /**
-     * Once an action is over there is a message that changes depending on the kind of action:
-     *  -Pull: Pull ok, let's move to dashboard
-     *  -Push (single): Push ok, let's move to dashboard
-     *  -Push (before pull): Push ok, let's start with the pull
-     *
-     * @return
-     */
-    private int getDoneMessage(){
-        boolean isAPull = isAPull();
-
-        //Pull
-        if(isAPull){
-            return R.string.dialog_pull_success;
-        }
-
-        //Push before pull
-        if(hasAPullAfterPush()){
-            return R.string.dialog_push_before_pull_success;
-        }
-
-        //Push (single)
-        return R.string.dialog_push_success;
-    }
-
-    /**
-     * Tells if a push is required
-     * @return
-     */
-    private boolean isAPull() {
-        //Check intent params
-        Intent intent=getIntent();
-        //Not a pull -> is a Push
-        return (intent!=null && intent.getIntExtra(TYPE_OF_ACTION,ACTION_PULL)==ACTION_PULL);
-    }
-
-
-    /**
-     * Tells is the intent requires a Pull after the push is done
-     * @return
-     */
-    private boolean hasAPullAfterPush(){
-        Intent intent=getIntent();
-        return (intent!=null && intent.getIntExtra(TYPE_OF_ACTION,ACTION_PULL)==ACTION_PUSH_BEFORE_PULL);
     }
 
     private String getDialogTitle(){
@@ -342,9 +242,15 @@ public class ProgressActivity extends Activity {
             return;
         }
         Log.d(TAG,"Logging out from sdk...OK");
-        Session.logout();
+        LogoutUseCase logoutUseCase = new LogoutUseCase(this);
+        logoutUseCase.execute();
         //Go to login
         finishAndGo(LoginActivity.class);
+    }
+
+    @Override
+    public void onBackPressed(){
+        cancellPull();
     }
 
     /**
@@ -356,5 +262,4 @@ public class ProgressActivity extends Activity {
         finish();
         startActivity(targetActivityIntent);
     }
-
 }

@@ -19,8 +19,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     @Override
-    public void saveUserCredentials(String serverUrl, String username, String password) {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverUrl);
+    public void onCreate() {
     }
 
     @Override
@@ -37,4 +36,5 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
         loginActivity.finish();
     }
+
 }

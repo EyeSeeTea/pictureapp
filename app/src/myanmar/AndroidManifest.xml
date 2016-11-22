@@ -11,6 +11,24 @@
         android:theme="@style/EyeSeeTheme"
         tools:replace="android:icon">
 
+        <activity
+            android:name=".LoginActivity"
+            tools:node="merge">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".DashboardActivity">
+            <intent-filter  tools:node="remove">
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <provider
             android:name="org.eyeseetea.malariacare.database.utils.SCMMDBProvider"
             android:authorities="org.eyeseetea.malariacare.database.utils.SCMMExportData"

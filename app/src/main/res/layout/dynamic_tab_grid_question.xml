@@ -64,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/footer_navigation_size"
         android:layout_alignParentBottom="true">
-        <include layout="@layout/progress_bar_row"></include>
+        <include layout="@layout/dynamic_tab_pagination_progress"></include>
 
     </RelativeLayout>
 

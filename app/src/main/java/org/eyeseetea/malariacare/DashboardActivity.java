@@ -37,6 +37,7 @@ import android.widget.TabHost;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
@@ -645,7 +646,7 @@ public class DashboardActivity extends BaseActivity {
         }
         
         private void initDataIfRequired() throws IOException {
-            if (new Select().count().from(Tab.class).count()!=0) {
+            if (!Tab.isEmpty()) {
                 Log.i(TAG, "DB Already loaded, showing surveys...");
                 return;
             }
@@ -653,6 +654,8 @@ public class DashboardActivity extends BaseActivity {
             Log.i(TAG, "DB empty, loading data ...");
             try {
                 PopulateDB.populateDB(getAssets());
+                //Get maximum total of questions
+                Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
             } catch (IOException e) {
                 throw e;
             }

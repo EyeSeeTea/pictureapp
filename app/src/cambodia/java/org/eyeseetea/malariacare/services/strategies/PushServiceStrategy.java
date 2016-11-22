@@ -1,7 +1,8 @@
 package org.eyeseetea.malariacare.services.strategies;
 
 import android.content.Context;
-import org.eyeseetea.malariacare.domain.usecase.PushUseCase;
+
+import org.eyeseetea.malariacare.domain.usecase.PushSurveysUseCase;
 import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy{
@@ -13,9 +14,9 @@ public class PushServiceStrategy extends APushServiceStrategy{
 
     @Override
     public void push() {
-        PushUseCase pushUseCase = new PushUseCase(mPushService);
+        PushSurveysUseCase pushSurveysUseCase = new PushSurveysUseCase(mPushService);
 
-        pushUseCase.execute(new PushUseCase.Callback() {
+        pushSurveysUseCase.execute(new PushSurveysUseCase.Callback() {
             @Override
             public void onPushFinished() {
                 mPushService.onPushFinished();

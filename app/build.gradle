@@ -67,9 +67,9 @@ android {
             buildConfigField "boolean", "activeSwipeNavigator", "true"
             buildConfigField "boolean", "activeButtonNavigator", "false"
             buildConfigField "boolean", "loginDataDownloadPeriod", "true"
-            buildConfigField "boolean", "multiuser", "false"
             buildConfigField "boolean","translations", "false"
             buildConfigField "boolean", "developerOptions", "false"
+            buildConfigField "boolean", "multiuser", "false"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
@@ -78,9 +78,9 @@ android {
             buildConfigField "boolean", "activeSwipeNavigator", "true"
             buildConfigField "boolean", "activeButtonNavigator", "false"
             buildConfigField "boolean", "loginDataDownloadPeriod", "false"
-            buildConfigField "boolean", "multiuser", "false"
             buildConfigField "boolean","translations", "true"
             buildConfigField "boolean", "developerOptions", "false"
+            buildConfigField "boolean", "multiuser", "false"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
@@ -89,9 +89,9 @@ android {
             buildConfigField "boolean", "activeSwipeNavigator", "false"
             buildConfigField "boolean", "activeButtonNavigator", "true"
             buildConfigField "boolean", "loginDataDownloadPeriod", "false"
-            buildConfigField "boolean","translations", "false"
-            buildConfigField "boolean", "multiuser", "true"
+            buildConfigField "boolean","translations", "true"
             buildConfigField "boolean", "developerOptions", "true"
+            buildConfigField "boolean", "multiuser", "true"
         }
     }
     

@@ -29,6 +29,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.MenuItem;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -36,6 +38,7 @@ import android.text.util.Linkify;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -45,14 +48,26 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
+import org.eyeseetea.malariacare.database.model.OrgUnit;
+import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.layout.customization.LoginActivityCustomization;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
+import org.hisp.dhis.android.sdk.persistence.models.Dashboard;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
+import org.hisp.dhis.android.sdk.ui.views.FontButton;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
+
+import static org.eyeseetea.malariacare.database.model.OrgUnit.getAllOrgUnit;
+import static org.eyeseetea.malariacare.database.model.User.createDummyUser;
 
 /**
  * Login Screen.
@@ -61,7 +76,6 @@ import java.util.ArrayList;
 public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity {
 
     private static final String TAG = ".LoginActivity";
-
 
     public static final String PULL_REQUIRED = "PULL_REQUIRED";
 
@@ -87,7 +101,6 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         initDataDownloadPeriodDropdown();
 
         //Populate server with the current value
-        serverText = (EditText) findViewById(R.id.server_url);
         serverText = (EditText) findViewById(R.id.server_url);
         serverText.setText(ServerAPIController.getServerUrl());
 

@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import static com.google.android.gms.analytics.internal.zzy.d;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -42,6 +44,13 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
         }
     }
 
+    @Override
+    public void saveUserCredentials(String serverUrl, String username, String password) {
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverUrl);
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, username);
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, password);
+    }
+
     private boolean existsLoggedUser(){
         return User.getLoggedUser() != null && !ProgressActivity.PULL_CANCEL;
     }
@@ -66,14 +75,14 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
         });
     }
 
-    @Override
-    public void finishAndGo() {
-        finishAndGo(ProgressActivity.class);
+    public void finishAndGo(Class <? extends Activity> activityClass) {
+        loginActivity.startActivity(new Intent(loginActivity, activityClass));
+
+        loginActivity.finish();
     }
 
-    private void finishAndGo(Class targetActivityClass){
-        Intent targetActivityIntent = new Intent(loginActivity,targetActivityClass);
-        loginActivity.finish();
-        loginActivity.startActivity(targetActivityIntent);
+    @Override
+    public void finishAndGo(){
+        finishAndGo(ProgressActivity.class);
     }
 }

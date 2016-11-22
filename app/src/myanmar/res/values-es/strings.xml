@@ -139,7 +139,6 @@
 <string name="last_6_weeks">Últimas 6 semanas</string>
 <string name="last_6_months">Últimos 6 meses</string>
 <string name="download">Descarga:</string>
-<string name="demo_login">Demo</string>
 <string name="assessment_past_cases">PAST CASES</string>
 <string name="assessment_new_cases">NEW CASES</string>
 <string name="assessment_connectivity">Data awaiting internet connectivity</string>
@@ -147,4 +146,5 @@
 <string name="developer_option_summary">Esta opción activa las opciones de desarrollador</string>
 <string name="developer_option_title">Mostrar opciones de desarrollador</string>
 <string name="export_data_option_title">Exportar base de datos</string>
+<string name="demo_login">Demo</string>
 </resources>

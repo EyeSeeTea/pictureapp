@@ -139,7 +139,6 @@
 <string name="last_6_weeks">ចុងក្រោយ 6 សប្តាហ៍</string>
 <string name="last_6_months"> 6 ខែចុង</string>
 <string name="download"> ទាញយក:</string>
-<string name="demo_login">ទស្សនាការបង្ហាញ</string>
 <string name="assessment_past_cases">PAST CASES</string>
 <string name="assessment_new_cases">NEW CASES</string>
 <string name="assessment_connectivity">Data awaiting internet connectivity</string>
@@ -147,4 +146,5 @@
 <string name="developer_option_summary">ជម្រើសនេះអនុញ្ញាតជម្រើសអភិវឌ្ឍន៍</string>
 <string name="developer_option_title">អភិវឌ្ឍន៍បង្ហាញជម្រើស</string>
 <string name="export_data_option_title">មូលដ្ឋានទិន្នន័យដែលបាននាំចេញ</string>
+<string name="demo_login">ទស្សនាការបង្ហាញ</string>
 </resources>

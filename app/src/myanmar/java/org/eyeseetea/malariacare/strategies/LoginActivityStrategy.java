@@ -44,13 +44,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
         }
     }
 
-    @Override
-    public void saveUserCredentials(String serverUrl, String username, String password) {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverUrl);
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, username);
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, password);
-    }
-
     private boolean existsLoggedUser(){
         return User.getLoggedUser() != null && !ProgressActivity.PULL_CANCEL;
     }

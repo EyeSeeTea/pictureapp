@@ -9,6 +9,9 @@
 <string name="settings_menu_about">"អំពី"</string>
 <string name="settings_menu_configuration">"ការ​កំណត់ "</string>
 <string name="settings_menu_licence">"អាជ្ញាប័ណ្ណ"</string>
+<string name="settings_menu_logout_title">"ចាកចេញ"</string>
+<string name="settings_menu_logout_message">"ការផ្លាស់ប្តូរម៉ាស៊ីនបម្រើឬ orgunit ត្រូវការដើម្បីឡើងវិញការចូល។ រាល់ការស្ទង់មតិមិនត្រូវបានផ្ញើនឹងត្រូវបានលុប។ តើអ្នកពិតជាចង់បន្តឬ?"</string>
+<string name="dashboard_menu_logout_message">"រាល់ការស្ទង់មតិមិនត្រូវបានផ្ញើនឹងត្រូវបានលុប។ តើអ្នកពិតជាចង់បន្តឬ?"</string>
 <string name="dialog_title_delete_surveys">"តើអ្នកប្រាកដទេថា អ្នកចង់លុបព័ត៌មានស្ទង់មតិដែលបានផ្ញើរចេញទាំងអស់?"</string>
 <string name="dialog_title_delete_survey">"លុបលទ្ធផលដែលបានផ្ញើរចេញ"</string>
 <string name="dialog_info_delete_survey">"តើ​អ្នក​ប្រាកដ​ជា​ចង់​លុបចោល​ទាំង​ស្រុង​ការស្ទង់មតិ​នេះ​?"</string>

@@ -73,6 +73,11 @@ public class Session {
     final public static ReentrantReadWriteLock valuesLock = new ReentrantReadWriteLock();
 
     /**
+     * The maximum total of questions in programm
+     */
+    private static int maxTotalQuestions;
+
+    /**
      * Map that holds non serializable results from services
      */
     private static Map<String,Object> serviceValues=new HashMap<>();
@@ -93,7 +98,6 @@ public class Session {
     }
 
     public static synchronized void setUser(User user) {
-        Log.i(TAG, "Creating user in session. " + user.toString());
         Session.user = user;
     }
 
@@ -136,11 +140,6 @@ public class Session {
      * Closes the current session when the user logs out
      */
     public static void logout(){
-        List<Survey> surveys = Survey.getAllUnsentSurveys();
-        for (Survey survey : surveys) {
-            survey.delete();
-        }
-        Session.getUser().delete();
         Session.setUser(null);
         Session.setSurvey(null);
         Session.setAdapterUncompleted(null);
@@ -194,6 +193,14 @@ public class Session {
 
     public static synchronized void setPhoneMetaData(PhoneMetaData phoneMetaData) {
         Session.phoneMetaData = phoneMetaData;
+    }
+
+    public static int getMaxTotalQuestions() {
+        return maxTotalQuestions;
+    }
+
+    public static synchronized void setMaxTotalQuestions(int maxTotalQuestions) {
+        Session.maxTotalQuestions = maxTotalQuestions;
     }
 
 }

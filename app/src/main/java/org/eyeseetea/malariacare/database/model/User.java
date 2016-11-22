@@ -96,6 +96,13 @@ public class User extends BaseModel {
         return null;
     }
 
+    public static void insertLoggedUser(User user){
+        User userDB=User.getUserFromDB(user);
+
+        if(userDB==null)
+            user.save();
+    }
+
     public static User getUserFromDB(User user) {
         List<User> userdb= new Select().from(User.class).queryList();
         for(int i=userdb.size()-1;i>=0;i--){

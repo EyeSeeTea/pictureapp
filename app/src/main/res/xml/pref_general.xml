@@ -41,7 +41,7 @@
     <!--</PreferenceCategory>-->
     <PreferenceCategory
         android:title="@string/pref_server"
-        android:key="pref_server">
+        android:key="@string/pref_cat_server">
         <EditTextPreference
             android:key="@string/dhis_url"
             android:title="@string/settings_text_dhis_server_url"

@@ -5,8 +5,6 @@ package utils;
  */
 public class PhoneMask {
 
-
-
     /**
      * Formatted telephone mask: 0NN NNN NNN{N}
      */

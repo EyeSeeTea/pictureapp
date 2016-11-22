@@ -69,50 +69,17 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         mEditText.setThreshold(0);
         this.context = context;
     }
-//
-//    @Override
-//    public void setOnPreferenceChangeListener(OnPreferenceChangeListener onPreferenceChangeListener) {
-//        super.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-//            @Override
-//            public boolean onPreferenceChange(Preference preference, Object newValue) {
-//                PreferencesState.getInstance().saveStringPreference(R.string.org_unit,newValue.toString());
-//                preference.setSummary(newValue.toString());
-//                mEditText.setText(newValue.toString());
-//                PreferencesState.getInstance().reloadPreferences();
-//                return true;
-//            }
-//        });
-//
-//    }
 
-    public void pullOrgUnits(String serverVersion) {
-
-        //Annotate new version
-        this.serverVersion = serverVersion;
+    public void pullOrgUnits() {
 
         //Reload options
         String[]  orgUnits;
-        if(Constants.DHIS_API_SERVER.equals(serverVersion)){
-            orgUnits=findOrgUnitsFromServer();
-        }else{
-            orgUnits=findOrgUnitsFromDB();
-        }
+
+        orgUnits=findOrgUnitsFromDB();
 
         AutocompleteAdapterFilter<String> adapter = new AutocompleteAdapterFilter(this.getContext(),
                 android.R.layout.simple_dropdown_item_1line,orgUnits);
         mEditText.setAdapter(adapter);
-    }
-
-    private String[] findOrgUnitsFromServer(){
-        String[]  orgUnits;
-        try {
-            GetOrgUnitsAsync getOrgUnitsAsynctask = new GetOrgUnitsAsync(context);
-            orgUnits = getOrgUnitsAsynctask.execute(new ArrayList<String>()).get();
-        } catch (Exception ex) {
-            Log.e(TAG, "Cannot findOrgUnitsFromServer: " + ex.getMessage());
-            orgUnits = new String[]{""};
-        }
-        return orgUnits;
     }
 
     private String[] findOrgUnitsFromDB(){
@@ -151,6 +118,8 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                 if (!orgUnits) {
                     ShowException.showError(R.string.exception_org_unit_not_valid);
                 }else{
+                    PreferencesState.getInstance().saveStringPreference(R.string.org_unit,value);
+                    PreferencesState.getInstance().reloadPreferences();
                     //Super invokes changeListener
                     callChangeListener(value);
                 }
@@ -158,35 +127,6 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                 Log.e(TAG,"onDialogClosed: "+ex.getMessage());
             }
         }
-    }
-
-    class GetOrgUnitsAsync extends AsyncTask<ArrayList<String>, Void, String[]> {
-
-        Context context;
-        public GetOrgUnitsAsync(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        protected String[] doInBackground(ArrayList<String>... passing) {
-            boolean validServer=false;
-            String[] result = {""};
-            //Reload preferences to ensure asking right server
-            PreferencesState.getInstance().reloadPreferences();
-            String serverUrl=PreferencesState.getInstance().getDhisURL();
-            //Ask server via API
-            if(ServerAPIController.isValidProgram(serverUrl))
-                result = ServerAPIController.pullOrgUnitsCodes(serverUrl);
-            else {
-                ShowException.showError(R.string.dialog_error_push_no_uid);
-            }
-
-            return result; //return result
-        }
-
     }
 
     class CheckCodeAsync extends AsyncTask<String, Void, Boolean> {

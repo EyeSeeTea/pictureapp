@@ -330,8 +330,7 @@ public class PopulateDB {
                 Score.class,
                 Survey.class,
                 OrgUnit.class,
-                OrgUnitLevel.class,
-                User.class
+                OrgUnitLevel.class
         );
     }
 

@@ -9,6 +9,9 @@
 <string name="settings_menu_about">"Acerca de"</string>
 <string name="settings_menu_configuration">"Configuración"</string>
 <string name="settings_menu_licence">"Licencia"</string>
+<string name="settings_menu_logout_title">"Desconectar"</string>
+<string name="settings_menu_logout_message">"Para cambiar el servidor o la localización es necesario volver a conectarse. Todas las encuestas no enviadas serán eliminadas. ¿Está seguro de querer continuar?"</string>
+<string name="dashboard_menu_logout_message">"Todas las encuestas no enviadas serán eliminadas. ¿Está seguro de querer continuar?"</string>
 <string name="dialog_title_delete_surveys">"¿Está seguro de querer borrar todas las evaluaciones enviadas?"</string>
 <string name="dialog_title_delete_survey">"Borrar evaluación"</string>
 <string name="dialog_info_delete_survey">"¿Seguro que desea borrar la evaluación?"</string>

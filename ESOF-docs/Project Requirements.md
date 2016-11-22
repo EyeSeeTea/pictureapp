@@ -62,7 +62,7 @@ Deve incluir um conjunto de casos de utilização que descrevem a interação do
 
 ###**Modelo de domínio** <a name="domainmodel"></a>
 
-![domainmodel](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/15139233_1408193329210742_1691838171_n.png?raw=true)
+![domainmodel](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/domainmodel.jpg?raw=true)
 
 
 

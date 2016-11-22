@@ -97,13 +97,13 @@ public class User extends BaseModel {
     }
 
     public static void insertLoggedUser(User user){
-        User userDB=User.existUser(user);
+        User userDB=User.getUserFromDB(user);
 
         if(userDB==null)
             user.save();
     }
 
-    public static User existUser(User user) {
+    public static User getUserFromDB(User user) {
         List<User> userdb= new Select().from(User.class).queryList();
         for(int i=userdb.size()-1;i>=0;i--){
             if((userdb.get(i).getUid().equals(user.getUid()))&&(userdb.get(i).getName().equals(user.getName())))

@@ -276,6 +276,13 @@ public class PreferencesState {
         prefEditor.commit(); // finally save changes
     }
 
+    public void saveStringPreference(String namePreference,String value){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putString(namePreference, value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+
     public String getDataLimitedByDate() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
         return sharedPreferences.getString(instance.getContext().getString(R.string.data_limited_by_date), "");

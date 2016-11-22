@@ -32,19 +32,17 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
-import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ProgressActivity extends Activity {
+
+    public ProgressActivityStrategy progressVariantAdapter = new ProgressActivityStrategy(this);
 
     private static final String TAG=".ProgressActivity";
 
@@ -261,12 +259,7 @@ public class ProgressActivity extends Activity {
                     public void onClick(DialogInterface arg0, int arg1) {
                         //Pull -> Settings
                         if (isAPull()) {
-                            //Move back to setting with extras
-                            Intent intent = new Intent(ProgressActivity.this,SettingsActivity.class);
-                            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER, true);
-                            intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE, true);
-                            finish();
-                            startActivity(intent);
+                            progressVariantAdapter.finishAndGo();
                             return;
                         }
 

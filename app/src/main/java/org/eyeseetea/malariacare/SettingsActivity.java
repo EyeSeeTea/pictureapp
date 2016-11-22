@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare;
 
+import static android.R.attr.settingsActivity;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -42,6 +44,7 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.DisplayMetrics;
+import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -81,7 +84,9 @@ import java.util.Locale;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
+    public static final String IS_LOGIN_DONE = "IS_LOGIN_DONE";
     /**
      * Determines whether to always show the simplified settings UI, where
      * settings are presented in a single list. When false, settings are shown
@@ -89,35 +94,18 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * shown on tablets.
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
-    private static final String TAG = ".Settings";
-    private AutoCompleteEditTextPreference autoCompleteEditTextPreference;
 
-    /**
-     * Intent extra param that states that the login before changing critical info has been done
-     */
-    public static final String LOGIN_BEFORE_CHANGE_DONE="LOGIN_BEFORE_CHANGE_DONE";
+    private static final String TAG=".SettingsActivity";
 
-    /**
-     * Intent extra param that states that the login is being done due to an attempt to change the orgunit
-     */
-    public static final String SETTINGS_CHANGING_ORGUNIT="SETTINGS_CHANGING_ORGUNIT";
+    public SettingsActivityStrategy mSettingsActivityStrategy = new SettingsActivityStrategy(this);
 
-    /**
-     * Intent extra param that states that the login is being done due to an attempt to change the server
-     */
-    public static final String SETTINGS_CHANGING_SERVER="SETTINGS_CHANGING_SERVER";
-    /**
-     * Intent extra param that states that the EULA has been accepted
-     */
-    public static final String SETTINGS_EULA_ACCEPTED="SETTINGS_EULA_ACCEPTED";
-
-
-    public static ServerInfo serverInfo;
-
+    public AutoCompleteEditTextPreference autoCompleteEditTextPreference;
+    public Preference serverUrlPreference;
 
     protected void onCreate(Bundle savedInstanceState) {
-        Dhis2Application.bus.register(this);
         super.onCreate(savedInstanceState);
+
+        mSettingsActivityStrategy.onCreate();
         PreferencesState.getInstance().loadsLanguageInActivity();
     }
 
@@ -129,11 +117,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     public void onStop(){
-        try{
-            Dhis2Application.bus.unregister(this);
-        }catch(IllegalArgumentException ex){
-            Log.e(TAG,"Unregistering SettingsActivity before it is register");
-        }
+        mSettingsActivityStrategy.onStop();
 
         super.onStop();
     }
@@ -169,287 +153,32 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         if(BuildConfig.translations)
             setLanguageOptions(findPreference(getApplicationContext().getString(R.string.language_code)));
+
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
-        bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.font_sizes)));
         if(BuildConfig.translations)
             bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.language_code)));
+
+        bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.font_sizes)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.dhis_url)));
         bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
 
-        // Set the ClickListener to the android:key"remove_sent_surveys" preference.
-
         autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
-        autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this,true));
-        autoCompleteEditTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+        autoCompleteEditTextPreference.setOnPreferenceClickListener(mSettingsActivityStrategy.getOnPreferenceClickListener());
+        autoCompleteEditTextPreference.pullOrgUnits();
 
-                //Save preference new value
-                PreferencesState.getInstance().saveStringPreference(R.string.org_unit, newValue.toString());
+        serverUrlPreference = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
+        serverUrlPreference.setOnPreferenceClickListener(mSettingsActivityStrategy.getOnPreferenceClickListener());
 
-                // Now, manually update it's value to next value
-                // Now, if you click on the item, you'll see the value you've just set here
-                preference.setSummary(newValue.toString());
+        if (mSettingsActivityStrategy.getOnPreferenceChangeListener() != null) {
+            serverUrlPreference.setOnPreferenceChangeListener(
+                    mSettingsActivityStrategy.getOnPreferenceChangeListener());
 
-                //Reload preference in memory
-                PreferencesState.getInstance().reloadPreferences();
-
-                //Reload orgunits according to server version
-                initReloadByServerVersionWhenOrgUnitChanged();
-
-                return true;
-
-            }
-        });
-
-        Preference serverUrlPreference = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
-        serverUrlPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(this, false));
-        serverUrlPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-
-                //Save preference new value
-                PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, newValue.toString());
-
-                // Now, manually update it's value to next value
-                // Now, if you click on the item, you'll see the value you've just set here
-                preference.setSummary(newValue.toString());
-
-                //Reload preference in memory
-                PreferencesState.getInstance().reloadPreferences();
-
-                //Reload orgunits according to server version
-                initReloadByServerVersionWhenUrlChanged(newValue.toString());
-
-                return true;
-
-            }
-        });
-
-        //Check current server version to populate orgunits
-        initPopulateOrgUnitsByServerVersion(PreferencesState.getInstance().getDhisURL());
-    }
-
-    /**
-     * Opens the preference that is being edited before login
-     */
-    void openClickedPreference(){
-        //No login -> nothing to open
-        if(!getIntent().getBooleanExtra(LOGIN_BEFORE_CHANGE_DONE,false)){
-            return;
-        }
-
-        //Login done -> open right preference
-        PreferenceScreen screen = (PreferenceScreen) findPreference("pref_screen");
-
-        //Find key to press
-        int key=-1;
-        if(getIntent().getBooleanExtra(SETTINGS_CHANGING_ORGUNIT,false)){
-            key = R.string.org_unit;
-        }
-        if(getIntent().getBooleanExtra(SETTINGS_CHANGING_SERVER,false)){
-            key = R.string.dhis_url;
-        }
-
-        //Nothing to show up
-        if(key==-1){
-            return;
-        }
-
-        //Find order in screen
-        int pos = findPreference(getApplicationContext().getString(key)).getOrder();
-
-        //Simulate click on that one
-        screen.onItemClick( null, null, pos, 0 );
-    }
-
-    /**
-     * Checks server version after creating activity (in order to repopulate options in orgunits editor)
-     * @param url
-     */
-    public void initPopulateOrgUnitsByServerVersion(String url){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
-        if(sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
-            CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this);
-            serverVersionAsync.execute(url);
+            autoCompleteEditTextPreference.setOnPreferenceChangeListener(
+                    mSettingsActivityStrategy.getOnPreferenceChangeListener());
         }
     }
-
-    public void callbackPopulateOrgUnitsByServerVersion(ServerInfo serverInfo){
-        Log.d(TAG, "callbackPopulateOrgUnitsByServerVersion " + serverInfo.getVersion());
-        autoCompleteEditTextPreference.pullOrgUnits(serverInfo.getVersion());
-    }
-
-    /**
-     * Launches an async task that resolved the current server version when the org unit has changed.
-     */
-    private void initReloadByServerVersionWhenOrgUnitChanged() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
-        if(sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
-            CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this, true, true);
-            serverVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
-        }
-    }
-
-
-    /**
-     * Reloads organisationUnits according to the server version:
-     *  - 2.20: Manually via API
-     *  - 2.21|2.22: Via sdk (which requires a login to initialize DHIS sdk)
-     *  - Else: Error
-     */
-    private void callbackReloadByServerVersionWhenOrgUnitChanged(ServerInfo serverInfo) {
-        Log.d(TAG, "callbackReloadByServerVersionWhenOrgUnitChanged " + serverInfo.getVersion());
-
-        //After changing to a new server survey data is always removed
-        PopulateDB.wipeSurveys();
-
-        String serverVersion=serverInfo.getVersion();
-
-        //2.20 -> nothing to do (since orgunits are already loaded)
-        if(ServerAPIController.isAPIVersion(serverVersion)){
-            return;
-        }
-
-        //2.21, 2.22 -> surveys
-        if(Constants.DHIS_SDK_221_SERVER.equals(serverVersion) || Constants.DHIS_SDK_222_SERVER.equals(serverVersion)){
-            initLoginPrePull(serverInfo);
-            return;
-        }
-
-        showServerError(serverVersion);
-    }
-
-    /**
-     * Launches an async task that resolved the current server version.
-     * @param url
-     */
-    private void initReloadByServerVersionWhenUrlChanged(String url) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
-        if(sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
-            Log.d(TAG, "init reload server version when url changed");
-            CheckServerVersionAsync serverVersionAsync = new CheckServerVersionAsync(this, true);
-            serverVersionAsync.execute(url);
-        }
-    }
-
-    /**
-     * Reloads organisationUnits according to the server version:
-     *  - 2.20: Manually via API
-     *  - 2.21|2.22: Via sdk (which requires a login to initialize DHIS sdk)
-     *  - Else: Error
-     */
-    public void callbackReloadByServerVersionWhenUrlChanged(ServerInfo serverInfo) {
-        Log.d(TAG, "callbackReloadByServerVersionWhenUrlChanged " + serverInfo.getVersion());
-
-        //After changing to a new server survey data is always removed
-        PopulateDB.wipeSurveys();
-
-        //And the orgUnit too
-        PreferencesState.getInstance().saveStringPreference(R.string.org_unit,"");
-
-        String serverVersion=serverInfo.getVersion();
-        Log.d(TAG, "SDK pull start");
-        //2.20 -> reload orgunits from server via api
-        if(ServerAPIController.isAPIVersion(serverVersion)){
-            Log.d(TAG, "Api pull start");
-            autoCompleteEditTextPreference.pullOrgUnits(Constants.DHIS_API_SERVER);
-            return;
-        }
-
-        //2.21, 2.22 -> pull orgunits + surveys
-        if(Constants.DHIS_SDK_221_SERVER.equals(serverVersion) || Constants.DHIS_SDK_222_SERVER.equals(serverVersion)){
-            Log.d(TAG, "SDK pull start");
-            initLoginPrePull(serverInfo);
-            return;
-        }
-        showServerError(serverVersion);
-
-
-    }
-
-    private void showServerError(String serverVersion) {
-        //Other error like: Too many follow-up requests: 21
-        if("".equals(serverVersion)){
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.dhis_url_error)
-                    .setMessage(R.string.dhis_url_error_generic)
-                    .setNeutralButton(android.R.string.yes, null)
-                    .create()
-                    .show();
-            return;
-        }
-        //Server version not supported -> Error
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.dhis_url_error)
-                .setMessage(R.string.dhis_url_error_bad_version)
-                .setNeutralButton(android.R.string.yes, null)
-                .create()
-                .show();
-    }
-
-    /**
-     * Logins programatically into new server to initialize sdk api
-     * @param serverInfo
-     */
-    private void initLoginPrePull(ServerInfo serverInfo){
-        HttpUrl serverUri = HttpUrl.parse(serverInfo.getUrl());
-        Log.d(TAG, "Server url "+serverUri);
-        DhisService.logInUser(serverUri, ServerAPIController.getSDKCredentials());
-    }
-
-    @Subscribe
-    public void callbackLoginPrePull(NetworkJob.NetworkJobResult<ResourceType> result) {
-        if(PushController.getInstance().isPushInProgress())
-            return;
-        //Nothing to check
-        if(result==null || result.getResourceType()==null || !result.getResourceType().equals(ResourceType.USERS)){
-            return;
-        }
-
-        //Login failed
-        if(result.getResponseHolder().getApiException()!=null){
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.dhis_url_error)
-                    .setMessage(R.string.dhis_url_error_bad_credentials)
-                    .setNeutralButton(android.R.string.yes, null)
-                    .create()
-                    .show();
-        }
-
-        //Login successful start reload
-        finish();
-        startActivity(new Intent(this, ProgressActivity.class));
-    }
-
-    //ask if the Sent Surveys
-    private void askRemoveSentSurveys() {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        removeSentSurveys();
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            }
-        };
-        AlertDialog.Builder builder =  new AlertDialog.Builder(this);
-        builder.setMessage(R.string.dialog_title_delete_surveys).setPositiveButton(R.string.yes, dialogClickListener)
-                .setNegativeButton(R.string.no, dialogClickListener).show();
-    }
-
-    private void removeSentSurveys() {
-        Intent surveysIntent=new Intent(this, SurveyService.class);
-        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.REMOVE_SENT_SURVEYS_ACTION);
-        this.startService(surveysIntent);
-    }
-
 
     /**
      * {@inheritDoc}
@@ -576,60 +305,28 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
 
+            SettingsActivity settingsActivity = (SettingsActivity)getActivity();
+
             //Hide translation option if is not active in gradle variable
             if(BuildConfig.translations)
-                bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.language_code)));
-            SettingsActivity settingsActivity = (SettingsActivity) getActivity();
-            AutoCompleteEditTextPreference autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
-            autoCompleteEditTextPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, true));
-            autoCompleteEditTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.language_code)));            
 
-                    //Save preference new value
-                    PreferencesState.getInstance().saveStringPreference(R.string.org_unit, newValue.toString());
+            settingsActivity.autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
+            settingsActivity.serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));
 
-                    // Now, manually update it's value to next value
-                    // Now, if you click on the item, you'll see the value you've just set here
-                    preference.setSummary(newValue.toString());
+            settingsActivity.autoCompleteEditTextPreference.pullOrgUnits();
 
-                    //Reload preference in memory
-                    PreferencesState.getInstance().reloadPreferences();
+            settingsActivity.autoCompleteEditTextPreference.setOnPreferenceClickListener(settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
+            settingsActivity.serverUrlPreference.setOnPreferenceClickListener(settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
 
-                    //Reload orgunits according to server version
-                    ((SettingsActivity) getActivity()).initReloadByServerVersionWhenOrgUnitChanged();
+            if (settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener() != null) {
+                settingsActivity.serverUrlPreference.setOnPreferenceChangeListener(
+                        settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener());
 
-                    return true;
-
-                }
-            });
-            settingsActivity.setAutoCompleteEditTextPreference(autoCompleteEditTextPreference);
-
-
-            Preference serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));
-            serverUrlPreference.setOnPreferenceClickListener(new LoginRequiredOnPreferenceClickListener(settingsActivity, false));
-            serverUrlPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    //Save preference new value
-                    PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, newValue.toString());
-
-                    // Now, manually update it's value to next value
-                    // Now, if you click on the item, you'll see the value you've just set here
-                    preference.setSummary(newValue.toString());
-
-                    //Reload preference in memory
-                    PreferencesState.getInstance().reloadPreferences();
-
-                    //Reload orgunits according to server version
-                    ((SettingsActivity) getActivity()).initReloadByServerVersionWhenUrlChanged(newValue.toString());
-
-                    return true;
-                }
-            });
-            ((SettingsActivity)getActivity()).initPopulateOrgUnitsByServerVersion(PreferencesState.getInstance().getDhisURL());
-//            ((SettingsActivity)getActivity()).openClickedPreference();
-    }
+                settingsActivity.autoCompleteEditTextPreference.setOnPreferenceChangeListener(
+                        settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener());
+            }
+        }
     }
 
     /**
@@ -659,27 +356,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         listPreference.setEntryValues(newValues);
     }
 
-    //asks the user whether to delete the surveys sent
-    private static void askRemoveSentSurveys(final Activity activity) {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        removeSentSurveys(activity);
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            }
-        };
-        AlertDialog.Builder builder =  new AlertDialog.Builder(activity);
-        builder.setMessage(R.string.dialog_title_delete_surveys).setPositiveButton(R.string.yes, dialogClickListener)
-                .setNegativeButton(R.string.no, dialogClickListener).show();
-    }
-
-
     /**
      * This method finds the existing app translations
      * * @param stringId this string id should be different in all value-xx/string.xml files. Else the language can be ignored
@@ -708,11 +384,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         return languages;
     }
 
-    private static void removeSentSurveys(Activity activity) {
-        Intent surveysIntent=new Intent(activity, SurveyService.class);
-        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.REMOVE_SENT_SURVEYS_ACTION);
-        activity.startService(surveysIntent);
-    }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public boolean isValidFragment(String fragment){
@@ -722,8 +393,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
     }
 
     @Override
@@ -758,229 +428,4 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         return callerActivity;
     }
 
-    /**
-     * AsyncTask that resolves the server version before pulling orgunits from it
-     */
-    class CheckServerVersionAsync extends AsyncTask<String, Void, ServerInfo> {
-
-        Context context;
-        ServerInfo serverInfo;
-        /**
-         * True: The server url has changed, a pull is required
-         * False: Need to check server version in order to populate orgunits
-         */
-        boolean pullRequired;
-
-        /**
-         * Flag that tells if this check corresponds to a change in the orgunit
-         */
-        boolean orgUnitChanged;
-
-        /**
-         * Constructor used to check orgunits after activity creation
-         * @param context
-         */
-        public CheckServerVersionAsync(Context context) {
-            this.context = context;
-            this.pullRequired = false;
-        }
-
-        /**
-         * Constructor used to pull metadata after url change
-         * @param context
-         * @param pullRequired
-         */
-        public CheckServerVersionAsync(Context context,boolean pullRequired) {
-            this(context);
-            this.pullRequired = pullRequired;
-        }
-
-        /**
-         * Constructor used to pull events after orgunit change
-         * @param context
-         * @param pullRequired
-         * @param orgUnitChanged
-         */
-        public CheckServerVersionAsync(Context context,boolean pullRequired, boolean orgUnitChanged) {
-            this(context,pullRequired);
-            this.orgUnitChanged = orgUnitChanged;
-        }
-
-        @Override
-        protected void onPreExecute() {}
-
-        protected ServerInfo doInBackground(String... params) {
-            serverInfo = new ServerInfo(params[0]);
-
-            PushClient pushClient=new PushClient(context);
-            String serverVersion= ServerAPIController.getServerVersion(serverInfo.getUrl());
-
-            serverInfo.setVersion(serverVersion);
-            SettingsActivity.serverInfo = serverInfo;
-            return serverInfo;
-        }
-
-        @Override
-        protected void onPostExecute(ServerInfo serverInfo) {
-
-            //OrgUnit has change -> init pull (orgunits not reloaded)
-            Log.d(TAG,"org unit changed:"+pullRequired);
-            if(orgUnitChanged){
-                callbackReloadByServerVersionWhenOrgUnitChanged(serverInfo);
-                return;
-            }
-            Log.d(TAG,"pull required:"+pullRequired);
-            //FIXME: review the "pullRequired" variable. There's an inconsistency if we need to make a pull even when pullRequired is false
-            //Url has change -> init pull (orgunits reloaded)
-            if(pullRequired) {
-                callbackReloadByServerVersionWhenUrlChanged(serverInfo);
-                //if the server was changed in the first loging it need be set as false
-                PreferencesState.getInstance().setIsNewServerUrl(false);
-                return;
-            } else if(PreferencesState.getInstance().isNewServerUrl()){
-                //Url has change on autentication -> init pull (orgunits reloaded)
-                PreferencesState.getInstance().setIsNewServerUrl(false);
-                callbackReloadByServerVersionWhenUrlChanged(serverInfo);
-                return;
-            }
-
-            //Orgunits will be reloaded
-            callbackPopulateOrgUnitsByServerVersion(serverInfo);
-        }
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "On activity result");
-        if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_ON_EULA_ACCEPTED) {
-            if (data.hasExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE)) {
-                Log.d(TAG, "Executing onActivityResult:");
-                CheckServerVersionAsync checkServerVersionAsync = new CheckServerVersionAsync(this, true, true);
-                checkServerVersionAsync.execute(PreferencesState.getInstance().getDhisURL());
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), true);
-                editor.commit();
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-        Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
-        propagateExtra(intent);
-        finish();
-        startActivity(intent);
-    }
-
-    private Intent propagateExtra(Intent intent){
-        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,false)){
-            Log.i(TAG, "propagateExtra -> Changing orgunit");
-            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,true);
-        }
-
-        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,false)){
-            Log.i(TAG, "propagateExtra -> Changing server");
-            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,true);
-        }
-
-        intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);
-        return intent;
-    }
-}
-
-/**
- * Listener that moves to the LoginActivity before changing orgunit|server.
- * If login has already been done simply pass through
- */
-class LoginRequiredOnPreferenceClickListener implements Preference.OnPreferenceClickListener{
-
-    /**
-     * Reference to the activity so you can use this from the activity or the fragment
-     */
-    SettingsActivity activity;
-
-    /**
-     * Flag to indicate if you are changing orgunit or server
-     */
-    boolean changingOrgUnit;
-
-    LoginRequiredOnPreferenceClickListener(SettingsActivity activity, boolean changingOrgUnit){
-        this.activity=activity;
-        this.changingOrgUnit=changingOrgUnit;
-    }
-
-    /**
-     * Shows an alert dialog asking for acceptance of the EULA terms. If ok calls login function, do nothing otherwise
-     * @param titleId
-     * @param rawId
-     * @param context
-     */
-    public void askEula(int titleId, int rawId, final Context context){
-        InputStream message = context.getResources().openRawResource(rawId);
-        String stringMessage = Utils.convertFromInputStreamToString(message).toString();
-        final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
-        Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
-
-        AlertDialog dialog = new AlertDialog.Builder(context)
-                .setTitle(context.getString(titleId))
-                .setMessage(linkedMessage)
-                .setCancelable(false)
-                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                launchLoginOnEulaAccepted();
-            }
-                })
-                .setNegativeButton(android.R.string.no, null).create();
-        dialog.show();
-        ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
-    @Override
-    public boolean onPreferenceClick(Preference preference) {
-
-        //Login already done -> move on
-        if(isLoginDone()){
-            return false;
-        }
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-
-        if (!sharedPreferences.getBoolean(activity.getApplicationContext().getResources().getString(R.string.eula_accepted), false)) {
-            askEula(R.string.settings_menu_eula, R.raw.eula, activity);
-        } else {
-            //Launch login with the right extra param
-            launchLoginPreChange();
-        }
-
-        return true;
-    }
-
-    /**
-     * Checks if login is required
-     * @return
-     */
-    boolean isLoginDone(){
-        return activity.getIntent().getBooleanExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,false);
-    }
-
-    /**
-     * Launches Login activity with the right extra params
-     */
-    void launchLoginPreChange(){
-        Intent intent = prepareIntent();
-        activity.finish();
-        activity.startActivity(intent);
-    }
-    void launchLoginOnEulaAccepted(){
-        Intent intent = prepareIntent();
-        intent.putExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, true);
-        activity.startActivityForResult(intent, Constants.REQUEST_CODE_ON_EULA_ACCEPTED);
-    }
-
-    Intent prepareIntent(){
-        String extraKey = changingOrgUnit?SettingsActivity.SETTINGS_CHANGING_ORGUNIT:SettingsActivity.SETTINGS_CHANGING_SERVER;
-        Intent intent = new Intent(activity,LoginActivity.class);
-        intent.putExtra(extraKey,true);
-        return intent;
-    }
 }

@@ -40,7 +40,7 @@ public class SurveyChecker {
                 try {
                     int quarantineSurveysSize= Survey.countQuarantineSurveys();
                     Log.d(TAG,"Quarantine size: "+quarantineSurveysSize);
-                    if(quarantineSurveysSize>1){
+                    if(quarantineSurveysSize>0){
                         checkAllQuarantineSurveys();
                     }
                 } finally {

@@ -19,18 +19,18 @@
 
 package org.eyeseetea.malariacare;
 
-import static android.os.Build.VERSION_CODES.M;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -42,25 +42,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.utils.ExportData;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.strategies.BaseActivityStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Permissions;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.InputStream;
@@ -91,6 +89,14 @@ public abstract class BaseActivity extends ActionBarActivity {
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);
 
+        if (EyeSeeTeaApplication.permissions == null){
+            EyeSeeTeaApplication.permissions = Permissions.getInstance(this);
+        }
+
+        if(!EyeSeeTeaApplication.permissions.areAllPermissionsGranted()){
+            EyeSeeTeaApplication.permissions.requestNextPermission();
+        }
+
         initView(savedInstanceState);
         if(PushController.getInstance().isPushInProgress()) {
             List<Survey> surveys=Survey.getAllSendingSurveys();
@@ -105,6 +111,38 @@ public abstract class BaseActivity extends ActionBarActivity {
         alarmPush.setPushAlarm(this);
 
         mBaseActivityStrategy.onCreate();
+    }
+
+    /**
+     * Its called on the requestPermission results, if the user accepts the permissions it request the Phone permission and gets the phoneMetadata
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+            String permissions[], int[] grantResults) {
+        if (Permissions.processAnswer(requestCode, permissions, grantResults)){
+            EyeSeeTeaApplication.permissions.requestNextPermission();
+            if (EyeSeeTeaApplication.permissions.areAllPermissionsGranted()){
+                PhoneMetaData phoneMetaData = getPhoneMetadata();
+                Session.setPhoneMetaData(phoneMetaData);
+            }
+        } else {
+            onDestroy();
+        }
+    }
+
+    PhoneMetaData getPhoneMetadata() {
+        PhoneMetaData phoneMetaData = new PhoneMetaData();
+        TelephonyManager phoneManagerMetaData = (TelephonyManager) getSystemService(
+                Context.TELEPHONY_SERVICE);
+        String imei = phoneManagerMetaData.getDeviceId();
+        String phone = phoneManagerMetaData.getLine1Number();
+        String serial = phoneManagerMetaData.getSimSerialNumber();
+        phoneMetaData.setImei(imei);
+        phoneMetaData.setPhone_number(phone);
+        phoneMetaData.setPhone_serial(serial);
+        phoneMetaData.setBuild_number(Utils.getCommitHash(getApplicationContext()));
+
+        return phoneMetaData;
     }
 
     @Override
@@ -267,7 +305,15 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Log.d(TAG, "requestLocationUpdates via NETWORK");
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            if (ActivityCompat.checkSelfPermission(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
+                    locationListener);
         }
         else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Log.d(TAG, "requestLocationUpdates via GPS");

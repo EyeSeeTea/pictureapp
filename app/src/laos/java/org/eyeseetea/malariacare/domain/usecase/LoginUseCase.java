@@ -29,6 +29,7 @@ public class LoginUseCase extends ALoginUseCase{
             User.insertLoggedUser(user);
 
             Session.setUser(user);
+            Session.setCredentials(credentials);
         }
         else{
             PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, credentials.getServerURL());

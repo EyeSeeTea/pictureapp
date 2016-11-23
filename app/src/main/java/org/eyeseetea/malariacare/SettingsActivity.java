@@ -301,7 +301,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
             //Hide translation option if is not active in gradle variable
             if(BuildConfig.translations)
-                bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.language_code)));            
+                bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.language_code)));
 
             settingsActivity.autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
             settingsActivity.serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));

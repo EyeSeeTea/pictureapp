@@ -24,6 +24,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.services.strategies.APushServiceStrategy;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 
@@ -91,9 +92,9 @@ public class PushService extends IntentService {
         Log.w(TAG, "onPushFinished error: " + message);
     }
 
-    private void reloadDashboard(){
-        Intent surveysIntent=new Intent(this, SurveyService.class);
+    public static void reloadDashboard(){
+        Intent surveysIntent=new Intent(PreferencesState.getInstance().getContext(), SurveyService.class);
         surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
-        this.startService(surveysIntent);
+        PreferencesState.getInstance().getContext().startService(surveysIntent);
     }
 }

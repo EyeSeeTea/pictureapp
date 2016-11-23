@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventEx
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.android.sdk.controllers.wrappers.EventsWrapper;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
@@ -40,8 +41,9 @@ public class SurveyChecker {
                 try {
                     int quarantineSurveysSize= Survey.countQuarantineSurveys();
                     Log.d(TAG,"Quarantine size: "+quarantineSurveysSize);
-                    if(quarantineSurveysSize>1){
+                    if(quarantineSurveysSize>0){
                         checkAllQuarantineSurveys();
+                        PushService.reloadDashboard();
                     }
                 } finally {
                     Log.d(TAG,"Quarantine thread finished");

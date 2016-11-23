@@ -21,7 +21,6 @@ package org.eyeseetea.malariacare.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -40,16 +39,12 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.ShowException;
-import org.hisp.dhis.android.sdk.controllers.wrappers.OrganisationUnitLevelWrapper;
-import org.hisp.dhis.android.sdk.controllers.wrappers.ProgramWrapper;
-import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.Proxy;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -115,12 +110,12 @@ public class ServerAPIController {
     /**
      * Endpoint to retrieve orgUnits info filtering by CODE (API)
      */
-    private static final String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id,closedDate&filter=code:eq:%s&filter:programs:id:eq:%s";
+    private static final String DHIS_PULL_ORG_UNIT_API ="/api/organisationUnits.json?paging=false&fields=id,closedDate,description&filter=code:eq:%s&filter:programs:id:eq:%s";
 
     /**
      * Endpoint to retrieve orgUnits info filtering by NAME (SDK)
      */
-    private static final String DHIS_PULL_ORG_UNIT_API_BY_NAME ="/api/organisationUnits.json?paging=false&fields=id,closedDate&filter=name:eq:%s&filter:programs:id:eq:%s";
+    private static final String DHIS_PULL_ORG_UNIT_API_BY_NAME ="/api/organisationUnits.json?paging=false&fields=id,closedDate,description&filter=name:eq:%s&filter:programs:id:eq:%s";
 
     /**
      * Endpoint suffix to retrieve orgUnits
@@ -433,15 +428,21 @@ public class ServerAPIController {
         try {
             JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
             String orgUnitUID =orgUnitJSON.getString(TAG_ID);
-            String orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
-
+            String orgUnitDescription;
+            try {
+                orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
+            }catch (Exception e){
+                orgUnitDescription = "";
+            }
             //NO OrgUnitUID -> Non blocking error, go on
             if(orgUnitUID==null){
                 Log.e(TAG,String.format("banOrg(%s,%s) -> No UID",url,orgUnitNameOrCode));
                 return;
             }
-
-            //Update date and descripcion in the orgunit
+            //Show informative dialog to the user
+            Context context = PreferencesState.getInstance().getContext();
+            ShowException.showError(context.getString(R.string.exception_org_unit_banned), context);
+            //Update date and description in the orgunit
             patchClosedDate(url, orgUnitUID);
             patchDescriptionClosedDate(url, orgUnitUID, orgUnitDescription);
         }catch(Exception ex){

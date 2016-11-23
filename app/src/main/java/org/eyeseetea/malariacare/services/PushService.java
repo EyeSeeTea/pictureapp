@@ -30,6 +30,7 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -276,9 +277,9 @@ public class PushService extends IntentService {
     /**
      * Reloads dashboard via SurveyService
      */
-    private void reloadDashboard(){
-        Intent surveysIntent=new Intent(this, SurveyService.class);
+    public static void reloadDashboard(){
+        Intent surveysIntent=new Intent(PreferencesState.getInstance().getContext(), SurveyService.class);
         surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
-        this.startService(surveysIntent);
+        PreferencesState.getInstance().getContext().startService(surveysIntent);
     }
 }

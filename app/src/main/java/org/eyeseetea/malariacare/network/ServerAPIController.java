@@ -429,6 +429,7 @@ public class ServerAPIController {
             JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
             String orgUnitUID =orgUnitJSON.getString(TAG_ID);
             String orgUnitDescription;
+            //Fixme: refactor try catch{ Exception }
             try {
                 orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
             }catch (Exception e){

@@ -99,6 +99,7 @@ import java.util.List;
 import java.util.Locale;
 
 import utils.PhoneMask;
+import utils.ProgressUtils;
 
 /**
  * Created by Jose on 21/04/2015.
@@ -271,7 +272,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         View rootView = view.getRootView();
         final TextCard questionView = (TextCard)rootView.findViewById(R.id.question);
         questionView.setText(questionCounter.getInternationalizedForm_name());
-        ((TextView) rootView.findViewById(R.id.dynamic_progress_text)).setText("");
+        ProgressUtils.setProgressBarText(rootView, "");
         //cancel
         ImageView noView = (ImageView) rootView.findViewById(R.id.confirm_no);
         noView.setOnClickListener(new View.OnClickListener() {
@@ -488,11 +489,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         //Progress
-        ProgressBar progressView = (ProgressBar) rowView.findViewById(R.id.dynamic_progress);
-        TextView progressText = (TextView) rowView.findViewById(R.id.dynamic_progress_text);
-        progressView.setMax(navigationController.getTotalPages());
-        progressView.setProgress(navigationController.getCurrentPage() + 1);
-        progressText.setText(getLocaleProgressStatus(progressView.getProgress(), progressView.getMax()));
+        ProgressUtils.updateProgressBarStatus(rowView, navigationController.getCurrentPage(), navigationController.getTotalPages());
 
         TableRow tableRow = null;
         TableRow tableButtonRow = null;
@@ -619,7 +616,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 rootView .findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
                 rootView.findViewById(R.id.no_container).setVisibility(View.GONE);
 
-                ((TextView) rowView.findViewById(R.id.dynamic_progress_text)).setText("");
+                ProgressUtils.setProgressBarText(rowView, "");
                 List<Option> questionOptions = questionItem.getAnswer().getOptions();
                 //Question "header" is in the first option in Options.csv
                 if(questionOptions!=null && questionOptions.size()>0) {
@@ -830,18 +827,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         textOption.setWidth(frameLayout.getWidth());
     }
 
-    /**
-     * Get status progress in locale strings
-     *
-     * @param currentPage
-     * @param totalPages
-     */
-    private String getLocaleProgressStatus(int currentPage, int totalPages) {
-
-        String current = context.getResources().getString(context.getResources().getIdentifier("number_" + currentPage, "string", context.getPackageName()));
-        String total = context.getResources().getString(context.getResources().getIdentifier("number_" + totalPages, "string", context.getPackageName()));
-        return current.concat("/").concat(total);
-    }
 
     private void showKeyboard(Context c, View v) {
         Log.d(TAG, "KEYBOARD SHOW ");
@@ -1650,6 +1635,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         question = navigationController.getCurrentQuestion();
         value = question.getValueBySession();
+        //TODO: rhardjono: navigationController totalPages is not updating properly in survey review
         //set new page number if the value is null
         if (value == null && !readOnly)
             navigationController.setTotalPages(navigationController.getCurrentQuestion().getTotalQuestions());

@@ -33,6 +33,8 @@ import java.util.List;
 @Table(databaseName = AppDatabase.NAME)
 public class User extends BaseModel {
 
+    private static final String DUMMY_USER="user";
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_user;
@@ -110,6 +112,19 @@ public class User extends BaseModel {
                 return userdb.get(i);
         }
         return null;
+    }
+
+    public static User createDummyUser(){
+        User dummyUser=new User(DUMMY_USER,DUMMY_USER);
+
+        User userdb=User.getUserFromDB(dummyUser);
+
+        if(userdb!=null)
+            dummyUser=userdb;
+        else
+            dummyUser.save();
+
+        return dummyUser;
     }
 
     @Override

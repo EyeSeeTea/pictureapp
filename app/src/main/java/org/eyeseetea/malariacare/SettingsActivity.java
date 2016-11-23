@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -35,14 +36,24 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.DisplayMetrics;
+import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.otto.Subscribe;
+
+import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
+import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.database.utils.PopulateDB;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.network.ServerInfo;
@@ -51,6 +62,10 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
+import org.hisp.dhis.android.sdk.controllers.DhisService;
+import org.hisp.dhis.android.sdk.job.NetworkJob;
+import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
+import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -285,8 +300,8 @@ public class SettingsActivity extends PreferenceActivity implements
             SettingsActivity settingsActivity = (SettingsActivity)getActivity();
 
             //Hide translation option if is not active in gradle variable
-            if(!BuildConfig.translations)
-                getPreferenceScreen().removePreference(getPreferenceScreen().findPreference(getResources().getString(R.string.language_code)));
+            if(BuildConfig.translations)
+                bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.language_code)));
 
             settingsActivity.autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
             settingsActivity.serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));

@@ -200,6 +200,15 @@ public class Tab extends BaseModel {
     public boolean isMultiQuestionTab(){
         return getType() == Constants.TAB_MULTI_QUESTION;
     }
+
+    /**
+     * Checks if TAB table is empty or has no data
+     * @return
+     */
+    public static boolean isEmpty(){
+        return new Select().count().from(Tab.class).count()==0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

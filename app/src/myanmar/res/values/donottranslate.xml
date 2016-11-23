@@ -11,4 +11,5 @@
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
     <string name="DHIS_DEFAULT_SERVER" translatable="false">https://dev.psi-mis.org</string>
+    <string name="url_server_demo_login" translatable="false">demo.server</string>
 </resources>

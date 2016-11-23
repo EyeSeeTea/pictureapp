@@ -9,6 +9,9 @@
 <string name="settings_menu_about">"กับ"</string>
 <string name="settings_menu_configuration">"เพื่อตรวจสอบ"</string>
 <string name="settings_menu_licence">"ใบอนุญาต"</string>
+<string name="settings_menu_logout_title">"ออกจากระบบ"</string>
+<string name="settings_menu_logout_message">"การเปลี่ยนเซิร์ฟเวอร์หรือองค์กรหน่วยความต้องการที่จะกลับเข้าสู่ระบบ ทุกการสำรวจไม่ส่งจะถูกลบ คุณแน่ใจหรือว่าต้องการดำเนินการต่อ"</string>
+<string name="dashboard_menu_logout_message">"ทุกการสำรวจไม่ส่งจะถูกลบ คุณแน่ใจหรือว่าต้องการดำเนินการต่อ"</string>
 <string name="dialog_title_delete_surveys">"คุณแน่ใจหรือว่าต้องการลบแบบสำรวจที่ส่งออก?"</string>
 <string name="dialog_title_delete_survey">"ลบผลการส่งออก"</string>
 <string name="dialog_info_delete_survey">"คุณแน่ใจหรือไม่ว่าคุณต้องการที่จะสมบูรณ์ยกเลิกการสำรวจครั้งนี้?"</string>

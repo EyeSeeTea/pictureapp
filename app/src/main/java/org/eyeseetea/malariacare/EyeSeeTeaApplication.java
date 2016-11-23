@@ -31,12 +31,14 @@ import com.raizlabs.android.dbflow.sql.index.Index;
 import org.eyeseetea.malariacare.database.PostMigration;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Match$Table;
+import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionOption$Table;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.QuestionRelation$Table;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold$Table;
+import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.model.Value$Table;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
@@ -68,6 +70,12 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         FlowManager.init(this, "_EyeSeeTeaDB");
         createDBIndexes();
         PostMigration.launchPostMigration();
+
+        //Get maximum total of questions
+        if (!Tab.isEmpty()) {
+            Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
+        }
+
     }
 
     private void createDBIndexes(){

@@ -23,6 +23,8 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
+import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -103,6 +105,35 @@ public class Program extends BaseModel {
 
     public static Program getFirstProgram() {
         return new Select().from(Program.class).querySingle();
+    }
+
+    public static int getMaxTotalQuestions() {
+
+        int maxTotalQuestions = 0;
+        Program p = Program.getFirstProgram();
+
+        Question qMax = new Select(Question$Table.TOTAL_QUESTIONS).method("MAX", Question$Table.TOTAL_QUESTIONS)
+                .from(Question.class).as("q")
+                .join(Header.class, Join.JoinType.INNER).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                .join(Tab.class, Join.JoinType.INNER).as("t")
+                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                .join(TabGroup.class, Join.JoinType.INNER).as("tg")
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP))
+                        .eq(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP)))
+                .join(Program.class, Join.JoinType.INNER).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).eq(p.getUid()))
+                .querySingle();
+
+        if(qMax!=null && qMax.getTotalQuestions()!=null){
+            maxTotalQuestions = qMax.getTotalQuestions();
+        }
+
+        return maxTotalQuestions;
     }
 
     public List<OrgUnit> getOrgUnits(){

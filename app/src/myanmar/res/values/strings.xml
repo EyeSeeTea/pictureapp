@@ -136,7 +136,6 @@
 <string name="review_title">Please check before</string>
 <string name="review_subtitle">Transmission</string>
 <string name="not_tested">Not tested</string>
-<string name="demo_login">Demo</string>
 <string name="system_defined">System defined</string>
 <string name="no_data">no data</string>
 <string name="last_6_days">last 6 days</string>
@@ -150,4 +149,5 @@
 <string name="developer_option_summary">This feature activates the developer options</string>
 <string name="developer_option_title">Show developer options</string>
 <string name="export_data_option_title">Export database</string>
+<string name="demo_login">Demo</string>
 </resources>

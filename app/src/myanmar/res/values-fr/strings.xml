@@ -9,6 +9,9 @@
 <string name="settings_menu_about">"A propos de cette app"</string>
 <string name="settings_menu_configuration">"Paramètres"</string>
 <string name="settings_menu_licence">"License"</string>
+<string name="settings_menu_logout_title">"Déconnecter"</string>
+<string name="settings_menu_logout_message">"Changer de serveur ou d'orgunit implique être déconnecté avant. Chaque rapport non envoyé sera supprimé. Êtes-vous sûr de voloir continuer?"</string>
+<string name="dashboard_menu_logout_message">"Chaque rapport non envoyé sera supprimé. Êtes-vous sûr de voloir continuer?"</string>
 <string name="dialog_title_delete_surveys">"Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?"</string>
 <string name="dialog_title_delete_survey">"Supprimer envoyés"</string>
 <string name="dialog_info_delete_survey">"Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?"</string>
@@ -139,7 +142,6 @@
 <string name="last_6_weeks">"dernières 6 semaines"</string>
 <string name="last_6_months"> les 6 derniers mois</string>
 <string name="download">"Téléchargement:"</string>
-<string name="demo_login">Demo</string>
 <string name="assessment_past_cases">PAST CASES</string>
 <string name="assessment_new_cases">NEW CASES</string>
 <string name="assessment_connectivity">Data awaiting internet connectivity</string>
@@ -147,4 +149,5 @@
 <string name="developer_option_summary">"Cette option active les options de développement"</string>
 <string name="developer_option_title">"Afficher les options développeur"</string>
 <string name="export_data_option_title">"Base de données à l'exportation"</string>
+<string name="demo_login">Demo</string>
 </resources>

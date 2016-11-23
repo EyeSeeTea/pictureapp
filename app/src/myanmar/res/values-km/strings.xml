@@ -9,6 +9,9 @@
 <string name="settings_menu_about">"អំពី"</string>
 <string name="settings_menu_configuration">"ការ​កំណត់ "</string>
 <string name="settings_menu_licence">"អាជ្ញាប័ណ្ណ"</string>
+<string name="settings_menu_logout_title">"ចាកចេញ"</string>
+<string name="settings_menu_logout_message">"ការផ្លាស់ប្តូរម៉ាស៊ីនបម្រើឬ orgunit ត្រូវការដើម្បីឡើងវិញការចូល។ រាល់ការស្ទង់មតិមិនត្រូវបានផ្ញើនឹងត្រូវបានលុប។ តើអ្នកពិតជាចង់បន្តឬ?"</string>
+<string name="dashboard_menu_logout_message">"រាល់ការស្ទង់មតិមិនត្រូវបានផ្ញើនឹងត្រូវបានលុប។ តើអ្នកពិតជាចង់បន្តឬ?"</string>
 <string name="dialog_title_delete_surveys">"តើអ្នកប្រាកដទេថា អ្នកចង់លុបព័ត៌មានស្ទង់មតិដែលបានផ្ញើរចេញទាំងអស់?"</string>
 <string name="dialog_title_delete_survey">"លុបលទ្ធផលដែលបានផ្ញើរចេញ"</string>
 <string name="dialog_info_delete_survey">"តើ​អ្នក​ប្រាកដ​ជា​ចង់​លុបចោល​ទាំង​ស្រុង​ការស្ទង់មតិ​នេះ​?"</string>
@@ -139,7 +142,6 @@
 <string name="last_6_weeks">ចុងក្រោយ 6 សប្តាហ៍</string>
 <string name="last_6_months"> 6 ខែចុង</string>
 <string name="download"> ទាញយក:</string>
-<string name="demo_login">ទស្សនាការបង្ហាញ</string>
 <string name="assessment_past_cases">PAST CASES</string>
 <string name="assessment_new_cases">NEW CASES</string>
 <string name="assessment_connectivity">Data awaiting internet connectivity</string>
@@ -147,4 +149,5 @@
 <string name="developer_option_summary">ជម្រើសនេះអនុញ្ញាតជម្រើសអភិវឌ្ឍន៍</string>
 <string name="developer_option_title">អភិវឌ្ឍន៍បង្ហាញជម្រើស</string>
 <string name="export_data_option_title">មូលដ្ឋានទិន្នន័យដែលបាននាំចេញ</string>
+<string name="demo_login">ទស្សនាការបង្ហាញ</string>
 </resources>

@@ -19,4 +19,7 @@
     <color name="question_header_subtitle">@color/medium_light_violet</color>
     <color name="hint">@color/medium_violet</color>
     <color name="intColor">@color/dark_violet</color>
+
+    <color name="pageIndicator_completed">#4D3B4C</color>
+    <color name="pageIndicator_pending">#C9B8C8</color>
 </resources>

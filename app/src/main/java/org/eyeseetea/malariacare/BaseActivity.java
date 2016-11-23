@@ -58,6 +58,7 @@ import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.strategies.BaseActivityStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Permissions;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.InputStream;
@@ -88,9 +89,14 @@ public abstract class BaseActivity extends ActionBarActivity {
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);
 
-        ActivityCompat.requestPermissions(this,
-                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                8);
+        if (EyeSeeTeaApplication.permissions == null){
+            EyeSeeTeaApplication.permissions = Permissions.getInstance(this);
+        }
+
+        if(!EyeSeeTeaApplication.permissions.areAllPermissionsGranted()){
+            EyeSeeTeaApplication.permissions.requestNextPermission();
+        }
+
         initView(savedInstanceState);
         if(PushController.getInstance().isPushInProgress()) {
             List<Survey> surveys=Survey.getAllSendingSurveys();
@@ -113,31 +119,14 @@ public abstract class BaseActivity extends ActionBarActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
             String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            //Checks the ACCESS_FINE_LOCATION permissions
-            case 8: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //requestPermissions for the Read_Phone_State permission
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{android.Manifest.permission.READ_PHONE_STATE},
-                            9);
-                } else {
-                    onDestroy();
-                }
-                return;
+        if (Permissions.processAnswer(requestCode, permissions, grantResults)){
+            EyeSeeTeaApplication.permissions.requestNextPermission();
+            if (EyeSeeTeaApplication.permissions.areAllPermissionsGranted()){
+                PhoneMetaData phoneMetaData = getPhoneMetadata();
+                Session.setPhoneMetaData(phoneMetaData);
             }
-            //Checks the Phone permissions
-            case 9: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PhoneMetaData phoneMetaData = this.getPhoneMetadata();
-                    Session.setPhoneMetaData(phoneMetaData);
-                } else {
-                    onDestroy();
-                }
-                return;
-            }
+        } else {
+            onDestroy();
         }
     }
 

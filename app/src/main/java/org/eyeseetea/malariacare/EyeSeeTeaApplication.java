@@ -44,6 +44,7 @@ import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Permissions;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
 import io.fabric.sdk.android.Fabric;
@@ -52,6 +53,8 @@ import io.fabric.sdk.android.Fabric;
  * Created by nacho on 04/08/15.
  */
 public class EyeSeeTeaApplication extends Dhis2Application {
+
+    public static Permissions permissions;
 
     @Override
     public void onCreate() {
@@ -68,6 +71,7 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         if (!Tab.isEmpty()) {
             Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
         }
+
 
     }
 

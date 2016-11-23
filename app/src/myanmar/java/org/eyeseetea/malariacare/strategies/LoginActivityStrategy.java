@@ -14,7 +14,9 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.hisp.dhis.android.sdk.ui.views.FontButton;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy{
@@ -37,6 +39,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
     @Override
     public void onCreate() {
         if (existsLoggedUser()) {
+            LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase = new LoadUserAndCredentialsUseCase(loginActivity);
+
+            loadUserAndCredentialsUseCase.execute();
+
             finishAndGo(DashboardActivity.class);
         }
         else{
@@ -75,7 +81,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
     }
 
     @Override
-    public void finishAndGo(){
+    public void finishAndGo() {
         finishAndGo(ProgressActivity.class);
     }
 }

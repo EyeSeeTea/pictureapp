@@ -33,6 +33,8 @@ import java.util.List;
 @Table(databaseName = AppDatabase.NAME)
 public class User extends BaseModel {
 
+    private static final String DUMMY_USER="user";
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_user;
@@ -112,6 +114,19 @@ public class User extends BaseModel {
         return null;
     }
 
+    public static User createDummyUser(){
+        User dummyUser=new User(DUMMY_USER,DUMMY_USER);
+
+        User userdb=User.getUserFromDB(dummyUser);
+
+        if(userdb!=null)
+            dummyUser=userdb;
+        else
+            dummyUser.save();
+
+        return dummyUser;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -140,20 +155,5 @@ public class User extends BaseModel {
                 ", uid='" + uid + '\'' +
                 ", name='" + name + '\'' +
                 '}';
-    }
-
-    private static final String DUMMY_USER="user";
-
-    public static User createDummyUser(){
-        User dummyUser=new User(DUMMY_USER,DUMMY_USER);
-
-        User userdb=User.getUserFromDB(dummyUser);
-
-        if(userdb!=null)
-            dummyUser=userdb;
-        else
-            dummyUser.save();
-
-        return dummyUser;
     }
 }

@@ -10,12 +10,12 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
  */
 public class ACTStockoutRowBuilder extends CounterRowBuilder {
 
-    public ACTStockoutRowBuilder(Context context){
+    public ACTStockoutRowBuilder(Context context) {
         super(context, context.getString(R.string.monitor_row_title_act_stockout));
     }
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isACTStockout())?1:0;
+        return (surveyMonitor.isACTStockout()) ? 1 : 0;
     }
 }

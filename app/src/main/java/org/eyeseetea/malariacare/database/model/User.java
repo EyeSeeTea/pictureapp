@@ -33,7 +33,7 @@ import java.util.List;
 @Table(databaseName = AppDatabase.NAME)
 public class User extends BaseModel {
 
-    private static final String DUMMY_USER="user";
+    private static final String DUMMY_USER = "user";
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -54,6 +54,49 @@ public class User extends BaseModel {
     public User(String uid, String name) {
         this.uid = uid;
         this.name = name;
+    }
+
+    public static User getLoggedUser() {
+        // for the moment we return just the first entry assuming there will be only one entry,
+        // but in the future we will have to tag the logged user
+        List<User> users = new Select().all().from(User.class).queryList();
+        if (users != null && users.size() != 0) {
+            return users.get(0);
+        }
+        return null;
+    }
+
+    public static void insertLoggedUser(User user) {
+        User userDB = User.getUserFromDB(user);
+
+        if (userDB == null) {
+            user.save();
+        }
+    }
+
+    public static User getUserFromDB(User user) {
+        List<User> userdb = new Select().from(User.class).queryList();
+        for (int i = userdb.size() - 1; i >= 0; i--) {
+            if ((userdb.get(i).getUid().equals(user.getUid())) && (userdb.get(i).getName().equals(
+                    user.getName()))) {
+                return userdb.get(i);
+            }
+        }
+        return null;
+    }
+
+    public static User createDummyUser() {
+        User dummyUser = new User(DUMMY_USER, DUMMY_USER);
+
+        User userdb = User.getUserFromDB(dummyUser);
+
+        if (userdb != null) {
+            dummyUser = userdb;
+        } else {
+            dummyUser.save();
+        }
+
+        return dummyUser;
     }
 
     public Long getId_user() {
@@ -80,51 +123,14 @@ public class User extends BaseModel {
         this.name = name;
     }
 
-    public List<Survey> getSurveys(){
-        if(surveys==null){
+    public List<Survey> getSurveys() {
+        if (surveys == null) {
             surveys = new Select()
                     .from(Survey.class)
                     .where(Condition.column(Survey$Table.ID_USER)
                             .eq(this.getId_user())).queryList();
         }
         return surveys;
-    }
-
-    public static User getLoggedUser(){
-        // for the moment we return just the first entry assuming there will be only one entry,but in the future we will have to tag the logged user
-        List<User> users = new Select().all().from(User.class).queryList();
-        if (users != null && users.size() != 0)
-            return users.get(0);
-        return null;
-    }
-
-    public static void insertLoggedUser(User user){
-        User userDB=User.getUserFromDB(user);
-
-        if(userDB==null)
-            user.save();
-    }
-
-    public static User getUserFromDB(User user) {
-        List<User> userdb= new Select().from(User.class).queryList();
-        for(int i=userdb.size()-1;i>=0;i--){
-            if((userdb.get(i).getUid().equals(user.getUid()))&&(userdb.get(i).getName().equals(user.getName())))
-                return userdb.get(i);
-        }
-        return null;
-    }
-
-    public static User createDummyUser(){
-        User dummyUser=new User(DUMMY_USER,DUMMY_USER);
-
-        User userdb=User.getUserFromDB(dummyUser);
-
-        if(userdb!=null)
-            dummyUser=userdb;
-        else
-            dummyUser.save();
-
-        return dummyUser;
     }
 
     @Override

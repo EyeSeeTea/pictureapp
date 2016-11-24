@@ -40,7 +40,8 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
     protected int backIndex = 0;
     protected boolean showNextFacilityName = true;
 
-    public AAssessmentAdapter() { }
+    public AAssessmentAdapter() {
+    }
 
     public AAssessmentAdapter(List<Survey> items, Context context) {
         this.items = items;
@@ -64,9 +65,10 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
 
         //Event Date
         TextCard eventDate = (TextCard) rowView.findViewById(R.id.completionDate);
-        if(survey.getEventDate()!=null){
+        if (survey.getEventDate() != null) {
             //it show dd/mm/yy in europe, mm/dd/yy in america, etc.
-            DateFormat formatter=DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Resources.getSystem().getConfiguration().locale);
+            DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT,
+                    DateFormat.SHORT, Resources.getSystem().getConfiguration().locale);
 
             eventDate.setText(formatter.format(survey.getEventDate()));
         }
@@ -81,7 +83,8 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         //INFO
         TextCard info = (TextCard) rowView.findViewById(R.id.info);
         //Load a font which support Khmer character
-        Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/" +  context.getString(R.string.specific_language_font));
+        Typeface tf = Typeface.createFromAsset(context.getAssets(),
+                "fonts/" + context.getString(R.string.specific_language_font));
         info.setTypeface(tf);
 
         info.setText(survey.getValuesToString());
@@ -91,7 +94,7 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
     }
 
     @Override
-    public void notifyDataSetChanged(){
+    public void notifyDataSetChanged() {
         this.showNextFacilityName = true;
         super.notifyDataSetChanged();
     }

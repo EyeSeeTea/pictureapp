@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/questionHeaderColor">
+    android:background="@color/questionHeaderColor"
+    android:orientation="vertical">
+
     <org.eyeseetea.malariacare.views.TextCard
+        android:id="@+id/answer_subtitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/questionHeaderColor"
+        android:gravity="center"
+        android:paddingLeft="10dip"
         android:text="@string/review_subtitle"
-        android:id="@+id/answer_subtitle"
         android:textColor="@color/questionHeaderTextColor"
         android:textSize="@dimen/default_review_fragment_font_size"
-        android:background="@color/questionHeaderColor"
-        android:paddingLeft="10dip"
-        android:gravity="center"
         app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/specific_language_font"/>
+        app:tFontName="@string/specific_language_font" />
 </LinearLayout>

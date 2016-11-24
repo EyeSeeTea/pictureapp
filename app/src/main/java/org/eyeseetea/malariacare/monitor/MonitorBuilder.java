@@ -34,7 +34,7 @@ import java.util.List;
  * Created by arrizabalaga on 25/02/16.
  */
 public class MonitorBuilder {
-    private static final String TAG=".MonitorBuilder";
+    private static final String TAG = ".MonitorBuilder";
 
     /**
      * Inject javascript to update i18n messages:
@@ -46,7 +46,8 @@ public class MonitorBuilder {
      * "OPT_DAYS":" days"
      * })
      */
-    private static final String JAVASCRIPT_UPDATE_MESSAGES="javascript:monitor.updateMessages(%s)";
+    private static final String JAVASCRIPT_UPDATE_MESSAGES =
+            "javascript:monitor.updateMessages(%s)";
 
     /**
      * Inyect javascript to reload tables
@@ -56,7 +57,9 @@ public class MonitorBuilder {
     /**
      * JSON map with pairs to translate webview interface
      */
-    private static final String UPDATE_MESSAGES_JSON="{\"LBL_TIMEUNIT\":\"%s\",\"OPT_MONTHS\":\"%s\",\"OPT_WEEKS\":\"%s\",\"OPT_DAYS\":\" %s\"}";
+    private static final String UPDATE_MESSAGES_JSON =
+            "{\"LBL_TIMEUNIT\":\"%s\",\"OPT_MONTHS\":\"%s\",\"OPT_WEEKS\":\"%s\",\"OPT_DAYS\":\" "
+                    + "%s\"}";
 
     /**
      * List of tables that make the monitor
@@ -68,7 +71,7 @@ public class MonitorBuilder {
      */
     Context context;
 
-    public MonitorBuilder(Context context){
+    public MonitorBuilder(Context context) {
         this.context = context;
         tableBuilders = new ArrayList<>();
         tableBuilders.add(new SuspectedPositiveTableBuilder(this.context));
@@ -77,13 +80,12 @@ public class MonitorBuilder {
 
     /**
      * Adds surveys info into its tables
-     * @param surveys
      */
-    public void addSurveys(List<Survey> surveys){
+    public void addSurveys(List<Survey> surveys) {
         //Each survey updates...
-        for(Survey survey:surveys){
+        for (Survey survey : surveys) {
             //Each table
-            for(MonitorTableBuilder tableBuilder:tableBuilders){
+            for (MonitorTableBuilder tableBuilder : tableBuilders) {
                 tableBuilder.addSurvey(survey);
             }
         }
@@ -91,14 +93,13 @@ public class MonitorBuilder {
 
     /**
      * Updates the given webview with the data provided by its tables
-     * @param webView
      */
-    public void addDataToView(WebView webView){
+    public void addDataToView(WebView webView) {
         //add i18n messages to webview interface
         addMessagesToView(webView);
 
         //add each table
-        for(MonitorTableBuilder tableBuilder:tableBuilders){
+        for (MonitorTableBuilder tableBuilder : tableBuilders) {
             tableBuilder.addDataToView(webView);
         }
 
@@ -108,26 +109,24 @@ public class MonitorBuilder {
 
     /**
      * Updates webview with i18N messages
-     * @param webView
      */
-    private void addMessagesToView(WebView webView){
-        String json=String.format(UPDATE_MESSAGES_JSON,
+    private void addMessagesToView(WebView webView) {
+        String json = String.format(UPDATE_MESSAGES_JSON,
                 context.getString(R.string.monitor_label),
                 context.getString(R.string.monitor_label_option_months),
                 context.getString(R.string.monitor_label_option_weeks),
                 context.getString(R.string.monitor_label_option_days));
 
         //Inyect in browser
-        String updateMessagesJS=String.format(JAVASCRIPT_UPDATE_MESSAGES,json);
+        String updateMessagesJS = String.format(JAVASCRIPT_UPDATE_MESSAGES, json);
         Log.d(TAG, updateMessagesJS);
         webView.loadUrl(updateMessagesJS);
     }
 
     /**
      * Reloads tables
-     * @param webView
      */
-    private void addReloadTablesToView(WebView webView){
+    private void addReloadTablesToView(WebView webView) {
         Log.d(TAG, JAVASCRIPT_RELOAD_TABLES);
         webView.loadUrl(JAVASCRIPT_RELOAD_TABLES);
     }

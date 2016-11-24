@@ -47,17 +47,16 @@ import java.util.Map;
 
 public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
-    private final static String TAG=".ConvertFromSDKVisitor";
+    private final static String TAG = ".ConvertFromSDKVisitor";
 
 
     TabGroup tabgroup;
-    Map<String,Object> appMapObjects;
+    Map<String, Object> appMapObjects;
     List<Survey> surveys;
     List<Value> values;
 
 
-
-    public ConvertFromSDKVisitor(){
+    public ConvertFromSDKVisitor() {
         Program firstProgram = Program.getFirstProgram();
         tabgroup = firstProgram.getTabGroups().get(0);
         appMapObjects = new HashMap();
@@ -91,36 +90,43 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     /**
      * Turns a sdk organisationUnit into an app OrgUnit
-     *
-     * @param sdkOrganisationUnitExtended
      */
     @Override
     public void visit(OrganisationUnitExtended sdkOrganisationUnitExtended) {
         //Create and save OrgUnitLevel
-        OrganisationUnit organisationUnit=sdkOrganisationUnitExtended.getOrgUnit();
-        org.eyeseetea.malariacare.database.model.OrgUnitLevel orgUnitLevel = new org.eyeseetea.malariacare.database.model.OrgUnitLevel();
-        if(!appMapObjects.containsKey(String.valueOf(organisationUnit.getLevel()))) {
-            orgUnitLevel.setName(PreferencesState.getInstance().getContext().getResources().getString(R.string.create_info_zone));
+        OrganisationUnit organisationUnit = sdkOrganisationUnitExtended.getOrgUnit();
+        org.eyeseetea.malariacare.database.model.OrgUnitLevel orgUnitLevel =
+                new org.eyeseetea.malariacare.database.model.OrgUnitLevel();
+        if (!appMapObjects.containsKey(String.valueOf(organisationUnit.getLevel()))) {
+            orgUnitLevel.setName(
+                    PreferencesState.getInstance().getContext().getResources().getString(
+                            R.string.create_info_zone));
             orgUnitLevel.save();
             appMapObjects.put(String.valueOf(organisationUnit.getLevel()), orgUnitLevel);
         }
         //create the orgUnit
-        org.eyeseetea.malariacare.database.model.OrgUnit appOrgUnit= new org.eyeseetea.malariacare.database.model.OrgUnit();
+        org.eyeseetea.malariacare.database.model.OrgUnit appOrgUnit =
+                new org.eyeseetea.malariacare.database.model.OrgUnit();
         //Set name
         appOrgUnit.setName(organisationUnit.getLabel());
         //Set uid
         appOrgUnit.setUid(organisationUnit.getId());
         //Set orgUnitLevel
-        appOrgUnit.setOrgUnitLevel((org.eyeseetea.malariacare.database.model.OrgUnitLevel) appMapObjects.get(String.valueOf(organisationUnit.getLevel())));
+        appOrgUnit.setOrgUnitLevel(
+                (org.eyeseetea.malariacare.database.model.OrgUnitLevel) appMapObjects.get(
+                        String.valueOf(organisationUnit.getLevel())));
         //Set the parent
-        //At this moment, the parent is a UID of a not pulled Org_unit , without the full org_unit the OrgUnit.orgUnit(parent) is null.
-        String parent_id=null;
+        //At this moment, the parent is a UID of a not pulled Org_unit , without the full
+        // org_unit the OrgUnit.orgUnit(parent) is null.
+        String parent_id = null;
         parent_id = organisationUnit.getParent();
-        if(parent_id!=null && !parent_id.equals("")) {
-            appOrgUnit.setOrgUnit((org.eyeseetea.malariacare.database.model.OrgUnit) appMapObjects.get(String.valueOf(parent_id)));
+        if (parent_id != null && !parent_id.equals("")) {
+            appOrgUnit.setOrgUnit(
+                    (org.eyeseetea.malariacare.database.model.OrgUnit) appMapObjects.get(
+                            String.valueOf(parent_id)));
+        } else {
+            appOrgUnit.setOrgUnit((OrgUnit) null);
         }
-        else
-            appOrgUnit.setOrgUnit((OrgUnit)null);
         appOrgUnit.save();
         //Annotate built orgunit
         appMapObjects.put(organisationUnit.getId(), appOrgUnit);
@@ -128,11 +134,10 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     /**
      * Turns a sdk userAccount into a User
-     * @param sdkUserAccountExtended
      */
     @Override
     public void visit(UserAccountExtended sdkUserAccountExtended) {
-        UserAccount userAccount=sdkUserAccountExtended.getUserAccount();
+        UserAccount userAccount = sdkUserAccountExtended.getUserAccount();
         User appUser = new User();
         appUser.setUid(userAccount.getUId());
         appUser.setName(userAccount.getName());
@@ -141,14 +146,13 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     /**
      * Turns an event into a sent survey
-     * @param sdkEventExtended
      */
     @Override
     public void visit(EventExtended sdkEventExtended) {
-        Event event=sdkEventExtended.getEvent();
-        OrgUnit orgUnit =(OrgUnit)appMapObjects.get(event.getOrganisationUnitId());
+        Event event = sdkEventExtended.getEvent();
+        OrgUnit orgUnit = (OrgUnit) appMapObjects.get(event.getOrganisationUnitId());
 
-        Survey survey=new Survey();
+        Survey survey = new Survey();
         //Any survey that comes from the pull has been sent
         survey.setStatus(Constants.SURVEY_SENT);
         //Set dates
@@ -167,34 +171,35 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     @Override
     public void visit(DataValueExtended sdkDataValueExtended) {
-        DataValue dataValue=sdkDataValueExtended.getDataValue();
-        Survey survey=(Survey)appMapObjects.get(dataValue.getEvent());
-        String questionUID=dataValue.getDataElement();
+        DataValue dataValue = sdkDataValueExtended.getDataValue();
+        Survey survey = (Survey) appMapObjects.get(dataValue.getEvent());
+        String questionUID = dataValue.getDataElement();
 
         //Data value is a value from compositeScore -> ignore
-        if(appMapObjects.get(questionUID) instanceof CompositeScore){
+        if (appMapObjects.get(questionUID) instanceof CompositeScore) {
             return;
         }
 
         //Phone metadata -> ignore
-        if(PushClient.PHONEMETADA_UID.equals(questionUID)){
+        if (PushClient.PHONEMETADA_UID.equals(questionUID)) {
             return;
         }
 
         //Datavalue is a value from a question
-        Question question=Question.findByUID(questionUID);
+        Question question = Question.findByUID(questionUID);
 
-        Value value=new Value();
+        Value value = new Value();
         value.setQuestion(question);
         value.setSurvey(survey);
 
-        org.eyeseetea.malariacare.database.model.Option option=sdkDataValueExtended.findOptionByQuestion(question);
+        org.eyeseetea.malariacare.database.model.Option option =
+                sdkDataValueExtended.findOptionByQuestion(question);
         value.setOption(option);
         //No option -> text question (straight value)
-        if(option==null){
+        if (option == null) {
             value.setValue(dataValue.getValue());
-        }else{
-        //Option -> extract value from code
+        } else {
+            //Option -> extract value from code
             value.setValue(sdkDataValueExtended.getDataValue().getValue());
         }
         values.add(value);

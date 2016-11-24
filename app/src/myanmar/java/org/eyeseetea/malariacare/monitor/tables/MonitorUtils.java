@@ -8,7 +8,6 @@ import org.eyeseetea.malariacare.monitor.rows.ACT6x2RowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.ACT6x3RowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.ACT6x4RowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.ACTStockoutRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.RDTStockoutRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.NegativeRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PfPvRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PfRowBuilder;
@@ -16,11 +15,11 @@ import org.eyeseetea.malariacare.monitor.rows.PositiveRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PositivityRateRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PvRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.RDTRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.ReferralRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.TestedRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.TreatmentRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.RDTStockoutRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.RDTTestingRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.SuspectedRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.TestedRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.TreatmentRowBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class MonitorUtils extends AMonitorUtils {
         super(context);
     }
 
-    public List<MonitorRowBuilder> defineRows(){
+    public List<MonitorRowBuilder> defineRows() {
         List<MonitorRowBuilder> rowBuilders = new ArrayList<>();
         //rowBuilders.add(new PeriodRowBuilder(context));
         rowBuilders.add(new RDTRowBuilder(context));

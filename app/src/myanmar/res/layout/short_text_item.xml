@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <org.eyeseetea.malariacare.views.EditCard
         android:id="@+id/answer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/edit_text_bottom_border"
-        android:inputType="text"
+        android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/input_edit_text_margin"
+        android:background="@drawable/edit_text_bottom_border"
+        android:gravity="left"
+        android:hint="@string/positive_hint"
+        android:inputType="text"
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:paddingRight="@dimen/input_edit_text_left_padding"
-        android:gravity="left"
-        android:layout_gravity="center_horizontal"
-        android:textSize="@dimen/input_number_edit_text_phone"
-        android:hint="@string/positive_hint"
-        android:textColorHint="@color/hint"
         android:textColor="@color/intColor"
+        android:textColorHint="@color/hint"
+        android:textSize="@dimen/input_number_edit_text_phone"
         app:tDimension="@string/font_size_level2"
-        app:tFontName="@string/light_font"
-        />
+        app:tFontName="@string/light_font" />
 </LinearLayout>

@@ -1,15 +1,11 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import static com.google.android.gms.analytics.internal.zzy.t;
-import static com.google.android.gms.analytics.internal.zzy.v;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.User;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 
@@ -17,11 +13,11 @@ public class LoadUserAndCredentialsUseCase {
 
     Context mContext;
 
-    public LoadUserAndCredentialsUseCase(Context context){
+    public LoadUserAndCredentialsUseCase(Context context) {
         mContext = context;
     }
 
-    public void execute(){
+    public void execute() {
         loadUser();
         loadCredentials();
     }
@@ -31,13 +27,15 @@ public class LoadUserAndCredentialsUseCase {
     }
 
     private void loadCredentials() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                mContext);
 
-        String serverURL = sharedPreferences.getString(mContext.getString(R.string.dhis_url),"");
-        String username = sharedPreferences.getString(mContext.getString(R.string.dhis_user),"");
-        String password = sharedPreferences.getString(mContext.getString(R.string.dhis_password),"");
+        String serverURL = sharedPreferences.getString(mContext.getString(R.string.dhis_url), "");
+        String username = sharedPreferences.getString(mContext.getString(R.string.dhis_user), "");
+        String password = sharedPreferences.getString(mContext.getString(R.string.dhis_password),
+                "");
 
-        Credentials credentials = new Credentials(serverURL,username,password);
+        Credentials credentials = new Credentials(serverURL, username, password);
 
         Session.setCredentials(credentials);
     }

@@ -39,18 +39,20 @@ import java.util.Map;
  */
 public class PreferencesState {
 
-    private static String TAG=".PreferencesState";
-
+    static Context context;
+    private static String TAG = ".PreferencesState";
     /**
      * Singleton reference
      */
     private static PreferencesState instance;
-
+    /**
+     * Active language code;
+     */
+    private static String languageCode;
     /**
      * Selected scale, one between [xsmall,small,medium,large,xlarge,system]
      */
     private String scale;
-
     /**
      * Flag that determines if numerator/denominator are shown in scores.
      */
@@ -59,35 +61,32 @@ public class PreferencesState {
      * Flag that determines if the url server was changed
      */
     private boolean isNewServerUrl;
-
-
     /**
      * Specified Organization Unit
      */
     private String orgUnit;
-
     /**
      * Specified DHIS2 Server
      */
     private String dhisURL;
-
     /**
      * Map that holds the relationship between a scale and a set of dimensions
      */
     private Map<String, Map<String, Float>> scaleDimensionsMap;
 
-    /**
-     * Active language code;
-     */
-    private static String languageCode;
+    private PreferencesState() {
+    }
 
-    static Context context;
+    public static PreferencesState getInstance() {
+        if (instance == null) {
+            instance = new PreferencesState();
+        }
+        return instance;
+    }
 
-    private PreferencesState(){ }
-
-    public void init(Context context){
-        this.context=context;
-        scaleDimensionsMap=initScaleDimensionsMap();
+    public void init(Context context) {
+        this.context = context;
+        scaleDimensionsMap = initScaleDimensionsMap();
         reloadPreferences();
     }
 
@@ -95,12 +94,12 @@ public class PreferencesState {
         return context;
     }
 
-    public void reloadPreferences(){
-        scale= initScale();
-        showNumDen=initShowNumDen();
-        orgUnit=initOrgUnit();
-        dhisURL=initDhisURL();
-        languageCode=initLanguageCode();
+    public void reloadPreferences() {
+        scale = initScale();
+        showNumDen = initShowNumDen();
+        orgUnit = initOrgUnit();
+        dhisURL = initDhisURL();
+        languageCode = initLanguageCode();
         Log.d(TAG, "reloadPreferences: "
                 + " orgUnit:" + orgUnit
                 + " |dhisURL:" + dhisURL
@@ -110,39 +109,43 @@ public class PreferencesState {
 
     /**
      * Returns 'language code' from sharedPreferences
-     * @return
      */
-    private String initLanguageCode(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
-        return sharedPreferences.getString(instance.getContext().getString(R.string.language_code), "");
+    private String initLanguageCode() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getString(instance.getContext().getString(R.string.language_code),
+                "");
     }
 
     /**
      * Returns 'org_unit' from sharedPreferences
-     * @return
      */
-    private String initOrgUnit(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
+    private String initOrgUnit() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
         return sharedPreferences.getString(instance.getContext().getString(R.string.org_unit), "");
     }
 
     /**
      * Returns 'org_unit' from sharedPreferences
-     * @return
      */
-    private String initDhisURL(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
-        return sharedPreferences.getString(instance.getContext().getString(R.string.dhis_url), instance.getContext().getString(R.string.DHIS_DEFAULT_SERVER));
+    private String initDhisURL() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getString(instance.getContext().getString(R.string.dhis_url),
+                instance.getContext().getString(R.string.DHIS_DEFAULT_SERVER));
     }
 
     /**
      * Inits scale according to preferences
-     * @return
      */
-    private String initScale(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
-        if (sharedPreferences.getBoolean(instance.getContext().getString(R.string.customize_fonts), false)) {
-            return sharedPreferences.getString(instance.getContext().getString(R.string.font_sizes), Constants.FONTS_SYSTEM);
+    private String initScale() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        if (sharedPreferences.getBoolean(instance.getContext().getString(R.string.customize_fonts),
+                false)) {
+            return sharedPreferences.getString(instance.getContext().getString(R.string.font_sizes),
+                    Constants.FONTS_SYSTEM);
         }
 
         return Constants.FONTS_SYSTEM;
@@ -150,18 +153,18 @@ public class PreferencesState {
 
     /**
      * Inits flag according to preferences
-     * @return
      */
-    private boolean initShowNumDen(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
-        return sharedPreferences.getBoolean(instance.getContext().getString(R.string.show_num_dems), false);
+    private boolean initShowNumDen() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(instance.getContext().getString(R.string.show_num_dems),
+                false);
     }
 
     /**
      * Inits maps of dimensions
-     * @return
      */
-    private Map<String, Map<String, Float>> initScaleDimensionsMap(){
+    private Map<String, Map<String, Float>> initScaleDimensionsMap() {
         Map<String, Float> xsmall = new HashMap<>();
         String xsmallKey = instance.getContext().getString(R.string.font_size_level0),
                 smallKey = context.getString(R.string.font_size_level1),
@@ -208,92 +211,87 @@ public class PreferencesState {
         return scaleDimensionsMap;
     }
 
-    public static PreferencesState getInstance(){
-        if(instance==null){
-            instance=new PreferencesState();
-        }
-        return instance;
-    }
-
     public String getScale() {
         return scale;
     }
 
-    public void setScale(String value){
-        this.scale=value;
+    public void setScale(String value) {
+        this.scale = value;
     }
 
     public boolean isShowNumDen() {
         return showNumDen;
     }
 
-    public void setShowNumDen(boolean value){
-        this.showNumDen=value;
+    public void setShowNumDen(boolean value) {
+        this.showNumDen = value;
     }
 
     public boolean isNewServerUrl() {
         return isNewServerUrl;
     }
 
-    public void setIsNewServerUrl(boolean value){
-        this.isNewServerUrl=value;
+    public void setIsNewServerUrl(boolean value) {
+        this.isNewServerUrl = value;
     }
 
-    public Float getFontSize(String scale,String dimension){
+    public Float getFontSize(String scale, String dimension) {
         return scaleDimensionsMap.get(scale).get(dimension);
     }
 
-    public String getOrgUnit(){
+    public String getOrgUnit() {
         return orgUnit;
     }
 
-    public void setOrgUnit(String orgUnit){
-        this.orgUnit=orgUnit;
+    public void setOrgUnit(String orgUnit) {
+        this.orgUnit = orgUnit;
     }
 
-    public String getDhisURL(){
+    public String getDhisURL() {
         return dhisURL;
     }
 
-    public void setDhisURL(String dhisURL){
+    public void setDhisURL(String dhisURL) {
         this.dhisURL = dhisURL;
     }
 
-    public String getLanguageCode(){
+    public String getLanguageCode() {
         return languageCode;
     }
 
 
     /**
      * Saves a value into a preference
-     * @param namePreference
-     * @param value
      */
-    public void saveStringPreference(int namePreference,String value){
+    public void saveStringPreference(int namePreference, String value) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
-        prefEditor.putString(context.getResources().getString(namePreference), value); // set your default value here (could be empty as well)
+        prefEditor.putString(context.getResources().getString(namePreference),
+                value); // set your default value here (could be empty as well)
         prefEditor.commit(); // finally save changes
     }
 
-    public void saveStringPreference(String namePreference,String value){
+    public void saveStringPreference(String namePreference, String value) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
-        prefEditor.putString(namePreference, value); // set your default value here (could be empty as well)
+        prefEditor.putString(namePreference,
+                value); // set your default value here (could be empty as well)
         prefEditor.commit(); // finally save changes
     }
 
     public String getDataLimitedByDate() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
-        return sharedPreferences.getString(instance.getContext().getString(R.string.data_limited_by_date), "");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getString(
+                instance.getContext().getString(R.string.data_limited_by_date), "");
     }
 
-    public void setDataLimitedByDate(String value){
+    public void setDataLimitedByDate(String value) {
         saveStringPreference(R.string.data_limited_by_date, value);
     }
 
     public void loadsLanguageInActivity() {
-        if(languageCode.equals("")) {
+        if (languageCode.equals("")) {
             return;
         }
         Resources res = context.getResources();
@@ -305,11 +303,12 @@ public class PreferencesState {
     }
 
     /**
-    * Inits hidePlanningTab flag according to preferences
-    * @return
-    */
-    public boolean isDevelopOptionActive(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.getContext());
-        return sharedPreferences.getBoolean(instance.getContext().getString(R.string.developer_option), false);
+     * Inits hidePlanningTab flag according to preferences
+     */
+    public boolean isDevelopOptionActive() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.developer_option), false);
     }
 }

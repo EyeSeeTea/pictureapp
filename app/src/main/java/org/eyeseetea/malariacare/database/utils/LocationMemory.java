@@ -30,51 +30,40 @@ import android.preference.PreferenceManager;
  */
 public class LocationMemory {
 
-    private static final String PREFIX_LATITUDE="LAT";
-    private static final String PREFIX_LONGITUDE="LNG";
-
+    private static final String PREFIX_LATITUDE = "LAT";
+    private static final String PREFIX_LONGITUDE = "LNG";
+    /**
+     * App context required to recover sharedpreferences
+     */
+    static Context context;
     /**
      * Singleton reference
      */
     private static LocationMemory instance;
 
-    /**
-     * App context required to recover sharedpreferences
-     */
-    static Context context;
-
-    private LocationMemory(){ }
-
-    /**
-     * Init method required to hold a reference to the app context
-     * @param context
-     */
-    public void init(Context context){
-        this.context=context;
+    private LocationMemory() {
     }
 
     /**
      * Singleton method
-     * @return
      */
-    public static LocationMemory getInstance(){
-        if(instance==null){
-            instance=new LocationMemory();
+    public static LocationMemory getInstance() {
+        if (instance == null) {
+            instance = new LocationMemory();
         }
         return instance;
     }
 
     /**
      * Saves the coordinates for the given survey into internal shared preferences
-     * @param idSurvey
-     * @param location
      */
-    public synchronized static void put(long idSurvey, Location location){
-        if(location==null){
+    public synchronized static void put(long idSurvey, Location location) {
+        if (location == null) {
             return;
         }
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.context);
-        SharedPreferences.Editor editor=sharedPreferences.edit();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat(PREFIX_LONGITUDE + idSurvey, (float) location.getLongitude());
         editor.putFloat(PREFIX_LATITUDE + idSurvey, (float) location.getLatitude());
         editor.commit();
@@ -82,18 +71,19 @@ public class LocationMemory {
 
     /**
      * Gets the coordinates for a given survey id from the shared preferences
-     * @param idSurvey
+     *
      * @return A Location if it is stored in preferences, null otherwise
      */
-    public static Location get(long idSurvey){
-        Location location=new Location(LocationManager.GPS_PROVIDER);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(instance.context);
+    public static Location get(long idSurvey) {
+        Location location = new Location(LocationManager.GPS_PROVIDER);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.context);
 
-        float longitude=sharedPreferences.getFloat(PREFIX_LONGITUDE+idSurvey, 0f);
-        float latitude=sharedPreferences.getFloat(PREFIX_LATITUDE+idSurvey, 0f);
+        float longitude = sharedPreferences.getFloat(PREFIX_LONGITUDE + idSurvey, 0f);
+        float latitude = sharedPreferences.getFloat(PREFIX_LATITUDE + idSurvey, 0f);
 
         //No coordinates were stored for the given survey
-        if(longitude==0 && latitude==0){
+        if (longitude == 0 && latitude == 0) {
             return null;
         }
 
@@ -105,10 +95,16 @@ public class LocationMemory {
 
     /**
      * Gets the app context
-     * @return
      */
-    public static Context getContext(){
+    public static Context getContext() {
         return instance.context;
+    }
+
+    /**
+     * Init method required to hold a reference to the app context
+     */
+    public void init(Context context) {
+        this.context = context;
     }
 
 }

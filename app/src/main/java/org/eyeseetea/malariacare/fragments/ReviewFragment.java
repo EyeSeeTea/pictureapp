@@ -26,9 +26,9 @@ import java.util.List;
 public class ReviewFragment extends Fragment {
 
     public static final String TAG = ".ReviewFragment";
-    private List<Value> values;
     protected IDashboardAdapter adapter;
     LayoutInflater lInflater;
+    private List<Value> values;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,8 @@ public class ReviewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         this.lInflater = LayoutInflater.from(getActivity().getApplicationContext());
         View view = inflater.inflate(R.layout.review_layout,
@@ -66,7 +67,8 @@ public class ReviewFragment extends Fragment {
      */
     private void initAdapter() {
         values = getReviewValues();
-        ReviewScreenAdapter adapterInSession = new ReviewScreenAdapter(this.values,lInflater, getActivity());
+        ReviewScreenAdapter adapterInSession = new ReviewScreenAdapter(this.values, lInflater,
+                getActivity());
         this.adapter = adapterInSession;
     }
 
@@ -74,14 +76,17 @@ public class ReviewFragment extends Fragment {
         List<Value> reviewValues = new ArrayList<>();
         Survey survey = Session.getSurvey();
         List<Value> allValues = survey.getValuesFromDB();
-        for(Value value:allValues) {
-            boolean isReviewValue=true;
-            for(QuestionRelation questionRelation:value.getQuestion().getQuestionRelations()){
-                if(questionRelation.isACounter() || questionRelation.isAReminder() || questionRelation.isAWarning())
-                    isReviewValue=false;
+        for (Value value : allValues) {
+            boolean isReviewValue = true;
+            for (QuestionRelation questionRelation : value.getQuestion().getQuestionRelations()) {
+                if (questionRelation.isACounter() || questionRelation.isAReminder()
+                        || questionRelation.isAWarning()) {
+                    isReviewValue = false;
+                }
             }
-            if(isReviewValue)
+            if (isReviewValue) {
                 reviewValues.add(value);
+            }
         }
         return reviewValues;
     }
@@ -92,7 +97,8 @@ public class ReviewFragment extends Fragment {
     private void initListView(View view) {
         //inflate headers
         View header = lInflater.inflate(this.adapter.getHeaderLayout(), null, false);
-        View subHeader = lInflater.inflate(((ReviewScreenAdapter) this.adapter).getSubHeaderLayout(), null, false);
+        View subHeader = lInflater.inflate(
+                ((ReviewScreenAdapter) this.adapter).getSubHeaderLayout(), null, false);
 
         ListView listView = (ListView) view.findViewById(R.id.review_list);
 

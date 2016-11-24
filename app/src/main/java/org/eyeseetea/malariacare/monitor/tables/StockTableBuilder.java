@@ -32,12 +32,13 @@ import java.util.List;
  */
 public class StockTableBuilder extends MonitorTableBuilder {
 
-    public StockTableBuilder(Context context){
-        super(context,context.getString(R.string.monitor_table_title_stock));
+    public StockTableBuilder(Context context) {
+        super(context, context.getString(R.string.monitor_table_title_stock));
     }
+
     @Override
     protected List<MonitorRowBuilder> defineRowBuilders() {
-        MonitorUtils monitorUtils =new MonitorUtils(context);
+        MonitorUtils monitorUtils = new MonitorUtils(context);
         return monitorUtils.defineRows();
 
     }

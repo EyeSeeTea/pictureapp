@@ -27,12 +27,13 @@ import org.hisp.dhis.android.sdk.persistence.models.UserAccount;
  * Created by arrizabalaga on 6/11/15.
  */
 public class UserAccountExtended implements VisitableFromSDK {
-   UserAccount userAccount;
+    UserAccount userAccount;
 
-    public UserAccountExtended(){}
+    public UserAccountExtended() {
+    }
 
-    public UserAccountExtended(UserAccount userAccount){
-        this.userAccount=userAccount;
+    public UserAccountExtended(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 
     @Override

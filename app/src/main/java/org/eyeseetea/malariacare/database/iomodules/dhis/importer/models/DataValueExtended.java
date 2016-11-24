@@ -19,11 +19,6 @@
 
 package org.eyeseetea.malariacare.database.iomodules.dhis.importer.models;
 
-import android.util.Log;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.IConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.VisitableFromSDK;
 import org.eyeseetea.malariacare.database.model.Answer;
@@ -32,26 +27,23 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by arrizabalaga on 5/11/15.
  */
 public class DataValueExtended implements VisitableFromSDK {
 
-    private final static String TAG=".DataValueExtended";
-    private final static String REGEXP_FACTOR=".*\\[([0-9]*)\\]";
+    private final static String TAG = ".DataValueExtended";
+    private final static String REGEXP_FACTOR = ".*\\[([0-9]*)\\]";
 
     DataValue dataValue;
 
-    public DataValueExtended(){}
+    public DataValueExtended() {
+    }
 
-    public DataValueExtended(DataValue dataValue){
-        this.dataValue =dataValue;
+    public DataValueExtended(DataValue dataValue) {
+        this.dataValue = dataValue;
     }
 
     @Override
@@ -64,25 +56,25 @@ public class DataValueExtended implements VisitableFromSDK {
     }
 
     public Option findOptionByQuestion(Question question) {
-        if(question==null){
+        if (question == null) {
             return null;
         }
 
-        Answer answer=question.getAnswer();
-        if(answer==null){
+        Answer answer = question.getAnswer();
+        if (answer == null) {
             return null;
         }
 
-        List<Option> options=answer.getOptions();
-        List<String> optionCodes=new ArrayList<>();
-        for(Option option:options){
-            String optionName=option.getName();
+        List<Option> options = answer.getOptions();
+        List<String> optionCodes = new ArrayList<>();
+        for (Option option : options) {
+            String optionName = option.getName();
             optionCodes.add(optionName);
-            if(optionName==null){
+            if (optionName == null) {
                 continue;
             }
 
-            if(optionName.equals(dataValue.getValue())){
+            if (optionName.equals(dataValue.getValue())) {
                 return option;
             }
         }

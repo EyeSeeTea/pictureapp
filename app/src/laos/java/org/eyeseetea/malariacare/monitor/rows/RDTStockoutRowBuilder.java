@@ -10,12 +10,13 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
  */
 public class RDTStockoutRowBuilder extends CounterRowBuilder {
 
-    public RDTStockoutRowBuilder(Context context){
+    public RDTStockoutRowBuilder(Context context) {
         super(context, context.getString(R.string.monitor_row_title_rdt_stockout));
     }
+
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isRDTStockout())?1:0;
+        return (surveyMonitor.isRDTStockout()) ? 1 : 0;
     }
 }
 

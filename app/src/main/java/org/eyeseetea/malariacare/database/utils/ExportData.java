@@ -28,35 +28,35 @@ import java.util.zip.ZipOutputStream;
  */
 public class ExportData {
 
-    private final static String TAG=".ExportData";
+    private final static String TAG = ".ExportData";
 
     /**
      * Temporal folder that contains all the files to send
      */
-    private final static String EXPORT_DATA_FOLDER="exportdata/";
+    private final static String EXPORT_DATA_FOLDER = "exportdata/";
     /**
      * Temporal file to be attached
      */
-    private final static String EXPORT_DATA_FILE="compressedData.zip";
+    private final static String EXPORT_DATA_FILE = "compressedData.zip";
     /**
      * Temporal file that contains phonemetadata and app version info
      */
-    private final static String EXTRA_INFO="extrainfo.txt";
+    private final static String EXTRA_INFO = "extrainfo.txt";
     /**
      * Databases folder
      */
-    private final static String DATABASE_FOLDER="databases/";
+    private final static String DATABASE_FOLDER = "databases/";
     /**
      * Shared preferences folder
      */
-    private final static String SHAREDPREFERENCES_FOLDER="shared_prefs/";
+    private final static String SHAREDPREFERENCES_FOLDER = "shared_prefs/";
 
     /**
      * This method create the dump and returns the intent
      */
     public static Intent dumpAndSendToAIntent(Activity activity) {
         ExportData.removeDumpIfExist(activity);
-        File tempFolder = new File(getCacheDir()+"/"+EXPORT_DATA_FOLDER);
+        File tempFolder = new File(getCacheDir() + "/" + EXPORT_DATA_FOLDER);
         tempFolder.mkdir();
         //copy databases
         dumpDatabase(AppDatabase.NAME + ".db", tempFolder);
@@ -65,16 +65,17 @@ public class ExportData {
         dumpSharedPreferences(tempFolder);
 
         //copy phonemetadata and gradle version
-        File customInformation= new File(tempFolder+"/"+EXTRA_INFO);
+        File customInformation = new File(tempFolder + "/" + EXTRA_INFO);
         dumpMetadata(customInformation, activity);
 
         //compress and send
-        File compressedFile=compressFolder(tempFolder);
-        if(compressedFile==null) {
+        File compressedFile = compressFolder(tempFolder);
+        if (compressedFile == null) {
             return null;
         }
         return createEmailIntent(activity, compressedFile);
     }
+
     /**
      * This method create the dump the metadata in a temporally file
      */
@@ -86,15 +87,15 @@ public class ExportData {
             return;
         }
         try {
-            FileWriter fw = new FileWriter(customInformation.getAbsoluteFile(),true);
+            FileWriter fw = new FileWriter(customInformation.getAbsoluteFile(), true);
             BufferedWriter bw = new BufferedWriter(fw);
-            bw.write("Flavour: "+ BuildConfig.FLAVOR+"\n");
-            bw.write(Session.getPhoneMetaData().getPhone_metaData()+"\n");
-            bw.write("Version code: "+ BuildConfig.VERSION_CODE+"\n");
-            bw.write("Version name: "+ BuildConfig.VERSION_NAME+"\n");
-            bw.write("Application Id: "+ BuildConfig.APPLICATION_ID+"\n");
-            bw.write("Build type: "+ BuildConfig.BUILD_TYPE+"\n");
-            bw.write("Hash: "+ Utils.getCommitHash(activity));
+            bw.write("Flavour: " + BuildConfig.FLAVOR + "\n");
+            bw.write(Session.getPhoneMetaData().getPhone_metaData() + "\n");
+            bw.write("Version code: " + BuildConfig.VERSION_CODE + "\n");
+            bw.write("Version name: " + BuildConfig.VERSION_NAME + "\n");
+            bw.write("Application Id: " + BuildConfig.APPLICATION_ID + "\n");
+            bw.write("Build type: " + BuildConfig.BUILD_TYPE + "\n");
+            bw.write("Hash: " + Utils.getCommitHash(activity));
 
             bw.close();
             fw.close();
@@ -102,16 +103,17 @@ public class ExportData {
             e.printStackTrace();
         }
     }
+
     /**
      * This method checks if the tempfolder contains files and zip it.
      */
     private static File compressFolder(File tempFolder) {
-        if(tempFolder.listFiles()==null) {
+        if (tempFolder.listFiles() == null) {
             Log.d(TAG, "Error, nothing to convert");
             return null;
         }
-        zipFolder(tempFolder.getAbsolutePath(),getCacheDir()+"/"+EXPORT_DATA_FILE);
-        File file =new File(getCacheDir()+"/"+EXPORT_DATA_FILE);
+        zipFolder(tempFolder.getAbsolutePath(), getCacheDir() + "/" + EXPORT_DATA_FILE);
+        File file = new File(getCacheDir() + "/" + EXPORT_DATA_FILE);
         return file;
     }
 
@@ -162,9 +164,8 @@ public class ExportData {
      */
     private static void dumpSharedPreferences(File tempFolder) {
         File files[] = getSharedPreferencesFolder().listFiles();
-        Log.d("Files", "Size: "+ files.length);
-        for (int i=0; i < files.length; i++)
-        {
+        Log.d("Files", "Size: " + files.length);
+        for (int i = 0; i < files.length; i++) {
             Log.d("Files", "FileName:" + files[i].getName());
             copyFile(files[i], new File(tempFolder, files[i].getName()));
         }
@@ -184,10 +185,9 @@ public class ExportData {
                 dst.transferFrom(src, 0, src.size());
                 src.close();
                 dst.close();
-            }catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
-                Log.d(TAG,"Error exporting file "+current+ " to "+backup);
+                Log.d(TAG, "Error exporting file " + current + " to " + backup);
             }
         }
     }
@@ -195,7 +195,7 @@ public class ExportData {
     /**
      * This method returns the app cache dir
      */
-    private static File getCacheDir(){
+    private static File getCacheDir() {
         return PreferencesState.getInstance().getContext().getCacheDir();
 
     }
@@ -203,15 +203,15 @@ public class ExportData {
     /**
      * This method returns the app path
      */
-    private static String getAppPath(){
-        return "/data/data/" + PreferencesState.getInstance().getContext().getPackageName()+"/";
+    private static String getAppPath() {
+        return "/data/data/" + PreferencesState.getInstance().getContext().getPackageName() + "/";
 
     }
 
     /**
      * This method returns the sharedPreferences app folder
      */
-    private static File getSharedPreferencesFolder(){
+    private static File getSharedPreferencesFolder() {
         String sharedPreferencesPath = getAppPath() + SHAREDPREFERENCES_FOLDER;
         File file = new File(sharedPreferencesPath);
         return file;
@@ -220,7 +220,7 @@ public class ExportData {
     /**
      * This method returns the databases app folder
      */
-    private static File getDatabasesFolder(){
+    private static File getDatabasesFolder() {
         String databasesPath = getAppPath() + DATABASE_FOLDER;
         File file = new File(databasesPath);
         return file;
@@ -234,14 +234,17 @@ public class ExportData {
         emailIntent.setType("*/*");
 
         emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-                new String[] { "" });
+                new String[]{""});
 
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                "Local "+ PreferencesState.getInstance().getContext().getString(R.string.app_name)+" db " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime()) );
+                "Local " + PreferencesState.getInstance().getContext().getString(R.string.app_name)
+                        + " db " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
+                        Calendar.getInstance().getTime()));
         //sets file as readable for external apps
-        data.setReadable(true,false);
-        Log.d(TAG,data.toURI()+"");
-        emailIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(activity, "org.eyeseetea.malariacare.database.utils.ExportData", data));
+        data.setReadable(true, false);
+        Log.d(TAG, data.toURI() + "");
+        emailIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(activity,
+                "org.eyeseetea.malariacare.database.utils.ExportData", data));
         Intent chooser = Intent.createChooser(
                 emailIntent,
                 activity.getResources().getString(R.string.export_data_option_title));
@@ -253,15 +256,15 @@ public class ExportData {
      * This method remove the dump.
      */
     public static void removeDumpIfExist(Activity activity) {
-        File file= new File(activity.getCacheDir()+"/"+EXPORT_DATA_FILE);
+        File file = new File(activity.getCacheDir() + "/" + EXPORT_DATA_FILE);
         file.delete();
 
-        File tempFolder = new File(activity.getCacheDir()+"/"+EXPORT_DATA_FOLDER);
-        File[] files=tempFolder.listFiles();
-        if(files==null)
+        File tempFolder = new File(activity.getCacheDir() + "/" + EXPORT_DATA_FOLDER);
+        File[] files = tempFolder.listFiles();
+        if (files == null) {
             return;
-        for (int i=0; i < files.length; i++)
-        {
+        }
+        for (int i = 0; i < files.length; i++) {
             files[i].delete();
         }
         tempFolder.delete();

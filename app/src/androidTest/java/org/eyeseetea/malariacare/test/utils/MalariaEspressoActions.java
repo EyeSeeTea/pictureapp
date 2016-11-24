@@ -19,7 +19,9 @@
 
 package org.eyeseetea.malariacare.test.utils;
 
-import android.support.test.espresso.EspressoException;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import android.support.test.espresso.PerformException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
@@ -32,21 +34,14 @@ import org.hamcrest.Matcher;
 
 import java.util.concurrent.TimeoutException;
 
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
 /**
  * Created by arrizabalaga on 24/06/15.
  */
 public class MalariaEspressoActions {
 
-    public interface EspressoSnippet{
-        public void attempt();
-        public String getDescription();
-    }
-
     /**
      * Looks for a view with the given ID for a given millis
+     *
      * @param viewId ID of the view you are looking for
      * @param millis Millis trying to find it
      * @return ViewAction so you can use like any other EspressoAction
@@ -60,7 +55,8 @@ public class MalariaEspressoActions {
 
             @Override
             public String getDescription() {
-                return "wait for a specific view with id <" + viewId + "> during " + millis + " millis.";
+                return "wait for a specific view with id <" + viewId + "> during " + millis
+                        + " millis.";
             }
 
             @Override
@@ -94,8 +90,9 @@ public class MalariaEspressoActions {
 
     /**
      * Looks for a view with the given ID for a given millis
+     *
      * @param snippet ID of the view you are looking for
-     * @param millis Millis trying to find it
+     * @param millis  Millis trying to find it
      * @return ViewAction so you can use like any other EspressoAction
      */
     public static ViewAction waitSnippet(final EspressoSnippet snippet, final long millis) {
@@ -107,7 +104,8 @@ public class MalariaEspressoActions {
 
             @Override
             public String getDescription() {
-                return "wait for snippet<" + snippet.getDescription() + "> during " + millis + " millis.";
+                return "wait for snippet<" + snippet.getDescription() + "> during " + millis
+                        + " millis.";
             }
 
             @Override
@@ -117,10 +115,10 @@ public class MalariaEspressoActions {
                 final long endTime = startTime + millis;
 
                 do {
-                    try{
+                    try {
                         snippet.attempt();
                         return;
-                    }catch(Exception ex){
+                    } catch (Exception ex) {
                         Log.w(".MalariaEspressoActions", ex.getMessage());
                     }
 
@@ -136,5 +134,11 @@ public class MalariaEspressoActions {
                         .build();
             }
         };
+    }
+
+    public interface EspressoSnippet {
+        public void attempt();
+
+        public String getDescription();
     }
 }

@@ -28,32 +28,28 @@ import org.eyeseetea.malariacare.database.model.Value;
  */
 public class BaseSurveyMonitor {
 
-    public BaseSurveyMonitor(Survey survey){
-        this.survey=survey;
-    }
-
     /**
      * Reference to inner survey
      */
     private Survey survey;
 
+    public BaseSurveyMonitor(Survey survey) {
+        this.survey = survey;
+    }
+
     /**
      * Returns wrapped survey
-     * @return
      */
-    public Survey getSurvey(){
+    public Survey getSurvey() {
         return this.survey;
     }
 
     /**
      * Looks for the value with the given question + option
-     * @param idQuestion
-     * @param idOption
-     * @return
      */
-    public Value findValue(Long idQuestion, Long idOption){
-        for(Value value:survey.getValues()){
-            if(value.matchesQuestionOption(idQuestion,idOption)){
+    public Value findValue(Long idQuestion, Long idOption) {
+        for (Value value : survey.getValues()) {
+            if (value.matchesQuestionOption(idQuestion, idOption)) {
                 return value;
             }
         }
@@ -63,27 +59,23 @@ public class BaseSurveyMonitor {
 
     /**
      * Looks for the value with the given question  is the provided option
-     * @param idQuestion
-     * @param idOption
-     * @return
      */
-    public boolean findOption(Long idQuestion, Long idOption){
+    public boolean findOption(Long idQuestion, Long idOption) {
         Value value = findValue(idQuestion);
-        if(value==null){
+        if (value == null) {
             return false;
         }
 
-        Long valueIdOption=value.getId_option();
+        Long valueIdOption = value.getId_option();
         return idOption.equals(valueIdOption);
     }
+
     /**
      * Looks for the value with the given question
-     * @param idQuestion
-     * @return
      */
-    public Value findValue(Long idQuestion){
-        for(Value value:survey.getValues()){
-            if(value.matchesQuestion(idQuestion)){
+    public Value findValue(Long idQuestion) {
+        for (Value value : survey.getValues()) {
+            if (value.matchesQuestion(idQuestion)) {
                 return value;
             }
         }

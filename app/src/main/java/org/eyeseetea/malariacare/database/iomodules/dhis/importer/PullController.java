@@ -55,9 +55,6 @@ import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 import org.hisp.dhis.android.sdk.utils.api.ProgramType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -68,12 +65,10 @@ import java.util.List;
  */
 public class PullController {
     public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
-    public static final int NUMBER_OF_MONTHS=0;
-    private final String TAG = ".PullController";
-
+    public static final int NUMBER_OF_MONTHS = 0;
     private static PullController instance;
-
     private static Job job;
+    private final String TAG = ".PullController";
     /**
      * Context required to i18n error messages while pulling
      */
@@ -83,6 +78,16 @@ public class PullController {
      * Constructs and register this pull controller to the event bus
      */
     PullController() {
+    }
+
+    /**
+     * Singleton constructor
+     */
+    public static PullController getInstance() {
+        if (instance == null) {
+            instance = new PullController();
+        }
+        return instance;
     }
 
     private void register() {
@@ -105,24 +110,10 @@ public class PullController {
     }
 
     /**
-     * Singleton constructor
-     *
-     * @return
-     */
-    public static PullController getInstance() {
-        if (instance == null) {
-            instance = new PullController();
-        }
-        return instance;
-    }
-
-    /**
      * Launches the pull process:
      * - Loads metadata from dhis2 server
      * - Wipes app database
      * - Turns SDK into APP data
-     *
-     * @param ctx
      */
     public void pull(Context ctx) {
         Log.d(TAG, "Starting PULL process...");
@@ -137,7 +128,7 @@ public class PullController {
             enableMetaDataFlags();
             //Delete previous metadata
 
-            Log.d(TAG,"Delete sdk db");
+            Log.d(TAG, "Delete sdk db");
             PopulateDB.wipeSDKData();
             //Pull new metadata
             postProgress(context.getString(R.string.progress_pull_downloading));
@@ -147,16 +138,19 @@ public class PullController {
             MetaDataController.wipe();
 
             TrackerController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
-            String selectedDateLimit=PreferencesState.getInstance().getDataLimitedByDate();
+            String selectedDateLimit = PreferencesState.getInstance().getDataLimitedByDate();
 
             //Limit of data by date is selected
-            if(BuildConfig.loginDataDownloadPeriod) {
-                TrackerController.setStartDate(EventExtended.format(getDateFromString(selectedDateLimit), EventExtended.AMERICAN_DATE_FORMAT));
+            if (BuildConfig.loginDataDownloadPeriod) {
+                TrackerController.setStartDate(
+                        EventExtended.format(getDateFromString(selectedDateLimit),
+                                EventExtended.AMERICAN_DATE_FORMAT));
             }
 
-            if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
+            if (selectedDateLimit.equals(
+                    PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
                 pullMetaData();
-            }else{
+            } else {
                 pullMetaDataAndData();
             }
         } catch (Exception ex) {
@@ -192,15 +186,17 @@ public class PullController {
 
     /**
      * Returns the correct data from the limited date in shared preferences
-     * @param selectedDateLimit
      */
     private Date getDateFromString(String selectedDateLimit) {
         Calendar day = Calendar.getInstance();
-        if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_days))){
+        if (selectedDateLimit.equals(
+                PreferencesState.getInstance().getContext().getString(R.string.last_6_days))) {
             day.add(Calendar.DAY_OF_YEAR, -6);
-        } else if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_weeks))){
+        } else if (selectedDateLimit.equals(
+                PreferencesState.getInstance().getContext().getString(R.string.last_6_weeks))) {
             day.add(Calendar.WEEK_OF_YEAR, -6);
-        }else if(selectedDateLimit.equals(PreferencesState.getInstance().getContext().getString(R.string.last_6_months))){
+        } else if (selectedDateLimit.equals(
+                PreferencesState.getInstance().getContext().getString(R.string.last_6_months))) {
             day.add(Calendar.MONTH, -6);
         }
         return day.getTime();
@@ -228,7 +224,8 @@ public class PullController {
                     }
 
                     //Error while pulling
-                    if (result.getResponseHolder() != null && result.getResponseHolder().getApiException() != null) {
+                    if (result.getResponseHolder() != null
+                            && result.getResponseHolder().getApiException() != null) {
                         Log.e(TAG, result.getResponseHolder().getApiException().getMessage());
                         postException(new Exception(context.getString(R.string.dialog_pull_error)));
                         return;
@@ -255,27 +252,27 @@ public class PullController {
     }
 
     private void convertOUinOptions() {
-        List<Question> questions= Question.getAllQuestionsWithOrgUnitDropdownList();
+        List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
         //remove older values, but not the especial "other" option
-        for(Question question:questions) {
+        for (Question question : questions) {
             List<Option> options = question.getAnswer().getOptions();
             removeOldValues(question, options);
         }
 
-        if(questions.size()==0) {
+        if (questions.size() == 0) {
             return;
         }
 
         //Generate the orgUnits options for each question with orgunit dropdown list
-        List<OrgUnit> orgUnits=OrgUnit.getAllOrgUnit();
-        for (OrgUnit orgUnit:orgUnits){
+        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
+        for (OrgUnit orgUnit : orgUnits) {
             addOUOptionToQuestions(questions, orgUnit);
         }
     }
 
     private void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
-        for(Question question:questions) {
-            Option option= new Option();
+        for (Question question : questions) {
+            Option option = new Option();
             option.setAnswer(question.getAnswer());
             option.setName(orgUnit.getUid());
             option.setCode(orgUnit.getName());
@@ -284,8 +281,8 @@ public class PullController {
     }
 
     private void removeOldValues(Question question, List<Option> options) {
-        for(Option option:options){
-            if(QuestionOption.findByQuestionAndOption(question,option).size()==0){
+        for (Option option : options) {
+            if (QuestionOption.findByQuestionAndOption(question, option).size() == 0) {
                 option.delete();
             }
         }
@@ -318,18 +315,18 @@ public class PullController {
 
     /**
      * Turns sdk metadata into app metadata
-     *
-     * @param converter
      */
     private void convertMetaData(ConvertFromSDKVisitor converter) {
         //OrganisationUnits
         if (!ProgressActivity.PULL_IS_ACTIVE) return;
         postProgress(context.getString(R.string.progress_pull_preparing_orgs));
         Log.i(TAG, "Converting organisationUnits...");
-        List<OrganisationUnit> assignedOrganisationsUnits = MetaDataController.getAssignedOrganisationUnits();
+        List<OrganisationUnit> assignedOrganisationsUnits =
+                MetaDataController.getAssignedOrganisationUnits();
         for (OrganisationUnit assignedOrganisationsUnit : assignedOrganisationsUnits) {
             if (!ProgressActivity.PULL_IS_ACTIVE) return;
-            OrganisationUnitExtended organisationUnitExtended = new OrganisationUnitExtended(assignedOrganisationsUnit);
+            OrganisationUnitExtended organisationUnitExtended = new OrganisationUnitExtended(
+                    assignedOrganisationsUnit);
             organisationUnitExtended.accept(converter);
         }
 
@@ -337,8 +334,6 @@ public class PullController {
 
     /**
      * Turns events and datavalues into
-     *
-     * @param converter
      */
     private void convertDataValues(ConvertFromSDKVisitor converter) {
         if (!ProgressActivity.PULL_IS_ACTIVE) return;
@@ -346,50 +341,63 @@ public class PullController {
         String orgUnitName = PreferencesState.getInstance().getOrgUnit();
 
         postProgress(context.getString(R.string.progress_pull_surveys));
-        //XXX This is the right place to apply additional filters to data conversion (only predefined orgunit for instance)
+        //XXX This is the right place to apply additional filters to data conversion (only
+        // predefined orgunit for instance)
         //For each unit
-        for (OrganisationUnit organisationUnit : MetaDataController.getAssignedOrganisationUnits()) {
+        for (OrganisationUnit organisationUnit : MetaDataController.getAssignedOrganisationUnits
+                ()) {
 
             //Only events for the right ORGUNIT are loaded
-            if(organisationUnit.getLabel() == null || !organisationUnit.getLabel().equals(orgUnitName)){
+            if (organisationUnit.getLabel() == null || !organisationUnit.getLabel().equals(
+                    orgUnitName)) {
                 continue;
             }
 
             //Each assigned program
-            for (org.hisp.dhis.android.sdk.persistence.models.Program program : MetaDataController.getProgramsForOrganisationUnit(organisationUnit.getId(), ProgramType.WITHOUT_REGISTRATION)) {
+            for (org.hisp.dhis.android.sdk.persistence.models.Program program :
+                    MetaDataController.getProgramsForOrganisationUnit(
+                            organisationUnit.getId(), ProgramType.WITHOUT_REGISTRATION)) {
 
                 //Only events for the right PROGRAM are loaded
-                if(!appProgram.getUid().equals(program.getUid())){
+                if (!appProgram.getUid().equals(program.getUid())) {
                     continue;
                 }
 
-                List<Event> events = TrackerController.getEvents(organisationUnit.getId(), program.getUid());
-                Log.i(TAG, String.format("Converting surveys and values for orgUnit: %s | program: %s", organisationUnit.getLabel(), program.getDisplayName()));
+                List<Event> events = TrackerController.getEvents(organisationUnit.getId(),
+                        program.getUid());
+                Log.i(TAG,
+                        String.format("Converting surveys and values for orgUnit: %s | program: %s",
+                                organisationUnit.getLabel(), program.getDisplayName()));
                 // Visit all the events and save them in block
-                int i=0;
+                int i = 0;
                 for (Event event : events) {
-                    postProgress(context.getString(R.string.progress_pull_building_survey) + String.format(" %s/%s",i++, events.size()));
+                    postProgress(context.getString(R.string.progress_pull_building_survey)
+                            + String.format(" %s/%s", i++, events.size()));
                     if (!ProgressActivity.PULL_IS_ACTIVE) return;
                     EventExtended eventExtended = new EventExtended(event);
 
                     //Only last X months
-                    if(eventExtended.isTooOld()) continue;
+                    if (eventExtended.isTooOld()) continue;
                     eventExtended.accept(converter);
                 }
-                new SaveModelTransaction<>(ProcessModelInfo.withModels(converter.getSurveys())).onExecute();
+                new SaveModelTransaction<>(
+                        ProcessModelInfo.withModels(converter.getSurveys())).onExecute();
 
                 // Visit all the Values and save them in block
-                i=0;
+                i = 0;
                 for (Event event : events) {
                     //Visit its values
-                    for(DataValue dataValue:event.getDataValues()){
-                        if(++i%50==0)
-                            postProgress(context.getString(R.string.progress_pull_building_value) + String.format(" %s",i));
-                        DataValueExtended dataValueExtended=new DataValueExtended(dataValue);
+                    for (DataValue dataValue : event.getDataValues()) {
+                        if (++i % 50 == 0) {
+                            postProgress(context.getString(R.string.progress_pull_building_value)
+                                    + String.format(" %s", i));
+                        }
+                        DataValueExtended dataValueExtended = new DataValueExtended(dataValue);
                         dataValueExtended.accept(converter);
                     }
                 }
-                new SaveModelTransaction<>(ProcessModelInfo.withModels(converter.getValues())).onExecute();
+                new SaveModelTransaction<>(
+                        ProcessModelInfo.withModels(converter.getValues())).onExecute();
             }
         }
 
@@ -397,8 +405,6 @@ public class PullController {
 
     /**
      * Notifies a progress into the bus (the caller activity will be listening)
-     *
-     * @param msg
      */
     private void postProgress(String msg) {
         Dhis2Application.getEventBus().post(new SyncProgressStatus(msg));
@@ -406,8 +412,6 @@ public class PullController {
 
     /**
      * Notifies an exception while pulling
-     *
-     * @param ex
      */
     private void postException(Exception ex) {
         Dhis2Application.getEventBus().post(new SyncProgressStatus(ex));
@@ -417,7 +421,8 @@ public class PullController {
      * Notifies that the pull is over
      */
     private void postFinish() {
-        //Fixme maybe it is not the best place to reload the logged user.(Without reload the user after pull, the user had diferent id and application crash).
+        //Fixme maybe it is not the best place to reload the logged user.(Without reload the user
+        // after pull, the user had diferent id and application crash).
         User user = User.getLoggedUser();
         Session.setUser(user);
         Dhis2Application.getEventBus().post(new SyncProgressStatus());
@@ -425,12 +430,15 @@ public class PullController {
 
     //Returns true if the pull thead is finish
     public boolean finishPullJob() {
-        if (job!=null && JobExecutor.isJobRunning(job.getJobId())) {
+        if (job != null && JobExecutor.isJobRunning(job.getJobId())) {
             Log.d(TAG, "Job " + job.getJobId() + " is running");
             job.cancel(true);
             try {
                 try {
-                    JobExecutor.getInstance().dequeueRunningJob(job);} catch (Exception e) {e.printStackTrace();}
+                    JobExecutor.getInstance().dequeueRunningJob(job);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 job.cancel(true);
             } catch (Exception e) {
                 e.printStackTrace();

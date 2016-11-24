@@ -3,8 +3,8 @@ package org.eyeseetea.malariacare.domain.entity;
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 public class Credentials {
-    private static final String DEMO_USER="demo";
-    private static final String DEMO_SERVER="demo.server";
+    private static final String DEMO_USER = "demo";
+    private static final String DEMO_SERVER = "demo.server";
 
     private String username;
     private String password;
@@ -16,8 +16,8 @@ public class Credentials {
         this.password = required(password, "Password is required");
     }
 
-    public static Credentials createDemoCredentials(){
-        Credentials credentials = new Credentials(DEMO_SERVER,DEMO_USER,DEMO_USER);
+    public static Credentials createDemoCredentials() {
+        Credentials credentials = new Credentials(DEMO_SERVER, DEMO_USER, DEMO_USER);
 
         return credentials;
     }
@@ -34,23 +34,23 @@ public class Credentials {
         return password;
     }
 
-    public boolean isDemoCredentials(){
+    public boolean isDemoCredentials() {
         return this.equals(Credentials.createDemoCredentials());
     }
 
-    public boolean equals(Object o){
-        if(o == null) return false;
-        if(!(o instanceof Credentials)) return false;
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof Credentials)) return false;
 
         Credentials other = (Credentials) o;
-        if(!this.serverURL.equals(other.getServerURL())) return false;
-        if(!this.username.equals(other.getUsername())) return false;
-        if(!this.password.equals(other.getPassword())) return false;
+        if (!this.serverURL.equals(other.getServerURL())) return false;
+        if (!this.username.equals(other.getUsername())) return false;
+        if (!this.password.equals(other.getPassword())) return false;
 
         return true;
     }
 
-    public int hashCode(){
+    public int hashCode() {
         return (int) serverURL.hashCode() *
                 username.hashCode() *
                 password.hashCode();

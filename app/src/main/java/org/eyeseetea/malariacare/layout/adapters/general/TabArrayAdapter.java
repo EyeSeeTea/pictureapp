@@ -36,7 +36,8 @@ public class TabArrayAdapter extends AddlArrayAdapter<Tab> {
         super(context, R.layout.main_spinner_item, tabs);
     }
 
-    @Override public void drawText(TextCard textCard, Tab tab) {
+    @Override
+    public void drawText(TextCard textCard, Tab tab) {
         textCard.setText(tab.getName());
     }
 

@@ -39,7 +39,8 @@ public class ProgressUtils {
 
         LinearLayout pager_indicator = (LinearLayout) view.findViewById(R.id.page_progress);
 
-        int maxTotalPages = (Session.getMaxTotalQuestions() > 0 ? Session.getMaxTotalQuestions() : DEFAULT_MAX_TOTALPAGES);
+        int maxTotalPages = (Session.getMaxTotalQuestions() > 0 ? Session.getMaxTotalQuestions()
+                : DEFAULT_MAX_TOTALPAGES);
         float dotsDistribution = 1.0f / maxTotalPages;
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -52,9 +53,13 @@ public class ProgressUtils {
             dots[i].setScaleType(ImageView.ScaleType.FIT_START);
             dots[i].setPadding(15, 15, 0, 0);
             if (i <= currentPage) {
-                dots[i].setImageDrawable(ResourcesCompat.getDrawable(view.getContext().getResources(), R.drawable.page_indicator_completed, null));
+                dots[i].setImageDrawable(
+                        ResourcesCompat.getDrawable(view.getContext().getResources(),
+                                R.drawable.page_indicator_completed, null));
             } else {
-                dots[i].setImageDrawable(ResourcesCompat.getDrawable(view.getContext().getResources(), R.drawable.page_indicator_pending, null));
+                dots[i].setImageDrawable(
+                        ResourcesCompat.getDrawable(view.getContext().getResources(),
+                                R.drawable.page_indicator_pending, null));
             }
             pager_indicator.addView(dots[i], layoutParams);
         }

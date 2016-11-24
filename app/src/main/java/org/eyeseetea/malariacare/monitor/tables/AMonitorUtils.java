@@ -11,8 +11,9 @@ import java.util.List;
  */
 public abstract class AMonitorUtils {
     Context context;
+
     public AMonitorUtils(Context context) {
-        this.context=context;
+        this.context = context;
     }
 
     public abstract List<MonitorRowBuilder> defineRows();

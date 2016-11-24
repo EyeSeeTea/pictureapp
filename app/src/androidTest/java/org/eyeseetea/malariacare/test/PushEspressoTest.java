@@ -94,7 +94,8 @@
 //        Log.i(TAG,"---BEFORE---");
 //        super.setup();
 //        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(), SurveyService.class);
+//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(),
+// SurveyService.class);
 //        Espresso.registerIdlingResources(idlingResource);
 //    }
 //
@@ -129,14 +130,17 @@
 //        }
 //
 //        //THEN
-//        onView(withText(surveyActivity.getString(android.R.string.ok))).check(matches(isDisplayed())).perform(click());
+//        onView(withText(surveyActivity.getString(android.R.string.ok))).check(matches
+// (isDisplayed())).perform(click());
 //
 //        //WHEN
 //        onRowWithSurvey(Survey.getUnsentSurveys(1).get(0)).perform(longClick());
-//        onView(withText(surveyActivity.getString(android.R.string.ok))).check(matches(isDisplayed())).perform(click());
+//        onView(withText(surveyActivity.getString(android.R.string.ok))).check(matches
+// (isDisplayed())).perform(click());
 //
 //        //THEN
-//        onView(withText(surveyActivity.getString(R.string.dialog_error_push_no_org_unit))).check(matches(isDisplayed()));
+//        onView(withText(surveyActivity.getString(R.string.dialog_error_push_no_org_unit)))
+// .check(matches(isDisplayed()));
 //    }
 //
 //    @Test
@@ -157,14 +161,17 @@
 //        }
 //
 //        //THEN
-//        onView(withText(surveyActivity.getString(android.R.string.ok))).check(matches(isDisplayed())).perform(click());
+//        onView(withText(surveyActivity.getString(android.R.string.ok))).check(matches
+// (isDisplayed())).perform(click());
 //
 //        //WHEN
 //        onRowWithSurvey(Survey.getUnsentSurveys(1).get(0)).perform(longClick());
-//        onView(withText(surveyActivity.getString(android.R.string.ok))).check(matches(isDisplayed())).perform(click());
+//        onView(withText(surveyActivity.getString(android.R.string.ok))).check(matches
+// (isDisplayed())).perform(click());
 //
 //        //THEN
-//        onView(withText(surveyActivity.getString(R.string.dialog_error_push_no_location))).check(matches(isDisplayed()));
+//        onView(withText(surveyActivity.getString(R.string.dialog_error_push_no_location)))
+// .check(matches(isDisplayed()));
 //    }
 //
 //    private void chooseOptionWithText(SurveyActivity activity,String text){
@@ -173,13 +180,15 @@
 //    }
 //
 //    private ViewInteraction onRowWithSurvey(Survey survey){
-//        return onView(allOf(withClassName(endsWith("TableRow")),withTagValue(is((Object)survey.getId()))));
+//        return onView(allOf(withClassName(endsWith("TableRow")),withTagValue(is((Object)survey
+// .getId()))));
 //    }
 //
 //    private void unregisterSurveyReceiver(){
 //        try{
 //            DashboardActivity dashboardActivity =(DashboardActivity)getActivityInstance();
-//            DashboardUnsentFragment dashboardUnsentFragment =(DashboardUnsentFragment) dashboardActivity.getFragmentManager().findFragmentById(R.id.dashboard_details_fragment);
+//            DashboardUnsentFragment dashboardUnsentFragment =(DashboardUnsentFragment)
+// dashboardActivity.getFragmentManager().findFragmentById(R.id.dashboard_details_fragment);
 //            dashboardUnsentFragment.unregisterSurveysReceiver();
 //        }catch(Exception ex){
 //            Log.e(TAG,"unregisterSurveyReceiver(): "+ex.getMessage());

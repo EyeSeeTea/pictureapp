@@ -87,6 +87,42 @@ public class OrgUnit extends BaseModel {
         this.setOrgUnitLevel(orgUnitLevel);
     }
 
+    /**
+     * Returns all the orgunits from the db
+     */
+    public static List<OrgUnit> getAllOrgUnit() {
+        return new Select().all().from(OrgUnit.class).orderBy(OrgUnit$Table.NAME).queryList();
+    }
+
+    /**
+     * Returns the list of org units from the database
+     */
+    public static String[] listAllNames() {
+        List<OrgUnit> orgUnits = getAllOrgUnit();
+        List<String> orgUnitsName = new ArrayList<String>();
+        //String[] orgUnitNames = new String[orgUnits.size()];
+        for (int i = 0; i < orgUnits.size(); i++) {
+            if (orgUnits.get(i).getName() != null && !orgUnits.get(i).getName().equals("")) {
+                orgUnitsName.add(orgUnits.get(i).getName());
+            }
+        }
+        return orgUnitsName.toArray(new String[orgUnitsName.size()]);
+    }
+
+    /**
+     * Returns the UID of an orgUnit with the given name
+     *
+     * @param name Name of the orgunit
+     */
+    public static String findUIDByName(String name) {
+        OrgUnit orgUnit = new Select().from(OrgUnit.class).where(
+                Condition.column(OrgUnit$Table.NAME).eq(name)).querySingle();
+        if (orgUnit == null) {
+            return null;
+        }
+        return orgUnit.getUid();
+    }
+
     public Long getId_org_unit() {
         return id_org_unit;
     }
@@ -112,7 +148,7 @@ public class OrgUnit extends BaseModel {
     }
 
     public OrgUnit getOrgUnit() {
-        if(orgUnit==null){
+        if (orgUnit == null) {
             if (this.id_parent == null) return null;
             orgUnit = new Select()
                     .from(OrgUnit.class)
@@ -122,20 +158,20 @@ public class OrgUnit extends BaseModel {
         return orgUnit;
     }
 
-    public void setOrgUnit(OrgUnit orgUnit) {
-        this.orgUnit = orgUnit;
-        this.id_parent = (orgUnit!=null)?orgUnit.getId_org_unit():null;
-    }
-
-    public void setOrgUnit(Long id_parent){
+    public void setOrgUnit(Long id_parent) {
         this.id_parent = id_parent;
         this.orgUnit = null;
     }
 
+    public void setOrgUnit(OrgUnit orgUnit) {
+        this.orgUnit = orgUnit;
+        this.id_parent = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
+    }
+
     public OrgUnitLevel getOrgUnitLevel() {
-        if(orgUnitLevel==null){
-            if (this.id_org_unit_level==null) return null;
-            orgUnitLevel  = new Select()
+        if (orgUnitLevel == null) {
+            if (this.id_org_unit_level == null) return null;
+            orgUnitLevel = new Select()
                     .from(OrgUnitLevel.class)
                     .where(Condition.column(OrgUnitLevel$Table.ID_ORG_UNIT_LEVEL)
                             .is(id_org_unit_level)).querySingle();
@@ -143,94 +179,62 @@ public class OrgUnit extends BaseModel {
         return orgUnitLevel;
     }
 
-    public void setOrgUnitLevel(OrgUnitLevel orgUnitLevel) {
-        this.orgUnitLevel = orgUnitLevel;
-        this.id_org_unit_level = (orgUnitLevel!=null)?orgUnitLevel.getId_org_unit_level():null;
-    }
-
-    public void setOrgUnitLevel(Long id_org_unit_level){
+    public void setOrgUnitLevel(Long id_org_unit_level) {
         this.id_org_unit_level = id_org_unit_level;
         this.orgUnitLevel = null;
     }
 
-    public List<OrgUnit> getChildren(){
-        if(this.children==null){
+    public void setOrgUnitLevel(OrgUnitLevel orgUnitLevel) {
+        this.orgUnitLevel = orgUnitLevel;
+        this.id_org_unit_level =
+                (orgUnitLevel != null) ? orgUnitLevel.getId_org_unit_level() : null;
+    }
+
+    public List<OrgUnit> getChildren() {
+        if (this.children == null) {
             this.children = new Select().from(OrgUnit.class)
-                    .where(Condition.column(OrgUnit$Table.ID_PARENT).eq(this.getId_org_unit())).queryList();
+                    .where(Condition.column(OrgUnit$Table.ID_PARENT).eq(
+                            this.getId_org_unit())).queryList();
         }
         return children;
     }
 
-    public List<Survey> getSurveys(){
-        if(this.surveys==null){
+    public List<Survey> getSurveys() {
+        if (this.surveys == null) {
             this.surveys = new Select().from(Survey.class)
-                    .where(Condition.column(Survey$Table.ID_ORG_UNIT).eq(this.getId_org_unit())).queryList();
+                    .where(Condition.column(Survey$Table.ID_ORG_UNIT).eq(
+                            this.getId_org_unit())).queryList();
         }
         return surveys;
     }
 
-    public List<Program> getPrograms(){
-        if(programs==null){
-            List<OrgUnitProgramRelation> orgUnitProgramRelations = new Select().from(OrgUnitProgramRelation.class)
-                    .where(Condition.column(OrgUnitProgramRelation$Table.ID_ORG_UNIT).eq(this.getId_org_unit()))
+    public List<Program> getPrograms() {
+        if (programs == null) {
+            List<OrgUnitProgramRelation> orgUnitProgramRelations = new Select().from(
+                    OrgUnitProgramRelation.class)
+                    .where(Condition.column(OrgUnitProgramRelation$Table.ID_ORG_UNIT).eq(
+                            this.getId_org_unit()))
                     .queryList();
-            this.programs= new ArrayList<>();
-            for(OrgUnitProgramRelation programRelation:orgUnitProgramRelations){
+            this.programs = new ArrayList<>();
+            for (OrgUnitProgramRelation programRelation : orgUnitProgramRelations) {
                 programs.add(programRelation.getProgram());
             }
         }
         return programs;
     }
 
-    /**
-     * Returns all the orgunits from the db
-     * @return
-     */
-    public static List<OrgUnit> getAllOrgUnit() {
-        return new Select().all().from(OrgUnit.class).orderBy(OrgUnit$Table.NAME).queryList();
-    }
-
-    /**
-     * Returns the list of org units from the database
-     * @return
-     */
-    public static String[] listAllNames(){
-        List<OrgUnit> orgUnits = getAllOrgUnit();
-        List<String> orgUnitsName = new ArrayList<String>();
-        //String[] orgUnitNames = new String[orgUnits.size()];
-        for(int i=0;i<orgUnits.size();i++){
-            if (orgUnits.get(i).getName() != null && !orgUnits.get(i).getName().equals("")){
-                orgUnitsName.add(orgUnits.get(i).getName());
-            }
-        }
-        return orgUnitsName.toArray(new String[orgUnitsName.size()]);
-    }
-
-    /**
-     * Returns the UID of an orgUnit with the given name
-     * @param name Name of the orgunit
-     * @return
-     */
-    public static String findUIDByName(String name) {
-        OrgUnit orgUnit=new Select().from(OrgUnit.class).where(Condition.column(OrgUnit$Table.NAME).eq(name)).querySingle();
-        if(orgUnit==null){
-            return null;
-        }
-        return orgUnit.getUid();
-    }
-
-    public void addProgram(Program program){
+    public void addProgram(Program program) {
         //Null -> nothing
-        if(program==null){
+        if (program == null) {
             return;
         }
 
         //Save a new relationship
-        OrgUnitProgramRelation orgUnitProgramRelation = new OrgUnitProgramRelation(this,program);
+        OrgUnitProgramRelation orgUnitProgramRelation = new OrgUnitProgramRelation(this, program);
         orgUnitProgramRelation.save();
 
         //Clear cache to enable reloading
-        programs=null;
+        programs = null;
     }
 
     @Override
@@ -243,9 +247,11 @@ public class OrgUnit extends BaseModel {
         if (id_org_unit != orgUnit.id_org_unit) return false;
         if (uid != null ? !uid.equals(orgUnit.uid) : orgUnit.uid != null) return false;
         if (name != null ? !name.equals(orgUnit.name) : orgUnit.name != null) return false;
-        if (id_parent != null ? !id_parent.equals(orgUnit.id_parent) : orgUnit.id_parent != null)
+        if (id_parent != null ? !id_parent.equals(orgUnit.id_parent) : orgUnit.id_parent != null) {
             return false;
-        return !(id_org_unit_level != null ? !id_org_unit_level.equals(orgUnit.id_org_unit_level) : orgUnit.id_org_unit_level != null);
+        }
+        return !(id_org_unit_level != null ? !id_org_unit_level.equals(orgUnit.id_org_unit_level)
+                : orgUnit.id_org_unit_level != null);
 
     }
 

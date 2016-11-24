@@ -110,7 +110,8 @@ public class Constants {
     public static final int MONITOR_HISTORY_SIZE = 6;
 
     /**
-     * Intent extra param that states that the login is being done due to an attempt to change the server
+     * Intent extra param that states that the login is being done due to an attempt to change the
+     * server
      */
     public static final int REQUEST_CODE_ON_EULA_ACCEPTED = 1;
 }

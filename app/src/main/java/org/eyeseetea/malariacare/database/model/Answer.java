@@ -61,6 +61,12 @@ public class Answer extends BaseModel {
         this.name = name;
     }
 
+    public static Answer findById(Long id) {
+        return new Select()
+                .from(Answer.class)
+                .where(Condition.column(Answer$Table.ID_ANSWER).eq(id)).querySingle();
+    }
+
     public Long getId_answer() {
         return id_answer;
     }
@@ -77,9 +83,8 @@ public class Answer extends BaseModel {
         this.name = name;
     }
 
-
-    public List<Option> getOptions(){
-        if(options==null){
+    public List<Option> getOptions() {
+        if (options == null) {
             options = new Select()
                     .from(Option.class)
                     .where(Condition.column(Option$Table.ID_ANSWER)
@@ -89,8 +94,8 @@ public class Answer extends BaseModel {
         return options;
     }
 
-    public List<Question> getQuestions(){
-        if(questions==null){
+    public List<Question> getQuestions() {
+        if (questions == null) {
             questions = new Select()
                     .from(Question.class)
                     .where(Condition.column(Question$Table.ID_ANSWER)
@@ -124,11 +129,5 @@ public class Answer extends BaseModel {
                 "id_answer=" + id_answer +
                 ", name='" + name + '\'' +
                 '}';
-    }
-
-    public static Answer findById(Long id) {
-        return new Select()
-                .from(Answer.class)
-                .where(Condition.column(Answer$Table.ID_ANSWER).eq(id)).querySingle();
     }
 }

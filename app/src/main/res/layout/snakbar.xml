@@ -4,5 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/footer_navigation_size"
     android:layout_alignParentBottom="true"
-    android:orientation="horizontal">
-</LinearLayout>
+    android:orientation="horizontal"></LinearLayout>

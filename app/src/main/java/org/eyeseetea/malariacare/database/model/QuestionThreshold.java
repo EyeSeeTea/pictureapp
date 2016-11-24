@@ -62,13 +62,35 @@ public class QuestionThreshold extends BaseModel {
     @Column
     Integer maxValue;
 
-    public QuestionThreshold(){}
+    public QuestionThreshold() {
+    }
 
     public QuestionThreshold(Question question, Match match, Integer minValue, Integer maxValue) {
         setQuestion(question);
         setMatch(match);
         this.minValue = minValue;
         this.maxValue = maxValue;
+    }
+
+    public static QuestionThreshold findByQuestionAndOption(Question questionWithOption,
+            Option option) {
+        List<QuestionOption> questionOptionList = QuestionOption.findByQuestionAndOption(
+                questionWithOption, option);
+        //No questionOption no threshold
+        if (questionOptionList == null || questionOptionList.isEmpty()) {
+            return null;
+        }
+
+        //Look for threshold under questionOption
+        for (QuestionOption questionOption : questionOptionList) {
+            Match match = questionOption.getMatch();
+            QuestionThreshold questionThreshold = match.getQuestionThreshold();
+            //Found
+            if (questionThreshold != null) {
+                return questionThreshold;
+            }
+        }
+        return null;
     }
 
     public long getId_question_threshold() {
@@ -80,8 +102,8 @@ public class QuestionThreshold extends BaseModel {
     }
 
     public Question getQuestion() {
-        if(question==null){
-            if(id_question==null) return null;
+        if (question == null) {
+            if (id_question == null) return null;
             question = new Select()
                     .from(Question.class)
                     .where(Condition.column(Question$Table.ID_QUESTION)
@@ -90,19 +112,19 @@ public class QuestionThreshold extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_question = (question!=null)?question.getId_question():null;
-    }
-
-    public void setQuestion(Long id_question){
+    public void setQuestion(Long id_question) {
         this.id_question = id_question;
         this.question = null;
     }
 
+    public void setQuestion(Question question) {
+        this.question = question;
+        this.id_question = (question != null) ? question.getId_question() : null;
+    }
+
     public Match getMatch() {
-        if(match==null){
-            if(id_match==null) return null;
+        if (match == null) {
+            if (id_match == null) return null;
             match = new Select()
                     .from(Match.class)
                     .where(Condition.column(Match$Table.ID_MATCH)
@@ -111,14 +133,14 @@ public class QuestionThreshold extends BaseModel {
         return match;
     }
 
-    public void setMatch(Match match) {
-        this.match = match;
-        this.id_match = (match!=null)?match.getId_match():null;
-    }
-
-    public void setMatch(Long id_match){
+    public void setMatch(Long id_match) {
         this.id_match = id_match;
         this.match = null;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
+        this.id_match = (match != null) ? match.getId_match() : null;
     }
 
     public Integer getMinValue() {
@@ -139,49 +161,26 @@ public class QuestionThreshold extends BaseModel {
 
     /**
      * Checks if the given string contains a number inside this threshold
-     * @param value
-     * @return
      */
-    public boolean isInThreshold(String value){
+    public boolean isInThreshold(String value) {
         //Get number
         try {
-            int intValue=Integer.valueOf(value);
+            int intValue = Integer.valueOf(value);
             return isInThreshold(intValue);
-        }catch (NumberFormatException ex){
-            Log.e(TAG,ex.getMessage());
+        } catch (NumberFormatException ex) {
+            Log.e(TAG, ex.getMessage());
             return false;
         }
     }
 
     /**
      * Checks if the given number is inside this threshold
-     * @param value
-     * @return
      */
-    public boolean isInThreshold(int value){
-        boolean okLowerBound = minValue==null || value>=minValue;
-        boolean okUpperBound = maxValue==null || value<=maxValue;
+    public boolean isInThreshold(int value) {
+        boolean okLowerBound = minValue == null || value >= minValue;
+        boolean okUpperBound = maxValue == null || value <= maxValue;
 
         return okLowerBound && okUpperBound;
-    }
-
-    public static QuestionThreshold findByQuestionAndOption(Question questionWithOption, Option option){
-        List<QuestionOption> questionOptionList = QuestionOption.findByQuestionAndOption(questionWithOption,option);
-        //No questionOption no threshold
-        if(questionOptionList==null || questionOptionList.isEmpty()){
-            return null;
-        }
-
-        //Look for threshold under questionOption
-        for(QuestionOption questionOption:questionOptionList){
-            Match match = questionOption.getMatch();
-            QuestionThreshold questionThreshold=match.getQuestionThreshold();
-            //Found
-            if(questionThreshold!=null){
-                return questionThreshold;
-            }
-        }
-        return null;
     }
 
     @Override

@@ -30,14 +30,15 @@ import java.util.List;
  * Defines the structure of the first table in the monitor
  * Created by arrizabalaga on 25/02/16.
  */
-public class SuspectedPositiveTableBuilder extends MonitorTableBuilder{
+public class SuspectedPositiveTableBuilder extends MonitorTableBuilder {
 
-    public SuspectedPositiveTableBuilder(Context context){
-        super(context,context.getString(R.string.monitor_table_title_suspected));
+    public SuspectedPositiveTableBuilder(Context context) {
+        super(context, context.getString(R.string.monitor_table_title_suspected));
     }
+
     @Override
     protected List<MonitorRowBuilder> defineRowBuilders() {
-        MonitorUtils monitorUtils =new MonitorUtils(context);
+        MonitorUtils monitorUtils = new MonitorUtils(context);
         return monitorUtils.defineSuspectedRows();
     }
 }

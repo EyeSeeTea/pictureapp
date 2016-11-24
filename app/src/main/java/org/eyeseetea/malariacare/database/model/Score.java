@@ -69,8 +69,8 @@ public class Score extends BaseModel {
     }
 
     public Survey getSurvey() {
-        if(survey==null){
-            if(id_survey==null) return null;
+        if (survey == null) {
+            if (id_survey == null) return null;
             survey = new Select()
                     .from(Survey.class)
                     .where(Condition.column(Survey$Table.ID_SURVEY)
@@ -79,14 +79,14 @@ public class Score extends BaseModel {
         return survey;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-        this.id_survey = (survey!=null)?survey.getId_survey():null;
-    }
-
-    public void setSurvey(Long id_survey){
+    public void setSurvey(Long id_survey) {
         this.id_survey = id_survey;
         this.survey = null;
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
+        this.id_survey = (survey != null) ? survey.getId_survey() : null;
     }
 
     public String getUid() {
@@ -113,8 +113,9 @@ public class Score extends BaseModel {
         Score score1 = (Score) o;
 
         if (id_score != score1.id_score) return false;
-        if (id_survey != null ? !id_survey.equals(score1.id_survey) : score1.id_survey != null)
+        if (id_survey != null ? !id_survey.equals(score1.id_survey) : score1.id_survey != null) {
             return false;
+        }
         if (uid != null ? !uid.equals(score1.uid) : score1.uid != null) return false;
         return !(score != null ? !score.equals(score1.score) : score1.score != null);
 

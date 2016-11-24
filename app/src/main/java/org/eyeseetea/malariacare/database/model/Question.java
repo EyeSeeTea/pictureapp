@@ -409,13 +409,12 @@ public class Question extends BaseModel {
         return form_name;
     }
 
-    public String getInternationalizedForm_name() {
-        return Utils.getInternationalizedString(form_name);
-    }
-
-
     public void setForm_name(String form_name) {
         this.form_name = form_name;
+    }
+
+    public String getInternationalizedForm_name() {
+        return Utils.getInternationalizedString(form_name);
     }
 
     public String getUid() {
@@ -462,12 +461,12 @@ public class Question extends BaseModel {
         return path;
     }
 
-    public String getInternationalizedPath() {
-        return Utils.getInternationalizedString(path);
-    }
-
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getInternationalizedPath() {
+        return Utils.getInternationalizedString(path);
     }
 
     public Header getHeader() {
@@ -481,14 +480,14 @@ public class Question extends BaseModel {
         return header;
     }
 
-    public void setHeader(Long id_header) {
-        this.id_header = id_header;
-        this.header = null;
-    }
-
     public void setHeader(Header header) {
         this.header = header;
         this.id_header = (header != null) ? header.getId_header() : null;
+    }
+
+    public void setHeader(Long id_header) {
+        this.id_header = id_header;
+        this.header = null;
     }
 
     public Integer getOutput() {
@@ -526,14 +525,14 @@ public class Question extends BaseModel {
         return answer;
     }
 
-    public void setAnswer(Long id_answer) {
-        this.id_answer = id_answer;
-        this.answer = null;
-    }
-
     public void setAnswer(Answer answer) {
         this.answer = answer;
         this.id_answer = (answer != null) ? answer.getId_answer() : null;
+    }
+
+    public void setAnswer(Long id_answer) {
+        this.id_answer = id_answer;
+        this.answer = null;
     }
 
     //Is necessary use the question relations.
@@ -548,15 +547,15 @@ public class Question extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Long id_parent) {
-        this.id_parent = id_parent;
-        this.question = null;
-    }
-
     @Deprecated
     public void setQuestion(Question question) {
         this.question = question;
         this.id_parent = (question != null) ? question.getId_question() : null;
+    }
+
+    public void setQuestion(Long id_parent) {
+        this.id_parent = id_parent;
+        this.question = null;
     }
 
     public CompositeScore getCompositeScore() {
@@ -570,15 +569,15 @@ public class Question extends BaseModel {
         return compositeScore;
     }
 
-    public void setCompositeScore(Long id_composite_score) {
-        this.id_composite_score = id_composite_score;
-        this.compositeScore = null;
-    }
-
     public void setCompositeScore(CompositeScore compositeScore) {
         this.compositeScore = compositeScore;
         this.id_composite_score =
                 (compositeScore != null) ? compositeScore.getId_composite_score() : null;
+    }
+
+    public void setCompositeScore(Long id_composite_score) {
+        this.id_composite_score = id_composite_score;
+        this.compositeScore = null;
     }
 
     public List<QuestionRelation> getQuestionRelations() {

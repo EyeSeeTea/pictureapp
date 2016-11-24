@@ -30,14 +30,9 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
-import org.eyeseetea.malariacare.BaseActivity;
-import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.CompositeScore;
-import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Match;
-import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.OrgUnitLevel;
@@ -49,8 +44,6 @@ import org.eyeseetea.malariacare.database.model.Score;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.TabGroup;
-import org.eyeseetea.malariacare.database.model.User;
-import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -67,26 +60,39 @@ import java.util.Map;
 @Migration(version = 2, databaseName = AppDatabase.NAME)
 public class Migration2Database extends BaseMigration {
 
-    private static String TAG=".Migration2Database";
-
-    private static Migration2Database instance;
-    private boolean postMigrationRequired;
-
+    public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
+    public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
     private final static Class NEW_APP_TABLES[] = {
             OrgUnitLevel.class,
             Match.class,
             QuestionOption.class,
             TabGroup.class
     };
-
-    public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
-
-    public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
+    private static String TAG = ".Migration2Database";
+    private static Migration2Database instance;
+    private boolean postMigrationRequired;
 
     public Migration2Database() {
         super();
         instance = this;
-        postMigrationRequired=false;
+        postMigrationRequired = false;
+    }
+
+    public static void postMigrate() {
+        //Migration NOT required -> done
+        if (!instance.postMigrationRequired) {
+            return;
+        }
+
+        //Data? Add new default data
+        if (instance.hasData()) {
+            instance.addTabGroup();
+            instance.linkTabGroup();
+            instance.moveOutputToQuestion();
+        }
+
+        //This operation wont be done again
+        instance.postMigrationRequired = false;
     }
 
     public void onPreMigrate() {
@@ -94,13 +100,12 @@ public class Migration2Database extends BaseMigration {
 
     /**
      * Adds new columns to database
-     * @param database
      */
     @Override
     public void migrate(SQLiteDatabase database) {
 
-        Log.d(TAG,"adding new columns...");
-        postMigrationRequired=true;
+        Log.d(TAG, "adding new columns...");
+        postMigrationRequired = true;
         addColumn(database, CompositeScore.class, "hierarchical_code", "text");
 
         addColumn(database, OrgUnit.class, "id_parent", "integer");
@@ -111,7 +116,7 @@ public class Migration2Database extends BaseMigration {
 
         addColumn(database, OptionAttribute.class, "path", "text");
 
-        addColumn(database,QuestionRelation.class, "id_question","integer");
+        addColumn(database, QuestionRelation.class, "id_question", "integer");
 
         addColumn(database, Score.class, "id_survey", "integer");
         addColumn(database, Score.class, "score", "real");
@@ -133,37 +138,19 @@ public class Migration2Database extends BaseMigration {
 //        }
     }
 
-    public static void postMigrate(){
-        //Migration NOT required -> done
-        if(!instance.postMigrationRequired){
-            return;
-        }
-
-        //Data? Add new default data
-        if(instance.hasData()) {
-            instance.addTabGroup();
-            instance.linkTabGroup();
-            instance.moveOutputToQuestion();
-        }
-
-        //This operation wont be done again
-        instance.postMigrationRequired=false;
-    }
-
     /**
      * Checks if the current db has data or not
-     * @return
      */
     private boolean hasData() {
-        return Program.getFirstProgram()!=null;
+        return Program.getFirstProgram() != null;
     }
 
     /**
      * Adds a row to tabgroup table for data consistency
      */
     private void addTabGroup() {
-        Log.d(TAG,"adding default tabgroup...");
-        TabGroup tabGroup = new TabGroup("Health System QIS TabGroup",Program.getFirstProgram());
+        Log.d(TAG, "adding default tabgroup...");
+        TabGroup tabGroup = new TabGroup("Health System QIS TabGroup", Program.getFirstProgram());
         tabGroup.save();
     }
 
@@ -171,13 +158,13 @@ public class Migration2Database extends BaseMigration {
      * Links the tabgroup in the current db
      */
     private void linkTabGroup() {
-        Log.d(TAG,"linking default tabgroup to surveys and tabs...");
+        Log.d(TAG, "linking default tabgroup to surveys and tabs...");
 
         TabGroup tabGroup = new Select().from(TabGroup.class).querySingle();
 
         //Add tabgroup to current surveys
         List<Survey> surveyList = new Select().from(Survey.class).queryList();
-        for(Survey survey:surveyList){
+        for (Survey survey : surveyList) {
             survey.setTabGroup(tabGroup);
             survey.save();
         }
@@ -193,11 +180,12 @@ public class Migration2Database extends BaseMigration {
      * Loads question.output from assets
      */
     private void moveOutputToQuestion() {
-        Log.d(TAG,"moving type questions to question table...");
+        Log.d(TAG, "moving type questions to question table...");
 
-        Map<String,Integer> mapQuestionOutputs = loadAnswerOutputs(PreferencesState.getInstance().getContext().getAssets());
+        Map<String, Integer> mapQuestionOutputs = loadAnswerOutputs(
+                PreferencesState.getInstance().getContext().getAssets());
         List<Question> questions = new Select().from(Question.class).queryList();
-        for(Question question:questions){
+        for (Question question : questions) {
             question.setOutput(mapQuestionOutputs.get(question.getCode()));
             question.save();
         }
@@ -205,29 +193,28 @@ public class Migration2Database extends BaseMigration {
 
     /**
      * Returns a map with the output for each question:
-     *
-     * @param assetManager
-     * @return
      */
-    private Map<String, Integer> loadAnswerOutputs(AssetManager assetManager){
+    private Map<String, Integer> loadAnswerOutputs(AssetManager assetManager) {
         //map<code,output>
-        Map<String,Integer> mapQuestion = new HashMap<>();
-        try{
-            CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.QUESTIONS_CSV)), ';', '\'');
+        Map<String, Integer> mapQuestion = new HashMap<>();
+        try {
+            CSVReader reader = new CSVReader(
+                    new InputStreamReader(assetManager.open(PopulateDB.QUESTIONS_CSV)), ';', '\'');
             String[] line;
             while ((line = reader.readNext()) != null) {
                 mapQuestion.put(line[1], Integer.valueOf(line[12]));
             }
             reader.close();
-        }catch (IOException ex){
+        } catch (IOException ex) {
 
         }
         return mapQuestion;
     }
 
 
-    private void addColumn(SQLiteDatabase database, Class model, String columnName,String type){
+    private void addColumn(SQLiteDatabase database, Class model, String columnName, String type) {
         ModelAdapter myAdapter = FlowManager.getModelAdapter(model);
-        database.execSQL(String.format(ALTER_TABLE_ADD_COLUMN, myAdapter.getTableName(),columnName,type) );
+        database.execSQL(
+                String.format(ALTER_TABLE_ADD_COLUMN, myAdapter.getTableName(), columnName, type));
     }
 }

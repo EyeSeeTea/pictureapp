@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.network.ServerAPIController;
 
 import java.io.IOException;
 import java.util.List;
@@ -54,5 +55,13 @@ public class LoginUseCase extends ALoginUseCase{
                 e.printStackTrace();
             }
         }
+    }
+    @Override
+    public boolean isLogoutNeeded(Credentials credentials) {
+        if(credentials.isDemoCredentials())
+            return false;
+        else
+        return (!credentials.getUsername().equals(LoginActivity.DEFAULT_USER) && !credentials.getUsername().equals(
+                ServerAPIController.getSDKCredentials().getUsername()));
     }
 }

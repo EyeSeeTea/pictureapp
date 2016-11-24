@@ -21,7 +21,6 @@ package org.eyeseetea.malariacare.monitor.rows;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 
 /**
@@ -29,11 +28,13 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
  */
 public class PfPvRowBuilder extends CounterRowBuilder {
 
-    public PfPvRowBuilder(Context context){
-        super(context, context.getString(R.string.monitor_row_title, context.getString(R.string.pfpv)));
+    public PfPvRowBuilder(Context context) {
+        super(context,
+                context.getString(R.string.monitor_row_title, context.getString(R.string.pfpv)));
     }
+
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isPfPv())?1:0;
+        return (surveyMonitor.isPfPv()) ? 1 : 0;
     }
 }

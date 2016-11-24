@@ -87,8 +87,8 @@ public class SurveySchedule extends BaseModel {
     }
 
     public Survey getSurvey() {
-        if(survey==null){
-            if(id_survey==null) return null;
+        if (survey == null) {
+            if (id_survey == null) return null;
             survey = new Select()
                     .from(Survey.class)
                     .where(Condition.column(Survey$Table.ID_SURVEY)
@@ -97,14 +97,14 @@ public class SurveySchedule extends BaseModel {
         return survey;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-        this.id_survey = (survey!=null)?survey.getId_survey():null;
-    }
-
-    public void setSurvey(Long id_survey){
+    public void setSurvey(Long id_survey) {
         this.id_survey = id_survey;
         this.survey = null;
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
+        this.id_survey = (survey != null) ? survey.getId_survey() : null;
     }
 
     @Override
@@ -115,10 +115,12 @@ public class SurveySchedule extends BaseModel {
         SurveySchedule that = (SurveySchedule) o;
 
         if (id_survey_schedule != that.id_survey_schedule) return false;
-        if (id_survey != null ? !id_survey.equals(that.id_survey) : that.id_survey != null)
+        if (id_survey != null ? !id_survey.equals(that.id_survey) : that.id_survey != null) {
             return false;
+        }
         if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
-        return !(previous_date != null ? !previous_date.equals(that.previous_date) : that.previous_date != null);
+        return !(previous_date != null ? !previous_date.equals(that.previous_date)
+                : that.previous_date != null);
 
     }
 

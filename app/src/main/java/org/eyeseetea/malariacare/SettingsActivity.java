@@ -19,16 +19,12 @@
 
 package org.eyeseetea.malariacare;
 
-import static android.R.attr.settingsActivity;
-
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -36,38 +32,12 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.DisplayMetrics;
-import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
-import android.util.Log;
-import android.widget.TextView;
 
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.otto.Subscribe;
-
-import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
-import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.network.PushClient;
-import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.network.ServerInfo;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
-import org.hisp.dhis.android.sdk.controllers.DhisService;
-import org.hisp.dhis.android.sdk.job.NetworkJob;
-import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
-import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -94,12 +64,139 @@ public class SettingsActivity extends PreferenceActivity implements
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
-    private static final String TAG=".SettingsActivity";
+    private static final String TAG = ".SettingsActivity";
+    /**
+     * A preference value change listener that updates the preference's summary
+     * to reflect its new value.
+     */
+    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener =
+            new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object value) {
+                    String stringValue = value.toString();
 
+                    if (preference instanceof ListPreference) {
+                        // For list preferences, look up the correct display value in
+                        // the preference's 'entries' list.
+                        ListPreference listPreference = (ListPreference) preference;
+                        int index = listPreference.findIndexOfValue(stringValue);
+
+                        // Set the summary to reflect the new value.
+                        preference.setSummary(
+                                index >= 0
+                                        ? listPreference.getEntries()[index]
+                                        : null);
+
+                    } else {
+                        // For all other preferences, set the summary to the value's
+                        // simple string representation.
+                        preference.setSummary(stringValue);
+                    }
+                    return true;
+                }
+            };
     public SettingsActivityStrategy mSettingsActivityStrategy = new SettingsActivityStrategy(this);
-
     public AutoCompleteEditTextPreference autoCompleteEditTextPreference;
     public Preference serverUrlPreference;
+
+    /**
+     * Helper method to determine if the device has an extra-large screen. For
+     * example, 10" tablets are extra-large.
+     */
+    private static boolean isXLargeTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+    }
+
+    /**
+     * Determines whether the simplified settings UI should be shown. This is
+     * true if this is forced via {@link #ALWAYS_SIMPLE_PREFS}, or the device
+     * doesn't have newer APIs like {@link PreferenceFragment}, or the device
+     * doesn't have an extra-large screen. In these cases, a single-pane
+     * "simplified" settings UI should be shown.
+     */
+    private static boolean isSimplePreferences(Context context) {
+        return ALWAYS_SIMPLE_PREFS
+                || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
+                || !isXLargeTablet(context);
+    }
+
+    /**
+     * Binds a preference's summary to its value. More specifically, when the
+     * preference's value is changed, its summary (line of text below the
+     * preference title) is updated to reflect the value. The summary is also
+     * immediately updated upon calling this method. The exact display format is
+     * dependent on the type of preference.
+     *
+     * @see #sBindPreferenceSummaryToValueListener
+     */
+    private static void bindPreferenceSummaryToValue(Preference preference) {
+        // Set the listener to watch for value changes.
+        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
+
+        // Trigger the listener immediately with the preference's
+        // current value.
+        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                PreferenceManager
+                        .getDefaultSharedPreferences(preference.getContext())
+                        .getString(preference.getKey(), ""));
+    }
+
+    /**
+     * Sets the application languages and populate the language in the preference
+     */
+    private static void setLanguageOptions(Preference preference) {
+        ListPreference listPreference = (ListPreference) preference;
+
+        HashMap<String, String> languages = getAppLanguages(R.string.system_defined);
+
+        CharSequence[] newEntries = new CharSequence[languages.size() + 1];
+        CharSequence[] newValues = new CharSequence[languages.size() + 1];
+        int i = 0;
+        newEntries[i] = PreferencesState.getInstance().getContext().getString(
+                R.string.system_defined);
+        newValues[i] = "";
+        for (String language : languages.keySet()) {
+            i++;
+            String languageCode = languages.get(language);
+            String firstLetter = language.substring(0, 1).toUpperCase();
+            language = firstLetter + language.substring(1, language.length());
+            newEntries[i] = language;
+            newValues[i] = languageCode;
+        }
+
+        listPreference.setEntries(newEntries);
+        listPreference.setEntryValues(newValues);
+    }
+
+    /**
+     * This method finds the existing app translations
+     * * @param stringId this string id should be different in all value-xx/string.xml files. Else
+     * the language can be ignored
+     */
+    public static HashMap<String, String> getAppLanguages(int stringId) {
+        HashMap<String, String> languages = new HashMap<>();
+        Context context = PreferencesState.getInstance().getContext();
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        Resources r = context.getResources();
+        Configuration c = r.getConfiguration();
+        String[] loc = r.getAssets().getLocales();
+        for (int i = 0; i < loc.length; i++) {
+            c.locale = new Locale(loc[i]);
+            Resources res = new Resources(context.getAssets(), metrics, c);
+            String s1 = res.getString(stringId);
+            String language = c.locale.getDisplayLanguage();
+            c.locale = new Locale("");
+            Resources res2 = new Resources(context.getAssets(), metrics, c);
+            String s2 = res2.getString(stringId);
+
+            //Compare with the default language
+            if (!s1.equals(s2)) {
+                languages.put(language, loc[i]);
+            }
+        }
+        return languages;
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +212,7 @@ public class SettingsActivity extends PreferenceActivity implements
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         mSettingsActivityStrategy.onStop();
 
         super.onStop();
@@ -142,25 +239,36 @@ public class SettingsActivity extends PreferenceActivity implements
         addPreferencesFromResource(R.xml.pref_general);
 
 
-        if(BuildConfig.translations)
-            setLanguageOptions(findPreference(getApplicationContext().getString(R.string.language_code)));
+        if (BuildConfig.translations) {
+            setLanguageOptions(
+                    findPreference(getApplicationContext().getString(R.string.language_code)));
+        }
 
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
-        if(BuildConfig.translations)
-            bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.language_code)));
+        if (BuildConfig.translations) {
+            bindPreferenceSummaryToValue(
+                    findPreference(getApplicationContext().getString(R.string.language_code)));
+        }
 
-        bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.font_sizes)));
-        bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.dhis_url)));
-        bindPreferenceSummaryToValue(findPreference(getApplicationContext().getString(R.string.org_unit)));
+        bindPreferenceSummaryToValue(
+                findPreference(getApplicationContext().getString(R.string.font_sizes)));
+        bindPreferenceSummaryToValue(
+                findPreference(getApplicationContext().getString(R.string.dhis_url)));
+        bindPreferenceSummaryToValue(
+                findPreference(getApplicationContext().getString(R.string.org_unit)));
 
-        autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getApplicationContext().getString(R.string.org_unit));
-        autoCompleteEditTextPreference.setOnPreferenceClickListener(mSettingsActivityStrategy.getOnPreferenceClickListener());
+        autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(
+                getApplicationContext().getString(R.string.org_unit));
+        autoCompleteEditTextPreference.setOnPreferenceClickListener(
+                mSettingsActivityStrategy.getOnPreferenceClickListener());
         autoCompleteEditTextPreference.pullOrgUnits();
 
-        serverUrlPreference = (Preference)findPreference(getApplicationContext().getResources().getString(R.string.dhis_url));
-        serverUrlPreference.setOnPreferenceClickListener(mSettingsActivityStrategy.getOnPreferenceClickListener());
+        serverUrlPreference = (Preference) findPreference(
+                getApplicationContext().getResources().getString(R.string.dhis_url));
+        serverUrlPreference.setOnPreferenceClickListener(
+                mSettingsActivityStrategy.getOnPreferenceClickListener());
 
         mSettingsActivityStrategy.setupPreferencesScreen(getPreferenceScreen());
 
@@ -182,28 +290,6 @@ public class SettingsActivity extends PreferenceActivity implements
     }
 
     /**
-     * Helper method to determine if the device has an extra-large screen. For
-     * example, 10" tablets are extra-large.
-     */
-    private static boolean isXLargeTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
-    }
-
-    /**
-     * Determines whether the simplified settings UI should be shown. This is
-     * true if this is forced via {@link #ALWAYS_SIMPLE_PREFS}, or the device
-     * doesn't have newer APIs like {@link PreferenceFragment}, or the device
-     * doesn't have an extra-large screen. In these cases, a single-pane
-     * "simplified" settings UI should be shown.
-     */
-    private static boolean isSimplePreferences(Context context) {
-        return ALWAYS_SIMPLE_PREFS
-                || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
-                || !isXLargeTablet(context);
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -214,57 +300,6 @@ public class SettingsActivity extends PreferenceActivity implements
         }
     }
 
-    /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
-     */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
-
-            if (preference instanceof ListPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
-
-                // Set the summary to reflect the new value.
-                preference.setSummary(
-                        index >= 0
-                                ? listPreference.getEntries()[index]
-                                : null);
-
-            } else {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-            }
-            return true;
-        }
-    };
-
-    /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
-     * immediately updated upon calling this method. The exact display format is
-     * dependent on the type of preference.
-     *
-     * @see #sBindPreferenceSummaryToValueListener
-     */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
-        // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-
-        // Trigger the listener immediately with the preference's
-        // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
-    }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.language_code))) {
@@ -273,114 +308,8 @@ public class SettingsActivity extends PreferenceActivity implements
 
     }
 
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
-
-
-            if(BuildConfig.translations)
-                setLanguageOptions(findPreference(PreferencesState.getInstance().getContext().getString(R.string.language_code)));
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.font_sizes)));
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.language_code)));
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
-
-            SettingsActivity settingsActivity = (SettingsActivity)getActivity();
-
-            //Hide translation option if is not active in gradle variable
-            if(BuildConfig.translations)
-                bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.language_code)));
-
-            settingsActivity.autoCompleteEditTextPreference= (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
-            settingsActivity.serverUrlPreference = (Preference)findPreference(getResources().getString(R.string.dhis_url));
-
-            settingsActivity.autoCompleteEditTextPreference.pullOrgUnits();
-
-            settingsActivity.autoCompleteEditTextPreference.setOnPreferenceClickListener(settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
-            settingsActivity.serverUrlPreference.setOnPreferenceClickListener(settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
-
-            settingsActivity.mSettingsActivityStrategy.setupPreferencesScreen(getPreferenceScreen());
-
-            if (settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener() != null) {
-                settingsActivity.serverUrlPreference.setOnPreferenceChangeListener(
-                        settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener());
-
-                settingsActivity.autoCompleteEditTextPreference.setOnPreferenceChangeListener(
-                        settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener());
-            }
-        }
-    }
-
-    /**
-     * Sets the application languages and populate the language in the preference
-     *
-     */
-    private static void setLanguageOptions(Preference preference) {
-        ListPreference listPreference = (ListPreference) preference;
-
-        HashMap<String, String> languages = getAppLanguages(R.string.system_defined);
-
-        CharSequence[] newEntries=new CharSequence[languages.size()+1];
-        CharSequence[] newValues=new CharSequence[languages.size()+1];
-        int i=0;
-        newEntries[i]=PreferencesState.getInstance().getContext().getString(R.string.system_defined);
-        newValues[i]="";
-        for(String language : languages.keySet()){
-            i++;
-            String languageCode = languages.get(language);
-            String firstLetter= language.substring(0,1).toUpperCase();
-            language = firstLetter + language.substring(1,language.length());
-            newEntries[i] = language;
-            newValues[i] = languageCode;
-        }
-
-        listPreference.setEntries(newEntries);
-        listPreference.setEntryValues(newValues);
-    }
-
-    /**
-     * This method finds the existing app translations
-     * * @param stringId this string id should be different in all value-xx/string.xml files. Else the language can be ignored
-     */
-    public static  HashMap<String, String> getAppLanguages(int stringId) {
-        HashMap<String, String> languages= new HashMap<>();
-        Context context = PreferencesState.getInstance().getContext();
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        Resources r = context.getResources();
-        Configuration c = r.getConfiguration();
-        String[] loc = r.getAssets().getLocales();
-        for (int i = 0; i < loc.length; i++) {
-            c.locale = new Locale(loc[i]);
-            Resources res = new Resources(context.getAssets(), metrics, c);
-            String s1 = res.getString(stringId);
-            String language = c.locale.getDisplayLanguage();
-            c.locale = new Locale("");
-            Resources res2 = new Resources(context.getAssets(), metrics, c);
-            String s2 = res2.getString(stringId);
-
-            //Compare with the default language
-            if(!s1.equals(s2)){
-                    languages.put(language, loc[i]);
-            }
-        }
-        return languages;
-    }
-
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public boolean isValidFragment(String fragment){
+    public boolean isValidFragment(String fragment) {
         return true;
     }
 
@@ -404,23 +333,85 @@ public class SettingsActivity extends PreferenceActivity implements
     @Override
     public void onBackPressed() {
         PreferencesState.getInstance().reloadPreferences();
-        Class callerActivityClass=getCallerActivity();
-        Intent returnIntent=new Intent(this,callerActivityClass);
+        Class callerActivityClass = getCallerActivity();
+        Intent returnIntent = new Intent(this, callerActivityClass);
         startActivity(returnIntent);
     }
 
-    private Class getCallerActivity(){
+    private Class getCallerActivity() {
         //FIXME Not working as it should the intent param is always null
-        Intent creationIntent=getIntent();
-        if(creationIntent==null){
+        Intent creationIntent = getIntent();
+        if (creationIntent == null) {
             return DashboardActivity.class;
         }
-        Class callerActivity=(Class)creationIntent.getSerializableExtra(BaseActivity.SETTINGS_CALLER_ACTIVITY);
-        if(callerActivity==null){
+        Class callerActivity = (Class) creationIntent.getSerializableExtra(
+                BaseActivity.SETTINGS_CALLER_ACTIVITY);
+        if (callerActivity == null) {
             return DashboardActivity.class;
         }
 
         return callerActivity;
+    }
+
+    /**
+     * This fragment shows general preferences only. It is used when the
+     * activity is showing a two-pane settings UI.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class GeneralPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_general);
+
+
+            if (BuildConfig.translations) {
+                setLanguageOptions(findPreference(
+                        PreferencesState.getInstance().getContext().getString(
+                                R.string.language_code)));
+            }
+
+            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+            // to their values. When their values change, their summaries are
+            // updated to reflect the new value, per the Android Design
+            // guidelines.
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.font_sizes)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.language_code)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
+
+            SettingsActivity settingsActivity = (SettingsActivity) getActivity();
+
+            //Hide translation option if is not active in gradle variable
+            if (BuildConfig.translations) {
+                bindPreferenceSummaryToValue(
+                        findPreference(getResources().getString(R.string.language_code)));
+            }
+
+            settingsActivity.autoCompleteEditTextPreference =
+                    (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
+            settingsActivity.serverUrlPreference = (Preference) findPreference(
+                    getResources().getString(R.string.dhis_url));
+
+            settingsActivity.autoCompleteEditTextPreference.pullOrgUnits();
+
+            settingsActivity.autoCompleteEditTextPreference.setOnPreferenceClickListener(
+                    settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
+            settingsActivity.serverUrlPreference.setOnPreferenceClickListener(
+                    settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
+
+            settingsActivity.mSettingsActivityStrategy.setupPreferencesScreen(
+                    getPreferenceScreen());
+
+            if (settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener()
+                    != null) {
+                settingsActivity.serverUrlPreference.setOnPreferenceChangeListener(
+                        settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener());
+
+                settingsActivity.autoCompleteEditTextPreference.setOnPreferenceChangeListener(
+                        settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener());
+            }
+        }
     }
 
 }

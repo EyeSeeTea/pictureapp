@@ -21,7 +21,6 @@ package org.eyeseetea.malariacare.monitor.rows;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 
 /**
@@ -29,12 +28,12 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
  */
 public class PositiveRowBuilder extends CounterRowBuilder {
 
-    public PositiveRowBuilder(Context context){
+    public PositiveRowBuilder(Context context) {
         super(context, context.getString(R.string.monitor_row_title_positive));
     }
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isPositive())?1:0;
+        return (surveyMonitor.isPositive()) ? 1 : 0;
     }
 }

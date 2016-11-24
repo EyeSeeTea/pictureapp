@@ -1,4 +1,4 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_focused="true"  android:drawable="@drawable/switch_background" />
-    <item                               android:drawable="@drawable/switch_background" />
+    <item android:drawable="@drawable/switch_background" android:state_focused="true" />
+    <item android:drawable="@drawable/switch_background" />
 </selector>

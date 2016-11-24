@@ -31,6 +31,28 @@ public class Migration14AddQuestionReminder extends BaseMigration {
         postMigrationRequired = false;
     }
 
+    public static void postMigrate() {
+        //Migration NOT required -> done
+        Log.d(TAG, "Post migrate");
+        if (!instance.postMigrationRequired) {
+            return;
+        }
+
+
+        //Data? Add new default data
+        if (instance.hasData()) {
+            try {
+                PopulateDB.addNotTestedRemminder(
+                        PreferencesState.getInstance().getContext().getAssets());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //This operation wont be done again
+        instance.postMigrationRequired = false;
+    }
+
     public void onPreMigrate() {
     }
 
@@ -43,32 +65,8 @@ public class Migration14AddQuestionReminder extends BaseMigration {
     public void onPostMigrate() {
     }
 
-
-    public static void postMigrate() {
-        //Migration NOT required -> done
-        Log.d(TAG, "Post migrate");
-        if (!instance.postMigrationRequired) {
-            return;
-        }
-
-
-        //Data? Add new default data
-        if (instance.hasData()) {
-            try {
-                PopulateDB.addNotTestedRemminder(PreferencesState.getInstance().getContext().getAssets());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        //This operation wont be done again
-        instance.postMigrationRequired = false;
-    }
-
     /**
      * Checks if the current db has data or not
-     *
-     * @return
      */
     private boolean hasData() {
         return Program.getFirstProgram() != null;

@@ -30,64 +30,57 @@ public class SyncProgressStatus {
 
     /**
      * Builds a step progress
-     * @param message
      */
-    public SyncProgressStatus(String message){
-        this.message=message;
+    public SyncProgressStatus(String message) {
+        this.message = message;
     }
 
     /**
      * Builds an error progress
-     * @param exception
      */
-    public SyncProgressStatus(Exception exception){
-        this.exception=exception;
+    public SyncProgressStatus(Exception exception) {
+        this.exception = exception;
     }
 
     /**
      * Builds a progress that notifies the process is done
      */
-    public SyncProgressStatus(){
-        this.finish=true;
+    public SyncProgressStatus() {
+        this.finish = true;
     }
 
     /**
      * Tells if this status represents an ordinary step
-     * @return
      */
-    public boolean hasProgress(){
-        return this.message!=null;
+    public boolean hasProgress() {
+        return this.message != null;
     }
 
     /**
      * Tells if this status represents an error step
-     * @return
      */
-    public boolean hasError(){
-        return this.exception!=null;
+    public boolean hasError() {
+        return this.exception != null;
     }
 
     /**
      * Tells if this status represents a process that has finished
-     * @return
      */
-    public boolean isFinish(){
+    public boolean isFinish() {
         return this.finish;
     }
 
     /**
      * Getter for the message
-     * @return
      */
-    public String getMessage(){
+    public String getMessage() {
         return message;
     }
 
     /**
      * Getter for the exception
-     * @return
      */
-    public Exception getException(){
+    public Exception getException() {
         return exception;
     }
 }

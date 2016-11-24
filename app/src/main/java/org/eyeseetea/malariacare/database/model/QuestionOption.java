@@ -62,12 +62,48 @@ public class QuestionOption extends BaseModel {
      */
     Match match;
 
-    public QuestionOption(){}
+    public QuestionOption() {
+    }
 
     public QuestionOption(Option option, Question question, Match match) {
         setQuestion(question);
         setOption(option);
         setMatch(match);
+    }
+
+    /**
+     * Returns the QuestionOptions for the given question and option
+     */
+    public static List<QuestionOption> findByQuestionAndOption(Question questionWithOption,
+            Option option) {
+        if (questionWithOption == null || option == null) {
+            return null;
+        }
+
+        return new Select().all().from(QuestionOption.class)
+                .where(Condition.column(QuestionOption$Table.ID_QUESTION)
+                        .is(questionWithOption.getId_question()))
+                .and(Condition.column(QuestionOption$Table.ID_OPTION)
+                        .is(option.getId_option()))
+                .queryList();
+    }
+
+    /**
+     * Find questionOptions related with the given questionRelation by its match
+     */
+    public static List<QuestionOption> findByQuestionRelation(QuestionRelation questionRelation) {
+        return new Select().all().from(QuestionOption.class).as("qo")
+                .join(Match.class, Join.JoinType.LEFT).as("m")
+                .on(Condition.column(
+                        ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH))
+                        .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION)).eq(
+                        questionRelation.getId_question_relation())).queryList();
+    }
+
+    public static List<QuestionOption> listAll() {
+        return new Select().all().from(QuestionOption.class).queryList();
     }
 
     public long getId_question_option() {
@@ -79,8 +115,8 @@ public class QuestionOption extends BaseModel {
     }
 
     public Option getOption() {
-        if(option==null){
-            if(id_option==null) return null;
+        if (option == null) {
+            if (id_option == null) return null;
             option = new Select()
                     .from(Option.class)
                     .where(Condition.column(Option$Table.ID_OPTION)
@@ -89,19 +125,19 @@ public class QuestionOption extends BaseModel {
         return option;
     }
 
-    public void setOption(Option option) {
-        this.option = option;
-        this.id_option = (option!=null)?option.getId_option():null;
-    }
-
-    public void setOption(Long id_option){
+    public void setOption(Long id_option) {
         this.id_option = id_option;
         this.option = null;
     }
 
+    public void setOption(Option option) {
+        this.option = option;
+        this.id_option = (option != null) ? option.getId_option() : null;
+    }
+
     public Question getQuestion() {
-        if(question==null){
-            if(id_question==null) return null;
+        if (question == null) {
+            if (id_question == null) return null;
             question = new Select()
                     .from(Question.class)
                     .where(Condition.column(Question$Table.ID_QUESTION)
@@ -110,19 +146,19 @@ public class QuestionOption extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_question = (question!=null)?question.getId_question():null;
-    }
-
-    public void setQuestion(Long id_question){
+    public void setQuestion(Long id_question) {
         this.id_question = id_question;
         this.question = null;
     }
 
+    public void setQuestion(Question question) {
+        this.question = question;
+        this.id_question = (question != null) ? question.getId_question() : null;
+    }
+
     public Match getMatch() {
-        if(match==null){
-            if(id_match==null) return null;
+        if (match == null) {
+            if (id_match == null) return null;
             match = new Select()
                     .from(Match.class)
                     .where(Condition.column(Match$Table.ID_MATCH)
@@ -131,61 +167,28 @@ public class QuestionOption extends BaseModel {
         return match;
     }
 
-    public void setMatch(Match match) {
-        this.match = match;
-        this.id_match = (match!=null)?match.getId_match():null;
-    }
-
-    public void setMatch(Long id_match){
+    public void setMatch(Long id_match) {
         this.id_match = id_match;
         this.match = null;
     }
 
+    public void setMatch(Match match) {
+        this.match = match;
+        this.id_match = (match != null) ? match.getId_match() : null;
+    }
+
     /**
      * Returns the threshold associated with this questionoption
-     * @return
      */
-    public QuestionThreshold getQuestionThreshold(){
+    public QuestionThreshold getQuestionThreshold() {
         Match match = getMatch();
 
         //No match -> no threshold
-        if(match==null){
+        if (match == null) {
             return null;
         }
 
         return match.getQuestionThreshold();
-    }
-
-    /**
-     * Returns the QuestionOptions for the given question and option
-     * @param questionWithOption
-     * @param option
-     * @return
-     */
-    public static List<QuestionOption> findByQuestionAndOption(Question questionWithOption, Option option) {
-        if(questionWithOption==null || option==null){
-            return null;
-        }
-
-        return new Select().all().from(QuestionOption.class)
-                .where(Condition.column(QuestionOption$Table.ID_QUESTION)
-                .is(questionWithOption.getId_question()))
-                .and(Condition.column(QuestionOption$Table.ID_OPTION)
-                        .is(option.getId_option()))
-                .queryList();
-    }
-
-    /**
-     * Find questionOptions related with the given questionRelation by its match
-     * @param questionRelation
-     * @return
-     */
-    public static List<QuestionOption> findByQuestionRelation(QuestionRelation questionRelation){
-        return new Select().all().from(QuestionOption.class).as("qo")
-                .join(Match.class, Join.JoinType.LEFT).as("m")
-                .on(Condition.column(ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH))
-                                .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)))
-                .where(Condition.column(ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION)).eq(questionRelation.getId_question_relation())).queryList();
     }
 
     @Override
@@ -196,10 +199,13 @@ public class QuestionOption extends BaseModel {
         QuestionOption that = (QuestionOption) o;
 
         if (id_question_option != that.id_question_option) return false;
-        if (id_option != null ? !id_option.equals(that.id_option) : that.id_option != null)
+        if (id_option != null ? !id_option.equals(that.id_option) : that.id_option != null) {
             return false;
-        if (id_question != null ? !id_question.equals(that.id_question) : that.id_question != null)
+        }
+        if (id_question != null ? !id_question.equals(that.id_question)
+                : that.id_question != null) {
             return false;
+        }
         return !(id_match != null ? !id_match.equals(that.id_match) : that.id_match != null);
 
     }
@@ -221,9 +227,5 @@ public class QuestionOption extends BaseModel {
                 ", id_question=" + id_question +
                 ", id_match=" + id_match +
                 '}';
-    }
-
-    public static List<QuestionOption> listAll() {
-        return new Select().all().from(QuestionOption.class).queryList();
     }
 }

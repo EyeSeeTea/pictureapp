@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2015.
   ~
   ~ This file is part of QIS Surveillance App.
@@ -20,80 +19,81 @@
 
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/assessment_row"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/assessment_row"
     android:padding="@dimen/dashboard_row_padding">
+
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
         android:id="@+id/facilityDateContainer"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
         android:layout_weight="0.4"
-        android:layout_gravity="center">
+        android:orientation="vertical">
 
         <org.eyeseetea.malariacare.views.TextCard
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/completionDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
-            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/black"
+            android:textStyle="bold"
             app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/medium_font_name"/>
-            <!--android:textSize="@dimen/dashboard_text_size"-->
+            app:tFontName="@string/medium_font_name" />
+        <!--android:textSize="@dimen/dashboard_text_size"-->
 
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
         android:id="@+id/statusContainer"
-        android:layout_weight="0.2"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:layout_weight="0.2"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <org.eyeseetea.malariacare.views.TextCard
+            android:id="@+id/rdt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/rdt"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
-            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/black"
+            android:textStyle="bold"
             app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/medium_font_name"/>
-            <!--android:textSize="@dimen/dashboard_text_size"-->
+            app:tFontName="@string/medium_font_name" />
+        <!--android:textSize="@dimen/dashboard_text_size"-->
 
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_weight="0.4"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:layout_weight="0.4"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <org.eyeseetea.malariacare.views.TextCard
+            android:id="@+id/info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/info"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:text="@string/lorem_ipsum"
-            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/black"
+            android:textStyle="bold"
             app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/medium_font_name"/>
-            <!--android:textSize="@dimen/dashboard_text_size"-->
+            app:tFontName="@string/medium_font_name" />
+        <!--android:textSize="@dimen/dashboard_text_size"-->
 
 
     </LinearLayout>

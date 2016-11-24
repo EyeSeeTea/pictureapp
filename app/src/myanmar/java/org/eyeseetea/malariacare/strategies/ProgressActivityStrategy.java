@@ -5,9 +5,8 @@ import android.content.Intent;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
-import org.eyeseetea.malariacare.SettingsActivity;
 
-public  class ProgressActivityStrategy extends AProgressActivityStrategy{
+public class ProgressActivityStrategy extends AProgressActivityStrategy {
 
 
     public ProgressActivityStrategy(ProgressActivity progressActivity) {
@@ -16,7 +15,7 @@ public  class ProgressActivityStrategy extends AProgressActivityStrategy{
 
     @Override
     public void finishAndGo() {
-        Intent intent = new Intent(progressActivity,DashboardActivity.class);
+        Intent intent = new Intent(progressActivity, DashboardActivity.class);
 
         progressActivity.finish();
         progressActivity.startActivity(intent);

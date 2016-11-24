@@ -29,34 +29,37 @@ import android.util.Log;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 
 /**
- * Basic location listener that persist coordinates associated to every survey in preferences (probably to review)
+ * Basic location listener that persist coordinates associated to every survey in preferences
+ * (probably to review)
  * Created by arrizabalaga on 23/09/15.
  */
 public class SurveyLocationListener implements LocationListener {
 
-    private static String TAG=".SurveyLocation";
+    private static String TAG = ".SurveyLocation";
     private long idSurvey;
 
-    public SurveyLocationListener(long idSurvey){
-        this.idSurvey=idSurvey;
+    public SurveyLocationListener(long idSurvey) {
+        this.idSurvey = idSurvey;
     }
 
-    public void saveLocation(Location location){
+    public void saveLocation(Location location) {
         LocationMemory.put(idSurvey, location);
     }
 
     /**
      * Listens for 1 locationChange event
-     * @param location
      */
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, String.format("onLocationChanged idSurvey:%d location: %s", idSurvey, location.toString()));
+        Log.d(TAG, String.format("onLocationChanged idSurvey:%d location: %s", idSurvey,
+                location.toString()));
         //Save location
         saveLocation(location);
 
         //No more updates
-        LocationManager locationManager=(LocationManager)LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager =
+                (LocationManager) LocationMemory.getContext().getSystemService(
+                        Context.LOCATION_SERVICE);
         locationManager.removeUpdates(this);
     }
 

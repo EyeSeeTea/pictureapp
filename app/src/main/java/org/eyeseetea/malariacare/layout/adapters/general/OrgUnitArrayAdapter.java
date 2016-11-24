@@ -35,7 +35,8 @@ public class OrgUnitArrayAdapter extends AddlArrayAdapter<OrgUnit> {
         super(context, orgUnits);
     }
 
-    @Override public void drawText(TextCard textCard, OrgUnit orgUnit) {
+    @Override
+    public void drawText(TextCard textCard, OrgUnit orgUnit) {
         textCard.setText(orgUnit.getName());
     }
 

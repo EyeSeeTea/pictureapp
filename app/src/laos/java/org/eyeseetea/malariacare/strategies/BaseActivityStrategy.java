@@ -13,7 +13,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onStop() {
-        
+
     }
 
     @Override

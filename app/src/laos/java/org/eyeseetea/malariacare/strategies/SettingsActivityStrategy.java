@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare.strategies;
 import android.content.Intent;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
-
 import android.support.v7.app.AlertDialog;
 
 import com.squareup.otto.Subscribe;
@@ -20,7 +19,7 @@ import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
-    private static final String TAG=".SettingsActivityStrategy";
+    private static final String TAG = ".SettingsActivityStrategy";
 
     private PullRequiredOnPreferenceChangeListener pullRequiredOnPreferenceChangeListener;
     private LoginRequiredOnPreferenceClickListener loginRequiredOnPreferenceClickListener;
@@ -28,7 +27,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public SettingsActivityStrategy(SettingsActivity settingsActivity) {
         super(settingsActivity);
 
-        loginRequiredOnPreferenceClickListener = new LoginRequiredOnPreferenceClickListener(settingsActivity);
+        loginRequiredOnPreferenceClickListener = new LoginRequiredOnPreferenceClickListener(
+                settingsActivity);
 
         pullRequiredOnPreferenceChangeListener = new PullRequiredOnPreferenceChangeListener();
     }
@@ -48,21 +48,23 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         try {
             //Unregister from bus before leaving
             Dhis2Application.bus.unregister(this);
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
     }
 
     @Subscribe
     public void callbackLoginPrePull(NetworkJob.NetworkJobResult<ResourceType> result) {
-        if(PushController.getInstance().isPushInProgress())
+        if (PushController.getInstance().isPushInProgress()) {
             return;
+        }
         //Nothing to check
-        if(result==null || result.getResourceType()==null || !result.getResourceType().equals(
-                ResourceType.USERS)){
+        if (result == null || result.getResourceType() == null || !result.getResourceType().equals(
+                ResourceType.USERS)) {
             return;
         }
 
         //Login failed
-        if(result.getResponseHolder().getApiException()!=null){
+        if (result.getResponseHolder().getApiException() != null) {
             new AlertDialog.Builder(settingsActivity)
                     .setTitle(R.string.dhis_url_error)
                     .setMessage(R.string.dhis_url_error_bad_credentials)

@@ -19,14 +19,14 @@
 
 package org.eyeseetea.malariacare.test.utils;
 
+import static com.google.android.apps.common.testing.deps.guava.base.Preconditions.checkNotNull;
+
 import android.view.View;
 
 import org.eyeseetea.malariacare.views.TextCard;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-
-import static com.google.android.apps.common.testing.deps.guava.base.Preconditions.checkNotNull;
 
 /**
  * Created by arrizabalaga on 25/05/15.
@@ -36,6 +36,10 @@ public class TextCardScaleMatcher extends TypeSafeMatcher<View> {
 
     private TextCardScaleMatcher(String scale) {
         this.scale = checkNotNull(scale);
+    }
+
+    public static Matcher<? super View> hasTextCardScale(String scale) {
+        return new TextCardScaleMatcher(scale);
     }
 
     @Override
@@ -50,9 +54,5 @@ public class TextCardScaleMatcher extends TypeSafeMatcher<View> {
     @Override
     public void describeTo(Description description) {
         description.appendText("with scale: " + scale);
-    }
-
-    public static Matcher<? super View> hasTextCardScale(String scale) {
-        return new TextCardScaleMatcher(scale);
     }
 }

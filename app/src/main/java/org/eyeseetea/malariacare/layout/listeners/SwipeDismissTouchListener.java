@@ -82,31 +82,12 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
     private float mTranslationX;
 
     /**
-     * The callback interface used by {@link SwipeDismissTouchListener} to inform its client
-     * about a successful dismissal of the view for which it was created.
-     */
-    public interface DismissCallbacks {
-        /**
-         * Called to determine whether the view can be dismissed.
-         */
-        boolean canDismiss(Object token);
-
-        /**
-         * Called when the user has indicated they she would like to dismiss the view.
-         *
-         * @param view  The originating {@link View} to be dismissed.
-         * @param token The optional token passed to this object's constructor.
-         */
-        void onDismiss(View view, Object token);
-    }
-
-    /**
      * Constructs a new swipe-to-dismiss touch listener for the given view.
      *
-     * @param view     The view to make dismissable.
-     * @param token    An optional token/cookie object to be passed through to the callback.
+     * @param view      The view to make dismissable.
+     * @param token     An optional token/cookie object to be passed through to the callback.
      * @param callbacks The callback to trigger when the user has indicated that she would like to
-     *                 dismiss this view.
+     *                  dismiss this view.
      */
     public SwipeDismissTouchListener(View view, Object token, DismissCallbacks callbacks) {
         ViewConfiguration vc = ViewConfiguration.get(view.getContext());
@@ -279,5 +260,24 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
         });
 
         animator.start();
+    }
+
+    /**
+     * The callback interface used by {@link SwipeDismissTouchListener} to inform its client
+     * about a successful dismissal of the view for which it was created.
+     */
+    public interface DismissCallbacks {
+        /**
+         * Called to determine whether the view can be dismissed.
+         */
+        boolean canDismiss(Object token);
+
+        /**
+         * Called when the user has indicated they she would like to dismiss the view.
+         *
+         * @param view  The originating {@link View} to be dismissed.
+         * @param token The optional token passed to this object's constructor.
+         */
+        void onDismiss(View view, Object token);
     }
 }

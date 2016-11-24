@@ -21,14 +21,14 @@ public class ReminderStatusChecker extends StatusChecker {
      */
     List<QuestionOption> reminderTriggers;
 
-    public ReminderStatusChecker(Question reminderQuestion){
+    public ReminderStatusChecker(Question reminderQuestion) {
         initRemainderTriggers(reminderQuestion);
     }
 
     @Override
-    public boolean isEnabled(){
-        for(QuestionOption questionOption:reminderTriggers){
-            if(isSelected(questionOption)){
+    public boolean isEnabled() {
+        for (QuestionOption questionOption : reminderTriggers) {
+            if (isSelected(questionOption)) {
                 return true;
             }
         }
@@ -36,22 +36,22 @@ public class ReminderStatusChecker extends StatusChecker {
     }
 
     @Override
-    public boolean isVisibleInReview(){
+    public boolean isVisibleInReview() {
         return false;
     }
 
-    private void initRemainderTriggers(Question reminderQuestion){
+    private void initRemainderTriggers(Question reminderQuestion) {
         this.reminderTriggers = new ArrayList<>();
 
         //Look for a REMINDER relation which origin questionOption is activated
-        for(QuestionRelation questionRelation:reminderQuestion.getQuestionRelations()){
-            if(!questionRelation.isAReminder()){
+        for (QuestionRelation questionRelation : reminderQuestion.getQuestionRelations()) {
+            if (!questionRelation.isAReminder()) {
                 continue;
             }
 
             //Find QuestionOption for this relation
             QuestionOption questionOption = findQuestionOption(questionRelation);
-            if(questionOption==null){
+            if (questionOption == null) {
                 continue;
             }
 
@@ -62,12 +62,11 @@ public class ReminderStatusChecker extends StatusChecker {
 
     /**
      * Checks if the given questionOption is activated
-     * @param questionOption
-     * @return
      */
-    private boolean isSelected(QuestionOption questionOption){
-        Option currentOption=ReadWriteDB.readOptionAnswered(questionOption.getQuestion());
-        return currentOption!=null && currentOption.getId_option()==questionOption.getOption().getId_option();
+    private boolean isSelected(QuestionOption questionOption) {
+        Option currentOption = ReadWriteDB.readOptionAnswered(questionOption.getQuestion());
+        return currentOption != null
+                && currentOption.getId_option() == questionOption.getOption().getId_option();
     }
 
 

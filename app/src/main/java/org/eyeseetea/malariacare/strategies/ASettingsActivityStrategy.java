@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.strategies;
 
 
-import android.content.Context;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
@@ -11,11 +10,12 @@ public abstract class ASettingsActivityStrategy {
 
     protected SettingsActivity settingsActivity;
 
-    public ASettingsActivityStrategy(SettingsActivity settingsActivity){
+    public ASettingsActivityStrategy(SettingsActivity settingsActivity) {
         this.settingsActivity = settingsActivity;
     }
 
     public abstract void onStop();
+
     public abstract void onCreate();
 
     public abstract void setupPreferencesScreen(PreferenceScreen preferenceScreen);

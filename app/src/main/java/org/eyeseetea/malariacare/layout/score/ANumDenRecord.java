@@ -28,13 +28,13 @@ import java.util.Map;
 
 public abstract class ANumDenRecord {
 
-    private Map<Question,List<Float>> numDenRecord = new HashMap<Question,List<Float>>();
+    private Map<Question, List<Float>> numDenRecord = new HashMap<Question, List<Float>>();
 
-    public void addRecord(Question question, Float num, Float den){
+    public void addRecord(Question question, Float num, Float den) {
         numDenRecord.put(question, new ArrayList<Float>(Arrays.asList(num, den)));
     }
 
-    public void deleteRecord(Question question){
+    public void deleteRecord(Question question) {
         getNumDenRecord().remove(question);
     }
 
@@ -42,7 +42,7 @@ public abstract class ANumDenRecord {
         return numDenRecord;
     }
 
-    public List<Float> calculateNumDenTotal(List<Float> numDenTotal){
+    public List<Float> calculateNumDenTotal(List<Float> numDenTotal) {
         Float num = numDenTotal.get(0);
         Float den = numDenTotal.get(1);
         for (List<Float> numDen : getNumDenRecord().values()) {

@@ -78,7 +78,8 @@
 //        Log.i(TAG,"---BEFORE---");
 //        super.setup();
 //        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(), SurveyService.class);
+//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(),
+// SurveyService.class);
 //        Espresso.registerIdlingResources(idlingResource);
 //    }
 //
@@ -138,7 +139,8 @@
 //                        withChild(allOf(withId(R.id.survey_type), withText("- " + program)))))))
 //                .perform(swipeRight());
 //
-//        //Espresso is NOT waiting for the SwipeListener to finish, thus some forced waiting is required
+//        //Espresso is NOT waiting for the SwipeListener to finish, thus some forced waiting is
+// required
 //        try {
 //            Thread.sleep(1000);
 //            onView(withText(android.R.string.ok)).perform(click());
@@ -164,14 +166,16 @@
 //        onView(allOf(withId(R.id.assessment_row),
 //                withChild(allOf(
 //                        withChild(allOf(withId(R.id.facility), withText(orgUnit))),
-//                        withChild(allOf(withId(R.id.survey_type), withText("- " + program))))))).check(doesNotExist());
+//                        withChild(allOf(withId(R.id.survey_type), withText("- " + program))))))
+// ).check(doesNotExist());
 //    }
 //
 //
 //    private void unregisterSurveyReceiver(){
 //        try{
 //            DashboardActivity dashboardActivity =(DashboardActivity)getActivityInstance();
-//            DashboardUnsentFragment dashboardUnsentFragment =(DashboardUnsentFragment) dashboardActivity.getFragmentManager().findFragmentById(R.id.dashboard_details_fragment);
+//            DashboardUnsentFragment dashboardUnsentFragment =(DashboardUnsentFragment)
+// dashboardActivity.getFragmentManager().findFragmentById(R.id.dashboard_details_fragment);
 //            dashboardUnsentFragment.unregisterSurveysReceiver();
 //        }catch(Exception ex){
 //            Log.e(TAG,"unregisterSurveyReceiver(): "+ex.getMessage());

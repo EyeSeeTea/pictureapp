@@ -35,7 +35,8 @@ public class ProgramArrayAdapter extends AddlArrayAdapter<Program> {
         super(context, programs);
     }
 
-    @Override public void drawText(TextCard textCard, Program program) {
+    @Override
+    public void drawText(TextCard textCard, Program program) {
         textCard.setText(program.getName());
     }
 

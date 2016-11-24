@@ -28,13 +28,14 @@ import java.util.Map;
  */
 public class SurveyAnsweredRatioCache {
 
-    private static Map<Long,SurveyAnsweredRatio> surveyAnsweredRatioMap=new HashMap<Long,SurveyAnsweredRatio>();
+    private static Map<Long, SurveyAnsweredRatio> surveyAnsweredRatioMap =
+            new HashMap<Long, SurveyAnsweredRatio>();
 
-    public static void put(Long surveyId,SurveyAnsweredRatio surveyAnsweredRatio){
-        surveyAnsweredRatioMap.put(surveyId,surveyAnsweredRatio);
+    public static void put(Long surveyId, SurveyAnsweredRatio surveyAnsweredRatio) {
+        surveyAnsweredRatioMap.put(surveyId, surveyAnsweredRatio);
     }
 
-    public static SurveyAnsweredRatio get(Long surveyId){
+    public static SurveyAnsweredRatio get(Long surveyId) {
         return surveyAnsweredRatioMap.get(surveyId);
     }
 }

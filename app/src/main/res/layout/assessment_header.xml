@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2015.
   ~
   ~ This file is part of QIS Surveillance App.
@@ -20,63 +19,62 @@
 
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center"
     android:background="@drawable/background_header"
-    android:padding="@dimen/dashboard_row_padding"
-    >
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="@dimen/dashboard_row_padding">
 
     <org.eyeseetea.malariacare.views.TextCard
-        android:layout_width="0dip"
-        android:layout_height="fill_parent"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/assessment_sent_date"
         android:id="@+id/idHeader"
+        android:layout_width="0dip"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.4"
         android:background="@drawable/background_header"
-        android:textColor="@color/fragment_header_title_text"
         android:gravity="center"
         android:padding="5dip"
-        android:layout_weight="0.4"
-        android:layout_gravity="center"
+        android:text="@string/assessment_sent_date"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/fragment_header_title_text"
         app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/condensed_font_name"/>
-        <!--android:textSize="@dimen/dashboard_text_size"-->
+        app:tFontName="@string/condensed_font_name" />
+    <!--android:textSize="@dimen/dashboard_text_size"-->
 
 
     <org.eyeseetea.malariacare.views.TextCard
         android:layout_width="0dip"
         android:layout_height="fill_parent"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:text="@string/assessment_title_rdt"
-        android:background="@drawable/background_header"
-        android:textColor="@color/fragment_header_title_text"
-        android:gravity="center"
-        android:padding="5dip"
+        android:layout_gravity="center"
         android:layout_weight="0.2"
-        android:layout_gravity="center"
         android:autoText="false"
+        android:background="@drawable/background_header"
+        android:gravity="center"
+        android:padding="5dip"
+        android:text="@string/assessment_title_rdt"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="@color/fragment_header_title_text"
         app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/condensed_font_name"/>
-        <!--android:textSize="@dimen/dashboard_text_size"-->
+        app:tFontName="@string/condensed_font_name" />
+    <!--android:textSize="@dimen/dashboard_text_size"-->
 
 
     <org.eyeseetea.malariacare.views.TextCard
         android:layout_width="0dip"
         android:layout_height="fill_parent"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:text="@string/assessment_title_info"
+        android:layout_gravity="center"
+        android:layout_weight="0.4"
+        android:autoText="false"
         android:background="@drawable/background_header"
-        android:textColor="@color/fragment_header_title_text"
         android:gravity="center"
         android:padding="5dip"
-        android:layout_weight="0.4"
-        android:layout_gravity="center"
-        android:autoText="false"
+        android:text="@string/assessment_title_info"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="@color/fragment_header_title_text"
         app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/condensed_font_name"/>
-        <!--android:textSize="@dimen/dashboard_text_size"-->
+        app:tFontName="@string/condensed_font_name" />
+    <!--android:textSize="@dimen/dashboard_text_size"-->
 
 
 </TableRow>

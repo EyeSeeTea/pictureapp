@@ -20,7 +20,6 @@
 package org.eyeseetea.malariacare.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
@@ -49,14 +48,14 @@ public class Utils {
 
     static final int numberOfDecimals = 0; // Number of decimals outputs will have
 
-    public static String round(float base, int decimalPlace){
+    public static String round(float base, int decimalPlace) {
         BigDecimal bd = new BigDecimal(Float.toString(base));
         bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
         if (decimalPlace == 0) return Integer.toString((int) bd.floatValue());
         return Float.toString(bd.floatValue());
     }
 
-    public static String round(float base){
+    public static String round(float base) {
         return round(base, Utils.numberOfDecimals);
     }
 
@@ -65,8 +64,9 @@ public class Utils {
 
         for (Header header : tab.getHeaders()) {
             result.add(header);
-            for (Question question : header.getQuestions())
+            for (Question question : header.getQuestions()) {
                 result.add(question);
+            }
 
         }
         return result;
@@ -78,8 +78,9 @@ public class Utils {
         for (Header header : tab.getHeaders()) {
             result.add(header);
             for (Question question : header.getQuestions()) {
-                if (question.hasChildren())
+                if (question.hasChildren()) {
                     result.add(question);
+                }
             }
         }
 
@@ -88,29 +89,31 @@ public class Utils {
 
 
     public static String getInternationalizedString(String name) {
-        Context context=PreferencesState.getInstance().getContext();
-        int identifier = context.getResources().getIdentifier(name, "string", context.getPackageName());
+        Context context = PreferencesState.getInstance().getContext();
+        int identifier = context.getResources().getIdentifier(name, "string",
+                context.getPackageName());
         //if the id is 0 it not exist.
-        if(identifier!=0) {
+        if (identifier != 0) {
             name = context.getString(identifier);
         }
         return name;
     }
 
-    public static String getCommitHash(Context context){
+    public static String getCommitHash(Context context) {
         String stringCommit;
         //Check if lastcommit.txt file exist, and if not exist show as unavailable.
-        int layoutId = context.getResources().getIdentifier("lastcommit", "raw", context.getPackageName());
-        if (layoutId == 0){
-            stringCommit=context.getString(R.string.unavailable);
+        int layoutId = context.getResources().getIdentifier("lastcommit", "raw",
+                context.getPackageName());
+        if (layoutId == 0) {
+            stringCommit = context.getString(R.string.unavailable);
         } else {
-            InputStream commit = context.getResources().openRawResource( layoutId);
-            stringCommit= Utils.convertFromInputStreamToString(commit).toString();
+            InputStream commit = context.getResources().openRawResource(layoutId);
+            stringCommit = Utils.convertFromInputStreamToString(commit).toString();
         }
         return stringCommit;
     }
 
-    public static StringBuilder convertFromInputStreamToString(InputStream inputStream){
+    public static StringBuilder convertFromInputStreamToString(InputStream inputStream) {
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
@@ -125,74 +128,79 @@ public class Utils {
 
         return stringBuilder;
     }
+
     /**
      * Get a JSONArray and returns a String array from a key value()
+     *
      * @param value is the key in the first level.
-     * @param json is JSONArray
-     * @throws Exception
+     * @param json  is JSONArray
      */
-    public static String[] jsonArrayToStringArray(JSONArray json,String value) {
-        int size=0;
+    public static String[] jsonArrayToStringArray(JSONArray json, String value) {
+        int size = 0;
         for (int i = 0; i < json.length(); ++i) {
             JSONObject row = null;
             try {
                 row = json.getJSONObject(i);
-                if(row.getString(value)!=null)
+                if (row.getString(value) != null) {
                     size++;
+                }
             } catch (JSONException e) {
             }
         }
-        int position=0;
-        String[] strings=new String[size];
+        int position = 0;
+        String[] strings = new String[size];
         for (int i = 0; i < json.length(); ++i) {
             JSONObject row = null;
             try {
                 row = json.getJSONObject(i);
-                if(row.getString(value)!=null)
+                if (row.getString(value) != null) {
                     strings[position++] = row.getString(value);
+                }
             } catch (JSONException e) {
             }
         }
         return strings;
     }
+
     /**
      * returns the system data and the event data difference in hours
+     *
      * @param limit is the time in hours
-     * @param date is the Date to compare with system Date
+     * @param date  is the Date to compare with system Date
      * @return if the difference is up than the time in hours
-     * @throws Exception
      */
-    public static boolean isDateOverLimit(Calendar date,int limit) {
+    public static boolean isDateOverLimit(Calendar date, int limit) {
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
-        if(differenceInHours((Date) sysDate.getTime(), (Date) date.getTime())<limit){
+        if (differenceInHours((Date) sysDate.getTime(), (Date) date.getTime()) < limit) {
             return false;
-        }
-        else
+        } else {
             return true;
+        }
     }
+
     /**
      * returns the system data and the event data difference in hours
-     * @param limit is the time in hours
+     *
+     * @param limit      is the time in hours
      * @param surveyDate is the Date to compare with nextDate
-     * @param nextDate is the Date to compare with surveyDate
+     * @param nextDate   is the Date to compare with surveyDate
      * @return if the difference is up than the time in hours
-     * @throws Exception
      */
-    public static boolean isDateOverLimit(Calendar surveyDate,Calendar nextDate,int limit) {
+    public static boolean isDateOverLimit(Calendar surveyDate, Calendar nextDate, int limit) {
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
-        int difference=differenceInHours((Date) nextDate.getTime(), (Date) surveyDate.getTime());
-        if(difference>=0 && difference<limit){
+        int difference = differenceInHours((Date) nextDate.getTime(), (Date) surveyDate.getTime());
+        if (difference >= 0 && difference < limit) {
             return false;
-        }
-        else
+        } else {
             return true;
+        }
     }
 
     //Check if the provided date is under the system data.
     public static boolean isDateOverSystemDate(Calendar closedDate) {
-        if(closedDate!=null) {
+        if (closedDate != null) {
             Calendar sysDate = Calendar.getInstance();
             sysDate.setTime(new Date());
             if (sysDate.after(closedDate)) {
@@ -208,19 +216,19 @@ public class Utils {
         return (int) hours;
     }
 
-    public static Calendar parseStringToCalendar(String datestring){
+    public static Calendar parseStringToCalendar(String datestring) {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         try {
             calendar.setTime(format.parse(datestring));// all done
         } catch (ParseException e) {
-            calendar=null;
+            calendar = null;
             e.printStackTrace();
         }
         return calendar;
     }
 
-    public static String getClosingDateString(String format){
+    public static String getClosingDateString(String format) {
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
         sysDate.set(Calendar.HOUR, sysDate.get(Calendar.HOUR) - 24);
@@ -229,21 +237,23 @@ public class Utils {
         return dateFormatted;
     }
 
-    public static Timestamp getClosingDateTimestamp(String format){
+    public static Timestamp getClosingDateTimestamp(String format) {
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
         sysDate.set(Calendar.HOUR, sysDate.get(Calendar.HOUR) - 24);
-        Timestamp timestamp=new Timestamp(sysDate.getTime().getTime());
+        Timestamp timestamp = new Timestamp(sysDate.getTime().getTime());
         return timestamp;
     }
-    public static String geTodayDataString(String format){
+
+    public static String geTodayDataString(String format) {
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());
         SimpleDateFormat formated = new SimpleDateFormat(format);
         String dateFormatted = formated.format(sysDate.getTime());
         return dateFormatted;
     }
-    public static Calendar DateToCalendar(Date date){
+
+    public static Calendar DateToCalendar(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal;

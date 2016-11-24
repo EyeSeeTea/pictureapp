@@ -21,8 +21,8 @@ package utils;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 
@@ -36,16 +36,23 @@ public class ProgressUtils {
         TextView progressText = (TextView) view.findViewById(R.id.dynamic_progress_text);
         progressView.setMax(totalPages);
         progressView.setProgress(currentPage + 1);
-        progressText.setText(getLocaleProgressStatus(progressView.getContext(), progressView.getProgress(), progressView.getMax()));
+        progressText.setText(
+                getLocaleProgressStatus(progressView.getContext(), progressView.getProgress(),
+                        progressView.getMax()));
     }
 
     public static void setProgressBarText(View view, String newText) {
         ((TextView) view.findViewById(R.id.dynamic_progress_text)).setText(newText);
     }
 
-    private static String getLocaleProgressStatus(Context context, int currentPage, int totalPages) {
-        String current = context.getResources().getString(context.getResources().getIdentifier("number_" + currentPage, "string", context.getPackageName()));
-        String total = context.getResources().getString(context.getResources().getIdentifier("number_" + totalPages, "string", context.getPackageName()));
+    private static String getLocaleProgressStatus(Context context, int currentPage,
+            int totalPages) {
+        String current = context.getResources().getString(
+                context.getResources().getIdentifier("number_" + currentPage, "string",
+                        context.getPackageName()));
+        String total = context.getResources().getString(
+                context.getResources().getIdentifier("number_" + totalPages, "string",
+                        context.getPackageName()));
         return current.concat("/").concat(total);
     }
 }

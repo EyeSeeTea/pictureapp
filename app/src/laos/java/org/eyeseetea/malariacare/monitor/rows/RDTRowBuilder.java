@@ -28,7 +28,7 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
  */
 public class RDTRowBuilder extends CounterRowBuilder {
 
-    public RDTRowBuilder(Context context){
+    public RDTRowBuilder(Context context) {
         super(context, context.getString(R.string.monitor_row_title_rdts));
     }
 

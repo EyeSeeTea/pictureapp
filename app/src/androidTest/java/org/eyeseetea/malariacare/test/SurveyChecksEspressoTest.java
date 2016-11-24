@@ -52,7 +52,8 @@
 //import static android.support.test.espresso.matcher.ViewMatchers.withText;
 //import static junit.framework.Assert.assertEquals;
 //import static org.eyeseetea.malariacare.test.utils.TextCardScaleMatcher.hasTextCardScale;
-//import static org.eyeseetea.malariacare.test.utils.UncheckeableRadioButtonScaleMatcher.hasRadioButtonScale;
+//import static org.eyeseetea.malariacare.test.utils.UncheckeableRadioButtonScaleMatcher
+// .hasRadioButtonScale;
 //import static org.hamcrest.Matchers.allOf;
 //import static org.hamcrest.Matchers.instanceOf;
 //import static org.hamcrest.Matchers.is;
@@ -84,7 +85,8 @@
 //    public void registerIntentServiceIdlingResource(){
 //        super.setup();
 //        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(), SurveyService.class);
+//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(),
+// SurveyService.class);
 //        Espresso.registerIdlingResources(idlingResource);
 //    }
 //

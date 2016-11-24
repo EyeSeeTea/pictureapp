@@ -43,6 +43,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -55,6 +56,8 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.hisp.dhis.android.sdk.controllers.DhisService;
+import org.hisp.dhis.android.sdk.events.UiEvent;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
 import org.hisp.dhis.android.sdk.persistence.models.Dashboard;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
@@ -77,6 +80,8 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     private static final String TAG = ".LoginActivity";
 
     public static final String PULL_REQUIRED = "PULL_REQUIRED";
+    public static final String DEFAULT_USER = "";
+    public static final String DEFAULT_PASSWORD = "";
 
     private String serverUrl;
 
@@ -105,9 +110,9 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
         //Username, Password blanks to force real login
         usernameEditText = (EditText) findViewById(R.id.username);
-        usernameEditText.setText("");
+        usernameEditText.setText(DEFAULT_USER);
         passwordEditText = (EditText) findViewById(R.id.password);
-        passwordEditText.setText("");
+        passwordEditText.setText(DEFAULT_PASSWORD);
     }
 
     private void initDataDownloadPeriodDropdown() {
@@ -218,14 +223,34 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         super.login(serverUrl, username, password);
     }
 
+    /**
+     * This logout is called from the success user autentication, and try to login in the server with the correct userdata.
+     */
+    @Subscribe
+    public void onLogoutFinished(UiEvent uiEvent){
+        //No event or not a logout event -> done
+        if(uiEvent==null || !uiEvent.getEventType().equals(UiEvent.UiEventType.USER_LOG_OUT)){
+            return;
+        }
+        HttpUrl serverUri = HttpUrl.parse(serverUrl);
+        DhisService.logInUser(serverUri, ServerAPIController.getSDKCredentials());
+    }
+
     @Subscribe
     public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
         if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
             if(result.getResponseHolder().getApiException() == null) {
                 Credentials credentials = new Credentials(serverUrl,username,password);
                 mLoginUseCase.execute(credentials);
-
-                mLoginActivityStrategy.finishAndGo();
+                //The first login is only to authenticate the user, and is need logout from the sdk and login with the correct user/password.
+                if(mLoginUseCase.isLogoutNeeded(credentials)){
+                    username=DEFAULT_USER;
+                    password=DEFAULT_PASSWORD;
+                    //The first login (user authentication) calls this
+                    DhisService.logOutUser(this);
+                }else{
+                    mLoginActivityStrategy.finishAndGo();
+                }
             } else {
                 onLoginFail(result.getResponseHolder().getApiException());
             }

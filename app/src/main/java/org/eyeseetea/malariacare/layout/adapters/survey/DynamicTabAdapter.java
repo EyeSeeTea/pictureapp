@@ -720,7 +720,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;
             }
             if(screenQuestion.getCompulsory()!=null && screenQuestion.getCompulsory() == 0) {
-                TextCard rowCompulsoryView = ((TextCard) tableRow.findViewById(R.id.row_header_compulsory));
+                ImageView rowCompulsoryView = ((ImageView) tableRow.findViewById(R.id.row_header_compulsory));
                 rowCompulsoryView.setVisibility(View.VISIBLE);
             }
 

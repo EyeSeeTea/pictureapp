@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <include layout="@layout/bottom_view"></include>
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="left"
         android:layout_gravity="left"
@@ -13,7 +15,7 @@
         android:paddingRight="@dimen/input_edit_text_right_padding">
         <org.eyeseetea.malariacare.views.TextCard
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/transparent"
             android:gravity="left"
             android:layout_gravity="left"
@@ -23,18 +25,16 @@
             app:tDimension="@string/font_size_level2"
             app:tFontName="@string/condensed_font_name"
             />
-        <org.eyeseetea.malariacare.views.TextCard
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             android:layout_toRightOf="@+id/row_header_text"
-            android:visibility="visible"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@color/red"
             android:id="@+id/row_header_compulsory"
-            android:inputType="textLongMessage"
-            android:text="*"
-            app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/condensed_font_name"/>
+            android:visibility="visible"
+            android:adjustViewBounds="true"
+            android:src="@drawable/compulsory"
+            android:scaleType="fitCenter" />
 
     </LinearLayout>
 </merge>

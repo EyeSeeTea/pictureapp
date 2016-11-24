@@ -22,4 +22,6 @@ public abstract class ALoginUseCase {
     }
 
     public abstract void execute(Credentials credentials);
+
+    public abstract boolean isLogoutNeeded(Credentials credentials);
 }

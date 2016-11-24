@@ -84,6 +84,8 @@ public class Question extends BaseModel {
     String feedback;
     @Column
     Long id_header;
+    @Column
+    Integer compulsory;
     /**
      * Reference to the parent header (loaded lazily)
      */
@@ -152,7 +154,7 @@ public class Question extends BaseModel {
 
     public Question(String code, String de_name, String short_name, String form_name, String uid,
             Integer order_pos, Float numerator_w, Float denominator_w, String feedback,
-            Integer output, Header header, Answer answer, Question question,
+            Integer output, Integer compulsory, Header header, Answer answer, Question question,
             CompositeScore compositeScore) {
         this.code = code;
         this.de_name = de_name;
@@ -164,6 +166,7 @@ public class Question extends BaseModel {
         this.denominator_w = denominator_w;
         this.feedback = feedback;
         this.output = output;
+        this.compulsory = compulsory;
         this.parent = null;
 
         this.setHeader(header);
@@ -456,6 +459,14 @@ public class Question extends BaseModel {
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+    }
+
+    public Integer getCompulsory() {
+        return compulsory;
+    }
+
+    public void setCompulsory(Integer compulsory) {
+        this.compulsory = compulsory;
     }
 
     public String getPath() {
@@ -1323,6 +1334,9 @@ public class Question extends BaseModel {
         if (visible != null ? !visible.equals(question.visible) : question.visible != null) {
             return false;
         }
+        if (compulsory != null ? !compulsory.equals(question.compulsory) : question.compulsory != null) {
+            return false;
+        }
         return !(id_composite_score != null ? !id_composite_score.equals(
                 question.id_composite_score) : question.id_composite_score != null);
 
@@ -1348,6 +1362,7 @@ public class Question extends BaseModel {
         result = 31 * result + (visible != null ? visible.hashCode() : 0);
         result = 31 * result + (path != null ? path.hashCode() : 0);
         result = 31 * result + (total_questions != null ? total_questions.hashCode() : 0);
+        result = 31 * result + (compulsory != null ? compulsory.hashCode() : 0);
         return result;
     }
 
@@ -1366,6 +1381,7 @@ public class Question extends BaseModel {
                 ", denominator_w=" + denominator_w +
                 ", id_header=" + id_header +
                 ", id_answer=" + id_answer +
+                ", compulsory=" + compulsory +
                 ", output=" + output +
                 ", id_parent=" + id_parent +
                 ", id_composite_score=" + id_composite_score +

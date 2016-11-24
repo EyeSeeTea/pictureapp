@@ -716,6 +716,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     showOrHideChildren(screenQuestion);
                     break;
             }
+            if(screenQuestion.getCompulsory()!=null && screenQuestion.getCompulsory() == 0) {
+                ImageView rowCompulsoryView = ((ImageView) tableRow.findViewById(R.id.row_header_compulsory));
+                rowCompulsoryView.setVisibility(View.VISIBLE);
+            }
+
+
+
         }
         rowView.requestLayout();
         return rowView;

@@ -118,10 +118,22 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                 if (!orgUnits) {
                     ShowException.showError(R.string.exception_org_unit_not_valid);
                 }else{
-                    PreferencesState.getInstance().saveStringPreference(R.string.org_unit,value);
-                    PreferencesState.getInstance().reloadPreferences();
-                    //Super invokes changeListener
-                    callChangeListener(value);
+                    CheckBanAsync checkBanAsync = new CheckBanAsync(mEditText.getContext());
+                    try {
+                        orgUnits = checkBanAsync.execute(value).get();
+                        if (!orgUnits) {
+                            ShowException.showError(R.string.exception_org_unit_banned);
+                        }else{
+                            PreferencesState.getInstance().saveStringPreference(R.string.org_unit,value);
+                            PreferencesState.getInstance().reloadPreferences();
+                            //Super invokes changeListener
+                            callChangeListener(value);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 }
             }catch(Exception ex){
                 Log.e(TAG,"onDialogClosed: "+ex.getMessage());
@@ -129,6 +141,7 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         }
     }
 
+}
     class CheckCodeAsync extends AsyncTask<String, Void, Boolean> {
 
         Context context;
@@ -153,4 +166,26 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     }
 
-}
+    class CheckBanAsync extends AsyncTask<String, Void, Boolean> {
+
+        Context context;
+        public CheckBanAsync(Context context) {
+            this.context=context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        protected Boolean doInBackground(String... param) {
+            boolean result = false;
+
+            String orgUnit = param[0];
+            if(orgUnit==null || orgUnit.isEmpty()){
+                return false;
+            }
+            String serverUrl=PreferencesState.getInstance().getDhisURL();
+            return ServerAPIController.isOrgUnitOpen(serverUrl,orgUnit);
+        }
+
+    }

@@ -58,10 +58,6 @@ public class LoginUseCase extends ALoginUseCase{
     }
     @Override
     public boolean isLogoutNeeded(Credentials credentials) {
-        if(credentials.isDemoCredentials())
-            return false;
-        else
-        return (!credentials.getUsername().equals(LoginActivity.DEFAULT_USER) && !credentials.getUsername().equals(
-                ServerAPIController.getSDKCredentials().getUsername()));
+        return false;
     }
 }

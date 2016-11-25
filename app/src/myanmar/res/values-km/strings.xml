@@ -85,8 +85,8 @@
     <string name="monitor_label_option_months">"៦ ខែមុន"</string>
     <string name="monitor_label_option_days">"៦ ថ្ងៃមុន"</string>
     <string name="monitor_label_option_weeks">"៦ សប្តាហ៍មុន"</string>
-    <string name="monitor_table_title_suspected">"ករណីីសង្ស័យ និងករណីវិជ្ជមាន"</string>
-    <string name="monitor_table_title_stock">"ស្តុកនៃការប្រើប្រាស់"</string>
+    <string name="monitor_table_title_suspected">"ករណីស្ថិតិ"</string>
+    <string name="monitor_table_title_stock">"ការប្រើប្រាស់"</string>
     <string name="monitor_row_title_period">"រយៈពេល"</string>
     <string name="monitor_row_title_week">"សប្តាហ៍"</string>
     <string name="monitor_row_title_suspected">"ករណីសង្ស័យ"</string>
@@ -130,7 +130,7 @@
     <string name="monitor_row_title_rdt_stockout">"លេខមិនបានសាកល្បង (គ្រឿងញៀន )"</string>
     <string name="monitor_row_title_pregnant">"អ្នកជំងឺដែលមានផ្ទៃពោះ"</string>
     <string name="monitor_row_title_severe">"អ្នកជំងឺធ្ងន់ធ្ងរ"</string>
-    <string name="monitor_row_title_treatment">"ចំនួននៃការបញ្ជូន (ការព្យាបាល)"</string>
+    <string name="monitor_row_title_treatment">"ការបញ្ជូន"</string>
     <string name="monitor_row_title_rdt_testing">"ចំនួននៃការបញ្ជូន (ការធ្វើតេស្ត RDT)"</string>
     <string name="monitor_row_title_submission">"ការដាក់ស្នើ"</string>
     <string name="review_title">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>

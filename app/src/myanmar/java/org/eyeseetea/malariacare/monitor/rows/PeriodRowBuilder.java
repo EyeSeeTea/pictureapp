@@ -55,8 +55,8 @@ public class PeriodRowBuilder extends MonitorRowBuilder {
     //private static final String DAYS_FORMAT="EEE";
     private static String DAYS_FORMAT = "'%s' dd";
 
-    public PeriodRowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_period));
+    public PeriodRowBuilder(Context context, int titleId) {
+        super(context, context.getString(titleId));
         initWeekFormat();
         initDayFormat();
         initData();

@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.monitor.tables;
 
 import android.content.Context;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.ACT12RowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.ACT6RowBuilder;
@@ -33,7 +34,7 @@ public class MonitorUtils extends AMonitorUtils {
 
     public List<MonitorRowBuilder> defineRows() {
         List<MonitorRowBuilder> rowBuilders = new ArrayList<>();
-        rowBuilders.add(new PeriodRowBuilder(context));
+        rowBuilders.add(new PeriodRowBuilder(context, R.string.monitor_table_title_stock));
         rowBuilders.add(new RDTRowBuilder(context));
         rowBuilders.add(new ACT6RowBuilder(context));
         rowBuilders.add(new ACT12RowBuilder(context));
@@ -46,7 +47,7 @@ public class MonitorUtils extends AMonitorUtils {
 
     public List<MonitorRowBuilder> defineSuspectedRows() {
         List<MonitorRowBuilder> rowBuilders = new ArrayList<>();
-        rowBuilders.add(new PeriodRowBuilder(context));
+        rowBuilders.add(new PeriodRowBuilder(context, R.string.monitor_table_title_suspected));
         rowBuilders.add(new TestedRowBuilder(context));
         rowBuilders.add(new PfRowBuilder(context));
         rowBuilders.add(new PvRowBuilder(context));

@@ -33,7 +33,7 @@ import java.util.List;
 public class SuspectedPositiveTableBuilder extends MonitorTableBuilder {
 
     public SuspectedPositiveTableBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_table_title_suspected));
+        super(context, context.getString(R.string.monitor_table_title_suspected_header));
     }
 
     @Override

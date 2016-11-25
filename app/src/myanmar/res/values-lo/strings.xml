@@ -90,8 +90,8 @@
     <string name="monitor_label_option_months">"6 ເດືອນຜ່ານມາ"</string>
     <string name="monitor_label_option_days">"6 ມື້ຜ່ານມາ"</string>
     <string name="monitor_label_option_weeks">"6 ອາທິດຜ່ານມາ"</string>
-    <string name="monitor_table_title_suspected">"ກໍລະນີສົງໄສເປັນໄຂ້ຍຸງ"</string>
-    <string name="monitor_table_title_stock">"ຈຳນວນການໃຊ້"</string>
+    <string name="monitor_table_title_suspected">"ກໍລະນີສະຖິຕິ"</string>
+    <string name="monitor_table_title_stock">"ການບໍລິໂພກ"</string>
     <string name="monitor_row_title_period">"ໄລຍະເວລາ"</string>
     <string name="monitor_row_title_week">"ອາທິດ"</string>
     <string name="monitor_row_title_suspected">"ກໍລະນີສົງໄສເປັນໄຂ້ຍຸງ"</string>
@@ -136,7 +136,7 @@
     <string name="option_confirm">"ທາງເລືອກຢືນຢັນ"</string>
     <string name="monitor_row_title_act_stockout">"ຈໍານວນບໍ່ຮັບການປິ່ນປົວ (ACT stockout) "</string>
     <string name="monitor_row_title_denied">"ຄົນເຈັບປະຕິເສດ "</string>
-    <string name="monitor_row_title_treatment">"ຈໍານວນຂອງການສົ່ງຕໍ່ (ການປິ່ນປົວ)"</string>
+    <string name="monitor_row_title_treatment">"ການສົ່ງຕໍ່"</string>
     <string name="monitor_row_title_rdt_testing">"ຈໍານວນຂອງການສົ່ງຕໍ່ (ການທົດສອບ RDT)"</string>
     <string name="monitor_row_title_rdt_stockout">"ຢາໝົດ"</string>
     <string name="monitor_row_title_pregnant">"ຄົນເຈັບຖືພາ"</string>

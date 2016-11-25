@@ -85,8 +85,8 @@
     <string name="monitor_label_option_months">"6 derniers mois"</string>
     <string name="monitor_label_option_days">"6 derniers jours"</string>
     <string name="monitor_label_option_weeks">"6 dernières semaines"</string>
-    <string name="monitor_table_title_suspected">"Suspicion et les cas positifs"</string>
-    <string name="monitor_table_title_stock">"Stock Consommation"</string>
+    <string name="monitor_table_title_suspected">"Statistiques de cas"</string>
+    <string name="monitor_table_title_stock">"Consommation"</string>
     <string name="monitor_row_title_period">"Période de temps"</string>
     <string name="monitor_row_title_week">"Semaine"</string>
     <string name="monitor_row_title_suspected">"Les cas suspects"</string>
@@ -130,7 +130,7 @@
     <string name="monitor_row_title_rdt_stockout">"Nombre non testé (Rdt rupture de stock)</string>
     <string name="monitor_row_title_pregnant">"Patients encintes"</string>
     <string name="monitor_row_title_severe">"Patients graves"</string>
-    <string name="monitor_row_title_treatment">"Nombre de références (Traitement)"</string>
+    <string name="monitor_row_title_treatment">"Références"</string>
     <string name="monitor_row_title_rdt_testing">"Nombre de références (test TDR)"</string>
     <string name="monitor_row_title_submission">"Envoies"</string>
     <string name="review_title">"S'il vous plaît vérifier avant"</string>

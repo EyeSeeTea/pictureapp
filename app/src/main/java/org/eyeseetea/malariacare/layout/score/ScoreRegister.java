@@ -214,16 +214,16 @@ public class ScoreRegister {
         ScoreRegister.clear();
 
         //Register scores for tabs
-        List<Tab> tabs = survey.getTabGroup().getTabs();
+        List<Tab> tabs = survey.getProgram().getTabs();
         ScoreRegister.registerTabScores(tabs);
 
         //Register scores for composites
-        List<CompositeScore> compositeScoreList = CompositeScore.listByTabGroup(
-                survey.getTabGroup());
+        List<CompositeScore> compositeScoreList = CompositeScore.listByProgram(
+                survey.getProgram());
         ScoreRegister.registerCompositeScores(compositeScoreList);
 
         //Initialize scores x question
-        ScoreRegister.initScoresForQuestions(Question.listByTabGroup(survey.getTabGroup()), survey);
+        ScoreRegister.initScoresForQuestions(Question.listByProgram(survey.getProgram()), survey);
 
         return compositeScoreList;
     }

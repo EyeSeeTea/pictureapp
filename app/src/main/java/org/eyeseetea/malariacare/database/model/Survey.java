@@ -54,11 +54,11 @@ public class Survey extends BaseModel implements VisitableToSDK {
     long id_survey;
 
     @Column
-    Long id_tab_group;
+    Long id_program;
     /**
-     * Reference to the tabgroup associated to this survey (loaded lazily)
+     * Reference to the program associated to this survey (loaded lazily)
      */
-    TabGroup tabGroup;
+    Program program;
 
     @Column
     Long id_org_unit;
@@ -117,7 +117,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.scheduledDate = null;
     }
 
-    public Survey(OrgUnit orgUnit, TabGroup tabGroup, User user) {
+    public Survey(OrgUnit orgUnit, Program program, User user) {
         this();
 
         // Possibilities [ In progress | Completed | Sent ]
@@ -125,17 +125,17 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
         //Set context of the survey
         this.setOrgUnit(orgUnit);
-        this.setTabGroup(tabGroup);
+        this.setProgram(program);
         this.setUser(user);
     }
 
     /**
      * Returns a concrete survey, if it exists
      */
-    public static List<Survey> getUnsentSurveys(OrgUnit orgUnit, TabGroup tabGroup) {
+    public static List<Survey> getUnsentSurveys(OrgUnit orgUnit, Program program) {
         return new Select().from(Survey.class)
                 .where(Condition.column(Survey$Table.ID_ORG_UNIT).eq(orgUnit.getId_org_unit()))
-                .and(Condition.column(Survey$Table.ID_TAB_GROUP).eq(tabGroup.getId_tab_group()))
+                .and(Condition.column(Survey$Table.ID_PROGRAM).eq(program.getId_program()))
                 .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
                 .orderBy(Survey$Table.EVENTDATE)
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
@@ -401,30 +401,25 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.id_org_unit = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
     }
 
-    public TabGroup getTabGroup() {
-        if (tabGroup == null) {
-            if (id_tab_group == null) return null;
-            tabGroup = new Select()
-                    .from(TabGroup.class)
-                    .where(Condition.column(TabGroup$Table.ID_TAB_GROUP)
-                            .is(id_tab_group)).querySingle();
-        }
-        return tabGroup;
-    }
-
-    public void setTabGroup(Long id_tab_group) {
-        this.id_tab_group = id_tab_group;
-        this.tabGroup = null;
-    }
-
-    public void setTabGroup(TabGroup tabGroup) {
-        this.tabGroup = tabGroup;
-        this.id_tab_group = (tabGroup != null) ? tabGroup.getId_tab_group() : null;
-    }
-
     public Program getProgram() {
-        TabGroup group = this.getTabGroup();
-        return group.getProgram();
+        if (program == null) {
+            if (id_program == null) return null;
+            program = new Select()
+                    .from(Program.class)
+                    .where(Condition.column(Program$Table.ID_PROGRAM)
+                            .is(id_program)).querySingle();
+        }
+        return program;
+    }
+
+    public void setProgram(Long id_program) {
+        this.id_program = id_program;
+        this.program = null;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+        this.id_program = (program != null) ? program.getId_program() : null;
     }
 
     public User getUser() {
@@ -993,8 +988,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
         Survey survey = (Survey) o;
 
         if (id_survey != survey.id_survey) return false;
-        if (id_tab_group != null ? !id_tab_group.equals(survey.id_tab_group)
-                : survey.id_tab_group != null) {
+        if (id_program != null ? !id_program.equals(survey.id_program)
+                : survey.id_program != null) {
             return false;
         }
         if (id_org_unit != null ? !id_org_unit.equals(survey.id_org_unit)
@@ -1026,7 +1021,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     @Override
     public int hashCode() {
         int result = (int) (id_survey ^ (id_survey >>> 32));
-        result = 31 * result + (id_tab_group != null ? id_tab_group.hashCode() : 0);
+        result = 31 * result + (id_program != null ? id_program.hashCode() : 0);
         result = 31 * result + (id_org_unit != null ? id_org_unit.hashCode() : 0);
         result = 31 * result + (id_user != null ? id_user.hashCode() : 0);
         result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
@@ -1041,7 +1036,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     public String toString() {
         return "Survey{" +
                 "id_survey=" + id_survey +
-                ", id_tab_group=" + id_tab_group +
+                ", id_program=" + id_program +
                 ", id_org_unit=" + id_org_unit +
                 ", id_user=" + id_user +
                 ", creationDate=" + creationDate +

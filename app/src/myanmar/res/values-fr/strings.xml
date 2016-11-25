@@ -81,7 +81,7 @@
     <string name="dhis_url_error_generic">"Cette erreur de serveur. Le serveur ne répond pas correctement"</string>
     <string name="dhis_url_error_bad_credentials">"Ce soft est pas autorisé dans le serveur donné"</string>
     <string name="settings_menu_monitoring">"Moniteur"</string>
-    <string name="monitor_label">"S\'il vous plaît, sélectionner une période de temps"</string>
+    <string name="monitor_label">"SURVEILLANCE"</string>
     <string name="monitor_label_option_months">"6 derniers mois"</string>
     <string name="monitor_label_option_days">"6 derniers jours"</string>
     <string name="monitor_label_option_weeks">"6 dernières semaines"</string>

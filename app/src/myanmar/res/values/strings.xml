@@ -81,7 +81,7 @@
     <string name="dhis_url_error_generic">"Dhis server error. The server not responding properly"</string>
     <string name="dhis_url_error_bad_credentials">"This app is not authorized in the given server"</string>
     <string name="settings_menu_monitoring">"Monitor"</string>
-    <string name="monitor_label">"Please, select a time period"</string>
+    <string name="monitor_label">"MONITORING"</string>
     <string name="monitor_label_option_months">"Last 6 months"</string>
     <string name="monitor_label_option_days">"Last 6 days"</string>
     <string name="monitor_label_option_weeks">"Last 6 weeks"</string>

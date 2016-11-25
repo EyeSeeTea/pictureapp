@@ -86,7 +86,7 @@
     <string name="dhis_url_error_bad_version">"ລະບົບ DHIS ບໍ່ຕອບສະໜອງ (ອະນຸຍາດໃຫ້ພຽງ 2.20, 2.21, 2.22)"</string>
     <string name="dhis_url_error_bad_credentials">"ແອບນີ້ບໍ່ໄດ້ຮັບອະນຸຍາດຢູ່ໃນລະບົບຖານຂໍ້ມູນ"</string>
     <string name="settings_menu_monitoring">"ການຕິດຕາມ"</string>
-    <string name="monitor_label">"ກະລຸນາເລືອກໄລຍະເວລາ "</string>
+    <string name="monitor_label">"ການຕິດຕາມ"</string>
     <string name="monitor_label_option_months">"6 ເດືອນຜ່ານມາ"</string>
     <string name="monitor_label_option_days">"6 ມື້ຜ່ານມາ"</string>
     <string name="monitor_label_option_weeks">"6 ອາທິດຜ່ານມາ"</string>

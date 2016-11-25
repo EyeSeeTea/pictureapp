@@ -81,7 +81,7 @@
     <string name="dhis_url_error_generic">"ข้อผิดพลาดเซิร์ฟเวอร์นี้ เซิร์ฟเวอร์ไม่ตอบสนองอย่างถูก"</string>
     <string name="dhis_url_error_bad_credentials">"โปรแกรมนี้ไม่ได้รับอนุญาตในเซิร์ฟเวอร์ที่กำหนดเพื่อ"</string>
     <string name="settings_menu_monitoring">"จอภาพ"</string>
-    <string name="monitor_label">"กรุณาเลือก:"</string>
+    <string name="monitor_label">"การติดตามตรวจสอบ"</string>
     <string name="monitor_label_option_months">"6 เดือน"</string>
     <string name="monitor_label_option_days">"6 วันที่ผ่านมา"</string>
     <string name="monitor_label_option_weeks">"6 สัปดาห์ก่อนที่"</string>

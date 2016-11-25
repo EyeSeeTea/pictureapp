@@ -82,7 +82,14 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     }
 
     /**
-     * Tells if the given survey is tested
+     * Tells if the given survey is Rated(all was tested in myanmar).
+     */
+    public boolean isRated() {
+        return isTested();
+    }
+
+    /**
+     * Tells if the given survey is tested and all are tested
      */
     public boolean isTested() {
         return true;

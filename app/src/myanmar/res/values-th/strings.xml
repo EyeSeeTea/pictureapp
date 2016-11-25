@@ -93,14 +93,14 @@
     <string name="monitor_row_title_positive">"กรณีที่เป็นบวก"</string>
     <string name="monitor_row_title_negative">"เชิงลบ"</string>
     <string name="monitor_row_title_not_tested">"ไม่ได้ทดสอบ"</string>
-    <string name="monitor_row_title_tested">"การทดสอบ"</string>
+    <string name="monitor_row_title_tested">"รวมการทดสอบ"</string>
     <string name="monitor_row_title_referral">"เพื่อบูรณาการ"</string>
     <string name="monitor_row_title_asmq">"ยาสวีเดนเม้งฟลอริด้าที่"</string>
     <string name="monitor_row_title_rdts">"RDTS ทดสอบ"</string>
     <string name="monitor_row_title_positivity_rate">"บวก"</string>
     <string name="pf">"Pf"</string>
     <string name="pv">"Pv"</string>
-    <string name="pfpv">"Pf/Pv"</string>
+    <string name="pfpv">"ผสม"</string>
     <string name="settings_menu_legal">"ถูกต้องตามกฎหมาย"</string>
     <string name="settings_menu_copyright">"ลิขสิทธิ์"</string>
     <string name="settings_menu_licenses">"โปรแกรมที่ได้รับอนุญาต"</string>

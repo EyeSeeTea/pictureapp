@@ -61,7 +61,7 @@ public class PositivityRateRowBuilder extends MonitorRowBuilder {
     @Override
     protected Object updateColumn(Object currentValue, SurveyMonitor surveyMonitor) {
         PositivityRate positivityRate = (PositivityRate) currentValue;
-        if (surveyMonitor.isRated()) {
+        if (surveyMonitor.isTested()) {
             positivityRate.incNumSuspected();
         }
         if (surveyMonitor.isPositive()) {

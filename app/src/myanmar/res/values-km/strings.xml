@@ -93,7 +93,7 @@
     <string name="monitor_row_title_positive">"ករណីវិជ្ជមាន"</string>
     <string name="monitor_row_title_negative">"អវិជ្ជមាន"</string>
     <string name="monitor_row_title_not_tested">"មិនបានធ្វើតេស្ត"</string>
-    <string name="monitor_row_title_tested">"ធ្វើតេស្ត"</string>
+    <string name="monitor_row_title_tested">"សរុបបានសាកល្បង"</string>
     <string name="monitor_row_title_referral">"ធ្វើកាបេញ្ជូន"</string>
     <string name="monitor_row_title_asmq">"ឱសថអាតេស៊ុយណាត​ ម៉េហ្លូគីន"</string>
     <string name="monitor_row_title_rdts">"តេស្ត RDTs"</string>

@@ -21,6 +21,7 @@ package org.eyeseetea.malariacare.monitor;
 
 import android.content.Context;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 import org.eyeseetea.malariacare.monitor.utils.TimePeriodCalculator;
@@ -141,7 +142,7 @@ public abstract class MonitorRowBuilder {
     public String getRowAsJSON() {
         String rowJSON = String.format(ROW_JSON,
                 getColumnClassesAsJSON(),
-                getDataAsJSON(monthsData),
+                getDataCapitalizedAsJSON(monthsData),
                 getDataAsJSON(weeksData),
                 getDataAsJSON(daysData)
         );
@@ -169,6 +170,18 @@ public abstract class MonitorRowBuilder {
         return convertListStringToJSON(dataAsString);
     }
 
+    /**
+     * Turns an array of objects into a list of capitalizated quoted items (via toString()) adding rowTitle as
+     * first item
+     */
+    private String getDataCapitalizedAsJSON(Object[] data) {
+        List<String> dataAsString = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
+        dataAsString.add(this.rowTitle);
+        for (int i = 0; i < data.length; i++) {
+            dataAsString.add(WordUtils.capitalize(data[i].toString()));
+        }
+        return convertListStringToJSON(dataAsString);
+    }
     /**
      * Turns the list of strings into a list of quoted items.
      * Ex: ["rowMetric","rowValue"] -> "\"rowMetric\",\"rowValue\""

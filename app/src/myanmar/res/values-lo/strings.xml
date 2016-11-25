@@ -98,14 +98,14 @@
     <string name="monitor_row_title_positive">"ກໍລະນີເປັນໄຂ້ຍຸງ"</string>
     <string name="monitor_row_title_negative">"ບໍ່ເປັນໄຂ້ຍຸງ"</string>
     <string name="monitor_row_title_not_tested">"ບໍ່ໄດ້ທົດສອບ"</string>
-    <string name="monitor_row_title_tested">"ການທົດສອບ"</string>
+    <string name="monitor_row_title_tested">"ທັງຫມົດການທົດສອບ"</string>
     <string name="monitor_row_title_referral">"ການເຊື່ອມໂຍງກັບການ"</string>
     <string name="monitor_row_title_asmq">"ຢາຊູແອັດ Meng Florida,"</string>
     <string name="monitor_row_title_rdts">"RDTs"</string>
     <string name="monitor_row_title_positivity_rate">"ອັດຕາການຕິດເຊື້ອໄຂ້ຍຸງ"</string>
     <string name="pf">"Pf"</string>
     <string name="pv">"Pv"</string>
-    <string name="pfpv">"Pf+Pv"</string>
+    <string name="pfpv">"ປະສົມ"</string>
     <string name="settings_menu_legal">"ຖືກກົດໝາຍ"</string>
     <string name="settings_menu_copyright">"ລິຂະສິດ"</string>
     <string name="settings_menu_licenses">"ການອະນຸຍາດໃຊ້ຊອຟແວຣ"</string>

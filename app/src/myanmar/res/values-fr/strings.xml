@@ -93,14 +93,14 @@
     <string name="monitor_row_title_positive">"Les cas Positifs"</string>
     <string name="monitor_row_title_negative">"Négatif"</string>
     <string name="monitor_row_title_not_tested">"Pas testé"</string>
-    <string name="monitor_row_title_tested">"testé"</string>
+    <string name="monitor_row_title_tested">"Total testé"</string>
     <string name="monitor_row_title_referral">"Referral"</string>
     <string name="monitor_row_title_asmq">"AS/MQ"</string>
     <string name="monitor_row_title_rdts">"RDTs"</string>
     <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
     <string name="pf">"Pf"</string>
     <string name="pv">"Pv"</string>
-    <string name="pfpv">"Pf/Pv"</string>
+    <string name="pfpv">"Mixte"</string>
     <string name="settings_menu_legal">"Légal"</string>
     <string name="settings_menu_copyright">"Copyright"</string>
     <string name="settings_menu_licenses">"Licenses de logiciels"</string>

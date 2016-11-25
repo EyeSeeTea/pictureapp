@@ -171,7 +171,8 @@ public abstract class MonitorRowBuilder {
     }
 
     /**
-     * Turns an array of objects into a list of capitalizated quoted items (via toString()) adding rowTitle as
+     * Turns an array of objects into a list of capitalized quoted items (via toString()) adding
+     * rowTitle as
      * first item
      */
     private String getDataCapitalizedAsJSON(Object[] data) {
@@ -182,6 +183,7 @@ public abstract class MonitorRowBuilder {
         }
         return convertListStringToJSON(dataAsString);
     }
+
     /**
      * Turns the list of strings into a list of quoted items.
      * Ex: ["rowMetric","rowValue"] -> "\"rowMetric\",\"rowValue\""

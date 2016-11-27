@@ -30,7 +30,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 13
+        versionCode 14
         multiDexEnabled true
         dexOptions {
             javaMaxHeapSize "6g"
@@ -73,7 +73,7 @@ android {
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
-            versionName "1.0.7"
+            versionName "1.0.8"
             buildConfigField "boolean","reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
             buildConfigField "boolean", "activeButtonNavigator", "false"

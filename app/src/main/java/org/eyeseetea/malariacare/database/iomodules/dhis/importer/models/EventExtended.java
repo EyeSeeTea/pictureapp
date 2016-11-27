@@ -35,17 +35,39 @@ import java.util.Date;
  */
 public class EventExtended implements VisitableFromSDK {
 
-    private final static String TAG=".EventExtended";
-    public final static String COMPLETION_DATE_FORMAT="yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    public final static String AMERICAN_DATE_FORMAT ="yyyy-MM-dd";
+    public final static String COMPLETION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    public final static String AMERICAN_DATE_FORMAT = "yyyy-MM-dd";
     public static final int MAX_MONTHS_LOADED = -6;
-
+    private final static String TAG = ".EventExtended";
     Event event;
 
-    public EventExtended(){}
+    public EventExtended() {
+    }
 
-    public EventExtended(Event event){
-        this.event =event;
+    public EventExtended(Event event) {
+        this.event = event;
+    }
+
+    /**
+     * Turns a given date into a parseable String according to sdk date format
+     */
+    public static String format(Date date) {
+        if (date == null) {
+            return null;
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(COMPLETION_DATE_FORMAT);
+        return simpleDateFormat.format(date);
+    }
+
+    /**
+     * Turns a given date into a parseable String according to sdk date format
+     */
+    public static String format(Date date, String format) {
+        if (date == null) {
+            return null;
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        return simpleDateFormat.format(date);
     }
 
     @Override
@@ -59,10 +81,9 @@ public class EventExtended implements VisitableFromSDK {
 
     /**
      * Returns the survey.creationDate associated with this event (created field)
-     * @return
      */
-    public Date getCreationDate(){
-        if(event==null){
+    public Date getCreationDate() {
+        if (event == null) {
             return null;
         }
 
@@ -71,10 +92,9 @@ public class EventExtended implements VisitableFromSDK {
 
     /**
      * Returns the survey.completionDate associated with this event (lastUpdated field)
-     * @return
      */
-    public Date getCompletionDate(){
-        if(event==null){
+    public Date getCompletionDate() {
+        if (event == null) {
             return null;
         }
 
@@ -83,10 +103,9 @@ public class EventExtended implements VisitableFromSDK {
 
     /**
      * Returns the survey.eventDate associated with this event (eventDate field)
-     * @return
      */
-    public Date getEventDate(){
-        if(event==null){
+    public Date getEventDate() {
+        if (event == null) {
             return null;
         }
 
@@ -95,62 +114,36 @@ public class EventExtended implements VisitableFromSDK {
 
     /**
      * Returns the survey.eventDate associated with this event (dueDate field)
-     * @return
      */
-    public Date getScheduledDate(){
-        if(event==null){
+    public Date getScheduledDate() {
+        if (event == null) {
             return null;
         }
 
         return parseDate(event.getDueDate());
     }
 
-    private Date parseDate(String dateAsString){
-        if(dateAsString==null){
+    private Date parseDate(String dateAsString) {
+        if (dateAsString == null) {
             return null;
         }
 
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat(COMPLETION_DATE_FORMAT);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(COMPLETION_DATE_FORMAT);
         try {
             return simpleDateFormat.parse(dateAsString);
-        }catch (ParseException e){
-            Log.e(TAG,String.format("Event (%s) cannot parse date %s",event.getUid(),e.getLocalizedMessage()));
+        } catch (ParseException e) {
+            Log.e(TAG, String.format("Event (%s) cannot parse date %s", event.getUid(),
+                    e.getLocalizedMessage()));
             return null;
         }
     }
 
-    public boolean isTooOld(){
-        Date eventDate =getEventDate();
+    public boolean isTooOld() {
+        Date eventDate = getEventDate();
 
         Calendar calendar = Calendar.getInstance();
-        calendar.add( Calendar.MONTH , MAX_MONTHS_LOADED);
-        return eventDate.compareTo( calendar.getTime() ) < 0;
+        calendar.add(Calendar.MONTH, MAX_MONTHS_LOADED);
+        return eventDate.compareTo(calendar.getTime()) < 0;
 
-    }
-
-    /**
-     * Turns a given date into a parseable String according to sdk date format
-     * @param date
-     * @return
-     */
-    public static String format(Date date){
-        if(date==null){
-            return null;
-        }
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat(COMPLETION_DATE_FORMAT);
-        return simpleDateFormat.format(date);
-    }
-
-    /**
-     * Turns a given date into a parseable String according to sdk date format
-     * @param date
-     * @return
-     */
-    public static String format(Date date, String format){
-        if(date==null){
-            return null;
-        }
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat(format);
-        return simpleDateFormat.format(date);
     }
 }

@@ -83,7 +83,8 @@
 //        onView(withId(R.id.email_sign_in_button)).perform(click());
 //
 //        //THEN
-//        onView(withId(R.id.user)).check(matches(hasErrorText(res.getString(R.string.login_error_bad_credentials))));
+//        onView(withId(R.id.user)).check(matches(hasErrorText(res.getString(R.string
+// .login_error_bad_credentials))));
 //    }
 //
 //    @Test

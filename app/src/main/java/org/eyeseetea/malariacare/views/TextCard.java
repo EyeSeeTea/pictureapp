@@ -59,7 +59,7 @@ public class TextCard extends TextView implements IEyeSeeView {
     }
 
     public void init(AttributeSet attrs, int defStyle) {
-        if(isInEditMode() && (getText()==null || getText().toString().isEmpty())){
+        if (isInEditMode() && (getText() == null || getText().toString().isEmpty())) {
             this.setText(R.string.lorem_ipsum);
             return;
         }
@@ -75,24 +75,18 @@ public class TextCard extends TextView implements IEyeSeeView {
 
                 mDimension = a.getString(R.styleable.TextCard_tDimension);
                 mScale = a.getString(R.styleable.TextCard_tScale);
-                if (mDimension == null)
+                if (mDimension == null) {
                     mDimension = context.getString(R.string.settings_array_values_font_sizes_def);
+                }
                 if (mScale == null) this.mScale = PreferencesState.getInstance().getScale();
-                if (!mScale.equals(Constants.FONTS_SYSTEM))
-                    setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferencesState.getInstance().getFontSize(mScale, mDimension));
+                if (!mScale.equals(Constants.FONTS_SYSTEM)) {
+                    setTextSize(TypedValue.COMPLEX_UNIT_SP,
+                            PreferencesState.getInstance().getFontSize(mScale, mDimension));
+                }
             } finally {
                 a.recycle();
             }
         }
-    }
-
-    /**
-     * Sets the view's mFontName attribute value. This is intended to be a String that represents the font filename.
-     *
-     * @param mFontName The example getmDimension attribute value to use.
-     */
-    public void setmFontName(String mFontName) {
-        this.mDimension = mDimension;
     }
 
     /**
@@ -105,11 +99,12 @@ public class TextCard extends TextView implements IEyeSeeView {
     }
 
     /**
-     * Sets the view's mDimension attribute value. In this case, this is the fontSize divided into some dicrete levels
+     * Sets the view's mFontName attribute value. This is intended to be a String that represents
+     * the font filename.
      *
-     * @param mDimension The example getmDimension attribute value to use.
+     * @param mFontName The example getmDimension attribute value to use.
      */
-    public void setmDimension(String mDimension) {
+    public void setmFontName(String mFontName) {
         this.mDimension = mDimension;
     }
 
@@ -123,12 +118,13 @@ public class TextCard extends TextView implements IEyeSeeView {
     }
 
     /**
-     * Sets the view's mDimension attribute value. In this case, this is the fontSize scale separated into some discrete levels
+     * Sets the view's mDimension attribute value. In this case, this is the fontSize divided into
+     * some dicrete levels
      *
-     * @param mScale The example scale attribute value to use.
+     * @param mDimension The example getmDimension attribute value to use.
      */
-    public void setmScale(String mScale) {
-        this.mScale = mScale;
+    public void setmDimension(String mDimension) {
+        this.mDimension = mDimension;
     }
 
     /**
@@ -138,6 +134,16 @@ public class TextCard extends TextView implements IEyeSeeView {
      */
     public String getmScale() {
         return this.mScale;
+    }
+
+    /**
+     * Sets the view's mDimension attribute value. In this case, this is the fontSize scale
+     * separated into some discrete levels
+     *
+     * @param mScale The example scale attribute value to use.
+     */
+    public void setmScale(String mScale) {
+        this.mScale = mScale;
     }
 }
 

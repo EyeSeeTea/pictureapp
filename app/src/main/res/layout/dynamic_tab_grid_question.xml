@@ -7,33 +7,37 @@
 
     <LinearLayout
         android:id="@+id/dynamic_tab"
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/snackbar"
+        android:layout_alignParentTop="true"
         android:orientation="vertical">
 
         <!--Question-->
         <include layout="@layout/question_header"></include>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
             <ImageView
                 android:id="@+id/questionImage"
                 android:layout_width="match_parent"
                 android:layout_height="0px"
-                android:layout_weight="0.2"
-                android:visibility="gone"
                 android:layout_gravity="center_horizontal"
-                android:paddingTop="@dimen/question_padding_image_top" />
+                android:layout_weight="0.2"
+                android:paddingTop="@dimen/question_padding_image_top"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0px"
                 android:layout_weight="0.8"
                 android:orientation="vertical">
+
                 <include layout="@layout/scrolled_table"></include>
+
                 <include layout="@layout/no_scrolled_table"></include>
 
 
@@ -46,15 +50,18 @@
                     android:weightSum="4">
 
                     <include layout="@layout/dynamic_tab_row_question_image" />
+
                     <include layout="@layout/dynamic_tab_row_question_text" />
+
                     <include layout="@layout/dynamic_tab_row_confirm_yes" />
+
                     <include layout="@layout/dynamic_tab_row_confirm_no" />
                 </TableLayout>
 
             </LinearLayout>
-    </LinearLayout>
+        </LinearLayout>
 
-            <!--Question-->
+        <!--Question-->
     </LinearLayout>
 
     <include layout="@layout/snakbar"></include>
@@ -64,6 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/footer_navigation_size"
         android:layout_alignParentBottom="true">
+
         <include layout="@layout/dynamic_tab_pagination_progress"></include>
 
     </RelativeLayout>

@@ -18,34 +18,29 @@ import java.util.Map;
  */
 public class QuestionNode {
     /**
+     * Parent node
+     */
+    QuestionNode parentNode;
+    /**
      * Question here
      */
     private Question question;
     /**
      * Where to go given an option (children questions)
      */
-    private Map<Long,QuestionNode> navigation;
-
+    private Map<Long, QuestionNode> navigation;
     /**
      * Question counters associated to each option of the question
      */
-    private Map<Long,QuestionCounter> counters;
-
+    private Map<Long, QuestionCounter> counters;
     /**
      * List of warning that can be triggered once this question is answer
      */
     private List<QuestionNode> warnings;
-
     /**
      * StatusChecker (provides info related to node state according to values)
      */
     private StatusChecker statusChecker;
-
-    /**
-     * Parent node
-     */
-    QuestionNode parentNode;
-
     /**
      * Next question (sibling)
      */
@@ -56,7 +51,7 @@ public class QuestionNode {
      */
     private QuestionNode previousSibling;
 
-    public QuestionNode(Question question){
+    public QuestionNode(Question question) {
         this.question = question;
         this.navigation = new HashMap<>();
         this.counters = new HashMap<>();
@@ -64,38 +59,35 @@ public class QuestionNode {
         this.warnings = new ArrayList<>();
     }
 
-    public void setQuestion(Question question){
-        this.question=question;
+    public Question getQuestion() {
+        return this.question;
     }
 
-    public Question getQuestion(){
-        return this.question;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     /**
      * From this question given the option you will move to
-     * @param option
      */
-    public void addNavigation(Option option, QuestionNode nextNode){
+    public void addNavigation(Option option, QuestionNode nextNode) {
         //something wrong -> nothing to add
-        if(option==null || nextNode==null){
+        if (option == null || nextNode == null) {
             return;
         }
 
         //Add parentNode to children
         nextNode.setParentNode(this);
         //Annotate navigation
-        this.navigation.put(option.getId_option(),nextNode);
+        this.navigation.put(option.getId_option(), nextNode);
     }
 
     /**
      * The given option triggers a counter to save the number of times its been answered
-     * @param option
-     * @param question
      */
-    public void addCounter(Option option, Question question){
+    public void addCounter(Option option, Question question) {
         //something wrong -> nothing to add
-        if(option==null || question==null){
+        if (option == null || question == null) {
             return;
         }
 
@@ -103,18 +95,17 @@ public class QuestionNode {
         QuestionCounter questionCounter = new QuestionCounter(question);
 
         //Add counter to option
-        this.counters.put(option.getId_option(),questionCounter);
+        this.counters.put(option.getId_option(), questionCounter);
     }
 
     /**
      * Adds a warning to this node.
      * This means that every time you about to leave this node every related warning node
      * will be checked in order to see if its triggered or not according to the current values.
-     * @param warningNode
      */
-    public void addWarning(QuestionNode warningNode){
+    public void addWarning(QuestionNode warningNode) {
         //Only nodes with type warning allows here
-        if(warningNode==null || warningNode.getQuestion().getOutput()!= Constants.WARNING){
+        if (warningNode == null || warningNode.getQuestion().getOutput() != Constants.WARNING) {
             return;
         }
 
@@ -123,11 +114,10 @@ public class QuestionNode {
 
     /**
      * Looks for a related warning that is activated
-     * @return
      */
-    public QuestionNode findWarningActivated(){
-        for(QuestionNode questionNode:this.warnings){
-            if(questionNode.isEnabled()){
+    public QuestionNode findWarningActivated() {
+        for (QuestionNode questionNode : this.warnings) {
+            if (questionNode.isEnabled()) {
                 return questionNode;
             }
         }
@@ -136,63 +126,60 @@ public class QuestionNode {
 
     /**
      * Sets the parent of this questionnode
-     * @param parentNode
      */
-    public void setParentNode(QuestionNode parentNode){
-        this.parentNode=parentNode;
+    public void setParentNode(QuestionNode parentNode) {
+        this.parentNode = parentNode;
     }
 
     /**
-     * Sets the next sibling (same parent question)
-     * @param sibling
-     */
-    public void setSibling(QuestionNode sibling){
-        this.sibling=sibling;
-        //Siblings share same parent
-        this.sibling.parentNode=this.parentNode;
-    }
-    /**
      * gets the next sibling (same parent question)
      */
-    public QuestionNode getSibling(){
+    public QuestionNode getSibling() {
         return this.sibling;
     }
 
     /**
-     * Sets the previous sibling
-     * @param previousSibling
+     * Sets the next sibling (same parent question)
      */
-    public void setPreviousSibling(QuestionNode previousSibling){
-        this.previousSibling = previousSibling;
+    public void setSibling(QuestionNode sibling) {
+        this.sibling = sibling;
+        //Siblings share same parent
+        this.sibling.parentNode = this.parentNode;
     }
 
-    public QuestionNode getPreviousSibling(){
+    public QuestionNode getPreviousSibling() {
         return this.previousSibling;
     }
 
     /**
-     * Returns previous actived node in navation
-     * @return
+     * Sets the previous sibling
      */
-    public QuestionNode previous(){
+    public void setPreviousSibling(QuestionNode previousSibling) {
+        this.previousSibling = previousSibling;
+    }
+
+    /**
+     * Returns previous actived node in navation
+     */
+    public QuestionNode previous() {
         //No previousSibling -> return parent
-        if(this.previousSibling==null){
+        if (this.previousSibling == null) {
             return this.parentNode;
         }
         //Previous not enable -> move backwards recursively
-        if (!this.previousSibling.isEnabled()){
+        if (!this.previousSibling.isEnabled()) {
             return this.previousSibling.previous();
         }
         //Returns previous node
         return this.previousSibling;
     }
+
     /**
      * Returns previous activated node in navigation
-     * @return
      */
-    public QuestionNode next(){
+    public QuestionNode next() {
         //Next not enable -> move forward recursively
-        if (!this.sibling.isEnabled()){
+        if (!this.sibling.isEnabled()) {
             return this.sibling.next(null);
         }
         //Go to next node
@@ -202,18 +189,16 @@ public class QuestionNode {
 
     /**
      * Returns next question given an option
-     * @param option
-     * @return
      */
-    public QuestionNode next(Option option){
+    public QuestionNode next(Option option) {
         //Find next (option, sibling, parent)
-        QuestionNode nextNode=nextAnyWay(option);
-        if(nextNode==null){
+        QuestionNode nextNode = nextAnyWay(option);
+        if (nextNode == null) {
             return null;
         }
         //If nextNode is off -> move forward (recursively)
-        while(nextNode!=null && !nextNode.isEnabled()){
-            nextNode=nextNode.nextAnyWay(null);
+        while (nextNode != null && !nextNode.isEnabled()) {
+            nextNode = nextNode.nextAnyWay(null);
         }
         return nextNode;
     }
@@ -222,29 +207,29 @@ public class QuestionNode {
      *
      * @return
      */
-    public boolean isEnabled(){
-        return this.statusChecker!=null && this.statusChecker.isEnabled();
+    public boolean isEnabled() {
+        return this.statusChecker != null && this.statusChecker.isEnabled();
     }
 
-    public boolean isVisibleInReview(){
-        return this.statusChecker!=null && this.statusChecker.isVisibleInReview();
+    public boolean isVisibleInReview() {
+        return this.statusChecker != null && this.statusChecker.isVisibleInReview();
     }
 
-    private QuestionNode nextAnyWay(Option option){
+    private QuestionNode nextAnyWay(Option option) {
         //Try children
         QuestionNode nextNode = nextByOption(option);
-        if(nextNode!=null){
+        if (nextNode != null) {
             return nextNode;
         }
 
         //Try sibling same level
         nextNode = nextBySibling();
-        if(nextNode!=null){
+        if (nextNode != null) {
             return nextNode;
         }
 
         //No parent -> no where to go
-        if(parentNode==null){
+        if (parentNode == null) {
             return null;
         }
 
@@ -254,22 +239,20 @@ public class QuestionNode {
 
     /**
      * Returns the status checker policy
-     * @return
      */
-    public StatusChecker getStatusChecker(){
+    public StatusChecker getStatusChecker() {
         return statusChecker;
     }
 
     /**
      * Builds a statusChecker according to the type of question
-     * @return
      */
-    private StatusChecker buildStatusChecker(){
-        if(this.question==null){
+    private StatusChecker buildStatusChecker() {
+        if (this.question == null) {
             return null;
         }
 
-        switch (this.getQuestion().getOutput()){
+        switch (this.getQuestion().getOutput()) {
             case Constants.WARNING:
                 return new WarningStatusChecker(this.question);
             case Constants.REMINDER:
@@ -281,11 +264,9 @@ public class QuestionNode {
 
     /**
      * Returns navigation from here with the given option
-     * @param option
-     * @return
      */
-    private QuestionNode nextByOption(Option option){
-        if(option==null){
+    private QuestionNode nextByOption(Option option) {
+        if (option == null) {
             return null;
         }
 
@@ -294,11 +275,10 @@ public class QuestionNode {
 
     /**
      * Returns next question no matter what (moves to sibling)
-     * @return
      */
-    private QuestionNode nextBySibling(){
+    private QuestionNode nextBySibling() {
         //NO sibling ->nowhere to go
-        if(this.sibling==null){
+        if (this.sibling == null) {
             return null;
         }
         return this.sibling;
@@ -306,16 +286,16 @@ public class QuestionNode {
 
     /**
      * Updates the question counter for the given option
-     * @param option
+     *
      * @return true when a counter has been incremented
      */
-    public boolean increaseRepetitions(Option option){
-        if(option==null){
+    public boolean increaseRepetitions(Option option) {
+        if (option == null) {
             return false;
         }
 
         QuestionCounter questionCounter = this.counters.get(option.getId_option());
-        if(questionCounter==null){
+        if (questionCounter == null) {
             return false;
         }
 
@@ -324,7 +304,7 @@ public class QuestionNode {
         return true;
     }
 
-    public Map<Long,QuestionCounter> getCountersMap(){
+    public Map<Long, QuestionCounter> getCountersMap() {
         return counters;
     }
 }

@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare.monitor.tables;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
-import org.eyeseetea.malariacare.monitor.MonitorTableBuilder;
 import org.eyeseetea.malariacare.monitor.rows.ASMQRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.DHAPIPRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.NegativeRowBuilder;
@@ -29,13 +28,13 @@ public class MonitorUtils extends AMonitorUtils {
         super(context);
     }
 
-    public List<MonitorRowBuilder> defineRows(){
+    public List<MonitorRowBuilder> defineRows() {
         List<MonitorRowBuilder> rowBuilders = new ArrayList<>();
         rowBuilders.add(new PeriodRowBuilder(context));
         rowBuilders.add(new ASMQRowBuilder(context));
         rowBuilders.add(new DHAPIPRowBuilder(context));
         rowBuilders.add(new RDTRowBuilder(context));
-    return rowBuilders;
+        return rowBuilders;
     }
 
     public List<MonitorRowBuilder> defineSuspectedRows() {

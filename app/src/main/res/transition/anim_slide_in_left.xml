@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2015.
   ~
   ~ This file is part of QIS Surveillance App App.
@@ -18,10 +17,9 @@
   ~  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<set xmlns:android="http://schemas.android.com/apk/res/android" >
+<set xmlns:android="http://schemas.android.com/apk/res/android">
     <translate
         android:duration="600"
         android:fromXDelta="100%"
-        android:toXDelta="0%" >
-    </translate>
+        android:toXDelta="0%"></translate>
 </set>

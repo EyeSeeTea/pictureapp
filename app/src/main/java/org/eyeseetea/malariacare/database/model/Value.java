@@ -29,8 +29,6 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKVisitor;
-import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,10 +74,36 @@ public class Value extends BaseModel {
     }
 
     public Value(Option option, Question question, Survey survey) {
-        this.value = (option!=null)?option.getName():null;
+        this.value = (option != null) ? option.getName() : null;
         this.setOption(option);
         this.setQuestion(question);
         this.setSurvey(survey);
+    }
+
+    public static int countBySurvey(Survey survey) {
+        if (survey == null || survey.getId_survey() == null) {
+            return 0;
+        }
+        return (int) new Select().count()
+                .from(Value.class)
+                .where(Condition.column(Value$Table.ID_SURVEY).eq(survey.getId_survey())).count();
+    }
+
+    /**
+     * List ordered values of the survey
+     */
+    public static List<Value> listAllBySurvey(Survey survey) {
+        if (survey == null || survey.getId_survey() == null) {
+            return new ArrayList<>();
+        }
+
+        return new Select().from(Value.class).as("v")
+                .join(Question.class, Join.JoinType.LEFT).as("q")
+                .on(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_QUESTION))
+                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)))
+                .where(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY))
+                        .eq(survey.getId_survey())).orderBy(true,
+                        Question$Table.ORDER_POS).queryList();
     }
 
     public Long getId_value() {
@@ -90,13 +114,13 @@ public class Value extends BaseModel {
         this.id_value = id_value;
     }
 
-    public Long getId_option(){
+    public Long getId_option() {
         return this.id_option;
     }
 
     public Option getOption() {
-        if(option==null){
-            if(id_option==null) return null;
+        if (option == null) {
+            if (id_option == null) return null;
             option = new Select()
                     .from(Option.class)
                     .where(Condition.column(Option$Table.ID_OPTION)
@@ -105,19 +129,19 @@ public class Value extends BaseModel {
         return option;
     }
 
-    public void setOption(Option option) {
-        this.option = option;
-        this.id_option=(option!=null)?option.getId_option():null;
+    public void setOption(Long id_option) {
+        this.id_option = id_option;
+        this.option = null;
     }
 
-    public void setOption(Long id_option){
-        this.id_option=id_option;
-        this.option=null;
+    public void setOption(Option option) {
+        this.option = option;
+        this.id_option = (option != null) ? option.getId_option() : null;
     }
 
     public Question getQuestion() {
-        if(question==null){
-            if(id_question==null) return null;
+        if (question == null) {
+            if (id_question == null) return null;
             question = new Select()
                     .from(Question.class)
                     .where(Condition.column(Question$Table.ID_QUESTION)
@@ -127,14 +151,14 @@ public class Value extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_question = (question!=null)?question.getId_question():null;
-    }
-
-    public void setQuestion(Long id_question){
+    public void setQuestion(Long id_question) {
         this.id_question = id_question;
         this.question = null;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+        this.id_question = (question != null) ? question.getId_question() : null;
     }
 
     public String getValue() {
@@ -146,8 +170,8 @@ public class Value extends BaseModel {
     }
 
     public Survey getSurvey() {
-        if(survey==null){
-            if(id_survey==null) return null;
+        if (survey == null) {
+            if (id_survey == null) return null;
             survey = new Select()
                     .from(Survey.class)
                     .where(Condition.column(Survey$Table.ID_SURVEY)
@@ -156,18 +180,19 @@ public class Value extends BaseModel {
         return survey;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-        this.id_survey = (survey!=null)?survey.getId_survey():null;
-    }
-
-    public void setSurvey(Long id_survey){
+    public void setSurvey(Long id_survey) {
         this.id_survey = id_survey;
         this.survey = null;
     }
 
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
+        this.id_survey = (survey != null) ? survey.getId_survey() : null;
+    }
+
     /**
      * The value is 'Positive' from a dropdown
+     *
      * @return true|false
      */
     public boolean isAPositive() {
@@ -176,86 +201,55 @@ public class Value extends BaseModel {
 
     /**
      * Checks if the current value contains an answer
+     *
      * @return true|false
      */
-    public boolean isAnAnswer(){
+    public boolean isAnAnswer() {
         return (getValue() != null && !getValue().equals("")) || getOption() != null;
     }
 
     /**
      * Checks if the current value belongs to a 'required' question
-     * @return
      */
-    public boolean belongsToAParentQuestion(){
+    public boolean belongsToAParentQuestion() {
         return !getQuestion().hasParent();
     }
 
     /**
      * The value is 'Yes' from a dropdown
+     *
      * @return true|false
      */
     public boolean isAYes() {
         return getOption() != null && getOption().getName().equals("Yes");
     }
 
-    public static int countBySurvey(Survey survey){
-        if(survey==null || survey.getId_survey()==null){
-            return 0;
-        }
-        return (int) new Select().count()
-                .from(Value.class)
-                .where(Condition.column(Value$Table.ID_SURVEY).eq(survey.getId_survey())).count();
-    }
-
-    /**
-     * List ordered values of the survey
-     * @param survey
-     * @return
-     */
-    public static List<Value> listAllBySurvey(Survey survey){
-        if(survey==null || survey.getId_survey()==null){
-            return new ArrayList<>();
-        }
-
-        return new Select().from(Value.class).as("v")
-                .join(Question.class, Join.JoinType.LEFT).as("q")
-                .on(Condition.column(ColumnAlias.columnWithTable("v",Value$Table.ID_QUESTION))
-                .eq(ColumnAlias.columnWithTable("q",Question$Table.ID_QUESTION)))
-                .where(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY))
-                        .eq(survey.getId_survey())).orderBy(true,Question$Table.ORDER_POS).queryList();
-    }
-
     /**
      * Checks if this value matches the given question and option
-     * @param idQuestion
-     * @param idOption
-     * @return
      */
-    public boolean matchesQuestionOption(Long idQuestion, Long idOption){
+    public boolean matchesQuestionOption(Long idQuestion, Long idOption) {
 
         //No question or option -> no match
-        if (idQuestion == null || idOption == null){
+        if (idQuestion == null || idOption == null) {
             return false;
         }
 
         //Check if both matches
-        return idQuestion==this.id_question && idOption==this.id_option;
+        return idQuestion == this.id_question && idOption == this.id_option;
     }
 
     /**
      * Checks if this value matches the given question
-     * @param idQuestion
-     * @return
      */
-    public boolean matchesQuestion(Long idQuestion){
+    public boolean matchesQuestion(Long idQuestion) {
 
         //No question or option -> no match
-        if (idQuestion == null){
+        if (idQuestion == null) {
             return false;
         }
 
         //Check if both matches
-        return idQuestion==this.id_question;
+        return idQuestion == this.id_question;
     }
 
     @Override
@@ -267,11 +261,15 @@ public class Value extends BaseModel {
 
         if (id_value != value1.id_value) return false;
         if (value != null ? !value.equals(value1.value) : value1.value != null) return false;
-        if (id_question != null ? !id_question.equals(value1.id_question) : value1.id_question != null)
+        if (id_question != null ? !id_question.equals(value1.id_question)
+                : value1.id_question != null) {
             return false;
-        if (id_survey != null ? !id_survey.equals(value1.id_survey) : value1.id_survey != null)
+        }
+        if (id_survey != null ? !id_survey.equals(value1.id_survey) : value1.id_survey != null) {
             return false;
-        return !(id_option != null ? !id_option.equals(value1.id_option) : value1.id_option != null);
+        }
+        return !(id_option != null ? !id_option.equals(value1.id_option)
+                : value1.id_option != null);
 
     }
 

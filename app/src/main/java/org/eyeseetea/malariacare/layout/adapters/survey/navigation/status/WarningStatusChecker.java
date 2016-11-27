@@ -1,16 +1,10 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation.status;
 
-import org.eyeseetea.malariacare.database.model.Match;
-import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Checker that helps to decide if a node is visible or not according to the current survey values.
@@ -22,28 +16,28 @@ public class WarningStatusChecker extends StatusChecker {
     QuestionThreshold questionThreshold;
     QuestionOption questionOption;
 
-    public WarningStatusChecker(Question warningQuestion){
+    public WarningStatusChecker(Question warningQuestion) {
         initWarningTrigger(warningQuestion);
     }
 
     @Override
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         //Warning not built yet -> false
-        if(questionThreshold==null || questionOption==null){
+        if (questionThreshold == null || questionOption == null) {
             return false;
         }
 
         //Get current values in DB
-        Question questionWithOption=questionOption.getQuestion();
+        Question questionWithOption = questionOption.getQuestion();
         Value optionValue = questionWithOption.getValueBySession();
         Value intValue = questionThreshold.getQuestion().getValueBySession();
 
         //A question is not answered yet -> false
-        if(optionValue==null || optionValue.getOption()==null|| intValue==null){
+        if (optionValue == null || optionValue.getOption() == null || intValue == null) {
             return false;
         }
         //The option for this warning has not been selected
-        if(optionValue.getId_option()!=questionOption.getOption().getId_option()){
+        if (optionValue.getId_option() != questionOption.getOption().getId_option()) {
             return false;
         }
         //If current int value NOT in threshold -> the warning is activated
@@ -51,21 +45,21 @@ public class WarningStatusChecker extends StatusChecker {
     }
 
     @Override
-    public boolean isVisibleInReview(){
+    public boolean isVisibleInReview() {
         return false;
     }
 
-    private void initWarningTrigger(Question reminderQuestion){
+    private void initWarningTrigger(Question reminderQuestion) {
 
         //Look for a WARNING relation which origin questionOption + questionThreshold activates this
-        for(QuestionRelation questionRelation:reminderQuestion.getQuestionRelations()){
-            if(!questionRelation.isAWarning()){
+        for (QuestionRelation questionRelation : reminderQuestion.getQuestionRelations()) {
+            if (!questionRelation.isAWarning()) {
                 continue;
             }
 
             //Find QuestionOption for this relation
             QuestionOption questionOption = findQuestionOption(questionRelation);
-            if(questionOption==null){
+            if (questionOption == null) {
                 continue;
             }
 
@@ -76,16 +70,16 @@ public class WarningStatusChecker extends StatusChecker {
         }
     }
 
-    public Question getQuestionToSubscribeFromThreshold(){
-        if(questionThreshold==null){
+    public Question getQuestionToSubscribeFromThreshold() {
+        if (questionThreshold == null) {
             return null;
         }
 
         return questionThreshold.getQuestion();
     }
 
-    public Question getQuestionToSubscribeFromOption(){
-        if(questionOption==null){
+    public Question getQuestionToSubscribeFromOption() {
+        if (questionOption == null) {
             return null;
         }
 

@@ -7,12 +7,10 @@ import android.support.v7.app.AlertDialog;
 
 import com.squareup.otto.Subscribe;
 
-import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
@@ -21,14 +19,15 @@ import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
-    private static final String TAG=".SettingsActivityStrategy";
+    private static final String TAG = ".SettingsActivityStrategy";
     private PullRequiredOnPreferenceChangeListener pullRequiredOnPreferenceChangeListener;
     private LoginRequiredOnPreferenceClickListener loginRequiredOnPreferenceClickListener;
 
     public SettingsActivityStrategy(SettingsActivity settingsActivity) {
         super(settingsActivity);
 
-        loginRequiredOnPreferenceClickListener = new LoginRequiredOnPreferenceClickListener(settingsActivity);
+        loginRequiredOnPreferenceClickListener = new LoginRequiredOnPreferenceClickListener(
+                settingsActivity);
 
         pullRequiredOnPreferenceChangeListener = new PullRequiredOnPreferenceChangeListener();
 
@@ -49,21 +48,23 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         try {
             //Unregister from bus before leaving
             Dhis2Application.bus.unregister(this);
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
     }
 
     @Subscribe
     public void callbackLoginPrePull(NetworkJob.NetworkJobResult<ResourceType> result) {
-        if(PushController.getInstance().isPushInProgress())
+        if (PushController.getInstance().isPushInProgress()) {
             return;
+        }
         //Nothing to check
-        if(result==null || result.getResourceType()==null || !result.getResourceType().equals(
-                ResourceType.USERS)){
+        if (result == null || result.getResourceType() == null || !result.getResourceType().equals(
+                ResourceType.USERS)) {
             return;
         }
 
         //Login failed
-        if(result.getResponseHolder().getApiException()!=null){
+        if (result.getResponseHolder().getApiException() != null) {
             new AlertDialog.Builder(settingsActivity)
                     .setTitle(R.string.dhis_url_error)
                     .setMessage(R.string.dhis_url_error_bad_credentials)

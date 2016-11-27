@@ -7,7 +7,7 @@ import org.eyeseetea.malariacare.domain.usecase.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.domain.usecase.PushSurveysUseCase;
 import org.eyeseetea.malariacare.services.PushService;
 
-public class PushServiceStrategy extends APushServiceStrategy{
+public class PushServiceStrategy extends APushServiceStrategy {
     public static final String TAG = ".PushServiceStrategy";
 
     public PushServiceStrategy(PushService pushService) {
@@ -16,12 +16,11 @@ public class PushServiceStrategy extends APushServiceStrategy{
 
     @Override
     public void push() {
-        if (Session.getCredentials().isDemoCredentials()){
-            Log.d(TAG,"execute mocked push");
+        if (Session.getCredentials().isDemoCredentials()) {
+            Log.d(TAG, "execute mocked push");
             executeMockedPush();
-        }
-        else {
-            Log.d(TAG,"execute push");
+        } else {
+            Log.d(TAG, "execute push");
             executePush();
         }
     }
@@ -32,7 +31,7 @@ public class PushServiceStrategy extends APushServiceStrategy{
         mockedPushSurveysUseCase.execute(new MockedPushSurveysUseCase.Callback() {
             @Override
             public void onPushFinished() {
-                Log.d(TAG,"onPushMockFinished");
+                Log.d(TAG, "onPushMockFinished");
                 mPushService.onPushFinished();
             }
         });
@@ -44,7 +43,7 @@ public class PushServiceStrategy extends APushServiceStrategy{
         pushUseCase.execute(new PushSurveysUseCase.Callback() {
             @Override
             public void onPushFinished() {
-                Log.d(TAG,"onPushFinished");
+                Log.d(TAG, "onPushFinished");
                 mPushService.onPushFinished();
             }
 

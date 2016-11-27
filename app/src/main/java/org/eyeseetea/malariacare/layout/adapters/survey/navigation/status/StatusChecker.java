@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation.status;
 
-import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 
@@ -14,31 +13,28 @@ import java.util.List;
 public class StatusChecker {
     /**
      * By default every node is enabled
-     * @return
      */
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         return true;
     }
 
     /**
      * By default every node is visible during review
-     * @return
      */
-    public boolean isVisibleInReview(){
+    public boolean isVisibleInReview() {
         return true;
     }
 
     /**
      * Navigates from questionRelation -> match -> questionOption
-     * @param questionRelation
-     * @return
      */
-    protected QuestionOption findQuestionOption(QuestionRelation questionRelation){
-        if(questionRelation==null){
+    protected QuestionOption findQuestionOption(QuestionRelation questionRelation) {
+        if (questionRelation == null) {
             return null;
         }
-        List<QuestionOption> questionOptions = QuestionOption.findByQuestionRelation(questionRelation);
-        if(questionOptions.isEmpty()){
+        List<QuestionOption> questionOptions = QuestionOption.findByQuestionRelation(
+                questionRelation);
+        if (questionOptions.isEmpty()) {
             return null;
         }
 

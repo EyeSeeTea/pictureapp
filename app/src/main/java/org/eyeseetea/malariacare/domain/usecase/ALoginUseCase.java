@@ -1,13 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.User;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 
 /**
@@ -17,9 +11,11 @@ public abstract class ALoginUseCase {
 
     protected Context context;
 
-    public ALoginUseCase(Context context){
+    public ALoginUseCase(Context context) {
         this.context = context;
     }
 
     public abstract void execute(Credentials credentials);
+
+    public abstract boolean isLogoutNeeded(Credentials credentials);
 }

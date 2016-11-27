@@ -63,8 +63,8 @@ public class OrgUnitProgramRelation extends BaseModel {
     }
 
     public OrgUnit getOrgUnit() {
-        if(orgUnit==null){
-            if(id_org_unit==null) return null;
+        if (orgUnit == null) {
+            if (id_org_unit == null) return null;
             orgUnit = new Select()
                     .from(OrgUnit.class)
                     .where(Condition.column(OrgUnit$Table.ID_ORG_UNIT)
@@ -73,19 +73,19 @@ public class OrgUnitProgramRelation extends BaseModel {
         return orgUnit;
     }
 
-    public void setOrgUnit(OrgUnit orgUnit) {
-        this.orgUnit= orgUnit;
-        this.id_org_unit = (orgUnit!=null)?orgUnit.getId_org_unit():null;
-    }
-
-    public void setOrgUnit(Long id_org_unit){
+    public void setOrgUnit(Long id_org_unit) {
         this.id_org_unit = id_org_unit;
         this.orgUnit = null;
     }
 
+    public void setOrgUnit(OrgUnit orgUnit) {
+        this.orgUnit = orgUnit;
+        this.id_org_unit = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
+    }
+
     public Program getProgram() {
-        if(program==null){
-            if(id_program==null) return null;
+        if (program == null) {
+            if (id_program == null) return null;
             program = new Select()
                     .from(Program.class)
                     .where(Condition.column(Program$Table.ID_PROGRAM)
@@ -94,14 +94,14 @@ public class OrgUnitProgramRelation extends BaseModel {
         return program;
     }
 
-    public void setProgram(Program program) {
-        this.program=program;
-        this.id_program = (program!=null)?program.getId_program():null;
-    }
-
-    public void setProgram(Long id_program){
+    public void setProgram(Long id_program) {
         this.id_program = id_program;
         this.program = null;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+        this.id_program = (program != null) ? program.getId_program() : null;
     }
 
     @Override
@@ -112,9 +112,12 @@ public class OrgUnitProgramRelation extends BaseModel {
         OrgUnitProgramRelation that = (OrgUnitProgramRelation) o;
 
         if (id_orgunit_program_relation != that.id_orgunit_program_relation) return false;
-        if (id_org_unit != null ? !id_org_unit.equals(that.id_org_unit) : that.id_org_unit != null)
+        if (id_org_unit != null ? !id_org_unit.equals(that.id_org_unit)
+                : that.id_org_unit != null) {
             return false;
-        return !(id_program != null ? !id_program.equals(that.id_program) : that.id_program != null);
+        }
+        return !(id_program != null ? !id_program.equals(that.id_program)
+                : that.id_program != null);
 
     }
 

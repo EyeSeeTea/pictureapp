@@ -48,73 +48,75 @@
         android:gravity="center"
         android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/dhis2_logo"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/description"
-        android:src="@drawable/dhis2_logo" />
+        <ImageView
+            android:id="@+id/dhis2_logo"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/description"
+            android:src="@drawable/dhis2_logo" />
 
-    <org.hisp.dhis.android.sdk.ui.views.FontEditText
-        android:id="@+id/server_url"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginBottom="1px"
-        android:background="@drawable/edittext_login_custom_shape"
-        android:drawableLeft="@drawable/ic_server"
-        android:drawablePadding="7dp"
-        android:gravity="center_vertical"
-        android:hint="@string/server_url"
-        android:inputType="textUri"
-        android:paddingLeft="7dp"
-        android:singleLine="true"
-        android:textSize="@dimen/medium_text_size"
-        app:font="@string/regular_font_name" />
+        <org.hisp.dhis.android.sdk.ui.views.FontEditText
+            android:id="@+id/server_url"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="1px"
+            android:background="@drawable/edittext_login_custom_shape"
+            android:drawableLeft="@drawable/ic_server"
+            android:drawablePadding="7dp"
+            android:gravity="center_vertical"
+            android:hint="@string/server_url"
+            android:inputType="textUri"
+            android:paddingLeft="7dp"
+            android:singleLine="true"
+            android:textSize="@dimen/medium_text_size"
+            app:font="@string/regular_font_name" />
 
-    <org.hisp.dhis.android.sdk.ui.views.FontEditText
-        android:id="@+id/username"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginBottom="1px"
-        android:background="@drawable/edittext_login_custom_shape"
-        android:drawableLeft="@drawable/ic_username"
-        android:drawablePadding="7dp"
-        android:gravity="center_vertical"
-        android:hint="@string/username"
-        android:paddingLeft="7dp"
-        android:singleLine="true"
-        android:textSize="@dimen/medium_text_size"
-        app:font="@string/regular_font_name" />
+        <org.hisp.dhis.android.sdk.ui.views.FontEditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="1px"
+            android:background="@drawable/edittext_login_custom_shape"
+            android:drawableLeft="@drawable/ic_username"
+            android:drawablePadding="7dp"
+            android:gravity="center_vertical"
+            android:hint="@string/username"
+            android:paddingLeft="7dp"
+            android:singleLine="true"
+            android:textSize="@dimen/medium_text_size"
+            app:font="@string/regular_font_name" />
 
-    <org.hisp.dhis.android.sdk.ui.views.FontEditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/edittext_login_custom_shape"
-        android:drawableLeft="@drawable/ic_password"
-        android:drawablePadding="7dp"
-        android:gravity="center_vertical"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:paddingLeft="7dp"
-        android:singleLine="true"
-        android:textSize="@dimen/medium_text_size"
-        app:font="@string/regular_font_name" />
+        <org.hisp.dhis.android.sdk.ui.views.FontEditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edittext_login_custom_shape"
+            android:drawableLeft="@drawable/ic_password"
+            android:drawablePadding="7dp"
+            android:gravity="center_vertical"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:paddingLeft="7dp"
+            android:singleLine="true"
+            android:textSize="@dimen/medium_text_size"
+            app:font="@string/regular_font_name" />
+
         <include layout="@layout/login_spinner"></include>
-    <org.hisp.dhis.android.sdk.ui.views.FontButton
-        android:id="@+id/login_button"
-        android:layout_width="180dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/button_blue_selector"
-        android:text="@string/login"
-        android:textColor="@color/white"
-        android:textSize="@dimen/medium_text_size"
-        app:font="@string/bold_font_name" />
+
+        <org.hisp.dhis.android.sdk.ui.views.FontButton
+            android:id="@+id/login_button"
+            android:layout_width="180dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_blue_selector"
+            android:text="@string/login"
+            android:textColor="@color/white"
+            android:textSize="@dimen/medium_text_size"
+            app:font="@string/bold_font_name" />
 
     </LinearLayout>
 

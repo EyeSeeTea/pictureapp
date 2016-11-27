@@ -51,12 +51,12 @@ public class DashboardSentFragment extends ListFragment {
 
 
     public static final String TAG = ".SentFragment";
+    private static int index = 0;
+    protected IDashboardAdapter adapter;
     private SurveyReceiver surveyReceiver;
     private List<Survey> surveys;
-    protected IDashboardAdapter adapter;
-    private static int index = 0;
 
-    public DashboardSentFragment(){
+    public DashboardSentFragment() {
         this.adapter = Session.getAdapterCompleted();
         this.surveys = new ArrayList();
     }
@@ -78,13 +78,14 @@ public class DashboardSentFragment extends ListFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         if (container == null) {
             return null;
@@ -103,7 +104,7 @@ public class DashboardSentFragment extends ListFragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         Log.d(TAG, "onResume");
         registerSurveysReceiver();
         super.onResume();
@@ -112,13 +113,14 @@ public class DashboardSentFragment extends ListFragment {
     /**
      * Inits adapter.
      * Most of times is just an AssessmentAdapter.
-     * In a version with several adapters in dashboard (like in 'mock' branch) a new one like the one in session is created.
+     * In a version with several adapters in dashboard (like in 'mock' branch) a new one like the
+     * one in session is created.
      */
-    private void initAdapter(){
+    private void initAdapter() {
         IDashboardAdapter adapterInSession = Session.getAdapterCompleted();
-        if(adapterInSession == null){
+        if (adapterInSession == null) {
             adapterInSession = new AssessmentSentAdapter(this.surveys, getActivity());
-        }else{
+        } else {
             adapterInSession = adapterInSession.newInstance(this.surveys, getActivity());
         }
         this.adapter = adapterInSession;
@@ -126,12 +128,12 @@ public class DashboardSentFragment extends ListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id){
+    public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d(TAG, "onListItemClick");
         super.onListItemClick(l, v, position, id);
 
         //Discard clicks on header|footer (which is attended on newSurvey via super)
-        if(!isPositionASurvey(position)){
+        if (!isPositionASurvey(position)) {
             return;
         }
 
@@ -142,7 +144,7 @@ public class DashboardSentFragment extends ListFragment {
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         Log.d(TAG, "onStop");
         unregisterSurveysReceiver();
 
@@ -150,36 +152,37 @@ public class DashboardSentFragment extends ListFragment {
     }
 
     /**
-     * Checks if the given position points to a real survey instead of a footer or header of the listview.
-     * @param position
+     * Checks if the given position points to a real survey instead of a footer or header of the
+     * listview.
+     *
      * @return true|false
      */
-    private boolean isPositionASurvey(int position){
+    private boolean isPositionASurvey(int position) {
         return !isPositionFooter(position) && !isPositionHeader(position);
     }
 
     /**
      * Checks if the given position is the header of the listview instead of a real survey
-     * @param position
+     *
      * @return true|false
      */
-    private boolean isPositionHeader(int position){
-        return position<=0;
+    private boolean isPositionHeader(int position) {
+        return position <= 0;
     }
 
     /**
      * Checks if the given position is the footer of the listview instead of a real survey
-     * @param position
+     *
      * @return true|false
      */
-    private boolean isPositionFooter(int position){
-        return position==(this.surveys.size()+1);
+    private boolean isPositionFooter(int position) {
+        return position == (this.surveys.size() + 1);
     }
 
     /**
      * Initializes the listview component, adding a listener for swiping right
      */
-    private void initListView(){
+    private void initListView() {
         if (Session.isNotFullOfUnsent(getActivity())) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View header = inflater.inflate(this.adapter.getHeaderLayout(), null, false);
@@ -201,9 +204,10 @@ public class DashboardSentFragment extends ListFragment {
     public void registerSurveysReceiver() {
         Log.d(TAG, "registerSurveysReceiver");
 
-        if(surveyReceiver==null){
-            surveyReceiver=new SurveyReceiver();
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(surveyReceiver, new IntentFilter(SurveyService.ALL_SENT_SURVEYS_ACTION));
+        if (surveyReceiver == null) {
+            surveyReceiver = new SurveyReceiver();
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(surveyReceiver,
+                    new IntentFilter(SurveyService.ALL_SENT_SURVEYS_ACTION));
         }
     }
 
@@ -212,49 +216,55 @@ public class DashboardSentFragment extends ListFragment {
      * Unregisters the survey receiver.
      * It really important to do this, otherwise each receiver will invoke its code.
      */
-    public void  unregisterSurveysReceiver(){
+    public void unregisterSurveysReceiver() {
         Log.d(TAG, "unregisterSurveysReceiver");
-        if(surveyReceiver!=null){
+        if (surveyReceiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
-            surveyReceiver=null;
+            surveyReceiver = null;
         }
     }
 
-    public void reloadSurveys(List<Survey> newListSurveys){
-        Log.d(TAG, "reloadSurveys (Thread: "+Thread.currentThread().getId()+"): " + newListSurveys.size());
+    public void reloadSurveys(List<Survey> newListSurveys) {
+        Log.d(TAG, "reloadSurveys (Thread: " + Thread.currentThread().getId() + "): "
+                + newListSurveys.size());
         this.surveys.clear();
         this.surveys.addAll(newListSurveys);
         this.adapter.notifyDataSetChanged();
         setListShown(true);
     }
+
+    public void reloadData() {
+        //Reload data using service
+        Intent surveysIntent = new Intent(
+                PreferencesState.getInstance().getContext().getApplicationContext(),
+                SurveyService.class);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.ALL_SENT_SURVEYS_ACTION);
+        PreferencesState.getInstance().getContext().getApplicationContext().startService(
+                surveysIntent);
+    }
+
     /**
      * Inner private class that receives the result from the service
      */
-    private class SurveyReceiver extends BroadcastReceiver{
-        private SurveyReceiver(){}
+    private class SurveyReceiver extends BroadcastReceiver {
+        private SurveyReceiver() {
+        }
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive");
             //Listening only intents from this method
-            if(SurveyService.ALL_SENT_SURVEYS_ACTION.equals(intent.getAction())) {
+            if (SurveyService.ALL_SENT_SURVEYS_ACTION.equals(intent.getAction())) {
                 List<Survey> surveysFromService;
                 Session.valuesLock.readLock().lock();
                 try {
-                    surveysFromService = (List<Survey>) Session.popServiceValue(SurveyService.ALL_SENT_SURVEYS_ACTION);
+                    surveysFromService = (List<Survey>) Session.popServiceValue(
+                            SurveyService.ALL_SENT_SURVEYS_ACTION);
                 } finally {
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveys(surveysFromService);
             }
         }
-    }
-
-
-    public void reloadData(){
-        //Reload data using service
-        Intent surveysIntent=new Intent(PreferencesState.getInstance().getContext().getApplicationContext(), SurveyService.class);
-        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.ALL_SENT_SURVEYS_ACTION);
-        PreferencesState.getInstance().getContext().getApplicationContext().startService(surveysIntent);
     }
 }

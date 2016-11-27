@@ -13,38 +13,42 @@ import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 public class QuestionCounter {
 
     private static final String TAG = ".QuestionCounter";
+    private final Integer infinite_counter_number = 0;
     /**
      * The question whose value will be increased
      */
     private Question counterQuestion;
 
-    private final Integer infinite_counter_number=0;
-
-    public QuestionCounter(Question counterQuestion){
+    public QuestionCounter(Question counterQuestion) {
         this.counterQuestion = counterQuestion;
     }
 
-    public void increaseRepetitions(){
-        String currentRepetitionsStr=ReadWriteDB.readValueQuestion(counterQuestion);
-        Integer increasedRepetitions= toInteger(currentRepetitionsStr)+1;
-        ReadWriteDB.saveValuesText(counterQuestion,increasedRepetitions.toString());
-        Log.i(TAG,String.format("Counter %s updated, current value %d",counterQuestion.getCode(),increasedRepetitions));
+    public void increaseRepetitions() {
+        String currentRepetitionsStr = ReadWriteDB.readValueQuestion(counterQuestion);
+        Integer increasedRepetitions = toInteger(currentRepetitionsStr) + 1;
+        ReadWriteDB.saveValuesText(counterQuestion, increasedRepetitions.toString());
+        Log.i(TAG, String.format("Counter %s updated, current value %d", counterQuestion.getCode(),
+                increasedRepetitions));
     }
 
     //Limits the counter by a number of failed attempts.
-    public boolean isMaxCounterLimit(Integer limit){
-        Integer currentRepetitions=toInteger(ReadWriteDB.readValueQuestion(counterQuestion));
-        Log.i(TAG,String.format("Counter %s updated, current value %d",counterQuestion.getCode(),currentRepetitions));
-        return !(limit==infinite_counter_number || currentRepetitions!=limit);
+    public boolean isMaxCounterLimit(Integer limit) {
+        Integer currentRepetitions = toInteger(ReadWriteDB.readValueQuestion(counterQuestion));
+        Log.i(TAG, String.format("Counter %s updated, current value %d", counterQuestion.getCode(),
+                currentRepetitions));
+        return !(limit == infinite_counter_number || currentRepetitions != limit);
     }
-    private int toInteger(String currentRepetitions){
-        if(currentRepetitions==null || currentRepetitions.isEmpty()){
+
+    private int toInteger(String currentRepetitions) {
+        if (currentRepetitions == null || currentRepetitions.isEmpty()) {
             return 0;
         }
-        try{
+        try {
             return Integer.valueOf(currentRepetitions);
-        }catch(NumberFormatException ex){
-            Log.e(TAG,String.format("Counter %s cannot be updated, current value '%s' not a integer",counterQuestion.getCode(),currentRepetitions));
+        } catch (NumberFormatException ex) {
+            Log.e(TAG,
+                    String.format("Counter %s cannot be updated, current value '%s' not a integer",
+                            counterQuestion.getCode(), currentRepetitions));
             return 0;
         }
     }

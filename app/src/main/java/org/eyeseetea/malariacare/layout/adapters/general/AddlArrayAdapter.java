@@ -41,7 +41,7 @@ public abstract class AddlArrayAdapter<T> extends ArrayAdapter<T> {
         this.layout = R.layout.simple_spinner_item;
     }
 
-    public AddlArrayAdapter(Context context, Integer layout, List<T> objects){
+    public AddlArrayAdapter(Context context, Integer layout, List<T> objects) {
         super(context, layout, objects);
         this.layout = layout;
     }

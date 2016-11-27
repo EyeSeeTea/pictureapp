@@ -7,8 +7,9 @@
     android:gravity="center_vertical"
     android:layout_weight="0.5"
     android:paddingLeft="@dimen/question_padding"
-    android:paddingRight="@dimen/question_padding"
-    >
+    android:paddingRight="@dimen/question_padding">
+
     <include layout="@layout/row_header_item"></include>
+
     <include layout="@layout/phone_item"></include>
 </LinearLayout>

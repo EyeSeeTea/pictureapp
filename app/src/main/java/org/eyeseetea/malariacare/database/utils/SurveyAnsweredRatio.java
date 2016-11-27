@@ -19,10 +19,6 @@
 
 package org.eyeseetea.malariacare.database.utils;
 
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.Survey;
-
 /**
  * VO that holds the completion ratio of answered/expected questions
  * Created by arrizabalaga on 1/07/15.
@@ -61,32 +57,34 @@ public class SurveyAnsweredRatio {
 
     /**
      * Return the ratio of completion
+     *
      * @return answered/total
      */
-    public float getRatio(){
-        if (total==0){
+    public float getRatio() {
+        if (total == 0) {
             //Not correct from a math perspective but most practical approach
             return 0;
         }
 
-        if(isCompleted()){
+        if (isCompleted()) {
             return 1;
         }
 
-        return (float)answered/total;
+        return (float) answered / total;
     }
 
     /**
      * Checks if the related survey is completed or not.
      * If there are NO questions it returns false.
+     *
      * @return true|false
      */
-    public boolean isCompleted(){
-        if(total<=0){
+    public boolean isCompleted() {
+        if (total <= 0) {
             return false;
         }
 
-        return answered>=total;
+        return answered >= total;
     }
 
 }

@@ -103,27 +103,25 @@ import utils.ProgressUtils;
 public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private final static String TAG = ".DynamicTabAdapter";
-
-    public NavigationController navigationController;
-
     /**
-     * Flag that indicates if the swipe listener has been already added to the listview container
+     * Flag that indicates if the actual question option is clicked to prevent multiple clicks.
      */
-    private boolean isSwipeAdded;
-
+    public static boolean isClicked;
     /**
-     * Listener that detects taps on buttons & swipe
+     * Flag that indicates the number of failed validations by the active screen in multiquestion
+     * tabs
      */
-    private SwipeTouchListener swipeTouchListener;
-
-    Tab tab;
-
-    LayoutInflater lInflater;
-
-    TableLayout tableLayout = null;
-
+    public static int failedValidations;
+    /**
+     * Flag that indicates the number of failed validations by the active screen in multiquestion
+     * tabs
+     */
+    public static View navigationButtonHolder;
     private final Context context;
-
+    public NavigationController navigationController;
+    Tab tab;
+    LayoutInflater lInflater;
+    TableLayout tableLayout = null;
     int id_layout;
 
 
@@ -137,24 +135,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * View needed to close the keyboard in methods with view
      */
     View keyboardView;
-
-
     /**
-     * Flag that indicates if the actual question option is clicked to prevent multiple clicks.
+     * Flag that indicates if the swipe listener has been already added to the listview container
      */
-    public static boolean isClicked;
-
+    private boolean isSwipeAdded;
     /**
      * Flag that indicates the number of failed validations by the active screen in multiquestion
      * tabs
+     * Listener that detects taps on buttons & swipe
      */
-    public static int failedValidations;
-
-    /**
-     * Flag that indicates the number of failed validations by the active screen in multiquestion
-     * tabs
-     */
-    public static View navigationButtonHolder;
+    private SwipeTouchListener swipeTouchListener;
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
@@ -191,6 +181,31 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         isClicked = false;
     }
 
+    /**
+     * Returns the option selected for the given question and boolean value or by position
+     */
+    public static Option findSwitchOption(Question question, boolean isChecked) {
+        //Search option by position
+        if (isChecked) {
+            return question.getAnswer().getOptions().get(0);
+        } else {
+            return question.getAnswer().getOptions().get(1);
+        }
+    }
+
+    /**
+     * Returns the boolean selected for the given question (by boolean value or position option,
+     * position 1=true 0=false)
+     */
+    public static Boolean findSwitchBoolean(Question question) {
+        Value value = question.getValueBySession();
+        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
+            return true;
+        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())) {
+            return false;
+        }
+        return false;
+    }
 
     private NavigationController initNavigationController(Tab tab) {
         NavigationController navigationController = NavigationBuilder.getInstance().buildController(
@@ -718,7 +733,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;*/
                 case Constants.SHORT_TEXT:
                 case Constants.PHONE:
-                    //TODO: swipeTouchListener.addClickableView(button) , avoid double click and test test test
+                    //TODO: swipeTouchListener.addClickableView(button) , avoid double click and
+                    // test test test
                     tableRow = new TableRow(context);
 
                     AQuestionView questionView = questionViewFactory.getView(context,
@@ -855,7 +871,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return navigationButtonsHolder;
     }
 
-
     private void setTextSettings(TextCard textOption, Option currentOption) {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in
         // donottranslate laos file.
@@ -868,7 +883,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
-
 
     private void initWarningValue(View rootView, Option option) {
         ImageView errorImage = (ImageView) rootView.findViewById(R.id.confirm_yes);
@@ -921,7 +935,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         textOption.setWidth(frameLayout.getWidth());
     }
 
-
     private void showKeyboard(Context c, View v) {
         Log.d(TAG, "KEYBOARD SHOW ");
         keyboardView = v;
@@ -941,7 +954,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
-
 
     /**
      * hide keyboard using a keyboardView variable view
@@ -1251,7 +1263,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void addTagQuestion(Question question, View viewById) {
         viewById.setTag(question);
     }
-
 
     /**
      * Adds listener to the Editcard and sets the default or saved value
@@ -1576,7 +1587,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return PhoneNumberUtil.getInstance().isValidNumber(phoneNumber);
     }
 
-
     /**
      * Checks if edit text is not null:
      *
@@ -1779,7 +1789,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
-
     /**
      * Skips the reminder question in the navigation
      */
@@ -1790,32 +1799,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 next();
             }
         }
-    }
-
-
-    /**
-     * Switch listener to save the switch value
-     *
-     * @return
-     */
-    public class SwitchButtonListener implements CompoundButton.OnCheckedChangeListener {
-
-        private Question question;
-        private Switch switchButton;
-
-        public SwitchButtonListener(Question question, Switch switchButton) {
-            this.question = question;
-            this.switchButton = switchButton;
-        }
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (!buttonView.isShown()) {
-                return;
-            }
-            saveSwitchOption(question, isChecked);
-        }
-
     }
 
     /**
@@ -1871,29 +1854,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         showOrHideChildren(question);
     }
 
-    /**
-     * Returns the option selected for the given question and boolean value or by position
-     */
-    public static Option findSwitchOption(Question question, boolean isChecked) {
-        //Search option by position
-        if (isChecked) {
-            return question.getAnswer().getOptions().get(0);
-        } else {
-            return question.getAnswer().getOptions().get(1);
-        }
-    }
+    public class SwitchButtonListener implements CompoundButton.OnCheckedChangeListener {
 
-    /**
-     * Returns the boolean selected for the given question (by boolean value or position option,
-     * position 1=true 0=false)
-     */
-    public static Boolean findSwitchBoolean(Question question) {
-        Value value = question.getValueBySession();
-        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
-            return true;
-        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())) {
-            return false;
+        private Question question;
+        private Switch switchButton;
+
+        public SwitchButtonListener(Question question, Switch switchButton) {
+            this.question = question;
+            this.switchButton = switchButton;
         }
-        return false;
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (!buttonView.isShown()) {
+                return;
+            }
+            saveSwitchOption(question, isChecked);
+        }
+
     }
 }

@@ -21,14 +21,12 @@ package org.eyeseetea.malariacare.database.utils;
 
 import android.support.v4.content.FileProvider;
 
-import java.io.File;
-
 /**
  * Created by nacho on 05/10/16.
  */
 
 public class SCMMDBProvider extends FileProvider {
-    public SCMMDBProvider(){
+    public SCMMDBProvider() {
         super();
     }
 }

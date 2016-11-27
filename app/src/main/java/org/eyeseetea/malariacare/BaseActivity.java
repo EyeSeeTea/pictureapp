@@ -71,13 +71,11 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Extra param to annotate the activity to return after settings
      */
     public static final String SETTINGS_CALLER_ACTIVITY = "SETTINGS_CALLER_ACTIVITY";
-
-    protected static String TAG=".BaseActivity";
     /**
      * Extra param to annotate the activity to return after settings
      */
-    private static final int DUMP_REQUEST_CODE=0;
-
+    private static final int DUMP_REQUEST_CODE = 0;
+    protected static String TAG = ".BaseActivity";
     private AlarmPushReceiver alarmPush;
 
     private BaseActivityStrategy mBaseActivityStrategy = new BaseActivityStrategy(this);
@@ -89,19 +87,20 @@ public abstract class BaseActivity extends ActionBarActivity {
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);
 
-        if (EyeSeeTeaApplication.permissions == null){
+        if (EyeSeeTeaApplication.permissions == null) {
             EyeSeeTeaApplication.permissions = Permissions.getInstance(this);
         }
 
-        if(!EyeSeeTeaApplication.permissions.areAllPermissionsGranted()){
+        if (!EyeSeeTeaApplication.permissions.areAllPermissionsGranted()) {
             EyeSeeTeaApplication.permissions.requestNextPermission();
         }
 
         initView(savedInstanceState);
-        if(PushController.getInstance().isPushInProgress()) {
-            List<Survey> surveys=Survey.getAllSendingSurveys();
-            Log.d(TAG,"The app was closed in the middle of a push. Surveys sending: "+surveys.size());
-            for(Survey survey:surveys){
+        if (PushController.getInstance().isPushInProgress()) {
+            List<Survey> surveys = Survey.getAllSendingSurveys();
+            Log.d(TAG, "The app was closed in the middle of a push. Surveys sending: "
+                    + surveys.size());
+            for (Survey survey : surveys) {
                 survey.setStatus(Constants.SURVEY_QUARANTINE);
                 survey.save();
             }
@@ -114,14 +113,15 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     /**
-     * Its called on the requestPermission results, if the user accepts the permissions it request the Phone permission and gets the phoneMetadata
+     * Its called on the requestPermission results, if the user accepts the permissions it request
+     * the Phone permission and gets the phoneMetadata
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
             String permissions[], int[] grantResults) {
-        if (Permissions.processAnswer(requestCode, permissions, grantResults)){
+        if (Permissions.processAnswer(requestCode, permissions, grantResults)) {
             EyeSeeTeaApplication.permissions.requestNextPermission();
-            if (EyeSeeTeaApplication.permissions.areAllPermissionsGranted()){
+            if (EyeSeeTeaApplication.permissions.areAllPermissionsGranted()) {
                 PhoneMetaData phoneMetaData = getPhoneMetadata();
                 Session.setPhoneMetaData(phoneMetaData);
             }
@@ -154,12 +154,12 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Common styling
      */
-    private void initView(Bundle savedInstanceState){
+    private void initView(Bundle savedInstanceState) {
         setTheme(R.style.EyeSeeTheme);
         android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
         LayoutUtils.setActionBar(actionBar);
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             initTransition();
         }
     }
@@ -167,13 +167,14 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Adds actionbar to the activity
      */
-    public void createActionBar(){
+    public void createActionBar() {
         Program program = Program.getFirstProgram();
 
         if (program != null) {
             android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
             LayoutUtils.setActionBarLogo(actionBar);
-            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), this.getResources().getString(R.string.app_name));
+            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
+                    this.getResources().getString(R.string.app_name));
         }
     }
 
@@ -181,7 +182,8 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Customize transitions for these activities
      */
     protected void initTransition() {
-        this.overridePendingTransition(R.transition.anim_slide_in_left, R.transition.anim_slide_out_left);
+        this.overridePendingTransition(R.transition.anim_slide_in_left,
+                R.transition.anim_slide_out_left);
     }
 
     @Override
@@ -201,18 +203,20 @@ public abstract class BaseActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_settings:
                 debugMessage("User asked for settings");
-                if(PushController.getInstance().isPushInProgress()) {
-                    Log.d(TAG,"Click in settings true "+PushController.getInstance().isPushInProgress());
+                if (PushController.getInstance().isPushInProgress()) {
+                    Log.d(TAG, "Click in settings true "
+                            + PushController.getInstance().isPushInProgress());
                     Toast.makeText(this, R.string.toast_push_is_pushing, Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Log.d(TAG,"Click in settings false "+PushController.getInstance().isPushInProgress());
+                } else {
+                    Log.d(TAG, "Click in settings false "
+                            + PushController.getInstance().isPushInProgress());
                     goSettings();
                 }
                 break;
             case R.id.action_about:
                 debugMessage("User asked for about");
-                showAlertWithHtmlMessageAndLastCommit(R.string.settings_menu_about, R.raw.about, BaseActivity.this);
+                showAlertWithHtmlMessageAndLastCommit(R.string.settings_menu_about, R.raw.about,
+                        BaseActivity.this);
                 break;
             case R.id.action_copyright:
                 debugMessage("User asked for copyright");
@@ -232,20 +236,24 @@ public abstract class BaseActivity extends ActionBarActivity {
                 break;
             case R.id.export_db:
                 debugMessage("Export db");
-                Intent emailIntent= ExportData.dumpAndSendToAIntent(this);
-                if(emailIntent!=null)
-                    startActivityForResult(emailIntent,DUMP_REQUEST_CODE);
+                Intent emailIntent = ExportData.dumpAndSendToAIntent(this);
+                if (emailIntent != null) {
+                    startActivityForResult(emailIntent, DUMP_REQUEST_CODE);
+                }
                 break;
             default:
-                if (!mBaseActivityStrategy.onOptionsItemSelected(item))
+                if (!mBaseActivityStrategy.onOptionsItemSelected(item)) {
                     return super.onOptionsItemSelected(item);
+                }
         }
         return true;
     }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if(!PreferencesState.getInstance().isDevelopOptionActive() || !BuildConfig.developerOptions) {
+        if (!PreferencesState.getInstance().isDevelopOptionActive()
+                || !BuildConfig.developerOptions) {
             MenuItem item = menu.findItem(R.id.export_db);
             item.setVisible(false);
         }
@@ -255,7 +263,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
-        if ((requestCode == DUMP_REQUEST_CODE)){
+        if ((requestCode == DUMP_REQUEST_CODE)) {
             ExportData.removeDumpIfExist(this);
         }
     }
@@ -263,17 +271,19 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
      */
-    public void onBackPressed(){
+    public void onBackPressed() {
         finishAndGo(DashboardActivity.class);
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         Intent intent;
-        intent = (getCallingActivity() != null) ? new Intent(getCallingActivity().getClassName()) : getIntent();
+        intent = (getCallingActivity() != null) ? new Intent(getCallingActivity().getClassName())
+                : getIntent();
 
-        if (intent.getStringExtra("activity") != null && getCallingActivity() != null && intent.getStringExtra("activity").equals("settings")){
+        if (intent.getStringExtra("activity") != null && getCallingActivity() != null
+                && intent.getStringExtra("activity").equals("settings")) {
             Log.i(".onResume", "coming from settings");
             overridePendingTransition(0, 0);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -289,18 +299,19 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    protected void goSettings(){
-        Intent intentSettings=new Intent(this,SettingsActivity.class);
+    protected void goSettings() {
+        Intent intentSettings = new Intent(this, SettingsActivity.class);
         intentSettings.putExtra(SETTINGS_CALLER_ACTIVITY, this.getClass());
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
 
-
-    public void prepareLocationListener(Survey survey){
+    public void prepareLocationListener(Survey survey) {
 
         SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
-        LocationManager locationManager = (LocationManager) LocationMemory.getContext().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager =
+                (LocationManager) LocationMemory.getContext().getSystemService(
+                        Context.LOCATION_SERVICE);
 
 
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -314,24 +325,27 @@ public abstract class BaseActivity extends ActionBarActivity {
             }
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
                     locationListener);
-        }
-        else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Log.d(TAG, "requestLocationUpdates via GPS");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        }
-        else {
-            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+                    locationListener);
+        } else {
+            Location lastLocation = locationManager.getLastKnownLocation(
+                    LocationManager.NETWORK_PROVIDER);
 
-            if(lastLocation != null) {
-                Log.d(TAG, "location not available via GPS|NETWORK, last know: "+lastLocation);
+            if (lastLocation != null) {
+                Log.d(TAG, "location not available via GPS|NETWORK, last know: " + lastLocation);
                 locationListener.saveLocation(lastLocation);
-            }else{
-                String defaultLatitude  = getApplicationContext().getString(R.string.GPS_LATITUDE_DEFAULT);
-                String defaultLongitude = getApplicationContext().getString(R.string.GPS_LONGITUDE_DEFAULT);
-                Location defaultLocation = new Location(getApplicationContext().getString(R.string.GPS_PROVIDER_DEFAULT));
+            } else {
+                String defaultLatitude = getApplicationContext().getString(
+                        R.string.GPS_LATITUDE_DEFAULT);
+                String defaultLongitude = getApplicationContext().getString(
+                        R.string.GPS_LONGITUDE_DEFAULT);
+                Location defaultLocation = new Location(
+                        getApplicationContext().getString(R.string.GPS_PROVIDER_DEFAULT));
                 defaultLocation.setLatitude(Double.parseDouble(defaultLatitude));
                 defaultLocation.setLongitude(Double.parseDouble(defaultLongitude));
-                Log.d(TAG, "location not available via GPS|NETWORK, default: "+defaultLocation);
+                Log.d(TAG, "location not available via GPS|NETWORK, default: " + defaultLocation);
                 locationListener.saveLocation(defaultLocation);
             }
         }
@@ -339,53 +353,60 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     /**
      * Finish current activity and launches an activity with the given class
+     *
      * @param targetActivityClass Given target activity class
      */
-    public void finishAndGo(Class targetActivityClass){
-        Intent targetActivityIntent = new Intent(this,targetActivityClass);
+    public void finishAndGo(Class targetActivityClass) {
+        Intent targetActivityIntent = new Intent(this, targetActivityClass);
         finish();
         startActivity(targetActivityIntent);
     }
 
     /**
      * Launches an activity with the given class
+     *
      * @param targetActivityClass Given target activity class
      */
-    public void go(Class targetActivityClass){
-        Intent targetActivityIntent = new Intent(this,targetActivityClass);
+    public void go(Class targetActivityClass) {
+        Intent targetActivityIntent = new Intent(this, targetActivityClass);
         startActivity(targetActivityIntent);
     }
 
     /**
      * Shows an alert dialog with a big message inside based on a raw resource
+     *
      * @param titleId Id of the title resource
-     * @param rawId Id of the raw text resource
+     * @param rawId   Id of the raw text resource
      */
-    private void showAlertWithMessage(int titleId, int rawId){
+    private void showAlertWithMessage(int titleId, int rawId) {
         InputStream message = getApplicationContext().getResources().openRawResource(rawId);
         new AlertDialog.Builder(this)
                 .setTitle(getApplicationContext().getString(titleId))
                 .setMessage(Utils.convertFromInputStreamToString(message))
                 .setNeutralButton(android.R.string.ok, null).create().show();
     }
+
     /**
      * Shows an alert dialog with a big message inside based on a raw resource HTML formatted
+     *
      * @param titleId Id of the title resource
-     * @param rawId Id of the raw text resource in HTML format
+     * @param rawId   Id of the raw text resource in HTML format
      */
-    private void showAlertWithHtmlMessage(int titleId, int rawId){
+    private void showAlertWithHtmlMessage(int titleId, int rawId) {
         InputStream message = getApplicationContext().getResources().openRawResource(rawId);
-        final SpannableString linkedMessage = new SpannableString(Html.fromHtml(Utils.convertFromInputStreamToString(message).toString()));
+        final SpannableString linkedMessage = new SpannableString(
+                Html.fromHtml(Utils.convertFromInputStreamToString(message).toString()));
         Linkify.addLinks(linkedMessage, Linkify.ALL);
         showAlert(titleId, linkedMessage);
     }
 
     /**
-            * Shows an alert dialog with a big message inside based on a raw resource HTML formatted
-    * @param titleId Id of the title resource
-    * @param rawId Id of the raw text resource in HTML format
-    */
-    public void showAlertWithHtmlMessageAndLastCommit(int titleId, int rawId, Context context){
+     * Shows an alert dialog with a big message inside based on a raw resource HTML formatted
+     *
+     * @param titleId Id of the title resource
+     * @param rawId   Id of the raw text resource in HTML format
+     */
+    public void showAlertWithHtmlMessageAndLastCommit(int titleId, int rawId, Context context) {
         String stringMessage = getMessageWithCommit(rawId, context);
         final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
         Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
@@ -396,25 +417,25 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     /**
      * Merge the lastcommit into the raw file
+     *
      * @param rawId Id of the raw text resource in HTML format
      */
     public String getMessageWithCommit(int rawId, Context context) {
         InputStream message = context.getResources().openRawResource(rawId);
 
         String stringCommit = Utils.getCommitHash(context);
-        String stringMessage= Utils.convertFromInputStreamToString(message).toString();
-        if(stringCommit.contains(context.getString(R.string.unavailable))){
-            stringCommit=String.format(context.getString(R.string.lastcommit),stringCommit);
-            stringCommit=stringCommit+" "+context.getText(R.string.lastcommit_unavailable);
-        }
-        else {
+        String stringMessage = Utils.convertFromInputStreamToString(message).toString();
+        if (stringCommit.contains(context.getString(R.string.unavailable))) {
+            stringCommit = String.format(context.getString(R.string.lastcommit), stringCommit);
+            stringCommit = stringCommit + " " + context.getText(R.string.lastcommit_unavailable);
+        } else {
             stringCommit = String.format(context.getString(R.string.lastcommit), stringCommit);
         }
-        stringMessage=String.format(stringMessage,stringCommit);
+        stringMessage = String.format(stringMessage, stringCommit);
         return stringMessage;
     }
 
-    public void showAlertWithLogoAndVersion(int titleId, CharSequence text, Context context){
+    public void showAlertWithLogoAndVersion(int titleId, CharSequence text, Context context) {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_about);
         dialog.setTitle(titleId);
@@ -447,23 +468,25 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     /**
      * Shows an alert dialog with a given string
+     *
      * @param titleId Id of the title resource
-     * @param text String of the message
+     * @param text    String of the message
      */
-    private void showAlert(int titleId, CharSequence text){
+    private void showAlert(int titleId, CharSequence text) {
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getApplicationContext().getString(titleId))
                 .setMessage(text)
                 .setNeutralButton(android.R.string.ok, null).create();
         dialog.show();
-        ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+        ((TextView) dialog.findViewById(android.R.id.message)).setMovementMethod(
+                LinkMovementMethod.getInstance());
     }
+
     /**
      * Logs a debug message using current activity SimpleName as tag. Ex:
-     *   SurveyActivity => ".SurveyActivity"
-     * @param message
+     * SurveyActivity => ".SurveyActivity"
      */
-    private void debugMessage(String message){
+    private void debugMessage(String message) {
         Log.d("." + this.getClass().getSimpleName(), message);
     }
 

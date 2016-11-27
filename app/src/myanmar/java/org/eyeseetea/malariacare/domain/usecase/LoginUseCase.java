@@ -1,9 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
 import android.content.Context;
-import android.util.Log;
 
-import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.User;
@@ -15,7 +13,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import java.io.IOException;
 import java.util.List;
 
-public class LoginUseCase extends ALoginUseCase{
+public class LoginUseCase extends ALoginUseCase {
 
     public LoginUseCase(Context context) {
         super(context);
@@ -32,15 +30,18 @@ public class LoginUseCase extends ALoginUseCase{
 
         saveCredentials(credentials);
 
-       if (credentials.isDemoCredentials()){
-           createDummyDataInDB(context);
-       }
+        if (credentials.isDemoCredentials()) {
+            createDummyDataInDB(context);
+        }
     }
 
     private void saveCredentials(Credentials credentials) {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, credentials.getServerURL());
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, credentials.getUsername());
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, credentials.getPassword());
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,
+                credentials.getServerURL());
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_user,
+                credentials.getUsername());
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_password,
+                credentials.getPassword());
         PreferencesState.getInstance().reloadPreferences();
     }
 
@@ -54,5 +55,10 @@ public class LoginUseCase extends ALoginUseCase{
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public boolean isLogoutNeeded(Credentials credentials) {
+        return false;
     }
 }

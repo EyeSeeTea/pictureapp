@@ -68,6 +68,23 @@ public class Tab extends BaseModel {
         setTabGroup(tabGroup);
     }
 
+    /*
+     * Return tabs filter by program and order by orderpos field
+     */
+    public static List<Tab> getTabsBySession() {
+        return new Select().from(Tab.class)
+                .where(Condition.column(Tab$Table.ID_TAB_GROUP).eq(
+                        Session.getSurvey().getTabGroup().getId_tab_group()))
+                .orderBy(Tab$Table.ORDER_POS).queryList();
+    }
+
+    /**
+     * Checks if TAB table is empty or has no data
+     */
+    public static boolean isEmpty() {
+        return new Select().count().from(Tab.class).count() == 0;
+    }
+
     public Long getId_tab() {
         return id_tab;
     }
@@ -80,12 +97,12 @@ public class Tab extends BaseModel {
         return name;
     }
 
-    public String getInternationalizedName(){
-        return Utils.getInternationalizedString(name);
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getInternationalizedName() {
+        return Utils.getInternationalizedString(name);
     }
 
     public Integer getOrder_pos() {
@@ -105,10 +122,10 @@ public class Tab extends BaseModel {
     }
 
     public TabGroup getTabGroup() {
-        if(tabGroup==null){
+        if (tabGroup == null) {
             if (id_tab_group == null) return null;
 
-            tabGroup= new Select()
+            tabGroup = new Select()
                     .from(TabGroup.class)
                     .where(Condition.column(TabGroup$Table.ID_TAB_GROUP)
                             .is(id_tab_group)).querySingle();
@@ -116,97 +133,74 @@ public class Tab extends BaseModel {
         return tabGroup;
     }
 
-    public void setTabGroup(Long id_tab_group){
-        this.id_tab_group=id_tab_group;
-        this.tabGroup=null;
-    }
-
     public void setTabGroup(TabGroup tabGroup) {
         this.tabGroup = tabGroup;
-        this.id_tab_group = (tabGroup!=null)?tabGroup.getId_tab_group():null;
+        this.id_tab_group = (tabGroup != null) ? tabGroup.getId_tab_group() : null;
     }
 
-    public List<Header> getHeaders(){
-        if(headers==null){
-            headers =new Select().from(Header.class)
+    public void setTabGroup(Long id_tab_group) {
+        this.id_tab_group = id_tab_group;
+        this.tabGroup = null;
+    }
+
+    public List<Header> getHeaders() {
+        if (headers == null) {
+            headers = new Select().from(Header.class)
                     .where(Condition.column(Header$Table.ID_TAB).eq(this.getId_tab()))
                     .orderBy(Header$Table.ORDER_POS).queryList();
         }
         return headers;
     }
 
-    /*
-     * Return tabs filter by program and order by orderpos field
-     */
-    public static List<Tab> getTabsBySession(){
-        return new Select().from(Tab.class)
-                .where(Condition.column(Tab$Table.ID_TAB_GROUP).eq(Session.getSurvey().getTabGroup().getId_tab_group()))
-                .orderBy(Tab$Table.ORDER_POS).queryList();
-    }
-
     /**
      * Checks if this tab is a general score tab.
-     * @return
      */
-    public boolean isGeneralScore(){
+    public boolean isGeneralScore() {
         return getType() == Constants.TAB_SCORE_SUMMARY && !isCompositeScore();
     }
 
     /**
      * Checks if this tab is the composite score tab
-     * @return
      */
-    public boolean isCompositeScore(){
+    public boolean isCompositeScore() {
         return getType().equals(Constants.TAB_COMPOSITE_SCORE);
     }
 
     /**
      * Checks if this tab is a custom tab
-     * @return
      */
     public boolean isACustomTab() {
-        return getType().equals(Constants.TAB_ADHERENCE) || getType().equals(Constants.TAB_IQATAB) ||
-        getType().equals(Constants.TAB_REPORTING);
+        return getType().equals(Constants.TAB_ADHERENCE) || getType().equals(Constants.TAB_IQATAB)
+                ||
+                getType().equals(Constants.TAB_REPORTING);
     }
 
     /**
      * Checks if this tab is the adherence tab
-     * @return
      */
-    public boolean isAdherenceTab(){
+    public boolean isAdherenceTab() {
         return getType() == Constants.TAB_ADHERENCE;
     }
 
     /**
      * Checks if this tab is the IQA tab
-     * @return
      */
-    public boolean isIQATab(){
+    public boolean isIQATab() {
         return getType() == Constants.TAB_IQATAB;
     }
 
     /**
      * Checks if this tab is a dynamic tab (sort of a wizard)
-     * @return
      */
-    public boolean isDynamicTab(){
+    public boolean isDynamicTab() {
         return getType() == Constants.TAB_DYNAMIC_AUTOMATIC_TAB;
     }
 
     /**
      * Checks if this tab is a dynamic tab (sort of a wizard)
-     * @return
      */
-    public boolean isMultiQuestionTab(){
+    public boolean isMultiQuestionTab() {
         return getType() == Constants.TAB_MULTI_QUESTION;
-    }
-
-    /**
-     * Checks if TAB table is empty or has no data
-     * @return
-     */
-    public static boolean isEmpty(){
-        return new Select().count().from(Tab.class).count()==0;
     }
 
     @Override
@@ -218,10 +212,12 @@ public class Tab extends BaseModel {
 
         if (id_tab != tab.id_tab) return false;
         if (name != null ? !name.equals(tab.name) : tab.name != null) return false;
-        if (order_pos != null ? !order_pos.equals(tab.order_pos) : tab.order_pos != null)
+        if (order_pos != null ? !order_pos.equals(tab.order_pos) : tab.order_pos != null) {
             return false;
+        }
         if (type != null ? !type.equals(tab.type) : tab.type != null) return false;
-        return !(id_tab_group != null ? !id_tab_group.equals(tab.id_tab_group) : tab.id_tab_group != null);
+        return !(id_tab_group != null ? !id_tab_group.equals(tab.id_tab_group)
+                : tab.id_tab_group != null);
 
     }
 

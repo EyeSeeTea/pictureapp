@@ -37,8 +37,9 @@ public class ReadWriteDB {
 
         Value value = question.getValueBySession();
 
-        if (value != null)
+        if (value != null) {
             result = value.getValue();
+        }
 
         return result;
     }
@@ -62,8 +63,9 @@ public class ReadWriteDB {
 
         Value value = question.getValueBySession();
 
-        if (value != null)
+        if (value != null) {
             option = value.getOption();
+        }
 
         return option;
     }
@@ -71,7 +73,7 @@ public class ReadWriteDB {
     public static void saveValuesDDL(Question question, Option option, Value value) {
 
         //No option, nothing to save
-        if(option==null){
+        if (option == null) {
             return;
         }
 
@@ -79,7 +81,7 @@ public class ReadWriteDB {
             if (value == null) {
                 value = new Value(option, question, Session.getSurvey());
             } else {
-                if(!value.getOption().equals(option) && question.hasChildren()) {
+                if (!value.getOption().equals(option) && question.hasChildren()) {
                     Survey survey = Session.getSurvey();
                     survey.removeChildrenValuesFromQuestionRecursively(question);
                 }
@@ -100,7 +102,7 @@ public class ReadWriteDB {
         if (value == null) {
             value = new Value(answer, question, Session.getSurvey());
         } else {
-            value.setOption((Long)null);
+            value.setOption((Long) null);
             value.setValue(answer);
         }
         value.save();
@@ -110,8 +112,9 @@ public class ReadWriteDB {
 
         Value value = question.getValueBySession();
 
-        if (value != null)
+        if (value != null) {
             value.delete();
+        }
     }
 
 }

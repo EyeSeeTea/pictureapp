@@ -10,12 +10,12 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
  */
 public class ASMQRowBuilder extends CounterRowBuilder {
 
-    public ASMQRowBuilder(Context context){
+    public ASMQRowBuilder(Context context) {
         super(context, context.getString(R.string.monitor_row_title_asmq));
     }
-    
+
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isASMQ())?1:0;
+        return (surveyMonitor.isASMQ()) ? 1 : 0;
     }
 }

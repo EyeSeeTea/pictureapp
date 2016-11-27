@@ -100,13 +100,17 @@
 //
 //    /**
 //     * Change font size
-//     * @param num font size in a discrete int scale [0: xsmall - 1: small - 2: medium - 3: large - 4: xlarge]
+//     * @param num font size in a discrete int scale [0: xsmall - 1: small - 2: medium - 3:
+// large - 4: xlarge]
 //     */
 //    private void whenFontSizeChange(int num) {
 //        SettingsActivity settingsActivity=(SettingsActivity)getActivityInstance();
-//        onView(withText(settingsActivity.getString(R.string.settings_checkbox_customize_fonts))).perform(click());
-//        onView(withText(settingsActivity.getString(R.string.settings_list_font_sizes))).perform(click());
-//        onView(withText((settingsActivity.getResources().getStringArray(R.array.settings_array_titles_font_sizes))[num])).perform(click());
+//        onView(withText(settingsActivity.getString(R.string.settings_checkbox_customize_fonts))
+// ).perform(click());
+//        onView(withText(settingsActivity.getString(R.string.settings_list_font_sizes))).perform
+// (click());
+//        onView(withText((settingsActivity.getResources().getStringArray(R.array
+// .settings_array_titles_font_sizes))[num])).perform(click());
 //    }
 //
 //    /**
@@ -114,7 +118,8 @@
 //     */
 //    private void whenToggleShowHideNumDem() {
 //        SettingsActivity settingsActivity=(SettingsActivity)getActivityInstance();
-//        onView(withText(settingsActivity.getString(R.string.settings_checkbox_show_num_dems))).perform(click());
+//        onView(withText(settingsActivity.getString(R.string.settings_checkbox_show_num_dems)))
+// .perform(click());
 //    }
 //
 //}

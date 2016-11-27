@@ -3,16 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.eyeseetea.malariacare"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" tools:node="remove" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" tools:node="remove" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" tools:node="remove" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.GET_ACCOUNTS"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_CONTACTS"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.USE_CREDENTIALS"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:node="remove" />
 
     <application
         android:name=".EyeSeeTeaApplication"
@@ -22,9 +30,15 @@
         android:theme="@style/EyeSeeTheme"
         tools:replace="android:icon">
 
-        <service android:name=".services.MonitorService" android:exported="false"/>
-        <service android:name=".services.SurveyService" android:exported="false"/>
-        <service android:name=".services.PushService" android:exported="false"/>
+        <service
+            android:name=".services.MonitorService"
+            android:exported="false" />
+        <service
+            android:name=".services.SurveyService"
+            android:exported="false" />
+        <service
+            android:name=".services.PushService"
+            android:exported="false" />
 
         <meta-data
             android:name="DATABASE"
@@ -42,8 +56,8 @@
         <activity
             android:name=".DashboardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,11 +66,11 @@
         </activity>
         <activity
             android:name="org.eyeseetea.malariacare.views.Dialog"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:finishOnTaskLaunch="true"
             android:label="@string/app_name"
-            android:parentActivityName=".DashboardActivity" >
+            android:parentActivityName=".DashboardActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DashboardActivity" />
@@ -64,16 +78,15 @@
 
         <activity
             android:name=".ProgressActivity"
-            android:label="@string/app_name"
-            android:configChanges="orientation|screenSize">
-        </activity>
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"></activity>
 
         <activity
             android:name="org.eyeseetea.malariacare.SettingsActivity"
-            android:label="@string/title_activity_settings"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:finishOnTaskLaunch="true"
-            android:parentActivityName=".DashboardActivity" >
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".DashboardActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -84,7 +97,7 @@
             android:name=".LoginActivity"
             android:finishOnTaskLaunch="true"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".SettingsActivity" />

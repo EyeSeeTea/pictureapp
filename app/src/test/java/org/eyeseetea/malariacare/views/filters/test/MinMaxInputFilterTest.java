@@ -19,12 +19,11 @@
 
 package org.eyeseetea.malariacare.views.filters.test;
 
-import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
-import org.junit.Assert;
-import org.junit.Test;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import org.eyeseetea.malariacare.views.filters.MinMaxInputFilter;
+import org.junit.Test;
 
 /**
  * Created by arrizabalaga on 2/06/15.
@@ -32,72 +31,72 @@ import static org.junit.Assert.assertTrue;
 public class MinMaxInputFilterTest {
 
     @Test
-    public void no_bounds_null_accepted(){
+    public void no_bounds_null_accepted() {
         //GIVEN
-        MinMaxInputFilter minMaxInputFilter=new MinMaxInputFilter(null);
+        MinMaxInputFilter minMaxInputFilter = new MinMaxInputFilter(null);
 
         //WHEN
-        boolean result=minMaxInputFilter.inRange(null);
+        boolean result = minMaxInputFilter.inRange(null);
 
         //THEN
         assertTrue(result);
     }
 
     @Test
-    public void no_min_null_rejected(){
+    public void no_min_null_rejected() {
         //GIVEN
-        MinMaxInputFilter minMaxInputFilter=new MinMaxInputFilter(null,10);
+        MinMaxInputFilter minMaxInputFilter = new MinMaxInputFilter(null, 10);
 
         //WHEN
-        boolean result=minMaxInputFilter.inRange(null);
+        boolean result = minMaxInputFilter.inRange(null);
 
         //THEN
         assertFalse(result);
     }
 
     @Test
-    public void no_max_null_rejected(){
+    public void no_max_null_rejected() {
         //GIVEN
-        MinMaxInputFilter minMaxInputFilter=new MinMaxInputFilter(5,null);
+        MinMaxInputFilter minMaxInputFilter = new MinMaxInputFilter(5, null);
 
         //WHEN
-        boolean result=minMaxInputFilter.inRange(null);
+        boolean result = minMaxInputFilter.inRange(null);
 
         //THEN
         assertFalse(result);
     }
 
     @Test
-    public void no_max_value_accepted(){
+    public void no_max_value_accepted() {
         //GIVEN
-        MinMaxInputFilter minMaxInputFilter=new MinMaxInputFilter(5,null);
+        MinMaxInputFilter minMaxInputFilter = new MinMaxInputFilter(5, null);
 
         //WHEN
-        boolean result=minMaxInputFilter.inRange(5);
+        boolean result = minMaxInputFilter.inRange(5);
 
         //THEN
         assertTrue(result);
     }
 
     @Test
-    public void bounds_set_value_inside_accepted(){
+    public void bounds_set_value_inside_accepted() {
         //GIVEN
-        MinMaxInputFilter minMaxInputFilter=new MinMaxInputFilter(0,10);
+        MinMaxInputFilter minMaxInputFilter = new MinMaxInputFilter(0, 10);
 
         //WHEN
-        boolean result=minMaxInputFilter.inRange(5);
+        boolean result = minMaxInputFilter.inRange(5);
 
         //THEN
         assertTrue(result);
     }
 
     @Test
-    public void bounds_set_value_outside_rejected(){
+    public void bounds_set_value_outside_rejected() {
         //GIVEN
-        MinMaxInputFilter minMaxInputFilter=new MinMaxInputFilter(0,10);
+        MinMaxInputFilter minMaxInputFilter = new MinMaxInputFilter(0, 10);
 
         //WHEN
-        boolean result=minMaxInputFilter.inRange(-5);
+        boolean result = minMaxInputFilter.inRange(-5);
 
         //THEN
         assertFalse(result);

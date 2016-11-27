@@ -7,7 +7,7 @@ public abstract class AProgressActivityStrategy {
 
     protected ProgressActivity progressActivity;
 
-    public AProgressActivityStrategy(ProgressActivity progressActivity){
+    public AProgressActivityStrategy(ProgressActivity progressActivity) {
         this.progressActivity = progressActivity;
     }
 

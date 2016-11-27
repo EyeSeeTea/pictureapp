@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.services.strategies.APushServiceStrategy;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 
 /**
@@ -36,12 +35,13 @@ public class PushService extends IntentService {
     /**
      * Constant added to the intent in order to reuse the service for different 'methods'
      */
-    public static final String SERVICE_METHOD="serviceMethod";
+    public static final String SERVICE_METHOD = "serviceMethod";
 
     /**
      * Name of 'push all pending surveys' action
      */
-    public static final String PENDING_SURVEYS_ACTION ="org.eyeseetea.malariacare.services.PushService.PENDING_SURVEYS_ACTION";
+    public static final String PENDING_SURVEYS_ACTION =
+            "org.eyeseetea.malariacare.services.PushService.PENDING_SURVEYS_ACTION";
 
     /**
      * Tag for logging
@@ -53,7 +53,7 @@ public class PushService extends IntentService {
     /**
      * Constructor required due to a error message in AndroidManifest.xml if it is not present
      */
-    public PushService(){
+    public PushService() {
         super(PushService.class.getSimpleName());
         Log.d(TAG, "PushService() register in Dhis2Application bus");
     }
@@ -68,8 +68,15 @@ public class PushService extends IntentService {
         Log.d(TAG, "PushService(name) constructor");
     }
 
+    public static void reloadDashboard() {
+        Intent surveysIntent = new Intent(PreferencesState.getInstance().getContext(),
+                SurveyService.class);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
+        PreferencesState.getInstance().getContext().startService(surveysIntent);
+    }
+
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         Log.d(TAG, "onDestroy");
         super.onDestroy();
     }
@@ -77,7 +84,7 @@ public class PushService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         //Ignore wrong actions
-        if(!PENDING_SURVEYS_ACTION.equals(intent.getStringExtra(SERVICE_METHOD))){
+        if (!PENDING_SURVEYS_ACTION.equals(intent.getStringExtra(SERVICE_METHOD))) {
             return;
         }
 
@@ -90,11 +97,5 @@ public class PushService extends IntentService {
 
     public void onPushError(String message) {
         Log.w(TAG, "onPushFinished error: " + message);
-    }
-
-    public static void reloadDashboard(){
-        Intent surveysIntent=new Intent(PreferencesState.getInstance().getContext(), SurveyService.class);
-        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
-        PreferencesState.getInstance().getContext().startService(surveysIntent);
     }
 }

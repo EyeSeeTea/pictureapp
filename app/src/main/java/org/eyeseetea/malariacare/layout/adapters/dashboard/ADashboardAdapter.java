@@ -29,19 +29,20 @@ import java.util.List;
 
 public abstract class ADashboardAdapter extends BaseAdapter implements IDashboardAdapter {
 
-    List<Survey> items;
     protected LayoutInflater lInflater;
     protected Context context;
     protected Integer headerLayout;
     protected Integer footerLayout;
     protected Integer recordLayout;
     protected String title;
+    List<Survey> items;
 
-    public ADashboardAdapter(){
+    public ADashboardAdapter() {
 
     }
 
-    public ADashboardAdapter(List<Survey> items, Context context, Integer headerLayout, Integer footerLayout, Integer recordLayout, String title) {
+    public ADashboardAdapter(List<Survey> items, Context context, Integer headerLayout,
+            Integer footerLayout, Integer recordLayout, String title) {
         this.items = items;
         this.context = context;
         this.lInflater = LayoutInflater.from(context);
@@ -72,18 +73,13 @@ public abstract class ADashboardAdapter extends BaseAdapter implements IDashboar
     }
 
     @Override
-    public void setHeaderLayout(Integer headerLayout){
-        this.headerLayout = headerLayout;
-    }
-
-    @Override
     public Integer getHeaderLayout() {
         return this.headerLayout;
     }
 
     @Override
-    public void setFooterLayout(Integer footerLayout) {
-        this.footerLayout = footerLayout;
+    public void setHeaderLayout(Integer headerLayout) {
+        this.headerLayout = headerLayout;
     }
 
     @Override
@@ -92,8 +88,8 @@ public abstract class ADashboardAdapter extends BaseAdapter implements IDashboar
     }
 
     @Override
-    public void setRecordLayout(Integer recordLayout){
-        this.recordLayout = recordLayout;
+    public void setFooterLayout(Integer footerLayout) {
+        this.footerLayout = footerLayout;
     }
 
     @Override
@@ -102,23 +98,28 @@ public abstract class ADashboardAdapter extends BaseAdapter implements IDashboar
     }
 
     @Override
+    public void setRecordLayout(Integer recordLayout) {
+        this.recordLayout = recordLayout;
+    }
+
+    @Override
     public String getTitle() {
         return title;
     }
 
     @Override
-    public void setContext(Context context){
-        this.context = context;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
-    public Context getContext(){
+    public Context getContext() {
         return this.context;
     }
 
     @Override
-    public void setTitle(String title) {
-        this.title = title;
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     @Override

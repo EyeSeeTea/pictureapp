@@ -26,7 +26,10 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.UserAcc
 
 public interface IConvertFromSDKVisitor {
     void visit(OrganisationUnitExtended organisationUnit);
+
     void visit(UserAccountExtended userAccount);
+
     void visit(EventExtended sdkEventExtended);
+
     void visit(DataValueExtended sdkDataValueExtended);
 }

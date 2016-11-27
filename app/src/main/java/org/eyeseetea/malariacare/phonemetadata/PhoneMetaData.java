@@ -66,25 +66,25 @@ public class PhoneMetaData {
     }
 
     public String getPhone_metaData() {
-        String phonemetadata="";
-        phonemetadata= "###";
-        if(phone_number != null && !phone_number.equals("") && phone_number.length()>0){
-            phonemetadata=phonemetadata+phone_number;
+        String phonemetadata = "";
+        phonemetadata = "###";
+        if (phone_number != null && !phone_number.equals("") && phone_number.length() > 0) {
+            phonemetadata = phonemetadata + phone_number;
         }
 
-        phonemetadata= phonemetadata+"###";
-        if(imei != null && !imei.equals("") && imei.length()>0){
-            phonemetadata=phonemetadata+imei;
+        phonemetadata = phonemetadata + "###";
+        if (imei != null && !imei.equals("") && imei.length() > 0) {
+            phonemetadata = phonemetadata + imei;
         }
 
-        phonemetadata= phonemetadata+"###";
-        if(phone_serial != null && !phone_serial.equals("") && phone_serial.length()>0){
-            phonemetadata=phonemetadata+phone_serial;
+        phonemetadata = phonemetadata + "###";
+        if (phone_serial != null && !phone_serial.equals("") && phone_serial.length() > 0) {
+            phonemetadata = phonemetadata + phone_serial;
         }
 
-        phonemetadata= phonemetadata+"###";
-        if(build_number != null && !build_number.equals("") && build_number.length()>0){
-            phonemetadata=phonemetadata+build_number;
+        phonemetadata = phonemetadata + "###";
+        if (build_number != null && !build_number.equals("") && build_number.length() > 0) {
+            phonemetadata = phonemetadata + build_number;
         }
 
         return phonemetadata;

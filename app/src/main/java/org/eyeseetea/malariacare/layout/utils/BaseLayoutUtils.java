@@ -95,12 +95,8 @@ public class BaseLayoutUtils {
     }
 
     public static void setActionBarWithOrgUnit(ActionBar actionBar) {
-        Program program = Program.getFirstProgram();
-
-        if (program != null) {
-            LayoutUtils.setActionBarLogo(actionBar);
-            LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), PreferencesState.getInstance().getContext().getResources().getString(R.string.app_name));
-        }
+        LayoutUtils.setActionBarLogo(actionBar);
+        LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), PreferencesState.getInstance().getContext().getResources().getString(R.string.app_name));
     }
 
     // Used to put the org unit name and the kind of survey instead of the app name

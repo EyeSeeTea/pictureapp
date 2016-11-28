@@ -1,27 +1,25 @@
 package org.eyeseetea.malariacare.views.question.singlequestion;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.domain.entity.Phone;
-import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
+import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
+import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.question.ASingleQuestionView;
 
-public class PhoneSingleQuestionView extends ASingleQuestionView {
-    EditCard editCard;
+public class PositiveNumberSingleQuestionView extends ASingleQuestionView {
+    EditText numberPicker;
     Button sendButton;
 
-    public PhoneSingleQuestionView(Context context) {
+    public PositiveNumberSingleQuestionView(Context context) {
         super(context);
 
         init(context);
@@ -29,37 +27,37 @@ public class PhoneSingleQuestionView extends ASingleQuestionView {
 
     @Override
     public void setEnabled(boolean enabled) {
-        editCard.setEnabled(enabled);
+        numberPicker.setEnabled(enabled);
         sendButton.setEnabled(enabled);
 
         if (enabled)
-            showKeyboard(editCard);
+            showKeyboard(numberPicker);
     }
 
     @Override
     public void setValue(Value value) {
         if (value != null) {
-            editCard.setText(value.getValue());
+            numberPicker.setText(value.getValue());
         }
     }
 
     private void init(final Context context) {
-        inflate(context, R.layout.dynamic_tab_phone_row, this);
+        inflate(context, R.layout.dynamic_tab_positiveint_row, this);
 
-        editCard = (EditCard) findViewById(R.id.answer);
-        editCard.setFocusable(true);
-        editCard.setFocusableInTouchMode(true);
+        numberPicker = (EditCard) findViewById(R.id.answer);
+        numberPicker.setFocusable(true);
+        numberPicker.setFocusableInTouchMode(true);
 
-        sendButton = (Button) findViewById(R.id.row_phone_btn);
+        sendButton = (Button) findViewById(R.id.dynamic_positiveInt_btn);
 
-        sendButton.setOnClickListener(new View.OnClickListener() {
+        sendButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 validateAnswer(context);
             }
         });
 
-        editCard.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        numberPicker.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -79,13 +77,12 @@ public class PhoneSingleQuestionView extends ASingleQuestionView {
 
     private void validateAnswer(Context context) {
         try {
-            Phone phone = new Phone(editCard.getText().toString());
-            hideKeyboard(editCard);
-            notifyAnswerChanged(phone.getValue());
+            PositiveNumber positiveNumber = PositiveNumber.parse(numberPicker.getText().toString());
+            hideKeyboard(numberPicker);
+            notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
 
-        } catch (InvalidPhoneException e) {
-            editCard.setError(
-                    context.getString(R.string.dynamic_error_phone_format));
+        } catch (InvalidPositiveNumberException e) {
+            numberPicker.setError(context.getString(R.string.dynamic_error_age));
         }
     }
 

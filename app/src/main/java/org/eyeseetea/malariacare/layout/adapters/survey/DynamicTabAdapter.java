@@ -691,7 +691,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;*/
-                case Constants.POSITIVE_INT:
+                /*case Constants.POSITIVE_INT:
                     if (isMultipleQuestionTab(tabType)) {
                         tableRow = (TableRow) lInflater.inflate(
                                 R.layout.multi_question_tab_positive_int_row, tableLayout, false);
@@ -705,7 +705,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     initPositiveIntValue(tableRow, value, tabType);
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
-                    break;
+                    break;*/
                 case Constants.INT:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_int_row,
                             tableLayout, false);
@@ -736,8 +736,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;*/
                 case Constants.SHORT_TEXT:
                 case Constants.PHONE:
-                    //TODO: swipeTouchListener.addClickableView(button) and
-                    // test test test
+                case Constants.POSITIVE_INT:
+                    //TODO: swipeTouchListener.addClickableView(button)
+
                     tableRow = new TableRow(context);
 
                     AQuestionView questionView = questionViewFactory.getView(context,

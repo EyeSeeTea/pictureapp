@@ -16,29 +16,24 @@
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.eyeseetea.malariacare.monitor.tables;
+package org.eyeseetea.malariacare.monitor.rows;
 
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
-import org.eyeseetea.malariacare.monitor.MonitorTableBuilder;
-
-import java.util.List;
+import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 
 /**
- * Defines the structure of the first table in the monitor
- * Created by arrizabalaga on 25/02/16.
+ * Created by arrizabalaga on 26/02/16.
  */
-public class SuspectedPositiveTableBuilder extends MonitorTableBuilder {
+public class SuspectedRowBuilder extends CounterRowBuilder {
 
-    public SuspectedPositiveTableBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_table_title_suspected_header));
+    public SuspectedRowBuilder(Context context) {
+        super(context, context.getString(R.string.monitor_row_title_suspected));
     }
 
     @Override
-    protected List<MonitorRowBuilder> defineRowBuilders() {
-        MonitorUtils monitorUtils = new MonitorUtils(context);
-        return monitorUtils.defineSuspectedRows();
+    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        return (surveyMonitor.isSuspected()) ? 1 : 0;
     }
 }

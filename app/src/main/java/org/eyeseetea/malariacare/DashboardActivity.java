@@ -73,8 +73,6 @@ public class DashboardActivity extends BaseActivity {
     DashboardSentFragment sentFragment;
     ReviewFragment reviewFragment;
     SurveyFragment surveyFragment;
-    String currentTab;
-    String currentTabName;
     /**
      * Flag that controls the fragment change animations
      */
@@ -124,7 +122,6 @@ public class DashboardActivity extends BaseActivity {
 
                 //set the tabs background as transparent
                 setTabsBackgroundColor(R.color.tab_unpressed_background);
-                currentTab = tabId;
 
                 //If change of tab from surveyFragment or FeedbackFragment they could be closed.
                 if (isSurveyFragmentActive()) {
@@ -134,19 +131,16 @@ public class DashboardActivity extends BaseActivity {
                     exitReviewOnChangeTab(null);
                 }
                 if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
-                    currentTabName = getString(R.string.assess);
                     tabHost.getCurrentTabView().setBackgroundColor(
                             getResources().getColor(R.color.tab_pressed_background));
                     unsentFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_improve))) {
-                    currentTabName = getString(R.string.improve);
                     tabHost.getCurrentTabView().setBackgroundColor(
                             getResources().getColor(R.color.tab_pressed_background));
                     sentFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
-                    currentTabName = getString(R.string.monitor);
                     tabHost.getCurrentTabView().setBackgroundColor(
                             getResources().getColor(R.color.tab_pressed_background));
                     monitorFragment.reloadData();
@@ -157,20 +151,16 @@ public class DashboardActivity extends BaseActivity {
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
             tabHost.getTabWidget().getChildAt(i).setFocusable(false);
         }
-        //set the initial selected tab background
-
-        currentTabName = getString(R.string.assess);
-        currentTab = currentTabName;
     }
 
     public void setTabHostsWithText() {
         Context context = PreferencesState.getInstance().getContext();
         setTab(context.getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout,
-                context.getResources().getString(R.string.assess));
+                context.getResources().getString(R.string.unsent_button));
         setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
-                context.getResources().getString(R.string.improve));
+                context.getResources().getString(R.string.sent_button));
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
-                context.getResources().getString(R.string.monitor));
+                context.getResources().getString(R.string.monitor_button));
     }
 
     public void setTabHostsWithImages() {

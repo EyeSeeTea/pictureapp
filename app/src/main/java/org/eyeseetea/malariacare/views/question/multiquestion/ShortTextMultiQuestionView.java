@@ -8,9 +8,11 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
-import org.eyeseetea.malariacare.views.question.AMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
+import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-public class ShortTextMultiQuestionView extends AMultiQuestionView {
+public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,IMultiQuestionView {
     TextCard header;
     EditCard editCard;
 

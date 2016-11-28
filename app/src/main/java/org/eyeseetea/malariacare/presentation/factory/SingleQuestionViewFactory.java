@@ -7,12 +7,15 @@ import android.widget.TableLayout;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.listeners.question.SingleQuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.question.AQuestionView;
+import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
+import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
+import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PhoneSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
 
+
 public class SingleQuestionViewFactory implements IQuestionViewFactory{
-    public AQuestionView getView(Context context, int typeQuestion) {
+    public IQuestionView getView(Context context, int typeQuestion) {
         switch (typeQuestion) {
             case Constants.PHONE:
                 return new PhoneSingleQuestionView(context);
@@ -24,8 +27,14 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory{
     }
 
     @Override
-    public AQuestionView.onAnswerChangedListener getAnswerChangedListener(TableLayout tableLayout,
+    public AKeyboardQuestionView.onAnswerChangedListener getStringAnswerChangedListener(TableLayout tableLayout,
             DynamicTabAdapter dynamicTabAdapter) {
+        return new SingleQuestionAnswerChangedListener(tableLayout,dynamicTabAdapter);
+    }
+
+    @Override
+    public AOptionQuestionView.onAnswerChangedListener getOptionAnswerChangedListener(
+            TableLayout tableLayout, DynamicTabAdapter dynamicTabAdapter) {
         return new SingleQuestionAnswerChangedListener(tableLayout,dynamicTabAdapter);
     }
 }

@@ -2,23 +2,31 @@ package org.eyeseetea.malariacare.views.question;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-import static com.google.android.gms.analytics.internal.zzy.e;
-
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 
-public abstract class ASingleQuestionView extends AQuestionView {
-    public ASingleQuestionView(Context context) {
+import org.eyeseetea.malariacare.database.model.Value;
+
+public abstract class AKeyboardQuestionView extends LinearLayout  {
+    public interface onAnswerChangedListener {
+        void onAnswerChanged(View view, String newValue);
+    }
+
+    protected onAnswerChangedListener mOnAnswerChangedListener;
+
+    public AKeyboardQuestionView(Context context) {
         super(context);
     }
 
-    boolean alreadyNotified;
+    public void setOnAnswerChangedListener(onAnswerChangedListener onAnswerChangedListener) {
+        mOnAnswerChangedListener = onAnswerChangedListener;
+    }
 
     protected void notifyAnswerChanged(String newValue) {
-        if (!alreadyNotified) {
-            alreadyNotified = true;
-            super.notifyAnswerChanged(newValue);
+        if (mOnAnswerChangedListener != null) {
+            mOnAnswerChangedListener.onAnswerChanged(this, newValue);
         }
     }
 

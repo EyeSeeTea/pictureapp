@@ -6,15 +6,15 @@ import android.text.TextWatcher;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.domain.entity.Phone;
 import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
-import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
-import org.eyeseetea.malariacare.views.question.AMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
+import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-public class PositiveNumberMultiQuestionView extends AMultiQuestionView {
+public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,IMultiQuestionView {
     TextCard header;
     EditCard numberPicker;
 

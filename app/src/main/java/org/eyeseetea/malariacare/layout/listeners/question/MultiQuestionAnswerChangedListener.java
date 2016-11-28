@@ -3,11 +3,12 @@ package org.eyeseetea.malariacare.layout.listeners.question;
 import android.view.View;
 import android.widget.TableLayout;
 
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
-import org.eyeseetea.malariacare.views.question.AQuestionView;
+import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
+import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 
 public class MultiQuestionAnswerChangedListener extends AQuestionAnswerChangedListener implements
-        AQuestionView.onAnswerChangedListener {
+        AKeyboardQuestionView.onAnswerChangedListener,AOptionQuestionView.onAnswerChangedListener {
 
     public MultiQuestionAnswerChangedListener(TableLayout tableLayout) {
         super(tableLayout);
@@ -18,4 +19,8 @@ public class MultiQuestionAnswerChangedListener extends AQuestionAnswerChangedLi
         saveValue(view, newValue);
     }
 
+    @Override
+    public void onAnswerChanged(View view, Option option) {
+
+    }
 }

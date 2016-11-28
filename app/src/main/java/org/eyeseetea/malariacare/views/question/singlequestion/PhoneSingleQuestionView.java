@@ -1,12 +1,9 @@
 package org.eyeseetea.malariacare.views.question.singlequestion;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -15,9 +12,10 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Phone;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.eyeseetea.malariacare.views.EditCard;
-import org.eyeseetea.malariacare.views.question.ASingleQuestionView;
+import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-public class PhoneSingleQuestionView extends ASingleQuestionView {
+public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView implements IQuestionView{
     EditCard editCard;
     Button sendButton;
 

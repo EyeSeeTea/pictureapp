@@ -11,9 +11,11 @@ import org.eyeseetea.malariacare.domain.entity.Phone;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
-import org.eyeseetea.malariacare.views.question.AMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
+import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-public class PhoneMultiQuestionView extends AMultiQuestionView {
+public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,IMultiQuestionView {
     TextCard header;
     EditCard editCard;
 

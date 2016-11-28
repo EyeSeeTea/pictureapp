@@ -13,9 +13,11 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.eyeseetea.malariacare.views.EditCard;
-import org.eyeseetea.malariacare.views.question.ASingleQuestionView;
+import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-public class PositiveNumberSingleQuestionView extends ASingleQuestionView {
+public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionView implements
+        IQuestionView {
     EditText numberPicker;
     Button sendButton;
 

@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.views.question;
+package org.eyeseetea.malariacare.views.question.singlequestion;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -15,8 +15,9 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Phone;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.eyeseetea.malariacare.views.EditCard;
+import org.eyeseetea.malariacare.views.question.ASingleQuestionView;
 
-public class PhoneSingleQuestionView extends AQuestionView {
+public class PhoneSingleQuestionView extends ASingleQuestionView {
     EditCard editCard;
     Button sendButton;
 

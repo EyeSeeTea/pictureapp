@@ -8,4 +8,6 @@ public abstract class AMultiQuestionView extends AQuestionView {
     }
 
     public abstract void setHeader(String headerValue);
+
+    public abstract boolean hasError();
 }

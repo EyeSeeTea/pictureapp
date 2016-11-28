@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.views.question;
+package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
 import android.text.Editable;
@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.domain.entity.Phone;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.malariacare.views.question.AMultiQuestionView;
 
 public class PhoneMultiQuestionView extends AMultiQuestionView {
     TextCard header;
@@ -25,6 +26,11 @@ public class PhoneMultiQuestionView extends AMultiQuestionView {
     @Override
     public void setHeader(String headerValue) {
         header.setText(headerValue);
+    }
+
+    @Override
+    public boolean hasError() {
+        return editCard.getError()!= null;
     }
 
     @Override

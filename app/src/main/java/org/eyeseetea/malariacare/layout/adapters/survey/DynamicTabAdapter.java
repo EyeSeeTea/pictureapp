@@ -146,6 +146,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private SwipeTouchListener swipeTouchListener;
 
+    List<AMultiQuestionView> mMultiQuestionViews = new ArrayList<>();
+
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
@@ -477,6 +479,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        mMultiQuestionViews.clear();
         //init validation control(used only in multiquestions tabs)
         failedValidations = 0;
         //Inflate the layout
@@ -733,7 +736,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;*/
                 case Constants.SHORT_TEXT:
                 case Constants.PHONE:
-                    //TODO: swipeTouchListener.addClickableView(button) , avoid double click and
+                    //TODO: swipeTouchListener.addClickableView(button) and
                     // test test test
                     tableRow = new TableRow(context);
 
@@ -741,6 +744,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             screenQuestion.getOutput());
 
                     if (isMultipleQuestionTab(tabType)) {
+                        mMultiQuestionViews.add((AMultiQuestionView)questionView);
                         ((AMultiQuestionView) questionView).setHeader(
                                 screenQuestion.getForm_name());
 
@@ -854,8 +858,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean questionsWithError = false;
+
+                for (AMultiQuestionView multiquestionView:mMultiQuestionViews) {
+                    if (multiquestionView.hasError()){
+                        questionsWithError = true;
+                        break;
+                    }
+                }
+
                 Log.d(TAG, "Questions with failed validation " + failedValidations);
-                if (failedValidations == 0) {
+                if (failedValidations == 0 && !questionsWithError) {
                     finishOrNext();
                 }
             }

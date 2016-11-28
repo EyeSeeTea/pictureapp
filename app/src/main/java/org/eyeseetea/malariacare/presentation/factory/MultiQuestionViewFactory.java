@@ -5,13 +5,11 @@ import android.content.Context;
 import android.widget.TableLayout;
 
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
-import org.eyeseetea.malariacare.layout.listeners.question.AQuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.layout.listeners.question.MultiQuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.AQuestionView;
-import org.eyeseetea.malariacare.views.question.PhoneMultiQuestionView;
-import org.eyeseetea.malariacare.views.question.ShortTextMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.PhoneMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.ShortTextMultiQuestionView;
 
 public class MultiQuestionViewFactory implements IQuestionViewFactory {
     public AQuestionView getView(Context context, int typeQuestion) {

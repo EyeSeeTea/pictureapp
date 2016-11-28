@@ -43,7 +43,6 @@ import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -499,9 +498,9 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the New Survey button
      */
     public void newSurvey(View view) {
-        TabGroup tabGroup = new Select().from(TabGroup.class).querySingle();
+        Program program = new Select().from(Program.class).querySingle();
         // Put new survey in session
-        Survey survey = new Survey(null, tabGroup, Session.getUser());
+        Survey survey = new Survey(null, program, Session.getUser());
         survey.save();
         Session.setSurvey(survey);
         //Look for coordinates

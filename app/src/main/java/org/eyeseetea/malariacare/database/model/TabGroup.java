@@ -72,17 +72,11 @@ public class TabGroup extends BaseModel {
         setProgram(program);
     }
 
-    public Long getId_tab_group() {
-        return id_tab_group;
-    }
 
     public void setId_tab_group(Long id_tab_group) {
         this.id_tab_group = id_tab_group;
     }
 
-    public String getName() {
-        return name;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -93,47 +87,17 @@ public class TabGroup extends BaseModel {
         this.program = null;
     }
 
-    public Program getProgram() {
-        if (program == null) {
-            if (id_program == null) return null;
-            program = new Select()
-                    .from(Program.class)
-                    .where(Condition.column(Program$Table.ID_PROGRAM)
-                            .is(id_program)).querySingle();
-        }
-        return program;
-    }
 
     public void setProgram(Program program) {
         this.program = program;
         this.id_program = (program != null) ? program.getId_program() : null;
     }
 
-    public String getUid() {
-        return uid;
-    }
 
     public void setUid(String uid) {
         this.uid = uid;
     }
 
-    public List<Tab> getTabs() {
-        if (tabs == null) {
-            tabs = new Select().from(Tab.class)
-                    .where(Condition.column(Tab$Table.ID_TAB_GROUP).eq(this.getId_tab_group()))
-                    .orderBy(Tab$Table.ORDER_POS).queryList();
-        }
-        return tabs;
-    }
-
-    public List<Survey> getSurveys() {
-        if (surveys == null) {
-            this.surveys = new Select().from(Survey.class)
-                    .where(Condition.column(Survey$Table.ID_TAB_GROUP).eq(
-                            this.getId_tab_group())).queryList();
-        }
-        return this.surveys;
-    }
 
 
     @Override

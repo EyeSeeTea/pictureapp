@@ -193,8 +193,8 @@ public class Question extends BaseModel {
     /**
      * Returns all the questions that belongs to a program
      */
-    public static List<Question> listByTabGroup(TabGroup tabGroup) {
-        if (tabGroup == null || tabGroup.getId_tab_group() == null) {
+    public static List<Question> listByProgram(Program program) {
+        if (program == null || program.getId_program() == null) {
             return new ArrayList();
         }
 
@@ -210,12 +210,12 @@ public class Question extends BaseModel {
                 .join(Tab.class, Join.JoinType.LEFT).as("t")
                 .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
                         .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
-                .join(TabGroup.class, Join.JoinType.LEFT).as("tg")
-                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP))
-                        .eq(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP)))
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
                 .where(Condition.column(
-                        ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP))
-                        .eq(tabGroup.getId_tab_group()))
+                        ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM))
+                        .eq(program.getId_program()))
                 .orderBy(Tab$Table.ORDER_POS)
                 .orderBy(Question$Table.ORDER_POS).queryList();
 

@@ -167,11 +167,11 @@ public class DashboardActivity extends BaseActivity {
     public void setTabHostsWithText() {
         Context context = PreferencesState.getInstance().getContext();
         setTab(context.getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout,
-                context.getResources().getString(R.string.assess));
+                context.getResources().getString(R.string.unsent_button));
         setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
-                context.getResources().getString(R.string.improve));
+                context.getResources().getString(R.string.sent_button));
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
-                context.getResources().getString(R.string.monitor));
+                context.getResources().getString(R.string.monitor_button));
     }
 
     public void setTabHostsWithImages() {

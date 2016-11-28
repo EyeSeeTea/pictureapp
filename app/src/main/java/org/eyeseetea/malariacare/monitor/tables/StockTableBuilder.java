@@ -33,7 +33,7 @@ import java.util.List;
 public class StockTableBuilder extends MonitorTableBuilder {
 
     public StockTableBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_table_title_stock));
+        super(context, context.getString(R.string.monitor_table_title_stock_header));
     }
 
     @Override

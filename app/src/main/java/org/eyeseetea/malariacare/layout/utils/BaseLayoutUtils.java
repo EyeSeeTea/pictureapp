@@ -38,7 +38,6 @@ import android.widget.ListView;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
@@ -96,7 +95,9 @@ public class BaseLayoutUtils {
 
     public static void setActionBarWithOrgUnit(ActionBar actionBar) {
         LayoutUtils.setActionBarLogo(actionBar);
-        LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(), PreferencesState.getInstance().getContext().getResources().getString(R.string.app_name));
+        LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
+                PreferencesState.getInstance().getContext().getResources().getString(
+                        R.string.app_name));
     }
 
     // Used to put the org unit name and the kind of survey instead of the app name

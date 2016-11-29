@@ -111,6 +111,23 @@ public class PopulateDB {
     static Map<Integer, OrgUnitLevel> orgUnitLevelList = new LinkedHashMap();
     static Map<Integer, OrgUnit> orgUnitList = new LinkedHashMap();
 
+    public static void initDataIfRequired(AssetManager assetManager) throws IOException {
+        if (!Tab.isEmpty()) {
+            Log.i(TAG, "DB Already loaded, showing surveys...");
+            return;
+        }
+
+        Log.i(TAG, "DB empty, loading data ...");
+        try {
+            PopulateDB.populateDB(assetManager);
+            //Get maximum total of questions
+            Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
+        } catch (IOException e) {
+            throw e;
+        }
+        Log.i(TAG, "DB empty, loading data ...DONE");
+    }
+
     public static void populateDB(AssetManager assetManager) throws IOException {
 
         //Reset inner references

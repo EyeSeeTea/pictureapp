@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,9 +11,12 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.hisp.dhis.android.sdk.ui.views.FontButton;
+
+import java.io.IOException;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
     public LoginActivityStrategy(LoginActivity loginActivity) {
@@ -33,6 +37,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onCreate() {
+        try {
+            PopulateDB.initDataIfRequired(loginActivity.getAssets());
+        } catch (IOException exception) {
+            Log.e("LoginActivity", "ERROR: DB not loaded");
+        }
         if (existsLoggedUser()) {
             LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
                     new LoadUserAndCredentialsUseCase(loginActivity);

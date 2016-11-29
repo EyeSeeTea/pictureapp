@@ -43,7 +43,6 @@ import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Score;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -65,8 +64,7 @@ public class Migration2Database extends BaseMigration {
     private final static Class NEW_APP_TABLES[] = {
             OrgUnitLevel.class,
             Match.class,
-            QuestionOption.class,
-            TabGroup.class
+            QuestionOption.class
     };
     private static String TAG = ".Migration2Database";
     private static Migration2Database instance;
@@ -86,8 +84,7 @@ public class Migration2Database extends BaseMigration {
 
         //Data? Add new default data
         if (instance.hasData()) {
-            instance.addTabGroup();
-            instance.linkTabGroup();
+            instance.linkProgram();
             instance.moveOutputToQuestion();
         }
 
@@ -133,7 +130,7 @@ public class Migration2Database extends BaseMigration {
         //FIXME DBflow querys cannot be used at this point
 //        if(hasData()) {
 //            addTabGroup();
-//            linkTabGroup();
+//            linkProgram();
 //            moveOutputToQuestion();
 //        }
     }
@@ -146,32 +143,23 @@ public class Migration2Database extends BaseMigration {
     }
 
     /**
-     * Adds a row to tabgroup table for data consistency
+     * Links the program in the current db
      */
-    private void addTabGroup() {
-        Log.d(TAG, "adding default tabgroup...");
-        TabGroup tabGroup = new TabGroup("Health System QIS TabGroup", Program.getFirstProgram());
-        tabGroup.save();
-    }
+    private void linkProgram() {
+        Log.d(TAG, "linking default program to surveys and tabs...");
 
-    /**
-     * Links the tabgroup in the current db
-     */
-    private void linkTabGroup() {
-        Log.d(TAG, "linking default tabgroup to surveys and tabs...");
+        Program program = Program.getFirstProgram();
 
-        TabGroup tabGroup = new Select().from(TabGroup.class).querySingle();
-
-        //Add tabgroup to current surveys
+        //Add program to current surveys
         List<Survey> surveyList = new Select().from(Survey.class).queryList();
         for (Survey survey : surveyList) {
-            survey.setTabGroup(tabGroup);
+            survey.setProgram(program);
             survey.save();
         }
 
-        //Add tabgroup to current tabs
+        //Add program to current tabs
         Tab tab = new Select().from(Tab.class).querySingle();
-        tab.setTabGroup(tabGroup);
+        tab.setProgram(program);
         tab.setType(Constants.TAB_DYNAMIC_AUTOMATIC_TAB);
         tab.save();
     }

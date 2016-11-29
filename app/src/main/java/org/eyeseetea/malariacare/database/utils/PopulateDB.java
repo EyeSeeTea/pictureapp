@@ -42,7 +42,6 @@ import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Score;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.Event;
@@ -59,7 +58,6 @@ import java.util.Map;
 public class PopulateDB {
 
     public static final String PROGRAMS_CSV = "Programs.csv";
-    public static final String TAB_GROUPS_CSV = "TabGroups.csv";
     public static final String TABS_CSV = "Tabs.csv";
     public static final String HEADERS_CSV = "Headers.csv";
     public static final String ANSWERS_CSV = "Answers.csv";
@@ -77,7 +75,6 @@ public class PopulateDB {
     public static final char QUOTECHAR = '\'';
     private static final List<String> tables2populate = Arrays.asList(
             PROGRAMS_CSV,
-            TAB_GROUPS_CSV,
             TABS_CSV,
             HEADERS_CSV,
             ANSWERS_CSV,
@@ -101,7 +98,6 @@ public class PopulateDB {
     private static final String TAG = "PopulateDB";
 
     static Map<Integer, Program> programList = new LinkedHashMap<Integer, Program>();
-    static Map<Integer, TabGroup> tabGroups = new LinkedHashMap<Integer, TabGroup>();
     static Map<Integer, Tab> tabList = new LinkedHashMap<Integer, Tab>();
     static Map<Integer, Header> headerList = new LinkedHashMap<Integer, Header>();
     static Map<Integer, Question> questionList = new LinkedHashMap<Integer, Question>();
@@ -134,18 +130,11 @@ public class PopulateDB {
                         program.save();
                         programList.put(Integer.valueOf(line[0]), program);
                         break;
-                    case TAB_GROUPS_CSV:
-                        TabGroup tabGroup = new TabGroup();
-                        tabGroup.setName(line[1]);
-                        tabGroup.setProgram(programList.get(Integer.valueOf(line[2])));
-                        tabGroup.save();
-                        tabGroups.put(Integer.valueOf(line[0]), tabGroup);
-                        break;
                     case TABS_CSV:
                         Tab tab = new Tab();
                         tab.setName(line[1]);
                         tab.setOrder_pos(Integer.valueOf(line[2]));
-                        tab.setTabGroup(tabGroups.get(Integer.valueOf(line[3])));
+                        tab.setProgram(programList.get(Integer.valueOf(line[3])));
                         tab.setType(Integer.valueOf(line[4]));
                         tab.save();
                         tabList.put(Integer.valueOf(line[0]), tab);
@@ -316,7 +305,6 @@ public class PopulateDB {
 
     private static void cleanInnerLists() {
         programList.clear();
-        tabGroups.clear();
         tabList.clear();
         headerList.clear();
         questionList.clear();

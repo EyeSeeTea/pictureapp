@@ -194,8 +194,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         event.setStatus(Event.STATUS_COMPLETED);
         event.setFromServer(false);
         event.setOrganisationUnitId(getSafeOrgUnitUID(survey));
-        event.setProgramId(survey.getTabGroup().getProgram().getUid());
-        event.setProgramStageId(survey.getTabGroup().getUid());
+        event.setProgramId(survey.getProgram().getUid());
+        event.setProgramStageId(survey.getProgram().getUid());
         event = updateEventLocation(survey, event);
         event = updateEventDates(survey, event);
         Log.d(TAG, "Saving event " + event.toString());

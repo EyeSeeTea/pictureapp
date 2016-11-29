@@ -99,8 +99,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"></FrameLayout>
-                    <!-- list view will be automatically added here by the list fragment -->
+                    <!-- stock content view will be automatically added here by the fragment -->
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/tab_monitor_layout"
                     android:layout_width="match_parent"

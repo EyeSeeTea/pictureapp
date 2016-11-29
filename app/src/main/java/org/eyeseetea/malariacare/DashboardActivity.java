@@ -288,7 +288,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     /**
-     * This method initializes the Improve fragment(DashboardSentFragment)
+     * This method initializes the Stock fragment(StockFragment)
      */
     public void initStock() {
         stockFragment = new StockFragment();

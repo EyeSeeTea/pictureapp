@@ -58,6 +58,7 @@ import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 import java.io.IOException;
 
@@ -105,7 +106,9 @@ public class DashboardActivity extends BaseActivity {
             initAssess();
             initImprove();
             initMonitor();
-            initStock();
+            if (GradleVariantConfig.isStockFragmentActive()) {
+                initStock();
+            }
         }
         initTabHost(savedInstanceState);
         /* set tabs in order */
@@ -140,7 +143,7 @@ public class DashboardActivity extends BaseActivity {
                         getResources().getString(R.string.tab_tag_improve))) {
                     sentFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(
-                        getResources().getString(R.string.tab_tag_improve))) {
+                        getResources().getString(R.string.tab_tag_stock))) {
                     stockFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
@@ -163,8 +166,15 @@ public class DashboardActivity extends BaseActivity {
                 context.getResources().getString(R.string.unsent_button));
         setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
                 context.getResources().getString(R.string.sent_button));
+        if (GradleVariantConfig.isStockFragmentActive()) {
+            setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
+                    context.getResources().getString(R.string.tab_tag_stock));
+        }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getString(R.string.monitor_button));
+        if (GradleVariantConfig.isStockFragmentActive()) {
+            initStock();
+        }
     }
 
     public void setTabHostsWithImages() {
@@ -173,8 +183,10 @@ public class DashboardActivity extends BaseActivity {
                 context.getResources().getDrawable(R.drawable.tab_assess));
         setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
                 context.getResources().getDrawable(R.drawable.tab_improve));
-        setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
-                context.getResources().getDrawable(R.drawable.tab_stock));
+        if (GradleVariantConfig.isStockFragmentActive()) {
+            setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
+                    context.getResources().getDrawable(R.drawable.tab_stock));
+        }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getDrawable(R.drawable.tab_monitor));
     }

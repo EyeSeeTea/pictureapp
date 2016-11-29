@@ -34,6 +34,8 @@ public abstract class AQuestionAnswerChangedListener {
         showOrHideChildren(question);
     }
 
+    //TODO: Duplicate code in DynamicTabAdapter line 1094
+    //code in DynamicTabAdapter will be delete when DynamicTabAdapter refactoring will be completed
     /**
      * Hide or show the childen question from a given question,  if is necessary  it reloads the
      * children questions values or refreshing the children questions answer component

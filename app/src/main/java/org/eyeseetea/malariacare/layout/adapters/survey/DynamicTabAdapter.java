@@ -958,23 +958,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Click, check and save the phone value
-     */
-    private boolean clickPhoneValue(EditCard editCard) {
-        //Hide keypad
-        hideKeyboard(PreferencesState.getInstance().getContext());
-        String valueAsText = String.valueOf(editCard.getText());
-        boolean isValid = validatePhoneValue(valueAsText);
-        if (isValid) {
-            navigationController.isMovingToForward = true;
-            saveValue(editCard);
-        } else {
-            editCard.setError(context.getString(R.string.dynamic_error_phone_format));
-        }
-        return isValid;
-    }
-
-    /**
      * Validate the phone number
      */
     private boolean validatePhoneValue(String valueAsText) {
@@ -1100,6 +1083,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
+    //TODO: Duplicate code in AQuestionAnswerChangedListener line 43
+    //this code will be delete when DynamicTabAdapter refactoring will be completed
     /**
      * Hide or show the childen question from a given question,  if is necessary  it reloads the
      * children questions values or refreshing the children questions answer component
@@ -1252,18 +1237,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
             }, 300);
         }
-    }
-
-    /**
-     * Checks if edit text is not null:
-     *
-     * @return true|false
-     */
-    private boolean checkEditTextNotNull(String editValue) {
-        if (editValue == null) {
-            editValue = "";
-        }
-        return editValue.isEmpty();
     }
 
     /**

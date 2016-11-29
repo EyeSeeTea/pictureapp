@@ -90,6 +90,43 @@ public class PullController {
         return instance;
     }
 
+    public static void convertOUinOptions() {
+        List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
+        //remove older values, but not the especial "other" option
+        for (Question question : questions) {
+            List<Option> options = question.getAnswer().getOptions();
+            removeOldValues(question, options);
+        }
+
+        if (questions.size() == 0) {
+            return;
+        }
+
+        //Generate the orgUnits options for each question with orgunit dropdown list
+        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
+        for (OrgUnit orgUnit : orgUnits) {
+            addOUOptionToQuestions(questions, orgUnit);
+        }
+    }
+
+    public static void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
+        for (Question question : questions) {
+            Option option = new Option();
+            option.setAnswer(question.getAnswer());
+            option.setName(orgUnit.getUid());
+            option.setCode(orgUnit.getName());
+            option.save();
+        }
+    }
+
+    public static void removeOldValues(Question question, List<Option> options) {
+        for (Option option : options) {
+            if (QuestionOption.findByQuestionAndOption(question, option).size() == 0) {
+                option.delete();
+            }
+        }
+    }
+
     private void register() {
         try {
             Dhis2Application.bus.register(this);
@@ -250,51 +287,6 @@ public class PullController {
             }
         }.start();
     }
-
-    public static void convertOUinOptions() {
-        List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
-        //remove older values, but not the especial "other" option
-        for (Question question : questions) {
-            List<Option> options = question.getAnswer().getOptions();
-            removeOldValues(question, options);
-        }
-
-        if (questions.size() == 0) {
-            return;
-        }
-
-        //Generate the orgUnits options for each question with orgunit dropdown list
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-        for (OrgUnit orgUnit : orgUnits) {
-            addOUOptionToQuestions(questions, orgUnit);
-        }
-        refreshAnswersInMemory(questions);
-    }
-
-    private static void refreshAnswersInMemory(List<Question> questions) {
-        for (Question question : questions) {
-            question.getAnswer().getOptionsFromDb();
-        }
-    }
-
-    public static void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
-        for (Question question : questions) {
-            Option option = new Option();
-            option.setAnswer(question.getAnswer());
-            option.setName(orgUnit.getUid());
-            option.setCode(orgUnit.getName());
-            option.save();
-        }
-    }
-
-    public static void removeOldValues(Question question, List<Option> options) {
-        for (Option option : options) {
-            if (QuestionOption.findByQuestionAndOption(question, option).size() == 0) {
-                option.delete();
-            }
-        }
-    }
-
 
     /**
      * Erase data from app database

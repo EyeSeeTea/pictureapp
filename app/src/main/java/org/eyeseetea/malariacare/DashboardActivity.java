@@ -191,6 +191,18 @@ public class DashboardActivity extends BaseActivity {
                 context.getResources().getDrawable(R.drawable.tab_monitor));
     }
 
+
+    /**
+     * Sets a divider drawable and background.
+     */
+    public void setDivider() {
+        tabHost.getTabWidget().setShowDividers(TabWidget.SHOW_DIVIDER_MIDDLE);
+        tabHost.getTabWidget().setDividerDrawable(R.drawable.tab_line);
+        tabHost.getTabWidget().setBackgroundColor(
+                ContextCompat.getColor(PreferencesState.getInstance().getContext(),
+                        R.color.tab_unpressed_background));
+    }
+
     private void setTabsBackgroundColor(int color) {
         //set the tabs background as transparent
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
@@ -630,14 +642,6 @@ public class DashboardActivity extends BaseActivity {
 
     public boolean isLoadingReview() {
         return isLoadingReview;
-    }
-
-    public void setDivider() {
-        tabHost.getTabWidget().setShowDividers(TabWidget.SHOW_DIVIDER_MIDDLE);
-        tabHost.getTabWidget().setDividerDrawable(R.drawable.tab_line);
-        tabHost.getTabWidget().setBackgroundColor(
-                ContextCompat.getColor(PreferencesState.getInstance().getContext(),
-                        R.color.tab_unpressed_background));
     }
 
     /**

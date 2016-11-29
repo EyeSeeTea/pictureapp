@@ -272,12 +272,12 @@ public class PullController {
     }
 
     private static void refreshAnswersInMemory(List<Question> questions) {
-        for ( Question question:questions){
+        for (Question question : questions) {
             question.getAnswer().getOptionsFromDb();
         }
     }
 
-    public static void  addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
+    public static void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
         for (Question question : questions) {
             Option option = new Option();
             option.setAnswer(question.getAnswer());

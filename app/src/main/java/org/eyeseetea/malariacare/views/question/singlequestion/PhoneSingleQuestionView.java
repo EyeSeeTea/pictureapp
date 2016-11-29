@@ -15,7 +15,7 @@ import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView implements IQuestionView{
+public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView implements IQuestionView {
     EditCard editCard;
     Button sendButton;
 
@@ -30,8 +30,9 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
         editCard.setEnabled(enabled);
         sendButton.setEnabled(enabled);
 
-        if (enabled)
+        if (enabled) {
             showKeyboard(editCard);
+        }
     }
 
     @Override

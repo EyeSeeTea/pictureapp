@@ -8,14 +8,15 @@ public class Phone {
 
     private static String value;
 
-    public Phone (String value) throws InvalidPhoneException {
-        if (!isValid(value))
+    public Phone(String value) throws InvalidPhoneException {
+        if (!isValid(value)) {
             throw new InvalidPhoneException("Invalid Phone format");
+        }
 
         this.value = value;
     }
 
-    private boolean isValid(String value){
+    private boolean isValid(String value) {
         return PhoneMask.checkPhoneNumberByMask(value);
     }
 
@@ -25,11 +26,11 @@ public class Phone {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null) return false;
-        if(!(o instanceof Phone)) return false;
+        if (o == null) return false;
+        if (!(o instanceof Phone)) return false;
 
         Phone other = (Phone) o;
-        if(!this.value.equals(other.value)) return false;
+        if (!this.value.equals(other.value)) return false;
 
         return true;
     }

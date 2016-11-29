@@ -8,7 +8,7 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 
 public class MultiQuestionAnswerChangedListener extends AQuestionAnswerChangedListener implements
-        AKeyboardQuestionView.onAnswerChangedListener,AOptionQuestionView.onAnswerChangedListener {
+        AKeyboardQuestionView.onAnswerChangedListener, AOptionQuestionView.onAnswerChangedListener {
 
     public MultiQuestionAnswerChangedListener(TableLayout tableLayout) {
         super(tableLayout);

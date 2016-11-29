@@ -90,6 +90,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import utils.PhoneMask;
 import utils.ProgressUtils;
 
@@ -116,18 +117,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     LayoutInflater lInflater;
     TableLayout tableLayout = null;
     int id_layout;
-
-
+    /**
+     * View needed to close the keyboard in methods with view
+     */
+    View keyboardView;
+    List<IMultiQuestionView> mMultiQuestionViews = new ArrayList<>();
     /**
      * Flag that indicates if the current survey in session is already sent or not (it affects
      * readonly settings)
      */
     private boolean readOnly;
-
-    /**
-     * View needed to close the keyboard in methods with view
-     */
-    View keyboardView;
     /**
      * Flag that indicates if the swipe listener has been already added to the listview container
      */
@@ -138,8 +137,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Listener that detects taps on buttons & swipe
      */
     private SwipeTouchListener swipeTouchListener;
-
-    List<IMultiQuestionView> mMultiQuestionViews = new ArrayList<>();
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
@@ -181,11 +178,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public static Option findSwitchOption(Question question, boolean isChecked) {
         //Search option by position
-        if (isChecked) {
-            return question.getAnswer().getOptions().get(0);
-        } else {
-            return question.getAnswer().getOptions().get(1);
-        }
+        return question.getAnswer().getOptions().get((isChecked) ? 0 : 1);
     }
 
     /**
@@ -710,9 +703,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     configureAnswerChangedListener(questionViewFactory, questionView);
 
-                    addTagQuestion(screenQuestion, (View)questionView);
+                    addTagQuestion(screenQuestion, (View) questionView);
 
-                    tableRow.addView((View)questionView);
+                    tableRow.addView((View) questionView);
 
                     tableRow.setVisibility(visibility);
 
@@ -778,12 +771,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void configureAnswerChangedListener(IQuestionViewFactory questionViewFactory,
             IQuestionView questionView) {
-        if (questionView instanceof AKeyboardQuestionView)
-            ((AKeyboardQuestionView)questionView).setOnAnswerChangedListener(
+        if (questionView instanceof AKeyboardQuestionView) {
+            ((AKeyboardQuestionView) questionView).setOnAnswerChangedListener(
                     questionViewFactory.getStringAnswerChangedListener(tableLayout, this));
-        else
-            ((AOptionQuestionView)questionView).setOnAnswerChangedListener(
+        } else {
+            ((AOptionQuestionView) questionView).setOnAnswerChangedListener(
                     questionViewFactory.getOptionAnswerChangedListener(tableLayout, this));
+        }
     }
 
     private void configureLayoutParams(int tabType, TableRow tableRow, LinearLayout questionView) {
@@ -830,8 +824,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             public void onClick(View v) {
                 boolean questionsWithError = false;
 
-                for (IMultiQuestionView multiquestionView:mMultiQuestionViews) {
-                    if (multiquestionView.hasError()){
+                for (IMultiQuestionView multiquestionView : mMultiQuestionViews) {
+                    if (multiquestionView.hasError()) {
                         questionsWithError = true;
                         break;
                     }
@@ -1083,34 +1077,37 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    //TODO: Duplicate code in AQuestionAnswerChangedListener line 43
-    //this code will be delete when DynamicTabAdapter refactoring will be completed
     /**
      * Hide or show the childen question from a given question,  if is necessary  it reloads the
      * children questions values or refreshing the children questions answer component
      *
+     * TODO: Duplicate code in AQuestionAnswerChangedListener line 43
+     * this code will be delete when DynamicTabAdapter refactoring will be completed
+     *
      * @param question is the parent question
      */
     private void showOrHideChildren(Question question) {
-        if (question.hasChildren()) {
-            for (int i = 0, j = tableLayout.getChildCount(); i < j; i++) {
-                View view = tableLayout.getChildAt(i);
-                if (view instanceof TableRow) {
-                    TableRow row = (TableRow) view;
-                    View answerView = view.findViewById(R.id.answer);
-                    if (answerView == null) {
-                        continue;
-                    }
-                    Question rowQuestion = (Question) answerView.getTag();
-                    if (rowQuestion == null) {
-                        continue;
-                    }
-                    List<Question> questionChildren = question.getChildren();
-                    if (questionChildren != null && questionChildren.size() > 0) {
-                        for (Question childQuestion : questionChildren) {
-                            //if the table row question is child of the modified question...
-                            toggleChild(row, rowQuestion, childQuestion);
-                        }
+        if (!question.hasChildren()) {
+            return;
+        }
+
+        for (int i = 0, j = tableLayout.getChildCount(); i < j; i++) {
+            View view = tableLayout.getChildAt(i);
+            if (view instanceof TableRow) {
+                TableRow row = (TableRow) view;
+                View answerView = view.findViewById(R.id.answer);
+                if (answerView == null) {
+                    continue;
+                }
+                Question rowQuestion = (Question) answerView.getTag();
+                if (rowQuestion == null) {
+                    continue;
+                }
+                List<Question> questionChildren = question.getChildren();
+                if (questionChildren != null && questionChildren.size() > 0) {
+                    for (Question childQuestion : questionChildren) {
+                        //if the table row question is child of the modified question...
+                        toggleChild(row, rowQuestion, childQuestion);
                     }
                 }
             }

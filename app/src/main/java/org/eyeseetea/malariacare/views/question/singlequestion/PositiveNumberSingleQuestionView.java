@@ -32,8 +32,9 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         numberPicker.setEnabled(enabled);
         sendButton.setEnabled(enabled);
 
-        if (enabled)
+        if (enabled) {
             showKeyboard(numberPicker);
+        }
     }
 
     @Override

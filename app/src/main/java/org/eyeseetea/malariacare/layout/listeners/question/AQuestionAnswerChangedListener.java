@@ -1,8 +1,5 @@
 package org.eyeseetea.malariacare.layout.listeners.question;
 
-import static com.google.android.gms.analytics.internal.zzy.m;
-
-import android.text.Layout;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -23,8 +20,37 @@ import java.util.List;
 public abstract class AQuestionAnswerChangedListener {
     protected TableLayout mTableLayout;
 
-    public AQuestionAnswerChangedListener(TableLayout tableLayout){
+    public AQuestionAnswerChangedListener(TableLayout tableLayout) {
         this.mTableLayout = tableLayout;
+    }
+
+    /**
+     * Returns the option selected for the given question and boolean value or by position
+     */
+    public static Option findSwitchOption(Question question, boolean isChecked) {
+        //Search option by position
+        if (isChecked) {
+            return question.getAnswer().getOptions().get(0);
+        } else {
+            return question.getAnswer().getOptions().get(1);
+        }
+    }
+
+    //TODO: Duplicate code in DynamicTabAdapter line 1094
+    //code in DynamicTabAdapter will be delete when DynamicTabAdapter refactoring will be completed
+
+    /**
+     * Returns the boolean selected for the given question (by boolean value or position option,
+     * position 1=true 0=false)
+     */
+    public static Boolean findSwitchBoolean(Question question) {
+        Value value = question.getValueBySession();
+        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
+            return true;
+        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())) {
+            return false;
+        }
+        return false;
     }
 
     protected void saveValue(View view, String newValue) {
@@ -34,34 +60,38 @@ public abstract class AQuestionAnswerChangedListener {
         showOrHideChildren(question);
     }
 
-    //TODO: Duplicate code in DynamicTabAdapter line 1094
-    //code in DynamicTabAdapter will be delete when DynamicTabAdapter refactoring will be completed
     /**
      * Hide or show the childen question from a given question,  if is necessary  it reloads the
      * children questions values or refreshing the children questions answer component
      *
+     * TODO: Duplicate code in DynamicTabAdapter line 1094
+     * code in DynamicTabAdapter will be delete when DynamicTabAdapter refactoring will be
+     * completed
+     *
      * @param question is the parent question
      */
     protected void showOrHideChildren(Question question) {
-        if (question.hasChildren()) {
-            for (int i = 0, j = mTableLayout.getChildCount(); i < j; i++) {
-                View view = mTableLayout.getChildAt(i);
-                if (view instanceof TableRow) {
-                    TableRow row = (TableRow) view;
-                    View answerView = view.findViewById(R.id.answer);
-                    if (answerView == null) {
-                        continue;
-                    }
-                    Question rowQuestion = (Question) answerView.getTag();
-                    if (rowQuestion == null) {
-                        continue;
-                    }
-                    List<Question> questionChildren = question.getChildren();
-                    if (questionChildren != null && questionChildren.size() > 0) {
-                        for (Question childQuestion : questionChildren) {
-                            //if the table row question is child of the modified question...
-                            toggleChild(row, rowQuestion, childQuestion);
-                        }
+        if (!question.hasChildren()) {
+            return;
+        }
+
+        for (int i = 0, j = mTableLayout.getChildCount(); i < j; i++) {
+            View view = mTableLayout.getChildAt(i);
+            if (view instanceof TableRow) {
+                TableRow row = (TableRow) view;
+                View answerView = view.findViewById(R.id.answer);
+                if (answerView == null) {
+                    continue;
+                }
+                Question rowQuestion = (Question) answerView.getTag();
+                if (rowQuestion == null) {
+                    continue;
+                }
+                List<Question> questionChildren = question.getChildren();
+                if (questionChildren != null && questionChildren.size() > 0) {
+                    for (Question childQuestion : questionChildren) {
+                        //if the table row question is child of the modified question...
+                        toggleChild(row, rowQuestion, childQuestion);
                     }
                 }
             }
@@ -175,31 +205,5 @@ public abstract class AQuestionAnswerChangedListener {
         }
         ReadWriteDB.saveValuesDDL(question, selectedOption, question.getValueBySession());
         showOrHideChildren(question);
-    }
-
-    /**
-     * Returns the option selected for the given question and boolean value or by position
-     */
-    public static Option findSwitchOption(Question question, boolean isChecked) {
-        //Search option by position
-        if (isChecked) {
-            return question.getAnswer().getOptions().get(0);
-        } else {
-            return question.getAnswer().getOptions().get(1);
-        }
-    }
-
-    /**
-     * Returns the boolean selected for the given question (by boolean value or position option,
-     * position 1=true 0=false)
-     */
-    public static Boolean findSwitchBoolean(Question question) {
-        Value value = question.getValueBySession();
-        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
-            return true;
-        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())) {
-            return false;
-        }
-        return false;
     }
 }

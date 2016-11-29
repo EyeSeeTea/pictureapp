@@ -14,7 +14,8 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,IMultiQuestionView {
+public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
+        IMultiQuestionView {
     TextCard header;
     EditCard numberPicker;
 
@@ -33,7 +34,7 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
 
     @Override
     public boolean hasError() {
-        return numberPicker.getError()!= null || positiveNumber == null;
+        return numberPicker.getError() != null || positiveNumber == null;
     }
 
     @Override

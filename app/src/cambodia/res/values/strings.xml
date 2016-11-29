@@ -26,7 +26,7 @@
     <string name="exception_org_unit_not_valid">"Outlet Code is not valid. Contact PSK at 011 771 811"</string>
     <string name="exception_org_unit_banned">"Outlet is closed or blocked. Contact PSI at 011 771 811"</string>
     <string name="dynamic_error_phone_format">"Invalid format for phone number ( 0NN NNN NNN{N} )"</string>
-    <string name="dynamic_error_age">"Invalid positiveNumber"</string>
+    <string name="dynamic_error_age">"Invalid age"</string>
     <string name="title_activity_settings">"Settings"</string>
     <string name="settings_checkbox_customize_fonts">"Customize fonts?"</string>
     <string name="settings_list_font_sizes">"Fonts size"</string>

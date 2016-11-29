@@ -16,7 +16,8 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 
 import java.util.List;
 
-public class DropdownMultiQuestionView extends AOptionQuestionView implements IQuestionView,IMultiQuestionView {
+public class DropdownMultiQuestionView extends AOptionQuestionView implements IQuestionView,
+        IMultiQuestionView {
     TextCard header;
     Spinner spinnerOptions;
 
@@ -48,15 +49,15 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
 
     @Override
     public void setValue(Value value) {
-        if (value != null && value.getValue() != null) {
-            if (value != null && value.getValue() != null) {
-                for (int i = 0; i < spinnerOptions.getAdapter().getCount(); i++) {
-                    Option option = (Option) spinnerOptions.getItemAtPosition(i);
-                    if (option.equals(value.getOption())) {
-                        spinnerOptions.setSelection(i);
-                        break;
-                    }
-                }
+        if (value == null || value.getValue() == null) {
+            return;
+        }
+
+        for (int i = 0; i < spinnerOptions.getAdapter().getCount(); i++) {
+            Option option = (Option) spinnerOptions.getItemAtPosition(i);
+            if (option.equals(value.getOption())) {
+                spinnerOptions.setSelection(i);
+                break;
             }
         }
     }

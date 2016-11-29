@@ -21,14 +21,15 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
             case Constants.PHONE:
                 return new PhoneMultiQuestionView(context);
             case Constants.POSITIVE_INT:
-                return  new PositiveNumberMultiQuestionView(context);
+                return new PositiveNumberMultiQuestionView(context);
         }
 
         throw new IllegalArgumentException("Not exists any question for type " + typeQuestion);
     }
 
     @Override
-    public AKeyboardQuestionView.onAnswerChangedListener getStringAnswerChangedListener(TableLayout tableLayout,
+    public AKeyboardQuestionView.onAnswerChangedListener getStringAnswerChangedListener(
+            TableLayout tableLayout,
             DynamicTabAdapter dynamicTabAdapter) {
         return new MultiQuestionAnswerChangedListener(tableLayout);
     }

@@ -9,15 +9,11 @@ import org.eyeseetea.malariacare.database.model.Option;
 import java.util.List;
 
 public abstract class AOptionQuestionView extends LinearLayout {
-    public interface onAnswerChangedListener {
-        void onAnswerChanged(View view, Option option);
-    }
+    onAnswerChangedListener mOnAnswerChangedListener;
 
     public AOptionQuestionView(Context context) {
         super(context);
     }
-
-    onAnswerChangedListener mOnAnswerChangedListener;
 
     public abstract void setOptions(List<Option> options);
 
@@ -29,5 +25,9 @@ public abstract class AOptionQuestionView extends LinearLayout {
         if (mOnAnswerChangedListener != null) {
             mOnAnswerChangedListener.onAnswerChanged(this, option);
         }
+    }
+
+    public interface onAnswerChangedListener {
+        void onAnswerChanged(View view, Option option);
     }
 }

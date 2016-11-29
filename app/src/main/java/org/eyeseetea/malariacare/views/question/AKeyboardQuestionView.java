@@ -7,13 +7,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
-import org.eyeseetea.malariacare.database.model.Value;
-
-public abstract class AKeyboardQuestionView extends LinearLayout  {
-    public interface onAnswerChangedListener {
-        void onAnswerChanged(View view, String newValue);
-    }
-
+public abstract class AKeyboardQuestionView extends LinearLayout {
     protected onAnswerChangedListener mOnAnswerChangedListener;
 
     public AKeyboardQuestionView(Context context) {
@@ -32,8 +26,9 @@ public abstract class AKeyboardQuestionView extends LinearLayout  {
 
     protected void showKeyboard(View view) {
         view.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
     /**
@@ -43,5 +38,9 @@ public abstract class AKeyboardQuestionView extends LinearLayout  {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
                 INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public interface onAnswerChangedListener {
+        void onAnswerChanged(View view, String newValue);
     }
 }

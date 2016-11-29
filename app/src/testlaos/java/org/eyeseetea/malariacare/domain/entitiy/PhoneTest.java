@@ -24,14 +24,14 @@ public class PhoneTest {
     }
 
     @Test
-    public void return_phone_if_phone_have_valid_formatted_format() throws InvalidPhoneException{
+    public void return_phone_if_phone_have_valid_formatted_format() throws InvalidPhoneException {
         Phone phone = new Phone("(455) 345-678");
 
         assertThat(phone, notNullValue());
     }
 
     @Test
-    public void return_phone_if_phone_have_valid_plain_format() throws InvalidPhoneException{
+    public void return_phone_if_phone_have_valid_plain_format() throws InvalidPhoneException {
         Phone phone = new Phone("02056736956");
 
 

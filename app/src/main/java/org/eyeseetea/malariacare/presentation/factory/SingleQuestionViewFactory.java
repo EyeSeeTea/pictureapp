@@ -14,27 +14,28 @@ import org.eyeseetea.malariacare.views.question.singlequestion.PhoneSingleQuesti
 import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
 
 
-public class SingleQuestionViewFactory implements IQuestionViewFactory{
+public class SingleQuestionViewFactory implements IQuestionViewFactory {
     public IQuestionView getView(Context context, int typeQuestion) {
         switch (typeQuestion) {
             case Constants.PHONE:
                 return new PhoneSingleQuestionView(context);
             case Constants.POSITIVE_INT:
-                return  new PositiveNumberSingleQuestionView(context);
+                return new PositiveNumberSingleQuestionView(context);
         }
 
         throw new IllegalArgumentException("Not exists any question for type " + typeQuestion);
     }
 
     @Override
-    public AKeyboardQuestionView.onAnswerChangedListener getStringAnswerChangedListener(TableLayout tableLayout,
+    public AKeyboardQuestionView.onAnswerChangedListener getStringAnswerChangedListener(
+            TableLayout tableLayout,
             DynamicTabAdapter dynamicTabAdapter) {
-        return new SingleQuestionAnswerChangedListener(tableLayout,dynamicTabAdapter);
+        return new SingleQuestionAnswerChangedListener(tableLayout, dynamicTabAdapter);
     }
 
     @Override
     public AOptionQuestionView.onAnswerChangedListener getOptionAnswerChangedListener(
             TableLayout tableLayout, DynamicTabAdapter dynamicTabAdapter) {
-        return new SingleQuestionAnswerChangedListener(tableLayout,dynamicTabAdapter);
+        return new SingleQuestionAnswerChangedListener(tableLayout, dynamicTabAdapter);
     }
 }

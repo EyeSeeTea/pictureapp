@@ -3,8 +3,8 @@ package org.eyeseetea.malariacare.domain.entity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
+import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -31,7 +31,8 @@ public class PositiveNumberTest {
     }
 
     @Test
-    public void throw_invalid_positiveNumber_exception_if_create_with_number_input_greather_than_99()
+    public void
+    throw_invalid_positiveNumber_exception_if_create_with_number_input_greather_than_99()
             throws InvalidPhoneException, InvalidPositiveNumberException {
         thrown.expect(InvalidPositiveNumberException.class);
 

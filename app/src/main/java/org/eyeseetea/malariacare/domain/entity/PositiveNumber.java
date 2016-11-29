@@ -7,25 +7,27 @@ public class PositiveNumber {
     private static int value;
 
     public PositiveNumber(int value) throws InvalidPositiveNumberException {
-        if (!isValid(value))
+        if (!isValid(value)) {
             throw new InvalidPositiveNumberException("Invalid positive number");
+        }
 
         this.value = value;
     }
 
-    public static PositiveNumber parse(String positiveNumber) throws InvalidPositiveNumberException {
+    public static PositiveNumber parse(String positiveNumber)
+            throws InvalidPositiveNumberException {
         int numericValue;
 
-        try{
+        try {
             numericValue = Integer.parseInt(positiveNumber);
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new InvalidPositiveNumberException("Invalid positive Number");
         }
 
         return new PositiveNumber(numericValue);
     }
 
-    private boolean isValid(int value){
+    private boolean isValid(int value) {
         return (value > 0 && value <= 99);
     }
 
@@ -35,11 +37,11 @@ public class PositiveNumber {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null) return false;
-        if(!(o instanceof PositiveNumber)) return false;
+        if (o == null) return false;
+        if (!(o instanceof PositiveNumber)) return false;
 
         PositiveNumber other = (PositiveNumber) o;
-        if(this.value != other.value) return false;
+        if (this.value != other.value) return false;
 
         return true;
     }

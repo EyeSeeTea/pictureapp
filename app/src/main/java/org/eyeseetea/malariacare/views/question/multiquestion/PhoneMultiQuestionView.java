@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare.views.question.multiquestion;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
@@ -15,7 +14,8 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,IMultiQuestionView {
+public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
+        IMultiQuestionView {
     TextCard header;
     EditCard editCard;
 
@@ -32,7 +32,7 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
 
     @Override
     public boolean hasError() {
-        return editCard.getError()!= null;
+        return editCard.getError() != null;
     }
 
     @Override

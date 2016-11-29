@@ -10,7 +10,7 @@ import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 
 
 public class SingleQuestionAnswerChangedListener extends AQuestionAnswerChangedListener implements
-        AKeyboardQuestionView.onAnswerChangedListener , AOptionQuestionView.onAnswerChangedListener{
+        AKeyboardQuestionView.onAnswerChangedListener, AOptionQuestionView.onAnswerChangedListener {
 
     private DynamicTabAdapter mDynamicTabAdapter;
 

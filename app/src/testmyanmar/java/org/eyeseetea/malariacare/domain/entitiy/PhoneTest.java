@@ -1,10 +1,8 @@
 package org.eyeseetea.malariacare.domain.entitiy;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.Phone;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.junit.Rule;
@@ -17,21 +15,22 @@ public class PhoneTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void throw_invalid_phone_exception_if_phone_format_not_is_valid() throws InvalidPhoneException {
+    public void throw_invalid_phone_exception_if_phone_format_not_is_valid()
+            throws InvalidPhoneException {
         thrown.expect(InvalidPhoneException.class);
 
         Phone phone = new Phone("678 848 8");
     }
 
     @Test
-    public void return_phone_if_phone_format_is_valid() throws InvalidPhoneException{
+    public void return_phone_if_phone_format_is_valid() throws InvalidPhoneException {
         Phone phone = new Phone("(520) 567-369");
 
         assertThat(phone, notNullValue());
     }
 
     @Test
-    public void return_phone_if_phone_have_valid_plain_format() throws InvalidPhoneException{
+    public void return_phone_if_phone_have_valid_plain_format() throws InvalidPhoneException {
         Phone phone = new Phone("02056736956");
 
 

@@ -8,14 +8,15 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 /**
  * Created by idelcano on 21/07/2016.
  */
-public class RDTTestingRowBuilder extends CounterRowBuilder {
+public class CqRowBuilder extends CounterRowBuilder {
 
-    public RDTTestingRowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_rdt_testing));
+    public CqRowBuilder(Context context) {
+        super(context, context.getString(R.string.monitor_row_title_cq));
     }
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isRDTTesting()) ? 1 : 0;
+        //// TODO: 25/11/2016  
+        return 0;
     }
 }

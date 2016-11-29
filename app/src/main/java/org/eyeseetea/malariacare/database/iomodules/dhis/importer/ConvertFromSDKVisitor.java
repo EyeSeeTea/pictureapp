@@ -29,7 +29,6 @@ import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -50,15 +49,14 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     private final static String TAG = ".ConvertFromSDKVisitor";
 
 
-    TabGroup tabgroup;
+    Program program;
     Map<String, Object> appMapObjects;
     List<Survey> surveys;
     List<Value> values;
 
 
     public ConvertFromSDKVisitor() {
-        Program firstProgram = Program.getFirstProgram();
-        tabgroup = firstProgram.getTabGroups().get(0);
+        program = Program.getFirstProgram();
         appMapObjects = new HashMap();
         surveys = new ArrayList<>();
         values = new ArrayList<>();
@@ -162,7 +160,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         survey.setScheduledDate(sdkEventExtended.getScheduledDate());
         //Set fks
         survey.setOrgUnit(orgUnit);
-        survey.setTabGroup(tabgroup);
+        survey.setProgram(program);
         surveys.add(survey);
 
         //Annotate object in map

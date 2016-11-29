@@ -43,7 +43,6 @@ import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.model.TabGroup;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -74,8 +73,6 @@ public class DashboardActivity extends BaseActivity {
     DashboardSentFragment sentFragment;
     ReviewFragment reviewFragment;
     SurveyFragment surveyFragment;
-    String currentTab;
-    String currentTabName;
     /**
      * Flag that controls the fragment change animations
      */
@@ -125,7 +122,6 @@ public class DashboardActivity extends BaseActivity {
 
                 //set the tabs background as transparent
                 setTabsBackgroundColor(R.color.tab_unpressed_background);
-                currentTab = tabId;
 
                 //If change of tab from surveyFragment or FeedbackFragment they could be closed.
                 if (isSurveyFragmentActive()) {
@@ -135,19 +131,16 @@ public class DashboardActivity extends BaseActivity {
                     exitReviewOnChangeTab(null);
                 }
                 if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
-                    currentTabName = getString(R.string.assess);
                     tabHost.getCurrentTabView().setBackgroundColor(
                             getResources().getColor(R.color.tab_pressed_background));
                     unsentFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_improve))) {
-                    currentTabName = getString(R.string.improve);
                     tabHost.getCurrentTabView().setBackgroundColor(
                             getResources().getColor(R.color.tab_pressed_background));
                     sentFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
-                    currentTabName = getString(R.string.monitor);
                     tabHost.getCurrentTabView().setBackgroundColor(
                             getResources().getColor(R.color.tab_pressed_background));
                     monitorFragment.reloadData();
@@ -158,20 +151,16 @@ public class DashboardActivity extends BaseActivity {
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
             tabHost.getTabWidget().getChildAt(i).setFocusable(false);
         }
-        //set the initial selected tab background
-
-        currentTabName = getString(R.string.assess);
-        currentTab = currentTabName;
     }
 
     public void setTabHostsWithText() {
         Context context = PreferencesState.getInstance().getContext();
         setTab(context.getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout,
-                context.getResources().getString(R.string.assess));
+                context.getResources().getString(R.string.unsent_button));
         setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
-                context.getResources().getString(R.string.improve));
+                context.getResources().getString(R.string.sent_button));
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
-                context.getResources().getString(R.string.monitor));
+                context.getResources().getString(R.string.monitor_button));
     }
 
     public void setTabHostsWithImages() {
@@ -509,9 +498,9 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the New Survey button
      */
     public void newSurvey(View view) {
-        TabGroup tabGroup = new Select().from(TabGroup.class).querySingle();
+        Program program = new Select().from(Program.class).querySingle();
         // Put new survey in session
-        Survey survey = new Survey(null, tabGroup, Session.getUser());
+        Survey survey = new Survey(null, program, Session.getUser());
         survey.save();
         Session.setSurvey(survey);
         //Look for coordinates

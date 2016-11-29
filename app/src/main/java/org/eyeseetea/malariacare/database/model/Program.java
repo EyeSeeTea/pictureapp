@@ -43,16 +43,23 @@ public class Program extends BaseModel {
     String uid;
     @Column
     String name;
+    @Column
+    String stage_uid;
 
     /**
-     * List of tabgroups for this program
+     * List of programs for this program
      */
-    List<TabGroup> tabGroups;
+    List<Program> programs;
 
     /**
      * List of orgUnit authorized for this program
      */
     List<OrgUnit> orgUnits;
+
+    /**
+     * List of tabs that belongs to this program
+     */
+    List<Tab> tabs;
 
     public Program() {
     }
@@ -88,11 +95,8 @@ public class Program extends BaseModel {
                 .join(Tab.class, Join.JoinType.INNER).as("t")
                 .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
                         .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
-                .join(TabGroup.class, Join.JoinType.INNER).as("tg")
-                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP))
-                        .eq(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP)))
                 .join(Program.class, Join.JoinType.INNER).as("p")
-                .on(Condition.column(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_PROGRAM))
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_PROGRAM))
                         .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
                 .where(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).eq(
                         p.getUid()))
@@ -129,13 +133,21 @@ public class Program extends BaseModel {
         this.name = name;
     }
 
-    public List<TabGroup> getTabGroups() {
-        if (tabGroups == null) {
-            this.tabGroups = new Select().from(TabGroup.class)
-                    .where(Condition.column(TabGroup$Table.ID_PROGRAM).eq(this.getId_program()))
+    public String getStageUid() {
+        return stage_uid;
+    }
+
+    public void setStageUid(String stage_uid) {
+        this.stage_uid = stage_uid;
+    }
+
+    public List<Program> getPrograms() {
+        if (programs == null) {
+            this.programs = new Select().from(Program.class)
+                    .where(Condition.column(Program$Table.ID_PROGRAM).eq(this.getId_program()))
                     .queryList();
         }
-        return this.tabGroups;
+        return this.programs;
     }
 
     public List<OrgUnit> getOrgUnits() {
@@ -165,6 +177,14 @@ public class Program extends BaseModel {
 
         //Clear cache to enable reloading
         orgUnits = null;
+    }
+    public List<Tab> getTabs() {
+        if (tabs == null) {
+            tabs = new Select().from(Tab.class)
+                    .where(Condition.column(Tab$Table.ID_PROGRAM).eq(this.getId_program()))
+                    .orderBy(Tab$Table.ORDER_POS).queryList();
+        }
+        return tabs;
     }
 
     @Override

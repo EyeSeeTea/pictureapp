@@ -109,5 +109,7 @@
     <string name="is_pushing_key" translatable="false">ispushing</string>
     <string name="data_limited_by_date" translatable="false">data_limited_by_date</string>
 
+    <string name="monitor_table_title_suspected_header" translatable="false">@string/monitor_table_title_suspected</string>
+    <string name="monitor_table_title_stock_header" translatable="false">@string/monitor_table_title_stock</string>
 
 </resources>

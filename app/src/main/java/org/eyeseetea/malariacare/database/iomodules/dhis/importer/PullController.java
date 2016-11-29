@@ -251,7 +251,7 @@ public class PullController {
         }.start();
     }
 
-    private void convertOUinOptions() {
+    public static void convertOUinOptions() {
         List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
         //remove older values, but not the especial "other" option
         for (Question question : questions) {
@@ -268,9 +268,16 @@ public class PullController {
         for (OrgUnit orgUnit : orgUnits) {
             addOUOptionToQuestions(questions, orgUnit);
         }
+        refreshAnswersInMemory(questions);
     }
 
-    private void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
+    private static void refreshAnswersInMemory(List<Question> questions) {
+        for ( Question question:questions){
+            question.getAnswer().getOptionsFromDb();
+        }
+    }
+
+    public static void  addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
         for (Question question : questions) {
             Option option = new Option();
             option.setAnswer(question.getAnswer());
@@ -280,7 +287,7 @@ public class PullController {
         }
     }
 
-    private void removeOldValues(Question question, List<Option> options) {
+    public static void removeOldValues(Question question, List<Option> options) {
         for (Option option : options) {
             if (QuestionOption.findByQuestionAndOption(question, option).size() == 0) {
                 option.delete();

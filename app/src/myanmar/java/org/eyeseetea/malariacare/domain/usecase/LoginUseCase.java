@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
@@ -51,6 +52,7 @@ public class LoginUseCase extends ALoginUseCase {
         if (orgUnits.size() == 0) {
             try {
                 PopulateDB.populateDummyData(context.getAssets());
+                PullController.convertOUinOptions();
             } catch (IOException e) {
                 e.printStackTrace();
             }

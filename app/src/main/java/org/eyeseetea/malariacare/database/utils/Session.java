@@ -91,6 +91,9 @@ public class Session {
     }
 
     public static Credentials getCredentials() {
+        if (sCredentials == null) {
+            sCredentials = PreferencesState.getInstance().getCredentials();
+        }
         return sCredentials;
     }
 

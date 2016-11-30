@@ -30,6 +30,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,7 +43,6 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -52,12 +52,12 @@ import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
+import org.eyeseetea.malariacare.fragments.StockFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
-
-import java.io.IOException;
+import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -71,6 +71,7 @@ public class DashboardActivity extends BaseActivity {
     MonitorFragment monitorFragment;
     DashboardUnsentFragment unsentFragment;
     DashboardSentFragment sentFragment;
+    StockFragment stockFragment;
     ReviewFragment reviewFragment;
     SurveyFragment surveyFragment;
     /**
@@ -102,11 +103,14 @@ public class DashboardActivity extends BaseActivity {
             initAssess();
             initImprove();
             initMonitor();
+            if (GradleVariantConfig.isStockFragmentActive()) {
+                initStock();
+            }
         }
         initTabHost(savedInstanceState);
         /* set tabs in order */
         LayoutUtils.setTabHosts(this);
-
+        LayoutUtils.setDivider(this);
         //set the tabs background as transparent
         setTabsBackgroundColor(R.color.tab_unpressed_background);
 
@@ -131,26 +135,26 @@ public class DashboardActivity extends BaseActivity {
                     exitReviewOnChangeTab(null);
                 }
                 if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
-                    tabHost.getCurrentTabView().setBackgroundColor(
-                            getResources().getColor(R.color.tab_pressed_background));
                     unsentFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_improve))) {
-                    tabHost.getCurrentTabView().setBackgroundColor(
-                            getResources().getColor(R.color.tab_pressed_background));
                     sentFragment.reloadData();
                 } else if (tabId.equalsIgnoreCase(
+                        getResources().getString(R.string.tab_tag_stock))) {
+                    stockFragment.reloadData();
+                } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
-                    tabHost.getCurrentTabView().setBackgroundColor(
-                            getResources().getColor(R.color.tab_pressed_background));
                     monitorFragment.reloadData();
                 }
+                tabHost.getCurrentTabView().setBackgroundColor(
+                        getResources().getColor(R.color.tab_pressed_background));
             }
         });
         // init tabHost
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
             tabHost.getTabWidget().getChildAt(i).setFocusable(false);
         }
+
     }
 
     public void setTabHostsWithText() {
@@ -159,18 +163,41 @@ public class DashboardActivity extends BaseActivity {
                 context.getResources().getString(R.string.unsent_button));
         setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
                 context.getResources().getString(R.string.sent_button));
+        if (GradleVariantConfig.isStockFragmentActive()) {
+            setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
+                    context.getResources().getString(R.string.tab_tag_stock));
+        }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getString(R.string.monitor_button));
+        if (GradleVariantConfig.isStockFragmentActive()) {
+            initStock();
+        }
     }
 
     public void setTabHostsWithImages() {
         Context context = PreferencesState.getInstance().getContext();
         setTab(context.getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout,
-                context.getResources().getDrawable(R.drawable.assess));
+                context.getResources().getDrawable(R.drawable.tab_assess));
         setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
-                context.getResources().getDrawable(R.drawable.improve));
+                context.getResources().getDrawable(R.drawable.tab_improve));
+        if (GradleVariantConfig.isStockFragmentActive()) {
+            setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
+                    context.getResources().getDrawable(R.drawable.tab_stock));
+        }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
-                context.getResources().getDrawable(R.drawable.monitor));
+                context.getResources().getDrawable(R.drawable.tab_monitor));
+    }
+
+
+    /**
+     * Sets a divider drawable and background.
+     */
+    public void setDivider() {
+        tabHost.getTabWidget().setShowDividers(TabWidget.SHOW_DIVIDER_MIDDLE);
+        tabHost.getTabWidget().setDividerDrawable(R.drawable.tab_line);
+        tabHost.getTabWidget().setBackgroundColor(
+                ContextCompat.getColor(PreferencesState.getInstance().getContext(),
+                        R.color.tab_unpressed_background));
     }
 
     private void setTabsBackgroundColor(int color) {
@@ -255,6 +282,16 @@ public class DashboardActivity extends BaseActivity {
         sentFragment.setArguments(getIntent().getExtras());
         sentFragment.reloadData();
         replaceListFragment(R.id.dashboard_completed_container, sentFragment);
+    }
+
+    /**
+     * This method initializes the Stock fragment(StockFragment)
+     */
+    public void initStock() {
+        stockFragment = new StockFragment();
+        stockFragment.setArguments(getIntent().getExtras());
+        stockFragment.reloadData();
+        replaceFragment(R.id.dashboard_stock_container, stockFragment);
     }
 
     /**
@@ -629,7 +666,7 @@ public class DashboardActivity extends BaseActivity {
                     loginUseCase.execute(demoCrededentials);
                 }
 
-                initDataIfRequired();
+                PopulateDB.initDataIfRequired(getAssets());
             } catch (Exception ex) {
                 Log.e(TAG, "Error initializing DB: ", ex);
                 return ex;
@@ -655,23 +692,6 @@ public class DashboardActivity extends BaseActivity {
             }
 
             getSurveysFromService();
-        }
-
-        private void initDataIfRequired() throws IOException {
-            if (!Tab.isEmpty()) {
-                Log.i(TAG, "DB Already loaded, showing surveys...");
-                return;
-            }
-
-            Log.i(TAG, "DB empty, loading data ...");
-            try {
-                PopulateDB.populateDB(getAssets());
-                //Get maximum total of questions
-                Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
-            } catch (IOException e) {
-                throw e;
-            }
-            Log.i(TAG, "DB empty, loading data ...DONE");
         }
     }
 

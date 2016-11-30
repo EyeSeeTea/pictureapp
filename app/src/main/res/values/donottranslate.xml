@@ -80,6 +80,7 @@
 
     <string name="tab_tag_assess" translatable="false">tab_assess</string>
     <string name="tab_tag_improve" translatable="false">tab_improve</string>
+    <string name="tab_tag_stock" translatable="false">tab_stock</string>
     <string name="tab_tag_monitor" translatable="false">tab_monitor</string>
 
     <item name="developer_option" translatable="false" type="string">show_dev_options</item>

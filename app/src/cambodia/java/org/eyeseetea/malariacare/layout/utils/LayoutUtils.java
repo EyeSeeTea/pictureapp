@@ -14,12 +14,16 @@ public class LayoutUtils extends BaseLayoutUtils {
         Program program = Program.getFirstProgram();
         if (program != null && !PreferencesState.getInstance().getOrgUnit().equals("")) {
             LayoutUtils.setActionBarWithOrgUnit(actionBar);
-        }else {
+        } else {
             LayoutUtils.setActionBarLogo(actionBar);
         }
     }
 
     public static void setTabHosts(DashboardActivity dashboardActivity) {
         dashboardActivity.setTabHostsWithText();
+    }
+
+    public static void setDivider(DashboardActivity dashboardActivity) {
+        return;
     }
 }

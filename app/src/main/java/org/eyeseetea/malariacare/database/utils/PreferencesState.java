@@ -317,7 +317,7 @@ public class PreferencesState {
     /**
      * Get credentials from sharedPreferences.
      */
-    public static Credentials getCredentials() {
+    public static Credentials getCredentialsFromPreferences() {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);

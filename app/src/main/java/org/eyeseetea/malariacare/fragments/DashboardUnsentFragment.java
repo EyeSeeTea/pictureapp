@@ -41,8 +41,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentUnsentAdapter;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.PushClient;
@@ -59,12 +58,11 @@ public class DashboardUnsentFragment extends ListFragment {
 
 
     public static final String TAG = ".UnsentFragment";
-    protected IDashboardAdapter adapter;
+    protected AssessmentAdapter adapter;
     private SurveyReceiver surveyReceiver;
     private List<Survey> surveys;
 
     public DashboardUnsentFragment() {
-        this.adapter = Session.getAdapterUncompleted();
         this.surveys = new ArrayList();
     }
 
@@ -127,14 +125,8 @@ public class DashboardUnsentFragment extends ListFragment {
      * one in session is created.
      */
     private void initAdapter() {
-        IDashboardAdapter adapterInSession = Session.getAdapterUncompleted();
-        if (adapterInSession == null) {
-            adapterInSession = new AssessmentUnsentAdapter(this.surveys, getActivity());
-        } else {
-            adapterInSession = adapterInSession.newInstance(this.surveys, getActivity());
-        }
-        this.adapter = adapterInSession;
-        Session.setAdapterUncompleted(this.adapter);
+        this.adapter = new AssessmentAdapter(getString(R.string.assessment_title_header),
+                this.surveys, getActivity());
     }
 
     @Override

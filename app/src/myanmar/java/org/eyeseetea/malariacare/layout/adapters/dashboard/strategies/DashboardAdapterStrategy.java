@@ -6,20 +6,20 @@ import android.view.View;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.AAssessmentAdapter;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 
 import java.util.List;
 
-public class DashboardAdapterStrategy implements IDashboardAdapterStrategy {
+public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
-    private AAssessmentAdapter mAssessmentAdapter;
+    private AssessmentAdapter mAssessmentAdapter;
     private Context mContext;
 
     private static String PATIENT_RESIDENCE_VILLAGE_CODE_QUESTION = "Code: PR";
     private static String IF_OTHER_ENTER_LOCATION_CODE_QUESTION = "Code: PO";
     private static String PATIENT_RESIDENCE_VILLAGE_OTHER_OPTION_CODE = "Other";
 
-    public DashboardAdapterStrategy(Context context, AAssessmentAdapter assessmentAdapter) {
+    public DashboardAdapterStrategy(Context context, AssessmentAdapter assessmentAdapter) {
         mAssessmentAdapter = assessmentAdapter;
         mContext = context;
     }

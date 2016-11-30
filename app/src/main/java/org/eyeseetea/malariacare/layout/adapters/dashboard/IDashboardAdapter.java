@@ -20,42 +20,31 @@
 package org.eyeseetea.malariacare.layout.adapters.dashboard;
 
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.List;
 
 public interface IDashboardAdapter {
 
-    public Context getContext();
+    Context getContext();
 
-    public void setContext(Context context);
+    void setContext(Context context);
 
-    public Integer getHeaderLayout();
+    Integer getHeaderLayout();
 
-    public void setHeaderLayout(Integer headerLayout);
+    Integer getFooterLayout();
 
-    public Integer getFooterLayout();
+    Integer getRecordLayout();
 
-    public void setFooterLayout(Integer headerLayout);
+    String getTitle();
 
-    public Integer getRecordLayout();
+    void setTitle(String title);
 
-    public void setRecordLayout(Integer recordLayout);
+    void setItems(List items);
 
-    public String getTitle();
+    Object getItem(int position);
 
-    public void setTitle(String title);
+    void remove(Object item);
 
-    public View getView(int position, View convertView, ViewGroup parent);
+    void notifyDataSetChanged();
 
-    public void setItems(List items);
-
-    public Object getItem(int position);
-
-    public void remove(Object item);
-
-    public void notifyDataSetChanged();
-
-    public IDashboardAdapter newInstance(List items, Context context);
 }

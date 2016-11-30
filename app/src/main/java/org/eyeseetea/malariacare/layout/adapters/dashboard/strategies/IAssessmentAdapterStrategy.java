@@ -4,6 +4,6 @@ import android.view.View;
 
 import org.eyeseetea.malariacare.database.model.Survey;
 
-public interface IDashboardAdapterStrategy {
+public interface IAssessmentAdapterStrategy {
     void renderSurveySummary(View rowView, Survey survey);
 }

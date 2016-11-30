@@ -25,6 +25,7 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
@@ -36,26 +37,89 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
-public abstract class AAssessmentAdapter extends ADashboardAdapter implements IDashboardAdapter {
+public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter {
 
-    protected int backIndex = 0;
-    protected boolean showNextFacilityName = true;
+    protected LayoutInflater lInflater;
+    protected Context context;
+    protected Integer headerLayout;
+    protected Integer footerLayout;
+    protected Integer recordLayout;
+    protected String title;
+    List<Survey> items;
 
     private DashboardAdapterStrategy mDashboardAdapterStrategy;
 
-    public AAssessmentAdapter() {
-    }
-
-    public AAssessmentAdapter(List<Survey> items, Context context) {
+    public AssessmentAdapter(String title, List<Survey> items, Context context) {
         this.items = items;
         this.context = context;
         this.lInflater = LayoutInflater.from(context);
         this.headerLayout = R.layout.assessment_header;
         this.recordLayout = R.layout.assessment_record;
         this.footerLayout = R.layout.assessment_footer;
-        this.title = context.getString(R.string.assessment_title_header);
+        this.lInflater = LayoutInflater.from(context);
+        this.title = title;
 
         mDashboardAdapterStrategy = new DashboardAdapterStrategy(context, this);
+    }
+
+    @Override
+    public int getCount() {
+        return items.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return items.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public void setItems(List items) {
+        this.items = (List<Survey>) items;
+    }
+
+    @Override
+    public Integer getHeaderLayout() {
+        return this.headerLayout;
+    }
+
+    @Override
+    public Integer getFooterLayout() {
+        return footerLayout;
+    }
+
+    @Override
+    public Integer getRecordLayout() {
+        return this.recordLayout;
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public Context getContext() {
+        return this.context;
+    }
+
+    @Override
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    @Override
+    public void remove(Object item) {
+        this.items.remove(item);
     }
 
     @Override
@@ -101,7 +165,7 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
 
     @Override
     public void notifyDataSetChanged() {
-        this.showNextFacilityName = true;
         super.notifyDataSetChanged();
     }
+
 }

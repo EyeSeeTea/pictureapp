@@ -6,15 +6,15 @@ import android.view.View;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.layout.SurveyInfoUtils;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.AAssessmentAdapter;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 
-public class DashboardAdapterStrategy implements IDashboardAdapterStrategy {
+public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
-    private AAssessmentAdapter mAssessmentAdapter;
+    private AssessmentAdapter mAssessmentAdapter;
     private Context mContext;
 
-    public DashboardAdapterStrategy(Context context, AAssessmentAdapter assessmentAdapter) {
-        mAssessmentAdapter = assessmentAdapter;
+    public DashboardAdapterStrategy(Context context, AssessmentAdapter dashboardAdapter) {
+        mAssessmentAdapter = dashboardAdapter;
         mContext = context;
     }
 

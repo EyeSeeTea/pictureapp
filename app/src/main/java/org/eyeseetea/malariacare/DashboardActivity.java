@@ -43,7 +43,6 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -59,8 +58,6 @@ import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
-
-import java.io.IOException;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -669,7 +666,7 @@ public class DashboardActivity extends BaseActivity {
                     loginUseCase.execute(demoCrededentials);
                 }
 
-                initDataIfRequired();
+                PopulateDB.initDataIfRequired(getAssets());
             } catch (Exception ex) {
                 Log.e(TAG, "Error initializing DB: ", ex);
                 return ex;
@@ -695,23 +692,6 @@ public class DashboardActivity extends BaseActivity {
             }
 
             getSurveysFromService();
-        }
-
-        private void initDataIfRequired() throws IOException {
-            if (!Tab.isEmpty()) {
-                Log.i(TAG, "DB Already loaded, showing surveys...");
-                return;
-            }
-
-            Log.i(TAG, "DB empty, loading data ...");
-            try {
-                PopulateDB.populateDB(getAssets());
-                //Get maximum total of questions
-                Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
-            } catch (IOException e) {
-                throw e;
-            }
-            Log.i(TAG, "DB empty, loading data ...DONE");
         }
     }
 

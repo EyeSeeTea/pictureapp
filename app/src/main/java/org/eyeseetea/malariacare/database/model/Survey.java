@@ -881,8 +881,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
      * @return String
      */
     public String getValuesToString() {
-        if (values == null || values.size() == 0) {
-            return "";
+        if (values == null) {
+            values = Value.listAllBySurvey(this);
         }
 
         Iterator<Value> iterator = values.iterator();

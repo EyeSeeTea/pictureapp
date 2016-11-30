@@ -28,17 +28,20 @@ import android.view.ViewGroup;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.layout.SurveyInfoUtils;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.DashboardAdapterStrategy;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.views.TextCard;
 
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 public abstract class AAssessmentAdapter extends ADashboardAdapter implements IDashboardAdapter {
 
     protected int backIndex = 0;
     protected boolean showNextFacilityName = true;
+
+    private DashboardAdapterStrategy mDashboardAdapterStrategy;
 
     public AAssessmentAdapter() {
     }
@@ -51,46 +54,49 @@ public abstract class AAssessmentAdapter extends ADashboardAdapter implements ID
         this.recordLayout = R.layout.assessment_record;
         this.footerLayout = R.layout.assessment_footer;
         this.title = context.getString(R.string.assessment_title_header);
+
+        mDashboardAdapterStrategy = new DashboardAdapterStrategy(context, this);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Survey survey = (Survey) getItem(position);
 
-        // Get the row layout
         View rowView = this.lInflater.inflate(getRecordLayout(), parent, false);
-        //To ease testing
-        rowView.setTag(survey.getId_survey());
 
+        mDashboardAdapterStrategy.renderSurveySummary(rowView, survey);
 
-        //Event Date
-        TextCard eventDate = (TextCard) rowView.findViewById(R.id.completionDate);
-        if (survey.getEventDate() != null) {
+        rowView.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));
+
+        return rowView;
+    }
+
+    public void showDate(View rowView, int viewId, Date dateValue) {
+        TextCard eventDateTextCard = (TextCard) rowView.findViewById(viewId);
+        if (dateValue != null) {
+
             //it show dd/mm/yy in europe, mm/dd/yy in america, etc.
             DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT,
                     DateFormat.SHORT, Resources.getSystem().getConfiguration().locale);
 
-            eventDate.setText(formatter.format(survey.getEventDate()));
+            eventDateTextCard.setText(formatter.format(dateValue));
         }
+    }
 
-        //RDT
-        TextCard rdt = (TextCard) rowView.findViewById(R.id.rdt);
-        //Since there are three possible values first question (RDT):'Yes','No','Cancel'
-        //rdt.setText(survey.isRDT()?"+":"-");
-
-        rdt.setText(SurveyInfoUtils.getRDTSymbol(context, survey));
-
-        //INFO
-        TextCard info = (TextCard) rowView.findViewById(R.id.info);
+    public void showInfo(View rowView, int viewId, String infoValue) {
+        TextCard info = (TextCard) rowView.findViewById(viewId);
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(),
                 "fonts/" + context.getString(R.string.specific_language_font));
         info.setTypeface(tf);
 
-        info.setText(survey.getValuesToString());
+        info.setText(infoValue);
+    }
 
-        rowView.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));
-        return rowView;
+    public void showRDT(View rowView, int viewId, String RDTValue) {
+        TextCard rdt = (TextCard) rowView.findViewById(viewId);
+
+        rdt.setText(RDTValue);
     }
 
     @Override

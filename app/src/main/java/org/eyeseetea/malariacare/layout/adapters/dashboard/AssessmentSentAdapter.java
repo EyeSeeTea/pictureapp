@@ -20,7 +20,6 @@
 package org.eyeseetea.malariacare.layout.adapters.dashboard;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
@@ -30,12 +29,8 @@ import java.util.List;
 public class AssessmentSentAdapter extends AAssessmentAdapter implements IAssessmentAdapter {
 
     public AssessmentSentAdapter(List<Survey> items, Context context) {
-        this.items = items;
-        this.context = context;
-        this.lInflater = LayoutInflater.from(context);
-        this.headerLayout = R.layout.assessment_header;
-        this.recordLayout = R.layout.assessment_record;
-        this.footerLayout = R.layout.assessment_sent_footer;
+        super(items, context);
+
         this.title = context.getString(R.string.assessment_sent_title_header);
     }
 

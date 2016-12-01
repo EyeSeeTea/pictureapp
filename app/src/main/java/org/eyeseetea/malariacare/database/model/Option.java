@@ -122,7 +122,7 @@ public class Option extends BaseModel {
     }
 
     public String getInternationalizedCode() {
-        return Utils.getInternationalizedString(code.replace("+", ""));
+        return Utils.getInternationalizedString(code);
     }
 
     public String getName() {

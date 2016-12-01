@@ -476,6 +476,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         // We get values from DB and put them in Session
         if (Session.getSurvey() != null) {
             Session.getSurvey().getValuesFromDB();
+        } else {
+            //The survey in session is null when the user closes the surveyFragment, but the getView is called.
+            return convertView;
         }
 
         //Question

@@ -919,6 +919,9 @@ public class Question extends BaseModel {
      * Checks if this question is shown according to the values of the given survey
      */
     public boolean isHiddenBySurveyAndHeader(Survey survey) {
+        if (survey == null) {
+            return false;
+        }
         //No question relations
         if (!hasParentInSameHeader()) {
             return false;

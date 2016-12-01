@@ -34,11 +34,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentSentAdapter;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.util.ArrayList;
@@ -51,13 +51,11 @@ public class DashboardSentFragment extends ListFragment {
 
 
     public static final String TAG = ".SentFragment";
-    private static int index = 0;
-    protected IDashboardAdapter adapter;
+    protected AssessmentAdapter adapter;
     private SurveyReceiver surveyReceiver;
     private List<Survey> surveys;
 
     public DashboardSentFragment() {
-        this.adapter = Session.getAdapterCompleted();
         this.surveys = new ArrayList();
     }
 
@@ -117,14 +115,8 @@ public class DashboardSentFragment extends ListFragment {
      * one in session is created.
      */
     private void initAdapter() {
-        IDashboardAdapter adapterInSession = Session.getAdapterCompleted();
-        if (adapterInSession == null) {
-            adapterInSession = new AssessmentSentAdapter(this.surveys, getActivity());
-        } else {
-            adapterInSession = adapterInSession.newInstance(this.surveys, getActivity());
-        }
-        this.adapter = adapterInSession;
-        Session.setAdapterCompleted(this.adapter);
+        this.adapter = new AssessmentAdapter(getString(R.string.assessment_sent_title_header),
+                this.surveys, getActivity());
     }
 
     @Override

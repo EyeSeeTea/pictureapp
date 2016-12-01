@@ -73,28 +73,13 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
     }
 
     @Override
-    public void setHeaderLayout(Integer headerLayout) {
-        this.headerLayout = headerLayout;
-    }
-
-    @Override
     public Integer getFooterLayout() {
         return footerLayout;
     }
 
     @Override
-    public void setFooterLayout(Integer footerLayout) {
-        this.footerLayout = footerLayout;
-    }
-
-    @Override
     public Integer getRecordLayout() {
         return this.recordLayout;
-    }
-
-    @Override
-    public void setRecordLayout(Integer recordLayout) {
-        this.recordLayout = recordLayout;
     }
 
     @Override
@@ -120,11 +105,6 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
     @Override
     public void remove(Object item) {
         this.items.remove(item);
-    }
-
-    @Override
-    public IDashboardAdapter newInstance(List items, Context context) {
-        return new ReviewScreenAdapter((List<Value>) items, lInflater, context);
     }
 
     @Override

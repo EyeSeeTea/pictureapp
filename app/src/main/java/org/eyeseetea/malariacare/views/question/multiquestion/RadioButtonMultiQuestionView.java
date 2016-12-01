@@ -2,16 +2,19 @@ package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
@@ -34,26 +37,47 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
     public RadioButtonMultiQuestionView(Context context) {
         super(context);
-        this.context=context;
+        this.context = context;
         init(context);
     }
 
     @Override
-    public void setQuestion(Question question){
-        this.question=question;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     @Override
     public void setOptions(List<Option> options) {
         LayoutInflater lInflater = (LayoutInflater) context.getSystemService
-            (Context.LAYOUT_INFLATER_SERVICE);
+                (Context.LAYOUT_INFLATER_SERVICE);
         for (Option option : options) {
-            CustomRadioButton button = (CustomRadioButton) lInflater.inflate(R.layout.uncheckeable_radiobutton, null);
+            LinearLayout linearLayout = (LinearLayout) lInflater.inflate(
+                    R.layout.uncheckeable_radiobutton, null);
+
+            fixOptionLayoutWidth(linearLayout);
+            CustomRadioButton button = (CustomRadioButton) linearLayout.findViewById(
+                    R.id.radio_button);
             button.setOption(option);
-            button.updateProperties(PreferencesState.getInstance().getScale(), context.getString(R.string.font_size_level1), context.getString(R.string.specific_language_font));
-            radioGroup.addView(button);
+            TextCard textCard = (TextCard) linearLayout.findViewById(R.id.radio_text);
+            textCard.setText(option.getName());
+            radioGroup.addView(linearLayout);
         }
         radioGroup.setOnCheckedChangeListener(new RadioGroupListener(question, radioGroup));
+    }
+
+    //This method is used to correct the 50% space in the radiobutton with two buttons.
+    private void fixOptionLayoutWidth(LinearLayout linearLayout) {
+        LinearLayout.LayoutParams layoutParamsWidth50 = new LinearLayout.LayoutParams(
+                getOptionWidth() / 2
+                , ViewGroup.LayoutParams.MATCH_PARENT);
+        linearLayout.setLayoutParams(layoutParamsWidth50);
+    }
+
+    private int getOptionWidth() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
+        return (metrics.widthPixels);
     }
 
     @Override
@@ -63,9 +87,11 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
     @Override
     public void setImage(String path) {
-        if(path!=null && !path.equals(""))
-        BaseLayoutUtils.makeImageVisible(path, image);
+        if (path != null && !path.equals("")) {
+            BaseLayoutUtils.makeImageVisible(path, image);
+        }
     }
+
     @Override
     public boolean hasError() {
         return false;
@@ -89,6 +115,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         }
         return false;
     }
+
     @Override
     public void setValue(Value value) {
 
@@ -101,17 +128,16 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             Option option = customRadioButton.getOption();
             if (option.equals(value.getOption())) {
                 ((CustomRadioButton) radioGroup.getChildAt(i)).setChecked(true);
-            }
-            else
-            {
+            } else {
                 ((CustomRadioButton) radioGroup.getChildAt(i)).setChecked(false);
             }
         }
     }
+
     /**
      * Initialize the default switch value or load the saved value
      *
-     * @param question       is the question in the view
+     * @param question is the question in the view
      */
     private void initSwitchOption(Question question) {
 
@@ -149,6 +175,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         //Search option by position
         return question.getAnswer().getOptions().get((isChecked) ? 0 : 1);
     }
+
     /**
      * Save the switch option and check children questions
      *
@@ -166,18 +193,6 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
     }
 
 
-    public static void createRadioGroupComponent(Question question, RadioGroup radioGroup, int orientation, LayoutInflater lInflater, Context context) {
-        radioGroup.setOrientation(orientation);
-
-        for (Option option : question.getAnswer().getOptions()) {
-            CustomRadioButton button = (CustomRadioButton) lInflater.inflate(R.layout.uncheckeable_radiobutton, null);
-            button.setOption(option);
-            button.updateProperties(PreferencesState.getInstance().getScale(), context.getString(R.string.font_size_level1), context.getString(R.string.medium_font_name));
-            radioGroup.addView(button);
-        }
-    }
-
-
     private void init(final Context context) {
         View view = inflate(context, R.layout.multi_question_radio_buttons, this);
         header = (TextCard) view.findViewById(R.id.row_header_text);
@@ -186,7 +201,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         radioGroup.setOrientation(HORIZONTAL);
     }
 
-    class RadioGroupListener implements RadioGroup.OnCheckedChangeListener  {
+    class RadioGroupListener implements RadioGroup.OnCheckedChangeListener {
         private RadioGroup radioGroup = null;
         private Question question;
 
@@ -197,7 +212,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
-            if(!group.isShown()){
+            if (!group.isShown()) {
                 return;
             }
 
@@ -205,22 +220,22 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             if (checkedId != -1) {
                 CustomRadioButton customRadioButton = findRadioButtonById(checkedId);
                 selectedOption = (Option) customRadioButton.getTag();
-                if(question.getOptionBySurvey(Session.getSurvey())!=null && question.getOptionBySurvey(Session.getSurvey()).equals(selectedOption)){
+                if (question.getOptionBySurvey(Session.getSurvey()) != null
+                        && question.getOptionBySurvey(Session.getSurvey()).equals(selectedOption)) {
                     //if is already active ignore it( it is to ignore the first click of two)
                     return;
                 }
             }
 
-           // notifyAnswerChanged(String.valueOf(selectedOption.getv()));
-            //AutoTabSelectedItem autoTabSelectedItem = autoTabSelectedItemFactory.buildSelectedItem(question,selectedOption,viewHolder, idSurvey, module);
+            // notifyAnswerChanged(String.valueOf(selectedOption.getv()));
+            //AutoTabSelectedItem autoTabSelectedItem = autoTabSelectedItemFactory
+            // .buildSelectedItem(question,selectedOption,viewHolder, idSurvey, module);
             //AutoTabLayoutUtils.itemSelected(autoTabSelectedItem, idSurvey, module);
             //autoTabSelectedItemFactory.notifyDataSetChanged();
         }
+
         /**
          * Fixes a bug in older apis where a RadioGroup cannot find its children by id
-         *
-         * @param id
-         * @return
          */
         public CustomRadioButton findRadioButtonById(int id) {
             //No component -> done

@@ -303,7 +303,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Show question image in counter alert
         if (questionCounter.getPath() != null && !questionCounter.getPath().equals("")) {
             ImageView imageView = (ImageView) rootView.findViewById(R.id.questionImageRow);
-            BaseLayoutUtils.putImageInImageView(questionCounter.getInternationalizedPath(), imageView);
+            BaseLayoutUtils.putImageInImageView(questionCounter.getInternationalizedPath(),
+                    imageView);
             imageView.setVisibility(View.VISIBLE);
         }
 
@@ -472,7 +473,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (Session.getSurvey() != null) {
             Session.getSurvey().getValuesFromDB();
         } else {
-            //The survey in session is null when the user closes the surveyFragment, but the getView is called.
+            //The survey in session is null when the user closes the surveyFragment, but the
+            // getView is called.
             return convertView;
         }
 
@@ -702,8 +704,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     questionView.setImage(screenQuestion.getInternationalizedPath());
 
                     if (questionView instanceof AOptionQuestionView) {
-                        ((AOptionQuestionView) questionView).setOptions(screenQuestion.getAnswer().getOptions());
                         ((AOptionQuestionView) questionView).setQuestion(screenQuestion);
+                        ((AOptionQuestionView) questionView).setOptions(
+                                screenQuestion.getAnswer().getOptions());
                     }
                     configureAnswerChangedListener(questionViewFactory, questionView);
 
@@ -724,7 +727,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     textCard.setText(
                             screenQuestion.getForm_name());
                     if (screenQuestion.hasAssociatedImage()) {
-                        LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(), rowImageLabelView);
+                        LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
+                                rowImageLabelView);
                     } else {
                         adaptLayoutToTextOnly(textCard, rowImageLabelView);
                     }
@@ -753,7 +757,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     if (screenQuestion.hasAssociatedImage()) {
                         ImageView rowImageView = ((ImageView) tableRow.findViewById(
                                 R.id.question_image_row));
-                        LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(), rowImageView);
+                        LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
+                                rowImageView);
                     }
                     ((TextCard) tableRow.findViewById(R.id.row_switch_true)).setText(
                             screenQuestion.getAnswer().getOptions().get(0).getCode());

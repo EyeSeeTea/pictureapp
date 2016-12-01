@@ -188,8 +188,6 @@ public class DashboardUnsentFragment extends ListFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View header = inflater.inflate(this.adapter.getHeaderLayout(), null, false);
         View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
-        //TextCard title = (TextCard) getActivity().findViewById(R.id.titleInProgress);
-        //title.setText(adapter.getTitle());
         ListView listView = getListView();
         listView.addHeaderView(header);
         listView.addFooterView(footer);
@@ -243,33 +241,6 @@ public class DashboardUnsentFragment extends ListFragment {
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         listView.setOnScrollListener(touchListener.makeScrollListener());
-
-        // Remove long click as push is done automatically now
-//        listView.setLongClickable(true);
-//
-//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, final int
-// position, long id) {
-//
-//
-//                new AlertDialog.Builder(getActivity())
-//                        .setTitle(R.string.dialog_title_push)
-//                        .setMessage(R.string.dialog_info_push_confirm)
-//                        .setPositiveButton(android.R.string.yes, new DialogInterface
-// .OnClickListener() {
-//                            public void onClick(DialogInterface arg0, int arg1) {
-//                                final Survey survey = (Survey) adapter.getItem(position-1);
-//                                AsyncPush asyncPush=new AsyncPush(survey);
-//                                asyncPush.execute((Void) null);
-//                            }
-//                        })
-//                        .setNegativeButton(android.R.string.no, null).create().show();
-//
-//
-//                return true;
-//            }
-//        });
 
 
         setListShown(false);

@@ -391,14 +391,14 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return orgUnit;
     }
 
-    public void setOrgUnit(Long id_org_unit) {
-        this.id_org_unit = id_org_unit;
-        this.orgUnit = null;
-    }
-
     public void setOrgUnit(OrgUnit orgUnit) {
         this.orgUnit = orgUnit;
         this.id_org_unit = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
+    }
+
+    public void setOrgUnit(Long id_org_unit) {
+        this.id_org_unit = id_org_unit;
+        this.orgUnit = null;
     }
 
     public Program getProgram() {
@@ -412,14 +412,14 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return program;
     }
 
-    public void setProgram(Long id_program) {
-        this.id_program = id_program;
-        this.program = null;
-    }
-
     public void setProgram(Program program) {
         this.program = program;
         this.id_program = (program != null) ? program.getId_program() : null;
+    }
+
+    public void setProgram(Long id_program) {
+        this.id_program = id_program;
+        this.program = null;
     }
 
     public User getUser() {
@@ -433,14 +433,14 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return user;
     }
 
-    public void setUser(Long id_user) {
-        this.id_user = id_user;
-        this.user = null;
-    }
-
     public void setUser(User user) {
         this.user = user;
         this.id_user = (user != null) ? user.getId_user() : null;
+    }
+
+    public void setUser(Long id_user) {
+        this.id_user = id_user;
+        this.user = null;
     }
 
     @Deprecated
@@ -881,8 +881,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
      * @return String
      */
     public String getValuesToString() {
-        if (values == null || values.size() == 0) {
-            return "";
+        if (values == null) {
+            values = Value.listAllBySurvey(this);
         }
 
         Iterator<Value> iterator = values.iterator();

@@ -90,7 +90,8 @@ public class Utils {
 
     public static String getInternationalizedString(String name) {
         Context context = PreferencesState.getInstance().getContext();
-        int identifier = context.getResources().getIdentifier(name, "string",
+
+        int identifier = context.getResources().getIdentifier(name.toLowerCase(), "string",
                 context.getPackageName());
         //if the id is 0 it not exist.
         if (identifier != 0) {

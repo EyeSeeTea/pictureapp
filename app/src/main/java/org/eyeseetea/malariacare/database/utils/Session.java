@@ -29,7 +29,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 
 import java.util.HashMap;
@@ -79,9 +78,6 @@ public class Session {
      */
     private static Map<String, Object> serviceValues = new HashMap<>();
 
-    //FIXME Probably no longer required
-    private static IDashboardAdapter adapterUncompleted, adapterCompleted;
-
     public static Survey getSurvey() {
         return survey;
     }
@@ -107,22 +103,6 @@ public class Session {
 
     public static synchronized void setUser(User user) {
         Session.user = user;
-    }
-
-    public static IDashboardAdapter getAdapterUncompleted() {
-        return adapterUncompleted;
-    }
-
-    public static synchronized void setAdapterUncompleted(IDashboardAdapter adapterUncompleted) {
-        Session.adapterUncompleted = adapterUncompleted;
-    }
-
-    public static IDashboardAdapter getAdapterCompleted() {
-        return adapterCompleted;
-    }
-
-    public static synchronized void setAdapterCompleted(IDashboardAdapter adapterCompleted) {
-        Session.adapterCompleted = adapterCompleted;
     }
 
     public static synchronized void setFullOfUnsent(Context context) {
@@ -154,7 +134,6 @@ public class Session {
     public static void logout() {
         Session.setUser(null);
         Session.setSurvey(null);
-        Session.setAdapterUncompleted(null);
         Session.serviceValues.clear();
     }
 

@@ -6,6 +6,7 @@ import android.view.View;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.layout.SurveyInfoUtils;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 
 import java.util.List;
@@ -15,12 +16,8 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
     private AssessmentAdapter mAssessmentAdapter;
     private Context mContext;
 
-    private static String PATIENT_RESIDENCE_VILLAGE_CODE_QUESTION = "Code: PR";
-    private static String IF_OTHER_ENTER_LOCATION_CODE_QUESTION = "Code: PO";
-    private static String PATIENT_RESIDENCE_VILLAGE_OTHER_OPTION_CODE = "Other";
-
-    public DashboardAdapterStrategy(Context context, AssessmentAdapter assessmentAdapter) {
-        mAssessmentAdapter = assessmentAdapter;
+    public DashboardAdapterStrategy(Context context, AssessmentAdapter dashboardAdapter) {
+        mAssessmentAdapter = dashboardAdapter;
         mContext = context;
     }
 
@@ -28,53 +25,9 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
     public void renderSurveySummary(View rowView, Survey survey) {
         mAssessmentAdapter.showDate(rowView, R.id.completionDate, survey.getEventDate());
 
-        String info = getQuestionInfo(survey);
+        //mAssessmentAdapter.showRDT(rowView, R.id.rdt,
+          //      SurveyInfoUtils.getRDTSymbol(mContext, survey));
 
-        mAssessmentAdapter.showInfo(rowView, R.id.info, info);
-    }
-
-    private String getQuestionInfo(Survey survey) {
-        String info;
-        String visibleValues = survey.getValuesToString();
-
-        String location = getLocation(survey);
-
-        if (location.isEmpty()) {
-            info = visibleValues;
-        } else {
-            info = location + ", " + visibleValues;
-        }
-
-        return info;
-    }
-
-    private String getLocation(Survey survey) {
-        List<Value> values = survey.getValues();
-
-        String location = "";
-        Value patientResidenceVillageValue = null;
-        Value manualLocationValue = null;
-
-        for (Value value : values) {
-            if (value.getQuestion().getCode().equals(PATIENT_RESIDENCE_VILLAGE_CODE_QUESTION)) {
-                patientResidenceVillageValue = value;
-            } else if (value.getQuestion().getCode().equals(
-                    IF_OTHER_ENTER_LOCATION_CODE_QUESTION)) {
-                manualLocationValue = value;
-            }
-        }
-
-        if (patientResidenceVillageValue != null) {
-            if (!patientResidenceVillageValue.getOption().getCode().equals(
-                    PATIENT_RESIDENCE_VILLAGE_OTHER_OPTION_CODE)) {
-                location = patientResidenceVillageValue.getOption().getInternationalizedCode();
-            } else {
-                if (manualLocationValue != null) {
-                    location = manualLocationValue.getValue();
-                }
-            }
-        }
-
-        return location;
+        mAssessmentAdapter.showInfo(rowView, R.id.info, survey.getValuesToString());
     }
 }

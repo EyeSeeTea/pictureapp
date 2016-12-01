@@ -89,6 +89,9 @@ public class Utils {
 
 
     public static String getInternationalizedString(String name) {
+        if(name==null){
+            return "";
+        }
         Context context = PreferencesState.getInstance().getContext();
         int identifier = context.getResources().getIdentifier(name, "string",
                 context.getPackageName());

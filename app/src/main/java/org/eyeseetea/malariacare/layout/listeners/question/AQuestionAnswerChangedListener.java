@@ -54,7 +54,7 @@ public abstract class AQuestionAnswerChangedListener {
     }
 
     protected void saveValue(View view, String newValue) {
-        Question question = (Question) view.getTag();
+        Question question = (Question) view.findViewById(R.id.answer).getTag();
         ReadWriteDB.saveValuesText(question, newValue);
 
         showOrHideChildren(question);

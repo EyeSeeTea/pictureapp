@@ -703,7 +703,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     configureAnswerChangedListener(questionViewFactory, questionView);
 
-                    addTagQuestion(screenQuestion, (View) questionView);
+                    addTagQuestion(screenQuestion, ((View) questionView).findViewById(R.id.answer));
 
                     tableRow.addView((View) questionView);
 

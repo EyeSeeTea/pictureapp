@@ -27,11 +27,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -72,13 +69,13 @@ import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
+import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.factory.IQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.MultiQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.SingleQuestionViewFactory;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
-import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
@@ -86,8 +83,6 @@ import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -308,7 +303,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Show question image in counter alert
         if (questionCounter.getPath() != null && !questionCounter.getPath().equals("")) {
             ImageView imageView = (ImageView) rootView.findViewById(R.id.questionImageRow);
-            putImageInImageView(questionCounter.getInternationalizedPath(), imageView);
+            BaseLayoutUtils.putImageInImageView(questionCounter.getInternationalizedPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
         }
 
@@ -499,7 +494,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (questionItem.getPath() != null && !questionItem.getPath().equals("")
                 && questionItem.hasVisibleHeaderQuestion()) {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.questionImage);
-            putImageInImageView(questionItem.getInternationalizedPath(), imageView);
+            BaseLayoutUtils.putImageInImageView(questionItem.getInternationalizedPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
         }
 
@@ -704,7 +699,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     questionView.setEnabled(!readOnly);
                     questionView.setValue(value);
-
+                    questionView.setImage(screenQuestion.getInternationalizedPath());
                     configureAnswerChangedListener(questionViewFactory, questionView);
 
                     addTagQuestion(screenQuestion, ((View) questionView).findViewById(R.id.answer));
@@ -724,7 +719,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     textCard.setText(
                             screenQuestion.getForm_name());
                     if (screenQuestion.hasAssociatedImage()) {
-                        makeImageVisible(screenQuestion, rowImageLabelView);
+                        LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(), rowImageLabelView);
                     } else {
                         adaptLayoutToTextOnly(textCard, rowImageLabelView);
                     }
@@ -750,10 +745,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
                             screenQuestion.getForm_name());
-                    if (screenQuestion.getPath() != null && !screenQuestion.getPath().equals("")) {
+                    if (screenQuestion.hasAssociatedImage()) {
                         ImageView rowImageView = ((ImageView) tableRow.findViewById(
                                 R.id.question_image_row));
-                        makeImageVisible(screenQuestion, rowImageView);
+                        LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(), rowImageView);
                     }
                     ((TextCard) tableRow.findViewById(R.id.row_switch_true)).setText(
                             screenQuestion.getAnswer().getOptions().get(0).getCode());
@@ -770,12 +765,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         rowView.requestLayout();
         return rowView;
-    }
-
-    private void makeImageVisible(Question screenQuestion, ImageView rowImageLabelView) {
-        rowImageLabelView.setVisibility(View.VISIBLE);
-        putImageInImageView(screenQuestion.getInternationalizedPath(),
-                rowImageLabelView);
     }
 
     private void adaptLayoutToTextOnly(TextCard textCard, ImageView rowImageLabelView) {
@@ -1270,7 +1259,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //the button is a framelayout that contains a imageview
         ImageView imageView = (ImageView) button.getChildAt(0);
         //Put image
-        putImageInImageView(option.getInternationalizedPath(), imageView);
+        BaseLayoutUtils.putImageInImageView(option.getInternationalizedPath(), imageView);
         //Associate option
         button.setTag(option);
 
@@ -1284,26 +1273,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         swipeTouchListener.addClickableView(button);
 
         resizeTextWidth(button, (TextCard) button.getChildAt(1));
-    }
-
-    /**
-     * Sets a image from assets path in a imageView
-     *
-     * @param path      path from assets image
-     * @param imageView is the imageView to set the image
-     */
-    private void putImageInImageView(String path, ImageView imageView) {
-        try {
-            if (path == null || path.equals("")) {
-                return;
-            }
-            InputStream inputStream = context.getAssets().open(
-                    Utils.getInternationalizedString(path));
-            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-            imageView.setImageDrawable(new BitmapDrawable(context.getResources(), bmp));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

@@ -24,7 +24,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <org.eyeseetea.malariacare.views.CustomTextView
+    <org.eyeseetea.malariacare.views.TextCard
         android:id="@+id/statement"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         android:padding="5dip"
         android:fontFamily="@string/normal_font"
         android:paddingLeft="@dimen/question_padding_left"
-        android:text="@string/widget_info_empty_statement"
+        android:text=""
         android:textColor="@color/black"
         app:tDimension="@string/font_size_level1"
         app:tFontName="@string/medium_font_name" />

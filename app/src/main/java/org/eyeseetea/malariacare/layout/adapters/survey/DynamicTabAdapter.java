@@ -682,6 +682,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.SHORT_TEXT:
                 case Constants.PHONE:
                 case Constants.POSITIVE_INT:
+                case Constants.RADIO_GROUP_HORIZONTAL:
                     //TODO: swipeTouchListener.addClickableView(button)
 
                     tableRow = new TableRow(context);

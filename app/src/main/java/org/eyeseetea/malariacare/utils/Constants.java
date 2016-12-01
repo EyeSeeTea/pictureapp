@@ -13,7 +13,7 @@ public class Constants {
             DATE = 5,
             POSITIVE_INT = 6,
             NO_ANSWER = 7,
-            RADIO_GROUP_HORIZONTAL = 8,
+            RADIO_GROUP_HORIZONTAL = 22,
             RADIO_GROUP_VERTICAL = 9,
             DROPDOWN_LIST_DISABLED = 10,
             IMAGES_2 = 10,
@@ -28,7 +28,7 @@ public class Constants {
             DROPDOWN_OU_LIST = 19,
             IMAGE_3_NO_DATAELEMENT = 20,
             HIDDEN = 21,
-            SWITCH_BUTTON = 22,
+            SWITCH_BUTTON = 8,
             QUESTION_LABEL = 23;
 
 

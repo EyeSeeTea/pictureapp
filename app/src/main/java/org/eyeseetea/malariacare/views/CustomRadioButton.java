@@ -118,7 +118,7 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
      */
     public void updateFontName(String fontName){
         if (fontName != null){
-            font = Typeface.createFromAsset(assetManager, "fonts/" + mfontName);
+            font = Typeface.createFromAsset(assetManager, "fonts/" + fontName);
             setTypeface(font);
             mfontName = fontName;
         }

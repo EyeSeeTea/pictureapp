@@ -700,6 +700,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     questionView.setEnabled(!readOnly);
                     questionView.setValue(value);
                     questionView.setImage(screenQuestion.getInternationalizedPath());
+
+                    if (questionView instanceof AOptionQuestionView) {
+                        ((AOptionQuestionView) questionView).setOptions(screenQuestion.getAnswer().getOptions());
+                        ((AOptionQuestionView) questionView).setQuestion(screenQuestion);
+                    }
                     configureAnswerChangedListener(questionViewFactory, questionView);
 
                     addTagQuestion(screenQuestion, ((View) questionView).findViewById(R.id.answer));

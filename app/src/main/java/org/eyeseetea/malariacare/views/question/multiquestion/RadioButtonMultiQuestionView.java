@@ -30,24 +30,30 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
     ImageView image;
     RadioGroup radioGroup;
     Context context;
+    Question question;
 
     public RadioButtonMultiQuestionView(Context context) {
         super(context);
         this.context=context;
         init(context);
     }
+
+    @Override
+    public void setQuestion(Question question){
+        this.question=question;
+    }
+
     @Override
     public void setOptions(List<Option> options) {
         LayoutInflater lInflater = (LayoutInflater) context.getSystemService
             (Context.LAYOUT_INFLATER_SERVICE);
         for (Option option : options) {
             CustomRadioButton button = (CustomRadioButton) lInflater.inflate(R.layout.uncheckeable_radiobutton, null);
-            button = (CustomRadioButton) findViewById(R.id.answer);
             button.setOption(option);
-            button.updateProperties(PreferencesState.getInstance().getScale(), context.getString(R.string.font_size_level1), context.getString(R.string.medium_font_name));
+            button.updateProperties(PreferencesState.getInstance().getScale(), context.getString(R.string.font_size_level1), context.getString(R.string.specific_language_font));
             radioGroup.addView(button);
         }
-        radioGroup.setOnCheckedChangeListener(new RadioGroupListener(options.get(0).getQuestionBySession(), radioGroup));
+        radioGroup.setOnCheckedChangeListener(new RadioGroupListener(question, radioGroup));
     }
 
     @Override
@@ -177,7 +183,9 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         header = (TextCard) view.findViewById(R.id.row_header_text);
         image = (ImageView) view.findViewById(R.id.question_image_row);
         radioGroup = (RadioGroup) view.findViewById(R.id.answer);
+        radioGroup.setOrientation(HORIZONTAL);
     }
+
     class RadioGroupListener implements RadioGroup.OnCheckedChangeListener  {
         private RadioGroup radioGroup = null;
         private Question question;
@@ -193,7 +201,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
                 return;
             }
 
-            Option selectedOption = new Option(Constants.DEFAULT_SELECT_OPTION); ;
+            Option selectedOption = new Option(Constants.DEFAULT_SELECT_OPTION);
             if (checkedId != -1) {
                 CustomRadioButton customRadioButton = findRadioButtonById(checkedId);
                 selectedOption = (Option) customRadioButton.getTag();

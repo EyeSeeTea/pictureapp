@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-       maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://maven.fabric.io/public' }
         mavenCentral()
         mavenLocal()
     }
@@ -44,7 +44,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
             debuggable true
         }
     }
@@ -67,37 +67,40 @@ android {
             buildConfigField "boolean", "activeSwipeNavigator", "true"
             buildConfigField "boolean", "activeButtonNavigator", "false"
             buildConfigField "boolean", "loginDataDownloadPeriod", "true"
-            buildConfigField "boolean","translations", "false"
+            buildConfigField "boolean", "translations", "false"
             buildConfigField "boolean", "developerOptions", "false"
             buildConfigField "boolean", "multiuser", "false"
+            buildConfigField "boolean", "activeStockFragment", "false"
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
             versionName "1.0.9"
-            buildConfigField "boolean","reviewScreen", "true"
+            buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
             buildConfigField "boolean", "activeButtonNavigator", "false"
             buildConfigField "boolean", "loginDataDownloadPeriod", "false"
-            buildConfigField "boolean","translations", "true"
+            buildConfigField "boolean", "translations", "true"
             buildConfigField "boolean", "developerOptions", "false"
             buildConfigField "boolean", "multiuser", "false"
+            buildConfigField "boolean", "activeStockFragment", "false"
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
             versionName "1.0.0"
-            buildConfigField "boolean","reviewScreen", "true"
+            buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
             buildConfigField "boolean", "activeButtonNavigator", "true"
             buildConfigField "boolean", "loginDataDownloadPeriod", "false"
-            buildConfigField "boolean","translations", "true"
+            buildConfigField "boolean", "translations", "true"
             buildConfigField "boolean", "developerOptions", "true"
             buildConfigField "boolean", "multiuser", "true"
+            buildConfigField "boolean", "activeStockFragment", "true"
         }
     }
-    
+
     lintOptions {
         disable 'RtlSymmetry', 'RtlHardcoded'
-    }    
+    }
 }
 
 dependencies {
@@ -113,14 +116,14 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'com.googlecode.libphonenumber:libphonenumber:7.0.9'
     compile 'com.android.support:multidex:1.0.1'
-//    apt 'com.raizlabs.android:DBFlow-Compiler:2.2.1'
-//    compile 'com.raizlabs.android:DBFlow-Core:2.2.1'
-//    compile 'com.raizlabs.android:DBFlow:2.2.1'
+    //    apt 'com.raizlabs.android:DBFlow-Compiler:2.2.1'
+    //    compile 'com.raizlabs.android:DBFlow-Core:2.2.1'
+    //    compile 'com.raizlabs.android:DBFlow:2.2.1'
     apt project(':DBFlowORM:DBFlow-Compiler')
     compile project(':DBFlowORM:DBFlow-Core')
     compile project(':DBFlowORM:DBFlow')
     compile project(':sdk:app')
-    
+
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }

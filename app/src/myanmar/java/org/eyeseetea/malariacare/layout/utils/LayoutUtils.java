@@ -29,6 +29,9 @@ public class LayoutUtils extends BaseLayoutUtils {
         dashboardActivity.setTabHostsWithImages();
     }
 
+    public static void setDivider(DashboardActivity dashboardActivity) {
+        dashboardActivity.setDivider();
+    }
 
     public static void setActionBarAppAndUser(ActionBar actionBar) {
         Context context = PreferencesState.getInstance().getContext();

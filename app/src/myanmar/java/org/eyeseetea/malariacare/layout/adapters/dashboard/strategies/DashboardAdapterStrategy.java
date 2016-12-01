@@ -5,11 +5,7 @@ import android.view.View;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.layout.SurveyInfoUtils;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
-
-import java.util.List;
 
 public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 

@@ -19,8 +19,6 @@
 
 package org.eyeseetea.malariacare.utils;
 
-import static com.google.android.gms.analytics.internal.zzy.a;
-
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;

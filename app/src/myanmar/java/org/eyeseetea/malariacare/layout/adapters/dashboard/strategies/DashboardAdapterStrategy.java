@@ -25,9 +25,6 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
     public void renderSurveySummary(View rowView, Survey survey) {
         mAssessmentAdapter.showDate(rowView, R.id.completionDate, survey.getEventDate());
 
-        //mAssessmentAdapter.showRDT(rowView, R.id.rdt,
-          //      SurveyInfoUtils.getRDTSymbol(mContext, survey));
-
         mAssessmentAdapter.showInfo(rowView, R.id.info, survey.getValuesToString());
     }
 }

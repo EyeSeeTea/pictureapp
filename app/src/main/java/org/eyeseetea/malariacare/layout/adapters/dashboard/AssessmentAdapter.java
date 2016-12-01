@@ -30,6 +30,7 @@ import android.widget.BaseAdapter;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.DashboardAdapterStrategy;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.IAssessmentAdapterStrategy;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.views.TextCard;
 
@@ -47,7 +48,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
     protected String title;
     List<Survey> items;
 
-    private DashboardAdapterStrategy mDashboardAdapterStrategy;
+    private IAssessmentAdapterStrategy mDashboardAdapterStrategy;
 
     public AssessmentAdapter(String title, List<Survey> items, Context context) {
         this.items = items;

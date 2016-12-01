@@ -476,6 +476,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         // We get values from DB and put them in Session
         if (Session.getSurvey() != null) {
             Session.getSurvey().getValuesFromDB();
+        } else {
+            //The survey in session is null when the user closes the surveyFragment, but the getView is called.
+            return convertView;
         }
 
         //Question
@@ -704,7 +707,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     configureAnswerChangedListener(questionViewFactory, questionView);
 
-                    addTagQuestion(screenQuestion, (View) questionView);
+                    addTagQuestion(screenQuestion, ((View) questionView).findViewById(R.id.answer));
 
                     tableRow.addView((View) questionView);
 
@@ -715,14 +718,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.QUESTION_LABEL:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_label_row,
                             tableLayout, false);
-                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
+                    TextCard textCard = (TextCard) tableRow.findViewById(R.id.row_header_text);
+                    ImageView rowImageLabelView = ((ImageView) tableRow.findViewById(
+                            R.id.question_image_row));
+                    textCard.setText(
                             screenQuestion.getForm_name());
-                    if (screenQuestion.getPath() != null && !screenQuestion.getPath().equals("")) {
-                        ImageView rowImageView = ((ImageView) tableRow.findViewById(
-                                R.id.question_image_row));
-                        rowImageView.setVisibility(View.VISIBLE);
-                        putImageInImageView(screenQuestion.getInternationalizedPath(),
-                                rowImageView);
+                    if (screenQuestion.hasAssociatedImage()) {
+                        makeImageVisible(screenQuestion, rowImageLabelView);
+                    } else {
+                        adaptLayoutToTextOnly(textCard, rowImageLabelView);
                     }
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
                             screenQuestion.getForm_name());
@@ -749,9 +753,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     if (screenQuestion.getPath() != null && !screenQuestion.getPath().equals("")) {
                         ImageView rowImageView = ((ImageView) tableRow.findViewById(
                                 R.id.question_image_row));
-                        rowImageView.setVisibility(View.VISIBLE);
-                        putImageInImageView(screenQuestion.getInternationalizedPath(),
-                                rowImageView);
+                        makeImageVisible(screenQuestion, rowImageView);
                     }
                     ((TextCard) tableRow.findViewById(R.id.row_switch_true)).setText(
                             screenQuestion.getAnswer().getOptions().get(0).getCode());
@@ -768,6 +770,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    private void makeImageVisible(Question screenQuestion, ImageView rowImageLabelView) {
+        rowImageLabelView.setVisibility(View.VISIBLE);
+        putImageInImageView(screenQuestion.getInternationalizedPath(),
+                rowImageLabelView);
+    }
+
+    private void adaptLayoutToTextOnly(TextCard textCard, ImageView rowImageLabelView) {
+        //Modify the text weight if the label don't have a image.
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.MATCH_PARENT, 0f);
+        rowImageLabelView.setLayoutParams(params);
+        params = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+        textCard.setLayoutParams(params);
     }
 
     private void configureAnswerChangedListener(IQuestionViewFactory questionViewFactory,

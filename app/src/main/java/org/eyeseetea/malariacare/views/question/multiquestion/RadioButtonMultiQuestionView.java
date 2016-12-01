@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 import org.eyeseetea.malariacare.R;
@@ -13,6 +14,7 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.CustomRadioButton;
 import org.eyeseetea.malariacare.views.TextCard;
@@ -25,6 +27,7 @@ import java.util.List;
 public class RadioButtonMultiQuestionView extends AOptionQuestionView implements IQuestionView,
         IMultiQuestionView {
     TextCard header;
+    ImageView image;
     RadioGroup radioGroup;
     Context context;
 
@@ -52,6 +55,11 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         header.setText(headerValue);
     }
 
+    @Override
+    public void setImage(String path) {
+        if(path!=null && !path.equals(""))
+        BaseLayoutUtils.makeImageVisible(path, image);
+    }
     @Override
     public boolean hasError() {
         return false;
@@ -167,6 +175,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
     private void init(final Context context) {
         View view = inflate(context, R.layout.multi_question_radio_buttons, this);
         header = (TextCard) view.findViewById(R.id.row_header_text);
+        image = (ImageView) view.findViewById(R.id.question_image_row);
         radioGroup = (RadioGroup) view.findViewById(R.id.answer);
     }
     class RadioGroupListener implements RadioGroup.OnCheckedChangeListener  {

@@ -28,6 +28,11 @@ public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements
     }
 
     @Override
+    public void setImage(String path) {
+        return;
+    }
+
+    @Override
     public boolean hasError() {
         return false;
     }

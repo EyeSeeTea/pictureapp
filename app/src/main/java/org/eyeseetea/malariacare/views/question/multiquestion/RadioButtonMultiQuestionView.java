@@ -1,12 +1,12 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -15,8 +15,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
-import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.CustomRadioButton;
@@ -60,9 +58,13 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             button.setOption(option);
             TextCard textCard = (TextCard) linearLayout.findViewById(R.id.radio_text);
             textCard.setText(option.getName());
+            if (question.getOptionBySession() != null && question.getOptionBySession().equals(
+                    option)) {
+                button.setChecked(true);
+            }
+            button.setOnCheckedChangeListener(new RadioButtonListener(question));
             radioGroup.addView(linearLayout);
         }
-        radioGroup.setOnCheckedChangeListener(new RadioGroupListener(question, radioGroup));
     }
 
     //This method is used to correct the 50% space in the radiobutton with two buttons.
@@ -134,64 +136,6 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         }
     }
 
-    /**
-     * Initialize the default switch value or load the saved value
-     *
-     * @param question is the question in the view
-     */
-    private void initSwitchOption(Question question) {
-
-        //Take option
-        Option selectedOption = question.getOptionBySession();
-        if (selectedOption == null) {
-            //the 0 option is the right option and is true in the switch, the 1 option is the
-            // left option and is false
-            boolean isDefaultOption = false;
-            boolean switchValue = false;
-            if (question.getAnswer().getOptions().get(0).getOptionAttribute().getDefaultOption()
-                    == 1) {
-                selectedOption = question.getAnswer().getOptions().get(0);
-                isDefaultOption = true;
-                switchValue = true;
-            } else if (question.getAnswer().getOptions().get(
-                    1).getOptionAttribute().getDefaultOption() == 1) {
-                selectedOption = question.getAnswer().getOptions().get(1);
-                isDefaultOption = true;
-                switchValue = false;
-            }
-            if (isDefaultOption) {
-                //radioButton.setChecked(switchValue);
-                ReadWriteDB.saveValuesDDL(question, selectedOption, null);
-            }
-        } else {
-            //radioButton.setChecked(findSwitchBoolean(question));
-        }
-    }
-
-    /**
-     * Returns the option selected for the given question and boolean value or by position
-     */
-    public static Option findSwitchOption(Question question, boolean isChecked) {
-        //Search option by position
-        return question.getAnswer().getOptions().get((isChecked) ? 0 : 1);
-    }
-
-    /**
-     * Save the switch option and check children questions
-     *
-     * @param question  is the question in the view
-     * @param isChecked is the value to be saved
-     */
-    private void saveSwitchOption(Question question, boolean isChecked) {
-        //Take option
-        Option selectedOption = findSwitchOption(question, isChecked);
-        if (selectedOption == null) {
-            return;
-        }
-        ReadWriteDB.saveValuesDDL(question, selectedOption, question.getValueBySession());
-        //showOrHideChildren(question);
-    }
-
 
     private void init(final Context context) {
         View view = inflate(context, R.layout.multi_question_radio_buttons, this);
@@ -201,63 +145,36 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         radioGroup.setOrientation(HORIZONTAL);
     }
 
-    class RadioGroupListener implements RadioGroup.OnCheckedChangeListener {
-        private RadioGroup radioGroup = null;
+    class RadioButtonListener implements RadioGroup.OnCheckedChangeListener,
+            CompoundButton.OnCheckedChangeListener {
         private Question question;
 
-        public RadioGroupListener(Question question, RadioGroup radioGroup) {
+        public RadioButtonListener(Question question) {
             this.question = question;
-            this.radioGroup = radioGroup;
         }
 
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
-            if (!group.isShown()) {
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (!buttonView.isShown()) {
                 return;
             }
 
-            Option selectedOption = new Option(Constants.DEFAULT_SELECT_OPTION);
-            if (checkedId != -1) {
-                CustomRadioButton customRadioButton = findRadioButtonById(checkedId);
-                selectedOption = (Option) customRadioButton.getTag();
-                if (question.getOptionBySurvey(Session.getSurvey()) != null
-                        && question.getOptionBySurvey(Session.getSurvey()).equals(selectedOption)) {
-                    //if is already active ignore it( it is to ignore the first click of two)
-                    return;
-                }
+            CustomRadioButton customRadioButton = (CustomRadioButton) buttonView;
+
+            Option optionToBeRemoved = new Option(Constants.DEFAULT_SELECT_OPTION);
+            Option selectedOption = (Option) customRadioButton.getTag();
+            Value value = question.getValueBySession();
+            if (value != null && value.getOption() != null && value.getOption().equals(
+                    selectedOption)) {
+                selectedOption = optionToBeRemoved;
             }
 
-            // notifyAnswerChanged(String.valueOf(selectedOption.getv()));
-            //AutoTabSelectedItem autoTabSelectedItem = autoTabSelectedItemFactory
-            // .buildSelectedItem(question,selectedOption,viewHolder, idSurvey, module);
-            //AutoTabLayoutUtils.itemSelected(autoTabSelectedItem, idSurvey, module);
-            //autoTabSelectedItemFactory.notifyDataSetChanged();
+            notifyAnswerChanged(selectedOption);
         }
-
-        /**
-         * Fixes a bug in older apis where a RadioGroup cannot find its children by id
-         */
-        public CustomRadioButton findRadioButtonById(int id) {
-            //No component -> done
-            if (radioGroup == null || !(radioGroup instanceof RadioGroup)) {
-                return null;
-            }
-
-            //Modern api -> delegate in its method
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                return (CustomRadioButton) radioGroup.findViewById(id);
-            }
-
-            //Find button manually
-            for (int i = 0; i < ((RadioGroup) radioGroup).getChildCount(); i++) {
-                View button = ((RadioGroup) radioGroup).getChildAt(i);
-                if (button.getId() == id) {
-                    return (CustomRadioButton) button;
-                }
-            }
-            return null;
-        }
-
     }
 }
 

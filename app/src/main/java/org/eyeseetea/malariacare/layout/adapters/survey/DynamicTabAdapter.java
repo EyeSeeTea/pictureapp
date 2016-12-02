@@ -715,7 +715,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow.addView((View) questionView);
 
                     tableRow.setVisibility(visibility);
-
+                    Session.getSurvey().getValues().toString();
                     tableLayout.addView(tableRow);
                     break;
                 case Constants.QUESTION_LABEL:

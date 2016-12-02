@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 
 /**
  * Created by adrian on 30/05/15.
@@ -252,7 +253,9 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
         for (int i = 0; i < ((RadioGroup) getParent().getParent()).getChildCount(); i++) {
             LinearLayout linearLayout =
                     (LinearLayout) ((RadioGroup) getParent().getParent()).getChildAt(i);
-            ((CustomRadioButton) linearLayout.getChildAt(1)).setChecked(false);
+            if(linearLayout.getChildAt(1) instanceof CustomRadioButton) {
+                ((CustomRadioButton) linearLayout.getChildAt(1)).setChecked(false);
+            }
         }
 
     }

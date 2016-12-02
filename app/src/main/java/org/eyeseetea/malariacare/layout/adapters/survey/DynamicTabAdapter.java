@@ -701,7 +701,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     if (questionView instanceof AKeyboardQuestionView) {
                         ((AKeyboardQuestionView) questionView).setHint(
-                                Utils.getInternationalizedString(screenQuestion.getShort_name()));
+                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
                     }
 
                     configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);

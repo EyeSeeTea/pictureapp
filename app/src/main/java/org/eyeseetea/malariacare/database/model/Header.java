@@ -176,7 +176,7 @@ public class Header extends BaseModel {
     public String toString() {
         return "Header{" +
                 "id_header=" + id_header +
-                ", short_name='" + short_name + '\'' +
+                ", help_text='" + short_name + '\'' +
                 ", name='" + name + '\'' +
                 ", order_pos=" + order_pos +
                 ", id_tab=" + id_tab +

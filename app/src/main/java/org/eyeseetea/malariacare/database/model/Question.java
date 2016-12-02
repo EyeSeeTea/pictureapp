@@ -69,7 +69,7 @@ public class Question extends BaseModel {
     @Column
     String de_name;
     @Column
-    String short_name;
+    String help_text;
     @Column
     String form_name;
     @Column
@@ -150,13 +150,13 @@ public class Question extends BaseModel {
     public Question() {
     }
 
-    public Question(String code, String de_name, String short_name, String form_name, String uid,
+    public Question(String code, String de_name, String help_text, String form_name, String uid,
             Integer order_pos, Float numerator_w, Float denominator_w, String feedback,
             Integer output, Header header, Answer answer, Question question,
             CompositeScore compositeScore) {
         this.code = code;
         this.de_name = de_name;
-        this.short_name = short_name;
+        this.help_text = help_text;
         this.form_name = form_name;
         this.uid = uid;
         this.order_pos = order_pos;
@@ -397,12 +397,12 @@ public class Question extends BaseModel {
         this.de_name = de_name;
     }
 
-    public String getShort_name() {
-        return short_name;
+    public String getHelp_text() {
+        return help_text;
     }
 
-    public void setShort_name(String short_name) {
-        this.short_name = short_name;
+    public void setHelp_text(String help_text) {
+        this.help_text = help_text;
     }
 
     public String getForm_name() {
@@ -1280,8 +1280,8 @@ public class Question extends BaseModel {
         if (de_name != null ? !de_name.equals(question.de_name) : question.de_name != null) {
             return false;
         }
-        if (short_name != null ? !short_name.equals(question.short_name)
-                : question.short_name != null) {
+        if (help_text != null ? !help_text.equals(question.help_text)
+                : question.help_text != null) {
             return false;
         }
         if (form_name != null ? !form_name.equals(question.form_name)
@@ -1339,7 +1339,7 @@ public class Question extends BaseModel {
         int result = (int) (id_question ^ (id_question >>> 32));
         result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (de_name != null ? de_name.hashCode() : 0);
-        result = 31 * result + (short_name != null ? short_name.hashCode() : 0);
+        result = 31 * result + (help_text != null ? help_text.hashCode() : 0);
         result = 31 * result + (form_name != null ? form_name.hashCode() : 0);
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (order_pos != null ? order_pos.hashCode() : 0);
@@ -1363,7 +1363,7 @@ public class Question extends BaseModel {
                 "id_question=" + id_question +
                 ", code='" + code + " " + '\'' +
                 ", de_name='" + de_name + " " + '\'' +
-                ", short_name='" + short_name + " " + '\'' +
+                ", help_text='" + help_text + " " + '\'' +
                 ", form_name='" + form_name + " " + '\'' +
                 ", uid='" + uid + " " + '\'' +
                 ", order_pos=" + order_pos +

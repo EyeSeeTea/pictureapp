@@ -220,7 +220,7 @@ public class PopulateDB {
                         Question question = new Question();
                         question.setCode(line[1]);
                         question.setDe_name(line[2]);
-                        question.setShort_name(line[3]);
+                        question.setHelp_text(line[3]);
                         question.setForm_name(line[4]);
                         question.setUid(line[5]);
                         question.setOrder_pos(Integer.valueOf(line[6]));
@@ -594,7 +594,7 @@ public class PopulateDB {
                 if (question.getUid().equals(line[5])) {
                     question.setCode(line[1]);
                     question.setDe_name(line[2]);
-                    question.setShort_name(line[3]);
+                    question.setHelp_text(line[3]);
                     question.setForm_name(line[4]);
                     //Update necessary from migration3
                     question.setTotalQuestions(Integer.valueOf(line[13]));
@@ -711,7 +711,7 @@ public class PopulateDB {
                             question = new Question();
                             question.setCode(line[1]);
                             question.setDe_name(line[2]);
-                            question.setShort_name(line[3]);
+                            question.setHelp_text(line[3]);
                             question.setForm_name(line[4]);
                             question.setUid(line[5]);
                             question.setOrder_pos(Integer.valueOf(line[6]));

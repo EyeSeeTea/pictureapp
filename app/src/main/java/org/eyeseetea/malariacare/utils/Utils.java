@@ -89,7 +89,7 @@ public class Utils {
 
 
     public static String getInternationalizedString(String name) {
-        if(name==null){
+        if (name == null) {
             return "";
         }
         Context context = PreferencesState.getInstance().getContext();

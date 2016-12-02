@@ -36,7 +36,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
 
     @Override
     public void setQuestion(Question question) {
-        this.question=question;
+        this.question = question;
     }
 
     @Override

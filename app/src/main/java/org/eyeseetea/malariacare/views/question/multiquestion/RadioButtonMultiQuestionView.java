@@ -1,17 +1,12 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-
-import com.fasterxml.jackson.databind.deser.Deserializers;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
@@ -127,7 +122,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
 
     private void init(final Context context) {
-        View view = inflate(context, R.layout.multi_question_radio_buttons, this);
+        View view = inflate(context, R.layout.multi_question_radio_button_row, this);
         header = (TextCard) view.findViewById(R.id.row_header_text);
         image = (ImageView) view.findViewById(R.id.question_image_row);
         radioGroup = (RadioGroup) view.findViewById(R.id.answer);

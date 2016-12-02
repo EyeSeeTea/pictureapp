@@ -700,7 +700,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
 
                     questionView.setEnabled(!readOnly);
-                    questionView.setValue(value);
                     questionView.setImage(screenQuestion.getInternationalizedPath());
 
                     if (questionView instanceof AOptionQuestionView) {
@@ -708,6 +707,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         ((AOptionQuestionView) questionView).setOptions(
                                 screenQuestion.getAnswer().getOptions());
                     }
+                    questionView.setValue(value);
                     configureAnswerChangedListener(questionViewFactory, questionView);
 
                     addTagQuestion(screenQuestion, ((View) questionView).findViewById(R.id.answer));
@@ -715,7 +715,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow.addView((View) questionView);
 
                     tableRow.setVisibility(visibility);
-                    Session.getSurvey().getValues().toString();
+
                     tableLayout.addView(tableRow);
                     break;
                 case Constants.QUESTION_LABEL:

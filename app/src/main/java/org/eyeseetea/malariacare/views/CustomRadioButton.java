@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2015.
+ *
+ * This file is part of QIS Surveillance App.
+ *
+ *  QIS Surveillance App App is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  QIS Surveillance App App is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.eyeseetea.malariacare.views;
 
 /**
@@ -9,6 +27,7 @@ import android.content.res.AssetManager;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -17,12 +36,12 @@ import android.widget.RadioGroup;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 
 /**
  * Created by adrian on 30/05/15.
  */
 public class CustomRadioButton extends RadioButton implements IEyeSeeView {
+    private final static String TAG = ".CustomRadioButton";
     private Context context = getContext();
     private String mfontName = context.getString(R.string.normal_font);
     private String mScale = context.getString(R.string.settings_array_values_font_sizes_def);
@@ -130,7 +149,8 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
     }
 
     /**
-     * Set the Object font size. This will be determined by the scale and dimension parameters, both
+     * Set the Object font size. This will be determined by the scale and dimension parameters,
+     * both
      * one of [xsmall|small|medium|large|xlarge ] choices
      *
      * @param dimension size related to rest of screen objects
@@ -232,29 +252,42 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
     }
 
     @Override
+    public void setChecked(boolean checked) {
+        Log.d(TAG, "radiobutton checked: " + checked);
+        super.setChecked(checked);
+    }
+
+    @Override
     /**
      * toggle the selection in the Radiobutton. Here we provide the capability of deselection
      * when already pressed answer in pressed.
      */
     public void toggle() {
+        Log.d(TAG, "radiobutton toggle ");
         if (isChecked()) {
             if (getParent() instanceof RadioGroup) {
                 ((RadioGroup) getParent()).clearCheck();
             } else if (getParent() instanceof LinearLayout) {
-                clearCheck();
+                setChecked(false);
             }
         } else {
-            clearCheck();
+            clearOthers();
             setChecked(true);
         }
     }
 
-    public void clearCheck() {
+    private void clearOthers() {
         for (int i = 0; i < ((RadioGroup) getParent().getParent()).getChildCount(); i++) {
             LinearLayout linearLayout =
                     (LinearLayout) ((RadioGroup) getParent().getParent()).getChildAt(i);
-            if(linearLayout.getChildAt(1) instanceof CustomRadioButton) {
-                ((CustomRadioButton) linearLayout.getChildAt(1)).setChecked(false);
+            if (linearLayout.getChildAt(1) instanceof CustomRadioButton) {
+                CustomRadioButton customRadioButton = ((CustomRadioButton) linearLayout.getChildAt(
+                        1));
+                if (!customRadioButton.getTag().equals(this.getTag())) {
+                    if (customRadioButton.isChecked()) {
+                        customRadioButton.setChecked(false);
+                    }
+                }
             }
         }
 

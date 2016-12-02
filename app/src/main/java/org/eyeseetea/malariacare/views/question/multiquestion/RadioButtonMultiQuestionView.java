@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -49,18 +50,20 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             LinearLayout linearLayout = (LinearLayout) lInflater.inflate(
                     R.layout.uncheckeable_radiobutton, null);
 
-            //This method is used to correct the 50% space in the radiobutton with two buttons.
-            BaseLayoutUtils.setLayoutParamsAs50Percent(linearLayout, context);
+
+            Drawable radioButtonIcon = getResources().getDrawable(R.drawable.radio_on);
+
+            //sets the fixed layout width, using the the 50% of the screen size without the
+            // radiobutton image width(to prevent a overlapsed image).
+            //The layout weight not working here.
+            BaseLayoutUtils.setLayoutParamsAs50Percent(linearLayout, context,
+                    radioButtonIcon.getIntrinsicWidth());
 
             CustomRadioButton button = (CustomRadioButton) linearLayout.findViewById(
                     R.id.radio_button);
             button.setOption(option);
             TextCard textCard = (TextCard) linearLayout.findViewById(R.id.radio_text);
             textCard.setText(option.getName());
-            if (question.getOptionBySession() != null && question.getOptionBySession().equals(
-                    option)) {
-                button.setChecked(true);
-            }
             button.setOnCheckedChangeListener(new RadioButtonListener(question));
             radioGroup.addView(linearLayout);
         }
@@ -110,12 +113,14 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         }
 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
+            LinearLayout linearLayout = (LinearLayout) radioGroup.getChildAt(i);
+            CustomRadioButton customRadioButton = (CustomRadioButton) linearLayout.getChildAt(1);
+
             Option option = customRadioButton.getOption();
             if (option.equals(value.getOption())) {
-                ((CustomRadioButton) radioGroup.getChildAt(i)).setChecked(true);
+                customRadioButton.setChecked(true);
             } else {
-                ((CustomRadioButton) radioGroup.getChildAt(i)).setChecked(false);
+                customRadioButton.setChecked(false);
             }
         }
     }

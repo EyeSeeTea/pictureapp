@@ -54,6 +54,8 @@
 
     <!--Text size for radio button text-->
     <dimen name="radio_button_option">18dp</dimen>
+    <!--Padding for radio button text-->
+    <dimen name="radio_button_padding">10dp</dimen>
 
     <!--Text size for review headers and rows-->
     <dimen name="default_review_fragment_font_size">24dp</dimen>

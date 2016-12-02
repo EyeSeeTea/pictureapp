@@ -236,9 +236,15 @@ public class BaseLayoutUtils {
     }
 
 
-    public static void setLayoutParamsAs50Percent(LinearLayout linearLayout, Context context) {
+    /**
+     * Sets a Layout Width as 50% of screen pixel
+     *
+     * @param fixed substract the fixed number from the screenwidth
+     */
+    public static void setLayoutParamsAs50Percent(LinearLayout linearLayout, Context context,
+            int fixed) {
         LinearLayout.LayoutParams layoutParamsWidth50 = new LinearLayout.LayoutParams(
-                getScreenWidth(context) / 2
+                ((getScreenWidth(context) - fixed) / 2)
                 , ViewGroup.LayoutParams.MATCH_PARENT);
         linearLayout.setLayoutParams(layoutParamsWidth50);
     }

@@ -10,10 +10,10 @@ import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.Question;
 
-@Migration(version = 17, databaseName = AppDatabase.NAME)
-public class Migration17RenameShortNameToHelpText extends BaseMigration {
+@Migration(version = 20, databaseName = AppDatabase.NAME)
+public class Migration20RenameShortNameToHelpText extends BaseMigration {
 
-    public Migration17RenameShortNameToHelpText() {
+    public Migration20RenameShortNameToHelpText() {
         super();
     }
 

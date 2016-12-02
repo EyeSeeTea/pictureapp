@@ -20,6 +20,7 @@
 package org.eyeseetea.malariacare.layout.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -33,8 +34,11 @@ import android.support.v7.app.ActionBar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -202,7 +206,6 @@ public class BaseLayoutUtils {
     }
 
 
-
     public static void makeImageVisible(String path, ImageView rowImageLabelView) {
         rowImageLabelView.setVisibility(View.VISIBLE);
         putImageInImageView(path,
@@ -224,9 +227,26 @@ public class BaseLayoutUtils {
             InputStream inputStream = PreferencesState.getInstance().getContext().getAssets().open(
                     Utils.getInternationalizedString(path));
             Bitmap bmp = BitmapFactory.decodeStream(inputStream);
-            imageView.setImageDrawable(new BitmapDrawable(PreferencesState.getInstance().getContext().getResources(), bmp));
+            imageView.setImageDrawable(
+                    new BitmapDrawable(PreferencesState.getInstance().getContext().getResources(),
+                            bmp));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static void setLayoutParamsAs50Percent(LinearLayout linearLayout, Context context) {
+        LinearLayout.LayoutParams layoutParamsWidth50 = new LinearLayout.LayoutParams(
+                getScreenWidth(context) / 2
+                , ViewGroup.LayoutParams.MATCH_PARENT);
+        linearLayout.setLayoutParams(layoutParamsWidth50);
+    }
+
+    private static int getScreenWidth(Context context) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
+        return (metrics.widthPixels);
     }
 }

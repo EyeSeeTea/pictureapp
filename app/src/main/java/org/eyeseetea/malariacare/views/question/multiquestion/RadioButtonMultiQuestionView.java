@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
+import com.fasterxml.jackson.databind.deser.Deserializers;
+
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
@@ -52,7 +54,9 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             LinearLayout linearLayout = (LinearLayout) lInflater.inflate(
                     R.layout.uncheckeable_radiobutton, null);
 
-            fixOptionLayoutWidth(linearLayout);
+            //This method is used to correct the 50% space in the radiobutton with two buttons.
+            BaseLayoutUtils.setLayoutParamsAs50Percent(linearLayout, context);
+
             CustomRadioButton button = (CustomRadioButton) linearLayout.findViewById(
                     R.id.radio_button);
             button.setOption(option);
@@ -65,21 +69,6 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             button.setOnCheckedChangeListener(new RadioButtonListener(question));
             radioGroup.addView(linearLayout);
         }
-    }
-
-    //This method is used to correct the 50% space in the radiobutton with two buttons.
-    private void fixOptionLayoutWidth(LinearLayout linearLayout) {
-        LinearLayout.LayoutParams layoutParamsWidth50 = new LinearLayout.LayoutParams(
-                getOptionWidth() / 2
-                , ViewGroup.LayoutParams.MATCH_PARENT);
-        linearLayout.setLayoutParams(layoutParamsWidth50);
-    }
-
-    private int getOptionWidth() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        wm.getDefaultDisplay().getMetrics(metrics);
-        return (metrics.widthPixels);
     }
 
     @Override

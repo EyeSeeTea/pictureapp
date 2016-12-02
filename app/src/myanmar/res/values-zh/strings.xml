@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="malaria_case_based_reporting">""</string>
+    <string name="volunteer_label">""</string>
+    <string name="new_case_title"></string>
+    <string name="patient_profile_subtitle"></string>
+
+    <string name="patient_name"></string>
+    <string name="patient_name_enter_prompt"></string>
+    <string name="patient_age"></string>
+    <string name="patient_age_enter_prompt"></string>
+    <string name="patient_phone"></string>
+    <string name="patient_phone_enter_prompt"></string>
+    <string name="patient_residence_village"></string>
+    <string name="patient_residence_village_other_option"></string>
+    <string name="patient_residence_village_location"></string>
+    <string name="patient_residence_village_other"></string>
+
+    <string name="patient_sex_pregnancy"></string>
+    <string name="patient_sex_male"></string>
+    <string name="patient_sex_female"></string>
+    <string name="patient_sex_female_pregnant"></string>
+
     <string name="yes">"Oui"</string>
     <string name="no">"No"</string>
     <string name="ok">"Ok"</string>
@@ -117,7 +138,7 @@
     <string name="unsent_button">"Pas envoyé"</string>
     <string name="sent_button">"Envoyé"</string>
     <string name="monitor_button">"surveillance"</string>
-    <string name="app_name">"Malaria Case Surveillance"</string>
+
     <string name="font_size_level0_title">"Extra petit"</string>
     <string name="font_size_level1_title">"Petit"</string>
     <string name="font_size_level2_title">"Moyen"</string>
@@ -143,7 +164,7 @@
     <string name="last_6_months"> les 6 derniers mois</string>
     <string name="download">"Téléchargement:"</string>
     <string name="assessment_past_cases">PAST CASES</string>
-    <string name="assessment_new_cases">NEW CASES</string>
+
     <string name="assessment_connectivity">Data awaiting internet connectivity</string>
     <string name="positive_hint">Name, Details</string>
     <string name="developer_option_summary">"Cette option active les options de développement"</string>

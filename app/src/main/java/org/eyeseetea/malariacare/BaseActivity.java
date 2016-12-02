@@ -174,7 +174,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
             LayoutUtils.setActionBarLogo(actionBar);
             LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
-                    this.getResources().getString(R.string.app_name));
+                    this.getResources().getString(R.string.malaria_case_based_reporting));
         }
     }
 

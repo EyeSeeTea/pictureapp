@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="malaria_case_based_reporting">"Malaria Case Surveillance"</string>
+
     <string name="yes">"Sí"</string>
     <string name="no">"No"</string>
     <string name="ok">"Ok"</string>
@@ -114,7 +116,7 @@
     <string name="unsent_button">"No enviado"</string>
     <string name="sent_button">"Enviado"</string>
     <string name="monitor_button">"Supervisión"</string>
-    <string name="app_name">"Malaria Case Surveillance"</string>
+
     <string name="font_size_level0_title">"Extra pequeño"</string>
     <string name="font_size_level1_title">"Pequeño"</string>
     <string name="font_size_level2_title">"Medio"</string>

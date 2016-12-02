@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="malaria_case_based_reporting">"การตรวจสอบกรณีของโรคมาลาเรีย"</string>
+
     <string name="yes">"ใช่ / ใช่"</string>
     <string name="no">"ไม่"</string>
     <string name="ok">"ตกลง"</string>
@@ -114,7 +116,7 @@
     <string name="unsent_button">"ยังส่ง"</string>
     <string name="sent_button">"ที่ส่ง"</string>
     <string name="monitor_button">"ตามรอย"</string>
-    <string name="app_name">"การตรวจสอบกรณีของโรคมาลาเรีย"</string>
+
     <string name="font_size_level0_title">"เล็กที่สุด"</string>
     <string name="font_size_level1_title">"เล็ก"</string>
     <string name="font_size_level2_title">"กลาง"</string>

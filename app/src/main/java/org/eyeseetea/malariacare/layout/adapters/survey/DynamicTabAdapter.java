@@ -477,7 +477,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (Session.getSurvey() != null) {
             Session.getSurvey().getValuesFromDB();
         } else {
-            //The survey in session is null when the user closes the surveyFragment, but the getView is called.
+            //The survey in session is null when the user closes the surveyFragment, but the
+            // getView is called.
             return convertView;
         }
 
@@ -676,7 +677,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow = (TableRow) lInflater.inflate(
                             R.layout.multi_question_tab_long_text_row, tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initLongTextValue(tableRow, value, tabType);
                     tableRow.setVisibility(visibility);
@@ -694,9 +695,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     if (questionView instanceof IMultiQuestionView) {
                         mMultiQuestionViews.add((IMultiQuestionView) questionView);
-
                         ((IMultiQuestionView) questionView).setHeader(
-                                screenQuestion.getForm_name());
+                                Utils.getInternationalizedString(screenQuestion.getForm_name()));
+                    }
+
+                    if (questionView instanceof AKeyboardQuestionView) {
+                        ((AKeyboardQuestionView) questionView).setHint(
+                                Utils.getInternationalizedString(screenQuestion.getShort_name()));
                     }
 
                     configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
@@ -721,14 +726,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     ImageView rowImageLabelView = ((ImageView) tableRow.findViewById(
                             R.id.question_image_row));
                     textCard.setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     if (screenQuestion.hasAssociatedImage()) {
                         makeImageVisible(screenQuestion, rowImageLabelView);
                     } else {
                         adaptLayoutToTextOnly(textCard, rowImageLabelView);
                     }
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
@@ -737,7 +742,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow = (TableRow) lInflater.inflate(
                             R.layout.multi_question_tab_dropdown_row, tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     tableRow = populateSpinnerFromOptions(tableRow, screenQuestion);
                     initDropdownValue(tableRow, value);
@@ -748,7 +753,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row,
                             tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     if (screenQuestion.getPath() != null && !screenQuestion.getPath().equals("")) {
                         ImageView rowImageView = ((ImageView) tableRow.findViewById(
                                 R.id.question_image_row));

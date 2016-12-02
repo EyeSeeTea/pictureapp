@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="malaria_case_based_reporting">Malaria Case Based Reporting</string>
+    <string name="volunteer_label">Volunteer:</string>
+    <string name="new_case_title">New Case</string>
+    <string name="patient_profile_subtitle">Patient Profile</string>
+
+    <string name="patient_name">Patient Name</string>
+    <string name="patient_name_enter_prompt">Enter full patient name</string>
+    <string name="patient_age">Patient Age</string>
+    <string name="patient_age_enter_prompt">Enter patient age in years</string>
+    <string name="patient_phone">Patient Phone</string>
+    <string name="patient_phone_enter_prompt">Enter mobile number</string>
+    <string name="patient_residence_village">Patient Residence Village</string>
+    <string name="patient_residence_village_other_option">Other</string>
+    <string name="patient_residence_village_location">If other, enter location</string>
+    <string name="patient_residence_village_other">Enter patient resident\'s village</string>
+
+    <string name="patient_sex_pregnancy">Patient Sex / Pregnancy</string>
+    <string name="patient_sex_male">Male</string>
+    <string name="patient_sex_female">Female</string>
+    <string name="patient_sex_female_pregnant">Female / pregnant</string>
+
+
+
+
     <string name="yes">"Yes"</string>
     <string name="no">"No"</string>
     <string name="ok">"Ok"</string>
@@ -117,7 +141,7 @@
     <string name="unsent_button">"Unsent"</string>
     <string name="sent_button">"Sent"</string>
     <string name="monitor_button">"Monitoring"</string>
-    <string name="app_name">"Malaria Case Surveillance"</string>
+
     <string name="font_size_level0_title">"Extra small"</string>
     <string name="font_size_level1_title">"Small"</string>
     <string name="font_size_level2_title">"Medium"</string>
@@ -143,7 +167,7 @@
     <string name="last_6_months">last 6 months</string>
     <string name="download">Download:</string>
     <string name="assessment_past_cases">PAST CASES</string>
-    <string name="assessment_new_cases">NEW CASES</string>
+
     <string name="assessment_connectivity">Unsent Data</string>
     <string name="positive_hint">Name, Details</string>
     <string name="developer_option_summary">This feature activates the developer options</string>

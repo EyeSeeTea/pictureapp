@@ -11,6 +11,8 @@
 "</string>
 <string name="send">"ສົ່ງ
 "</string>
+    <string name="malaria_case_based_reporting">"ການເຝົ້າລະວັງກໍລະນີໄຂ້ຍຸງ"</string>
+
     <string name="settings_menu_about">"ກ່ຽວກັບ"</string>
     <string name="settings_menu_configuration">"ການຕັ້ງຄ່າ"</string>
     <string name="settings_menu_licence">"ການໄດ້ຮັບອະນຸຍາດ"</string>
@@ -122,7 +124,7 @@
     <string name="unsent_button">"ຍັງບໍ່ໄດ້ສົ່ງ"</string>
     <string name="sent_button">"ສົ່ງແລ້ວ"</string>
     <string name="monitor_button">"ການຕິດຕາມ"</string>
-    <string name="app_name">"ການເຝົ້າລະວັງກໍລະນີໄຂ້ຍຸງ"</string>
+
     <string name="font_size_level0_title">"ນ້ອຍສຸດ"</string>
     <string name="font_size_level1_title">"ນ້ອຍ"</string>
     <string name="font_size_level2_title">"ປານກາງ"</string>

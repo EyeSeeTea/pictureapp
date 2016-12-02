@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 public abstract class AKeyboardQuestionView extends LinearLayout {
     protected onAnswerChangedListener mOnAnswerChangedListener;
 
+    public abstract void setHint(String hintValue);
+
     public AKeyboardQuestionView(Context context) {
         super(context);
     }

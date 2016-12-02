@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.views.question.singlequestion;
 
+import static android.R.attr.value;
+
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,6 +20,8 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView implements IQuestionView {
     EditCard editCard;
     Button sendButton;
+
+
 
     public PhoneSingleQuestionView(Context context) {
         super(context);
@@ -40,6 +44,11 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
         if (value != null) {
             editCard.setText(value.getValue());
         }
+    }
+
+    @Override
+    public void setHint(String hintValue) {
+        editCard.setHint(hintValue);
     }
 
     private void init(final Context context) {

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="malaria_case_based_reporting">"ឃ្លាំមើលករណីគ្រុនចាញ់"</string>
+
     <string name="yes">"បាទ/ចាស"</string>
     <string name="no">"ទេ"</string>
     <string name="ok">"យល់ព្រម"</string>
@@ -114,7 +116,7 @@
     <string name="unsent_button">"មិនទាន់ផ្ញើ"</string>
     <string name="sent_button">"ដែលបានផ្ញើ"</string>
     <string name="monitor_button">"ការតាមដាន"</string>
-    <string name="app_name">"ឃ្លាំមើលករណីគ្រុនចាញ់"</string>
+
     <string name="font_size_level0_title">"តូចបំផុត"</string>
     <string name="font_size_level1_title">"តូច"</string>
     <string name="font_size_level2_title">"មធ្យម"</string>

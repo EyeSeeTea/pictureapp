@@ -44,6 +44,11 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         }
     }
 
+    @Override
+    public void setHint(String hintValue) {
+        numberPicker.setHint(hintValue);
+    }
+
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_positiveint_row, this);
 

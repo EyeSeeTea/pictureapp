@@ -49,6 +49,12 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
         }
     }
 
+    @Override
+    public void setHint(String hintValue) {
+        numberPicker.setHint(hintValue);
+    }
+
+
     private void init(final Context context) {
         inflate(context, R.layout.multi_question_tab_positive_int_row, this);
 

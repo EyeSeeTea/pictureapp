@@ -40,9 +40,7 @@ Para o processo de testing, são criados ficheiros de teste diferentes para cada
 
 Para o processo de testing, foi utilizada a biblioteca *Android Testing Support Library*, que disponibiliza uma framework para testar aplicações Android. Inclui duas ferramentas, *JAndroidJUnitRunner* e *Expresso*, utilizadas para os dois tipos de testes implementados, testes unitários e testes instrumentados.
 Um teste instrumentado é um tipo de teste que é exectuado diretamento no emulador ou dispositivo, simulando o comportamento de um utilizador. Para estes testes, a equipa de desenvolvimento tirou proveito das ferramentas referidas, que dispõem de classes como *Instrumentation* e *Context*, que permitem aceder a informação da componente a ser testada, bem como a sua interação com o sistema.
-Foi também usada uma extensão da ferramenta Expresso, Expresso Intents. 
-
-Tendo em conta o que foi referido anteriormente, pensamos ser correto afirmar que esta aplicação tem um alto nível de observabilidade.
+Portanto, pensamos também ser correto afirmar que esta aplicação tem um alto nível de observabilidade.
 
 
 ###**Isolabilidade** <a name="iso"></a>

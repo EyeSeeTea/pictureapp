@@ -89,6 +89,12 @@ Com a ferramenta Codacy, conseguimos ter acesso a algumas estatísticas.
 
 ![stat2](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/stat2.PNG?raw=true)
 
+A percentagem de Error Prone está a 0%, porque, como podemos ver, existem 518 issues. Relativamente a erros, são 379. No entanto, existem apenas 4 tipos de erros:
+    - Use explicit scoping instead of the default package private level
+    - Switch statements should have a default label
+    - Use equals() to compare object references
+    - Avoid reassigning parameters
+    
 ***
 ##**Bug report**<a name="bug"></a>
 

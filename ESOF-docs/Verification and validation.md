@@ -17,7 +17,7 @@
 ***
 ##**Introdução** <a name ="intro"></a>
 
-O objetivo deste relatório consiste na análise dos processos de verificação e validação seguidos no desenvolvimento do projeto open source em estudo. O processo de verificação pretende verificar se as funcionalidades do software estão a ser ou foram implementadas como planeado de acordo com os requisitos. Por sua vez, o processo de validação tem como objetivo avaliar se o produto final satisfaz as expectativas e necessidade para o qual estava destinado.
+O objetivo deste relatório consiste na análise dos processos de verificação e validação usados no desenvolvimento do projeto open source em estudo. O processo de verificação pretende verificar se as funcionalidades do software estão a ser ou foram implementadas como planeado de acordo com os requisitos. Por sua vez, o processo de validação tem como objetivo avaliar se o produto final satisfaz as expectativas e necessidade para o qual estava destinado.
 
 Numa primeira fase, explorar-se-á o grau de testabilidade do software, analisando a controlabilidade do estado dos componentes testados, a observabilidade dos resultados e a isolabilidade dos componentes, bem como o grau de separação de funcionalidades, de inteligibilidade dos componentes e de heterogeneidade das tecnologias utilizadas.
 

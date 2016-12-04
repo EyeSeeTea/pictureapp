@@ -83,6 +83,12 @@ No que toca a comentários, concluímos que está relativamente bem. No entanto,
 ***
 ##**Estatísticas de teste**<a name="est"></a>
 
+Com a ferramenta Codacy, conseguimos ter acesso a algumas estatísticas.
+
+![stat1](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/stat1.PNG?raw=true)
+
+![stat2](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/stat2.PNG?raw=true)
+
 ***
 ##**Bug report**<a name="bug"></a>
 

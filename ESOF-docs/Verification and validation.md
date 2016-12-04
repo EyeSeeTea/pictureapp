@@ -42,7 +42,7 @@ Para o processo de testing, foi utilizada a biblioteca *Android Testing Support 
 Um teste instrumentado é um tipo de teste que é exectuado diretamento no emulador ou dispositivo, simulando o comportamento de um utilizador. Para estes testes, a equipa de desenvolvimento tirou proveito das ferramentas referidas, que dispõem de classes como *Instrumentation* e *Context*, que permitem aceder a informação da componente a ser testada, bem como a sua interação com o sistema.
 Foi também usada uma extensão da ferramenta Expresso, Expresso Intents. 
 
-Tendo em conta o que foi referido anteriormente, pensamos ser correto afirmar que esta aplicação tem um alto nível de controlabilidade.
+Tendo em conta o que foi referido anteriormente, pensamos ser correto afirmar que esta aplicação tem um alto nível de observabilidade.
 
 
 ###**Isolabilidade** <a name="iso"></a>

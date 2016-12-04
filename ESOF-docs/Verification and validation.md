@@ -72,6 +72,8 @@ Analisando a estrutura interna, podemos ver que a aplicação separa de forma ex
 
 ###**Inteligibilidade** <a name="int"></a>
 
+A aplicação "Malaria Case Surveillance" tem boa documentação, principalmente na wiki do projeto , visto que se encontra muito completa. Embora existam falhas, visto que algumas zonas do projeto estão pouco ou nada comentadas o que dificulta a sua compreensão. Na nossa opinião, este problema vem das fases iniciais do projeto quando só trabalhava a "core-team" e como são só 3, não precisariam de comentar tão bem como se a equipa tivesse muitos elementos. Os colaboradores externos comentam bem o seu código, tentando ser o máximo explicitos.
+
 
 ###**Heterogeneidade** <a name="het"></a>
 

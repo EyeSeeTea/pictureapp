@@ -72,7 +72,9 @@ Analisando a estrutura interna, podemos ver que a aplicação separa de forma ex
 
 ###**Inteligibilidade** <a name="int"></a>
 
-A aplicação "Malaria Case Surveillance" tem boa documentação, principalmente na wiki do projeto , visto que se encontra muito completa. Embora existam falhas, visto que algumas zonas do projeto estão pouco ou nada comentadas o que dificulta a sua compreensão. Na nossa opinião, este problema vem das fases iniciais do projeto quando só trabalhava a "core-team" e como são só 3, não precisariam de comentar tão bem como se a equipa tivesse muitos elementos. Os colaboradores externos comentam bem o seu código, tentando ser o máximo explicitos.
+Durante o desenvolvimento dos vários relatórios, consultamos várias vezes a Wiki disponível no projeto, que, na nossa opinião, se encontra completa, fornecendo vários diagramas e explicações que facilitam a compreensão das várias partes do projeto.
+
+No que toca a comentários, concluímos que está relativamente bem. No entanto, existem algumas partes do código que estão pouco ou nada comentadadas. Analisando mais aprofundadamente os commits, percebemos que esta falta de comentários se encontra nos ficheiros que foram implementados no início do desenvolvimento da aplicação. Inicialmente, a aplicação era desenvolvida pela *core team*, constituída por três elementos, sendo provável ter havido um descuido por este motivo. No entanto, tendo em conta que é uma aplicação open source, pensamos ser do interesse deles e de todos que fazem ou poderão vir a contribuir para a aplicação que haja comentários explícitos, de modo a haver uma maior compreensão por parte de todos. 
 
 
 ###**Heterogeneidade** <a name="het"></a>

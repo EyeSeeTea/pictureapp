@@ -34,7 +34,13 @@ Finalmente, abordaremos a útlima fase que consistiu na seleção de um bug repo
 
 Após a análise do projeto relativamente à testabilidade do mesmo, verificamos que foram feitos dois tipos de testes, testes unitários e testes instrumentados. 
 
-Para o processo de testing, são criados ficheiros de teste diferentes para cada componente que a equipa pretende testar. São também utilizadas ferramentas, referidas posteriormente, que dispõe de features que acedem a informação dos objetos e a estados de componentes quando ocorrem ações por parte dos utilizadores. Posto isto, pensamos ser razoável admitir que é possível controlar o estado das mesmas, apresentando então um bom nível de controlabilidade.
+Para o processo de testing, são criados ficheiros de teste diferentes para cada componente que a equipa pretende testar. São também utilizadas ferramentas, referidas posteriormente, que dispõe de features que acedem a informação dos objetos e a estados de componentes quando ocorrem ações por parte dos utilizadores. 
+
+Encontramos um ficheiro *tests.md* algumas indicações da equipa de desenvolvimento, o que nos permitiu perceber que estes dão importância ao estado das componentes quando são testadas, caso contrário, pode levar a resultados positivos que não correspondem à realidade.
+
+*"Because of that it is really important to ensure that each tests with its preconditions and checks is run under the right context no matter what test has been run before."*
+
+Posto isto, pensamos ser razoável admitir que é possível controlar o estado das mesmas, apresentando então um bom nível de controlabilidade.
 
 
 ###**Observabilidade** <a name="observ"></a>
@@ -52,10 +58,16 @@ Portanto, pensamos também ser correto afirmar que esta aplicação tem um alto 
 
 ###**Isolabilidade** <a name="iso"></a>
 
-Um dos principais desafios na definição de testes unitários reside no isolamento de cada componente, isto é, na definição de testes cujo resultado não seja condicionado por eventuais dependências exteriores à unidade de código a ser testada.
+Um dos principais desafios na definição de testes unitários reside no isolamento de cada componente, isto é, na definição de testes cujo resultado não seja condicionado por eventuais dependências exteriores à unidade de código a ser testada. Relativamente a *Android Testing Support Library*, sabemos que dispõe de uma outra ferramenta *UI Automator*, que segue um modelo black-box, servindo para escrever testes que precisar de ter conhecer detalhes internos da aplicação, o que, na nossa opinião, pode ser útil para aumentar a capacidade de isolabilidade.
+
+No entanto, de acordo com as duas caractéristicas anteriores, controlabilidade e observabilidade, achamos que os testes foram desenvolvidos no sentido de conseguirem isolar componentes e que, de facto, o conseguiram. 
 
 
 ###**Separação de Funcionalidades** <a name="sep"></a>
+
+Ao desenvolver software, é importante garantir que cada funcionalidade implementada fique confinada, o mais possível, ao componente ao qual diz respeito, sob pena de o código resultar mais confuso e, por conseguinte, menos testável. Uma classe que assuma demasiadas responsabilidades ou responsabilidades muito diferentes é não só mais suscetível à introdução de falhas quando alterada, como também mais difícil de testar e validar.
+
+Analisando a estrutura interna, podemos ver que a aplicação separa de forma explícita a sua funcionalidade por diversas classes, o que permite uma maior facilidade nos testes, como foi referido anterioremente.
 
 
 ###**Inteligibilidade** <a name="int"></a>

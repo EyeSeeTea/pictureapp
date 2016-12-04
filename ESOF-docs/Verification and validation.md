@@ -98,6 +98,9 @@ A percentagem de Error Prone está a 0%, porque, como podemos ver, existem 518 i
      - Switch statements should have a default label       
      - Use equals() to compare object references  
      - Avoid reassigning parameters  
+     
+     
+Devido a erros no Android Studio, os quais não conseguimos resolver, não foi possível obter a *test coverage*.
 
 ***
 ##**Bug report**<a name="bug"></a>

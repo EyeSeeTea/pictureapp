@@ -81,7 +81,7 @@ No que toca a comentários, concluímos que está relativamente bem. No entanto,
 
 Uma vez que a "Malaria Case Surveillance" é uma aplicação open-source é necessário garantir que, após a incorporação do código modificado submetido num dado pull request, o sistema permanece globalmente funcional.
 
-Por um lado, a realização de testes unitários permite garantir o correto funcionamento dos componentes da biblioteca. Por outro lado, é preciso averiguar o comportamento da aplicação durante sua utilização, surgindo a necessidade de realizar teste de instrumentação. A ferramente usada para automatizar os testes unitarios foi o JUnit e para os testes de instrumentação foi a Espresso Framework.
+Por um lado, a realização de testes unitários permite garantir o correto funcionamento dos componentes da aplicação. Por outro lado, é preciso averiguar o comportamento da aplicação durante sua utilização, surgindo a necessidade de realizar teste de instrumentação. A ferramente usada para automatizar os testes unitarios foi o JUnit e para os testes de instrumentação foi a Espresso Framework.
 
 Conclui-se, então que o projeto tem muita heterogeneidade nas ferramentas de teste utilizadas.
 ***

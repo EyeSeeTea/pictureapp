@@ -102,6 +102,10 @@ A percentagem de Error Prone está a 0%, porque, como podemos ver, existem 518 i
 ***
 ##**Bug report**<a name="bug"></a>
 
+![bug1](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/1.png?raw=true)
+![bug2](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/2.png?raw=true)
+![bug3](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/3.png?raw=true)
+
 ***
 ##**Contribuidores**<a name="contributors"></a>
 

@@ -33,17 +33,26 @@ Finalmente, abordaremos a útlima fase que consistiu na seleção de um bug repo
 ###**Controlabilidade** <a name="cont"></a>
 
 Após a análise do projeto relativamente à testabilidade do mesmo, verificamos que foram feitos dois tipos de testes, testes unitários e testes instrumentados. 
-Para o processo de testing, são criados ficheiros de teste diferentes para cada componente que a equipa pretende testar. São também utilizadas ferramentas, referidas posteriormente, que dispõe de features que acedem a informação dos objetos e a estados de componentes quando ocorrem ações por parte dos utilizadores. Posto isto, pensamos ser razoável admitir que é possível controlar o estado das mesmas, apresentando então um alto nível de controlabilidade.
+
+Para o processo de testing, são criados ficheiros de teste diferentes para cada componente que a equipa pretende testar. São também utilizadas ferramentas, referidas posteriormente, que dispõe de features que acedem a informação dos objetos e a estados de componentes quando ocorrem ações por parte dos utilizadores. Posto isto, pensamos ser razoável admitir que é possível controlar o estado das mesmas, apresentando então um bom nível de controlabilidade.
 
 
 ###**Observabilidade** <a name="observ"></a>
 
 Para o processo de testing, foi utilizada a biblioteca *Android Testing Support Library*, que disponibiliza uma framework para testar aplicações Android. Inclui duas ferramentas, *JAndroidJUnitRunner* e *Expresso*, utilizadas para os dois tipos de testes implementados, testes unitários e testes instrumentados.
+
 Um teste instrumentado é um tipo de teste que é exectuado diretamento no emulador ou dispositivo, simulando o comportamento de um utilizador. Para estes testes, a equipa de desenvolvimento tirou proveito das ferramentas referidas, que dispõem de classes como *Instrumentation* e *Context*, que permitem aceder a informação da componente a ser testada, bem como a sua interação com o sistema.
+
+Também é utilizada a biblioteca Hamcrest, que se integra com o JUnit e tem versões para várias linguagens. Permite verificar os resultados dos nossos testes muito mais concisamente. Além disso, quando uma verificação do Hamcrest falha, a mensagem de erro detalha o problema encontrado. 
+
+Um Matcher do Hamcrest nada mais é do que uma classe cuja função é verificar se um dado objeto tem as propriedades desejadas. Apesar de o Hamcrest já incluir diversos Matchers, nem sempre encontramos um que se adeque às nossas necessidades, sendo possível criar um novo que satisfaça estas mesmas necessidades. 
+
 Portanto, pensamos também ser correto afirmar que esta aplicação tem um alto nível de observabilidade.
 
 
 ###**Isolabilidade** <a name="iso"></a>
+
+Um dos principais desafios na definição de testes unitários reside no isolamento de cada componente, isto é, na definição de testes cujo resultado não seja condicionado por eventuais dependências exteriores à unidade de código a ser testada.
 
 
 ###**Separação de Funcionalidades** <a name="sep"></a>

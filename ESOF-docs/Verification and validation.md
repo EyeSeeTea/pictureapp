@@ -32,8 +32,17 @@ Finalmente, abordaremos a útlima fase que consistiu na seleção de um bug repo
 
 ###**Controlabilidade** <a name="cont"></a>
 
+Após a análise do projeto relativamente à testabilidade do mesmo, verificamos que foram feitos dois tipos de testes, testes unitários e testes instrumentados. 
+Para o processo de testing, são criados ficheiros de teste diferentes para cada componente que a equipa pretende testar. São também utilizadas ferramentas, referidas posteriormente, que dispõe de features que acedem a informação dos objetos e a estados de componentes quando ocorrem ações por parte dos utilizadores. Posto isto, pensamos ser razoável admitir que é possível controlar o estado das mesmas, apresentando então um alto nível de controlabilidade.
+
 
 ###**Observabilidade** <a name="observ"></a>
+
+Para o processo de testing, foi utilizada a biblioteca *Android Testing Support Library*, que disponibiliza uma framework para testar aplicações Android. Inclui duas ferramentas, *JAndroidJUnitRunner* e *Expresso*, utilizadas para os dois tipos de testes implementados, testes unitários e testes instrumentados.
+Um teste instrumentado é um tipo de teste que é exectuado diretamento no emulador ou dispositivo, simulando o comportamento de um utilizador. Para estes testes, a equipa de desenvolvimento tirou proveito das ferramentas referidas, que dispõem de classes como *Instrumentation* e *Context*, que permitem aceder a informação da componente a ser testada, bem como a sua interação com o sistema.
+Foi também usada uma extensão da ferramenta Expresso, Expresso Intents. 
+
+Tendo em conta o que foi referido anteriormente, pensamos ser correto afirmar que esta aplicação tem um alto nível de controlabilidade.
 
 
 ###**Isolabilidade** <a name="iso"></a>

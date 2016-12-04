@@ -102,6 +102,8 @@ A percentagem de Error Prone está a 0%, porque, como podemos ver, existem 518 i
 ***
 ##**Bug report**<a name="bug"></a>
 
+Por fim, procedemos à identificação de um bug. Correndo a aplicação e procedendo ao preenchimento das 9 perguntas, verificamos que na primeira pergunta aparece 1/1, sendo que nas restantes aparece 2/9, 3/9, e as restantes até 9/9 corretamente. Podemos ver o sucedido nas três imagens seguintes.
+
 ![bug1](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/1.png?raw=true)
 ![bug2](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/2.png?raw=true)
 ![bug3](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/3.png?raw=true)

@@ -27,9 +27,7 @@ import android.content.res.AssetManager;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -41,7 +39,6 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
  * Created by adrian on 30/05/15.
  */
 public class CustomRadioButton extends RadioButton implements IEyeSeeView {
-    private final static String TAG = ".CustomRadioButton";
     private Context context = getContext();
     private String mfontName = context.getString(R.string.normal_font);
     private String mScale = context.getString(R.string.settings_array_values_font_sizes_def);
@@ -89,10 +86,15 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
     }
 
     /**
-     * Initializing method. Sets font name and font size depending on the styled attributes
-     * selected
+     * Initializing method. Sets font name and font size depending on the styled attributes selected
+     * @param attrs
+     * @param defStyle
      */
     public void init(AttributeSet attrs, int defStyle) {
+
+        if(isInEditMode()){
+            return;
+        }
 
         // Load attributes
         if (attrs != null) {
@@ -100,20 +102,16 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
             try {
                 mfontName = a.getString(R.styleable.CustomRadioButton_rFontName);
                 if (mfontName != null) {
-                    font = Typeface.createFromAsset(assetManager, "fonts/" + mfontName);
-                    setTypeface(font);
+                    setTypeface(TypefaceCache.getInstance().getTypeface(mfontName));
                 }
 
                 mDimension = a.getString(R.styleable.CustomRadioButton_rDimension);
                 mScale = a.getString(R.styleable.CustomRadioButton_rScale);
-                if (mDimension == null) {
+                if (mDimension == null)
                     mDimension = context.getString(R.string.settings_array_values_font_sizes_def);
-                }
                 if (mScale == null) mScale = PreferencesState.getInstance().getScale();
-                if (!mScale.equals(context.getString(R.string.font_size_system))) {
-                    setTextSize(TypedValue.COMPLEX_UNIT_SP,
-                            PreferencesState.getInstance().getFontSize(mScale, mDimension));
-                }
+                if (!mScale.equals(context.getString(R.string.font_size_system)))
+                    setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferencesState.getInstance().getFontSize(mScale, mDimension));
             } finally {
                 a.recycle();
             }
@@ -126,51 +124,44 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
 
     /**
      * Call sequentially all the updateXXX methods for each styleable properties
-     *
-     * @param scale     global size selected by the user
+     * @param scale global size selected by the user
      * @param dimension specific dimension of this component related to the rest of the components
-     * @param fontName  font name, within listed in fonts folder inside the resources of the app
+     * @param fontName font name, within listed in fonts folder inside the resources of the app
      */
-    public void updateProperties(String scale, String dimension, String fontName) {
+    public void updateProperties(String scale, String dimension, String fontName){
         updateFontName(fontName);
         updateFontSize(scale, dimension);
     }
 
     /**
-     * Set the Object font name. This must be a valid font placed in fonts subfolder, inside the
-     * resources of the app
+     * Set the Object font name. This must be a valid font placed in fonts subfolder, inside the resources of the app
+     * @param fontName
      */
-    public void updateFontName(String fontName) {
-        if (fontName != null) {
-            font = Typeface.createFromAsset(assetManager, "fonts/" + fontName);
-            setTypeface(font);
+    public void updateFontName(String fontName){
+        if (fontName != null){
+            setTypeface(TypefaceCache.getInstance().getTypeface(fontName));
             mfontName = fontName;
         }
     }
 
     /**
-     * Set the Object font size. This will be determined by the scale and dimension parameters,
-     * both
-     * one of [xsmall|small|medium|large|xlarge ] choices
-     *
+     * Set the Object font size. This will be determined by the scale and dimension parameters, both one of [xsmall|small|medium|large|xlarge ] choices
      * @param dimension size related to rest of screen objects
-     * @param scale     global app font size established in preferences
+     * @param scale global app font size established in preferences
      */
-    public void updateFontSize(String scale, String dimension) {
-        if (dimension != null && scale != null) {
+    public void updateFontSize(String scale, String dimension){
+        if (dimension != null && scale != null){
             this.mDimension = dimension;
             this.mScale = scale;
             if (!scale.equals(context.getString(R.string.font_size_system))) {
-                setTextSize(TypedValue.COMPLEX_UNIT_SP,
-                        PreferencesState.getInstance().getFontSize(scale, dimension));
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferencesState.getInstance().getFontSize(scale,dimension));
             }
         }
     }
 
     @Override
     /**
-     * Sets the view's mFontName attribute value. This is intended to be a String that represents
-     * the font name we need to use here.
+     * Sets the view's mFontName attribute value. This is intended to be a String that represents the font name we need to use here.
      *
      * @param mFontName The dimension for this component.
      */
@@ -180,8 +171,7 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
 
     @Override
     /**
-     * Gets the view's mFontName attribute value. This is intended to be a String that represents
-     * the font name we need to use here.
+     * Gets the view's mFontName attribute value. This is intended to be a String that represents the font name we need to use here.
      *
      * @return The dimension for this component.
      */
@@ -191,23 +181,19 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
 
     @Override
     /**
-     * Sets the view's mDimension attribute value. This is intended to be a String that
-     * represents component dimension size of this font [xsmall|small|medium|large|xlarge]].
+     * Sets the view's mDimension attribute value. This is intended to be a String that represents component dimension size of this font [xsmall|small|medium|large|xlarge]].
      *
      * @param mDimension The dimension for this component.
      */
     public void setmDimension(String mDimension) {
         this.mDimension = mDimension;
-        if (getmScale() != getContext().getString(R.string.font_size_system)) {
-            setTextSize(TypedValue.COMPLEX_UNIT_SP,
-                    PreferencesState.getInstance().getFontSize(mScale, mDimension));
-        }
+        if (getmScale() != getContext().getString(R.string.font_size_system))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferencesState.getInstance().getFontSize(mScale, mDimension));
     }
 
     @Override
     /**
-     * Gets the view's mDimension attribute value. This is intended to be a String that
-     * represents component dimension size of this font [xsmall|small|medium|large|xlarge]].
+     * Gets the view's mDimension attribute value. This is intended to be a String that represents component dimension size of this font [xsmall|small|medium|large|xlarge]].
      *
      * @return The dimension for this component.
      */
@@ -217,23 +203,19 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
 
     @Override
     /**
-     * Sets the view's mScale attribute value. This is intended to be a String that represents
-     * the global font scale on this app [xsmall|small|medium|large|xlarge]].
+     * Sets the view's mScale attribute value. This is intended to be a String that represents the global font scale on this app [xsmall|small|medium|large|xlarge]].
      *
      * @param mScale The scale for this component.
      */
     public void setmScale(String mScale) {
-        if (!mScale.equals(this.mScale)) {
-            setTextSize(TypedValue.COMPLEX_UNIT_SP,
-                    PreferencesState.getInstance().getFontSize(mScale, mDimension));
-        }
+        if (!mScale.equals(this.mScale))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferencesState.getInstance().getFontSize(mScale, mDimension));
         this.mScale = mScale;
     }
 
     @Override
     /**
-     * Gets the view's mScale attribute value. This is intended to be a String that represents
-     * the global font scale on this app [xsmall|small|medium|large|xlarge]].
+     * Gets the view's mScale attribute value. This is intended to be a String that represents the global font scale on this app [xsmall|small|medium|large|xlarge]].
      *
      * @return The scale for this component.
      */
@@ -248,48 +230,20 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
     public void setOption(Option option) {
         this.option = option;
         this.setTag(option);
-        //this.setText(option.getName());
-    }
-
-    @Override
-    public void setChecked(boolean checked) {
-        Log.d(TAG, "radiobutton checked: " + checked);
-        super.setChecked(checked);
+        this.setText(option.getName());
     }
 
     @Override
     /**
-     * toggle the selection in the Radiobutton. Here we provide the capability of deselection
-     * when already pressed answer in pressed.
+     * toggle the selection in the Radiobutton. Here we provide the capability of deselection when already pressed answer in pressed.
      */
     public void toggle() {
-        Log.d(TAG, "radiobutton toggle ");
-        if (isChecked()) {
-            if (getParent() instanceof RadioGroup) {
-                ((RadioGroup) getParent()).clearCheck();
-            } else if (getParent() instanceof LinearLayout) {
-                setChecked(false);
+        if(isChecked()) {
+            if(getParent() instanceof RadioGroup) {
+                ((RadioGroup)getParent()).clearCheck();
             }
         } else {
-            clearOthers();
             setChecked(true);
         }
-    }
-
-    private void clearOthers() {
-        for (int i = 0; i < ((RadioGroup) getParent().getParent()).getChildCount(); i++) {
-            LinearLayout linearLayout =
-                    (LinearLayout) ((RadioGroup) getParent().getParent()).getChildAt(i);
-            if (linearLayout.getChildAt(1) instanceof CustomRadioButton) {
-                CustomRadioButton customRadioButton = ((CustomRadioButton) linearLayout.getChildAt(
-                        1));
-                if (!customRadioButton.getTag().equals(this.getTag())) {
-                    if (customRadioButton.isChecked()) {
-                        customRadioButton.setChecked(false);
-                    }
-                }
-            }
-        }
-
     }
 }

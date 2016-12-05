@@ -241,7 +241,7 @@ public class BaseLayoutUtils {
      *
      * @param fixed substract the fixed number from the screenwidth
      */
-    public static void setLayoutParamsAs50Percent(LinearLayout linearLayout, Context context,
+    public static void setLayoutParamsAs50Percent(View linearLayout, Context context,
             int fixed) {
         LinearLayout.LayoutParams layoutParamsWidth50 = new LinearLayout.LayoutParams(
                 ((getScreenWidth(context) - fixed) / 2)

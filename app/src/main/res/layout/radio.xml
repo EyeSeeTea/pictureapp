@@ -23,6 +23,7 @@
         android:id="@+id/answer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="right"
         android:gravity="center_vertical"
         android:padding="5dip">
 

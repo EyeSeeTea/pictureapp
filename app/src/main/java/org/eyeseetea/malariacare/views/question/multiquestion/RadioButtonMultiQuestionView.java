@@ -1,18 +1,17 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.CustomRadioButton;
@@ -39,6 +38,12 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
     @Override
     public void setQuestion(Question question) {
+        if(question.getOutput()== Constants.RADIO_GROUP_HORIZONTAL) {
+            radioGroup.setOrientation(HORIZONTAL);
+        }
+        else{
+            radioGroup.setOrientation(VERTICAL);
+        }
         this.question = question;
     }
 
@@ -47,25 +52,14 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         LayoutInflater lInflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
         for (Option option : options) {
-            LinearLayout linearLayout = (LinearLayout) lInflater.inflate(
+            CustomRadioButton radioButton = (CustomRadioButton) lInflater.inflate(
                     R.layout.uncheckeable_radiobutton, null);
-
-
-            Drawable radioButtonIcon = getResources().getDrawable(R.drawable.radio_on);
-
-            //sets the fixed layout width, using the the 50% of the screen size without the
-            // radiobutton image width(to prevent a overlapsed image).
-            //The layout weight not working here.
-            BaseLayoutUtils.setLayoutParamsAs50Percent(linearLayout, context,
-                    radioButtonIcon.getIntrinsicWidth());
-
-            CustomRadioButton button = (CustomRadioButton) linearLayout.findViewById(
-                    R.id.radio_button);
-            button.setOption(option);
-            TextCard textCard = (TextCard) linearLayout.findViewById(R.id.radio_text);
-            textCard.setText(option.getName());
-            button.setOnCheckedChangeListener(new RadioButtonListener(question));
-            radioGroup.addView(linearLayout);
+            radioButton.setOption(option);
+            BaseLayoutUtils.setLayoutParamsAs50Percent(radioButton, context,
+                    0);
+            radioButton.updateProperties(PreferencesState.getInstance().getScale(), context.getString(R.string.font_size_level1), context.getString(R.string.specific_language_font));
+            radioGroup.addView(radioButton);
+            radioGroup.setOnCheckedChangeListener(new RadioGroupListener((View) radioGroup.getParent(), question));
         }
     }
 
@@ -91,20 +85,6 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         radioGroup.setEnabled(enabled);
     }
 
-    /**
-     * Returns the boolean selected for the given question (by boolean value or position option,
-     * position 1=true 0=false)
-     */
-    public static Boolean findSwitchBoolean(Question question) {
-        Value value = question.getValueBySession();
-        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
-            return true;
-        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())) {
-            return false;
-        }
-        return false;
-    }
-
     @Override
     public void setValue(Value value) {
 
@@ -113,8 +93,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         }
 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            LinearLayout linearLayout = (LinearLayout) radioGroup.getChildAt(i);
-            CustomRadioButton customRadioButton = (CustomRadioButton) linearLayout.getChildAt(1);
+            CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
 
             Option option = customRadioButton.getOption();
             if (option.equals(value.getOption())) {
@@ -131,38 +110,55 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         header = (TextCard) view.findViewById(R.id.row_header_text);
         image = (ImageView) view.findViewById(R.id.question_image_row);
         radioGroup = (RadioGroup) view.findViewById(R.id.answer);
-        radioGroup.setOrientation(HORIZONTAL);
     }
 
-    class RadioButtonListener implements RadioGroup.OnCheckedChangeListener,
-            CompoundButton.OnCheckedChangeListener {
+    public class RadioGroupListener implements RadioGroup.OnCheckedChangeListener {
+        private View viewHolder;
         private Question question;
 
-        public RadioButtonListener(Question question) {
+        public RadioGroupListener(View viewHolder, Question question) {
             this.question = question;
+            this.viewHolder = viewHolder;
         }
 
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
-        }
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (!buttonView.isShown()) {
+            if(!group.isShown()){
                 return;
             }
 
-            CustomRadioButton customRadioButton = (CustomRadioButton) buttonView;
-
-            Option optionToBeRemoved = new Option(Constants.DEFAULT_SELECT_OPTION);
-            Option selectedOption = (Option) customRadioButton.getTag();
-            Value value = question.getValueBySession();
-            if (value != null && value.getOption() != null && value.getOption().equals(
-                    selectedOption)) {
-                selectedOption = optionToBeRemoved;
+            Option selectedOption = new Option(Constants.DEFAULT_SELECT_OPTION);
+            if (checkedId != -1) {
+                CustomRadioButton customRadioButton = findRadioButtonById(checkedId);
+                selectedOption = customRadioButton.getOption();
+            }
+            notifyAnswerChanged(selectedOption);
+        }
+        /**
+         * Fixes a bug in older apis where a RadioGroup cannot find its children by id
+         *
+         * @param id
+         * @return
+         */
+        public CustomRadioButton findRadioButtonById(int id) {
+            //No component -> done
+            if (radioGroup == null || !(radioGroup instanceof RadioGroup)) {
+                return null;
             }
 
-            notifyAnswerChanged(selectedOption);
+            //Modern api -> delegate in its method
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                return (CustomRadioButton) radioGroup.findViewById(id);
+            }
+
+            //Find button manually
+            for (int i = 0; i < ((RadioGroup) ((RadioGroup) radioGroup).getChildAt(0)).getChildCount(); i++) {
+                View button = ((RadioGroup) radioGroup).getChildAt(i);
+                if (button.getId() == id) {
+                    return (CustomRadioButton) button;
+                }
+            }
+            return null;
         }
     }
 }

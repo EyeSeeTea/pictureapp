@@ -142,9 +142,14 @@
     <string name="last_6_weeks">last 6 weeks</string>
     <string name="last_6_months">last 6 months</string>
     <string name="download">Download:</string>
-    <string name="assessment_past_cases">PAST CASES</string>
-    <string name="assessment_new_cases">NEW CASES</string>
-    <string name="assessment_connectivity">Unsent Data</string>
+    <string name="header_title_sent">PAST CASES</string>
+    <string name="header_title_unsent">NEW CASES</string>
+    <string name="header_title_stock">STOCK CONTROL</string>
+    <string name="header_title_monitoring">MONITORING</string>
+    <string name="header_subtitle_unsent">Unsent data</string>
+    <string name="header_subtitle_sent">Sent Data</string>
+    <string name="header_subtitle_stock">Receipts / Balances</string>
+    <string name="header_subtitle_monitoring">Time period</string>
     <string name="positive_hint">Name, Details</string>
     <string name="developer_option_summary">This feature activates the developer options</string>
     <string name="developer_option_title">Show developer options</string>

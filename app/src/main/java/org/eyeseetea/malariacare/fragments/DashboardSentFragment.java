@@ -187,6 +187,10 @@ public class DashboardSentFragment extends ListFragment {
             if (header != null) {
                 listView.addHeaderView(header);
             }
+            View button = footer.findViewById(R.id.plusButton);
+            if (button != null) {
+                button.setVisibility(View.GONE);
+            }
             listView.addFooterView(footer);
             LayoutUtils.setRowDivider(listView);
             setListAdapter((BaseAdapter) adapter);

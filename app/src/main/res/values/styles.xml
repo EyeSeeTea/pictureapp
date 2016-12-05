@@ -63,4 +63,8 @@
     </style>
 
 
+    <style name="RadioButtonNullStyle" parent="@android:style/Widget.CompoundButton">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:button">@null</item>
+    </style>
 </resources>

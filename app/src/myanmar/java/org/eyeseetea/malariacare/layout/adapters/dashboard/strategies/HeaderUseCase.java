@@ -24,10 +24,12 @@ public class HeaderUseCase implements IHeaderCaseUse {
         return instance;
     }
 
+    @Override
     public View loadHeader(Integer headerLayout, LayoutInflater inflater) {
         return null;
     }
 
+    @Override
     public void init(Activity activity, int tabTag) {
         if (activity == null) {
             return;
@@ -64,6 +66,7 @@ public class HeaderUseCase implements IHeaderCaseUse {
         title.setText(view.getContext().getString(titleString));
     }
 
+    @Override
     public void hideHeader(Activity activity) {
         if (activity != null) {
             View view = activity.findViewById(R.id.common_header);

@@ -110,7 +110,7 @@ public class DashboardActivity extends BaseActivity {
         initTabHost(savedInstanceState);
         /* set tabs in order */
         LayoutUtils.setTabHosts(this);
-        LayoutUtils.setDivider(this);
+        LayoutUtils.setTabDivider(this);
         //set the tabs background as transparent
         setTabsBackgroundColor(R.color.tab_unpressed_background);
 

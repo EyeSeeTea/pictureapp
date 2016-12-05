@@ -91,25 +91,34 @@ public class LayoutUtils extends BaseLayoutUtils {
                 totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)));
     }
 
-    public static void setDivider(ListView listView) {
-        listView.setDividerHeight(0);
+    public static void setTabDivider(DashboardActivity dashboardActivity) {
+        dashboardActivity.setDivider();
     }
 
-    public static void setRowDivider(ListView listView) {
+    public static void setHeaderDivider(ListView listView) {
         ColorDrawable myColor = new ColorDrawable(
-                PreferencesState.getInstance().getContext().getResources().getColor(R.color.headerColor)
+                PreferencesState.getInstance().getContext().getResources().getColor(
+                        R.color.headerColor)
         );
         listView.setDivider(myColor);
         listView.setDividerHeight(0);
-        listView.setPadding(20,0,20,0);
+        listView.setPadding(20, 0, 20, 0);
     }
 
+    public static void setRowDivider(ListView listView) {
+        listView.setDivider(ContextCompat.getDrawable(PreferencesState.getInstance().getContext(),
+                R.drawable.dotted));
+    }
 
     // Given a index, this method return a background color
     public static int calculateBackgrounds(int index) {
-        if(index==0){
+        if (index == 0) {
             return R.drawable.transparent_selector;
         }
         return rowBackgrounds[index % rowBackgrounds.length];
+    }
+    public static void setDivider(ListView listView) {
+        listView.setDivider(ContextCompat.getDrawable(PreferencesState.getInstance().getContext(),
+                R.drawable.dotted));
     }
 }

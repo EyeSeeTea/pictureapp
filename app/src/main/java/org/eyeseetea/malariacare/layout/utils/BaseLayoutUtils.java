@@ -26,7 +26,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -36,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Option;
@@ -193,8 +193,4 @@ public class BaseLayoutUtils {
         }
     }
 
-    public static void setDivider(ListView listView) {
-        listView.setDivider(ContextCompat.getDrawable(PreferencesState.getInstance().getContext(),
-                R.drawable.dotted));
-    }
 }

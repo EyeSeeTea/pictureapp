@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.layout.adapters.dashboard.strategies;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -7,7 +8,7 @@ import android.view.View;
  * Created by idelcano on 05/12/2016.
  */
 
-public class HeaderCaseUse implements IHeaderCaseUse {
+public class HeaderUseCase implements IHeaderCaseUse {
 
     /**
      * Singleton reference
@@ -21,13 +22,17 @@ public class HeaderCaseUse implements IHeaderCaseUse {
         return instance;
     }
 
-    public static View loadHeader(Integer headerLayout, LayoutInflater inflater) {
+    @Override
+    public View loadHeader(Integer headerLayout, LayoutInflater inflater) {
         return inflater.inflate(headerLayout, null, false);
     }
 
-    public static void init(View view, int tabTag) {
+    @Override
+    public void init(Activity activity, int tabTag) {
+
     }
 
+    @Override
     public void hideHeader(Activity activity) {
     }
 }

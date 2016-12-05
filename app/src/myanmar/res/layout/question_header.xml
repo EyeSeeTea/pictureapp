@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/background_question_header"
     android:orientation="vertical">
-R
     <include layout="@layout/top_view"></include>
 
     <LinearLayout
@@ -30,12 +29,9 @@ R
             android:textColor="@color/question_header_title"
             app:tDimension="@string/font_size_level1"
             app:tFontName="@string/condensed_font_name" />
-        <!--android:textSize="@dimen/dashboard_text_size"-->
-        <View
-            android:layout_width="3dip"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:background="@color/dark_violet" />
+
+
+        <include layout="@layout/horizontal_divisor_view"></include>
 
         <org.eyeseetea.malariacare.views.TextCard
             android:id="@+id/question"

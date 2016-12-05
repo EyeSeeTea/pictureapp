@@ -6,12 +6,12 @@
 6;'Hidden';'Male';0;7;6
 7;'Hidden';'No pregnant';0;8;7
 8;'Hidden';'Pregnant';0;8;8
-9;'Yes';'Yes';0;9;9
-10;'No';'No';0;9;10
-11;'Yes';'Yes';0;10;11
-12;'No';'No';0;10;12
-13;'Yes';'Yes';0;11;13
-14;'No';'No';0;11;14
+9;'symptoms_fever_yes';'Yes';0;9;9
+10;'symptoms_fever_no';'No';0;9;10
+11;'symptoms_care_sought_yes';'Yes';0;10;11
+12;'symptoms_care_sought_no';'No';0;10;12
+13;'symptoms_severity_yes';'Yes';0;11;13
+14;'symptoms_severity_no';'No';0;11;14
 15;'Negative';'Negative';0;12;15
 16;'Pf';'Pf';0;12;16
 17;'Pv';'Pv';0;12;17

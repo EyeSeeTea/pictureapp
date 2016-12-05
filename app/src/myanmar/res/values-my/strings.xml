@@ -21,6 +21,21 @@
     <string name="patient_sex_female"></string>
     <string name="patient_sex_female_pregnant"></string>
 
+    <string name="symptoms_title"></string>
+    <string name="symptoms_fever"></string>
+    <string name="symptoms_fever_text"></string>
+    <string name="symptoms_fever_yes"></string>
+    <string name="symptoms_fever_no"></string>
+    <string name="symptoms_care_sought"></string>
+    <string name="symptoms_care_sought_text"></string>
+    <string name="symptoms_care_sought_yes"></string>
+    <string name="symptoms_care_sought_no"></string>
+    <string name="symptoms_severity"></string>
+    <string name="symptoms_severity_text"></string>
+    <string name="symptoms_severity_yes"></string>
+    <string name="symptoms_severity_no"></string>
+
+
     <string name="yes">"Sí"</string>
     <string name="no">"No"</string>
     <string name="ok">"Ok"</string>

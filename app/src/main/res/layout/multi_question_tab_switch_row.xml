@@ -47,6 +47,19 @@
                 android:orientation="vertical">
 
                 <org.eyeseetea.malariacare.views.TextCard
+                    android:id="@+id/row_header_title_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:gravity="right"
+                    android:paddingLeft="@dimen/question_padding_all"
+                    android:paddingRight="@dimen/question_padding_all"
+                    android:textColor="@color/intColor"
+                    android:textSize="@dimen/input_number_edit_text_phone"
+                    app:tDimension="@string/font_size_level1"
+                    app:tFontName="@string/condensed_font_name" />
+
+                <org.eyeseetea.malariacare.views.TextCard
                     android:id="@+id/row_header_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

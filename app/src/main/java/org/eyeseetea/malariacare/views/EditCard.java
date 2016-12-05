@@ -69,8 +69,7 @@ public class EditCard extends EditText implements IEyeSeeView {
             try {
                 mfontName = a.getString(R.styleable.EditCard_eFontName);
                 if (mfontName != null) {
-                    font = Typeface.createFromAsset(assetManager, "fonts/" + mfontName);
-                    setTypeface(font);
+                    setTypeface(TypefaceCache.getInstance().getTypeface(mfontName));
                 }
 
                 mDimension = a.getString(R.styleable.EditCard_eDimension);

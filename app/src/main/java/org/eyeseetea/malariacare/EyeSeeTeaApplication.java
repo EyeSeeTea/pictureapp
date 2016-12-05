@@ -45,6 +45,7 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Permissions;
+import org.eyeseetea.malariacare.views.TypefaceCache;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
 import io.fabric.sdk.android.Fabric;
@@ -62,6 +63,7 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         Fabric.with(this, new Crashlytics());
         PreferencesState.getInstance().init(getApplicationContext());
         LocationMemory.getInstance().init(getApplicationContext());
+        TypefaceCache.getInstance().init(getApplicationContext());
 
         FlowManager.init(this, "_EyeSeeTeaDB");
         createDBIndexes();

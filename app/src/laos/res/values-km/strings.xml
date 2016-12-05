@@ -29,10 +29,10 @@
     <string name="exception_org_unit_banned">"ហាងត្រូវបានបិទឬរារាំង។ ការទំនាក់ទំនងនៅ  អង្គការ PSI 011 771 811"</string>
     <string name="dynamic_error_phone_format">"បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ  ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
     <string name="dynamic_error_age">"អាយុមិនត្រឹមត្រូវ"</string>
-    <string name="title_activity_settings">"ការកំនត់"</string>
-    <string name="settings_checkbox_customize_fonts">"ប្តូរពុម្ពអក្សរ?"</string>
-    <string name="settings_list_font_sizes">"ទំហំពុម្ពអក្សរ"</string>
-    <string name="settings_text_dhis_server_url">"DHIS Server URL"</string>
+    <string name="app_settings">"ការកំនត់"</string>
+    <string name="fonts_customise">"ប្តូរពុម្ពអក្សរ?"</string>
+    <string name="font_size">"ទំហំពុម្ពអក្សរ"</string>
+    <string name="server_name">"DHIS Server URL"</string>
     <string name="settings_select_language">"ភាសា"</string>
     <string name="pref_header_general">"General"</string>
     <string name="font_size_level0">"xsmall"</string>
@@ -46,8 +46,8 @@
     <string name="dialog_info_push_bad_credentials">"លិខិត​សម្គាល់​អាក្រក់​សម្រាប់​ជំរុញ​ឱ្យ​មាន "</string>
     <string name="dialog_error_push_no_uid">"លេខកូដ UID មិនត្រូវបានរកឃើញនៅក្នុងម៉ាស៊ីនបម្រើ (Server)"</string>
     <string name="dialog_error_push_no_location">"ទីតាំង​ដែល​អាច​ប្រើ​បាន​គ្មាន"</string>
-    <string name="pref_server">"Server"</string>
-    <string name="pref_visual">"Visual"</string>
+    <string name="server">"Server"</string>
+    <string name="app_visual">"Visual"</string>
     <string name="number_0">"០"</string>
     <string name="number_1">"១"</string>
     <string name="number_2">"២"</string>
@@ -117,11 +117,11 @@
     <string name="sent_button">"ដែលបានផ្ញើ"</string>
     <string name="monitor_button">"ការតាមដាន"</string>
 
-    <string name="font_size_level0_title">"តូចបំផុត"</string>
-    <string name="font_size_level1_title">"តូច"</string>
-    <string name="font_size_level2_title">"មធ្យម"</string>
-    <string name="font_size_level3_title">"ធំ"</string>
-    <string name="font_size_level4_title">"ធំបំផុត"</string>
+    <string name="font_extra_small">"តូចបំផុត"</string>
+    <string name="font_small">"តូច"</string>
+    <string name="font_medium">"មធ្យម"</string>
+    <string name="font_large">"ធំ"</string>
+    <string name="font_extra_large">"ធំបំផុត"</string>
     <string name="option_counter">"ការធ្វើឡើងវិញ:"</string>
     <string name="option_confirm">"អះអាងជម្រើស"</string>
     <string name="monitor_row_title_act_stockout">"ចំនួនមិនបានព្យាបាល (stockout ACT)"</string>

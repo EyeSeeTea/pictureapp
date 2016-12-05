@@ -85,7 +85,7 @@
             android:name="org.eyeseetea.malariacare.SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:finishOnTaskLaunch="true"
-            android:label="@string/title_activity_settings"
+            android:label="@string/app_settings"
             android:parentActivityName=".DashboardActivity">
 
             <meta-data

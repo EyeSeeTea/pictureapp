@@ -44,7 +44,32 @@
 
 
 
+    <string name="app_settings">Settings</string> <!--title_activity_settings-->
+    <string name="server">Server:</string>
+    <string name="server_name">DHIS Server URL</string> <!--settings_text_dhis_server_url-->
+    <string name="app_visual">Visual:</string>
+    <string name="fonts_customise">Customise fonts</string>  <!--settings_checkbox_customize_fonts-->
+    <string name="font_size">Font size</string> <!--settings_list_font_sizes-->
+    <string name="font_extra_small">Extra small</string> <!--font_size_level0_title-->
+    <string name="font_small">Small</string> <!--font_size_level1_title-->
+    <string name="font_medium">Medium</string> <!--font_size_level2_title-->
+    <string name="font_large">Large</string> <!--font_size_level3_title-->
+    <string name="font_extra_large">Extra large</string> <!--font_size_level4_title-->
+    <string name="settings_select_language">"Language"</string> <!--settings_select_language-->
+    <string name="developer_option_title">Show developer options</string>
+    <string name="developer_option_summary">This feature activates the developer options</string>
 
+
+    <string name="settings_menu_legal">"Legal"</string>
+    <string name="settings_menu_copyright">"Copyright"</string>
+    <string name="settings_menu_licenses">"Software licenses"</string>
+    <string name="settings_menu_eula">"EULA"</string>
+    <string name="settings_menu_about">"About"</string>
+    <string name="settings_menu_configuration">"Settings"</string>
+    <string name="settings_menu_licence">"License"</string>
+    <string name="settings_menu_logout_title">"Logout"</string>
+    <string name="settings_menu_logout_message">"Changing the server or orgunit needs to re-login. Every not-sent survey will be deleted. Are you sure you want to continue?"</string>
+    <string name="dashboard_menu_logout_message">"Every not-sent survey will be deleted. Are you sure you want to continue?"</string>
 
 
     <string name="yes">"Yes"</string>
@@ -53,12 +78,7 @@
     <string name="cancel">"Cancel"</string>
     <string name="review">"Review"</string>
     <string name="send">"Send"</string>
-    <string name="settings_menu_about">"About"</string>
-    <string name="settings_menu_configuration">"Settings"</string>
-    <string name="settings_menu_licence">"License"</string>
-    <string name="settings_menu_logout_title">"Logout"</string>
-    <string name="settings_menu_logout_message">"Changing the server or orgunit needs to re-login. Every not-sent survey will be deleted. Are you sure you want to continue?"</string>
-    <string name="dashboard_menu_logout_message">"Every not-sent survey will be deleted. Are you sure you want to continue?"</string>
+
     <string name="dialog_title_delete_surveys">"Are you sure that you want to remove all sent surveys?"</string>
     <string name="dialog_title_delete_survey">"Delete Survey"</string>
     <string name="dialog_info_delete_survey">"Are you sure you want to completely delete this survey?"</string>
@@ -77,12 +97,11 @@
     <string name="exception_org_unit_banned">"Outlet is closed or blocked. Contact PSI at 011 771 811"</string>
     <string name="dynamic_error_phone_format">"Invalid format for phone number ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
     <string name="dynamic_error_age">"Invalid age"</string>
-    <string name="title_activity_settings">"Settings"</string>
-    <string name="settings_checkbox_customize_fonts">"Customize fonts?"</string>
-    <string name="settings_list_font_sizes">"Fonts size"</string>
-    <string name="settings_text_dhis_server_url">"DHIS Server URL"</string>
-    <string name="settings_select_language">"Language"</string>
+
+
+
     <string name="pref_header_general">"General"</string>
+
     <string name="font_size_level0">"xsmall"</string>
     <string name="font_size_level1">"small"</string>
     <string name="font_size_level2">"medium"</string>
@@ -94,8 +113,7 @@
     <string name="dialog_info_push_bad_credentials">"Bad credentials for pushing"</string>
     <string name="dialog_error_push_no_uid">"No program UID found in server for code "</string>
     <string name="dialog_error_push_no_location">"No location available"</string>
-    <string name="pref_server">"Server"</string>
-    <string name="pref_visual">"Visual"</string>
+
     <string name="number_0">"0"</string>
     <string name="number_1">"1"</string>
     <string name="number_2">"2"</string>
@@ -146,10 +164,8 @@
     <string name="monitor_row_title_rdts">"RDTs"</string>
     <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
 
-    <string name="settings_menu_legal">"Legal"</string>
-    <string name="settings_menu_copyright">"Copyright"</string>
-    <string name="settings_menu_licenses">"Software licenses"</string>
-    <string name="settings_menu_eula">"EULA"</string>
+
+
     <string name="monitor_row_title_day">"Day"</string>
     <string name="monitor_row_title_month">"Month"</string>
     <string name="unrecognized_option">"Unrecognized"</string>
@@ -163,11 +179,7 @@
     <string name="sent_button">"Sent"</string>
     <string name="monitor_button">"Monitoring"</string>
 
-    <string name="font_size_level0_title">"Extra small"</string>
-    <string name="font_size_level1_title">"Small"</string>
-    <string name="font_size_level2_title">"Medium"</string>
-    <string name="font_size_level3_title">"Large"</string>
-    <string name="font_size_level4_title">"Extra large"</string>
+
     <string name="option_counter">"Repetitions: "</string>
     <string name="option_confirm">"Confirm option"</string>
     <string name="monitor_row_title_act_stockout">Number not treated (ACT stockout)</string>
@@ -191,8 +203,7 @@
 
     <string name="assessment_connectivity">Unsent Data</string>
     <string name="positive_hint">Name, Details</string>
-    <string name="developer_option_summary">This feature activates the developer options</string>
-    <string name="developer_option_title">Show developer options</string>
+
     <string name="export_data_option_title">Export database</string>
     <string name="demo_login">Demo</string>
 </resources>

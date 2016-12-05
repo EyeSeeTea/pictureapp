@@ -35,6 +35,27 @@
     <string name="symptoms_severity_yes"></string>
     <string name="symptoms_severity_no"></string>
 
+    <string name="rdt_test_result"></string>
+    <string name="rdt_negative"></string>
+    <string name="rdt_pf"></string>
+    <string name="rdt_pv"></string>
+    <string name="rdt_mixed"></string>
+    <string name="rdt_invalid"></string>
+
+
+    <string name="app_settings"></string>
+    <string name="server"></string>
+    <string name="app_visual"></string>
+    <string name="fonts_customise"></string>
+    <string name="font_size"></string>
+    <string name="font_extra_small"></string>
+    <string name="font_small"></string>
+    <string name="font_medium"></string>
+    <string name="font_large"></string>
+    <string name="font_extra_large"></string>
+    <string name="settings_select_language">"Idioma"</string>
+    <string name="developer_option_summary">Esta opción activa las opciones de desarrollador</string>
+    <string name="developer_option_title">Mostrar opciones de desarrollador</string>
 
     <string name="yes">"Sí"</string>
     <string name="no">"No"</string>
@@ -66,11 +87,10 @@
     <string name="exception_org_unit_banned">"El código está cerrado o bloqueado . Contacto PSI en el 011 771 811"</string>
     <string name="dynamic_error_phone_format">"El télefono dado no esta bien formateado  ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx )"</string>
     <string name="dynamic_error_age">"La edad no es válida"</string>
-    <string name="title_activity_settings">"Configuración"</string>
-    <string name="settings_checkbox_customize_fonts">"¿Personalizar fuentes?"</string>
-    <string name="settings_list_font_sizes">"Tamaño de fuentes"</string>
-    <string name="settings_text_dhis_server_url">"URL de servidor DHIS"</string>
-    <string name="settings_select_language">"Idioma"</string>
+
+
+    <string name="server_name">"URL de servidor DHIS"</string>
+
     <string name="pref_header_general">"General"</string>
     <string name="font_size_level0">"xsmall"</string>
     <string name="font_size_level1">"small"</string>
@@ -83,8 +103,7 @@
     <string name="dialog_info_push_bad_credentials">"Credenciales incorrectas para el push"</string>
     <string name="dialog_error_push_no_uid">"No UID encontrado en el servidor para el código "</string>
     <string name="dialog_error_push_no_location">"Localización no disponible"</string>
-    <string name="pref_server">"Servidor"</string>
-    <string name="pref_visual">"Visual"</string>
+
     <string name="number_0">"0"</string>
     <string name="number_1">"1"</string>
     <string name="number_2">"2"</string>
@@ -151,11 +170,7 @@
     <string name="sent_button">"Enviado"</string>
     <string name="monitor_button">"Supervisión"</string>
 
-    <string name="font_size_level0_title">"Extra pequeño"</string>
-    <string name="font_size_level1_title">"Pequeño"</string>
-    <string name="font_size_level2_title">"Medio"</string>
-    <string name="font_size_level3_title">"Grande"</string>
-    <string name="font_size_level4_title">"Extra grande"</string>
+
     <string name="option_counter">"Repeticiones: "</string>
     <string name="option_confirm">"Confirmar opción"</string>
     <string name="monitor_row_title_act_stockout">Número no tratadas (falta de existencias ACT)</string>
@@ -179,8 +194,7 @@
 
     <string name="assessment_connectivity">Data awaiting internet connectivity</string>
     <string name="positive_hint">Name, Details</string>
-    <string name="developer_option_summary">Esta opción activa las opciones de desarrollador</string>
-    <string name="developer_option_title">Mostrar opciones de desarrollador</string>
+
     <string name="export_data_option_title">Exportar base de datos</string>
     <string name="demo_login">Demo</string>
 </resources>

@@ -29,10 +29,10 @@
     <string name="exception_org_unit_banned">"Outlet is closed or blocked. Contact PSI at 011 771 811"</string>
     <string name="dynamic_error_phone_format">"Invalid format for phone number ( 0NN NNN NNN{N} )"</string>
     <string name="dynamic_error_age">"Invalid age"</string>
-    <string name="title_activity_settings">"Settings"</string>
-    <string name="settings_checkbox_customize_fonts">"Customize fonts?"</string>
-    <string name="settings_list_font_sizes">"Fonts size"</string>
-    <string name="settings_text_dhis_server_url">"DHIS Server URL"</string>
+    <string name="app_settings">"Settings"</string>
+    <string name="fonts_customise">"Customize fonts?"</string>
+    <string name="font_size">"Fonts size"</string>
+    <string name="server_name">"DHIS Server URL"</string>
     <string name="settings_select_language">"Language"</string>
     <string name="pref_header_general">"General"</string>
     <string name="font_size_level0">"xsmall"</string>
@@ -46,8 +46,8 @@
     <string name="dialog_info_push_bad_credentials">"Bad credentials for pushing"</string>
     <string name="dialog_error_push_no_uid">"No program UID found in server for code "</string>
     <string name="dialog_error_push_no_location">"No location available"</string>
-    <string name="pref_server">"Server"</string>
-    <string name="pref_visual">"Visual"</string>
+    <string name="server">"Server"</string>
+    <string name="app_visual">"Visual"</string>
     <string name="number_0">"0"</string>
     <string name="number_1">"1"</string>
     <string name="number_2">"2"</string>
@@ -116,11 +116,11 @@
     <string name="sent_button">"Sent"</string>
     <string name="monitor_button">"Monitoring"</string>
 
-    <string name="font_size_level0_title">"Extra small"</string>
-    <string name="font_size_level1_title">"Small"</string>
-    <string name="font_size_level2_title">"Medium"</string>
-    <string name="font_size_level3_title">"Large"</string>
-    <string name="font_size_level4_title">"Extra large"</string>
+    <string name="font_extra_small">"Extra small"</string>
+    <string name="font_small">"Small"</string>
+    <string name="font_medium">"Medium"</string>
+    <string name="font_large">"Large"</string>
+    <string name="font_extra_large">"Extra large"</string>
     <string name="option_counter">"Repetitions: "</string>
     <string name="option_confirm">"Confirm option"</string>
     <string name="system_defined">"System defined"</string>

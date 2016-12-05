@@ -29,10 +29,10 @@
     <string name="exception_org_unit_banned">"Outlet ถูกปิดหรือถูกปิดกั้น ติดต่อ PSI ที่ 011 771 811"</string>
     <string name="dynamic_error_phone_format">"หมายเลขโทรศัพท์ ที่ไม่ถูกต้อง ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
     <string name="dynamic_error_age">"ไม่ถูกต้อง"</string>
-    <string name="title_activity_settings">"เพื่อตรวจสอบ"</string>
-    <string name="settings_checkbox_customize_fonts">"เพื่อเปลี่ยนแบบอักษร?"</string>
-    <string name="settings_list_font_sizes">"ขนาดตัวอักษร"</string>
-    <string name="settings_text_dhis_server_url">"DHIS เซิร์ฟเวอร์ URL"</string>
+    <string name="app_settings">"เพื่อตรวจสอบ"</string>
+    <string name="fonts_customise">"เพื่อเปลี่ยนแบบอักษร?"</string>
+    <string name="font_size">"ขนาดตัวอักษร"</string>
+    <string name="server_name">"DHIS เซิร์ฟเวอร์ URL"</string>
     <string name="settings_select_language">"ภาษา"</string>
     <string name="pref_header_general">"ทั่วไป"</string>
     <string name="font_size_level0">"XSMALL"</string>
@@ -46,8 +46,8 @@
     <string name="dialog_info_push_bad_credentials">"ข้อมูลประจำตัวที่ไ​​ม่ดีสำหรับการผลักดันมี"</string>
     <string name="dialog_error_push_no_uid">"ไม่มีโพสต์โปรแกรมที่พบในเซิร์ฟเวอร์รหัส"</string>
     <string name="dialog_error_push_no_location">"ซึ่งสามารถนำมาใช้โดยไม่ต้อง"</string>
-    <string name="pref_server">"เซิร์ฟเวอร์"</string>
-    <string name="pref_visual">"ภาพ"</string>
+    <string name="server">"เซิร์ฟเวอร์"</string>
+    <string name="app_visual">"ภาพ"</string>
     <string name="number_0">"0"</string>
     <string name="number_1">"1"</string>
     <string name="number_2">"2"</string>
@@ -117,11 +117,11 @@
     <string name="sent_button">"ที่ส่ง"</string>
     <string name="monitor_button">"ตามรอย"</string>
 
-    <string name="font_size_level0_title">"เล็กที่สุด"</string>
-    <string name="font_size_level1_title">"เล็ก"</string>
-    <string name="font_size_level2_title">"กลาง"</string>
-    <string name="font_size_level3_title">"ใหญ่"</string>
-    <string name="font_size_level4_title">"บิ๊กดีที่สุด"</string>
+    <string name="font_extra_small">"เล็กที่สุด"</string>
+    <string name="font_small">"เล็ก"</string>
+    <string name="font_medium">"กลาง"</string>
+    <string name="font_large">"ใหญ่"</string>
+    <string name="font_extra_large">"บิ๊กดีที่สุด"</string>
     <string name="option_counter">"ซ้ำ: "</string>
     <string name="option_confirm">"ตัวเลือกการยืนยัน"</string>
     <string name="monitor_row_title_act_stockout">"จำนวนไม่ได้รับการรักษา (ACT stockout) "</string>

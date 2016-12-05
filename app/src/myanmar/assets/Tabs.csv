@@ -1,7 +1,7 @@
 1;'patient_profile_subtitle';1;1;10
 2;'patient_sex_pregnancy';2;1;9
 3;'symptoms_title';3;1;10
-4;'RDT / Indicate Test Result';4;1;9
+4;'rdt_test_result';4;1;9
 5;'Negative Test Result';5;1;9
 6;'Counter';6;1;9
 7;'Treatment / Give ACT strip and Primaquine tablets, selecting the drugs given to the patient';7;1;9

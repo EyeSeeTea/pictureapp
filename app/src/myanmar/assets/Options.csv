@@ -12,11 +12,11 @@
 12;'symptoms_care_sought_no';'No';0;10;12
 13;'symptoms_severity_yes';'Yes';0;11;13
 14;'symptoms_severity_no';'No';0;11;14
-15;'Negative';'Negative';0;12;15
-16;'Pf';'Pf';0;12;16
-17;'Pv';'Pv';0;12;17
-18;'Pf+Pv';'Pf+Pv';0;12;18
-19;'Invalid';'Invalid';2;12;19
+15;'rdt_negative';'Negative';0;12;15
+16;'rdt_pf';'Pf';0;12;16
+17;'rdt_pv';'Pv';0;12;17
+18;'rdt_mixed';'Pf+Pv';0;12;18
+19;'rdt_invalid';'Invalid';2;12;19
 20;'Negative Test';'Negative Reminder';0;13;20
 21;'Negative Test Send';'Negative Reminder Button';0;13;21
 22;'Counter Header';'Counter H';0;14;22

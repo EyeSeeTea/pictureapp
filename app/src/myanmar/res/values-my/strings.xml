@@ -134,9 +134,6 @@
     <string name="monitor_row_title_asmq">"AS/MQ"</string>
     <string name="monitor_row_title_rdts">"RDTs"</string>
     <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
-    <string name="pf">"Pf"</string>
-    <string name="pv">"Pv"</string>
-    <string name="pfpv">"Mixto"</string>
     <string name="settings_menu_legal">"Legal"</string>
     <string name="settings_menu_copyright">"Copyright"</string>
     <string name="settings_menu_licenses">"Licencias de software"</string>

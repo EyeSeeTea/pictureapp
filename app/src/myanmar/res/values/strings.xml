@@ -35,6 +35,18 @@
     <string name="symptoms_severity_yes">Yes</string>
     <string name="symptoms_severity_no">No</string>
 
+    <string name="rdt_test_result">RDT / Test Result</string>
+    <string name="rdt_negative">Negative</string>
+    <string name="rdt_pf">Pf</string>
+    <string name="rdt_pv">Pv</string>
+    <string name="rdt_mixed">Mixed</string>
+    <string name="rdt_invalid">Invalid</string>
+
+
+
+
+
+
     <string name="yes">"Yes"</string>
     <string name="no">"No"</string>
     <string name="ok">"Ok"</string>
@@ -133,9 +145,7 @@
     <string name="monitor_row_title_asmq">"AS/MQ"</string>
     <string name="monitor_row_title_rdts">"RDTs"</string>
     <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
-    <string name="pf">"Pf"</string>
-    <string name="pv">"Pv"</string>
-    <string name="pfpv">"Mixed"</string>
+
     <string name="settings_menu_legal">"Legal"</string>
     <string name="settings_menu_copyright">"Copyright"</string>
     <string name="settings_menu_licenses">"Software licenses"</string>

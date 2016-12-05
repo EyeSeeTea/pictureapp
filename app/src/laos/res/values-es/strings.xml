@@ -8,8 +8,7 @@
     <string name="cancel">"Cancelar"</string>
     <string name="review">"Revisar"</string>
     <string name="send">"Enviar"</string>
-    <string name="settings_menu_about">"Acerca de"</string>
-    <string name="settings_menu_configuration">"Configuración"</string>
+    <string name="app_about">"Acerca de"</string>
     <string name="settings_menu_licence">"Licencia"</string>
     <string name="dialog_title_delete_surveys">"¿Está seguro de querer borrar todas las evaluaciones enviadas?"</string>
     <string name="dialog_title_delete_survey">"Borrar evaluación"</string>
@@ -99,11 +98,11 @@
     <string name="rdt_pf">"Pf"</string>
     <string name="rdt_pv">"Pv"</string>
     <string name="rdt_mixed">"Pf/Pv"</string>
-    <string name="settings_menu_legal">"Legal"</string>
-    <string name="settings_menu_copyright">"Copyright"</string>
-    <string name="settings_menu_licenses">"Licencias de software"</string>
+    <string name="app_legal">"Legal"</string>
+    <string name="app_copyright">"Copyright"</string>
+    <string name="app_software_licenses">"Licencias de software"</string>
     <string name="settings_select_language">"Idioma"</string>
-    <string name="settings_menu_eula">"EULA"</string>
+    <string name="app_EULA">"EULA"</string>
     <string name="monitor_row_title_day">"Día"</string>
     <string name="monitor_row_title_month">"Mes"</string>
     <string name="unrecognized_option">"Desconocido"</string>

@@ -43,33 +43,31 @@
     <string name="rdt_invalid">Invalid</string>
 
 
-
-    <string name="app_settings">Settings</string> <!--title_activity_settings-->
+    <string name="app_settings">"Settings"</string>
     <string name="server">Server:</string>
-    <string name="server_name">DHIS Server URL</string> <!--settings_text_dhis_server_url-->
+    <string name="server_name">DHIS Server URL</string>
     <string name="app_visual">Visual:</string>
-    <string name="fonts_customise">Customise fonts</string>  <!--settings_checkbox_customize_fonts-->
-    <string name="font_size">Font size</string> <!--settings_list_font_sizes-->
-    <string name="font_extra_small">Extra small</string> <!--font_size_level0_title-->
-    <string name="font_small">Small</string> <!--font_size_level1_title-->
-    <string name="font_medium">Medium</string> <!--font_size_level2_title-->
-    <string name="font_large">Large</string> <!--font_size_level3_title-->
-    <string name="font_extra_large">Extra large</string> <!--font_size_level4_title-->
-    <string name="settings_select_language">"Language"</string> <!--settings_select_language-->
+    <string name="fonts_customise">Customise fonts</string>
+    <string name="font_size">Font size</string>
+    <string name="font_extra_small">Extra small</string>
+    <string name="font_small">Small</string>
+    <string name="font_medium">Medium</string>
+    <string name="font_large">Large</string>
+    <string name="font_extra_large">Extra large</string>
+    <string name="settings_select_language">"Language"</string>
     <string name="developer_option_title">Show developer options</string>
     <string name="developer_option_summary">This feature activates the developer options</string>
 
+    <string name="app_about">About</string>
+    <string name="app_legal">Legal</string>
+    <string name="app_copyright">Copyright</string>
+    <string name="app_software_licenses">Software licenses</string>
+    <string name="app_EULA">EULA</string> <!--settings_menu_eula-->
+    <string name="app_logout">Logout</string>
+    <string name="settings_menu_logout_message">Changing the server or orgunit needs to re-login. Every not-sent survey will be deleted. Are you sure you want to continue?</string>
+    <string name="dashboard_menu_logout_message">Every not-sent survey will be deleted. Are you sure you want to continue?</string>
 
-    <string name="settings_menu_legal">"Legal"</string>
-    <string name="settings_menu_copyright">"Copyright"</string>
-    <string name="settings_menu_licenses">"Software licenses"</string>
-    <string name="settings_menu_eula">"EULA"</string>
-    <string name="settings_menu_about">"About"</string>
-    <string name="settings_menu_configuration">"Settings"</string>
-    <string name="settings_menu_licence">"License"</string>
-    <string name="settings_menu_logout_title">"Logout"</string>
-    <string name="settings_menu_logout_message">"Changing the server or orgunit needs to re-login. Every not-sent survey will be deleted. Are you sure you want to continue?"</string>
-    <string name="dashboard_menu_logout_message">"Every not-sent survey will be deleted. Are you sure you want to continue?"</string>
+<!--    <string name="settings_menu_licence">"License"</string> &lt;!&ndash;settings_menu_about&ndash;&gt;-->
 
 
     <string name="yes">"Yes"</string>

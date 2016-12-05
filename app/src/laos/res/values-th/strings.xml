@@ -8,8 +8,7 @@
     <string name="cancel">"ยกเลิก"</string>
     <string name="review">"ทบทวนตรวจสอบ"</string>
     <string name="send">"ส่ง"</string>
-    <string name="settings_menu_about">"กับ"</string>
-    <string name="settings_menu_configuration">"เพื่อตรวจสอบ"</string>
+    <string name="app_about">"กับ"</string>
     <string name="settings_menu_licence">"ใบอนุญาต"</string>
     <string name="dialog_title_delete_surveys">"คุณแน่ใจหรือว่าต้องการลบแบบสำรวจที่ส่งออก?"</string>
     <string name="dialog_title_delete_survey">"ลบผลการส่งออก"</string>
@@ -100,10 +99,10 @@
     <string name="rdt_pf">"Pf"</string>
     <string name="rdt_pv">"Pv"</string>
     <string name="rdt_mixed">"Pf/Pv"</string>
-    <string name="settings_menu_legal">"ถูกต้องตามกฎหมาย"</string>
-    <string name="settings_menu_copyright">"ลิขสิทธิ์"</string>
-    <string name="settings_menu_licenses">"โปรแกรมที่ได้รับอนุญาต"</string>
-    <string name="settings_menu_eula">"EULA"</string>
+    <string name="app_legal">"ถูกต้องตามกฎหมาย"</string>
+    <string name="app_copyright">"ลิขสิทธิ์"</string>
+    <string name="app_software_licenses">"โปรแกรมที่ได้รับอนุญาต"</string>
+    <string name="app_EULA">"EULA"</string>
     <string name="monitor_row_title_day">"ครั้งแรก"</string>
     <string name="monitor_row_title_month">"เดือน"</string>
     <string name="unrecognized_option">"ไม่รู้จัก"</string>

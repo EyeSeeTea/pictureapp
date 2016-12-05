@@ -8,8 +8,7 @@
     <string name="cancel">"បោះបង់"</string>
     <string name="review">"ពិនិត្យឡើងវិញ"</string>
     <string name="send">"ផ្ញើ"</string>
-    <string name="settings_menu_about">"អំពី"</string>
-    <string name="settings_menu_configuration">"ការ​កំណត់ "</string>
+    <string name="app_about">"អំពី"</string>
     <string name="settings_menu_licence">"អាជ្ញាប័ណ្ណ"</string>
     <string name="dialog_title_delete_surveys">"តើអ្នកប្រាកដទេថា អ្នកចង់លុបព័ត៌មានស្ទង់មតិដែលបានផ្ញើរចេញទាំងអស់?"</string>
     <string name="dialog_title_delete_survey">"លុបលទ្ធផលដែលបានផ្ញើរចេញ"</string>
@@ -101,10 +100,10 @@
     <string name="rdt_pf">"ផ្លាស្មូដ្យូម ហ្វាល់ស៊ីប៉ារ៉ូម (Pf)"</string>
     <string name="rdt_pv">"ផ្លាស្មូដ្យូម វីវ៉ាក់ (Pv)"</string>
     <string name="rdt_mixed">"ចំរុះ (Mixed)"</string>
-    <string name="settings_menu_legal">"ស្របច្បាប់"</string>
-    <string name="settings_menu_copyright">"រក្សាសិទ្ធិ"</string>
-    <string name="settings_menu_licenses">"អជ្ញាប័ណ្ណរបស់កម្មវិធី"</string>
-    <string name="settings_menu_eula">"EULA"</string>
+    <string name="app_legal">"ស្របច្បាប់"</string>
+    <string name="app_copyright">"រក្សាសិទ្ធិ"</string>
+    <string name="app_software_licenses">"អជ្ញាប័ណ្ណរបស់កម្មវិធី"</string>
+    <string name="app_EULA">"EULA"</string>
     <string name="monitor_row_title_day">"ទី"</string>
     <string name="monitor_row_title_month">"ខែ"</string>
     <string name="unrecognized_option">"មិនស្គាល់"</string>

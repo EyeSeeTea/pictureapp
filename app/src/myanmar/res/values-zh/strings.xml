@@ -57,18 +57,24 @@
     <string name="developer_option_summary">Esta opción activa las opciones de desarrollador</string>
     <string name="developer_option_title">Mostrar opciones de desarrollador</string>
 
+
+    <string name="settings_menu_about"></string>
+    <string name="app_legal"></string>
+    <string name="app_copyright"></string>
+    <string name="app_software_licenses"></string>
+    <string name="app_EULA"></string>
+    <string name="app_logout"></string>
+    <string name="settings_menu_logout_message"></string>
+    <string name="dashboard_menu_logout_message"></string>
+
+
     <string name="yes">"Oui"</string>
     <string name="no">"No"</string>
     <string name="ok">"Ok"</string>
     <string name="cancel">"Annuler"</string>
     <string name="review">"Réviser"</string>
     <string name="send">"Envoyer"</string>
-    <string name="settings_menu_about">"A propos de cette app"</string>
-    <string name="settings_menu_configuration">"Paramètres"</string>
-    <string name="settings_menu_licence">"License"</string>
-    <string name="settings_menu_logout_title">"Déconnecter"</string>
-    <string name="settings_menu_logout_message">"Changer de serveur ou d'orgunit implique être déconnecté avant. Chaque rapport non envoyé sera supprimé. Êtes-vous sûr de voloir continuer?"</string>
-    <string name="dashboard_menu_logout_message">"Chaque rapport non envoyé sera supprimé. Êtes-vous sûr de voloir continuer?"</string>
+
     <string name="dialog_title_delete_surveys">"Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?"</string>
     <string name="dialog_title_delete_survey">"Supprimer envoyés"</string>
     <string name="dialog_info_delete_survey">"Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?"</string>
@@ -149,10 +155,7 @@
     <string name="monitor_row_title_asmq">"AS/MQ"</string>
     <string name="monitor_row_title_rdts">"RDTs"</string>
     <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
-    <string name="settings_menu_legal">"Légal"</string>
-    <string name="settings_menu_copyright">"Copyright"</string>
-    <string name="settings_menu_licenses">"Licenses de logiciels"</string>
-    <string name="settings_menu_eula">"EULA"</string>
+
     <string name="monitor_row_title_day">"Jour"</string>
     <string name="monitor_row_title_month">"Mois"</string>
     <string name="unrecognized_option">"Méconnu"</string>

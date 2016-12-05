@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.HeaderUseCase;
 
 /**
  * Created by idelcano on 29/11/2016.
@@ -47,7 +49,10 @@ public class StockFragment extends Fragment {
         super.onStop();
     }
 
-    public void reloadData() {
+    public void reloadHeader(Activity activity) {
+        HeaderUseCase.getInstance().init(activity, R.string.tab_tag_stock);
+    }
 
+    public void reloadData() {
     }
 }

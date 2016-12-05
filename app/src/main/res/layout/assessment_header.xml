@@ -27,7 +27,7 @@
     android:padding="@dimen/dashboard_row_padding">
 
     <org.eyeseetea.malariacare.views.TextCard
-        android:id="@+id/idHeader"
+        android:id="@+id/header_title"
         android:layout_width="0dip"
         android:layout_height="fill_parent"
         android:layout_gravity="center"

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/background_question_header"
     android:orientation="vertical">
-
+R
     <include layout="@layout/top_view"></include>
 
     <LinearLayout
@@ -25,7 +25,7 @@
             android:paddingBottom="2dip"
             android:paddingLeft="10dip"
             android:paddingTop="2dip"
-            android:text="@string/assessment_new_cases"
+            android:text="@string/header_title_unsent"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/question_header_title"
             app:tDimension="@string/font_size_level1"

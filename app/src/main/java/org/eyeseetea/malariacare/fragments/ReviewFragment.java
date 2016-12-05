@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.HeaderUseCase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,5 +111,13 @@ public class ReviewFragment extends Fragment {
 
         //remove spaces between rows in the listview
         listView.setDividerHeight(0);
+    }
+
+    public void reloadHeader(Activity activity) {
+        try {
+            HeaderUseCase.getInstance().hideHeader(activity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

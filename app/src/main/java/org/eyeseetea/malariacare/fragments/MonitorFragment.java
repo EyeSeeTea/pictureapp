@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -37,6 +38,7 @@ import android.webkit.WebViewClient;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.HeaderUseCase;
 import org.eyeseetea.malariacare.monitor.MonitorBuilder;
 import org.eyeseetea.malariacare.services.MonitorService;
 
@@ -179,6 +181,10 @@ public class MonitorFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void reloadHeader(Activity activity) {
+        HeaderUseCase.getInstance().init(activity, R.string.tab_tag_monitor);
     }
 
     /**

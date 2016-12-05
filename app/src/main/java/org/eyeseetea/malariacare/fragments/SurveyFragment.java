@@ -18,6 +18,7 @@
  */
 package org.eyeseetea.malariacare.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -43,6 +44,7 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.HeaderUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
@@ -101,6 +103,7 @@ public class SurveyFragment extends Fragment {
         if (container == null) {
             return null;
         }
+
         llLayout = (RelativeLayout) inflater.inflate(R.layout.survey, container, false);
         registerReceiver();
         createProgress();
@@ -436,6 +439,14 @@ public class SurveyFragment extends Fragment {
             }
 
             return null;
+        }
+    }
+
+    public void reloadHeader(Activity activity) {
+        try {
+            HeaderUseCase.getInstance().hideHeader(activity);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

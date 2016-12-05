@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.layout.utils;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Html;
@@ -78,7 +79,6 @@ public class LayoutUtils extends BaseLayoutUtils {
         int totalHeight = 0;
         int desiredHeight = View.MeasureSpec.makeMeasureSpec(listView.getHeight(),
                 View.MeasureSpec.AT_MOST);
-
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(desiredHeight, View.MeasureSpec.UNSPECIFIED);
@@ -93,5 +93,23 @@ public class LayoutUtils extends BaseLayoutUtils {
 
     public static void setDivider(ListView listView) {
         listView.setDividerHeight(0);
+    }
+
+    public static void setRowDivider(ListView listView) {
+        ColorDrawable myColor = new ColorDrawable(
+                PreferencesState.getInstance().getContext().getResources().getColor(R.color.headerColor)
+        );
+        listView.setDivider(myColor);
+        listView.setDividerHeight(0);
+        listView.setPadding(20,0,20,0);
+    }
+
+
+    // Given a index, this method return a background color
+    public static int calculateBackgrounds(int index) {
+        if(index==0){
+            return R.drawable.transparent_selector;
+        }
+        return rowBackgrounds[index % rowBackgrounds.length];
     }
 }

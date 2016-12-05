@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.fragments;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -39,6 +40,8 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.HeaderUseCase;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 
 import java.util.ArrayList;
@@ -177,13 +180,15 @@ public class DashboardSentFragment extends ListFragment {
     private void initListView() {
         if (Session.isNotFullOfUnsent(getActivity())) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View header = inflater.inflate(this.adapter.getHeaderLayout(), null, false);
+            View header = HeaderUseCase.getInstance().loadHeader(this.adapter.getHeaderLayout(),
+                    inflater);
             View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
-            //TextCard title = (TextCard) getActivity().findViewById(R.id.titleCompleted);
-            //title.setText(adapter.getTitle());
             ListView listView = getListView();
-            listView.addHeaderView(header);
+            if (header != null) {
+                listView.addHeaderView(header);
+            }
             listView.addFooterView(footer);
+            LayoutUtils.setRowDivider(listView);
             setListAdapter((BaseAdapter) adapter);
             setListShown(false);
         }
@@ -223,6 +228,10 @@ public class DashboardSentFragment extends ListFragment {
         this.surveys.addAll(newListSurveys);
         this.adapter.notifyDataSetChanged();
         setListShown(true);
+    }
+
+    public void reloadHeader(Activity activity) {
+        HeaderUseCase.getInstance().init(activity, R.string.tab_tag_improve);
     }
 
     public void reloadData() {

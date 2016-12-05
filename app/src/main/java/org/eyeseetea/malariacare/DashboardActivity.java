@@ -136,15 +136,19 @@ public class DashboardActivity extends BaseActivity {
                 }
                 if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
                     unsentFragment.reloadData();
+                    unsentFragment.reloadHeader(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_improve))) {
                     sentFragment.reloadData();
+                    sentFragment.reloadHeader(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_stock))) {
                     stockFragment.reloadData();
+                    stockFragment.reloadHeader(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
                     monitorFragment.reloadData();
+                    monitorFragment.reloadHeader(dashboardActivity);
                 }
                 tabHost.getCurrentTabView().setBackgroundColor(
                         getResources().getColor(R.color.tab_pressed_background));
@@ -258,6 +262,7 @@ public class DashboardActivity extends BaseActivity {
         unsentFragment = new DashboardUnsentFragment();
         unsentFragment.setArguments(getIntent().getExtras());
         replaceListFragment(R.id.dashboard_details_container, unsentFragment);
+        unsentFragment.reloadHeader(dashboardActivity);
     }
 
     public void restoreAssess() {
@@ -272,6 +277,7 @@ public class DashboardActivity extends BaseActivity {
             reviewFragment = new ReviewFragment();
         }
         replaceFragment(R.id.dashboard_details_container, reviewFragment);
+        reviewFragment.reloadHeader(dashboardActivity);
     }
 
     /**
@@ -304,6 +310,7 @@ public class DashboardActivity extends BaseActivity {
             surveyFragment = new SurveyFragment();
         }
         replaceFragment(R.id.dashboard_details_container, surveyFragment);
+        surveyFragment.reloadHeader(dashboardActivity);
     }
 
     /**

@@ -107,10 +107,10 @@ public class LayoutUtils extends BaseLayoutUtils {
 
 
     // Given a index, this method return a background color
-    public static int calculateBackgrounds(int index) {
-        if (index == 0) {
-            return R.drawable.transparent_selector;
+    public static void fixRowViewBackground(View row, int index) {
+        if (index < 1) {
+            row.findViewById(R.id.dotted_line).setVisibility(View.GONE);
         }
-        return rowBackgrounds[index % rowBackgrounds.length];
     }
+
 }

@@ -215,7 +215,6 @@ public abstract class BaseLayoutUtils {
         //No action. This method should be created in the variant.
     }
 
-
     public static void makeImageVisible(String path, ImageView rowImageLabelView) {
         rowImageLabelView.setVisibility(View.VISIBLE);
         putImageInImageView(path,
@@ -264,5 +263,9 @@ public abstract class BaseLayoutUtils {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
         return (metrics.widthPixels);
+    }
+
+    public static void fixRowViewBackground(View row, int position) {
+        row.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));
     }
 }

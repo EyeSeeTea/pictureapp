@@ -196,7 +196,7 @@ public class DashboardUnsentFragment extends ListFragment {
             listView.addHeaderView(header);
         }
         listView.addFooterView(footer);
-        LayoutUtils.setHeaderDivider(listView);
+        LayoutUtils.setRowDivider(listView);
         setListAdapter((BaseAdapter) adapter);
 
         // Create a ListView-specific touch listener. ListViews are given special treatment because
@@ -329,7 +329,7 @@ public class DashboardUnsentFragment extends ListFragment {
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveys(surveysUnsentFromService);
-                LayoutUtils.setRowDivider(getListView());
+                LayoutUtils.setLineBetweenRows(getListView());
                 // Measure the screen height
                 int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
 

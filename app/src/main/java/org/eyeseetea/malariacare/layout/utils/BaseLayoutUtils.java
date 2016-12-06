@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * Created by Jose on 22/02/2015.
  */
-public class BaseLayoutUtils {
+public abstract class BaseLayoutUtils {
 
     public static final int[] rowBackgrounds =
             {R.drawable.background_even, R.drawable.background_odd};
@@ -193,4 +193,15 @@ public class BaseLayoutUtils {
         }
     }
 
+    public static void setTabDivider(DashboardActivity dashboardActivity) {
+        //No action. This method should be created in the variant.
+    }
+
+    public static void setLineBetweenRows(ListView listView) {
+        //No action. This method should be created in the variant.
+    }
+
+    public static void setRowDivider(ListView listView) {
+        //No action. This method should be created in the variant.
+    }
 }

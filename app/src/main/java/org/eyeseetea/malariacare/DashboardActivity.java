@@ -196,7 +196,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Sets a divider drawable and background.
      */
-    public void setDivider() {
+    public void setTabDivider() {
         tabHost.getTabWidget().setShowDividers(TabWidget.SHOW_DIVIDER_MIDDLE);
         tabHost.getTabWidget().setDividerDrawable(R.drawable.tab_line);
         tabHost.getTabWidget().setBackgroundColor(

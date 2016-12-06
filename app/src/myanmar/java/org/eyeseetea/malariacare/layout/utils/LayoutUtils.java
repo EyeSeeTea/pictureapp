@@ -30,8 +30,8 @@ public class LayoutUtils extends BaseLayoutUtils {
         dashboardActivity.setTabHostsWithImages();
     }
 
-    public static void setDivider(DashboardActivity dashboardActivity) {
-        dashboardActivity.setDivider();
+    public static void setTabDivider(DashboardActivity dashboardActivity) {
+        dashboardActivity.setTabDivider();
     }
 
     public static void setActionBarAppAndUser(ActionBar actionBar) {
@@ -91,11 +91,11 @@ public class LayoutUtils extends BaseLayoutUtils {
                 totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)));
     }
 
-    public static void setTabDivider(DashboardActivity dashboardActivity) {
-        dashboardActivity.setDivider();
+    public static void setLineBetweenRows(ListView listView) {
+        listView.setDividerHeight(0);
     }
 
-    public static void setHeaderDivider(ListView listView) {
+    public static void setRowDivider(ListView listView) {
         ColorDrawable myColor = new ColorDrawable(
                 PreferencesState.getInstance().getContext().getResources().getColor(
                         R.color.headerColor)
@@ -105,10 +105,6 @@ public class LayoutUtils extends BaseLayoutUtils {
         listView.setPadding(20, 0, 20, 0);
     }
 
-    public static void setRowDivider(ListView listView) {
-        listView.setDivider(ContextCompat.getDrawable(PreferencesState.getInstance().getContext(),
-                R.drawable.dotted));
-    }
 
     // Given a index, this method return a background color
     public static int calculateBackgrounds(int index) {
@@ -116,9 +112,5 @@ public class LayoutUtils extends BaseLayoutUtils {
             return R.drawable.transparent_selector;
         }
         return rowBackgrounds[index % rowBackgrounds.length];
-    }
-    public static void setDivider(ListView listView) {
-        listView.setDivider(ContextCompat.getDrawable(PreferencesState.getInstance().getContext(),
-                R.drawable.dotted));
     }
 }

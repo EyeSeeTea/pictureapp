@@ -39,7 +39,9 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.views.TextCard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +117,7 @@ public class DashboardSentFragment extends ListFragment {
      * one in session is created.
      */
     private void initAdapter() {
-        this.adapter = new AssessmentAdapter(getString(R.string.assessment_sent_title_header),
+        this.adapter = new AssessmentAdapter(getString(R.string.sent_data),
                 this.surveys, getActivity());
     }
 
@@ -179,8 +181,9 @@ public class DashboardSentFragment extends ListFragment {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View header = inflater.inflate(this.adapter.getHeaderLayout(), null, false);
             View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
-            //TextCard title = (TextCard) getActivity().findViewById(R.id.titleCompleted);
-            //title.setText(adapter.getTitle());
+
+            LayoutUtils.InitAssessmentHeader(header,adapter);
+
             ListView listView = getListView();
             listView.addHeaderView(header);
             listView.addFooterView(footer);

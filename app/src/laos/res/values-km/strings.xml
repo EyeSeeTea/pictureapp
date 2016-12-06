@@ -112,8 +112,8 @@
     <string name="number_10">"១០"</string>
     <string name="number_11">"១១"</string>
     <string name="number_12">"12"</string>
-    <string name="unsent_button">"មិនទាន់ផ្ញើ"</string>
-    <string name="sent_button">"ដែលបានផ្ញើ"</string>
+    <string name="unsent_data">"មិនទាន់ផ្ញើ"</string>
+    <string name="sent_data">"ដែលបានផ្ញើ"</string>
     <string name="monitor_button">"ការតាមដាន"</string>
 
     <string name="font_extra_small">"តូចបំផុត"</string>

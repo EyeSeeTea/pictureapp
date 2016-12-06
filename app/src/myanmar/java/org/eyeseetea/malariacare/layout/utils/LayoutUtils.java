@@ -15,6 +15,8 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
+import org.eyeseetea.malariacare.views.TextCard;
 
 /**
  * Created by idelcano on 01/11/2016.
@@ -96,5 +98,10 @@ public class LayoutUtils extends BaseLayoutUtils {
 
     public static void setDivider(ListView listView) {
         listView.setDividerHeight(0);
+    }
+
+    public static void InitAssessmentHeader(View header, AssessmentAdapter adapter) {
+        TextCard connectivity = (TextCard) header.findViewById(R.id.assessment_connectivity);
+        connectivity.setText(adapter.getTitle());
     }
 }

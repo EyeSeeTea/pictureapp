@@ -1,8 +1,11 @@
 package org.eyeseetea.malariacare.layout.utils;
 
+import android.view.View;
+
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 
 /**
  * Created by idelcano on 01/11/2016.
@@ -25,5 +28,9 @@ public class LayoutUtils extends BaseLayoutUtils {
 
     public static void setDivider(DashboardActivity dashboardActivity) {
         return;
+    }
+
+    public static void InitAssessmentHeader(View header, AssessmentAdapter adapter) {
+
     }
 }

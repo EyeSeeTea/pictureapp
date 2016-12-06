@@ -125,7 +125,9 @@
     <string name="settings_menu_logout_message"></string>
     <string name="dashboard_menu_logout_message"></string>
 
-
+    <string name="past_cases">PAST CASES</string>
+    <string name="sent_data">Sent Data</string>
+    <string name="unsent_data">Unsent Data</string>
 
     <string name="yes">"Sí"</string>
     <string name="no">"No"</string>
@@ -140,8 +142,7 @@
     <string name="toast_push_is_pushing">"Enviando encuestas antes de entrar en ajustes"</string>
     <string name="create_info_organization_unit">"Unidad de organización"</string>
     <string name="assessment_sent_date">"Fecha de llenado"</string>
-    <string name="assessment_title_header">"Pendiente de enviar"</string>
-    <string name="assessment_sent_title_header">"Evaluaciones Enviadas"</string>
+
     <string name="assessment_title_info">"Info"</string>
     <string name="survey_info_exit">"¿Está seguro de que quiere salir?"</string>
     <string name="survey_info_exit_delete">"La evaluación en marcha será eliminada"</string>
@@ -250,9 +251,7 @@
     <string name="last_6_weeks">Últimas 6 semanas</string>
     <string name="last_6_months">Últimos 6 meses</string>
     <string name="download">Descarga:</string>
-    <string name="assessment_past_cases">PAST CASES</string>
 
-    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
     <string name="positive_hint">Name, Details</string>
 
     <string name="export_data_option_title">Exportar base de datos</string>

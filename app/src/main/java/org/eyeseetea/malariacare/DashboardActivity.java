@@ -160,9 +160,9 @@ public class DashboardActivity extends BaseActivity {
     public void setTabHostsWithText() {
         Context context = PreferencesState.getInstance().getContext();
         setTab(context.getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout,
-                context.getResources().getString(R.string.unsent_button));
+                context.getResources().getString(R.string.unsent_data));
         setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
-                context.getResources().getString(R.string.sent_button));
+                context.getResources().getString(R.string.sent_data));
         if (GradleVariantConfig.isStockFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
                     context.getResources().getString(R.string.tab_tag_stock));

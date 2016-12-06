@@ -120,8 +120,8 @@
     <string name="number_10">"10"</string>
     <string name="number_11">"11"</string>
     <string name="number_12">"12"</string>
-    <string name="unsent_button">"ຍັງບໍ່ໄດ້ສົ່ງ"</string>
-    <string name="sent_button">"ສົ່ງແລ້ວ"</string>
+    <string name="unsent_data">"ຍັງບໍ່ໄດ້ສົ່ງ"</string>
+    <string name="sent_data">"ສົ່ງແລ້ວ"</string>
     <string name="monitor_button">"ການຕິດຕາມ"</string>
 
     <string name="font_extra_small">"ນ້ອຍສຸດ"</string>

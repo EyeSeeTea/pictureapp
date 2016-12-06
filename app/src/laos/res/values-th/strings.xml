@@ -112,8 +112,8 @@
     <string name="number_10">"10"</string>
     <string name="number_11">"11"</string>
     <string name="number_12">"12"</string>
-    <string name="unsent_button">"ยังส่ง"</string>
-    <string name="sent_button">"ที่ส่ง"</string>
+    <string name="unsent_data">"ยังส่ง"</string>
+    <string name="sent_data">"ที่ส่ง"</string>
     <string name="monitor_button">"ตามรอย"</string>
 
     <string name="font_extra_small">"เล็กที่สุด"</string>

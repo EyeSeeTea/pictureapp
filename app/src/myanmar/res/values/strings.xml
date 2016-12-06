@@ -129,12 +129,15 @@
     <string name="settings_menu_logout_message">Changing the server or orgunit needs to re-login. Every not-sent survey will be deleted. Are you sure you want to continue?</string>
     <string name="dashboard_menu_logout_message">Every not-sent survey will be deleted. Are you sure you want to continue?</string>
 
+    <string name="past_cases">PAST CASES</string>
+    <string name="sent_data">Sent Data</string>
+    <string name="unsent_data">Unsent Data</string>
+
 
     <string name="yes">"Yes"</string>
     <string name="no">"No"</string>
     <string name="ok">"Ok"</string>
     <string name="cancel">"Cancel"</string>
-
 
     <string name="dialog_title_delete_surveys">"Are you sure that you want to remove all sent surveys?"</string>
     <string name="dialog_title_delete_survey">"Delete Survey"</string>
@@ -143,8 +146,8 @@
     <string name="toast_push_is_pushing">"Sending surveys before entering settings."</string>
     <string name="create_info_organization_unit">"Organization Unit"</string>
     <string name="assessment_sent_date">"Date"</string>
-    <string name="assessment_title_header">"Pending Send"</string>
-    <string name="assessment_sent_title_header">"Sent Surveys"</string>
+
+
     <string name="assessment_title_info">"Info"</string>
     <string name="survey_info_exit">"Are you sure you want to exit?"</string>
     <string name="survey_info_exit_delete">"The survey in progress will be deleted"</string>
@@ -201,6 +204,7 @@
     <string name="dhis_url_error_bad_version">"Dhis server not compatible (only 2.20, 2.21, 2.22 allowed)"</string>
     <string name="dhis_url_error_generic">"Dhis server error. The server not responding properly"</string>
     <string name="dhis_url_error_bad_credentials">"This app is not authorized in the given server"</string>
+
     <string name="settings_menu_monitoring">"Monitor"</string>
     <string name="monitor_label">"MONITORING"</string>
     <string name="monitor_label_option_months">"Last 6 months"</string>
@@ -255,9 +259,9 @@
     <string name="last_6_weeks">last 6 weeks</string>
     <string name="last_6_months">last 6 months</string>
     <string name="download">Download:</string>
-    <string name="assessment_past_cases">PAST CASES</string>
 
-    <string name="assessment_connectivity">Unsent Data</string>
+
+
     <string name="positive_hint">Name, Details</string>
 
     <string name="export_data_option_title">Export database</string>

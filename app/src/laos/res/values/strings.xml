@@ -111,8 +111,8 @@
     <string name="number_10">"10"</string>
     <string name="number_11">"11"</string>
     <string name="number_12">"12"</string>
-    <string name="unsent_button">"Unsent"</string>
-    <string name="sent_button">"Sent"</string>
+    <string name="unsent_data">"Unsent"</string>
+    <string name="sent_data">"Sent"</string>
     <string name="monitor_button">"Monitoring"</string>
 
     <string name="font_extra_small">"Extra small"</string>

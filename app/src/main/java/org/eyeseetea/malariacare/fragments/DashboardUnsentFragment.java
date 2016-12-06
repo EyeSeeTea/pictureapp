@@ -47,6 +47,7 @@ import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.views.TextCard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +126,7 @@ public class DashboardUnsentFragment extends ListFragment {
      * one in session is created.
      */
     private void initAdapter() {
-        this.adapter = new AssessmentAdapter(getString(R.string.assessment_title_header),
+        this.adapter = new AssessmentAdapter(getString(R.string.unsent_data),
                 this.surveys, getActivity());
     }
 
@@ -188,6 +189,9 @@ public class DashboardUnsentFragment extends ListFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View header = inflater.inflate(this.adapter.getHeaderLayout(), null, false);
         View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
+
+        LayoutUtils.InitAssessmentHeader(header,adapter);
+
         ListView listView = getListView();
         listView.addHeaderView(header);
         listView.addFooterView(footer);

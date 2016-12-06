@@ -56,7 +56,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DashboardUnsentFragment extends ListFragment {
+public class DashboardUnsentFragment extends ListFragment implements IDashboardFragment {
 
 
     public static final String TAG = ".UnsentFragment";
@@ -66,22 +66,6 @@ public class DashboardUnsentFragment extends ListFragment {
 
     public DashboardUnsentFragment() {
         this.surveys = new ArrayList();
-    }
-
-    public static DashboardUnsentFragment newInstance(int index) {
-        DashboardUnsentFragment f = new DashboardUnsentFragment();
-
-        // Supply index input as an argument.
-        Bundle args = new Bundle();
-        args.putInt("index", index);
-        f.setArguments(args);
-
-        return f;
-    }
-
-
-    public int getShownIndex() {
-        return getArguments().getInt("index", 0);
     }
 
     @Override
@@ -115,7 +99,7 @@ public class DashboardUnsentFragment extends ListFragment {
     @Override
     public void onResume() {
         Log.d(TAG, "onResume");
-        registerSurveysReceiver();
+        registerFragmentReceiver();
 
         super.onResume();
     }
@@ -150,7 +134,7 @@ public class DashboardUnsentFragment extends ListFragment {
     @Override
     public void onStop() {
         Log.d(TAG, "onStop");
-        unregisterSurveysReceiver();
+        unregisterFragmentReceiver();
 
         super.onStop();
     }
@@ -256,8 +240,8 @@ public class DashboardUnsentFragment extends ListFragment {
     /**
      * Register a survey receiver to load surveys into the listadapter
      */
-    private void registerSurveysReceiver() {
-        Log.d(TAG, "registerSurveysReceiver");
+    public void registerFragmentReceiver() {
+        Log.d(TAG, "registerFragmentReceiver");
 
         if (surveyReceiver == null) {
             surveyReceiver = new SurveyReceiver();
@@ -271,8 +255,8 @@ public class DashboardUnsentFragment extends ListFragment {
      * Unregisters the survey receiver.
      * It really important to do this, otherwise each receiver will invoke its code.
      */
-    public void unregisterSurveysReceiver() {
-        Log.d(TAG, "unregisterSurveysReceiver");
+    public void unregisterFragmentReceiver() {
+        Log.d(TAG, "unregisterFragmentReceiver");
         if (surveyReceiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
             surveyReceiver = null;

@@ -60,7 +60,7 @@ import java.util.Set;
 /**
  * Activity that supports the data entry for the surveys.
  */
-public class SurveyFragment extends Fragment {
+public class SurveyFragment extends Fragment implements IDashboardFragment {
 
     public static final String TAG = ".SurveyActivity";
     /**
@@ -105,7 +105,7 @@ public class SurveyFragment extends Fragment {
         }
 
         llLayout = (RelativeLayout) inflater.inflate(R.layout.survey, container, false);
-        registerReceiver();
+        registerFragmentReceiver();
         createProgress();
         return llLayout;
     }
@@ -141,7 +141,7 @@ public class SurveyFragment extends Fragment {
     @Override
     public void onStop() {
         Log.d(TAG, "onStop");
-        unregisterReceiver();
+        unregisterFragmentReceiver();
         super.onStop();
     }
 
@@ -217,8 +217,8 @@ public class SurveyFragment extends Fragment {
     /**
      * Register a survey receiver to load surveys into the listadapter
      */
-    public void registerReceiver() {
-        Log.d(TAG, "registerReceiver");
+    public void registerFragmentReceiver() {
+        Log.d(TAG, "registerFragmentReceiver");
 
         if (surveyReceiver == null) {
             surveyReceiver = new SurveyReceiver();
@@ -231,8 +231,8 @@ public class SurveyFragment extends Fragment {
      * Unregisters the survey receiver.
      * It really important to do this, otherwise each receiver will invoke its code.
      */
-    public void unregisterReceiver() {
-        Log.d(TAG, "unregisterReceiver");
+    public void unregisterFragmentReceiver() {
+        Log.d(TAG, "unregisterFragmentReceiver");
         if (surveyReceiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
             surveyReceiver = null;
@@ -440,6 +440,11 @@ public class SurveyFragment extends Fragment {
 
             return null;
         }
+    }
+
+    @Override
+    public void reloadData() {
+
     }
 
     public void reloadHeader(Activity activity) {

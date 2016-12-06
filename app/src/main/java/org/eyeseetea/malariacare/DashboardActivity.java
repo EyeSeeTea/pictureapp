@@ -493,7 +493,7 @@ public class DashboardActivity extends BaseActivity {
         if (isBackPressed) {
             beforeExit();
         }
-        surveyFragment.unregisterReceiver();
+        surveyFragment.unregisterFragmentReceiver();
         if (isSent) {
             tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
             initAssess();

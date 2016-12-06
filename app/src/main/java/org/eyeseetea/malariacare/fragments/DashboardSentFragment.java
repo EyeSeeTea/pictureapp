@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DashboardSentFragment extends ListFragment {
+public class DashboardSentFragment extends ListFragment implements IDashboardFragment {
 
 
     public static final String TAG = ".SentFragment";
@@ -107,7 +107,7 @@ public class DashboardSentFragment extends ListFragment {
     @Override
     public void onResume() {
         Log.d(TAG, "onResume");
-        registerSurveysReceiver();
+        registerFragmentReceiver();
         super.onResume();
     }
 
@@ -141,7 +141,7 @@ public class DashboardSentFragment extends ListFragment {
     @Override
     public void onStop() {
         Log.d(TAG, "onStop");
-        unregisterSurveysReceiver();
+        unregisterFragmentReceiver();;
 
         super.onStop();
     }
@@ -202,7 +202,7 @@ public class DashboardSentFragment extends ListFragment {
     /**
      * Register a survey receiver to load surveys into the listadapter
      */
-    public void registerSurveysReceiver() {
+    public void registerFragmentReceiver() {
         Log.d(TAG, "registerSurveysReceiver");
 
         if (surveyReceiver == null) {
@@ -217,8 +217,8 @@ public class DashboardSentFragment extends ListFragment {
      * Unregisters the survey receiver.
      * It really important to do this, otherwise each receiver will invoke its code.
      */
-    public void unregisterSurveysReceiver() {
-        Log.d(TAG, "unregisterSurveysReceiver");
+    public void unregisterFragmentReceiver() {
+        Log.d(TAG, "unregisterFragmentReceiver");
         if (surveyReceiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
             surveyReceiver = null;

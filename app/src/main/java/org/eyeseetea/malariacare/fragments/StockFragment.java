@@ -7,15 +7,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.HeaderUseCase;
+import org.eyeseetea.malariacare.webview.IWebViewBuilder;
+import org.eyeseetea.malariacare.webview.IWebView;
 
 /**
  * Created by idelcano on 29/11/2016.
  */
 
-public class StockFragment extends Fragment {
+public class StockFragment extends Fragment implements IDashboardFragment, IWebView {
 
     public static final String TAG = ".StockFragment";
     LayoutInflater lInflater;
@@ -53,6 +56,31 @@ public class StockFragment extends Fragment {
         HeaderUseCase.getInstance().init(activity, R.string.tab_tag_stock);
     }
 
+    @Override
+    public void registerFragmentReceiver() {
+
+    }
+
+    @Override
+    public void unregisterFragmentReceiver() {
+
+    }
+
     public void reloadData() {
+    }
+
+    @Override
+    public void reloadWebView(IWebViewBuilder monitorBuilder) {
+
+    }
+
+    @Override
+    public WebView initWebView() {
+        return null;
+    }
+
+    @Override
+    public void stopWebView() {
+
     }
 }

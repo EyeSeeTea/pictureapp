@@ -60,6 +60,29 @@
      <string name="invalid2_result_subtext"></string> 
     <string name="invalid2_end_test"></string>
 
+    <string name="drugs_referral"></string>
+    <string name="drugs_referral_instructions"></string>
+    <string name="drugs_referral_ACT12_question"></string>
+    <string name="drugs_referral_ACTx12_yes"></string>
+    <string name="drugs_referral_ACTx12_no"></string>
+    <string name="drugs_referral_Pqx2_question"></string>
+    <string name="drugs_referral_Pqx2_yes"></string>
+    <string name="drugs_referral_Pqx2_no"></string>
+    <string name="drugs_referral_referred_question"></string>
+    <string name="drugs_referral_yes"></string>
+    <string name="drugs_referral_no"></string>
+
+    <string name="patient_advice"></string>
+    <string name="patient_advice_title_vomiting"></string>
+    <string name="patient_advice_text_vomiting"></string>
+    <string name="patient_advice_title_medication_with_food"></string>
+    <string name="patient_advice_text_medication_with_food"></string>
+    <string name="patient_advice_title_side_effects"></string>
+    <string name="patient_advice_text_side"></string>
+    <string name="patient_advice_title_help"></string>
+    <string name="patient_advice_text_help"></string>
+
+
     <string name="app_settings"></string>
     <string name="server"></string>
     <string name="app_visual"></string>

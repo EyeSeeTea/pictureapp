@@ -29,17 +29,34 @@
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY" />
 
-            <org.eyeseetea.malariacare.views.TextCard
-                android:id="@+id/row_header_text"
+
+            <LinearLayout
+                android:id="@+id/question_text_container"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.75"
                 android:paddingLeft="@dimen/question_padding_all"
                 android:paddingRight="@dimen/question_padding_all"
-                android:textColor="@color/intColor"
-                android:textSize="@dimen/input_number_edit_text_phone"
-                app:tDimension="@string/font_size_level1"
-                app:tFontName="@string/condensed_font_name" />
+                android:orientation="vertical">
+                <org.eyeseetea.malariacare.views.TextCard
+                    android:id="@+id/row_header_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/question_header_title"
+                    android:textSize="@dimen/input_number_edit_text_phone"
+                    app:tDimension="@string/font_size_level1"
+                    app:tFontName="@string/condensed_font_name" />
+                <org.eyeseetea.malariacare.views.TextCard
+                    android:id="@+id/row_help_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/question_header_subtitle"
+                    android:textSize="@dimen/input_number_edit_text_phone"
+                    app:tDimension="@string/font_size_level1"
+                    app:tFontName="@string/condensed_font_name" />
+            </LinearLayout>
+
+
         </LinearLayout>
     </LinearLayout>
 

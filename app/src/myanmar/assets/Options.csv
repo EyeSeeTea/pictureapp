@@ -30,9 +30,9 @@
 30;'No';'No';0;21;30
 31;'Yes';'Yes';0;22;31
 32;'No';'No';0;22;32
-33;'Yes';'Yes';0;24;33
-34;'No';'No';0;24;34
-35;'Yes';'Yes';0;25;35
-36;'No';'No';0;25;36
-37;'Yes';'Yes';0;26;37
-38;'No';'No';0;26;38
+33;'drugs_referral_ACTx12_yes';'Yes';0;24;33
+34;'drugs_referral_ACTx12_no';'No';0;24;34
+35;'drugs_referral_Pqx2_yes';'Yes';0;25;35
+36;'drugs_referral_Pqx2_no';'No';0;25;36
+37;'drugs_referral_yes';'Yes';0;26;37
+38;'drugs_referral_no';'No';0;26;38

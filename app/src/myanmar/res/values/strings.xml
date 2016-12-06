@@ -60,6 +60,29 @@
      <string name="invalid2_result_subtext">You have conducted two invalid tests. Refer the patient to the nearest health facility and contact your supervisor.</string> 
     <string name="invalid2_end_test">End test</string>
 
+    <string name="drugs_referral">Drugs / Referral</string>
+    <string name="drugs_referral_instructions">Please give patient 12 ACT tablets, plus 2 Primaquine tablets, and refer to health facility.</string>
+    <string name="drugs_referral_ACT12_question">ACT x 12</string>
+    <string name="drugs_referral_ACTx12_yes">Yes</string>
+    <string name="drugs_referral_ACTx12_no">No</string>
+    <string name="drugs_referral_Pqx2_question">Pq x 2</string>
+    <string name="drugs_referral_Pqx2_yes">Yes</string>
+    <string name="drugs_referral_Pqx2_no">No</string>
+    <string name="drugs_referral_referred_question">Referred</string>
+    <string name="drugs_referral_yes">Yes</string>
+    <string name="drugs_referral_no">No</string>
+
+
+    <string name="patient_advice">Patient advice</string>
+    <string name="patient_advice_title_vomiting">Vomiting</string>
+    <string name="patient_advice_text_vomiting">If you vomit within 30 minutes of taking the medication, repeat your dose.</string>
+    <string name="patient_advice_title_medication_with_food">Taking medication with food</string>
+    <string name="patient_advice_text_medication_with_food">Within 24 hours of onset of fever or other symptoms?</string>
+    <string name="patient_advice_title_side_effects">Side effects</string>
+    <string name="patient_advice_text_side_effects">If you have dark coloured urine, stop taking your Primaquine and go to the nearest health centre.</string>
+    <string name="patient_advice_title_help">When to get help</string>
+    <string name="patient_advice_text_help">If you do not feel better within 1 day, or start to feel much worse, go to the nearest health facility for further care.</string>
+
 
 
 
@@ -82,12 +105,10 @@
     <string name="app_legal">Legal</string>
     <string name="app_copyright">Copyright</string>
     <string name="app_software_licenses">Software licenses</string>
-    <string name="app_EULA">EULA</string> <!--settings_menu_eula-->
+    <string name="app_EULA">EULA</string>
     <string name="app_logout">Logout</string>
     <string name="settings_menu_logout_message">Changing the server or orgunit needs to re-login. Every not-sent survey will be deleted. Are you sure you want to continue?</string>
     <string name="dashboard_menu_logout_message">Every not-sent survey will be deleted. Are you sure you want to continue?</string>
-
-<!--    <string name="settings_menu_licence">"License"</string> &lt;!&ndash;settings_menu_about&ndash;&gt;-->
 
 
     <string name="yes">"Yes"</string>

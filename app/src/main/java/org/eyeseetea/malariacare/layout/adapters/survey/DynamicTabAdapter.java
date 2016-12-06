@@ -730,10 +730,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     if (screenQuestion.hasAssociatedImage()) {
                         makeImageVisible(screenQuestion, rowImageLabelView);
                     } else {
-                        adaptLayoutToTextOnly(textCard, rowImageLabelView);
+                        adaptLayoutToTextOnly(tableRow.findViewById(R.id.question_text_container), rowImageLabelView);
                     }
+
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
                             Utils.getInternationalizedString(screenQuestion.getForm_name()));
+
+                    if (!screenQuestion.getHelp_text().isEmpty()){
+                        ((TextCard) tableRow.findViewById(R.id.row_help_text)).setText(
+                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
+                    }
+
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
@@ -789,14 +796,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 rowImageLabelView);
     }
 
-    private void adaptLayoutToTextOnly(TextCard textCard, ImageView rowImageLabelView) {
+    private void adaptLayoutToTextOnly(View viewWithText, ImageView rowImageLabelView) {
         //Modify the text weight if the label don't have a image.
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
                 LinearLayout.LayoutParams.MATCH_PARENT, 0f);
         rowImageLabelView.setLayoutParams(params);
         params = new LinearLayout.LayoutParams(0,
                 LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-        textCard.setLayoutParams(params);
+        viewWithText.setLayoutParams(params);
     }
 
     private void configureAnswerChangedListener(IQuestionViewFactory questionViewFactory,

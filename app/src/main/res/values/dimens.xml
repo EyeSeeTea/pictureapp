@@ -52,6 +52,11 @@
     <dimen name="input_number_edit_text">32dp</dimen>
     <dimen name="input_number_edit_text_phone">22dp</dimen>
 
+    <!--Text size for radio button text-->
+    <dimen name="radio_button_option">18dp</dimen>
+    <!--Padding for radio button text-->
+    <dimen name="radio_button_padding">40dp</dimen>
+
     <!--Text size for review headers and rows-->
     <dimen name="default_review_fragment_font_size">24dp</dimen>
 

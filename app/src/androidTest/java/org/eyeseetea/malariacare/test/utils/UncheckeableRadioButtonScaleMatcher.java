@@ -23,7 +23,7 @@ import static com.google.android.apps.common.testing.deps.guava.base.Preconditio
 
 import android.view.View;
 
-import org.eyeseetea.malariacare.views.UncheckeableRadioButton;
+import org.eyeseetea.malariacare.views.CustomRadioButton;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -44,10 +44,10 @@ public class UncheckeableRadioButtonScaleMatcher extends TypeSafeMatcher<View> {
 
     @Override
     public boolean matchesSafely(View view) {
-        if (!(view instanceof UncheckeableRadioButton)) {
+        if (!(view instanceof CustomRadioButton)) {
             return false;
         }
-        UncheckeableRadioButton button = (UncheckeableRadioButton) view;
+        CustomRadioButton button = (CustomRadioButton) view;
         return scale.equals(button.getmScale());
     }
 

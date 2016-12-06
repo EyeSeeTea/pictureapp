@@ -105,14 +105,14 @@ public class LayoutUtils extends BaseLayoutUtils {
     }
 
 
-    public static void setDashboardActionBar(ActionBar actionBar){
+    public static void setDashboardActionBar(ActionBar actionBar) {
         ColorDrawable myColor = new ColorDrawable(
                 PreferencesState.getInstance().getContext().getResources().getColor(
                         R.color.actionbar_background));
         actionBar.setBackgroundDrawable(myColor);
     }
 
-    public static void setSurveyActionBar(ActionBar actionBar){
+    public static void setSurveyActionBar(ActionBar actionBar) {
         ColorDrawable myColor = new ColorDrawable(
                 PreferencesState.getInstance().getContext().getResources().getColor(
                         R.color.myanmar_orange));

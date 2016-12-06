@@ -11,5 +11,5 @@
         android:drawableLeft="@drawable/back_button"
         android:gravity="center"
         android:scaleType="centerInside"
-        android:textColor="@color/dark_violet"/>
+        android:textColor="@color/dark_violet" />
 </merge>

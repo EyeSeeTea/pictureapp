@@ -255,4 +255,16 @@ public class BaseLayoutUtils {
         wm.getDefaultDisplay().getMetrics(metrics);
         return (metrics.widthPixels);
     }
+
+    public static void setListRowBackgroundColor(View view) {
+
+    }
+
+    public static void setSurveyActionBar(ActionBar actionBar) {
+
+    }
+
+    public static void setDashboardActionBar(ActionBar actionBar) {
+
+    }
 }

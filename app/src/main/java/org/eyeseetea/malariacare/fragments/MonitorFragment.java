@@ -39,10 +39,10 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.HeaderUseCase;
-import org.eyeseetea.malariacare.webview.IWebViewBuilder;
 import org.eyeseetea.malariacare.monitor.MonitorBuilder;
 import org.eyeseetea.malariacare.services.MonitorService;
 import org.eyeseetea.malariacare.webview.IWebView;
+import org.eyeseetea.malariacare.webview.IWebViewBuilder;
 
 
 /**
@@ -50,7 +50,7 @@ import org.eyeseetea.malariacare.webview.IWebView;
  *
  * @author ivan.arrizabalaga
  */
-public class MonitorFragment extends Fragment implements IDashboardFragment,IWebView {
+public class MonitorFragment extends Fragment implements IDashboardFragment, IWebView {
 
     public static final String TAG = ".MonitorFragment";
     /**

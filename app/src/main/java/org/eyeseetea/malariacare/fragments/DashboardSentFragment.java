@@ -62,22 +62,6 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
         this.surveys = new ArrayList();
     }
 
-    public static DashboardSentFragment newInstance(int index) {
-        DashboardSentFragment f = new DashboardSentFragment();
-
-        // Supply index input as an argument.
-        Bundle args = new Bundle();
-        args.putInt("index", index);
-        f.setArguments(args);
-
-        return f;
-    }
-
-
-    public int getShownIndex() {
-        return getArguments().getInt("index", 0);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -141,7 +125,8 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
     @Override
     public void onStop() {
         Log.d(TAG, "onStop");
-        unregisterFragmentReceiver();;
+        unregisterFragmentReceiver();
+        ;
 
         super.onStop();
     }

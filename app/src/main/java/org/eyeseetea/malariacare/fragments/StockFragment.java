@@ -11,8 +11,8 @@ import android.webkit.WebView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.HeaderUseCase;
-import org.eyeseetea.malariacare.webview.IWebViewBuilder;
 import org.eyeseetea.malariacare.webview.IWebView;
+import org.eyeseetea.malariacare.webview.IWebViewBuilder;
 
 /**
  * Created by idelcano on 29/11/2016.

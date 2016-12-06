@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.webview;
 
-import android.content.Context;
 import android.webkit.WebView;
 
 import org.eyeseetea.malariacare.database.model.Survey;

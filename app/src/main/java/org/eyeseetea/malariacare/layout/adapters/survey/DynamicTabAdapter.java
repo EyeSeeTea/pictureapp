@@ -760,23 +760,25 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row,
                             tableLayout, false);
 
-                    if (screenQuestion.getHelp_text() != null && !screenQuestion.getHelp_text().equals("")) {
-                        ((TextCard) tableRow.findViewById(R.id.row_header_title_text)).setText(
-                        Utils.getInternationalizedString(screenQuestion.getHelp_text()));
-                    }
-
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
                             Utils.getInternationalizedString(screenQuestion.getForm_name()));
+
+                    if (!screenQuestion.getHelp_text().isEmpty()) {
+                        ((TextCard) tableRow.findViewById(R.id.row_help_text)).setText(
+                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
+                    }
 
                     if (screenQuestion.getPath() != null && !screenQuestion.getPath().equals("")) {
                         ImageView rowImageView = ((ImageView) tableRow.findViewById(
                                 R.id.question_image_row));
                         makeImageVisible(screenQuestion, rowImageView);
                     }
+
                     ((TextCard) tableRow.findViewById(R.id.row_switch_true)).setText(
                             Utils.getInternationalizedString(screenQuestion.getAnswer().getOptions().get(0).getCode()));
                     ((TextCard) tableRow.findViewById(R.id.row_switch_false)).setText(
                             Utils.getInternationalizedString(screenQuestion.getAnswer().getOptions().get(1).getCode()));
+
                     Switch switchView = (Switch) tableRow.findViewById(R.id.answer);
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initSwitchOption(screenQuestion, switchView);

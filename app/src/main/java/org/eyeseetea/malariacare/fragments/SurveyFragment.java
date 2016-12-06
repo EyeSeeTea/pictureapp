@@ -44,7 +44,7 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.HeaderUseCase;
+import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
@@ -448,10 +448,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     }
 
     public void reloadHeader(Activity activity) {
-        try {
-            HeaderUseCase.getInstance().hideHeader(activity);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        HeaderUseCase.getInstance().hideHeader(activity);
     }
 }

@@ -40,7 +40,7 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.HeaderUseCase;
+import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 
@@ -126,7 +126,6 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
     public void onStop() {
         Log.d(TAG, "onStop");
         unregisterFragmentReceiver();
-        ;
 
         super.onStop();
     }

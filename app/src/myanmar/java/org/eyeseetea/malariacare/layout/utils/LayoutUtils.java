@@ -91,7 +91,7 @@ public class LayoutUtils extends BaseLayoutUtils {
                 totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)));
     }
 
-    public static void setLineBetweenRows(ListView listView) {
+    public static void setRowsDivider(ListView listView) {
         listView.setDividerHeight(0);
     }
 

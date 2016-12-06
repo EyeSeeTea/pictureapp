@@ -83,7 +83,22 @@
     <string name="patient_advice_title_help">When to get help</string>
     <string name="patient_advice_text_help">If you do not feel better within 1 day, or start to feel much worse, go to the nearest health facility for further care.</string>
 
-
+    <string name="follow_up">Follow-up questions</string>
+    <string name="follow_up_travelling_question">Travelling</string>
+    <string name="follow_up_travelling_text">Has the patient travelled overnight within the previous two weeks?</string>
+    <string name="follow_up_travelling_yes">Yes</string>
+    <string name="follow_up_travelling_no">No</string>
+    <string name="follow_up_occupation_question">Occupation?</string>
+    <string name="follow_up_occupation_options">worksites, forest, plantation, village / city</string>
+    <string name="follow_up_LLIN_ITN_usage_question">LLIN / ITN usage</string>
+    <string name="follow_up_LLIN_ITN_usage_text">Did the patient sleep under a LLIN last night?</string>
+    <string name="follow_up_LLIN_ITN_usage_yes">Yes</string>
+    <string name="follow_up_LLIN_ITN_usage_no">No</string>
+    <string name="follow_up_LLIN_ITN_ownership_question">LLIN / ITN ownership</string>
+    <string name="follow_up_LLIN_ITN_ownership_text">Does the patient’s household own a LLIN?</string>
+    <string name="follow_up_LLIN_ITN_ownership_yes">Yes</string>
+    <string name="follow_up_LLIN_ITN_ownership_no">No</string>
+    <string name="follow_up_end_test">End test</string>
 
 
     <string name="app_settings">"Settings"</string>

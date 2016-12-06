@@ -83,6 +83,23 @@
     <string name="patient_advice_title_help"></string>
     <string name="patient_advice_text_help"></string>
 
+    <string name="follow_up"></string>
+    <string name="follow_up_travelling_question"></string>
+    <string name="follow_up_travelling_text"></string>
+    <string name="follow_up_travelling_yes"></string>
+    <string name="follow_up_travelling_no"></string>
+    <string name="follow_up_occupation_question"></string>
+    <string name="follow_up_occupation_options"></string>
+    <string name="follow_up_LLIN_ITN_usage_question"></string>
+    <string name="follow_up_LLIN_ITN_usage_text"></string>
+    <string name="follow_up_LLIN_ITN_usage_yes"></string>
+    <string name="follow_up_LLIN_ITN_usage_no"></string>
+    <string name="follow_up_LLIN_ITN_ownership_question"></string>
+    <string name="follow_up_LLIN_ITN_ownership_text"></string>
+    <string name="follow_up_LLIN_ITN_ownership_yes"></string>
+    <string name="follow_up_LLIN_ITN_ownership_no"></string>
+    <string name="follow_up_end_test"></string>
+
     <string name="app_settings"></string>
     <string name="server"></string>
     <string name="app_visual"></string>

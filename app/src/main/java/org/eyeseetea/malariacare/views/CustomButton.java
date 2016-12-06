@@ -65,8 +65,7 @@ public class CustomButton extends Button implements IEyeSeeView {
             try {
                 mfontName = a.getString(R.styleable.CustomButton_bFontName);
                 if (mfontName != null) {
-                    font = Typeface.createFromAsset(assetManager, "fonts/" + mfontName);
-                    setTypeface(font);
+                    setTypeface(TypefaceCache.getInstance().getTypeface(mfontName));
                 }
 
                 mDimension = a.getString(R.styleable.CustomButton_bDimension);

@@ -60,8 +60,15 @@ public abstract class AQuestionAnswerChangedListener {
         showOrHideChildren(question);
     }
 
+
+    protected void saveValue(View view, Option option) {
+        Question question = (Question) view.findViewById(R.id.answer).getTag();
+        ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
+
+        showOrHideChildren(question);
+    }
     /**
-     * Hide or show the childen question from a given question,  if is necessary  it reloads the
+     * Hide or show the children question from a given question,  if is necessary  it reloads the
      * children questions values or refreshing the children questions answer component
      *
      * TODO: Duplicate code in DynamicTabAdapter line 1094

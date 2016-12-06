@@ -32,8 +32,8 @@
         <attr name="eFontName" format="string|reference" />
     </declare-styleable>
 
-    <!-- UncheckeableRadioButton: Radiobutton with adaptative text size and text font -->
-    <declare-styleable name="UncheckeableRadioButton">
+    <!-- CustomRadioButton: Radiobutton with adaptative text size and text font -->
+    <declare-styleable name="CustomRadioButton">
         <attr name="rDimension" format="string|reference" />
         <attr name="rScale" format="string|reference" />
         <attr name="rFontName" format="string|reference" />

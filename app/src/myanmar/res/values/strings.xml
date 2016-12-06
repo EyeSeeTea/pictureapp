@@ -42,6 +42,26 @@
     <string name="rdt_mixed">Mixed</string>
     <string name="rdt_invalid">Invalid</string>
 
+    <string name="negative_test">Negative Test</string> 
+    <string name="negative_result">Negative</string> 
+    <string name="negative_result_text">Negative test result</string>
+     <string name="negative_result_subtext">Please refer the patient to the nearest health facility.</string> 
+    <string name="negative_end_test">End Test</string>
+
+    <string name="invalid1_subtitle">Invalid Test 1</string> 
+    <string name="invalid1_result">Invalid</string> 
+    <string name="invalid1_result_text">Number of Invalid Tests: 1</string>
+     <string name="invalid1_result_subtext">Make sure that the blood and the buffer solution are applied into the respective openings. Take a new sample and repeat.</string> 
+    <string name="invalid1_test_again">Test again</string>
+
+    <string name="invalid2_subtitle">Invalid Test 2</string> 
+    <string name="invalid2_result">Invalid</string> 
+    <string name="invalid2_result_text">Number of Invalid Tests: 12</string>
+     <string name="invalid2_result_subtext">You have conducted two invalid tests. Refer the patient to the nearest health facility and contact your supervisor.</string> 
+    <string name="invalid2_end_test">End test</string>
+
+
+
 
     <string name="app_settings">"Settings"</string>
     <string name="server">Server:</string>

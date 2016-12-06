@@ -42,7 +42,24 @@
     <string name="rdt_mixed"></string>
     <string name="rdt_invalid"></string>
 
+    <string name="negative_test"></string> 
+    <string name="negative_result"></string> 
+    <string name="negative_result_text"></string>
+     <string name="negative_result_subtext"></string> 
+    <string name="negative_end_test"></string>
 
+    <string name="invalid1_subtitle"></string> 
+    <string name="invalid1_result"></string> 
+    <string name="invalid1_result_text"></string>
+     <string name="invalid1_result_subtext"></string> 
+    <string name="invalid1_test_again"></string>
+
+    <string name="invalid2_subtitle"></string> 
+    <string name="invalid2_result"></string> 
+    <string name="invalid2_result_text"></string>
+     <string name="invalid2_result_subtext"></string> 
+    <string name="invalid2_end_test"></string>
+    
     <string name="app_settings"></string>
     <string name="server"></string>
     <string name="app_visual"></string>

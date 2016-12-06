@@ -38,10 +38,9 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
     @Override
     public void setQuestion(Question question) {
-        if(question.getOutput()== Constants.RADIO_GROUP_HORIZONTAL) {
+        if (question.getOutput() == Constants.RADIO_GROUP_HORIZONTAL) {
             radioGroup.setOrientation(HORIZONTAL);
-        }
-        else{
+        } else {
             radioGroup.setOrientation(VERTICAL);
         }
         this.question = question;
@@ -57,9 +56,12 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             radioButton.setOption(option);
             BaseLayoutUtils.setLayoutParamsAs50Percent(radioButton, context,
                     0);
-            radioButton.updateProperties(PreferencesState.getInstance().getScale(), context.getString(R.string.font_size_level1), context.getString(R.string.specific_language_font));
+            radioButton.updateProperties(PreferencesState.getInstance().getScale(),
+                    context.getString(R.string.font_size_level1),
+                    context.getString(R.string.specific_language_font));
             radioGroup.addView(radioButton);
-            radioGroup.setOnCheckedChangeListener(new RadioGroupListener((View) radioGroup.getParent(), question));
+            radioGroup.setOnCheckedChangeListener(
+                    new RadioGroupListener((View) radioGroup.getParent(), question));
         }
     }
 
@@ -87,20 +89,13 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
     @Override
     public void setValue(Value value) {
-
         if (value == null || value.getValue() == null) {
             return;
         }
 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
-
-            Option option = customRadioButton.getOption();
-            if (option.equals(value.getOption())) {
-                customRadioButton.setChecked(true);
-            } else {
-                customRadioButton.setChecked(false);
-            }
+            customRadioButton.setChecked(customRadioButton.getOption().equals(value.getOption()));
         }
     }
 
@@ -123,7 +118,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
-            if(!group.isShown()){
+            if (!group.isShown()) {
                 return;
             }
 
@@ -134,11 +129,9 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             }
             notifyAnswerChanged(selectedOption);
         }
+
         /**
          * Fixes a bug in older apis where a RadioGroup cannot find its children by id
-         *
-         * @param id
-         * @return
          */
         public CustomRadioButton findRadioButtonById(int id) {
             //No component -> done
@@ -152,7 +145,8 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             }
 
             //Find button manually
-            for (int i = 0; i < ((RadioGroup) ((RadioGroup) radioGroup).getChildAt(0)).getChildCount(); i++) {
+            for (int i = 0; i < ((RadioGroup) ((RadioGroup) radioGroup).getChildAt(
+                    0)).getChildCount(); i++) {
                 View button = ((RadioGroup) radioGroup).getChildAt(i);
                 if (button.getId() == id) {
                     return (CustomRadioButton) button;

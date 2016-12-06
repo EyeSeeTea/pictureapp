@@ -220,10 +220,10 @@ public class BaseLayoutUtils {
      * @param imageView is the imageView to set the image
      */
     public static void putImageInImageView(String path, ImageView imageView) {
+        if (path == null || path.equals("")) {
+            return;
+        }
         try {
-            if (path == null || path.equals("")) {
-                return;
-            }
             InputStream inputStream = PreferencesState.getInstance().getContext().getAssets().open(
                     Utils.getInternationalizedString(path));
             Bitmap bmp = BitmapFactory.decodeStream(inputStream);

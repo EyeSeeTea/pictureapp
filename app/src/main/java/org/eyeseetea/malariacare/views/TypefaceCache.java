@@ -31,9 +31,9 @@ import java.util.Map;
  */
 public class TypefaceCache {
     public static final String FONTS_PATH = "fonts/";
+    private static TypefaceCache instance;
     private AssetManager assetManager;
     private Map<String, Typeface> fontsCache;
-    private static TypefaceCache instance;
 
     TypefaceCache() {
         fontsCache = new HashMap<>();

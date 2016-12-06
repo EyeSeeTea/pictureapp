@@ -567,17 +567,17 @@ public class DashboardActivity extends BaseActivity {
      */
     public void showDone() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(this)
-                .setTitle(R.string.survey_title_completed)
-                .setMessage(R.string.survey_info_completed)
+                .setTitle(R.string.survey_completed)
+                .setMessage(R.string.survey_completed_text)
                 .setCancelable(false)
-                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         Survey survey = Session.getSurvey();
                         survey.updateSurveyStatus();
                         closeSurveyFragment();
                     }
                 });
-        msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
+        msgConfirmation.setNegativeButton(R.string.survey_review, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
                         0).getQuestion());

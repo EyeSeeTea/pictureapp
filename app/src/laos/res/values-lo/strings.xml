@@ -7,9 +7,9 @@
 <string name="ok">"ຕົກລົງ
 "</string>
     <string name="cancel">"ຍົກເລີກ"</string>
-<string name="review">"ເບິ່ງຄືນ
+<string name="survey_review">"ເບິ່ງຄືນ
 "</string>
-<string name="send">"ສົ່ງ
+<string name="survey_send">"ສົ່ງ
 "</string>
     <string name="malaria_case_based_reporting">"ການເຝົ້າລະວັງກໍລະນີໄຂ້ຍຸງ"</string>
 
@@ -26,8 +26,8 @@
     <string name="assessment_title_info">"ຂໍ້ຄວາມເຕືອນ"</string>
     <string name="survey_info_exit">"ທ່ານຕ້ອງການອອກຈາກລະບົບບໍ?"</string>
     <string name="survey_info_exit_delete">"ຂໍ້ມູນກຳລັງຈະຖືກລຶບ"</string>
-    <string name="survey_title_completed">"ການປ້ອນຂໍ້ມູນ"</string>
-    <string name="survey_info_completed">"ການປ້ອນຂໍ້ມູນສຳເລັດແລ້ວ"</string>
+    <string name="survey_completed">"ການປ້ອນຂໍ້ມູນ"</string>
+    <string name="survey_completed_text">"ການປ້ອນຂໍ້ມູນສຳເລັດແລ້ວ"</string>
 <string name="exception_org_unit_not_valid">"ລະຫັດຮ້ານບໍ່ຖືກຕ້ອງ. 
 ກະລຸນາຕິດຕໍ່ອົງການ PSI ລາວ*ຜ່ານເບີ*"</string>
 <string name="exception_org_unit_banned">"ຮ້ານປິດ.

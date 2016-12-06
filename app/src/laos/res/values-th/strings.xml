@@ -6,8 +6,8 @@
     <string name="no">"ไม่"</string>
     <string name="ok">"ตกลง"</string>
     <string name="cancel">"ยกเลิก"</string>
-    <string name="review">"ทบทวนตรวจสอบ"</string>
-    <string name="send">"ส่ง"</string>
+    <string name="survey_review">"ทบทวนตรวจสอบ"</string>
+    <string name="survey_send">"ส่ง"</string>
     <string name="app_about">"กับ"</string>
     <string name="settings_menu_licence">"ใบอนุญาต"</string>
     <string name="dialog_title_delete_surveys">"คุณแน่ใจหรือว่าต้องการลบแบบสำรวจที่ส่งออก?"</string>
@@ -22,8 +22,8 @@
     <string name="assessment_title_info">"ข้อมูล"</string>
     <string name="survey_info_exit">"คุณต้องการจริงๆที่จะออกใช่มั้ย?"</string>
     <string name="survey_info_exit_delete">"การสำรวจอยู่ในความคืบหน้าและจะถูกยกเลิก"</string>
-    <string name="survey_title_completed">"โพลสิ้นสุด Con"</string>
-    <string name="survey_info_completed">"การสำรวจเสร็จเรียบร้อยแล้ว"</string>
+    <string name="survey_completed">"โพลสิ้นสุด Con"</string>
+    <string name="survey_completed_text">"การสำรวจเสร็จเรียบร้อยแล้ว"</string>
     <string name="exception_org_unit_not_valid">" รหัส Outlet ไม่ถูกต้อง ติดต่อ PSI ที่ 011 771 811 "</string>
     <string name="exception_org_unit_banned">"Outlet ถูกปิดหรือถูกปิดกั้น ติดต่อ PSI ที่ 011 771 811"</string>
     <string name="dynamic_error_phone_format">"หมายเลขโทรศัพท์ ที่ไม่ถูกต้อง ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>

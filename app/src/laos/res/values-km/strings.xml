@@ -6,8 +6,8 @@
     <string name="no">"ទេ"</string>
     <string name="ok">"យល់ព្រម"</string>
     <string name="cancel">"បោះបង់"</string>
-    <string name="review">"ពិនិត្យឡើងវិញ"</string>
-    <string name="send">"ផ្ញើ"</string>
+    <string name="survey_review">"ពិនិត្យឡើងវិញ"</string>
+    <string name="survey_send">"ផ្ញើ"</string>
     <string name="app_about">"អំពី"</string>
     <string name="settings_menu_licence">"អាជ្ញាប័ណ្ណ"</string>
     <string name="dialog_title_delete_surveys">"តើអ្នកប្រាកដទេថា អ្នកចង់លុបព័ត៌មានស្ទង់មតិដែលបានផ្ញើរចេញទាំងអស់?"</string>
@@ -22,8 +22,8 @@
     <string name="assessment_title_info">"ព័ត៌មាន"</string>
     <string name="survey_info_exit">"តើអ្នកពិតជាចង់ចាកចេញមែនទេ?"</string>
     <string name="survey_info_exit_delete">"ការស្ទង់មតិកំពុងដំណើរការ​ ហើយនឹងត្រូវលុបចោល"</string>
-    <string name="survey_title_completed">"ការស្ទង់មតិបានបញ្ចប់់"</string>
-    <string name="survey_info_completed">"ការស្ទង់មតិបានបញ្ចប់ដោយជោគជ័យ"</string>
+    <string name="survey_completed">"ការស្ទង់មតិបានបញ្ចប់់"</string>
+    <string name="survey_completed_text">"ការស្ទង់មតិបានបញ្ចប់ដោយជោគជ័យ"</string>
     <string name="exception_org_unit_not_valid">"ហាងក្រមមិនត្រឹមត្រូវ។ ការទំនាក់ទំនងនៅ  អង្គការ PSI 011 771 811"</string>
     <string name="exception_org_unit_banned">"ហាងត្រូវបានបិទឬរារាំង។ ការទំនាក់ទំនងនៅ  អង្គការ PSI 011 771 811"</string>
     <string name="dynamic_error_phone_format">"បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ  ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>

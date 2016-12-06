@@ -1359,17 +1359,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void showDone() {
         final Activity activity = (Activity) context;
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
-                .setTitle(R.string.survey_title_completed)
-                .setMessage(R.string.survey_info_completed)
+                .setTitle(R.string.survey_completed)
+                .setMessage(R.string.survey_completed_text)
                 .setCancelable(false)
-                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         hideKeyboard(PreferencesState.getInstance().getContext());
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
                         isClicked = false;
                     }
                 });
-        msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
+        msgConfirmation.setNegativeButton(R.string.survey_review, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 hideKeyboard(PreferencesState.getInstance().getContext());
                 review();

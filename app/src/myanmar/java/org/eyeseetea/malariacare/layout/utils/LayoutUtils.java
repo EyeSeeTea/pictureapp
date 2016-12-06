@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.layout.utils;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Html;
@@ -93,5 +94,28 @@ public class LayoutUtils extends BaseLayoutUtils {
 
     public static void setDivider(ListView listView) {
         listView.setDividerHeight(0);
+    }
+
+    public static void setListRowBackgroundColor(View row) {
+        int myColor = ContextCompat.getColor(
+                PreferencesState.getInstance().getContext(),
+                R.color.rowBackgroundColor
+        );
+        row.setBackgroundColor(myColor);
+    }
+
+
+    public static void setDashboardActionBar(ActionBar actionBar){
+        ColorDrawable myColor = new ColorDrawable(
+                PreferencesState.getInstance().getContext().getResources().getColor(
+                        R.color.actionbar_background));
+        actionBar.setBackgroundDrawable(myColor);
+    }
+
+    public static void setSurveyActionBar(ActionBar actionBar){
+        ColorDrawable myColor = new ColorDrawable(
+                PreferencesState.getInstance().getContext().getResources().getColor(
+                        R.color.myanmar_orange));
+        actionBar.setBackgroundDrawable(myColor);
     }
 }

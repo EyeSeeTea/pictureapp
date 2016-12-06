@@ -7,9 +7,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:adjustViewBounds="true"
-        android:background="@drawable/back_background_button"
+        android:background="@null"
         android:drawableLeft="@drawable/back_button"
         android:gravity="center"
         android:scaleType="centerInside"
-        android:textColor="@color/dark_violet" />
+        android:textColor="@color/dark_violet"/>
 </merge>

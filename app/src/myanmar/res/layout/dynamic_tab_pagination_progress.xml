@@ -4,7 +4,7 @@
     android:id="@+id/page_progress"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Gray"
+    android:background="@color/dynamicProgressBarColor"
     android:orientation="horizontal"
     android:weightSum="1">
 

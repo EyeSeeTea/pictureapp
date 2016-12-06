@@ -7,9 +7,14 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:adjustViewBounds="true"
-        android:background="@drawable/next_background_button"
+        android:background="@null"
         android:drawableRight="@drawable/next_button"
         android:gravity="center"
         android:scaleType="centerInside"
         android:textColor="@color/white" />
+    <!-- staticText
+    Add
+    android:background="@drawable/back_background_button"
+    if a text nextbutton is needed
+    -->
 </merge>

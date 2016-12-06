@@ -50,10 +50,7 @@
             app:tDimension="@string/font_size_level1"
             app:tFontName="@string/condensed_font_name" />
         <!--android:textSize="@dimen/dashboard_text_size"-->
-        <View
-            android:layout_width="8dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/vertical_bar" />
+        <include layout="@layout/vertical_divisor_view"></include>
 
         <org.eyeseetea.malariacare.views.TextCard
             android:id="@+id/header_subtitle"
@@ -71,7 +68,6 @@
             android:textStyle="bold"
             app:tDimension="@string/font_size_level1"
             app:tFontName="@string/condensed_font_name" />
-        <!--android:textSize="@dimen/dashboard_text_size"-->
     </LinearLayout>
 
     <include layout="@layout/header_bottom_view"></include>

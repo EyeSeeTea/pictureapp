@@ -4,48 +4,56 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_question_header"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/dashboard_row_padding"
+    android:paddingLeft="@dimen/dashboard_row_padding"
+    android:paddingRight="@dimen/dashboard_row_padding">
+
     <include layout="@layout/top_view"></include>
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:orientation="horizontal">
 
-        <org.eyeseetea.malariacare.views.TextCard
-            android:id="@+id/question_title"
-            android:layout_width="0dip"
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="0.5"
-            android:gravity="left"
-            android:lineSpacingMultiplier="1.5"
-            android:padding="5dip"
-            android:paddingBottom="2dip"
-            android:paddingLeft="10dip"
-            android:paddingTop="2dip"
-            android:text="@string/header_title_unsent"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/question_header_title"
-            app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/condensed_font_name" />
+            android:orientation="horizontal">
 
+            <org.eyeseetea.malariacare.views.TextCard
+                android:id="@+id/question_title"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:layout_weight="0.5"
+                android:gravity="left|center_vertical"
+                android:padding="7dip"
+                android:text="@string/header_title_sent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/fragment_header_title"
+                android:textSize="@dimen/header_text_size"
+                app:tDimension="@string/font_size_level1"
+                app:tFontName="@string/condensed_font_name" />
 
-        <include layout="@layout/horizontal_divisor_view"></include>
+            <include layout="@layout/vertical_divisor_view"></include>
+        </LinearLayout>
 
         <org.eyeseetea.malariacare.views.TextCard
             android:id="@+id/question"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="right|center_vertical"
             android:layout_weight="0.5"
             android:autoText="false"
-            android:gravity="center"
-            android:padding="5dip"
+            android:gravity="right|center_vertical"
+            android:padding="7dip"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/question_header_subtitle"
+            android:textColor="@color/fragment_header_subtitle"
+            android:textSize="@dimen/header_text_size"
+            android:textStyle="bold"
             app:tDimension="@string/font_size_level1"
             app:tFontName="@string/condensed_font_name" />
-        <!--android:textSize="@dimen/dashboard_text_size"-->
     </LinearLayout>
 </LinearLayout>

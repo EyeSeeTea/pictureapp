@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/dynamicProgressBarColor"
     android:orientation="horizontal"
+    android:paddingLeft="30dp"
+    android:paddingRight="20dp"
     android:weightSum="1">
 
 </LinearLayout>

@@ -51,7 +51,7 @@ public class ProgressUtils {
         for (int i = 0; i < totalPages; i++) {
             dots[i] = new ImageView(view.getContext());
             dots[i].setScaleType(ImageView.ScaleType.FIT_START);
-            dots[i].setPadding(15, 15, 0, 0);
+            dots[i].setPadding(0, 10, 0, 10);
             if (i <= currentPage) {
                 dots[i].setImageDrawable(
                         ResourcesCompat.getDrawable(view.getContext().getResources(),

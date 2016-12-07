@@ -313,7 +313,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveys(surveysUnsentFromService);
-                LayoutUtils.setRowsDivider(getListView());
+                LayoutUtils.setRowDivider(getListView());
                 // Measure the screen height
                 int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
 

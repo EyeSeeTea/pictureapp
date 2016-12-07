@@ -3,12 +3,12 @@
  *
  * This file is part of QIS Surveillance App.
  *
- *  QIS Surveillance App is free software: you can redistribute it and/or modify
+ *  QIS Surveillance App App is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  QIS Surveillance App is distributed in the hope that it will be useful,
+ *  QIS Surveillance App App is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -16,7 +16,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.eyeseetea.malariacare.views;
 
 import android.content.Context;
@@ -31,12 +30,8 @@ import android.widget.RadioGroup;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.utils.Constants;
 
-/**
- * Created by adrian on 30/05/15.
- */
-public class UncheckeableRadioButton extends RadioButton implements IEyeSeeView {
+public class CustomRadioButton extends RadioButton implements IEyeSeeView {
     private Context context = getContext();
     private String mfontName = context.getString(R.string.normal_font);
     private String mScale = context.getString(R.string.settings_array_values_font_sizes_def);
@@ -47,37 +42,36 @@ public class UncheckeableRadioButton extends RadioButton implements IEyeSeeView 
 
     private Option option = null;
 
-    public UncheckeableRadioButton(Context context) {
+    public CustomRadioButton(Context context) {
         super(context);
         init(null, 0);
     }
 
-    public UncheckeableRadioButton(Context context, AttributeSet attrs) {
+    public CustomRadioButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs, 0);
     }
 
-    public UncheckeableRadioButton(Context context, AttributeSet attrs, int defStyle) {
+    public CustomRadioButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs, defStyle);
     }
 
-    public UncheckeableRadioButton(Context context, Option option, AttributeSet attrs,
-            int defStyle) {
+    public CustomRadioButton(Context context, Option option, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.setTag(option);
         this.setText(option.getName());
         init(attrs, defStyle);
     }
 
-    public UncheckeableRadioButton(Context context, Option option) {
+    public CustomRadioButton(Context context, Option option) {
         super(context);
         this.setTag(option);
         this.setText(option.getName());
         init(null, 0);
     }
 
-    public UncheckeableRadioButton(Context context, Option option, AttributeSet attrs) {
+    public CustomRadioButton(Context context, Option option, AttributeSet attrs) {
         super(context, attrs);
         this.setTag(option);
         this.setText(option.getName());
@@ -89,24 +83,27 @@ public class UncheckeableRadioButton extends RadioButton implements IEyeSeeView 
      * selected
      */
     public void init(AttributeSet attrs, int defStyle) {
+
+        if (isInEditMode()) {
+            return;
+        }
+
         // Load attributes
         if (attrs != null) {
-            a = getContext().obtainStyledAttributes(attrs, R.styleable.UncheckeableRadioButton,
-                    defStyle, 0);
+            a = context.obtainStyledAttributes(attrs, R.styleable.CustomRadioButton, defStyle, 0);
             try {
-                mfontName = a.getString(R.styleable.UncheckeableRadioButton_rFontName);
+                mfontName = a.getString(R.styleable.CustomRadioButton_rFontName);
                 if (mfontName != null) {
-                    font = Typeface.createFromAsset(assetManager, "fonts/" + mfontName);
-                    setTypeface(font);
+                    setTypeface(TypefaceCache.getInstance().getTypeface(mfontName));
                 }
 
-                mDimension = a.getString(R.styleable.UncheckeableRadioButton_rDimension);
-                mScale = a.getString(R.styleable.UncheckeableRadioButton_rScale);
+                mDimension = a.getString(R.styleable.CustomRadioButton_rDimension);
+                mScale = a.getString(R.styleable.CustomRadioButton_rScale);
                 if (mDimension == null) {
                     mDimension = context.getString(R.string.settings_array_values_font_sizes_def);
                 }
                 if (mScale == null) mScale = PreferencesState.getInstance().getScale();
-                if (!mScale.equals(Constants.FONTS_SYSTEM)) {
+                if (!mScale.equals(context.getString(R.string.font_size_system))) {
                     setTextSize(TypedValue.COMPLEX_UNIT_SP,
                             PreferencesState.getInstance().getFontSize(mScale, mDimension));
                 }
@@ -138,15 +135,13 @@ public class UncheckeableRadioButton extends RadioButton implements IEyeSeeView 
      */
     public void updateFontName(String fontName) {
         if (fontName != null) {
-            Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/" + fontName);
-            setTypeface(font);
+            setTypeface(TypefaceCache.getInstance().getTypeface(fontName));
             mfontName = fontName;
         }
     }
 
     /**
-     * Set the Object font size. This will be determined by the scale and dimension parameters,
-     * both
+     * Set the Object font size. This will be determined by the scale and dimension parameters, both
      * one of [xsmall|small|medium|large|xlarge ] choices
      *
      * @param dimension size related to rest of screen objects
@@ -156,7 +151,7 @@ public class UncheckeableRadioButton extends RadioButton implements IEyeSeeView 
         if (dimension != null && scale != null) {
             this.mDimension = dimension;
             this.mScale = scale;
-            if (!scale.equals(Constants.FONTS_SYSTEM)) {
+            if (!scale.equals(context.getString(R.string.font_size_system))) {
                 setTextSize(TypedValue.COMPLEX_UNIT_SP,
                         PreferencesState.getInstance().getFontSize(scale, dimension));
             }
@@ -205,6 +200,10 @@ public class UncheckeableRadioButton extends RadioButton implements IEyeSeeView 
      */
     public void setmDimension(String mDimension) {
         this.mDimension = mDimension;
+        if (getmScale() != getContext().getString(R.string.font_size_system)) {
+            setTextSize(TypedValue.COMPLEX_UNIT_SP,
+                    PreferencesState.getInstance().getFontSize(mScale, mDimension));
+        }
     }
 
     @Override
@@ -226,6 +225,10 @@ public class UncheckeableRadioButton extends RadioButton implements IEyeSeeView 
      * @param mScale The scale for this component.
      */
     public void setmScale(String mScale) {
+        if (!mScale.equals(this.mScale)) {
+            setTextSize(TypedValue.COMPLEX_UNIT_SP,
+                    PreferencesState.getInstance().getFontSize(mScale, mDimension));
+        }
         this.mScale = mScale;
     }
 

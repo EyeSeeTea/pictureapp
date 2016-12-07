@@ -79,7 +79,8 @@
     <string name="dhis_url_error_generic">"Error en el servidor Dhis. El servidor no esta respondiendo correctamente"</string>
     <string name="dhis_url_error_bad_credentials">"Esta app no esta autorizada en el servidor indicado"</string>
     <string name="settings_menu_monitoring">"Monitorizar"</string>
-    <string name="monitoring_title">"Por favor, selecciona un periodo de tiempo"</string>
+    <string name="monitoring_title_dropdown">"Por favor, selecciona un periodo de tiempo"</string>
+    <string name="monitoring_title">Supervisión</string>
     <string name="monitoring_label_option_months">"Últimos 6 meses"</string>
     <string name="monitoring_label_option_days">"Últimos 6 dias "</string>
     <string name="monitoring_label_option_weeks">"Últimas 6 semanas"</string>

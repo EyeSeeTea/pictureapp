@@ -2,7 +2,7 @@
 <resources>
     <string name="malaria_case_based_reporting">Malaria Case Based Reporting</string>
     <string name="volunteer_label">Volunteer:</string>
-    <string name="new_case_title">New Case</string>
+    <string name="new_case_title">NEW CASE</string>
     <string name="patient_profile_subtitle">Patient Profile</string>
     <string name="patient_name">Patient Name</string>
     <string name="patient_name_enter_prompt">Enter full patient name</string>
@@ -117,7 +117,10 @@
     <string name="past_cases">PAST CASES</string>
     <string name="sent_data">Sent Data</string>
     <string name="unsent_data">Unsent Data</string>
+    <string name="stock_control">STOCK CONTROL</string>
+    <string name="receipts_balances">Receipts Balances</string>
     <string name="monitoring_title">MONITORING</string>
+    <string name="monitoring_time_period">Time Period</string>
     <string name="monitoring_case_stats">Case Stats</string>
     <string name="monitoring_label_option_months">Last 6 months</string>
     <string name="monitoring_label_option_days">Last 6 days</string>
@@ -152,6 +155,7 @@
     <string name="Cq">Cq</string>
     <string name="Pq">Pq</string>
 
+    <string name="monitoring_title_dropdown">Please, select a time period</string>
     <string name="ok">"Ok"</string>
     <string name="cancel">"Cancel"</string>
     <string name="dialog_title_delete_survey">"Delete Survey"</string>

@@ -84,7 +84,8 @@
     <string name="dhis_url_error_bad_version">"ລະບົບ DHIS ບໍ່ຕອບສະໜອງ (ໃຊ້ສະເພາະກັບລຸ້ນ: 2.20, 2.21, 2.22)"</string>
     <string name="dhis_url_error_bad_credentials">"ໂປຣແກມນີ້ບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ນຳໃຊ້ຢູ່ໃນເຊີເວີດັ່ງກ່າວ"</string>
     <string name="settings_menu_monitoring">"ການຕິດຕາມ"</string>
-    <string name="monitoring_title">"ກະລຸນາເລືອກໄລຍະເວລາ "</string>
+    <string name="monitoring_title_dropdown">"ກະລຸນາເລືອກໄລຍະເວລາ "</string>
+    <string name="monitoring_title">ການຕິດຕາມ</string>
     <string name="monitoring_label_option_months">"6 ເດືອນຜ່ານມາ"</string>
     <string name="monitoring_label_option_days">"6 ມື້ຜ່ານມາ"</string>
     <string name="monitoring_label_option_weeks">"6 ອາທິດຜ່ານມາ"</string>

@@ -110,7 +110,7 @@ public class DashboardActivity extends BaseActivity {
         initTabHost(savedInstanceState);
         /* set tabs in order */
         LayoutUtils.setTabHosts(this);
-        LayoutUtils.setDivider(this);
+        LayoutUtils.setTabDivider(this);
         //set the tabs background as transparent
         setTabsBackgroundColor(R.color.tab_unpressed_background);
 
@@ -136,15 +136,19 @@ public class DashboardActivity extends BaseActivity {
                 }
                 if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
                     unsentFragment.reloadData();
+                    unsentFragment.reloadHeader(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_improve))) {
                     sentFragment.reloadData();
+                    sentFragment.reloadHeader(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_stock))) {
                     stockFragment.reloadData();
+                    stockFragment.reloadHeader(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
                     monitorFragment.reloadData();
+                    monitorFragment.reloadHeader(dashboardActivity);
                 }
                 tabHost.getCurrentTabView().setBackgroundColor(
                         getResources().getColor(R.color.tab_pressed_background));
@@ -168,7 +172,7 @@ public class DashboardActivity extends BaseActivity {
                     context.getResources().getString(R.string.tab_tag_stock));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
-                context.getResources().getString(R.string.monitor_button));
+                context.getResources().getString(R.string.monitoring_title));
         if (GradleVariantConfig.isStockFragmentActive()) {
             initStock();
         }
@@ -192,7 +196,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Sets a divider drawable and background.
      */
-    public void setDivider() {
+    public void setTabDivider() {
         tabHost.getTabWidget().setShowDividers(TabWidget.SHOW_DIVIDER_MIDDLE);
         tabHost.getTabWidget().setDividerDrawable(R.drawable.tab_line);
         tabHost.getTabWidget().setBackgroundColor(
@@ -258,6 +262,7 @@ public class DashboardActivity extends BaseActivity {
         unsentFragment = new DashboardUnsentFragment();
         unsentFragment.setArguments(getIntent().getExtras());
         replaceListFragment(R.id.dashboard_details_container, unsentFragment);
+        unsentFragment.reloadHeader(dashboardActivity);
     }
 
     public void restoreAssess() {
@@ -272,6 +277,7 @@ public class DashboardActivity extends BaseActivity {
             reviewFragment = new ReviewFragment();
         }
         replaceFragment(R.id.dashboard_details_container, reviewFragment);
+        reviewFragment.reloadHeader(dashboardActivity);
     }
 
     /**
@@ -304,6 +310,7 @@ public class DashboardActivity extends BaseActivity {
             surveyFragment = new SurveyFragment();
         }
         replaceFragment(R.id.dashboard_details_container, surveyFragment);
+        surveyFragment.reloadHeader(dashboardActivity);
     }
 
     /**
@@ -486,7 +493,7 @@ public class DashboardActivity extends BaseActivity {
         if (isBackPressed) {
             beforeExit();
         }
-        surveyFragment.unregisterReceiver();
+        surveyFragment.unregisterFragmentReceiver();
         if (isSent) {
             tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
             initAssess();

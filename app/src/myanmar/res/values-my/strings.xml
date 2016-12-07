@@ -114,7 +114,10 @@
     <string name="past_cases"></string>
     <string name="sent_data"></string>
     <string name="unsent_data"></string>
+    <string name="stock_control"></string>
+    <string name="receipts_balances"></string>
     <string name="monitoring_title"></string>
+    <string name="monitoring_time_period"></string>
     <string name="monitoring_case_stats"></string>
     <string name="monitoring_label_option_months"></string>
     <string name="monitoring_label_option_days"></string>
@@ -149,6 +152,7 @@
     <string name="Cq"></string>
     <string name="Pq"></string>
 
+    <string name="monitoring_title_dropdown"></string>
     <string name="ok"></string>
     <string name="cancel"></string>
     <string name="dialog_title_delete_survey"></string>

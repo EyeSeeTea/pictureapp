@@ -12,7 +12,8 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,IMultiQuestionView {
+public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
+        IMultiQuestionView {
     TextCard header;
     EditCard editCard;
 
@@ -25,6 +26,11 @@ public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements
     @Override
     public void setHeader(String headerValue) {
         header.setText(headerValue);
+    }
+
+    @Override
+    public void setImage(String path) {
+        return;
     }
 
     @Override

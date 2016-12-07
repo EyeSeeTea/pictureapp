@@ -21,6 +21,6 @@ public class MultiQuestionAnswerChangedListener extends AQuestionAnswerChangedLi
 
     @Override
     public void onAnswerChanged(View view, Option option) {
-
+        saveValue(view, option);
     }
 }

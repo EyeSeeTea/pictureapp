@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.Question;
 
 import java.util.List;
 
@@ -16,6 +17,8 @@ public abstract class AOptionQuestionView extends LinearLayout {
     }
 
     public abstract void setOptions(List<Option> options);
+
+    public abstract void setQuestion(Question question);
 
     public void setOnAnswerChangedListener(onAnswerChangedListener onAnswerChangedListener) {
         mOnAnswerChangedListener = onAnswerChangedListener;

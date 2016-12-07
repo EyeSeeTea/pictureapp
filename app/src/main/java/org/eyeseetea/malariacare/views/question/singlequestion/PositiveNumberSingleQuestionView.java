@@ -38,6 +38,11 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
     }
 
     @Override
+    public void setImage(String path) {
+        return;
+    }
+
+    @Override
     public void setValue(Value value) {
         if (value != null) {
             numberPicker.setText(value.getValue());

@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.BroadcastReceiver;
@@ -41,6 +42,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.layout.listeners.SwipeDismissListViewTouchListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -55,7 +57,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DashboardUnsentFragment extends ListFragment {
+public class DashboardUnsentFragment extends ListFragment implements IDashboardFragment {
 
 
     public static final String TAG = ".UnsentFragment";
@@ -65,22 +67,6 @@ public class DashboardUnsentFragment extends ListFragment {
 
     public DashboardUnsentFragment() {
         this.surveys = new ArrayList();
-    }
-
-    public static DashboardUnsentFragment newInstance(int index) {
-        DashboardUnsentFragment f = new DashboardUnsentFragment();
-
-        // Supply index input as an argument.
-        Bundle args = new Bundle();
-        args.putInt("index", index);
-        f.setArguments(args);
-
-        return f;
-    }
-
-
-    public int getShownIndex() {
-        return getArguments().getInt("index", 0);
     }
 
     @Override
@@ -114,7 +100,7 @@ public class DashboardUnsentFragment extends ListFragment {
     @Override
     public void onResume() {
         Log.d(TAG, "onResume");
-        registerSurveysReceiver();
+        registerFragmentReceiver();
 
         super.onResume();
     }
@@ -149,7 +135,7 @@ public class DashboardUnsentFragment extends ListFragment {
     @Override
     public void onStop() {
         Log.d(TAG, "onStop");
-        unregisterSurveysReceiver();
+        unregisterFragmentReceiver();
 
         super.onStop();
     }
@@ -187,14 +173,16 @@ public class DashboardUnsentFragment extends ListFragment {
      */
     private void initListView() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View header = inflater.inflate(this.adapter.getHeaderLayout(), null, false);
+        View header = HeaderUseCase.getInstance().loadHeader(this.adapter.getHeaderLayout(),
+                inflater);
         View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
 
-        LayoutUtils.InitAssessmentHeader(header,adapter);
-
         ListView listView = getListView();
-        listView.addHeaderView(header);
+        if (header != null) {
+            listView.addHeaderView(header);
+        }
         listView.addFooterView(footer);
+        LayoutUtils.setRowDivider(listView);
         setListAdapter((BaseAdapter) adapter);
 
         // Create a ListView-specific touch listener. ListViews are given special treatment because
@@ -254,8 +242,8 @@ public class DashboardUnsentFragment extends ListFragment {
     /**
      * Register a survey receiver to load surveys into the listadapter
      */
-    private void registerSurveysReceiver() {
-        Log.d(TAG, "registerSurveysReceiver");
+    public void registerFragmentReceiver() {
+        Log.d(TAG, "registerFragmentReceiver");
 
         if (surveyReceiver == null) {
             surveyReceiver = new SurveyReceiver();
@@ -269,12 +257,16 @@ public class DashboardUnsentFragment extends ListFragment {
      * Unregisters the survey receiver.
      * It really important to do this, otherwise each receiver will invoke its code.
      */
-    public void unregisterSurveysReceiver() {
-        Log.d(TAG, "unregisterSurveysReceiver");
+    public void unregisterFragmentReceiver() {
+        Log.d(TAG, "unregisterFragmentReceiver");
         if (surveyReceiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
             surveyReceiver = null;
         }
+    }
+
+    public void reloadHeader(Activity activity) {
+        HeaderUseCase.getInstance().init(activity, R.string.tab_tag_assess);
     }
 
     public void reloadData() {
@@ -293,7 +285,11 @@ public class DashboardUnsentFragment extends ListFragment {
         this.surveys.clear();
         this.surveys.addAll(newListSurveys);
         this.adapter.notifyDataSetChanged();
-        LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
+        try {
+            LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setListShown(true);
     }
 
@@ -319,7 +315,7 @@ public class DashboardUnsentFragment extends ListFragment {
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveys(surveysUnsentFromService);
-                LayoutUtils.setDivider(getListView());
+                LayoutUtils.setRowsDivider(getListView());
                 // Measure the screen height
                 int screenHeight = LayoutUtils.measureScreenHeight(getActivity());
 

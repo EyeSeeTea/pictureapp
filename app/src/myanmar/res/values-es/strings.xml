@@ -142,9 +142,14 @@
     <string name="last_6_weeks">Últimas 6 semanas</string>
     <string name="last_6_months">Últimos 6 meses</string>
     <string name="download">Descarga:</string>
-    <string name="assessment_past_cases">PAST CASES</string>
-    <string name="assessment_new_cases">NEW CASES</string>
-    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
+    <string name="header_title_sent">CASOS PASADOS</string>
+    <string name="header_title_unsent">NUEVOS CASOS</string>
+    <string name="header_title_stock">CONTROL DE STOCK</string>
+    <string name="header_title_monitoring">SUPERVISIÓN</string>
+    <string name="header_subtitle_unsent">Datos no enviados</string>
+    <string name="header_subtitle_sent">Datos enviados</string>
+    <string name="header_subtitle_stock">Recibos / Saldos</string>
+    <string name="header_subtitle_monitoring">Periodo de tiempo</string>
     <string name="positive_hint">Name, Details</string>
     <string name="developer_option_summary">Esta opción activa las opciones de desarrollador</string>
     <string name="developer_option_title">Mostrar opciones de desarrollador</string>

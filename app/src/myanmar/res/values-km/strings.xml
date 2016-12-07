@@ -142,9 +142,14 @@
     <string name="last_6_weeks">ចុងក្រោយ 6 សប្តាហ៍</string>
     <string name="last_6_months"> 6 ខែចុង</string>
     <string name="download"> ទាញយក:</string>
-    <string name="assessment_past_cases">PAST CASES</string>
-    <string name="assessment_new_cases">NEW CASES</string>
-    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
+    <string name="header_title_sent">ធអតីតកាល</string>
+    <string name="header_title_unsent">ករណីថ្មី</string>
+    <string name="header_title_stock">ការគ្រប់គ្រងស្តុក</string>
+    <string name="header_title_monitoring">អ្នកឃ្លាំមើល</string>
+    <string name="header_subtitle_unsent">ទិន្នន័យមិនទាន់ផ្ញើ</string>
+    <string name="header_subtitle_sent">ទិន្នន័យដែលបានផ្ញើ</string>
+    <string name="header_subtitle_stock">វិក័យប័ត្រ / សមតុល្យ</string>
+    <string name="header_subtitle_monitoring">រយៈពេល</string>
     <string name="positive_hint">Name, Details</string>
     <string name="developer_option_summary">ជម្រើសនេះអនុញ្ញាតជម្រើសអភិវឌ្ឍន៍</string>
     <string name="developer_option_title">អភិវឌ្ឍន៍បង្ហាញជម្រើស</string>

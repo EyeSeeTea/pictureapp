@@ -69,4 +69,7 @@
     <dimen name="input_edit_text_margin">8dp</dimen>
     <dimen name="header_edit_text_left_padding">10dp</dimen>
 
+    <!--Text size for headers-->
+    <dimen name="header_text_size">20dp</dimen>
+
 </resources>

@@ -151,9 +151,14 @@
     <string name="last_6_weeks">ທີ່ຜ່ານມາ 6 ອາທິດ</string>
     <string name="last_6_months">ສຸດທ້າຍ 6 ເດືອນທີ່</string>
     <string name="download">Download:</string>
-    <string name="assessment_past_cases">PAST CASES</string>
-    <string name="assessment_new_cases">NEW CASES</string>
-    <string name="assessment_connectivity">Data awaiting internet connectivity</string>
+    <string name="header_title_sent">ກໍລະນີທີ່ຜ່ານມາ</string>
+    <string name="header_title_unsent">ກໍລະນີໃຫມ່</string>
+    <string name="header_title_stock">STOCK ຄວບຄຸມ</string>
+    <string name="header_title_monitoring">ການຕິດຕາມ</string>
+    <string name="header_subtitle_unsent">ຂໍ້ມູນ Unsent</string>
+    <string name="header_subtitle_sent">ຂໍ້ມູນທີ່ສົ່ງ</string>
+    <string name="header_subtitle_stock">ລາຍຮັບ / ເຄື່ອງຊັ່ງ</string>
+    <string name="header_subtitle_monitoring">ໄລ​ຍະ​ເວ​ລາ</string>
     <string name="positive_hint">Name, Details</string>
     <string name="developer_option_summary">ຄຸນນະສົມບັດນີ້ເປີດໃຊ້ວຽກທາງເລືອກການພັດທະນາ</string>
     <string name="developer_option_title">ທາງເລືອກໃນການສະແດງໃຫ້ເຫັນການພັດທະນາ</string>

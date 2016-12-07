@@ -865,6 +865,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         });
 
+        //// TODO: 07/12/2016 set text examples
+        TextCard textNextButton = (TextCard) navigationButtonsHolder.findViewById(R.id.next_txt);
+        if (isDone(questionItem.getValueBySession())) {
+            //// TODO: 07/12/2016 add in strings
+            textNextButton.setText("End test");
+        }
+        TextCard textBackButton = (TextCard) navigationButtonsHolder.findViewById(
+                R.id.back_txt);
+
         return navigationButtonsHolder;
     }
 

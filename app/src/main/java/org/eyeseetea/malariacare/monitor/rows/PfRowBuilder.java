@@ -30,7 +30,7 @@ public class PfRowBuilder extends CounterRowBuilder {
 
     public PfRowBuilder(Context context) {
         super(context,
-                context.getString(R.string.monitor_row_title, context.getString(R.string.rdt_pf)));
+                context.getString(R.string.monitor_row_title, context.getString(R.string.Pf)));
     }
 
     @Override

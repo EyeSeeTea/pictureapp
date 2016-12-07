@@ -30,7 +30,7 @@ public class PvRowBuilder extends CounterRowBuilder {
 
     public PvRowBuilder(Context context) {
         super(context,
-                context.getString(R.string.monitor_row_title, context.getString(R.string.rdt_pv)));
+                context.getString(R.string.monitor_row_title, context.getString(R.string.Pv)));
     }
 
     @Override

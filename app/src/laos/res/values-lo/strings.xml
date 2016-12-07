@@ -84,14 +84,14 @@
     <string name="dhis_url_error_bad_version">"ລະບົບ DHIS ບໍ່ຕອບສະໜອງ (ໃຊ້ສະເພາະກັບລຸ້ນ: 2.20, 2.21, 2.22)"</string>
     <string name="dhis_url_error_bad_credentials">"ໂປຣແກມນີ້ບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ນຳໃຊ້ຢູ່ໃນເຊີເວີດັ່ງກ່າວ"</string>
     <string name="settings_menu_monitoring">"ການຕິດຕາມ"</string>
-    <string name="monitor_label">"ກະລຸນາເລືອກໄລຍະເວລາ "</string>
-    <string name="monitor_label_option_months">"6 ເດືອນຜ່ານມາ"</string>
-    <string name="monitor_label_option_days">"6 ມື້ຜ່ານມາ"</string>
-    <string name="monitor_label_option_weeks">"6 ອາທິດຜ່ານມາ"</string>
-    <string name="monitor_table_title_suspected">"ກໍລະນີສົງໄສ ແລະ ເປັນໄຂ້ຍຸງ"</string>
-    <string name="monitor_table_title_stock">"ຈຳນວນທີ່ນຳໃຊ້"</string>
+    <string name="monitoring_title">"ກະລຸນາເລືອກໄລຍະເວລາ "</string>
+    <string name="monitoring_label_option_months">"6 ເດືອນຜ່ານມາ"</string>
+    <string name="monitoring_label_option_days">"6 ມື້ຜ່ານມາ"</string>
+    <string name="monitoring_label_option_weeks">"6 ອາທິດຜ່ານມາ"</string>
+    <string name="monitoring_case_stats">"ກໍລະນີສົງໄສ ແລະ ເປັນໄຂ້ຍຸງ"</string>
+    <string name="consumption">"ຈຳນວນທີ່ນຳໃຊ້"</string>
     <string name="monitor_row_title_period">"ໄລຍະເວລາ"</string>
-    <string name="monitor_row_title_week">"ອາທິດ"</string>
+    <string name="monitoring_row_title_week">"ອາທິດ"</string>
     <string name="monitor_row_title_suspected">"ກໍລະນີສົງໄສວ່າເປັນໄຂ້ຍຸງ"</string>
     <string name="monitor_row_title_positive">"ເປັນໄຂ້ຍຸງ"</string>
     <string name="monitor_row_title_negative">"ບໍ່ເປັນໄຂ້ຍຸງ"</string>
@@ -100,16 +100,16 @@
 
     <!-- I think this is from Cambodia. Does it need to be removed? -->
     <string name="monitor_row_title_asmq">"AS/MQ"</string>
-    <string name="monitor_row_title_rdts">"RDTs"</string>
+    <string name="RDT">"RDTs"</string>
     <string name="monitor_row_title_positivity_rate">"ອັດຕາການຕິດເຊື້ອໄຂ້ຍຸງ"</string>
-    <string name="rdt_pf">"Pf"</string>
-    <string name="rdt_pv">"Pv"</string>
-    <string name="rdt_mixed">"Pf+Pv"</string>
+    <string name="Pf">"Pf"</string>
+    <string name="Pv">"Pv"</string>
+    <string name="mixed">"Pf+Pv"</string>
     <string name="app_legal">"ຂໍ້ກຳນົດດ້ານນິຕິກຳ"</string>
     <string name="app_copyright">"ສະຫງວນລິຂະສິດ"</string>
     <string name="app_software_licenses">"ການອະນຸຍາດໃຫ້ນຳໃຊ້ໂປຣແກມ"</string>
     <string name="app_EULA">"EULA"</string>
-    <string name="monitor_row_title_day">"ວັນທີ"</string>
+    <string name="monitoring_row_title_day">"ວັນທີ"</string>
     <string name="monitor_row_title_month">"ເດືອນ"</string>
     <string name="unrecognized_option">"ບໍ່ຮູ້ຈັກ"</string>
     <string name="progress_pull_building_survey">"ການດຳເນີນການສຳຫຼວດ "</string>

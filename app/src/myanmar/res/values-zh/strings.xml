@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="malaria_case_based_reporting">""</string>
-    <string name="volunteer_label">""</string>
+    <string name="malaria_case_based_reporting"></string>
+    <string name="volunteer_label"></string>
     <string name="new_case_title"></string>
     <string name="patient_profile_subtitle"></string>
-
     <string name="patient_name"></string>
     <string name="patient_name_enter_prompt"></string>
     <string name="patient_age"></string>
@@ -15,12 +14,10 @@
     <string name="patient_residence_village_other_option"></string>
     <string name="patient_residence_village_location"></string>
     <string name="patient_residence_village_other"></string>
-
     <string name="patient_sex_pregnancy"></string>
     <string name="patient_sex_male"></string>
     <string name="patient_sex_female"></string>
     <string name="patient_sex_female_pregnant"></string>
-
     <string name="symptoms_title"></string>
     <string name="symptoms_fever"></string>
     <string name="symptoms_fever_text"></string>
@@ -34,32 +31,27 @@
     <string name="symptoms_severity_text"></string>
     <string name="symptoms_severity_yes"></string>
     <string name="symptoms_severity_no"></string>
-
     <string name="rdt_test_result"></string>
     <string name="rdt_negative"></string>
     <string name="rdt_pf"></string>
     <string name="rdt_pv"></string>
     <string name="rdt_mixed"></string>
     <string name="rdt_invalid"></string>
-
     <string name="negative_test"></string> 
     <string name="negative_result"></string> 
     <string name="negative_result_text"></string>
      <string name="negative_result_subtext"></string> 
     <string name="negative_end_test"></string>
-
     <string name="invalid1_subtitle"></string> 
     <string name="invalid1_result"></string> 
     <string name="invalid1_result_text"></string>
      <string name="invalid1_result_subtext"></string> 
     <string name="invalid1_test_again"></string>
-
     <string name="invalid2_subtitle"></string> 
     <string name="invalid2_result"></string> 
     <string name="invalid2_result_text"></string>
      <string name="invalid2_result_subtext"></string> 
     <string name="invalid2_end_test"></string>
-
     <string name="drugs_referral"></string>
     <string name="drugs_referral_instructions"></string>
     <string name="drugs_referral_ACT12_question"></string>
@@ -71,8 +63,6 @@
     <string name="drugs_referral_referred_question"></string>
     <string name="drugs_referral_yes"></string>
     <string name="drugs_referral_no"></string>
-
-
     <string name="patient_advice"></string>
     <string name="patient_advice_title_vomiting"></string>
     <string name="patient_advice_text_vomiting"></string>
@@ -82,7 +72,6 @@
     <string name="patient_advice_text_side"></string>
     <string name="patient_advice_title_help"></string>
     <string name="patient_advice_text_help"></string>
-
     <string name="follow_up"></string>
     <string name="follow_up_travelling_question"></string>
     <string name="follow_up_travelling_text"></string>
@@ -99,10 +88,8 @@
     <string name="follow_up_LLIN_ITN_ownership_yes"></string>
     <string name="follow_up_LLIN_ITN_ownership_no"></string>
     <string name="follow_up_end_test"></string>
-
-    <string name="survey_completed">"Enquête terminée"</string>
-    <string name="survey_completed_text">"Le sondage a été effectué avec succès"</string>
-
+    <string name="survey_completed">"Survey completed"</string>
+    <string name="survey_completed_text">"The survey has been successfully completed."</string>
     <string name="app_settings"></string>
     <string name="server"></string>
     <string name="app_visual"></string>
@@ -116,8 +103,6 @@
     <string name="settings_select_language">"Idioma"</string>
     <string name="developer_option_summary">Esta opción activa las opciones de desarrollador</string>
     <string name="developer_option_title">Mostrar opciones de desarrollador</string>
-
-
     <string name="settings_menu_about"></string>
     <string name="app_legal"></string>
     <string name="app_copyright"></string>
@@ -126,128 +111,106 @@
     <string name="app_logout"></string>
     <string name="settings_menu_logout_message"></string>
     <string name="dashboard_menu_logout_message"></string>
+    <string name="past_cases"></string>
+    <string name="sent_data"></string>
+    <string name="unsent_data"></string>
+    <string name="monitoring_title"></string>
+    <string name="monitoring_case_stats"></string>
+    <string name="monitoring_label_option_months"></string>
+    <string name="monitoring_label_option_days"></string>
+    <string name="monitoring_label_option_weeks"></string>
+    <string name="monitoring_row_title_week"></string>
+    <string name="monitoring_row_title_day"></string>
+    <string name="monitoring_month_01_January"></string>
+    <string name="monitoring_month_02_February"></string>
+    <string name="monitoring_month_03_March"></string>
+    <string name="monitoring_month_04_April"></string>
+    <string name="monitoring_month_05_May"></string>
+    <string name="monitoring_month_06_June"></string>
+    <string name="monitoring_month_07_July"></string>
+    <string name="monitoring_month_08_August"></string>
+    <string name="monitoring_month_09_September"></string>
+    <string name="monitoring_month_10_October"></string>
+    <string name="monitoring_month_11_November"></string>
+    <string name="monitoring_month_12_December"></string>
+    <string name="monitor_row_title_tested"></string>
+    <string name="Pf"></string>
+    <string name="Pv"></string>
+    <string name="mixed"></string>
+    <string name="negative"></string>
+    <string name="positivity_rate"></string>
+    <string name="referrals"></string>
+    <string name="consumption"></string>
+    <string name="RDT"></string>
+    <string name="ACT_x_6"></string>
+    <string name="ACT_x_12"></string>
+    <string name="ACT_x_18"></string>
+    <string name="ACT_x_24"></string>
+    <string name="Cq"></string>
+    <string name="Pq"></string>
 
-    <string name="past_cases">PAST CASES</string>
-    <string name="sent_data">Sent Data</string>
-    <string name="unsent_data">Unsent Data</string>
-
-    <string name="yes">"Oui"</string>
-    <string name="no">"No"</string>
-    <string name="ok">"Ok"</string>
-    <string name="cancel">"Annuler"</string>
-    <string name="survey_review">"Réviser"</string>
-    <string name="survey_send">"Envoyer"</string>
-
-    <string name="dialog_title_delete_surveys">"Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?"</string>
-    <string name="dialog_title_delete_survey">"Supprimer envoyés"</string>
-    <string name="dialog_info_delete_survey">"Etes-vous sûr que vous voulez supprimer tous les sondages envoyés?"</string>
-    <string name="dialog_title_error">"Erreur"</string>
-    <string name="toast_push_is_pushing">"Envoi d'enquêtes avant d'entrer dans les paramètres."</string>
-    <string name="create_info_organization_unit">"Unité d'organisation"</string>
-    <string name="assessment_sent_date">"Date de remplissement"</string>
-    <string name="assessment_title_info">"Info"</string>
-    <string name="survey_info_exit">"Êtes-vous sûr de vouloir quitter?"</string>
-    <string name="survey_info_exit_delete">"L'enquête en cours sera supprimé"</string>
-    <string name="exception_org_unit_not_valid">"Code de sortie est pas active pour le programme . Contactez PSI au 011 771 811"</string>
-    <string name="exception_org_unit_banned">"Sortie est fermée ou bloquée. Contactez PSI au 011 771 811"</string>
-    <string name="dynamic_error_phone_format">"Le numéro de téléphone donné a un format incorrect  ((xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
-    <string name="dynamic_error_age">"âge invalide"</string>
-    <string name="server_name">"URL du serveur DHIS"</string>
-    <string name="pref_header_general">"General"</string>
-    <string name="font_size_level0">"xsmall"</string>
-    <string name="font_size_level1">"small"</string>
-    <string name="font_size_level2">"medium"</string>
-    <string name="font_size_level3">"large"</string>
-    <string name="font_size_level4">"xlarge"</string>
-    <string name="dialog_title_push">"Envoi de données"</string>
-    <string name="dialog_title_push_response">"Réponse de charge"</string>
-    <string name="dialog_info_push_ok">"Les données du sondage a été poussé avec succès au serveur. Résultats: "</string>
-    <string name="dialog_info_push_bad_credentials">"Identification incorrectes pour la poussée"</string>
-    <string name="dialog_error_push_no_uid">"Aucune UID trouvé dans le serveur pour le code "</string>
-    <string name="dialog_error_push_no_location">"Aucun emplacement disponible"</string>
-    <string name="number_0">"0"</string>
-    <string name="number_1">"1"</string>
-    <string name="number_2">"2"</string>
-    <string name="number_3">"3"</string>
-    <string name="number_4">"4"</string>
-    <string name="number_5">"5"</string>
-    <string name="number_6">"6"</string>
-    <string name="number_7">"7"</string>
-    <string name="number_8">"8"</string>
-    <string name="number_9">"9"</string>
-    <string name="assessment_title_rdt">"RDT"</string>
-    <string name="progress_pull_downloading">"Mise à jour des métadonnées (cela peut prendre quelques minutes) ..."</string>
-    <string name="progress_pull_preparing_orgs">"Organisations de chargement ..."</string>
-    <string name="progress_pull_surveys">"Enquêtes de chargement ..."</string>
-    <string name="progress_pull_connecting">"La connexion à DHIS serveur ..."</string>
-    <string name="progress_pull_done">"Terminé"</string>
-    <string name="progress_push_no_survey">"Aucune enquête a révélé pour pousser"</string>
-    <string name="progress_push_posting_survey">"Pousser les données d\'enquête au serveur ..."</string>
-    <string name="progress_push_preparing_survey">"Préparation de l\'enquête pour pousser ..."</string>
-    <string name="progress_push_updating_survey">"Mise à jour poussé données de l\'enquête ..."</string>
-    <string name="cancellingPull">"Le processus est arrêté en quelques secondes"</string>
-    <string name="dialog_title_pull_response">"Pull status"</string>
-    <string name="dialog_pull_success">"Dhis métadonnées retiré avec succès de serveur"</string>
-    <string name="dialog_push_before_pull_success">"Enquête poussé avec succès à dhis serveur, de commencer à tirer des métadonnées"</string>
-    <string name="dialog_push_success">"Enquête poussé avec succès à dhis serveur"</string>
-    <string name="dialog_pull_error">"Erreur en essayant de tirer des métadonnées à partir dhis serveur"</string>
-    <string name="create_info_zone">"Zone"</string>
-    <string name="dhis_url_error">"DHIS URL Error"</string>
-    <string name="dhis_url_error_bad_version">"Serveur dhis pas pris en charge (seulement 2.20, 2.21, 2.22 acceptés)"</string>
-    <string name="dhis_url_error_generic">"Cette erreur de serveur. Le serveur ne répond pas correctement"</string>
-    <string name="dhis_url_error_bad_credentials">"Ce soft est pas autorisé dans le serveur donné"</string>
-    <string name="settings_menu_monitoring">"Moniteur"</string>
-    <string name="monitor_label">"SURVEILLANCE"</string>
-    <string name="monitor_label_option_months">"6 derniers mois"</string>
-    <string name="monitor_label_option_days">"6 derniers jours"</string>
-    <string name="monitor_label_option_weeks">"6 dernières semaines"</string>
-    <string name="monitor_table_title_suspected">"Statistiques de cas"</string>
-    <string name="monitor_table_title_stock">"Consommation"</string>
-    <string name="monitor_row_title_period">"Période de temps"</string>
-    <string name="monitor_row_title_week">"Semaine"</string>
-    <string name="monitor_row_title_suspected">"Les cas suspects"</string>
-    <string name="monitor_row_title_positive">"Les cas Positifs"</string>
-    <string name="monitor_row_title_negative">"Négatif"</string>
-    <string name="monitor_row_title_not_tested">"Pas testé"</string>
-    <string name="monitor_row_title_tested">"Total testé"</string>
-    <string name="monitor_row_title_referral">"Referral"</string>
-    <string name="monitor_row_title_asmq">"AS/MQ"</string>
-    <string name="monitor_row_title_rdts">"RDTs"</string>
-    <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
-
-    <string name="monitor_row_title_day">"Jour"</string>
-    <string name="monitor_row_title_month">"Mois"</string>
-    <string name="unrecognized_option">"Méconnu"</string>
-    <string name="progress_pull_building_survey">"Enquête en construction ..."</string>
-    <string name="progress_pull_building_value">"Valeurs en construction ..."</string>
-    <string name="monitor_row_title_dhapip">"DHA-PIP"</string>
-    <string name="number_10">"10"</string>
-    <string name="number_11">"11"</string>
-    <string name="number_12">"12"</string>
-    <string name="unsent_button">"Pas envoyé"</string>
-    <string name="sent_button">"Envoyé"</string>
-    <string name="monitor_button">"surveillance"</string>
-
-    <string name="option_counter">"Répétitions: "</string>
-    <string name="option_confirm">"Confirmer option"</string>
-    <string name="monitor_row_title_act_stockout">"Numéro non traitée (ACT rupture de stock)"</string>
-    <string name="monitor_row_title_denied">"Patients rejetés"</string>
-    <string name="monitor_row_title_rdt_stockout">"Nombre non testé (Rdt rupture de stock)</string>
-    <string name="monitor_row_title_pregnant">"Patients encintes"</string>
-    <string name="monitor_row_title_severe">"Patients graves"</string>
-    <string name="monitor_row_title_treatment">"Références"</string>
-    <string name="monitor_row_title_rdt_testing">"Nombre de références (test TDR)"</string>
-    <string name="monitor_row_title_submission">"Envoies"</string>
-    <string name="review_title">"S'il vous plaît vérifier avant"</string>
-    <string name="review_subtitle">Transmission</string>
-    <string name="not_tested">"Pas testé"</string>
-    <string name="system_defined">"Système défini"</string>
-    <string name="no_data">pas de données</string>
-    <string name="last_6_days">les 6 derniers jours</string>
-    <string name="last_6_weeks">"dernières 6 semaines"</string>
-    <string name="last_6_months"> les 6 derniers mois</string>
-    <string name="download">"Téléchargement:"</string>
-    <string name="positive_hint">Name, Details</string>
-    <string name="export_data_option_title">"Base de données à l'exportation"</string>
-    <string name="demo_login">Demo</string>
+    <string name="ok"></string>
+    <string name="cancel"></string>
+    <string name="dialog_title_delete_survey"></string>
+    <string name="dialog_info_delete_survey"></string>
+    <string name="dialog_title_error"></string>
+    <string name="toast_push_is_pushing"></string>
+    <string name="create_info_organization_unit">"</string>
+    <string name="assessment_sent_date"></string>
+    <string name="assessment_title_info"></string>
+    <string name="survey_info_exit"></string>
+    <string name="survey_info_exit_delete"></string>
+    <string name="exception_org_unit_not_valid"></string>
+    <string name="exception_org_unit_banned"></string>
+    <string name="dynamic_error_phone_format"></string>
+    <string name="dynamic_error_age"></string>
+    <string name="pref_header_general"></string>
+    <string name="font_size_level0"></string>
+    <string name="font_size_level1"></string>
+    <string name="font_size_level2"></string>
+    <string name="font_size_level3"></string>
+    <string name="font_size_level4"></string>
+    <string name="dialog_title_push"></string>
+    <string name="dialog_title_push_response"></string>
+    <string name="dialog_info_push_ok"></string>
+    <string name="dialog_info_push_bad_credentials"></string>
+    <string name="dialog_error_push_no_uid"></string>
+    <string name="dialog_error_push_no_location"></string>
+    <string name="assessment_title_rdt"></string>
+    <string name="progress_pull_downloading"></string>
+    <string name="progress_pull_preparing_orgs"></string>
+    <string name="progress_pull_surveys"></string>
+    <string name="progress_pull_connecting"></string>
+    <string name="progress_pull_done"></string>
+    <string name="progress_push_no_survey"></string>
+    <string name="progress_push_posting_survey"></string>
+    <string name="progress_push_preparing_survey"></string>
+    <string name="progress_push_updating_survey"></string>
+    <string name="cancellingPull"></string>
+    <string name="dialog_title_pull_response"></string>
+    <string name="dialog_pull_success"></string>
+    <string name="dialog_pull_error"></string>
+    <string name="create_info_zone"></string>
+    <string name="last_6_days"></string>
+    <string name="last_6_weeks"></string>
+    <string name="last_6_months"></string>
+    <string name="download"></string>
+    <string name="unrecognized_option"></string>
+    <string name="progress_pull_building_survey"></string>
+    <string name="progress_pull_building_value"></string>
+    <string name="positive_hint"></string>
+    <string name="export_data_option_title"></string>
+    <string name="demo_login"></string>
+    <string name="option_counter"></string>
+    <string name="option_confirm"></string>
+    <string name="monitor_row_title_positive"></string>
+    <string name="monitor_row_title_referral"></string>
+    <string name="monitor_row_title_act_stockout"></string>
+    <string name="monitor_row_title_denied"></string>
+    <string name="monitor_row_title_rdt_stockout"></string>
+    <string name="review_title"></string>
+    <string name="review_subtitle"></string>
+    <string name="not_tested"></string>
+    <string name="system_defined"></string>
+    <string name="no_data"></string>
 </resources>

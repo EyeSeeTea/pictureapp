@@ -34,7 +34,7 @@ public class MonitorUtils extends AMonitorUtils {
 
     public List<MonitorRowBuilder> defineRows() {
         List<MonitorRowBuilder> rowBuilders = new ArrayList<>();
-        rowBuilders.add(new PeriodRowBuilder(context, R.string.monitor_table_title_stock));
+        rowBuilders.add(new PeriodRowBuilder(context, R.string.consumption));
         rowBuilders.add(new RDTRowBuilder(context));
         rowBuilders.add(new ACT6RowBuilder(context));
         rowBuilders.add(new ACT12RowBuilder(context));
@@ -47,7 +47,7 @@ public class MonitorUtils extends AMonitorUtils {
 
     public List<MonitorRowBuilder> defineSuspectedRows() {
         List<MonitorRowBuilder> rowBuilders = new ArrayList<>();
-        rowBuilders.add(new PeriodRowBuilder(context, R.string.monitor_table_title_suspected));
+        rowBuilders.add(new PeriodRowBuilder(context, R.string.monitoring_case_stats));
         rowBuilders.add(new TestedRowBuilder(context));
         rowBuilders.add(new PfRowBuilder(context));
         rowBuilders.add(new PvRowBuilder(context));

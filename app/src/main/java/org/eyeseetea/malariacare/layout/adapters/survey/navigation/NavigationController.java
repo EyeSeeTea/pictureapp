@@ -306,7 +306,7 @@ public class NavigationController {
                         option == null ? "" : option.getInternationalizedCode()));
                 return null;
             }
-            if (option!=null && counters.containsKey(option.getId_option())) {
+            if (counters.containsKey(option.getId_option())) {
                 QuestionCounter questionCounter = counters.get(option.getId_option());
                 Integer limit = (int) Math.floor(option.getFactor());
                 Log.d(TAG, String.format("findNext(%s)-> Survey(%s)finished",

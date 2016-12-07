@@ -22,8 +22,4 @@ public class LayoutUtils extends BaseLayoutUtils {
     public static void setTabHosts(DashboardActivity dashboardActivity) {
         dashboardActivity.setTabHostsWithText();
     }
-
-    public static void setDivider(DashboardActivity dashboardActivity) {
-        return;
-    }
 }

@@ -26,6 +26,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.monitor.tables.StockTableBuilder;
 import org.eyeseetea.malariacare.monitor.tables.SuspectedPositiveTableBuilder;
+import org.eyeseetea.malariacare.webview.IWebViewBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.List;
 /**
  * Created by arrizabalaga on 25/02/16.
  */
-public class MonitorBuilder {
+public class MonitorBuilder implements IWebViewBuilder {
     private static final String TAG = ".MonitorBuilder";
 
     /**
@@ -110,7 +111,7 @@ public class MonitorBuilder {
     /**
      * Updates webview with i18N messages
      */
-    private void addMessagesToView(WebView webView) {
+    public void addMessagesToView(WebView webView) {
         String json = String.format(UPDATE_MESSAGES_JSON,
                 context.getString(R.string.monitor_label),
                 context.getString(R.string.monitor_label_option_months),
@@ -126,7 +127,7 @@ public class MonitorBuilder {
     /**
      * Reloads tables
      */
-    private void addReloadTablesToView(WebView webView) {
+    public void addReloadTablesToView(WebView webView) {
         Log.d(TAG, JAVASCRIPT_RELOAD_TABLES);
         webView.loadUrl(JAVASCRIPT_RELOAD_TABLES);
     }

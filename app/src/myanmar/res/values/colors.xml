@@ -13,7 +13,7 @@
     <color name="tab_unpressed_background">@color/dark_violet</color>
 
     <color name="main_window_background">@color/myanmar_orange</color>
-    <color name="headerColor">@color/light_violet</color>
+    <color name="headerColor">@color/myanmar_orange</color>
     <color name="rowBackgroundColor">@color/myanmar_orange</color>
     <color name="fragment_header_title">@color/text_first_color</color>
     <color name="fragment_header_subtitle">@color/white</color>medium_light_violet

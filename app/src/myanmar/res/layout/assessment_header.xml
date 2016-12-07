@@ -39,7 +39,7 @@
             android:orientation="horizontal">
 
             <org.eyeseetea.malariacare.views.TextCard
-                android:id="@+id/idHeader"
+                android:id="@+id/header_title"
                 android:layout_width="0dip"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
@@ -47,7 +47,7 @@
                 android:background="@drawable/background_header"
                 android:gravity="center"
                 android:padding="5dip"
-                android:text="@string/assessment_past_cases"
+                android:text="@string/header_title_sent"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/fragment_header_title"
                 app:tDimension="@string/font_size_level1"
@@ -69,7 +69,7 @@
                 android:background="@drawable/background_header"
                 android:gravity="center"
                 android:padding="5dip"
-                android:text="@string/assessment_connectivity"
+                android:text="@string/header_subtitle_unsent"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/fragment_header_subtitle"
                 app:tDimension="@string/font_size_level1"

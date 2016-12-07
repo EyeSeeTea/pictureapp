@@ -42,6 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Option;
@@ -56,7 +57,7 @@ import java.util.List;
 /**
  * Created by Jose on 22/02/2015.
  */
-public class BaseLayoutUtils {
+public abstract class BaseLayoutUtils {
 
     public static final int[] rowBackgrounds =
             {R.drawable.background_even, R.drawable.background_odd};
@@ -202,9 +203,17 @@ public class BaseLayoutUtils {
         }
     }
 
-    public static void setDivider(ListView listView) {
+    public static void setTabDivider(DashboardActivity dashboardActivity) {
+        //No action. This method should be created in the variant.
     }
 
+    public static void setLineBetweenRows(ListView listView) {
+        //No action. This method should be created in the variant.
+    }
+
+    public static void setRowDivider(ListView listView) {
+        //No action. This method should be created in the variant.
+    }
 
     public static void makeImageVisible(String path, ImageView rowImageLabelView) {
         rowImageLabelView.setVisibility(View.VISIBLE);
@@ -257,14 +266,18 @@ public class BaseLayoutUtils {
     }
 
     public static void setListRowBackgroundColor(View view) {
-
+        //No action. This method should be created in the variant.
     }
 
     public static void setSurveyActionBar(ActionBar actionBar) {
-
+        //No action. This method should be created in the variant.
     }
 
     public static void setDashboardActionBar(ActionBar actionBar) {
+        //No action. This method should be created in the variant.
+    }
 
+    public static void fixRowViewBackground(View row, int position) {
+        row.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));
     }
 }

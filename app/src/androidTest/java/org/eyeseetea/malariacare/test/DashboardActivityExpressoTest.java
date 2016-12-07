@@ -176,7 +176,7 @@
 //            DashboardActivity dashboardActivity =(DashboardActivity)getActivityInstance();
 //            DashboardUnsentFragment dashboardUnsentFragment =(DashboardUnsentFragment)
 // dashboardActivity.getFragmentManager().findFragmentById(R.id.dashboard_details_fragment);
-//            dashboardUnsentFragment.unregisterSurveysReceiver();
+//            dashboardUnsentFragment.unregisterFragmentReceiver();
 //        }catch(Exception ex){
 //            Log.e(TAG,"unregisterSurveyReceiver(): "+ex.getMessage());
 //        }

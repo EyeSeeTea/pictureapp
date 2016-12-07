@@ -131,7 +131,8 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
 
         mDashboardAdapterStrategy.renderSurveySummary(rowView, survey);
 
-        rowView.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));
+        LayoutUtils.fixRowViewBackground(rowView, position);
+
 
         LayoutUtils.setListRowBackgroundColor(rowView);
 

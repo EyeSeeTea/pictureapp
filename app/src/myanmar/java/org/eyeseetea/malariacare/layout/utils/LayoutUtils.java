@@ -30,8 +30,8 @@ public class LayoutUtils extends BaseLayoutUtils {
         dashboardActivity.setTabHostsWithImages();
     }
 
-    public static void setDivider(DashboardActivity dashboardActivity) {
-        dashboardActivity.setDivider();
+    public static void setTabDivider(DashboardActivity dashboardActivity) {
+        dashboardActivity.setTabDivider();
     }
 
     public static void setActionBarAppAndUser(ActionBar actionBar) {
@@ -92,10 +92,6 @@ public class LayoutUtils extends BaseLayoutUtils {
                 totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)));
     }
 
-    public static void setDivider(ListView listView) {
-        listView.setDividerHeight(0);
-    }
-
     public static void setListRowBackgroundColor(View row) {
         int myColor = ContextCompat.getColor(
                 PreferencesState.getInstance().getContext(),
@@ -118,4 +114,23 @@ public class LayoutUtils extends BaseLayoutUtils {
                         R.color.myanmar_orange));
         actionBar.setBackgroundDrawable(myColor);
     }
+
+    public static void setRowDivider(ListView listView) {
+        ColorDrawable myColor = new ColorDrawable(
+                PreferencesState.getInstance().getContext().getResources().getColor(
+                        R.color.headerColor)
+        );
+        listView.setDivider(myColor);
+        listView.setDividerHeight(0);
+        listView.setPadding(20, 0, 20, 0);
+    }
+
+
+    // Given a index, this method return a background color
+    public static void fixRowViewBackground(View row, int index) {
+        if (index < 1) {
+            row.findViewById(R.id.dotted_line).setVisibility(View.GONE);
+        }
+    }
+
 }

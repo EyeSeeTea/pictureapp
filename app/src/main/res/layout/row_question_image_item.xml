@@ -8,6 +8,7 @@
         android:id="@+id/question_image_row"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:minHeight="60dp"
         android:layout_gravity="center_horizontal"
         android:visibility="gone" />
 </LinearLayout>

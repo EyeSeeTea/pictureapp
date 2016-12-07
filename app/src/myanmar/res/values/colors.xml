@@ -21,6 +21,7 @@
     <color name="question_header_subtitle">@color/medium_light_violet</color>
     <color name="hint">@color/medium_violet</color>
     <color name="intColor">@color/dark_violet</color>
+    <color name="spinner_color">@color/dark_violet</color>
 
     <color name="pageIndicator_completed">@color/dark_violet</color>
     <color name="pageIndicator_pending">@color/light_violet</color>

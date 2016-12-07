@@ -91,11 +91,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         super.onActivityCreated(savedInstanceState);
 
         initAdapter();
-        try {
-            initListView();
-        } catch (NoClassDefFoundError error){
-            error.printStackTrace();
-        }
+        initListView();
         registerForContextMenu(getListView());
     }
 
@@ -174,7 +170,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     /**
      * Initializes the listview component, adding a listener for swiping right
      */
-    private void initListView() throws NoClassDefFoundError{
+    private void initListView() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View header = HeaderUseCase.getInstance().loadHeader(this.adapter.getHeaderLayout(),
                 inflater);
@@ -268,11 +264,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     }
 
     public void reloadHeader(Activity activity) {
-        try {
-            HeaderUseCase.getInstance().init(activity, R.string.tab_tag_assess);
-        } catch (NoClassDefFoundError error){
-            error.printStackTrace();
-        }
+        HeaderUseCase.getInstance().init(activity, R.string.tab_tag_assess);
     }
 
     public void reloadData() {

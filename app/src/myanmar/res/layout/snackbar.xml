@@ -6,9 +6,9 @@
     android:layout_alignParentBottom="true"
     android:layout_marginBottom="@dimen/footer_navigation_size"
     android:orientation="horizontal"
-    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     android:paddingLeft="15dp"
-    android:paddingBottom="5dp" >
+    android:paddingTop="5dp">
 
 
     <include layout="@layout/back_button"></include>

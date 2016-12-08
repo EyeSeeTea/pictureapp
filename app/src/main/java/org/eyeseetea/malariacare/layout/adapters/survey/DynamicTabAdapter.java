@@ -502,7 +502,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Progress
         ProgressUtils.updateProgressBarStatus(rowView, navigationController.getCurrentPage(),
-                navigationController.getTotalPages());
+                questionItem.getTotalQuestions());
 
         TableRow tableRow = null;
         TableRow tableButtonRow = null;

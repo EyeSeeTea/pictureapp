@@ -8,30 +8,32 @@
     android:paddingBottom="1dp"
     android:paddingRight="5dp"
     android:paddingTop="1dp">
+
     <org.eyeseetea.malariacare.views.TextCard
         android:id="@+id/next_txt"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/footer_navigation_size"
         android:adjustViewBounds="true"
         android:gravity="center"
-        android:scaleType="centerInside"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
+        android:scaleType="centerInside"
         android:text=""
         android:textColor="@color/white"
         android:textSize="10dp"
         app:tDimension="@string/font_size_level2"
         app:tFontName="@string/specific_language_font" />
+
     <ImageButton
         android:id="@+id/next_btn"
         android:layout_width="wrap_content"
-        android:clickable="false"
         android:layout_height="@dimen/footer_navigation_size"
         android:adjustViewBounds="true"
+        android:background="@null"
+        android:clickable="false"
         android:gravity="center"
         android:scaleType="fitCenter"
+        android:src="@drawable/next_button"
         android:text=""
-        android:textSize="10dp"
-        android:background="@null"
-        android:src="@drawable/next_button"  />
+        android:textSize="10dp" />
 </LinearLayout>

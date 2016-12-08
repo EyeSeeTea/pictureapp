@@ -122,7 +122,8 @@ public class LayoutUtils extends BaseLayoutUtils {
         );
         listView.setDivider(myColor);
         listView.setDividerHeight(0);
-        int padding = (int)PreferencesState.getInstance().getContext().getResources().getDimension(R.dimen.dashboard_row_padding);
+        int padding = (int) PreferencesState.getInstance().getContext().getResources().getDimension(
+                R.dimen.dashboard_row_padding);
         listView.setPadding(padding, 0, padding, 0);
     }
 

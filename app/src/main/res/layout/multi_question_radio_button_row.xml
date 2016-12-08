@@ -51,19 +51,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/question_padding_all"
-                android:paddingRight="@dimen/question_padding_all"
                 android:minHeight="100dp"
                 android:orientation="horizontal"
+                android:paddingLeft="@dimen/question_padding_all"
+                android:paddingRight="@dimen/question_padding_all"
                 android:weightSum="1">
 
                 <org.eyeseetea.malariacare.views.TextCard
                     android:id="@+id/row_header_text"
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/intColor"
-                    android:gravity="right"
                     android:layout_weight="0.90"
+                    android:gravity="right"
+                    android:textColor="@color/intColor"
                     android:textSize="@dimen/input_number_edit_text_phone"
                     app:tDimension="@string/font_size_level1"
                     app:tFontName="@string/condensed_font_name" />

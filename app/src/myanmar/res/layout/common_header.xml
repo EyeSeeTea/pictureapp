@@ -24,9 +24,9 @@
     android:layout_height="wrap_content"
     android:background="@drawable/background_header"
     android:orientation="vertical"
-    android:paddingTop="@dimen/dashboard_row_padding"
     android:paddingLeft="@dimen/dashboard_row_padding"
     android:paddingRight="@dimen/dashboard_row_padding"
+    android:paddingTop="@dimen/dashboard_row_padding"
     android:visibility="gone">
 
     <include layout="@layout/top_view"></include>

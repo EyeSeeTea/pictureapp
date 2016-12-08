@@ -25,9 +25,9 @@
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
-                android:minHeight="100dp"
                 android:layout_weight="0.25"
-                android:gravity="left">
+                android:gravity="left"
+                android:minHeight="100dp">
 
                 <ImageView
                     android:id="@+id/question_image_row"

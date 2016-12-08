@@ -35,9 +35,10 @@ import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
 public class OrganisationUnitExtended implements VisitableFromSDK {
     OrganisationUnit orgUnit;
 
-    public OrganisationUnitExtended(){}
+    public OrganisationUnitExtended() {
+    }
 
-    public OrganisationUnitExtended(OrganisationUnit orgUnit){
+    public OrganisationUnitExtended(OrganisationUnit orgUnit) {
         this.orgUnit = orgUnit;
     }
 

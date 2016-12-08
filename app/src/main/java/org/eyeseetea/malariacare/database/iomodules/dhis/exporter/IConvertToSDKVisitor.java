@@ -19,9 +19,7 @@
 
 package org.eyeseetea.malariacare.database.iomodules.dhis.exporter;
 
-import org.eyeseetea.malariacare.database.model.CompositeScore;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Value;
 
 public interface IConvertToSDKVisitor {
     void visit(Survey survey) throws Exception;

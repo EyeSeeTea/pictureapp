@@ -33,9 +33,9 @@ public class IntentServiceIdlingResource implements IdlingResource {
     private ResourceCallback resourceCallback;
 
 
-    public IntentServiceIdlingResource(Context context,Class serviceClass) {
+    public IntentServiceIdlingResource(Context context, Class serviceClass) {
         this.context = context;
-        this.serviceClass=serviceClass;
+        this.serviceClass = serviceClass;
     }
 
     @Override
@@ -58,8 +58,10 @@ public class IntentServiceIdlingResource implements IdlingResource {
     }
 
     private boolean isIntentServiceRunning() {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo info : manager.getRunningServices(Integer.MAX_VALUE)) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(
+                Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo info : manager.getRunningServices(
+                Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(info.service.getClassName())) {
                 return true;
             }

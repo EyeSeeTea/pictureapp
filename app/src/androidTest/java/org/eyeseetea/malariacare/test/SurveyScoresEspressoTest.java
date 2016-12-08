@@ -84,7 +84,8 @@
 //        Log.i(TAG,"---BEFORE---");
 //        super.setup();
 //        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(), SurveyService.class);
+//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(),
+// SurveyService.class);
 //        Espresso.registerIdlingResources(idlingResource);
 //    }
 //
@@ -173,7 +174,8 @@
 //
 //        //THEN
 //        onView(withId(R.id.score)).check(matches(withText("66 % ")));
-//        onView(withId(R.id.qualitativeScore)).check(matches(withText(getActivityInstance().getString(R.string.fair))));
+//        onView(withId(R.id.qualitativeScore)).check(matches(withText(getActivityInstance()
+// .getString(R.string.fair))));
 //    }
 //
 //    @Test

@@ -20,8 +20,6 @@
 package org.eyeseetea.malariacare.database.model;
 
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
@@ -29,17 +27,18 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
 public class Option extends BaseModel {
 
-    //FIXME A 'Yes' answer shows children questions, this should be configurable by some additional attribute in Option
-    public static final String CHECKBOX_YES_OPTION="Yes";
+    //FIXME A 'Yes' answer shows children questions, this should be configurable by some
+    // additional attribute in Option
+    public static final String CHECKBOX_YES_OPTION = "Yes";
 
     public static final int DOESNT_MATCH_POSITION = 0;
     public static final int MATCH_POSITION = 1;
@@ -96,6 +95,16 @@ public class Option extends BaseModel {
         this.name = name;
     }
 
+    public static List<Option> getAllOptions() {
+        return new Select().from(Option.class).queryList();
+    }
+
+    public static Option findById(Float id) {
+        return new Select()
+                .from(Option.class)
+                .where(Condition.column(Option$Table.ID_OPTION).eq(id)).querySingle();
+    }
+
     public Long getId_option() {
         return id_option;
     }
@@ -104,11 +113,17 @@ public class Option extends BaseModel {
         this.id_option = id_option;
     }
 
-    public String getCode() {return code;}
+    public String getCode() {
+        return code;
+    }
 
-    public String getInternationalizedCode() {return Utils.getInternationalizedString(code);}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-    public void setCode(String code) {this.code = code;}
+    public String getInternationalizedCode() {
+        return Utils.getInternationalizedString(code);
+    }
 
     public String getName() {
         return name;
@@ -127,8 +142,8 @@ public class Option extends BaseModel {
     }
 
     public Answer getAnswer() {
-        if(answer==null){
-            if(id_answer==null) return null;
+        if (answer == null) {
+            if (id_answer == null) return null;
             answer = new Select()
                     .from(Answer.class)
                     .where(Condition.column(Answer$Table.ID_ANSWER)
@@ -139,29 +154,30 @@ public class Option extends BaseModel {
 
     public void setAnswer(Answer answer) {
         this.answer = answer;
-        this.id_answer = (answer!=null)?answer.getId_answer():null;
+        this.id_answer = (answer != null) ? answer.getId_answer() : null;
     }
 
     public OptionAttribute getOptionAttribute() {
-        if(optionAttribute==null){
+        if (optionAttribute == null) {
             optionAttribute = new Select().from(OptionAttribute.class)
-                    .where(Condition.column(OptionAttribute$Table.ID_OPTION_ATTRIBUTE).eq(id_option_attribute)).querySingle();
+                    .where(Condition.column(OptionAttribute$Table.ID_OPTION_ATTRIBUTE).eq(
+                            id_option_attribute)).querySingle();
         }
         return optionAttribute;
     }
 
     public void setOptionAttribute(OptionAttribute optionAttribute) {
         this.optionAttribute = optionAttribute;
-        this.id_option_attribute = (optionAttribute!=null)?optionAttribute.getId_option_attribute():null;
+        this.id_option_attribute =
+                (optionAttribute != null) ? optionAttribute.getId_option_attribute() : null;
     }
 
     /**
      * Getter for extended option attribute 'path'
-     * @return
      */
     public String getPath() {
         OptionAttribute optionAttribute = this.getOptionAttribute();
-        if(optionAttribute==null){
+        if (optionAttribute == null) {
             return null;
         }
 
@@ -170,23 +186,22 @@ public class Option extends BaseModel {
 
     /**
      * Getter for extended option attribute 'path' translation in paths.xml
-     * @return
      */
     public String getInternationalizedPath() {
         OptionAttribute optionAttribute = this.getOptionAttribute();
-        if(optionAttribute==null){
+        if (optionAttribute == null) {
             return null;
         }
 
         return optionAttribute.getInternationalizedPath();
     }
+
     /**
      * Getter for extended option attribute 'backgroundColor'
-     * @return
      */
     public String getBackground_colour() {
         OptionAttribute optionAttribute = this.getOptionAttribute();
-        if(optionAttribute==null){
+        if (optionAttribute == null) {
             return null;
         }
 
@@ -195,9 +210,10 @@ public class Option extends BaseModel {
 
     /**
      * Checks if this option actives the children questions
+     *
      * @return true: Children questions should be shown, false: otherwise.
      */
-    public boolean isActiveChildren(){
+    public boolean isActiveChildren() {
         return CHECKBOX_YES_OPTION.equals(name);
     }
 
@@ -206,14 +222,15 @@ public class Option extends BaseModel {
      *
      * @return true|false
      */
-    public boolean is(String given){
+    public boolean is(String given) {
         return given.equals(name);
     }
 
-    public List<Value> getValues(){
-        if(values==null){
+    public List<Value> getValues() {
+        if (values == null) {
             values = new Select().from(Value.class)
-                    .where(Condition.column(Value$Table.ID_OPTION).eq(this.getId_option())).queryList();
+                    .where(Condition.column(Value$Table.ID_OPTION).eq(
+                            this.getId_option())).queryList();
         }
         return values;
     }
@@ -230,7 +247,8 @@ public class Option extends BaseModel {
         if (code != null ? !code.equals(option.code) : option.code != null) return false;
         if (name != null ? !name.equals(option.name) : option.name != null) return false;
         if (factor != null ? !factor.equals(option.factor) : option.factor != null) return false;
-        return !(id_answer != null ? !id_answer.equals(option.id_answer) : option.id_answer != null);
+        return !(id_answer != null ? !id_answer.equals(option.id_answer)
+                : option.id_answer != null);
 
     }
 
@@ -257,29 +275,15 @@ public class Option extends BaseModel {
                 '}';
     }
 
-    public static List<Option> getAllOptions() {
-        return new Select().from(Option.class).queryList();
-    }
-
-    public static Option findById(Float id) {
-        return new Select()
-                .from(Option.class)
-                .where(Condition.column(Option$Table.ID_OPTION).eq(id)).querySingle();
-    }
-
     /**
      * Gets the Question of this Option in session
-     *
-     * @return
      */
     public Question getQuestionBySession() {
         return getQuestionBySurvey(Session.getSurvey());
     }
+
     /**
      * Gets the Question of this Option in the given Survey
-     *
-     * @param survey
-     * @return
      */
     public Question getQuestionBySurvey(Survey survey) {
         if (survey == null) {

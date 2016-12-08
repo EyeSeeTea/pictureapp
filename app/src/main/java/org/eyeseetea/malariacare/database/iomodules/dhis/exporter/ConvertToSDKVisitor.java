@@ -58,7 +58,7 @@ import java.util.Map;
  */
 public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
-    private final static String TAG=".ConvertToSDKVisitor";
+    private final static String TAG = ".ConvertToSDKVisitor";
 
     /**
      * Context required to recover magic UID for mainScore dataElements
@@ -75,41 +75,51 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      */
     List<Event> events;
 
-    ConvertToSDKVisitor(Context context){
-        this.context=context;
+    ConvertToSDKVisitor(Context context) {
+        this.context = context;
         surveys = new ArrayList<>();
         events = new ArrayList<>();
     }
 
+    public static void logEmptySurveyException(Survey survey) {
+        PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
+        String info = String.format("Survey: %s\nPhoneMetaData: %s\nAPI: %s",
+                survey.toString(),
+                phoneMetaData == null ? "" : phoneMetaData.getPhone_metaData(),
+                Build.VERSION.RELEASE
+        );
+        Crashlytics.logException(new Throwable(info));
+    }
+
     @Override
-    public void visit(Survey survey) throws Exception{
+    public void visit(Survey survey) throws Exception {
 
         //Precondition
-        if(isEmpty(survey)){
+        if (isEmpty(survey)) {
             survey.delete();
             return;
         }
 
-        if(Survey.countSurveysByCompletiondate(survey.getCompletionDate())>1) {
+        if (Survey.countSurveysByCompletiondate(survey.getCompletionDate()) > 1) {
             Log.d(TAG, String.format("Delete repeated survey", survey.toString()));
             survey.delete();
             return;
         }
 
-        Log.d(TAG,String.format("Creating event for survey (%d) ...",survey.getId_survey()));
+        Log.d(TAG, String.format("Creating event for survey (%d) ...", survey.getId_survey()));
         Event event = buildEvent(survey);
 
         //Turn question values into dataValues
-        Log.d(TAG,"Creating datavalues from questions...");
-        for(Value value:survey.getValues()){
-            buildAndSaveDataValue(value.getQuestion().getUid(),value.getValue(),event);
+        Log.d(TAG, "Creating datavalues from questions...");
+        for (Value value : survey.getValues()) {
+            buildAndSaveDataValue(value.getQuestion().getUid(), value.getValue(), event);
         }
 
-        Log.d(TAG,"Saving control dataelements");
+        Log.d(TAG, "Saving control dataelements");
         buildControlDataElements(survey, event);
 
 
-        if(Survey.countSurveysByCompletiondate(survey.getCompletionDate())>1) {
+        if (Survey.countSurveysByCompletiondate(survey.getCompletionDate()) > 1) {
             Log.d(TAG, String.format("Delete repeated survey", survey.toString()));
             survey.delete();
             event.delete();
@@ -120,85 +130,82 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         annotateSurveyAndEvent(survey, event);
     }
 
-    private boolean isEmpty(Survey survey){
-        if(survey==null){
+    private boolean isEmpty(Survey survey) {
+        if (survey == null) {
             return true;
         }
 
-        List<Value> values=survey.getValuesFromDB();
-        if(values==null || values.isEmpty()){
+        List<Value> values = survey.getValuesFromDB();
+        if (values == null || values.isEmpty()) {
             logEmptySurveyException(survey);
             return true;
         }
         return false;
     }
 
-    public static void logEmptySurveyException(Survey survey){
-        PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
-        String info=String.format("Survey: %s\nPhoneMetaData: %s\nAPI: %s",
-                survey.toString(),
-                phoneMetaData==null?"":phoneMetaData.getPhone_metaData(),
-                Build.VERSION.RELEASE
-                );
-        Crashlytics.logException(new Throwable(info));
-    }
     /**
      * Builds several datavalues from the mainScore of the survey
-     * @param survey
      */
     private void buildControlDataElements(Survey survey, Event event) {
         //save phonemetadata
-        PhoneMetaData phoneMetaData= Session.getPhoneMetaData();
-        buildAndSaveDataValue(PushClient.PHONEMETADA_UID,phoneMetaData.getPhone_metaData(),event);
+        PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
+        buildAndSaveDataValue(PushClient.PHONEMETADA_UID, phoneMetaData.getPhone_metaData(), event);
 
         //save Time capture
-        if(PushClient.DATETIME_CAPTURE_UID !=null && !PushClient.DATETIME_CAPTURE_UID.equals(""))
-            buildAndSaveDataValue(PushClient.DATETIME_CAPTURE_UID, EventExtended.format(survey.getCompletionDate(), EventExtended.COMPLETION_DATE_FORMAT),event);
+        if (PushClient.DATETIME_CAPTURE_UID != null && !PushClient.DATETIME_CAPTURE_UID.equals(
+                "")) {
+            buildAndSaveDataValue(PushClient.DATETIME_CAPTURE_UID,
+                    EventExtended.format(survey.getCompletionDate(),
+                            EventExtended.COMPLETION_DATE_FORMAT), event);
+        }
 
         //save Time Sent
-        if(PushClient.DATETIME_SENT_UID !=null && !PushClient.DATETIME_SENT_UID.equals(""))
-            buildAndSaveDataValue(PushClient.DATETIME_SENT_UID,  EventExtended.format(new Date(), EventExtended.COMPLETION_DATE_FORMAT),event);
+        if (PushClient.DATETIME_SENT_UID != null && !PushClient.DATETIME_SENT_UID.equals("")) {
+            buildAndSaveDataValue(PushClient.DATETIME_SENT_UID,
+                    EventExtended.format(new Date(), EventExtended.COMPLETION_DATE_FORMAT), event);
+        }
     }
 
     /**
      * Adds value in Datavalue
-     * @param UID is the dataElement uid
+     *
+     * @param UID   is the dataElement uid
      * @param value is the value
      */
-    private void buildAndSaveDataValue(String UID, String value, Event event){
-        DataValue dataValue=new DataValue();
+    private void buildAndSaveDataValue(String UID, String value, Event event) {
+        DataValue dataValue = new DataValue();
         dataValue.setDataElement(UID);
         dataValue.setLocalEventId(event.getLocalId());
         dataValue.setEvent(event.getEvent());
         dataValue.setProvidedElsewhere(false);
-        if(Session.getUser()!=null)
+        if (Session.getUser() != null) {
             dataValue.setStoredBy(Session.getUser().getName());
+        }
         dataValue.setValue(value);
         dataValue.save();
     }
 
     /**
      * Builds an event from a survey
-     * @return
      */
-    private Event buildEvent(Survey survey)throws Exception{
-        Event event=new Event();
+    private Event buildEvent(Survey survey) throws Exception {
+        Event event = new Event();
 
         event.setStatus(Event.STATUS_COMPLETED);
         event.setFromServer(false);
         event.setOrganisationUnitId(getSafeOrgUnitUID(survey));
-        event.setProgramId(survey.getTabGroup().getProgram().getUid());
-        event.setProgramStageId(survey.getTabGroup().getUid());
-        event=updateEventLocation(survey,event);
-        event=updateEventDates(survey, event);
+        event.setProgramId(survey.getProgram().getUid());
+        event.setProgramStageId(survey.getProgram().getUid());
+        event = updateEventLocation(survey, event);
+        event = updateEventDates(survey, event);
         Log.d(TAG, "Saving event " + event.toString());
         event.save();
         return event;
     }
 
-    private String getSafeOrgUnitUID(Survey survey){
-        OrgUnit orgUnit=survey.getOrgUnit();
-        if(orgUnit!=null){
+    private String getSafeOrgUnitUID(Survey survey) {
+        OrgUnit orgUnit = survey.getOrgUnit();
+        if (orgUnit != null) {
             return orgUnit.getUid();
         }
 
@@ -223,13 +230,12 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
     /**
      * Updates the location of the current event that it is being processed
-     * @throws Exception
      */
-    private Event updateEventLocation(Survey survey, Event event) throws Exception{
+    private Event updateEventLocation(Survey survey, Event event) throws Exception {
         Location lastLocation = LocationMemory.get(survey.getId_survey());
 
         //No location + not required -> done
-        if(lastLocation==null){
+        if (lastLocation == null) {
             return event;
         }
 
@@ -251,38 +257,43 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
     /**
      * Saves changes in the survey (supposedly after a successful push)
-     * @param importSummaryMap
      */
-    public void saveSurveyStatus(Map<Long,ImportSummary> importSummaryMap){
+    public void saveSurveyStatus(Map<Long, ImportSummary> importSummaryMap) {
         Log.d(TAG, String.format("ImportSummary %d surveys savedSurveyStatus", surveys.size()));
-        for(int i=0;i<surveys.size();i++){
-            Survey iSurvey=surveys.get(i);
-            Event iEvent=events.get(i);
-            //Sets all the surveys as completed because the survey has as state: "sending" at this moment and the sending process is finish.
+        for (int i = 0; i < surveys.size(); i++) {
+            Survey iSurvey = surveys.get(i);
+            Event iEvent = events.get(i);
+            //Sets all the surveys as completed because the survey has as state: "sending" at
+            // this moment and the sending process is finish.
             iSurvey.setStatus(Constants.SURVEY_COMPLETED);
-            ImportSummary importSummary=importSummaryMap.get(iEvent.getLocalId());
-            FailedItem failedItem= hasConflict(iEvent.getLocalId());
-            if(hasImportSummaryErrors(importSummary)){
-                //Sets the survey status as quarantine to prevent wrong importSummaries (F.E. in network failures).
-                //This survey will be checked again in the future push to prevent the duplicates in the server.
+            ImportSummary importSummary = importSummaryMap.get(iEvent.getLocalId());
+            FailedItem failedItem = hasConflict(iEvent.getLocalId());
+            if (hasImportSummaryErrors(importSummary)) {
+                //Sets the survey status as quarantine to prevent wrong importSummaries (F.E. in
+                // network failures).
+                //This survey will be checked again in the future push to prevent the duplicates
+                // in the server.
                 iSurvey.setStatus(Constants.SURVEY_QUARANTINE);
 
-                //If the importSummary has a failedItem the survey was saved in the server but never resend, the survey is saved as survey in conflict.
-                if(failedItem!=null) {
-                    List<String> failedUids=getFailedUidQuestion(failedItem.getErrorMessage());
-                    if(failedUids != null && failedUids.size()>0){
+                //If the importSummary has a failedItem the survey was saved in the server but
+                // never resend, the survey is saved as survey in conflict.
+                if (failedItem != null) {
+                    List<String> failedUids = getFailedUidQuestion(failedItem.getErrorMessage());
+                    if (failedUids != null && failedUids.size() > 0) {
                         iSurvey.setStatus(Constants.SURVEY_CONFLICT);
-                        for(String uid:failedUids) {
-                            Log.d(TAG, "PUSH process...ImportSummary Conflict in "+uid+" dataElement. Survey: "+iSurvey.getId_survey());
+                        for (String uid : failedUids) {
+                            Log.d(TAG, "PUSH process...ImportSummary Conflict in " + uid
+                                    + " dataElement. Survey: " + iSurvey.getId_survey());
                         }
                     }
                 }
                 iSurvey.save();
-            }else{
+            } else {
                 iSurvey.setStatus(Constants.SURVEY_SENT);
                 iSurvey.saveMainScore();
                 iSurvey.save();
-                Log.d("DpBlank", "ImportSummary Saving survey as completed " + iSurvey + " event "+ iEvent.getUid());
+                Log.d("DpBlank", "ImportSummary Saving survey as completed " + iSurvey + " event "
+                        + iEvent.getUid());
             }
             //Generated event must be remove too
             iEvent.delete();
@@ -290,13 +301,12 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     /**
-     * Checks whether the given event contains errors in SDK FailedItem table or has been successful.
+     * Checks whether the given event contains errors in SDK FailedItem table or has been
+     * successful.
      * If not return null, it is becouse this item had a conflict.
-     * @param localId
-     * @return
      */
-    private FailedItem hasConflict(long localId){
-        return  new Select()
+    private FailedItem hasConflict(long localId) {
+        return new Select()
                 .from(FailedItem.class)
                 .where(Condition.column(FailedItem$Table.ITEMID)
                         .is(localId)).querySingle();
@@ -305,50 +315,47 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Checks whether the given importSummary contains errors or has been successful.
      * An import with 0 importedItems is an error too.
-     * @param importSummary
-     * @return
      */
-    private boolean hasImportSummaryErrors(ImportSummary importSummary){
-        if(importSummary==null){
+    private boolean hasImportSummaryErrors(ImportSummary importSummary) {
+        if (importSummary == null) {
             return true;
         }
 
-        if(importSummary.getImportCount()==null){
+        if (importSummary.getImportCount() == null) {
             return true;
         }
-        return importSummary.getImportCount().getImported()==0;
+        return importSummary.getImportCount().getImported() == 0;
     }
 
 
     /**
      * Get dataelement fails from errormessage JSON.
-     * @param responseData
-     * @return
      */
-    private List<String> getFailedUidQuestion(String responseData){
-        String message="";
-        List<String> uid=new ArrayList<>();
-        JSONArray jsonArrayResponse=null;
-        JSONObject jsonObjectResponse= null;
+    private List<String> getFailedUidQuestion(String responseData) {
+        String message = "";
+        List<String> uid = new ArrayList<>();
+        JSONArray jsonArrayResponse = null;
+        JSONObject jsonObjectResponse = null;
         try {
             jsonObjectResponse = new JSONObject(responseData);
-            message=jsonObjectResponse.getString("message");
-            jsonObjectResponse=new JSONObject(jsonObjectResponse.getString("response"));
-            jsonArrayResponse=new JSONArray(jsonObjectResponse.getString("importSummaries"));
-            jsonObjectResponse=new JSONObject(jsonArrayResponse.getString(0));
-            jsonArrayResponse=new JSONArray(jsonObjectResponse.getString("conflicts"));
+            message = jsonObjectResponse.getString("message");
+            jsonObjectResponse = new JSONObject(jsonObjectResponse.getString("response"));
+            jsonArrayResponse = new JSONArray(jsonObjectResponse.getString("importSummaries"));
+            jsonObjectResponse = new JSONObject(jsonArrayResponse.getString(0));
+            jsonArrayResponse = new JSONArray(jsonObjectResponse.getString("conflicts"));
             //values
-            for(int i=0;i<jsonArrayResponse.length();i++) {
+            for (int i = 0; i < jsonArrayResponse.length(); i++) {
                 jsonObjectResponse = new JSONObject(jsonArrayResponse.getString(i));
                 uid.add(jsonObjectResponse.getString("object"));
             }
         } catch (JSONException e) {
-            Log.d(TAG, "Error import summary response: "+responseData);
+            Log.d(TAG, "Error import summary response: " + responseData);
             e.printStackTrace();
             return null;
         }
-        if(message!="")
-            ShowException.showError(message,PreferencesState.getInstance().getContext());
-        return  uid;
+        if (message != "") {
+            ShowException.showError(message, PreferencesState.getInstance().getContext());
+        }
+        return uid;
     }
 }

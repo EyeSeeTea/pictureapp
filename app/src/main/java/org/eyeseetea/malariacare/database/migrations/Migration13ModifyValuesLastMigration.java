@@ -19,7 +19,7 @@ import java.io.IOException;
 @Migration(version = 19, databaseName = AppDatabase.NAME)
 public class Migration13ModifyValuesLastMigration extends BaseMigration {
 
-    private static String TAG=".Migration13";
+    private static String TAG = ".Migration13";
 
     private static Migration13ModifyValuesLastMigration instance;
     private boolean postMigrationRequired;
@@ -27,35 +27,24 @@ public class Migration13ModifyValuesLastMigration extends BaseMigration {
     public Migration13ModifyValuesLastMigration() {
         super();
         instance = this;
-        postMigrationRequired=false;
+        postMigrationRequired = false;
     }
 
-    public void onPreMigrate() {
-    }
-
-    @Override
-    public void migrate(SQLiteDatabase database) {
-        postMigrationRequired=true;
-    }
-
-    @Override
-    public void onPostMigrate() {
-    }
-
-
-    public static void postMigrate(){
+    public static void postMigrate() {
         //Migration NOT required -> done
-        Log.d(TAG,"Post migrate");
-        if(!instance.postMigrationRequired){
+        Log.d(TAG, "Post migrate");
+        if (!instance.postMigrationRequired) {
             return;
         }
 
 
         //Data? Add new default data
-        if(instance.hasData()) {
+        if (instance.hasData()) {
             try {
-                PopulateDB.addOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
-                PopulateDB.updateOptionNames(PreferencesState.getInstance().getContext().getAssets());
+                PopulateDB.addOptionAttributes(
+                        PreferencesState.getInstance().getContext().getAssets());
+                PopulateDB.updateOptionNames(
+                        PreferencesState.getInstance().getContext().getAssets());
                 PopulateDB.updateQuestions(PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -63,14 +52,25 @@ public class Migration13ModifyValuesLastMigration extends BaseMigration {
         }
 
         //This operation wont be done again
-        instance.postMigrationRequired=false;
+        instance.postMigrationRequired = false;
+    }
+
+    public void onPreMigrate() {
+    }
+
+    @Override
+    public void migrate(SQLiteDatabase database) {
+        postMigrationRequired = true;
+    }
+
+    @Override
+    public void onPostMigrate() {
     }
 
     /**
      * Checks if the current db has data or not
-     * @return
      */
     private boolean hasData() {
-        return Program.getFirstProgram()!=null;
+        return Program.getFirstProgram() != null;
     }
 }

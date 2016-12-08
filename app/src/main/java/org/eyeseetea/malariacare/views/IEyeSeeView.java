@@ -28,15 +28,15 @@ public interface IEyeSeeView {
 
     public void init(AttributeSet attrs, int defStyle);
 
-    public void setmFontName(String mFontName);
-
     public String getmFontName();
 
-    public void setmDimension(String mDimension);
+    public void setmFontName(String mFontName);
 
     public String getmDimension();
 
-    public void setmScale(String mScale);
+    public void setmDimension(String mDimension);
 
     public String getmScale();
+
+    public void setmScale(String mScale);
 }

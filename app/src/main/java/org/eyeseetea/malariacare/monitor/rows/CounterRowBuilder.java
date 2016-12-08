@@ -33,20 +33,20 @@ import java.util.List;
  */
 public abstract class CounterRowBuilder extends MonitorRowBuilder {
 
-    public CounterRowBuilder(Context context,String rowTitle){
+    public CounterRowBuilder(Context context, String rowTitle) {
         super(context, rowTitle);
     }
 
     /**
      * Returns a list with:
-     * ["rowMetric", "rowTimeUnit", "rowTimeUnit", "rowTimeUnit", "rowTimeUnit", "rowTimeUnit", "rowTimeUnit"]
-     * @return
+     * ["rowMetric", "rowTimeUnit", "rowTimeUnit", "rowTimeUnit", "rowTimeUnit", "rowTimeUnit",
+     * "rowTimeUnit"]
      */
     @Override
     protected List<String> defineColumnClasses() {
         List<String> cssClasses = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
         cssClasses.add(CSS_ROW_METRIC);
-        for(int i=0;i<Constants.MONITOR_HISTORY_SIZE;i++){
+        for (int i = 0; i < Constants.MONITOR_HISTORY_SIZE; i++) {
             cssClasses.add(CSS_ROW_VALUE);
         }
         return cssClasses;
@@ -54,14 +54,12 @@ public abstract class CounterRowBuilder extends MonitorRowBuilder {
 
     @Override
     protected Object updateColumn(Object currentValue, SurveyMonitor surveyMonitor) {
-        Integer currentCount=(Integer)currentValue;
-        return Integer.valueOf(currentCount+ incrementCount(surveyMonitor));
+        Integer currentCount = (Integer) currentValue;
+        return Integer.valueOf(currentCount + incrementCount(surveyMonitor));
     }
 
     /**
      * Each counterRow fills this function to evaluate if the survey increments the counter or not
-     * @param survey
-     * @return
      */
     protected abstract Integer incrementCount(SurveyMonitor survey);
 }

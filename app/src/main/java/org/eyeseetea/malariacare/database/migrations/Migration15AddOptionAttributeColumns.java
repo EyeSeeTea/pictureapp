@@ -22,16 +22,44 @@ import java.io.IOException;
 @Migration(version = 15, databaseName = AppDatabase.NAME)
 public class Migration15AddOptionAttributeColumns extends BaseMigration {
 
-    private static String TAG=".Migration5";
     public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
-
+    private static String TAG = ".Migration5";
     private static Migration15AddOptionAttributeColumns instance;
     private boolean postMigrationRequired;
 
     public Migration15AddOptionAttributeColumns() {
         super();
         instance = this;
-        postMigrationRequired=false;
+        postMigrationRequired = false;
+    }
+
+    public static void addColumn(SQLiteDatabase database, Class model, String columnName,
+            String type) {
+        ModelAdapter myAdapter = FlowManager.getModelAdapter(model);
+        database.execSQL(
+                String.format(ALTER_TABLE_ADD_COLUMN, myAdapter.getTableName(), columnName, type));
+    }
+
+    public static void postMigrate() {
+        //Migration NOT required -> done
+        Log.d(TAG, "Post migrate");
+        if (!instance.postMigrationRequired) {
+            return;
+        }
+
+
+        //this migration is moved to last migration
+        //Data? Add new default data
+        if (instance.hasData()) {
+            try {
+                PopulateDB.addOptionAttributes(
+                        PreferencesState.getInstance().getContext().getAssets());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //This operation wont be done again
+        instance.postMigrationRequired = false;
     }
 
     public void onPreMigrate() {
@@ -39,7 +67,7 @@ public class Migration15AddOptionAttributeColumns extends BaseMigration {
 
     @Override
     public void migrate(SQLiteDatabase database) {
-        postMigrationRequired=false;
+        postMigrationRequired = false;
         addColumn(database, OptionAttribute.class, "default_option", "Integer");
     }
 
@@ -47,38 +75,10 @@ public class Migration15AddOptionAttributeColumns extends BaseMigration {
     public void onPostMigrate() {
     }
 
-    public static void addColumn(SQLiteDatabase database, Class model, String columnName, String type) {
-        ModelAdapter myAdapter = FlowManager.getModelAdapter(model);
-        database.execSQL(String.format(ALTER_TABLE_ADD_COLUMN, myAdapter.getTableName(), columnName, type));
-    }
-
-
-    public static void postMigrate(){
-        //Migration NOT required -> done
-        Log.d(TAG,"Post migrate");
-        if(!instance.postMigrationRequired){
-            return;
-        }
-
-
-        //this migration is moved to last migration
-        //Data? Add new default data
-        if(instance.hasData()) {
-            try {
-                PopulateDB.addOptionAttributes(PreferencesState.getInstance().getContext().getAssets());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        //This operation wont be done again
-        instance.postMigrationRequired=false;
-    }
-
     /**
      * Checks if the current db has data or not
-     * @return
      */
     private boolean hasData() {
-        return Program.getFirstProgram()!=null;
+        return Program.getFirstProgram() != null;
     }
 }

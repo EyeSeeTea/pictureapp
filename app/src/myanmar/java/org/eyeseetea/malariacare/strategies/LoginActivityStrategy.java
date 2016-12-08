@@ -1,9 +1,8 @@
 package org.eyeseetea.malariacare.strategies;
 
-import static com.google.android.gms.analytics.internal.zzy.d;
-
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,15 +10,15 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.database.model.User;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.hisp.dhis.android.sdk.ui.views.FontButton;
 
-public class LoginActivityStrategy extends ALoginActivityStrategy{
+import java.io.IOException;
+
+public class LoginActivityStrategy extends ALoginActivityStrategy {
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
     }
@@ -38,26 +37,33 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
 
     @Override
     public void onCreate() {
+        try {
+            PopulateDB.initDataIfRequired(loginActivity.getAssets());
+        } catch (IOException exception) {
+            Log.e("LoginActivity", "ERROR: DB not loaded");
+        }
         if (existsLoggedUser()) {
-            LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase = new LoadUserAndCredentialsUseCase(loginActivity);
+            LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
+                    new LoadUserAndCredentialsUseCase(loginActivity);
 
             loadUserAndCredentialsUseCase.execute();
 
             finishAndGo(DashboardActivity.class);
-        }
-        else{
+        } else {
             addDemoButton();
         }
     }
 
-    private boolean existsLoggedUser(){
+    private boolean existsLoggedUser() {
         return User.getLoggedUser() != null && !ProgressActivity.PULL_CANCEL;
     }
 
     private void addDemoButton() {
-        ViewGroup loginViewsContainer =(ViewGroup) loginActivity.findViewById(R.id.login_views_container);
+        ViewGroup loginViewsContainer = (ViewGroup) loginActivity.findViewById(
+                R.id.login_views_container);
 
-        loginActivity.getLayoutInflater().inflate(R.layout.demo_login_button, loginViewsContainer, true);
+        loginActivity.getLayoutInflater().inflate(R.layout.demo_login_button, loginViewsContainer,
+                true);
 
         FontButton demoButton = (FontButton) loginActivity.findViewById(R.id.demo_login_button);
 
@@ -69,12 +75,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
 
                 loginActivity.mLoginUseCase.execute(demoCrededentials);
 
-               finishAndGo(DashboardActivity.class);
+                finishAndGo(DashboardActivity.class);
             }
         });
     }
 
-    public void finishAndGo(Class <? extends Activity> activityClass) {
+    public void finishAndGo(Class<? extends Activity> activityClass) {
         loginActivity.startActivity(new Intent(loginActivity, activityClass));
 
         loginActivity.finish();

@@ -39,36 +39,34 @@ public class ProgressTabStatus {
     /**
      * List of flags that indicates if a question has been visited or not
      */
-    boolean [] visited;
+    boolean[] visited;
 
     /**
      * Based 0 index to the current page in screen
      */
     int currentPage;
 
-    public ProgressTabStatus(List<Question> questions){
-        this.questions=questions;
-        this.currentPage=0;
-        if(questions!=null && questions.size()>0) {
+    public ProgressTabStatus(List<Question> questions) {
+        this.questions = questions;
+        this.currentPage = 0;
+        if (questions != null && questions.size() > 0) {
             this.visited = new boolean[questions.size()];
-            this.visited[0]=true;
+            this.visited[0] = true;
         }
     }
 
     /**
      * Index of the current question
-     * @return
      */
-    public int getCurrentPage(){
+    public int getCurrentPage() {
         return currentPage;
     }
 
     /**
      * Total number of pages to show (equals number of questions)
-     * @return
      */
-    public int getTotalPages(){
-        if(questions==null){
+    public int getTotalPages() {
+        if (questions == null) {
             return 0;
         }
         return questions.size();
@@ -76,35 +74,31 @@ public class ProgressTabStatus {
 
     /**
      * Checks if there is a next question
-     * @return
      */
-    public boolean hasNextQuestion(){
-        int totalPages=getTotalPages();
-        return (currentPage+1)<totalPages;
+    public boolean hasNextQuestion() {
+        int totalPages = getTotalPages();
+        return (currentPage + 1) < totalPages;
     }
 
     /**
      * Checks if you are allowed to move forward (only if you get there before)
-     * @return
      */
-    public boolean isNextAllowed(){
-        return hasNextQuestion() && visited[currentPage+1];
+    public boolean isNextAllowed() {
+        return hasNextQuestion() && visited[currentPage + 1];
     }
 
     /**
      * Checks if there is a previous question
-     * @return
      */
-    public boolean hasPreviousQuestion(){
-        return (currentPage-1)>=0;
+    public boolean hasPreviousQuestion() {
+        return (currentPage - 1) >= 0;
     }
 
     /**
      * Gets the question in the current position
-     * @return
      */
-    public Question getCurrentQuestion(){
-        if(getTotalPages()==0){
+    public Question getCurrentQuestion() {
+        if (getTotalPages() == 0) {
             return null;
         }
 
@@ -113,24 +107,22 @@ public class ProgressTabStatus {
 
     /**
      * Gets the next question in the list whenever is possible
-     * @return
      */
-    public Question getNextQuestion(){
-        if(getTotalPages()==0 || !hasNextQuestion()){
+    public Question getNextQuestion() {
+        if (getTotalPages() == 0 || !hasNextQuestion()) {
             return null;
         }
 
         currentPage++;
-        visited[currentPage]=true;
+        visited[currentPage] = true;
         return questions.get(currentPage);
     }
 
     /**
      * Gets the previous question in the list whenever is possible
-     * @return
      */
-    public Question getPreviousQuestion(){
-        if(getTotalPages()==0 || !hasPreviousQuestion()){
+    public Question getPreviousQuestion() {
+        if (getTotalPages() == 0 || !hasPreviousQuestion()) {
             return null;
         }
 
@@ -140,24 +132,24 @@ public class ProgressTabStatus {
 
     /**
      * Gets the first question in the list
-     * @return
      */
-    public Question getFirstQuestion(){
-        if(getTotalPages()==0){
+    public Question getFirstQuestion() {
+        if (getTotalPages() == 0) {
             return null;
         }
 
-        currentPage=0;
+        currentPage = 0;
         return questions.get(currentPage);
     }
 
     /**
      * Checks if the current question is the first one
+     *
      * @return true|false
      */
-    public boolean isFirstQuestion(){
-        Question currentQuestion=getCurrentQuestion();
-        if(currentQuestion==null){
+    public boolean isFirstQuestion() {
+        Question currentQuestion = getCurrentQuestion();
+        if (currentQuestion == null) {
             return false;
         }
 
@@ -166,11 +158,11 @@ public class ProgressTabStatus {
 
     /**
      * Returns a formatted string with the current status as follows:
-     *  "1 / 5"
-     * @return
+     * "1 / 5"
      */
-    public String getStatusAsString(){
-        return String.format("%d / %d", Integer.valueOf(getCurrentPage() + 1),Integer.valueOf(getTotalPages()));
+    public String getStatusAsString() {
+        return String.format("%d / %d", Integer.valueOf(getCurrentPage() + 1),
+                Integer.valueOf(getTotalPages()));
     }
 
 

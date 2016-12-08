@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import static com.google.android.gms.analytics.internal.zzy.p;
-
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
@@ -10,7 +8,7 @@ import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 
-public class LogoutUseCase extends ALogoutUseCase{
+public class LogoutUseCase extends ALogoutUseCase {
 
     public LogoutUseCase(Context context) {
         super(context);
@@ -20,8 +18,9 @@ public class LogoutUseCase extends ALogoutUseCase{
     public void execute() {
         User user = User.getLoggedUser();
 
-        if (user != null)
+        if (user != null) {
             user.delete();
+        }
 
         clearCredentials();
 
@@ -31,7 +30,8 @@ public class LogoutUseCase extends ALogoutUseCase{
     }
 
     private void clearCredentials() {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, context.getString(R.string.DHIS_DEFAULT_SERVER));
+        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,
+                context.getString(R.string.DHIS_DEFAULT_SERVER));
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, "");
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, "");
         PreferencesState.getInstance().reloadPreferences();

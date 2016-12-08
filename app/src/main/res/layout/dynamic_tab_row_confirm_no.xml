@@ -2,37 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/no_container"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <FrameLayout
-        android:paddingTop="@dimen/dashboard_row_padding"
-        android:paddingBottom="@dimen/dashboard_row_padding"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.5"
+        android:paddingBottom="@dimen/dashboard_row_padding"
+        android:paddingTop="@dimen/dashboard_row_padding"
         android:scaleType="centerInside">
+
         <ImageView
             android:id="@+id/confirm_no"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:scaleType="fitCenter"
             android:layout_weight="1"
-            android:src="@drawable/option_button"/>
+            android:scaleType="fitCenter"
+            android:src="@drawable/option_button" />
+
         <org.eyeseetea.malariacare.views.TextCard
             android:id="@+id/textcard_confirm_no"
-            android:padding="5dip"
-            android:gravity="center"
-            android:layout_height="match_parent"
             android:layout_width="fill_parent"
-            app:tFontName="@string/specific_language_font"
-            app:tDimension="@string/font_size_level1"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="5dip"
+            android:text="@android:string/no"
             android:textColor="@color/white"
             android:textSize="40dp"
-            android:text="@android:string/no"
-            />
+            app:tDimension="@string/font_size_level1"
+            app:tFontName="@string/specific_language_font" />
     </FrameLayout>
 </LinearLayout>

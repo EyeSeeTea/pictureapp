@@ -1,11 +1,9 @@
 package org.eyeseetea.malariacare.services.strategies;
 
-import android.content.Context;
-
 import org.eyeseetea.malariacare.domain.usecase.PushSurveysUseCase;
 import org.eyeseetea.malariacare.services.PushService;
 
-public class PushServiceStrategy extends APushServiceStrategy{
+public class PushServiceStrategy extends APushServiceStrategy {
     public static final String TAG = ".PushServiceStrategy";
 
     public PushServiceStrategy(PushService pushService) {

@@ -65,6 +65,12 @@ public class Header extends BaseModel {
         setTab(tab);
     }
 
+    public static Header findById(Long id) {
+        return new Select()
+                .from(Header.class)
+                .where(Condition.column(Header$Table.ID_HEADER).eq(id)).querySingle();
+    }
+
     public Long getId_header() {
         return id_header;
     }
@@ -98,8 +104,8 @@ public class Header extends BaseModel {
     }
 
     public Tab getTab() {
-        if(tab==null){
-            if(id_tab==null) return null;
+        if (tab == null) {
+            if (id_tab == null) return null;
             tab = new Select()
                     .from(Tab.class)
                     .where(Condition.column(Tab$Table.ID_TAB)
@@ -108,18 +114,18 @@ public class Header extends BaseModel {
         return tab;
     }
 
-    public void setTab(Tab tab) {
-        this.tab = tab;
-        this.id_tab = (tab!=null)?tab.getId_tab():null;
-    }
-
-    public void setTab(Long id_tab){
+    public void setTab(Long id_tab) {
         this.id_tab = id_tab;
         this.tab = null;
     }
 
-    public List<Question> getQuestions(){
-        if (this.questions == null){
+    public void setTab(Tab tab) {
+        this.tab = tab;
+        this.id_tab = (tab != null) ? tab.getId_tab() : null;
+    }
+
+    public List<Question> getQuestions() {
+        if (this.questions == null) {
             this.questions = new Select().from(Question.class)
                     .where(Condition.column(Question$Table.ID_HEADER).eq(this.getId_header()))
                     .orderBy(Question$Table.ORDER_POS).queryList();
@@ -129,7 +135,6 @@ public class Header extends BaseModel {
 
     /**
      * getNumber Of Question Parents Header
-     * @return
      */
     public long getNumberOfQuestionParents() {
         return new Select().count().from(Question.class)
@@ -145,11 +150,14 @@ public class Header extends BaseModel {
         Header header = (Header) o;
 
         if (id_header != header.id_header) return false;
-        if (short_name != null ? !short_name.equals(header.short_name) : header.short_name != null)
+        if (short_name != null ? !short_name.equals(header.short_name)
+                : header.short_name != null) {
             return false;
+        }
         if (name != null ? !name.equals(header.name) : header.name != null) return false;
-        if (order_pos != null ? !order_pos.equals(header.order_pos) : header.order_pos != null)
+        if (order_pos != null ? !order_pos.equals(header.order_pos) : header.order_pos != null) {
             return false;
+        }
         return !(id_tab != null ? !id_tab.equals(header.id_tab) : header.id_tab != null);
 
     }
@@ -164,7 +172,6 @@ public class Header extends BaseModel {
         return result;
     }
 
-
     @Override
     public String toString() {
         return "Header{" +
@@ -174,11 +181,5 @@ public class Header extends BaseModel {
                 ", order_pos=" + order_pos +
                 ", id_tab=" + id_tab +
                 '}';
-    }
-
-    public static Header findById(Long id) {
-        return new Select()
-                .from(Header.class)
-                .where(Condition.column(Header$Table.ID_HEADER).eq(id)).querySingle();
     }
 }

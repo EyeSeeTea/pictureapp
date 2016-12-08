@@ -47,39 +47,39 @@ public class PushResult {
 
     }
 
-    public boolean isSuccessful(){
-        return exception==null && jsonObject!=null && !getValue(IMPORTED).equals("0");
+    public boolean isSuccessful() {
+        return exception == null && jsonObject != null && !getValue(IMPORTED).equals("0");
     }
 
-    public String getUpdated(){
-        if(!isSuccessful()){
+    public String getUpdated() {
+        if (!isSuccessful()) {
             return "0";
         }
 
         return getValue(UPDATED);
     }
 
-    public String getIgnored(){
-        if(!isSuccessful()){
+    public String getIgnored() {
+        if (!isSuccessful()) {
             return "0";
         }
 
         return getValue(IGNORED);
     }
 
-    public String getImported(){
-        if(!isSuccessful()){
+    public String getImported() {
+        if (!isSuccessful()) {
             return "0";
         }
 
         return getValue(IMPORTED);
     }
 
-    public Exception getException(){
+    public Exception getException() {
         return exception;
     }
 
-    private String getValue(String key){
+    private String getValue(String key) {
 //        try {
 //            //DHIS 2.19
 //            return jsonObject.getString(key);
@@ -87,7 +87,7 @@ public class PushResult {
 //        }
         try {
             //DHIS 2.20
-            JSONObject response=jsonObject.getJSONObject(DHIS220_RESPONSE);
+            JSONObject response = jsonObject.getJSONObject(DHIS220_RESPONSE);
             return response.getString(key);
         } catch (JSONException e) {
             return "";

@@ -2,38 +2,23 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="horizontal"
+    android:id="@+id/facilityDateContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="horizontal">
+
+    <org.eyeseetea.malariacare.views.TextCard
+        android:id="@+id/info"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:id="@+id/facilityDateContainer"
-        android:layout_gravity="center">
-
-        <org.eyeseetea.malariacare.views.TextCard
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/name"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:textStyle="bold"
-            android:text="Name"
-            android:textColor="@color/white"
-            app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/medium_font_name"/>
-        <!--android:textSize="@dimen/dashboard_text_size"-->
-
-        <org.eyeseetea.malariacare.views.TextCard
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/details"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:text="Details"
-            app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/medium_font_name"/>
-        <!--android:textSize="@dimen/dashboard_text_size"-->
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:text="Details"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:tDimension="@string/font_size_level1"
+        app:tFontName="@string/medium_font_name" />
 
 </LinearLayout>

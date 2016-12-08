@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
+
     <Button
         android:id="@+id/back_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:gravity="center"
-        android:background="@drawable/back_background_button"
-        android:textColor="@color/dark_violet"
         android:adjustViewBounds="true"
-        android:scaleType="centerInside"
+        android:background="@drawable/back_background_button"
         android:drawableLeft="@drawable/back_button"
-        />
+        android:gravity="center"
+        android:scaleType="centerInside"
+        android:textColor="@color/dark_violet" />
 </merge>

@@ -21,41 +21,41 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 </head>
-<style>
-    @font-face {
-    font-family: 'Saysettha OT';
-    src: url('../fonts/saysettha_ot.ttf');
-    font-weight: 300;
+<style>    @font-face {
+		font-family: 'Saysettha OT';
+		src: url('../fonts/saysettha_ot.ttf');
+		font-weight: 300;
     }
 
     body {
-    background-color: #795d77;
-    font-family: 'saysettha_ot';
+		background-color: #c9b8c8;
+		font-family: 'saysettha_ot';
     }
 
     table {
-    width: 100%;
-    border-collapse: collapse;
+		width: 100%;
+		border-collapse: collapse;
     }
 
     table,
     td,
     th {
-    border: 1px solid black;
-    text-align: center;
+		border: 1px solid black;
+		text-align: center;
     }
 
     .stats {
-    margin-top: 25px;
+		margin-top: 25px;
     }
 
     .line-title {
-    color:#ffffff;}
+		color:#ffffff;
+	}
 
     .rowMetric {
-    background-color: #f9f3cf;
-    text-align: left;
-    width: 40%;
+		background-color: #f9f3cf;
+		text-align: left;
+		width: 40%;
     }
 
     tr:first-child td {
@@ -65,37 +65,83 @@
     tr:nth-child(odd){background: #ffffff}
 
     .rowTimeUnit {
-    font-weight: 700;
+		font-weight: 700;
     }
 
     .rowSummary {
-    background-color: #c4dfb2 !important;
+		//background-color: #c4dfb2 !important;
     }
 
     .timeUnitPicker {
-    text-align: right;
+		text-align: right;
     }
     #LBL_TIMEUNIT{
-    color:white;
-    float:left;
+		display:none;
     }
 
     .selectParent{
-    width:80px;
-    overflow:hidden;
-
-
+		width:80px;
+		overflow:hidden;
     }
 
     #timeUnit{
-    border-radius:4px;border:1px;
-    width: 40%;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border: none;
-    background: #fafbf6 url("triangle.png") no-repeat 90% center;}
+		border-radius:4px;border:1px;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		border: none;
+		background: transparent;
+		color: white;
+		margin: auto;
+		padding-top: 15px;
+		padding-bottom: 12px;
+		width: 35%;
     }
+	.timeUnitPicker{
+	}
+	.timeUnitPicker:after {
+	}
+	table:first-child tr:first-child td:first-child {
+        background: #c9b8c8;
+        color: #4d3b4c;
+        border: 1px solid transparent;
+        border-bottom: 2px solid #795d77;
+	}
+	table:first-child tr:first-child td:not(:first-child) {
+        background: #868487;
+        color: #4d3b4c;
+        border: 1px solid transparent;
+        border-bottom: 2px solid #795d77;
+        border-radius: 17px 17px 17px 17px;
+	}
+
+	table:first-child tr:not(:first-child) td:first-child {
+        background: #4d3b4c;
+        color: #c9b8c8;
+        border: 1px solid transparent;
+        border-bottom: 2px solid #795d77;
+        border-radius: 17px 17px 17px 17px;
+        padding-left: 10px;
+    }
+
+	table:first-child tr:not(:first-child) td:not(:first-child) {
+        background: white;
+        color: #4d3b4c;
+        border: 1px solid  transparent;
+        border-bottom: 2px solid #795d77;
+        border-radius: 17px 17px 17px 17px;
+    }
+	table:first-child tr:last-child td {
+	    border-bottom: 2px solid transparent!important;
+	}
+
+
+
+
+
+
+
+
 </style>
 
 <body>

@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.database;
 
-import org.eyeseetea.malariacare.database.migrations.Migration13ModifyValuesLastMigration;
 import org.eyeseetea.malariacare.database.migrations.Migration15AddOptionAttributeColumns;
 
 /**

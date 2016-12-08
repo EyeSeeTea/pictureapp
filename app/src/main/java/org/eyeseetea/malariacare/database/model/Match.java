@@ -28,7 +28,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.hisp.dhis.android.sdk.controllers.metadata.MetaDataController;
 
 import java.util.List;
 
@@ -53,14 +52,19 @@ public class Match extends BaseModel {
      */
     List<QuestionOption> questionOptions;
 
-    public Match(){}
+    public Match() {
+    }
 
-    public Match(QuestionRelation questionRelation){
+    public Match(QuestionRelation questionRelation) {
         setQuestionRelation(questionRelation);
     }
 
+    public static List<Match> listAll() {
+        return new Select().all().from(Match.class).queryList();
+    }
+
     public List<QuestionOption> getQuestionOptions() {
-        if(questionOptions==null){
+        if (questionOptions == null) {
             this.questionOptions = new Select().from(QuestionOption.class)
                     .indexedBy(Constants.QUESTION_OPTION_MATCH_IDX)
                     .where(Condition.column(QuestionOption$Table.ID_MATCH).eq(this.getId_match()))
@@ -78,8 +82,8 @@ public class Match extends BaseModel {
     }
 
     public QuestionRelation getQuestionRelation() {
-        if(questionRelation==null){
-            if(id_question_relation==null) return null;
+        if (questionRelation == null) {
+            if (id_question_relation == null) return null;
             questionRelation = new Select()
                     .from(QuestionRelation.class)
                     .where(Condition.column(QuestionRelation$Table.ID_QUESTION_RELATION)
@@ -88,21 +92,21 @@ public class Match extends BaseModel {
         return questionRelation;
     }
 
-    public void setQuestionRelation(QuestionRelation questionRelation) {
-        this.questionRelation = questionRelation;
-        this.id_question_relation = (questionRelation!=null)?questionRelation.getId_question_relation():null;
-    }
-
-    public void setQuestionRelation(Long id_question_relation){
+    public void setQuestionRelation(Long id_question_relation) {
         this.id_question_relation = id_question_relation;
         this.questionRelation = null;
     }
 
+    public void setQuestionRelation(QuestionRelation questionRelation) {
+        this.questionRelation = questionRelation;
+        this.id_question_relation =
+                (questionRelation != null) ? questionRelation.getId_question_relation() : null;
+    }
+
     /**
      * Returns the threshold associated with this questionoption
-     * @return
      */
-    public QuestionThreshold getQuestionThreshold(){
+    public QuestionThreshold getQuestionThreshold() {
         //Find threshold with this match
         return new Select().from(QuestionThreshold.class)
                 .where(Condition.column(Match$Table.ID_MATCH)
@@ -111,12 +115,10 @@ public class Match extends BaseModel {
 
     /**
      * Returns the question from QuestionRelation for this match with the given operationType
-     * @param operationType
-     * @return
      */
-    public Question getQuestionFromRelationWithType(int operationType){
+    public Question getQuestionFromRelationWithType(int operationType) {
         QuestionRelation questionRelation = this.getQuestionRelation();
-        if(questionRelation==null || questionRelation.getOperation()!=operationType){
+        if (questionRelation == null || questionRelation.getOperation() != operationType) {
             return null;
         }
 
@@ -131,7 +133,8 @@ public class Match extends BaseModel {
         Match match = (Match) o;
 
         if (id_match != match.id_match) return false;
-        return !(id_question_relation != null ? !id_question_relation.equals(match.id_question_relation) : match.id_question_relation != null);
+        return !(id_question_relation != null ? !id_question_relation.equals(
+                match.id_question_relation) : match.id_question_relation != null);
 
     }
 
@@ -148,9 +151,5 @@ public class Match extends BaseModel {
                 "id_match=" + id_match +
                 ", id_question_relation=" + id_question_relation +
                 '}';
-    }
-
-    public static List<Match> listAll() {
-        return new Select().all().from(Match.class).queryList();
     }
 }

@@ -34,7 +34,6 @@ import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
-import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
@@ -43,27 +42,20 @@ import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
 public class ProgressActivity extends Activity {
 
-    public ProgressActivityStrategy progressVariantAdapter = new ProgressActivityStrategy(this);
-
-    private static final String TAG=".ProgressActivity";
-
-
+    private static final String TAG = ".ProgressActivity";
     /**
      * Num of expected steps while pulling
      */
-    private static final int MAX_PULL_STEPS=7;
-
-
+    private static final int MAX_PULL_STEPS = 7;
     /**
      * Used for control new steps
      */
-    public static Boolean PULL_IS_ACTIVE =false;
-
+    public static Boolean PULL_IS_ACTIVE = false;
     /**
      * Used for control autopull from login
      */
-    public static Boolean PULL_CANCEL =false;
-
+    public static Boolean PULL_CANCEL = false;
+    public ProgressActivityStrategy progressVariantAdapter = new ProgressActivityStrategy(this);
     ProgressBar progressBar;
     TextView textView;
 
@@ -77,11 +69,11 @@ public class ProgressActivity extends Activity {
     }
 
     private void cancellPull() {
-        if(PULL_IS_ACTIVE) {
+        if (PULL_IS_ACTIVE) {
             PULL_CANCEL = true;
             PULL_IS_ACTIVE = false;
             step(getBaseContext().getResources().getString(R.string.cancellingPull));
-            if(PullController.getInstance().finishPullJob()) {
+            if (PullController.getInstance().finishPullJob()) {
                 Log.d(TAG, "Logging out from sdk...");
                 DhisService.logOutUser(ProgressActivity.this);
             }
@@ -92,8 +84,8 @@ public class ProgressActivity extends Activity {
     public void onResume() {
         super.onResume();
         try {
-        Dhis2Application.bus.register(this);
-        }catch(Exception e){
+            Dhis2Application.bus.register(this);
+        } catch (Exception e) {
             e.printStackTrace();
             Dhis2Application.bus.unregister(this);
             Dhis2Application.bus.register(this);
@@ -106,23 +98,23 @@ public class ProgressActivity extends Activity {
         super.onPause();
         unregisterBus();
         //TODO this is not expected in pictureapp
-        if(PULL_CANCEL==true) {
+        if (PULL_CANCEL == true) {
             finishAndGo(LoginActivity.class);
         }
     }
 
-    private void unregisterBus(){
+    private void unregisterBus() {
         try {
             Dhis2Application.bus.unregister(this);
-        }catch(Exception e){
-            Log.e(TAG,e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
     }
 
-    private void prepareUI(){
-        progressBar=(ProgressBar)findViewById(R.id.pull_progress);
+    private void prepareUI() {
+        progressBar = (ProgressBar) findViewById(R.id.pull_progress);
         progressBar.setMax(MAX_PULL_STEPS);
-        textView=(TextView)findViewById(R.id.pull_text);
+        textView = (TextView) findViewById(R.id.pull_text);
         final Button button = (Button) findViewById(R.id.cancelPullButton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -133,7 +125,7 @@ public class ProgressActivity extends Activity {
 
     @Subscribe
     public void onProgressChange(final SyncProgressStatus syncProgressStatus) {
-        if(syncProgressStatus ==null){
+        if (syncProgressStatus == null) {
             return;
         }
         runOnUiThread(new Runnable() {
@@ -160,10 +152,9 @@ public class ProgressActivity extends Activity {
 
     /**
      * Shows a dialog with the given message y move to login after showing error
-     * @param msg
      */
-    private void showException(String msg){
-        String title=getDialogTitle();
+    private void showException(String msg) {
+        String title = getDialogTitle();
 
         new AlertDialog.Builder(this)
                 .setCancelable(false)
@@ -183,7 +174,6 @@ public class ProgressActivity extends Activity {
 
     /**
      * Prints the step in the progress bar
-     * @param msg
      */
     private void step(final String msg) {
         final int currentProgress = progressBar.getProgress();
@@ -193,14 +183,13 @@ public class ProgressActivity extends Activity {
 
     /**
      * Shows a dialog to tell that pull is done and then moves into the dashboard.
-     *
      */
     private void showAndMoveOn() {
         //If is not active, we need restart the process
-        if(!PULL_IS_ACTIVE) {
-            try{
+        if (!PULL_IS_ACTIVE) {
+            try {
                 Dhis2Application.bus.unregister(this);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             finishAndGo(LoginActivity.class);
@@ -210,7 +199,7 @@ public class ProgressActivity extends Activity {
         //Show final step -> done
         step(getString(R.string.progress_pull_done));
 
-        String title=getDialogTitle();
+        String title = getDialogTitle();
 
         new AlertDialog.Builder(this)
                 .setCancelable(false)
@@ -224,24 +213,24 @@ public class ProgressActivity extends Activity {
 
     }
 
-    private String getDialogTitle(){
-        int stringId=R.string.dialog_title_pull_response;
+    private String getDialogTitle() {
+        int stringId = R.string.dialog_title_pull_response;
         return getString(stringId);
     }
 
-    private void launchPull(){
+    private void launchPull() {
         progressBar.setProgress(0);
         progressBar.setMax(MAX_PULL_STEPS);
         PullController.getInstance().pull(this);
     }
 
     @Subscribe
-    public void onLogoutFinished(UiEvent uiEvent){
+    public void onLogoutFinished(UiEvent uiEvent) {
         //No event or not a logout event -> done
-        if(uiEvent==null || !uiEvent.getEventType().equals(UiEvent.UiEventType.USER_LOG_OUT)){
+        if (uiEvent == null || !uiEvent.getEventType().equals(UiEvent.UiEventType.USER_LOG_OUT)) {
             return;
         }
-        Log.d(TAG,"Logging out from sdk...OK");
+        Log.d(TAG, "Logging out from sdk...OK");
         LogoutUseCase logoutUseCase = new LogoutUseCase(this);
         logoutUseCase.execute();
         //Go to login
@@ -249,16 +238,17 @@ public class ProgressActivity extends Activity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         cancellPull();
     }
 
     /**
      * Finish current activity and launches an activity with the given class
+     *
      * @param targetActivityClass Given target activity class
      */
-    public void finishAndGo(Class targetActivityClass){
-        Intent targetActivityIntent = new Intent(this,targetActivityClass);
+    public void finishAndGo(Class targetActivityClass) {
+        Intent targetActivityIntent = new Intent(this, targetActivityClass);
         finish();
         startActivity(targetActivityIntent);
     }

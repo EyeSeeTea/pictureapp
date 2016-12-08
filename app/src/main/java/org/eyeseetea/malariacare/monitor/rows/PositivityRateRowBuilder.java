@@ -34,19 +34,18 @@ import java.util.List;
  */
 public class PositivityRateRowBuilder extends MonitorRowBuilder {
 
-    public PositivityRateRowBuilder(Context context){
+    public PositivityRateRowBuilder(Context context) {
         super(context, context.getString(R.string.monitor_row_title_positivity_rate));
     }
 
     /**
      * Returns a list with column classes
-     * @return
      */
     @Override
     protected List<String> defineColumnClasses() {
-        List<String> cssClasses = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE+1);
+        List<String> cssClasses = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE + 1);
         cssClasses.add(CSS_ROW_METRIC_SUMMARY);
-        for(int i=0;i<Constants.MONITOR_HISTORY_SIZE;i++){
+        for (int i = 0; i < Constants.MONITOR_HISTORY_SIZE; i++) {
             cssClasses.add(CSS_ROW_VALUE_SUMMARY);
         }
         return cssClasses;
@@ -54,19 +53,18 @@ public class PositivityRateRowBuilder extends MonitorRowBuilder {
 
     /**
      * This row is special, instead of counter there are rates
-     * @return
      */
-    protected Object defaultValueColumn(){
+    protected Object defaultValueColumn() {
         return new PositivityRate();
     }
 
     @Override
     protected Object updateColumn(Object currentValue, SurveyMonitor surveyMonitor) {
         PositivityRate positivityRate = (PositivityRate) currentValue;
-        if(surveyMonitor.isRated()){
+        if (surveyMonitor.isRated()) {
             positivityRate.incNumSuspected();
         }
-        if(surveyMonitor.isPositive()){
+        if (surveyMonitor.isPositive()) {
             positivityRate.incNumPositive();
         }
         return positivityRate;

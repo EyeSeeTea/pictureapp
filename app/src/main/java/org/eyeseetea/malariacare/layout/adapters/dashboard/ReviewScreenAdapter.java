@@ -59,16 +59,12 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
         this.items = (List<Value>) items;
     }
 
-    public void setSubHeaderLayout(Integer subHeaderLayout) {
-        this.subHeaderLayout = subHeaderLayout;
-    }
-
     public Integer getSubHeaderLayout() {
         return this.subHeaderLayout;
     }
-    @Override
-    public void setHeaderLayout(Integer headerLayout) {
-        this.headerLayout = headerLayout;
+
+    public void setSubHeaderLayout(Integer subHeaderLayout) {
+        this.subHeaderLayout = subHeaderLayout;
     }
 
     @Override
@@ -77,18 +73,8 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
     }
 
     @Override
-    public void setFooterLayout(Integer footerLayout) {
-        this.footerLayout = footerLayout;
-    }
-
-    @Override
     public Integer getFooterLayout() {
         return footerLayout;
-    }
-
-    @Override
-    public void setRecordLayout(Integer recordLayout) {
-        this.recordLayout = recordLayout;
     }
 
     @Override
@@ -102,8 +88,8 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
     }
 
     @Override
-    public void setContext(Context context) {
-        this.context = context;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
@@ -112,18 +98,13 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
     }
 
     @Override
-    public void setTitle(String title) {
-        this.title = title;
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     @Override
     public void remove(Object item) {
         this.items.remove(item);
-    }
-
-    @Override
-    public IDashboardAdapter newInstance(List items, Context context) {
-        return new ReviewScreenAdapter((List<Value>) items, lInflater, context);
     }
 
     @Override
@@ -135,7 +116,8 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
 
         //Sets the value text in the row and add the question as tag.
         TextCard textCard = (TextCard) rowView.findViewById(R.id.review_content_text);
-        textCard.setText((value.getOption() != null) ? value.getOption().getInternationalizedCode() : value.getValue());
+        textCard.setText((value.getOption() != null) ? value.getOption().getInternationalizedCode()
+                : value.getValue());
         if ((value.getQuestion() != null)) {
             textCard.setTag(value.getQuestion());
 
@@ -149,7 +131,8 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
             });
 
             if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
-                textCard.setBackgroundColor(Color.parseColor("#" + value.getOption().getBackground_colour()));
+                textCard.setBackgroundColor(
+                        Color.parseColor("#" + value.getOption().getBackground_colour()));
             }
 
         }

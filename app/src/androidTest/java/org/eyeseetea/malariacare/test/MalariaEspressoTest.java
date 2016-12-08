@@ -61,7 +61,8 @@
 //    protected IntentServiceIdlingResource idlingResource;
 //    protected Resources res;
 //    public static final String DATABASE_NAME="malariacare.db";
-//    public static final String DATABASE_FULL_PATH = "/data/data/org.eyeseetea.pictureapp/databases/"+DATABASE_NAME;
+//    public static final String DATABASE_FULL_PATH = "/data/data/org.eyeseetea
+// .pictureapp/databases/"+DATABASE_NAME;
 //
 //    public static void init(){
 //        cleanAll();
@@ -101,7 +102,8 @@
 //    }
 //
 //    public static void cleanSettings(){
-//        Context activity = InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+//        Context activity = InstrumentationRegistry.getInstrumentation().getTargetContext()
+// .getApplicationContext();
 //        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity);
 //        SharedPreferences.Editor editor = settings.edit();
 //        editor.clear();
@@ -112,7 +114,8 @@
 //    public static boolean databaseExists() {
 //        SQLiteDatabase checkDB = null;
 //        try {
-//            checkDB = SQLiteDatabase.openDatabase(DATABASE_FULL_PATH, null, SQLiteDatabase.OPEN_READONLY);
+//            checkDB = SQLiteDatabase.openDatabase(DATABASE_FULL_PATH, null, SQLiteDatabase
+// .OPEN_READONLY);
 //            checkDB.close();
 //            checkDB.releaseReference();
 //        } catch (Exception e) {
@@ -153,7 +156,8 @@
 //            survey.save();
 //        }
 //        List<Survey> surveys= Survey.find(Survey.class, "user=?", user.getId().toString());
-//        Session.setAdapterUncompleted(new AssessmentUnsentAdapter(surveys, InstrumentationRegistry.getTargetContext()));
+//        Session.setAdapterUncompleted(new AssessmentUnsentAdapter(surveys,
+// InstrumentationRegistry.getTargetContext()));
 //        return surveys;
 //    }
 //
@@ -178,7 +182,8 @@
 //        instrumentation.waitForIdleSync();
 //        instrumentation.runOnMainSync(new Runnable() {
 //            public void run() {
-//                Collection resumedActivities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+//                Collection resumedActivities = ActivityLifecycleMonitorRegistry.getInstance()
+// .getActivitiesInStage(Stage.RESUMED);
 //                if (resumedActivities.iterator().hasNext()) {
 //                    activity[0] = (Activity) resumedActivities.iterator().next();
 //                }
@@ -189,7 +194,8 @@
 //    }
 //
 //    protected static void clearSharedPreferences(){
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getTargetContext());
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences
+// (InstrumentationRegistry.getTargetContext());
 //        sharedPreferences.edit().clear().commit();
 //    }
 //

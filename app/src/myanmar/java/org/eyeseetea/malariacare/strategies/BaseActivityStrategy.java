@@ -1,16 +1,9 @@
 package org.eyeseetea.malariacare.strategies;
 
-import static android.R.attr.baseline;
-import static android.R.attr.settingsActivity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.preference.DialogPreference;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -24,8 +17,8 @@ import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
-    private static final int MENU_ITEM_LOGOUT=99;
-    private static final int MENU_ITEM_LOGOUT_ORDER=106;
+    private static final int MENU_ITEM_LOGOUT = 99;
+    private static final int MENU_ITEM_LOGOUT_ORDER = 106;
 
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
@@ -42,12 +35,14 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         try {
             //Unregister from bus before leaving
             Dhis2Application.bus.unregister(this);
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, MENU_ITEM_LOGOUT,MENU_ITEM_LOGOUT_ORDER, mBaseActivity.getResources().getString(R.string.settings_menu_logout_title));
+        menu.add(Menu.NONE, MENU_ITEM_LOGOUT, MENU_ITEM_LOGOUT_ORDER,
+                mBaseActivity.getResources().getString(R.string.settings_menu_logout_title));
     }
 
     @Override
@@ -59,16 +54,18 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 new AlertDialog.Builder(mBaseActivity)
                         .setTitle(mBaseActivity.getString(R.string.settings_menu_logout_title))
                         .setMessage(mBaseActivity.getString(R.string.dashboard_menu_logout_message))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                DhisService.logOutUser(mBaseActivity);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        }).create().show();
+                        .setPositiveButton(android.R.string.yes,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        DhisService.logOutUser(mBaseActivity);
+                                    }
+                                })
+                        .setNegativeButton(android.R.string.no,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                }).create().show();
                 break;
             default:
                 return false;
@@ -77,9 +74,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     @Subscribe
-    public void onLogoutFinished(UiEvent uiEvent){
+    public void onLogoutFinished(UiEvent uiEvent) {
         //No event or not a logout event -> done
-        if(uiEvent==null || !uiEvent.getEventType().equals(UiEvent.UiEventType.USER_LOG_OUT)){
+        if (uiEvent == null || !uiEvent.getEventType().equals(UiEvent.UiEventType.USER_LOG_OUT)) {
             return;
         }
 

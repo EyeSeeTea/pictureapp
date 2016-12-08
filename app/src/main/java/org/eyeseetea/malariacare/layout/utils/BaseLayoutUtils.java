@@ -21,41 +21,46 @@ package org.eyeseetea.malariacare.layout.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.utils.Utils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
  * Created by Jose on 22/02/2015.
  */
-public class BaseLayoutUtils {
+public abstract class BaseLayoutUtils {
 
-    public static final int [] rowBackgrounds = {R.drawable.background_even, R.drawable.background_odd};
+    public static final int[] rowBackgrounds =
+            {R.drawable.background_even, R.drawable.background_odd};
 
     /**
      * Variable to store the Unsent surveys list height
@@ -79,17 +84,19 @@ public class BaseLayoutUtils {
     public static int getNumberOfQuestionParentsHeader(Header header) {
         int result = 0;
 
-        List<Question> list =  header.getQuestions();
+        List<Question> list = header.getQuestions();
 
-        for (Question question : list)
-            if (question.hasChildren())
+        for (Question question : list) {
+            if (question.hasChildren()) {
                 result = result + 1;
+            }
+        }
 
         return result;
     }
 
     // Used to setup the usual actionbar with the logo and the app name
-    public static void setActionBarLogo(ActionBar actionBar){
+    public static void setActionBarLogo(ActionBar actionBar) {
         actionBar.setLogo(R.drawable.pictureapp_logo);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
@@ -97,8 +104,15 @@ public class BaseLayoutUtils {
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
     }
 
+    public static void setActionBarWithOrgUnit(ActionBar actionBar) {
+        LayoutUtils.setActionBarLogo(actionBar);
+        LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
+                PreferencesState.getInstance().getContext().getResources().getString(
+                        R.string.app_name));
+    }
+
     // Used to put the org unit name and the kind of survey instead of the app name
-    public static void setActionBarText(ActionBar actionBar, String title, String subtitle){
+    public static void setActionBarText(ActionBar actionBar, String title, String subtitle) {
         actionBar.setDisplayUseLogoEnabled(false);
         // Uncomment in case of we want the logo out
         // actionBar.setLogo(null);
@@ -114,73 +128,144 @@ public class BaseLayoutUtils {
         }
 
         int totalHeight = 0;
-        int desiredHeight = View.MeasureSpec.makeMeasureSpec(listView.getHeight(), View.MeasureSpec.AT_MOST);
+        int desiredHeight = View.MeasureSpec.makeMeasureSpec(listView.getHeight(),
+                View.MeasureSpec.AT_MOST);
 
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(desiredHeight, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += listItem.getMeasuredHeight()/2; //FIXME: measure is not properly measuring (it gives a very high number compared to the screen height measure) so I'm dividing by 2
+            totalHeight += listItem.getMeasuredHeight()
+                    / 2; //FIXME: measure is not properly measuring (it gives a very high number
+            // compared to the screen height measure) so I'm dividing by 2
         }
 
-        setUnsentListHeight(totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)));
+        setUnsentListHeight(
+                totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)));
     }
 
-    public static int measureScreenHeight(Activity activity){
+    public static int measureScreenHeight(Activity activity) {
         DisplayMetrics metrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
         Log.d("measureScreen", metrics.toString());
-        return Math.round(metrics.heightPixels*metrics.density);
+        return Math.round(metrics.heightPixels * metrics.density);
     }
 
     /**
      * @param view
      * @param option
      */
-    public static void highlightSelection(View view, Option option){
-        Drawable selectedBackground = view.getContext().getResources().getDrawable(R.drawable.background_dynamic_clicked_option);
-        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {    //JELLY_BEAN=API16
+    public static void highlightSelection(View view, Option option) {
+        Drawable selectedBackground = view.getContext().getResources().getDrawable(
+                R.drawable.background_dynamic_clicked_option);
+        if (android.os.Build.VERSION.SDK_INT
+                > Build.VERSION_CODES.JELLY_BEAN) {    //JELLY_BEAN=API16
             view.setBackground(selectedBackground);
         } else {
             view.setBackgroundDrawable(selectedBackground);
         }
 
-        if(option!=null) {
+        if (option != null) {
             GradientDrawable bgShape = (GradientDrawable) view.getBackground();
-            String backGColor = option.getOptionAttribute() != null ? option.getOptionAttribute().getBackground_colour() : option.getBackground_colour();
+            String backGColor = option.getOptionAttribute() != null
+                    ? option.getOptionAttribute().getBackground_colour()
+                    : option.getBackground_colour();
             bgShape.setColor(Color.parseColor("#" + backGColor));
             bgShape.setStroke(3, Color.WHITE);
         }
 
         //the view is a framelayout with a imageview, or a imageview, or a custombutton
         ImageView imageView = null;
-        if(view instanceof FrameLayout){
+        if (view instanceof FrameLayout) {
             FrameLayout f = (FrameLayout) view;
-            imageView= (ImageView) f.getChildAt(0);
-        }else if(view instanceof ImageView){
-            imageView = (ImageView)view;
+            imageView = (ImageView) f.getChildAt(0);
+        } else if (view instanceof ImageView) {
+            imageView = (ImageView) view;
         }
-        if(imageView!=null) {
+        if (imageView != null) {
             imageView.clearColorFilter();
         }
     }
 
     /**
      * Puts a sort of dark shadow over the given view
-     * @param view
      */
-    public static void overshadow(FrameLayout view){
+    public static void overshadow(FrameLayout view) {
         //FIXME: (API17) setColorFilter for view.getBackground() has no effect...
-        view.getBackground().setColorFilter(Color.parseColor("#805a595b"), PorterDuff.Mode.SRC_ATOP);
+        view.getBackground().setColorFilter(Color.parseColor("#805a595b"),
+                PorterDuff.Mode.SRC_ATOP);
         ImageView imageView = (ImageView) view.getChildAt(0);
         imageView.setColorFilter(Color.parseColor("#805a595b"));
 
         Drawable bg = view.getBackground();
-        if(bg instanceof GradientDrawable) {
-            GradientDrawable bgShape = (GradientDrawable)bg;
+        if (bg instanceof GradientDrawable) {
+            GradientDrawable bgShape = (GradientDrawable) bg;
             bgShape.setStroke(0, 0);
         }
     }
 
-    public static void setDivider(ListView listView) {
+    public static void setTabDivider(DashboardActivity dashboardActivity) {
+        //No action. This method should be created in the variant.
+    }
+
+    public static void setLineBetweenRows(ListView listView) {
+        //No action. This method should be created in the variant.
+    }
+
+    public static void setRowDivider(ListView listView) {
+        //No action. This method should be created in the variant.
+    }
+
+    public static void makeImageVisible(String path, ImageView rowImageLabelView) {
+        rowImageLabelView.setVisibility(View.VISIBLE);
+        putImageInImageView(path,
+                rowImageLabelView);
+    }
+
+
+    /**
+     * Sets a image from assets path in a imageView
+     *
+     * @param path      path from assets image
+     * @param imageView is the imageView to set the image
+     */
+    public static void putImageInImageView(String path, ImageView imageView) {
+        if (path == null || path.equals("")) {
+            return;
+        }
+        try {
+            InputStream inputStream = PreferencesState.getInstance().getContext().getAssets().open(
+                    Utils.getInternationalizedString(path));
+            Bitmap bmp = BitmapFactory.decodeStream(inputStream);
+            imageView.setImageDrawable(
+                    new BitmapDrawable(PreferencesState.getInstance().getContext().getResources(),
+                            bmp));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Sets a Layout Width as 50% of screen pixel
+     *
+     * @param fixed substract the fixed number from the screenwidth
+     */
+    public static void setLayoutParamsAs50Percent(View linearLayout, Context context,
+            int fixed) {
+        LinearLayout.LayoutParams layoutParamsWidth50 = new LinearLayout.LayoutParams(
+                ((getScreenWidth(context) - fixed) / 2)
+                , ViewGroup.LayoutParams.MATCH_PARENT);
+        linearLayout.setLayoutParams(layoutParamsWidth50);
+    }
+
+    private static int getScreenWidth(Context context) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
+        return (metrics.widthPixels);
+    }
+
+    public static void fixRowViewBackground(View row, int position) {
+        row.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));
     }
 }

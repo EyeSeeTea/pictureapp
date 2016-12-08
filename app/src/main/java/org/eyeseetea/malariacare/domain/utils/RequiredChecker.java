@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.domain.utils;
 
-import android.util.Log;
-
 public class RequiredChecker {
 
     private RequiredChecker() {

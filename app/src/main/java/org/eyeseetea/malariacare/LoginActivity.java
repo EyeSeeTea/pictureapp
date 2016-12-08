@@ -20,17 +20,11 @@
 package org.eyeseetea.malariacare;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.Loader;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.MenuItem;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -38,7 +32,6 @@ import android.text.util.Linkify;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -46,30 +39,19 @@ import android.widget.TextView;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.otto.Subscribe;
 
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
-import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
-import org.eyeseetea.malariacare.database.model.OrgUnit;
-import org.eyeseetea.malariacare.database.model.User;
-import org.eyeseetea.malariacare.database.utils.PopulateDB;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
-import org.hisp.dhis.android.sdk.persistence.models.Dashboard;
 import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
-import org.hisp.dhis.android.sdk.ui.views.FontButton;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
-
-import static org.eyeseetea.malariacare.database.model.OrgUnit.getAllOrgUnit;
-import static org.eyeseetea.malariacare.database.model.User.createDummyUser;
 
 /**
  * Login Screen.
@@ -77,24 +59,18 @@ import static org.eyeseetea.malariacare.database.model.User.createDummyUser;
  */
 public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity {
 
-    private static final String TAG = ".LoginActivity";
-
     public static final String PULL_REQUIRED = "PULL_REQUIRED";
     public static final String DEFAULT_USER = "";
     public static final String DEFAULT_PASSWORD = "";
-
-    private String serverUrl;
-
-    private String username;
-
-    private String password;
-
+    private static final String TAG = ".LoginActivity";
     public LoginUseCase mLoginUseCase = new LoginUseCase(this);
     public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
-
     EditText serverText;
     EditText usernameEditText;
     EditText passwordEditText;
+    private String serverUrl;
+    private String username;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +92,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     }
 
     private void initDataDownloadPeriodDropdown() {
-        if(!BuildConfig.loginDataDownloadPeriod) {
+        if (!BuildConfig.loginDataDownloadPeriod) {
             return;
         }
         //Add left text for the spinner "title"
@@ -131,7 +107,8 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         dataLimitOptions.add(getString(R.string.last_6_weeks));
         dataLimitOptions.add(getString(R.string.last_6_months));
 
-        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dataLimitOptions);
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, dataLimitOptions);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         //add spinner
@@ -140,15 +117,17 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         spinner.setAdapter(spinnerArrayAdapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view,int pos, long id) {
-                PreferencesState.getInstance().setDataLimitedByDate(spinnerArrayAdapter.getItem(pos).toString());
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                PreferencesState.getInstance().setDataLimitedByDate(
+                        spinnerArrayAdapter.getItem(pos).toString());
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
         //select the selected option or default no data option
         String dateLimit = PreferencesState.getInstance().getDataLimitedByDate();
-        if(dateLimit.equals("")) {
+        if (dateLimit.equals("")) {
             spinner.setSelection(spinnerArrayAdapter.getPosition(getString(R.string.no_data)));
         } else {
             spinner.setSelection(spinnerArrayAdapter.getPosition(dateLimit));
@@ -158,9 +137,9 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     @Override
     public void login(String serverUrl, String username, String password) {
         //This method is overriden to capture credentials data
-        this.serverUrl=serverUrl;
-        this.username=username;
-        this.password=password;
+        this.serverUrl = serverUrl;
+        this.username = username;
+        this.password = password;
 
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -173,12 +152,11 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
 
     /**
-     * Shows an alert dialog asking for acceptance of the EULA terms. If ok calls login function, do nothing otherwise
-     * @param titleId
-     * @param rawId
-     * @param context
+     * Shows an alert dialog asking for acceptance of the EULA terms. If ok calls login function,
+     * do
+     * nothing otherwise
      */
-    public void askEula(int titleId, int rawId, final Context context){
+    public void askEula(int titleId, int rawId, final Context context) {
         InputStream message = context.getResources().openRawResource(rawId);
         String stringMessage = Utils.convertFromInputStreamToString(message).toString();
         final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
@@ -191,22 +169,23 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         rememberEulaAccepted(context);
-                        loginToDhis(serverUrl,username,password);
+                        loginToDhis(serverUrl, username, password);
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).create();
 
         dialog.show();
 
-        ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+        ((TextView) dialog.findViewById(android.R.id.message)).setMovementMethod(
+                LinkMovementMethod.getInstance());
     }
 
     /**
      * Save a preference to remember that EULA was already accepted
-     * @param context
      */
-    public void rememberEulaAccepted(Context context){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public void rememberEulaAccepted(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(getString(R.string.eula_accepted), true);
         editor.commit();
@@ -214,22 +193,20 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     /**
      * User SDK function to login
-     * @param serverUrl
-     * @param username
-     * @param password
      */
-    public void loginToDhis(String serverUrl, String username, String password){
+    public void loginToDhis(String serverUrl, String username, String password) {
         //Delegate real login attempt to parent in sdk
         super.login(serverUrl, username, password);
     }
 
     /**
-     * This logout is called from the success user autentication, and try to login in the server with the correct userdata.
+     * This logout is called from the success user autentication, and try to login in the server
+     * with the correct userdata.
      */
     @Subscribe
-    public void onLogoutFinished(UiEvent uiEvent){
+    public void onLogoutFinished(UiEvent uiEvent) {
         //No event or not a logout event -> done
-        if(uiEvent==null || !uiEvent.getEventType().equals(UiEvent.UiEventType.USER_LOG_OUT)){
+        if (uiEvent == null || !uiEvent.getEventType().equals(UiEvent.UiEventType.USER_LOG_OUT)) {
             return;
         }
         HttpUrl serverUri = HttpUrl.parse(serverUrl);
@@ -238,17 +215,18 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
     @Subscribe
     public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
-        if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
-            if(result.getResponseHolder().getApiException() == null) {
-                Credentials credentials = new Credentials(serverUrl,username,password);
+        if (result != null && result.getResourceType().equals(ResourceType.USERS)) {
+            if (result.getResponseHolder().getApiException() == null) {
+                Credentials credentials = new Credentials(serverUrl, username, password);
                 mLoginUseCase.execute(credentials);
-                //The first login is only to authenticate the user, and is need logout from the sdk and login with the correct user/password.
-                if(mLoginUseCase.isLogoutNeeded(credentials)){
-                    username=DEFAULT_USER;
-                    password=DEFAULT_PASSWORD;
+                //The first login is only to authenticate the user, and is need logout from the
+                // sdk and login with the correct user/password.
+                if (mLoginUseCase.isLogoutNeeded(credentials)) {
+                    username = DEFAULT_USER;
+                    password = DEFAULT_PASSWORD;
                     //The first login (user authentication) calls this
                     DhisService.logOutUser(this);
-                }else{
+                } else {
                     mLoginActivityStrategy.finishAndGo();
                 }
             } else {
@@ -259,7 +237,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         mLoginActivityStrategy.onBackPressed();
     }
 

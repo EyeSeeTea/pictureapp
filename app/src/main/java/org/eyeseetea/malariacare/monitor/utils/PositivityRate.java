@@ -34,24 +34,24 @@ public class PositivityRate {
      */
     int numSuspected;
 
-    public PositivityRate(){
+    public PositivityRate() {
     }
 
-    public void incNumPositive(){
+    public void incNumPositive() {
         numPositive++;
     }
 
-    public void incNumSuspected(){
+    public void incNumSuspected() {
         numSuspected++;
     }
 
-    public String toString(){
-        if(numSuspected==0){
+    public String toString() {
+        if (numSuspected == 0) {
             return "0%";
         }
 
-        float rate=((float)numPositive/numSuspected)*100;
-        return String.format("%.0f%%",rate);
+        float rate = ((float) numPositive / numSuspected) * 100;
+        return String.format("%.0f%%", rate);
     }
 
 }

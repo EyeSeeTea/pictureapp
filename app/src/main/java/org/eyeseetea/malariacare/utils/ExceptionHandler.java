@@ -25,10 +25,10 @@ import android.util.Log;
 /**
  * Created by nacho on 02/05/15.
  */
-public class ExceptionHandler implements Thread.UncaughtExceptionHandler{
+public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
     Activity context;
 
-    public ExceptionHandler(Activity context){
+    public ExceptionHandler(Activity context) {
         this.context = context;
     }
 

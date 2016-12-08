@@ -8,15 +8,15 @@
     <!--<string name="score_info_zero_float">0.0</string>-->
 
 
-    <item name="show_num_dems" type="string" translatable="false">show_num_dems</item>
-    <item name="customize_fonts" type="string" translatable="false">customize_fonts</item>
-    <item name="font_sizes" type="string" translatable="false">font_sizes</item>
-    <item name="dhis_url" type="string" translatable="false">dhis_url</item>
-    <item name="dhis_user" type="string" translatable="false">dhis_user</item>
-    <item name="dhis_password" type="string" translatable="false">dhis_password</item>
-    <item name="org_unit" type="string" translatable="false">org_unit</item>
+    <item name="show_num_dems" translatable="false" type="string">show_num_dems</item>
+    <item name="customize_fonts" translatable="false" type="string">customize_fonts</item>
+    <item name="font_sizes" translatable="false" type="string">font_sizes</item>
+    <item name="dhis_url" translatable="false" type="string">dhis_url</item>
+    <item name="dhis_user" translatable="false" type="string">dhis_user</item>
+    <item name="dhis_password" translatable="false" type="string">dhis_password</item>
+    <item name="org_unit" translatable="false" type="string">org_unit</item>
     <string name="pref_cat_server" translatable="false">pref_cat_server</string>
-    <item name="language_code" type="string" translatable="false">language_code</item>
+    <item name="language_code" translatable="false" type="string">language_code</item>
 
 
     <string name="PUSH_PERIOD" translatable="false">10</string>
@@ -25,8 +25,6 @@
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
-
-
 
 
     <string name="normal_font" translatable="false">Roboto-Medium.ttf</string>
@@ -58,7 +56,7 @@
 
     <string name="monitor_row_title" translatable="false"><![CDATA[&nbsp;&nbsp;%1$s]]></string>
 
-    <item name="eula_accepted" type="string" translatable="false">eula_accepted</item>
+    <item name="eula_accepted" translatable="false" type="string">eula_accepted</item>
 
 
     <string name="lastcommit" translatable="false">Version %s</string>
@@ -82,10 +80,11 @@
 
     <string name="tab_tag_assess" translatable="false">tab_assess</string>
     <string name="tab_tag_improve" translatable="false">tab_improve</string>
+    <string name="tab_tag_stock" translatable="false">tab_stock</string>
     <string name="tab_tag_monitor" translatable="false">tab_monitor</string>
 
-    <item name="developer_option" type="string" translatable="false">show_dev_options</item>
-    <item name="export_data_option" type="string" translatable="false">export_data_option</item>
+    <item name="developer_option" translatable="false" type="string">show_dev_options</item>
+    <item name="export_data_option" translatable="false" type="string">export_data_option</item>
 
     <string name="assess" translatable="false">Assess - active surveys</string>
     <string name="improve" translatable="false">Improve</string>
@@ -111,5 +110,7 @@
     <string name="is_pushing_key" translatable="false">ispushing</string>
     <string name="data_limited_by_date" translatable="false">data_limited_by_date</string>
 
+    <string name="monitor_table_title_suspected_header" translatable="false">@string/monitor_table_title_suspected</string>
+    <string name="monitor_table_title_stock_header" translatable="false">@string/monitor_table_title_stock</string>
 
 </resources>

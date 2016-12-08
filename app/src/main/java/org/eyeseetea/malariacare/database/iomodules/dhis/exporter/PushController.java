@@ -50,72 +50,72 @@ import java.util.Map;
  * Created by arrizabalaga on 4/11/15.
  */
 public class PushController {
-    private final String TAG=".PushController";
-
     private static PushController instance;
-
+    private final String TAG = ".PushController";
+    /**
+     * The stateful converter used to turn a survey into its corresponding event + datavalues;
+     */
+    ConvertToSDKVisitor converter;
     /**
      * Context required to i18n error messages while pulling
      */
     private Context context;
 
-    /**
-     * The stateful converter used to turn a survey into its corresponding event + datavalues;
-     */
-    ConvertToSDKVisitor converter;
-
-
-    public boolean isPushInProgress() {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
-        return sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getString(R.string.is_pushing_key), false);
-    }
-
-    public void setPushInProgress(boolean pushInProgress) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
-        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
-        prefEditor.putBoolean(PreferencesState.getInstance().getContext().getResources().getString(R.string.is_pushing_key), pushInProgress); // set your default value here (could be empty as well)
-        prefEditor.commit(); // finally save changes
-    }
-
 
     /**
      * Constructs and register this pull controller to the event bus
      */
-    PushController(){
+    PushController() {
     }
 
-    private void register(){
+    /**
+     * Singleton constructor
+     */
+    public static PushController getInstance() {
+        if (instance == null) {
+            instance = new PushController();
+        }
+        return instance;
+    }
+
+    public boolean isPushInProgress() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                PreferencesState.getInstance().getContext());
+        return sharedPreferences.getBoolean(
+                PreferencesState.getInstance().getContext().getString(R.string.is_pushing_key),
+                false);
+    }
+
+    public void setPushInProgress(boolean pushInProgress) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(
+                PreferencesState.getInstance().getContext());
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(PreferencesState.getInstance().getContext().getResources().getString(
+                R.string.is_pushing_key),
+                pushInProgress); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+
+    private void register() {
         Dhis2Application.bus.register(this);
     }
 
     /**
      * Unregister pull controller from bus events
      */
-    private void unregister(){
+    private void unregister() {
         Dhis2Application.bus.unregister(this);
     }
 
     /**
-     * Singleton constructor
-     * @return
-     */
-    public static PushController getInstance(){
-        if(instance==null){
-            instance=new PushController();
-        }
-        return instance;
-    }
-
-    /**
      * Launches the push process
-     * @param ctx
      */
-    public void push(Context ctx,List<Survey> surveys){
+    public void push(Context ctx, List<Survey> surveys) {
         Log.d(TAG, "Starting PUSH process...");
-        context=ctx;
+        context = ctx;
 
         //No survey no push
-        if(surveys==null || surveys.size()==0){
+        if (surveys == null || surveys.size() == 0) {
             PushController.getInstance().setPushInProgress(false);
             postException(new Exception(context.getString(R.string.progress_push_no_survey)));
             return;
@@ -124,9 +124,9 @@ public class PushController {
 
         Log.d("DpBlank", "Sets of Surveys to push");
 
-        for (Survey srv : surveys){
+        for (Survey srv : surveys) {
             Log.d("DpBlank", "Survey to push " + srv.toString());
-            for (Value dv : srv.getValues()){
+            for (Value dv : srv.getValues()) {
                 Log.d("DpBlank", "Values to push " + dv.toString());
             }
         }
@@ -145,7 +145,7 @@ public class PushController {
 
             convertToSDK(surveys);
 
-            for(Survey survey:surveys){
+            for (Survey survey : surveys) {
                 survey.setStatus(Constants.SURVEY_SENDING);
                 survey.save();
             }
@@ -155,9 +155,9 @@ public class PushController {
             Log.d(TAG, "Pushing survey data to server...");
             DhisService.sendEventChanges();
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-            Log.e(TAG,"push: "+ex.getLocalizedMessage());
+            Log.e(TAG, "push: " + ex.getLocalizedMessage());
             unregister();
             postException(ex);
             PushController.getInstance().setPushInProgress(false);
@@ -165,22 +165,25 @@ public class PushController {
     }
 
     @Subscribe
-    public void onSendDataFinished(final NetworkJob.NetworkJobResult<Map<Long,ImportSummary>> result) {
-        new Thread(){
+    public void onSendDataFinished(
+            final NetworkJob.NetworkJobResult<Map<Long, ImportSummary>> result) {
+        new Thread() {
             @Override
-            public void run(){
+            public void run() {
                 try {
                     if (result == null) {
                         Log.e(TAG, "onSendDataFinished with null");
                         return;
                     }
 
-                    if(result!=null && result.getResourceType() != null && result.getResourceType().equals(ResourceType.USERS)) {
+                    if (result != null && result.getResourceType() != null
+                            && result.getResourceType().equals(ResourceType.USERS)) {
                         Log.e(TAG, "onSendDataFinished wrong subscribe(login)");
                         return;
                     }
                     //Error while pulling
-                    if (result.getResponseHolder() != null && result.getResponseHolder().getApiException() != null) {
+                    if (result.getResponseHolder() != null
+                            && result.getResponseHolder().getApiException() != null) {
                         Log.e(TAG, result.getResponseHolder().getApiException().getMessage());
                         postException(new Exception(context.getString(R.string.dialog_pull_error)));
                         PushController.getInstance().setPushInProgress(false);
@@ -196,10 +199,10 @@ public class PushController {
 
                     Log.d(TAG, "PUSH process...OK");
 
-                }catch (Exception ex){
-                    Log.e(TAG,"onSendDataFinished: "+ex.getLocalizedMessage());
+                } catch (Exception ex) {
+                    Log.e(TAG, "onSendDataFinished: " + ex.getLocalizedMessage());
                     postException(ex);
-                }finally {
+                } finally {
                     postFinish();
                     unregister();
                     PushController.getInstance().setPushInProgress(false);
@@ -211,34 +214,34 @@ public class PushController {
     /**
      * Launches visitor that turns an APP survey into a SDK event
      */
-    private void convertToSDK(List<Survey> surveys)throws  Exception{
-        Log.d(TAG,"Converting APP survey into a SDK event");
-        converter =new ConvertToSDKVisitor(context);
-        for(Survey survey:surveys){
-            Log.d(TAG,"Status of survey to be push is = "+survey.getStatus());
+    private void convertToSDK(List<Survey> surveys) throws Exception {
+        Log.d(TAG, "Converting APP survey into a SDK event");
+        converter = new ConvertToSDKVisitor(context);
+        for (Survey survey : surveys) {
+            Log.d(TAG, "Status of survey to be push is = " + survey.getStatus());
             survey.accept(converter);
         }
     }
 
     /**
      * Gets full importSummary for every Event that has been pushed to the server
-     * @param result
-     * @return
      */
-    private Map<Long,ImportSummary> getImportSummaryMap(NetworkJob.NetworkJobResult<Map<Long,ImportSummary>> result){
-        Map<Long,ImportSummary> emptyImportSummaryMap=new HashMap<>();
+    private Map<Long, ImportSummary> getImportSummaryMap(
+            NetworkJob.NetworkJobResult<Map<Long, ImportSummary>> result) {
+        Map<Long, ImportSummary> emptyImportSummaryMap = new HashMap<>();
         //No result -> no details
-        if(result==null){
+        if (result == null) {
             return emptyImportSummaryMap;
         }
 
         //General exception -> no details
-        if (result.getResponseHolder() != null && result.getResponseHolder().getApiException() != null) {
+        if (result.getResponseHolder() != null
+                && result.getResponseHolder().getApiException() != null) {
             return emptyImportSummaryMap;
         }
 
-        ResponseHolder<Map<Long,ImportSummary>> responseHolder=result.getResponseHolder();
-        if(responseHolder==null || responseHolder.getItem()==null){
+        ResponseHolder<Map<Long, ImportSummary>> responseHolder = result.getResponseHolder();
+        if (responseHolder == null || responseHolder.getItem() == null) {
             return emptyImportSummaryMap;
         }
 
@@ -247,17 +250,15 @@ public class PushController {
 
     /**
      * Notifies a progress into the bus (the caller activity will be listening)
-     * @param msg
      */
-    private void postProgress(String msg){
+    private void postProgress(String msg) {
         Dhis2Application.getEventBus().post(new SyncProgressStatus(msg));
     }
 
     /**
      * Notifies an exception while pulling
-     * @param ex
      */
-    private void postException(Exception ex){
+    private void postException(Exception ex) {
         ex.printStackTrace();
         Dhis2Application.getEventBus().post(new SyncProgressStatus(ex));
     }
@@ -265,12 +266,11 @@ public class PushController {
     /**
      * Notifies that the pull is over
      */
-    private void postFinish(){
+    private void postFinish() {
         try {
-            Log.i(TAG,"postFinish");
+            Log.i(TAG, "postFinish");
             Dhis2Application.getEventBus().post(new SyncProgressStatus());
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -72,67 +72,32 @@ public class TabGroup extends BaseModel {
         setProgram(program);
     }
 
-    public Long getId_tab_group() {
-        return id_tab_group;
-    }
 
     public void setId_tab_group(Long id_tab_group) {
         this.id_tab_group = id_tab_group;
     }
 
-    public String getName() {
-        return name;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setProgram(Long id_program){
-        this.id_program=id_program;
-        this.program=null;
+    public void setProgram(Long id_program) {
+        this.id_program = id_program;
+        this.program = null;
     }
+
+
     public void setProgram(Program program) {
         this.program = program;
-        this.id_program=(program!=null)?program.getId_program():null;
+        this.id_program = (program != null) ? program.getId_program() : null;
     }
 
-    public Program getProgram() {
-        if(program==null){
-            if (id_program == null) return null;
-            program= new Select()
-                    .from(Program.class)
-                    .where(Condition.column(Program$Table.ID_PROGRAM)
-                            .is(id_program)).querySingle();
-        }
-        return program;
-    }
-
-
-    public String getUid() {
-        return uid;
-    }
 
     public void setUid(String uid) {
         this.uid = uid;
     }
 
-    public List<Tab> getTabs(){
-        if (tabs==null){
-            tabs=new Select().from(Tab.class)
-                    .where(Condition.column(Tab$Table.ID_TAB_GROUP).eq(this.getId_tab_group()))
-                    .orderBy(Tab$Table.ORDER_POS).queryList();
-        }
-        return tabs;
-    }
-
-    public List<Survey> getSurveys(){
-        if(surveys==null){
-            this.surveys = new Select().from(Survey.class)
-                    .where(Condition.column(Survey$Table.ID_TAB_GROUP).eq(this.getId_tab_group())).queryList();
-        }
-        return this.surveys;
-    }
 
 
     @Override
@@ -144,8 +109,10 @@ public class TabGroup extends BaseModel {
 
         if (id_tab_group != tabGroup.id_tab_group) return false;
         if (name != null ? !name.equals(tabGroup.name) : tabGroup.name != null) return false;
-        if (id_program != null ? !id_program.equals(tabGroup.id_program) : tabGroup.id_program != null)
+        if (id_program != null ? !id_program.equals(tabGroup.id_program)
+                : tabGroup.id_program != null) {
             return false;
+        }
         return !(uid != null ? !uid.equals(tabGroup.uid) : tabGroup.uid != null);
 
     }

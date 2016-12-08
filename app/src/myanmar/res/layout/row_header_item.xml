@@ -3,38 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <include layout="@layout/bottom_view"></include>
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="left"
         android:layout_gravity="left"
         android:layout_margin="@dimen/input_edit_text_margin"
+        android:gravity="left"
+        android:orientation="horizontal"
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:paddingRight="@dimen/input_edit_text_right_padding">
+
+        <include layout="@layout/bottom_view"></include>
+
         <org.eyeseetea.malariacare.views.TextCard
+            android:id="@+id/row_header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="left"
             android:background="@color/transparent"
             android:gravity="left"
-            android:layout_gravity="left"
             android:textColor="@color/dark_violet"
-            android:id="@+id/row_header_text"
             android:textSize="@dimen/input_number_edit_text_phone"
             app:tDimension="@string/font_size_level2"
-            app:tFontName="@string/condensed_font_name"
-            />
+            app:tFontName="@string/condensed_font_name" />
 
         <ImageView
+            android:id="@+id/row_header_compulsory"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_toRightOf="@+id/row_header_text"
-            android:id="@+id/row_header_compulsory"
-            android:visibility="visible"
             android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             android:src="@drawable/compulsory"
-            android:scaleType="fitCenter" />
+            android:visibility="visible" />
 
     </LinearLayout>
 </merge>

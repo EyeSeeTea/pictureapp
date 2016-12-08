@@ -196,8 +196,8 @@ public class Question extends BaseModel {
     /**
      * Returns all the questions that belongs to a program
      */
-    public static List<Question> listByTabGroup(TabGroup tabGroup) {
-        if (tabGroup == null || tabGroup.getId_tab_group() == null) {
+    public static List<Question> listByProgram(Program program) {
+        if (program == null || program.getId_program() == null) {
             return new ArrayList();
         }
 
@@ -213,12 +213,12 @@ public class Question extends BaseModel {
                 .join(Tab.class, Join.JoinType.LEFT).as("t")
                 .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
                         .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
-                .join(TabGroup.class, Join.JoinType.LEFT).as("tg")
-                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB_GROUP))
-                        .eq(ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP)))
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
                 .where(Condition.column(
-                        ColumnAlias.columnWithTable("tg", TabGroup$Table.ID_TAB_GROUP))
-                        .eq(tabGroup.getId_tab_group()))
+                        ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM))
+                        .eq(program.getId_program()))
                 .orderBy(Tab$Table.ORDER_POS)
                 .orderBy(Question$Table.ORDER_POS).queryList();
 
@@ -412,13 +412,12 @@ public class Question extends BaseModel {
         return form_name;
     }
 
-    public String getInternationalizedForm_name() {
-        return Utils.getInternationalizedString(form_name);
-    }
-
-
     public void setForm_name(String form_name) {
         this.form_name = form_name;
+    }
+
+    public String getInternationalizedForm_name() {
+        return Utils.getInternationalizedString(form_name);
     }
 
     public String getUid() {
@@ -473,12 +472,12 @@ public class Question extends BaseModel {
         return path;
     }
 
-    public String getInternationalizedPath() {
-        return Utils.getInternationalizedString(path);
-    }
-
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getInternationalizedPath() {
+        return Utils.getInternationalizedString(path);
     }
 
     public Header getHeader() {
@@ -492,14 +491,14 @@ public class Question extends BaseModel {
         return header;
     }
 
-    public void setHeader(Long id_header) {
-        this.id_header = id_header;
-        this.header = null;
-    }
-
     public void setHeader(Header header) {
         this.header = header;
         this.id_header = (header != null) ? header.getId_header() : null;
+    }
+
+    public void setHeader(Long id_header) {
+        this.id_header = id_header;
+        this.header = null;
     }
 
     public Integer getOutput() {
@@ -537,14 +536,14 @@ public class Question extends BaseModel {
         return answer;
     }
 
-    public void setAnswer(Long id_answer) {
-        this.id_answer = id_answer;
-        this.answer = null;
-    }
-
     public void setAnswer(Answer answer) {
         this.answer = answer;
         this.id_answer = (answer != null) ? answer.getId_answer() : null;
+    }
+
+    public void setAnswer(Long id_answer) {
+        this.id_answer = id_answer;
+        this.answer = null;
     }
 
     //Is necessary use the question relations.
@@ -559,15 +558,15 @@ public class Question extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Long id_parent) {
-        this.id_parent = id_parent;
-        this.question = null;
-    }
-
     @Deprecated
     public void setQuestion(Question question) {
         this.question = question;
         this.id_parent = (question != null) ? question.getId_question() : null;
+    }
+
+    public void setQuestion(Long id_parent) {
+        this.id_parent = id_parent;
+        this.question = null;
     }
 
     public CompositeScore getCompositeScore() {
@@ -581,15 +580,15 @@ public class Question extends BaseModel {
         return compositeScore;
     }
 
-    public void setCompositeScore(Long id_composite_score) {
-        this.id_composite_score = id_composite_score;
-        this.compositeScore = null;
-    }
-
     public void setCompositeScore(CompositeScore compositeScore) {
         this.compositeScore = compositeScore;
         this.id_composite_score =
                 (compositeScore != null) ? compositeScore.getId_composite_score() : null;
+    }
+
+    public void setCompositeScore(Long id_composite_score) {
+        this.id_composite_score = id_composite_score;
+        this.compositeScore = null;
     }
 
     public List<QuestionRelation> getQuestionRelations() {
@@ -931,6 +930,9 @@ public class Question extends BaseModel {
      * Checks if this question is shown according to the values of the given survey
      */
     public boolean isHiddenBySurveyAndHeader(Survey survey) {
+        if (survey == null) {
+            return false;
+        }
         //No question relations
         if (!hasParentInSameHeader()) {
             return false;
@@ -1048,7 +1050,8 @@ public class Question extends BaseModel {
      * Returns if a question should have the image header visible or not.
      */
     public boolean hasVisibleHeaderQuestion() {
-        return output != Constants.SWITCH_BUTTON && output != Constants.QUESTION_LABEL;
+        return output != Constants.SWITCH_BUTTON && output != Constants.QUESTION_LABEL
+                && output != Constants.RADIO_GROUP_HORIZONTAL;
     }
 
     /**
@@ -1121,6 +1124,10 @@ public class Question extends BaseModel {
                 output == Constants.DROPDOWN_LIST_DISABLED ||
                 output == Constants.RADIO_GROUP_HORIZONTAL ||
                 output == Constants.RADIO_GROUP_VERTICAL;
+    }
+
+    public boolean hasAssociatedImage() {
+        return (getPath() != null && !getPath().equals(""));
     }
 
     /**

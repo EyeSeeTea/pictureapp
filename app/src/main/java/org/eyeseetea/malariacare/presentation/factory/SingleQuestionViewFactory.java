@@ -24,6 +24,8 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
                 return new PhoneSingleQuestionView(context);
             case Constants.POSITIVE_INT:
                 return new PositiveNumberSingleQuestionView(context);
+            case Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT:
+                return new ImageRadioButtonSingleQuestionView(context);
             case Constants.IMAGE_RADIO_GROUP:
                 return new ImageRadioButtonSingleQuestionView(context);
         }

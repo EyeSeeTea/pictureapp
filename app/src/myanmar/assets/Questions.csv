@@ -9,7 +9,7 @@
 9;'Code: Does fever';'';'symptoms_fever_text';'symptoms_fever';'9VV1JoHmO94';9;0;0;3;9;0;8;8;0;'question_images/p4_fever.png'
 10;'Code: Did seek';'';'symptoms_care_sought_text';'symptoms_care_sought';'10V1JoHmO94';10;0;0;3;10;0;8;8;0;'question_images/p4_seek.png'
 11;'Code: Severe symptoms';'';'symptoms_severity_text';'symptoms_severity';'11V1JoHmO94';11;0;0;3;11;0;8;8;0;'question_images/p4_severe.png'
-12;'Code: RDT';'';'';'rdt_test_result';'12V1JoHmO94';12;0;0;4;12;0;14;8;1;
+12;'Code: RDT';'';'';'rdt_test_result';'12V1JoHmO94';12;0;0;4;12;0;25;8;1;
 13;'Code: RDT NEGATIVE';'';'';'negative_test';'13V1JoHmO94';13;0;0;5;13;0;18;8;0;'question_images/p5_negative.png'
 14;'ConfirmInvalid';'';'';'ConfirmInvalid';'15V1JoHmO94';12;0;0;6;14;0;16;8;0;'question_images/p5_negative.png'
 15;'Code: Treat';'';'';'Treatment';'16V1JoHmO94';2;0;0;7;15;0;14;8;0;

@@ -1,16 +1,21 @@
 package org.eyeseetea.malariacare.views.question.singlequestion;
 
+import static android.R.attr.value;
+
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -21,7 +26,7 @@ import java.util.List;
 
 public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView implements
         IQuestionView, ImageRadioButtonOption.OnCheckedChangeListener {
-    Question question;
+    Question mQuestion;
 
     LinearLayout answersContainer;
 
@@ -29,6 +34,21 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
         super(context);
 
         init(context);
+    }
+
+    public ImageRadioButtonOption getSelectedOptionView(){
+
+        ImageRadioButtonOption selectedOptionView = null;
+
+        for (int i = 0; i < answersContainer.getChildCount(); i++) {
+            ImageRadioButtonOption imageRadioButtonOption = (ImageRadioButtonOption) answersContainer.getChildAt(i);
+
+            if (imageRadioButtonOption.isChecked()) {
+                selectedOptionView = imageRadioButtonOption;
+            }
+        }
+
+        return selectedOptionView;
     }
 
     @Override
@@ -46,13 +66,13 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
         imageRadioButtonOption.setText(option.getInternationalizedCode());
         putImageInImageRadioButton(option.getInternationalizedPath(), imageRadioButtonOption);
         imageRadioButtonOption.setOnCheckedChangeListener(this);
-        imageRadioButtonOption.setOption(option);
+        imageRadioButtonOption.setOption(option,mQuestion );
         return imageRadioButtonOption;
     }
 
     @Override
     public void setQuestion(Question question) {
-        this.question = question;
+        this.mQuestion = question;
     }
 
     @Override
@@ -108,6 +128,6 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
                 optionView.setChecked(false);
         }
 
-        notifyAnswerChanged(imageRadioButton.getOption());
+        //notifyAnswerChanged(imageRadioButton.getOption());
     }
 }

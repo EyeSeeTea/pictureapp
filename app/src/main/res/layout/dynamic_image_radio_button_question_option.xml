@@ -17,34 +17,45 @@
         android:gravity="center"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:minHeight="50dp"
-        android:background="@color/myanmar_grey">
-
-
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
 
         <ImageView
             android:id="@+id/radio_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.4"/>
+            android:layout_weight="0.5"
+            android:layout_marginRight="8dp"/>
 
         <org.eyeseetea.malariacare.views.CustomRadioButton
             android:id="@+id/radio_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.6"
-            android:button="@null"
-            android:background="@drawable/rounded_background"
-            android:drawableRight="@drawable/rounded_radio_button"
-            android:gravity="left"
+            android:layout_weight="0.5"
             android:paddingLeft="25dp"
             android:paddingRight="4dp"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
+            android:button="@null"
+            android:background="@drawable/rounded_background"
+            android:drawableRight="@drawable/rounded_radio_button"
+            android:gravity="left"
+
             android:textSize="@dimen/radio_button_option"
             app:tDimension="@string/font_size_level2"
             app:tFontName="@string/specific_language_font"/>
     </LinearLayout>
+
+    <org.eyeseetea.malariacare.views.TextCard
+        android:id="@+id/counter1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dip"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:layout_marginLeft="16dp"
+        android:lines="1"
+        android:visibility="gone"
+        app:tDimension="@string/font_size_level1"
+        app:tFontName="@string/specific_language_font" />
 </LinearLayout>

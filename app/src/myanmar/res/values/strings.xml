@@ -17,7 +17,7 @@
     <string name="patient_sex_pregnancy">Patient Sex / Pregnancy</string>
     <string name="patient_sex_male">Male</string>
     <string name="patient_sex_female">Female</string>
-    <string name="patient_sex_female_pregnant">Female / pregnant</string>
+    <string name="patient_sex_female_pregnant">Pregnant</string>
     <string name="symptoms_title">Check-up and Symptoms</string>
     <string name="symptoms_fever">Fever?</string>
     <string name="symptoms_fever_text">Measured through thermometer or feeling the body.</string>

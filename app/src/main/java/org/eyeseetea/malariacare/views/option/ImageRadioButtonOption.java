@@ -1,18 +1,25 @@
 package org.eyeseetea.malariacare.views.option;
 
+import static org.eyeseetea.malariacare.R.id.question;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
+import org.eyeseetea.malariacare.views.TextCard;
 
 public class ImageRadioButtonOption extends LinearLayout {
-    Option option;
+    Option mOption;
 
     public interface OnCheckedChangeListener {
         void onCheckedChanged(ImageRadioButtonOption imageRadioButton, boolean value);
@@ -22,6 +29,7 @@ public class ImageRadioButtonOption extends LinearLayout {
 
     ImageView mImageView;
     RadioButton mRadioButton;
+    TextCard mCounter;
 
     public ImageRadioButtonOption(Context context) {
         super(context);
@@ -36,11 +44,13 @@ public class ImageRadioButtonOption extends LinearLayout {
     }
 
     public Option getOption() {
-        return option;
+        return mOption;
     }
 
-    public void setOption(Option option) {
-        this.option = option;
+    public void setOption(Option option, Question question) {
+        this.mOption = option;
+
+        setCounter(question);
     }
 
     public void setImageDrawable(Drawable drawable) {
@@ -63,12 +73,31 @@ public class ImageRadioButtonOption extends LinearLayout {
         mOnCheckedChangeListener = onCheckedChangeListener;
     }
 
+    public void setCounter(Question question){
+
+        Question optionCounter = question.findCounterByOption(mOption);
+
+        if (optionCounter == null) {
+            return;
+        }
+
+        String counterValue = ReadWriteDB.readValueQuestion(optionCounter);
+        if (counterValue == null || counterValue.isEmpty()) {
+            return;
+        }
+
+        String counterTextValue = getContext().getResources().getString(R.string.option_counter);
+
+        mCounter.setText(counterTextValue + counterValue);
+        mCounter.setVisibility(View.VISIBLE);
+    }
+
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_image_radio_button_question_option, this);
 
         mImageView = (ImageView) findViewById(R.id.radio_image);
-
         mRadioButton = (RadioButton) findViewById(R.id.radio_button);
+        mCounter = (TextCard) findViewById(R.id.counter1);
 
         mRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

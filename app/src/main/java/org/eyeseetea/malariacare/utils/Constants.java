@@ -30,7 +30,8 @@ public class Constants {
             HIDDEN = 21,
             SWITCH_BUTTON = 22,
             QUESTION_LABEL = 23,
-            IMAGE_RADIO_GROUP = 24;
+            IMAGE_RADIO_GROUP_NO_DATAELEMENT = 24,
+            IMAGE_RADIO_GROUP = 25;
 
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
@@ -44,7 +45,9 @@ public class Constants {
             IMAGES_4,
             IMAGES_5,
             IMAGES_6,
-            IMAGE_3_NO_DATAELEMENT);
+            IMAGE_3_NO_DATAELEMENT,
+            IMAGE_RADIO_GROUP_NO_DATAELEMENT,
+            IMAGE_RADIO_GROUP);
 
 
     public static final String DEFAULT_SELECT_OPTION = "";

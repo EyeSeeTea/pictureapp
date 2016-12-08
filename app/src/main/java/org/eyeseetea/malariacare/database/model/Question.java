@@ -1288,6 +1288,15 @@ public class Question extends BaseModel {
         return parents.get(0);
     }
 
+
+    public boolean isAnswered() {
+        if (this.getValueBySession() == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

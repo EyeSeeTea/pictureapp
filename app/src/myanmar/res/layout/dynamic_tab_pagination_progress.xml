@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dynamicProgressBarColor"
-    android:gravity="center"
     android:orientation="horizontal"
     android:paddingBottom="1dp"
     android:paddingLeft="30dp"

@@ -772,9 +772,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     showOrHideChildren(screenQuestion);
                     break;
             }
+            setBottonDivisor(tabType, screenQuestions, screenQuestion);
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    private void setBottonDivisor(int tabType, List<Question> screenQuestions,
+            Question screenQuestion) {
+        if (isMultipleQuestionTab(tabType) && screenQuestion.equals(
+                screenQuestions.get(screenQuestions.size() - 1))) {
+            LinearLayout view = (LinearLayout) lInflater.inflate(R.layout.bottom_screen_view,
+                    tableLayout, false);
+            tableLayout.addView(view);
+        }
     }
 
     private void adaptLayoutToTextOnly(TextCard textCard, ImageView rowImageLabelView) {

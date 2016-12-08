@@ -1,8 +1,10 @@
-package org.eyeseetea.malariacare.layout.adapters.dashboard.strategies;
+package org.eyeseetea.malariacare.domain.usecase;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.IHeaderCaseUse;
 
 /**
  * Created by idelcano on 05/12/2016.

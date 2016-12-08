@@ -309,8 +309,10 @@ public class DashboardActivity extends BaseActivity {
         if (surveyFragment == null) {
             surveyFragment = new SurveyFragment();
         }
-        replaceFragment(R.id.dashboard_details_container, surveyFragment);
         surveyFragment.reloadHeader(dashboardActivity);
+        replaceFragment(R.id.dashboard_details_container, surveyFragment);
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+        LayoutUtils.setSurveyActionBar(actionBar);
     }
 
     /**
@@ -483,6 +485,8 @@ public class DashboardActivity extends BaseActivity {
      * After that, loads the Assess fragment(DashboardUnSentFragment) in the Assess tab.
      */
     public void closeSurveyFragment() {
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+        LayoutUtils.setDashboardActionBar(actionBar);
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         isLoadingReview = false;
         ScoreRegister.clear();

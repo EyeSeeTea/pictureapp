@@ -39,10 +39,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -526,7 +526,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         swipeTouchListener.clearClickableViews();
         navigationButtonHolder = rowView.findViewById(R.id.snackbar);
         if (GradleVariantConfig.isButtonNavigationActive()) {
-            createNavigationButtonsBackButton(navigationButtonHolder);
+            createNavigationButtonsBackButton(navigationButtonHolder, questionItem);
         }
         Log.d(TAG, "Questions in actual tab: " + screenQuestions.size());
         for (Question screenQuestion : screenQuestions) {
@@ -777,11 +777,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         R.id.row_header_compulsory));
                 rowCompulsoryView.setVisibility(View.VISIBLE);
             }
-
-
+            setBottonDivisor(tabType, screenQuestions, screenQuestion);
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    private void setBottonDivisor(int tabType, List<Question> screenQuestions,
+            Question screenQuestion) {
+        if (isMultipleQuestionTab(tabType) && screenQuestion.equals(
+                screenQuestions.get(screenQuestions.size() - 1))) {
+            LinearLayout view = (LinearLayout) lInflater.inflate(R.layout.bottom_screen_view,
+                    tableLayout, false);
+            tableLayout.addView(view);
+        }
     }
 
     private void adaptLayoutToTextOnly(TextCard textCard, ImageView rowImageLabelView) {
@@ -841,10 +850,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     /**
      * Create a buttons for navigate.
      */
-    private View createNavigationButtonsBackButton(View navigationButtonsHolder) {
-        Button button = (Button) navigationButtonsHolder.findViewById(R.id.next_btn);
+    private View createNavigationButtonsBackButton(View navigationButtonsHolder,
+            Question questionItem) {
+        ImageButton button = (ImageButton) navigationButtonsHolder.findViewById(R.id.next_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
-        button.setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) button.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean questionsWithError = false;
@@ -862,9 +872,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
             }
         });
-        button = (Button) navigationButtonsHolder.findViewById(R.id.back_btn);
+        button = (ImageButton) navigationButtonsHolder.findViewById(R.id.back_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
-        button.setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) button.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 previous();

@@ -3,23 +3,26 @@
     <color name="questionHeaderColor">@color/light_violet</color>
     <color name="questionHeaderTextColor">@color/dark_violet</color>
     <color name="questionLayoutBackground">@color/myanmar_grey</color>
-    <color name="dynamicProgressBarColor">@color/light_grey_violet</color>
+    <color name="dynamicProgressBarColor">@color/myanmar_orange</color>
     <color name="text_first_color">@color/dark_violet</color>
     <color name="text_second_color">@color/white</color>
-    <color name="actionbar_background">@color/light_grey_violet</color>
+    <color name="actionbar_background">@color/medium_light_violet</color>
+    <color name="second_actionbar_background">@color/myanmar_orange</color>
     <color name="general_background">@color/light_violet</color>
-    <color name="tab_pressed_background">@color/light_violet</color>
-    <color name="tab_unpressed_background">#4d3b4c</color>
+    <color name="tab_pressed_background">@color/myanmar_orange</color>
+    <color name="tab_unpressed_background">@color/dark_violet</color>
 
-    <color name="main_window_background">@color/light_violet</color>
-    <color name="headerColor">@color/light_violet</color>
+    <color name="main_window_background">@color/myanmar_orange</color>
+    <color name="headerColor">@color/myanmar_orange</color>
+    <color name="rowBackgroundColor">@color/myanmar_orange</color>
     <color name="fragment_header_title">@color/text_first_color</color>
-    <color name="fragment_header_subtitle">@color/white</color>medium_light_violet
+    <color name="fragment_header_subtitle">@color/white</color>
     <color name="question_header_title">@color/text_first_color</color>
     <color name="question_header_subtitle">@color/medium_light_violet</color>
     <color name="hint">@color/medium_violet</color>
     <color name="intColor">@color/dark_violet</color>
+    <color name="spinner_color">@color/dark_violet</color>
 
-    <color name="pageIndicator_completed">#4D3B4C</color>
-    <color name="pageIndicator_pending">#C9B8C8</color>
+    <color name="pageIndicator_completed">@color/dark_violet</color>
+    <color name="pageIndicator_pending">@color/light_violet</color>
 </resources>

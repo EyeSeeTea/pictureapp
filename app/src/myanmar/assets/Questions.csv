@@ -1,6 +1,6 @@
 1;'Code: PN';'';'';'Patient Name';'1XX1JoHmO94';1;0;0;1;1;0;4;4;1;'';1
 2;'Code: PA';'';'';'Patient Age';'2XX1JoHmO94';2;0;0;1;2;0;6;4;1;'';1
-3;'Code: PP';'';'';'Patient Phone';'3ZZ1JoHmO94';3;0;0;1;3;0;13;4;0;'';1
+3;'Code: PP';'';'';'Patient Phone';'3ZZ1JoHmO94';3;0;0;1;3;0;13;4;0;'';0
 4;'Code: PR';'';'';'Patient Residence Village';'4YY1JoHmO94';4;0;0;1;4;0;19;4;0;'';1
 5;'Code: PO';'';'';'If other, enter location';'5VV1JoHmO94';5;0;0;1;5;0;4;4;0;'';0
 6;'Code: QS';'';'';'Patient Sex';'6VV1JoHmO94';6;0;0;2;6;0;20;4;0;'';0

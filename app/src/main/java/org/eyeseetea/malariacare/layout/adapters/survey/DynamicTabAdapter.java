@@ -666,8 +666,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             tableLayout, false);
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initIntValue(tableRow, value, tabType);
-                    tableRow.setVisibility(visibility);
-                    tableLayout.addView(tableRow);
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
                 case Constants.LONG_TEXT:
                     tableRow = (TableRow) lInflater.inflate(
@@ -676,8 +675,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             screenQuestion.getForm_name());
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initLongTextValue(tableRow, value, tabType);
-                    tableRow.setVisibility(visibility);
-                    tableLayout.addView(tableRow);
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
                 case Constants.SHORT_TEXT:
                 case Constants.PHONE:
@@ -714,9 +712,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     tableRow.addView((View) questionView);
 
-                    tableRow.setVisibility(visibility);
-
-                    tableLayout.addView(tableRow);
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
                 case Constants.QUESTION_LABEL:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_label_row,
@@ -734,8 +730,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
                             screenQuestion.getForm_name());
-                    tableRow.setVisibility(visibility);
-                    tableLayout.addView(tableRow);
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
                 case Constants.DROPDOWN_LIST:
                 case Constants.DROPDOWN_OU_LIST:
@@ -746,8 +741,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     tableRow = populateSpinnerFromOptions(tableRow, screenQuestion);
                     initDropdownValue(tableRow, value);
-                    tableRow.setVisibility(visibility);
-                    tableLayout.addView(tableRow);
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
                 case Constants.SWITCH_BUTTON:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row,
@@ -767,20 +761,31 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     Switch switchView = (Switch) tableRow.findViewById(R.id.answer);
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initSwitchOption(screenQuestion, switchView);
-                    tableRow.setVisibility(visibility);
-                    tableLayout.addView(tableRow);
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     showOrHideChildren(screenQuestion);
                     break;
-            }
-            if (screenQuestion.getCompulsory() != null && screenQuestion.getCompulsory() == 0) {
-                ImageView rowCompulsoryView = ((ImageView) tableRow.findViewById(
-                        R.id.row_header_compulsory));
-                rowCompulsoryView.setVisibility(View.VISIBLE);
             }
             setBottonDivisor(tabType, screenQuestions, screenQuestion);
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    private void setVisibilityAndAddRow(TableRow tableRow, Question screenQuestion,
+            int visibility) {
+        tableRow.setVisibility(visibility);
+        showCompulsory(tableRow, screenQuestion);
+        tableLayout.addView(tableRow);
+    }
+
+    private void showCompulsory(TableRow tableRow, Question screenQuestion) {
+        if (screenQuestion.isCompulsory()) {
+            ImageView rowCompulsoryView = ((ImageView) tableRow.findViewById(
+                    R.id.row_header_compulsory));
+            if (rowCompulsoryView != null) {
+                rowCompulsoryView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void setBottonDivisor(int tabType, List<Question> screenQuestions,

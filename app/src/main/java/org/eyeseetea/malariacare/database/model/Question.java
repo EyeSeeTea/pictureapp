@@ -48,6 +48,7 @@ import java.util.List;
 @Table(databaseName = AppDatabase.NAME)
 public class Question extends BaseModel {
 
+    private static final String TAG = "Question";
     /**
      * Constant that reflects a visible question in information
      */
@@ -56,7 +57,14 @@ public class Question extends BaseModel {
      * Constant that reflects a not visible question in information
      */
     public static final int QUESTION_INVISIBLE = 0;
-    private static final String TAG = "Question";
+    /**
+     * Constant that reflects a visible question in information
+     */
+    public static final int QUESTION_COMPULSORY = 1;
+    /**
+     * Constant that reflects a not visible question in information
+     */
+    public static final int QUESTION_NO_COMPULSORY = 0;
     /**
      * Required to create a null Question value to enable caching when you're the last question.
      */
@@ -84,8 +92,6 @@ public class Question extends BaseModel {
     String feedback;
     @Column
     Long id_header;
-    @Column
-    Integer compulsory;
     /**
      * Reference to the parent header (loaded lazily)
      */
@@ -112,6 +118,8 @@ public class Question extends BaseModel {
     Integer visible;
     @Column
     String path;
+    @Column
+    Integer compulsory;
     /**
      * Reference to associated compositeScore for this question (loaded lazily)
      */
@@ -460,8 +468,8 @@ public class Question extends BaseModel {
         this.feedback = feedback;
     }
 
-    public Integer getCompulsory() {
-        return compulsory;
+    public Boolean isCompulsory() {
+        return (this.compulsory == QUESTION_COMPULSORY);
     }
 
     public void setCompulsory(Integer compulsory) {
@@ -1341,7 +1349,8 @@ public class Question extends BaseModel {
         if (visible != null ? !visible.equals(question.visible) : question.visible != null) {
             return false;
         }
-        if (compulsory != null ? !compulsory.equals(question.compulsory) : question.compulsory != null) {
+        if (compulsory != null ? !compulsory.equals(question.compulsory)
+                : question.compulsory != null) {
             return false;
         }
         return !(id_composite_score != null ? !id_composite_score.equals(

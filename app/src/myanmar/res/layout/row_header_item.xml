@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <include layout="@layout/bottom_view"></include>
 
@@ -10,21 +8,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:layout_margin="@dimen/input_edit_text_margin"
-        android:gravity="left"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/input_edit_text_left_padding"
-        android:paddingRight="@dimen/input_edit_text_right_padding">
-
-        <include layout="@layout/bottom_view"></include>
+        android:layout_margin="@dimen/input_edit_text_margin">
 
         <org.eyeseetea.malariacare.views.TextCard
             android:id="@+id/row_header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
             android:background="@color/transparent"
             android:gravity="left"
+            android:paddingLeft="@dimen/input_edit_text_left_padding"
+            android:paddingRight="@dimen/input_edit_text_right_padding"
             android:textColor="@color/dark_violet"
             android:textSize="@dimen/input_number_edit_text_phone"
             app:tDimension="@string/font_size_level2"
@@ -38,7 +31,6 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/compulsory"
-            android:visibility="visible" />
-
+            android:visibility="gone" />
     </LinearLayout>
 </merge>

@@ -16,7 +16,7 @@
     <color name="headerColor">@color/myanmar_orange</color>
     <color name="rowBackgroundColor">@color/myanmar_orange</color>
     <color name="fragment_header_title">@color/text_first_color</color>
-    <color name="fragment_header_subtitle">@color/white</color>medium_light_violet
+    <color name="fragment_header_subtitle">@color/white</color>
     <color name="question_header_title">@color/text_first_color</color>
     <color name="question_header_subtitle">@color/medium_light_violet</color>
     <color name="hint">@color/medium_violet</color>

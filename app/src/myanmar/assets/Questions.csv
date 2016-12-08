@@ -3,7 +3,7 @@
 3;'Code: PP';'';'patient_phone_enter_prompt';'patient_phone';'3ZZ1JoHmO94';3;0;0;1;3;0;13;8;0;''
 4;'Code: PR';'';'';'patient_residence_village';'4YY1JoHmO94';4;0;0;1;4;0;19;8;0;''
 5;'Code: PO';'';'patient_residence_village_other';'patient_residence_village_location';'5VV1JoHmO94';5;0;0;1;5;0;4;8;0;''
-6;'Code: QS';'';'';'patient_sex_pregnancy';'6VV1JoHmO94';6;0;0;2;6;0;20;8;0;''
+6;'Code: QS';'';'';'patient_sex_pregnancy';'6VV1JoHmO94';6;0;0;2;6;0;24;8;0;''
 7;'Code: sex';'';'';'SEX';'7VV1JoHmO94';7;0;0;2;7;0;21;8;0;''
 8;'Code: Pregnant';'';'';'Pregnant';'8VV1JoHmO94';8;0;0;2;8;0;21;8;0;''
 9;'Code: Does fever';'';'symptoms_fever_text';'symptoms_fever';'9VV1JoHmO94';9;0;0;3;9;0;8;8;0;'question_images/p4_fever.png'

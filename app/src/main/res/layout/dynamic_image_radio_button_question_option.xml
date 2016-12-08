@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include layout="@layout/bottom_view"></include>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:minHeight="50dp"
+        android:background="@color/myanmar_grey">
+
+
+
+        <ImageView
+            android:id="@+id/radio_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"/>
+
+        <org.eyeseetea.malariacare.views.CustomRadioButton
+            android:id="@+id/radio_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:button="@null"
+            android:background="@drawable/rounded_background"
+            android:drawableRight="@drawable/rounded_radio_button"
+            android:gravity="left"
+            android:paddingLeft="25dp"
+            android:paddingRight="4dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textSize="@dimen/radio_button_option"
+            app:tDimension="@string/font_size_level2"
+            app:tFontName="@string/specific_language_font"/>
+    </LinearLayout>
+</LinearLayout>

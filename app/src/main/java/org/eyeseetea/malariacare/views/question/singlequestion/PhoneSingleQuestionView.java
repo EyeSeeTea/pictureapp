@@ -40,11 +40,6 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
     }
 
     @Override
-    public void setImage(String path) {
-        return;
-    }
-
-    @Override
     public void setValue(Value value) {
         if (value != null) {
             editCard.setText(value.getValue());

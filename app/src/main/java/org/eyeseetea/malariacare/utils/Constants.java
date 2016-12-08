@@ -29,7 +29,8 @@ public class Constants {
             IMAGE_3_NO_DATAELEMENT = 20,
             HIDDEN = 21,
             SWITCH_BUTTON = 22,
-            QUESTION_LABEL = 23;
+            QUESTION_LABEL = 23,
+            IMAGE_RADIO_GROUP = 24;
 
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(

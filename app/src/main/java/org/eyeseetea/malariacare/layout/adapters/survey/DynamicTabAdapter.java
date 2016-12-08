@@ -82,6 +82,7 @@ import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
+import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
@@ -580,7 +581,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
                     break;
                 case Constants.IMAGES_3:
-                case Constants.IMAGE_3_NO_DATAELEMENT:
+                //case Constants.IMAGE_3_NO_DATAELEMENT:
                     List<Option> opts = screenQuestion.getAnswer().getOptions();
                     for (int i = 0; i < opts.size(); i++) {
 
@@ -685,6 +686,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.PHONE:
                 case Constants.POSITIVE_INT:
                 case Constants.RADIO_GROUP_HORIZONTAL:
+                case Constants.IMAGE_RADIO_GROUP:
                     //TODO: swipeTouchListener.addClickableView(button)
 
                     tableRow = new TableRow(context);
@@ -706,7 +708,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
 
                     questionView.setEnabled(!readOnly);
-                    questionView.setImage(screenQuestion.getInternationalizedPath());
+
+                    if (questionView instanceof IImageQuestionView)
+                        ((IImageQuestionView) questionView).setImage(screenQuestion.getInternationalizedPath());
 
                     if (questionView instanceof AOptionQuestionView) {
                         ((AOptionQuestionView) questionView).setQuestion(screenQuestion);

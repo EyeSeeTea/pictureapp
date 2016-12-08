@@ -31,11 +31,6 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
     }
 
     @Override
-    public void setImage(String path) {
-        return;
-    }
-
-    @Override
     public boolean hasError() {
         return editCard.getError() != null;
     }

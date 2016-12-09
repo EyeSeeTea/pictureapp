@@ -756,6 +756,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             R.layout.multi_question_tab_dropdown_row, tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
                             Utils.getInternationalizedString(screenQuestion.getForm_name()));
+
+                    ImageView rowImageView = ((ImageView) tableRow.findViewById(
+                            R.id.question_image_row));
+                    if (screenQuestion.hasAssociatedImage()) {
+                        LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
+                                rowImageView);
+                    } else {
+                        rowImageView.setVisibility(View.GONE);
+                    }
+
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     tableRow = populateSpinnerFromOptions(tableRow, screenQuestion);
                     initDropdownValue(tableRow, value);
@@ -775,7 +785,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
 
                     if (screenQuestion.hasAssociatedImage()) {
-                        ImageView rowImageView = ((ImageView) tableRow.findViewById(
+                        rowImageView = ((ImageView) tableRow.findViewById(
                                 R.id.question_image_row));
                         LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
                                 rowImageView);

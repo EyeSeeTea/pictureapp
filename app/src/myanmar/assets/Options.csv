@@ -8,8 +8,8 @@
 8;'Hidden';'Pregnant';0;8;8
 9;'symptoms_fever_yes';'Yes';0;9;9
 10;'symptoms_fever_no';'No';0;9;10
-11;'symptoms_care_sought_yes';'Yes';0;10;11
-12;'symptoms_care_sought_no';'No';0;10;12
+11;'symptoms_care_sought_within_24h';'Within 24h';0;10;11
+12;'symptoms_care_sought_after_24h';'After 24h';0;10;12
 13;'symptoms_severity_yes';'Yes';0;11;13
 14;'symptoms_severity_no';'No';0;11;14
 15;'rdt_negative';'Negative';0;12;15

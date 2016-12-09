@@ -128,6 +128,9 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
                 optionView.setChecked(false);
         }
 
+        //TODO: Review architecture listeners
+        //This question type not save in database from listeners when is answered because for something
+        //is necessary confirm counter for invalid option
         //notifyAnswerChanged(imageRadioButton.getOption());
     }
 }

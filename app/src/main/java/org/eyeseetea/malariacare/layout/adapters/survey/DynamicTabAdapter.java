@@ -415,9 +415,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         int optionPosition = (option.getCode().equals(matchOption.getCode())) ? MATCH_POSITION
                 : DOESNT_MATCH_POSITION;
 
-        if (option.getQuestionBySession() != null) {
-            ReadWriteDB.deleteValue(option.getQuestionBySession());
-        }
         ReadWriteDB.saveValuesDDL(matchQuestion,
                 matchQuestion.getAnswer().getOptions().get(optionPosition),
                 matchQuestion.getValueBySession());

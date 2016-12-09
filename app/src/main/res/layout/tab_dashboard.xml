@@ -24,6 +24,8 @@
     android:fillViewport="true"
     android:orientation="vertical">
 
+    <include layout="@layout/common_header"></include>
+
     <TabHost
         android:id="@+id/tabHost"
         android:layout_width="fill_parent"

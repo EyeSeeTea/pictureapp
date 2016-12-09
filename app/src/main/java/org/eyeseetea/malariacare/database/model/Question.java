@@ -1416,6 +1416,31 @@ public class Question extends BaseModel {
                 '}';
     }
 
+    public boolean hasCompulsoryNotAnswered() {
+        List<Question> questions = new ArrayList<>();
+        //get all the questions in the same screen page
+        if (getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
+            questions = getQuestionsByTab(getHeader().getTab());
+        } else {
+            questions.add(this);
+        }
+        for (Question question : questions) {
+            if (question.isCompulsory() && !question.isHiddenBySurveyAndHeader(
+                    Session.getSurvey())) {
+                if (isNotAnswered(question)) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isNotAnswered(Question question) {
+        if (question.getValueBySession().getValue() == null
+                || question.getValueBySession().getValue().length() == 0) {
+            return true;
+        }
+        return false;
+    }
+
     private static class QuestionOrderComparator implements Comparator {
 
         @Override

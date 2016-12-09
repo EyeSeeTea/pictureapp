@@ -1312,7 +1312,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * value.
      */
     public void finishOrNext() {
-        if (hasCompulsoryNotAnswered(navigationController.getCurrentQuestion())) {
+        if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
             return;
         }
         final Handler handler = new Handler();
@@ -1335,24 +1335,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 next();
             }
         }, 750);
-    }
-
-    private boolean hasCompulsoryNotAnswered(Question currentQuestion) {
-        List<Question> questions = new ArrayList<>();
-        if (currentQuestion.getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
-            questions = currentQuestion.getQuestionsByTab(currentQuestion.getHeader().getTab());
-        }
-        else{
-            questions.add(currentQuestion);
-        }
-        for (Question question : questions) {
-            if (question.isCompulsory() && !question.isHiddenBySurveyAndHeader(Session.getSurvey())) {
-                if (!question.isAnswered()) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**

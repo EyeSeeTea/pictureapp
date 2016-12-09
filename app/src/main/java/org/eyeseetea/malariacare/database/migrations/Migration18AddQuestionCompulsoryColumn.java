@@ -15,16 +15,16 @@ import org.eyeseetea.malariacare.database.model.Question;
 /**
  * Created by idelcano on 10/06/2016.
  */
-@Migration(version = 16, databaseName = AppDatabase.NAME)
-public class Migration16AddQuestionCompulsoryColumn extends BaseMigration {
+@Migration(version = 18, databaseName = AppDatabase.NAME)
+public class Migration18AddQuestionCompulsoryColumn extends BaseMigration {
 
-    private static String TAG=".Migration16";
+    private static String TAG=".Migration18";
     public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s %s";
 
-    private static Migration16AddQuestionCompulsoryColumn instance;
+    private static Migration18AddQuestionCompulsoryColumn instance;
     private boolean postMigrationRequired;
 
-    public Migration16AddQuestionCompulsoryColumn() {
+    public Migration18AddQuestionCompulsoryColumn() {
         super();
         instance = this;
         postMigrationRequired=false;

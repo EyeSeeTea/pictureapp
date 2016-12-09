@@ -164,15 +164,15 @@ public class DashboardActivity extends BaseActivity {
     public void setTabHostsWithText() {
         Context context = PreferencesState.getInstance().getContext();
         setTab(context.getResources().getString(R.string.tab_tag_assess), R.id.tab_assess_layout,
-                context.getResources().getString(R.string.unsent_button));
+                context.getResources().getString(R.string.unsent_data));
         setTab(context.getResources().getString(R.string.tab_tag_improve), R.id.tab_improve_layout,
-                context.getResources().getString(R.string.sent_button));
+                context.getResources().getString(R.string.sent_data));
         if (GradleVariantConfig.isStockFragmentActive()) {
             setTab(context.getResources().getString(R.string.tab_tag_stock), R.id.tab_stock_layout,
                     context.getResources().getString(R.string.tab_tag_stock));
         }
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
-                context.getResources().getString(R.string.monitor_button));
+                context.getResources().getString(R.string.monitoring_title));
         if (GradleVariantConfig.isStockFragmentActive()) {
             initStock();
         }
@@ -574,23 +574,24 @@ public class DashboardActivity extends BaseActivity {
      */
     public void showDone() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(this)
-                .setTitle(R.string.survey_title_completed)
-                .setMessage(R.string.survey_info_completed)
+                .setTitle(R.string.survey_completed)
+                .setMessage(R.string.survey_completed_text)
                 .setCancelable(false)
-                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         Survey survey = Session.getSurvey();
                         survey.updateSurveyStatus();
                         closeSurveyFragment();
                     }
                 });
-        msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int arg1) {
-                DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
-                        0).getQuestion());
-                hideReview();
-            }
-        });
+        msgConfirmation.setNegativeButton(R.string.survey_review,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
+                                0).getQuestion());
+                        hideReview();
+                    }
+                });
 
         msgConfirmation.create().show();
     }

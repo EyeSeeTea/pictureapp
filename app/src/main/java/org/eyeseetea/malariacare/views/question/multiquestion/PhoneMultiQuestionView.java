@@ -52,6 +52,11 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
         }
     }
 
+    @Override
+    public void setHint(String hintValue) {
+        editCard.setHint(hintValue);
+    }
+
     private void init(final Context context) {
         inflate(context, R.layout.multi_question_tab_phone_row, this);
 

@@ -22,6 +22,7 @@ package org.eyeseetea.malariacare.layout.adapters.survey;
 import static org.eyeseetea.malariacare.R.id.question;
 import static org.eyeseetea.malariacare.database.model.Option.DOESNT_MATCH_POSITION;
 import static org.eyeseetea.malariacare.database.model.Option.MATCH_POSITION;
+import static org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils.putImageInImageView;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -69,13 +70,13 @@ import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
-import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.factory.IQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.MultiQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.SingleQuestionViewFactory;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
@@ -303,7 +304,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Show question image in counter alert
         if (questionCounter.getPath() != null && !questionCounter.getPath().equals("")) {
             ImageView imageView = (ImageView) rootView.findViewById(R.id.questionImageRow);
-            BaseLayoutUtils.putImageInImageView(questionCounter.getInternationalizedPath(),
+            putImageInImageView(questionCounter.getInternationalizedPath(),
                     imageView);
             imageView.setVisibility(View.VISIBLE);
         }
@@ -496,7 +497,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (questionItem.getPath() != null && !questionItem.getPath().equals("")
                 && questionItem.hasVisibleHeaderQuestion()) {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.questionImage);
-            BaseLayoutUtils.putImageInImageView(questionItem.getInternationalizedPath(), imageView);
+            putImageInImageView(questionItem.getInternationalizedPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
         }
 
@@ -673,7 +674,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow = (TableRow) lInflater.inflate(
                             R.layout.multi_question_tab_long_text_row, tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initLongTextValue(tableRow, value, tabType);
                     tableRow.setVisibility(visibility);
@@ -692,9 +693,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     if (questionView instanceof IMultiQuestionView) {
                         mMultiQuestionViews.add((IMultiQuestionView) questionView);
-
                         ((IMultiQuestionView) questionView).setHeader(
-                                screenQuestion.getForm_name());
+                                Utils.getInternationalizedString(screenQuestion.getForm_name()));
+                    }
+
+                    if (questionView instanceof AKeyboardQuestionView) {
+                        ((AKeyboardQuestionView) questionView).setHint(
+                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
                     }
 
                     configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
@@ -725,15 +730,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     ImageView rowImageLabelView = ((ImageView) tableRow.findViewById(
                             R.id.question_image_row));
                     textCard.setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     if (screenQuestion.hasAssociatedImage()) {
                         LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
                                 rowImageLabelView);
                     } else {
-                        adaptLayoutToTextOnly(textCard, rowImageLabelView);
+                        adaptLayoutToTextOnly(tableRow.findViewById(R.id.question_text_container),
+                                rowImageLabelView);
                     }
+
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
+
+                    if (!screenQuestion.getHelp_text().isEmpty()) {
+                        ((TextCard) tableRow.findViewById(R.id.row_help_text)).setText(
+                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
+                    }
+
                     tableRow.setVisibility(visibility);
                     tableLayout.addView(tableRow);
                     break;
@@ -742,7 +755,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow = (TableRow) lInflater.inflate(
                             R.layout.multi_question_tab_dropdown_row, tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     tableRow = populateSpinnerFromOptions(tableRow, screenQuestion);
                     initDropdownValue(tableRow, value);
@@ -752,18 +765,29 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.SWITCH_BUTTON:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row,
                             tableLayout, false);
+
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
+
+                    if (!screenQuestion.getHelp_text().isEmpty()) {
+                        ((TextCard) tableRow.findViewById(R.id.row_help_text)).setText(
+                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
+                    }
+
                     if (screenQuestion.hasAssociatedImage()) {
                         ImageView rowImageView = ((ImageView) tableRow.findViewById(
                                 R.id.question_image_row));
                         LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
                                 rowImageView);
                     }
+
                     ((TextCard) tableRow.findViewById(R.id.row_switch_true)).setText(
-                            screenQuestion.getAnswer().getOptions().get(0).getCode());
+                            Utils.getInternationalizedString(
+                                    screenQuestion.getAnswer().getOptions().get(0).getCode()));
                     ((TextCard) tableRow.findViewById(R.id.row_switch_false)).setText(
-                            screenQuestion.getAnswer().getOptions().get(1).getCode());
+                            Utils.getInternationalizedString(
+                                    screenQuestion.getAnswer().getOptions().get(1).getCode()));
+
                     Switch switchView = (Switch) tableRow.findViewById(R.id.answer);
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initSwitchOption(screenQuestion, switchView);
@@ -777,14 +801,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return rowView;
     }
 
-    private void adaptLayoutToTextOnly(TextCard textCard, ImageView rowImageLabelView) {
+    private void adaptLayoutToTextOnly(View viewWithText, ImageView rowImageLabelView) {
         //Modify the text weight if the label don't have a image.
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
                 LinearLayout.LayoutParams.MATCH_PARENT, 0f);
         rowImageLabelView.setLayoutParams(params);
         params = new LinearLayout.LayoutParams(0,
                 LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-        textCard.setLayoutParams(params);
+        viewWithText.setLayoutParams(params);
     }
 
     private void configureAnswerChangedListener(IQuestionViewFactory questionViewFactory,
@@ -1269,7 +1293,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //the button is a framelayout that contains a imageview
         ImageView imageView = (ImageView) button.getChildAt(0);
         //Put image
-        BaseLayoutUtils.putImageInImageView(option.getInternationalizedPath(), imageView);
+        putImageInImageView(option.getInternationalizedPath(), imageView);
         //Associate option
         button.setTag(option);
 
@@ -1318,23 +1342,24 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void showDone() {
         final Activity activity = (Activity) context;
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
-                .setTitle(R.string.survey_title_completed)
-                .setMessage(R.string.survey_info_completed)
+                .setTitle(R.string.survey_completed)
+                .setMessage(R.string.survey_completed_text)
                 .setCancelable(false)
-                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         hideKeyboard(PreferencesState.getInstance().getContext());
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
                         isClicked = false;
                     }
                 });
-        msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int arg1) {
-                hideKeyboard(PreferencesState.getInstance().getContext());
-                review();
-                isClicked = false;
-            }
-        });
+        msgConfirmation.setNegativeButton(R.string.survey_review,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        hideKeyboard(PreferencesState.getInstance().getContext());
+                        review();
+                        isClicked = false;
+                    }
+                });
 
         msgConfirmation.create().show();
     }

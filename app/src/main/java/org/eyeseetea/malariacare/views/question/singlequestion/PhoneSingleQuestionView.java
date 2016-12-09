@@ -19,6 +19,7 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
     EditCard editCard;
     Button sendButton;
 
+
     public PhoneSingleQuestionView(Context context) {
         super(context);
 
@@ -45,6 +46,11 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
         if (value != null) {
             editCard.setText(value.getValue());
         }
+    }
+
+    @Override
+    public void setHint(String hintValue) {
+        editCard.setHint(hintValue);
     }
 
     private void init(final Context context) {

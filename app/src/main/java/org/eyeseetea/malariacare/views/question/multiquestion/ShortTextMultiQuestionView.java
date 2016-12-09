@@ -50,6 +50,11 @@ public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements
         }
     }
 
+    @Override
+    public void setHint(String hintValue) {
+        editCard.setHint(hintValue);
+    }
+
     private void init(Context context) {
         inflate(context, R.layout.multi_question_tab_short_text_row, this);
 

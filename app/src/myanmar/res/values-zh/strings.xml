@@ -78,7 +78,10 @@
     <string name="follow_up_travelling_yes">是</string>
     <string name="follow_up_travelling_no">否</string>
     <string name="follow_up_occupation_question">你去了哪里？</string>
-    <string name="follow_up_occupation_options">工作地点、森林、种植园、村/城市</string>
+    <string name="follow_up_occupation_option_worksites">工作地点</string>
+    <string name="follow_up_occupation_option_forest">森林</string>
+    <string name="follow_up_occupation_option_plantation">种植园/ခြံ</string>
+    <string name="follow_up_occupation_option_village">村/城市</string>
     <string name="follow_up_LLIN_ITN_usage_question">长效/药浸蚊帐使用情况</string>
     <string name="follow_up_LLIN_ITN_usage_text">昨晚病人是否睡在长效蚊帐里？</string>
     <string name="follow_up_LLIN_ITN_usage_yes">是</string>

@@ -596,7 +596,7 @@ public class PopulateDB {
         //Save new option name for each option
         while ((line = reader.readNext()) != null) {
             for (Question question : questions) {
-                if (question.getId_question().equals(line[0])) {
+                if (String.valueOf(question.getId_question()).equals((line[0]))) {
                     question.setCode(line[1]);
                     question.setDe_name(line[2]);
                     question.setShort_name(line[3]);

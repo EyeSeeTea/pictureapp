@@ -82,6 +82,7 @@ public class LayoutUtils extends BaseLayoutUtils {
         int totalHeight = 0;
         int desiredHeight = View.MeasureSpec.makeMeasureSpec(listView.getHeight(),
                 View.MeasureSpec.AT_MOST);
+
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(desiredHeight, View.MeasureSpec.UNSPECIFIED);
@@ -92,28 +93,6 @@ public class LayoutUtils extends BaseLayoutUtils {
 
         setUnsentListHeight(
                 totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)));
-    }
-
-    public static void setRowsDivider(ListView listView) {
-        listView.setDividerHeight(0);
-    }
-
-    public static void setRowDivider(ListView listView) {
-        ColorDrawable myColor = new ColorDrawable(
-                PreferencesState.getInstance().getContext().getResources().getColor(
-                        R.color.headerColor)
-        );
-        listView.setDivider(myColor);
-        listView.setDividerHeight(0);
-        listView.setPadding(20, 0, 20, 0);
-    }
-
-
-    // Given a index, this method return a background color
-    public static void fixRowViewBackground(View row, int index) {
-        if (index < 1) {
-            row.findViewById(R.id.dotted_line).setVisibility(View.GONE);
-        }
     }
 
     public static void setListRowBackgroundColor(View row) {
@@ -138,4 +117,25 @@ public class LayoutUtils extends BaseLayoutUtils {
                         R.color.myanmar_orange));
         actionBar.setBackgroundDrawable(myColor);
     }
+
+    public static void setRowDivider(ListView listView) {
+        ColorDrawable myColor = new ColorDrawable(
+                PreferencesState.getInstance().getContext().getResources().getColor(
+                        R.color.headerColor)
+        );
+        listView.setDivider(myColor);
+        listView.setDividerHeight(0);
+        int padding = (int) PreferencesState.getInstance().getContext().getResources().getDimension(
+                R.dimen.dashboard_row_padding);
+        listView.setPadding(padding, 0, padding, 0);
+    }
+
+
+    // Given a index, this method return a background color
+    public static void fixRowViewBackground(View row, int index) {
+        if (index < 1) {
+            row.findViewById(R.id.dotted_line).setVisibility(View.GONE);
+        }
+    }
+
 }

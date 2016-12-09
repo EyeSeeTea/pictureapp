@@ -265,19 +265,19 @@ public abstract class BaseLayoutUtils {
         return (metrics.widthPixels);
     }
 
-    public static void fixRowViewBackground(View row, int position) {
-        row.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));
-    }
-
     public static void setListRowBackgroundColor(View view) {
-
+        //No action. This method should be created in the variant.
     }
 
     public static void setSurveyActionBar(ActionBar actionBar) {
-
+        //No action. This method should be created in the variant.
     }
 
     public static void setDashboardActionBar(ActionBar actionBar) {
+        //No action. This method should be created in the variant.
+    }
 
+    public static void fixRowViewBackground(View row, int position) {
+        row.setBackgroundResource(LayoutUtils.calculateBackgrounds(position));
     }
 }

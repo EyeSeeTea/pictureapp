@@ -309,8 +309,8 @@ public class DashboardActivity extends BaseActivity {
         if (surveyFragment == null) {
             surveyFragment = new SurveyFragment();
         }
-        replaceFragment(R.id.dashboard_details_container, surveyFragment);
         surveyFragment.reloadHeader(dashboardActivity);
+        replaceFragment(R.id.dashboard_details_container, surveyFragment);
         android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
         LayoutUtils.setSurveyActionBar(actionBar);
     }

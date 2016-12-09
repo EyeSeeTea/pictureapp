@@ -19,6 +19,8 @@
     <color name="fragment_header_subtitle">@color/white</color>
     <color name="question_header_title">@color/text_first_color</color>
     <color name="question_header_subtitle">@color/medium_light_violet</color>
+    <color name="question_title">@color/text_first_color</color>
+    <color name="question_subtitle">@color/medium_light_violet</color>
     <color name="hint">@color/medium_violet</color>
     <color name="intColor">@color/dark_violet</color>
     <color name="spinner_color">@color/dark_violet</color>

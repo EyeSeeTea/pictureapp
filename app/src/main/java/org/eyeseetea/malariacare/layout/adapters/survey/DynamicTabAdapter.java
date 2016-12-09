@@ -85,6 +85,8 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies
+        .ReminderSingleCustomViewStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -645,6 +647,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.REMINDER:
                 case Constants.WARNING:
                     View rootView = rowView.getRootView();
+
                     //Show confirm on full screen
                     rootView.findViewById(R.id.scrolled_table).setVisibility(View.GONE);
                     rootView.findViewById(R.id.no_scrolled_table).setVisibility(View.GONE);
@@ -653,15 +656,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     ProgressUtils.setProgressBarText(rowView, "");
                     List<Option> questionOptions = questionItem.getAnswer().getOptions();
+
+                    ReminderSingleCustomViewStrategy reminderStrategy = new ReminderSingleCustomViewStrategy(this);
+
                     //Question "header" is in the first option in Options.csv
                     if (questionOptions != null && questionOptions.size() > 0) {
-                        initWarningText(rootView, questionOptions.get(0));
+                        reminderStrategy.initWarningText(rootView, questionOptions.get(0));
                     }
                     //Question "button" is in the second option in Options.csv
                     if (questionOptions != null && questionOptions.size() > 1) {
-                        initWarningValue(rootView, questionOptions.get(1));
+                        reminderStrategy.initWarningValue(rootView, questionOptions.get(1));
                     }
-
 
                     break;
                 case Constants.INT:
@@ -917,7 +922,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
     }
 
-    private void initWarningValue(View rootView, Option option) {
+    public void initWarningValue(View rootView, Option option) {
         ImageView errorImage = (ImageView) rootView.findViewById(R.id.confirm_yes);
         errorImage.setImageResource(R.drawable.option_button);
         //Add button to listener
@@ -928,7 +933,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         okText.setTextSize(option.getOptionAttribute().getText_size());
     }
 
-    private void initWarningText(View rootView, Option option) {
+    public void initWarningText(View rootView, Option option) {
         TextView okText = (TextView) rootView.findViewById(R.id.questionTextRow);
         okText.setText(option.getInternationalizedCode());
         okText.setTextSize(option.getOptionAttribute().getText_size());
@@ -1005,18 +1010,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean isMultipleQuestionTab(int tabType) {
         return tabType == Constants.TAB_MULTI_QUESTION;
-    }
-
-    /**
-     * Validate the phone number
-     */
-    private boolean validatePhoneValue(String valueAsText) {
-        //Required, empty values rejected
-        if (!PhoneMask.checkPhoneNumberByMask(valueAsText)) {
-            isClicked = false;
-            return false;
-        }
-        return true;
     }
 
     /**

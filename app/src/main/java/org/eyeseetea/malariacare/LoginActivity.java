@@ -19,20 +19,24 @@
 
 package org.eyeseetea.malariacare;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -44,6 +48,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
+import org.eyeseetea.malariacare.utils.Permissions;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
@@ -59,6 +64,7 @@ import java.util.ArrayList;
  */
 public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity {
 
+    public static Permissions permissions;
     public static final String PULL_REQUIRED = "PULL_REQUIRED";
     public static final String DEFAULT_USER = "";
     public static final String DEFAULT_PASSWORD = "";
@@ -72,23 +78,14 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
     private String username;
     private String password;
 
+    private ProgressBar bar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mLoginActivityStrategy.onCreate();
-
-        initDataDownloadPeriodDropdown();
-
-        //Populate server with the current value
-        serverText = (EditText) findViewById(R.id.server_url);
-        serverText.setText(ServerAPIController.getServerUrl());
-
-        //Username, Password blanks to force real login
-        usernameEditText = (EditText) findViewById(R.id.username);
-        usernameEditText.setText(DEFAULT_USER);
-        passwordEditText = (EditText) findViewById(R.id.password);
-        passwordEditText.setText(DEFAULT_PASSWORD);
+        Log.d(TAG, "onCreate");
+        AsyncInit asyncPopulateDB = new AsyncInit(this);
+        asyncPopulateDB.execute((Void) null);
     }
 
     private void initDataDownloadPeriodDropdown() {
@@ -241,6 +238,48 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         mLoginActivityStrategy.onBackPressed();
     }
 
+    public class AsyncInit extends AsyncTask<Void, Void, Exception> {
+        Activity activity;
+
+        AsyncInit(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            bar = (ProgressBar) activity.findViewById(R.id.progress_bar);
+            bar.setVisibility(View.VISIBLE);
+            activity.findViewById(R.id.login_views_container).setVisibility(View.GONE);
+        }
+
+        @Override
+        protected Exception doInBackground(Void... params) {
+            mLoginActivityStrategy.onCreate();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final Exception exception) {
+            //Error
+            bar.setVisibility(View.GONE);
+            activity.findViewById(R.id.login_views_container).setVisibility(View.VISIBLE);
+
+            init();
+        }
+    }
+
+    private void init() {
+        initDataDownloadPeriodDropdown();
+        //Populate server with the current value
+        serverText = (EditText) findViewById(R.id.server_url);
+        serverText.setText(ServerAPIController.getServerUrl());
+
+        //Username, Password blanks to force real login
+        usernameEditText = (EditText) findViewById(R.id.username);
+        usernameEditText.setText(DEFAULT_USER);
+        passwordEditText = (EditText) findViewById(R.id.password);
+        passwordEditText.setText(DEFAULT_PASSWORD);
+    }
 }
 
 

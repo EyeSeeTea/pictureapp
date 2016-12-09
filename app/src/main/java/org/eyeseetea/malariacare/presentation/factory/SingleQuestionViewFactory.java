@@ -1,8 +1,6 @@
 package org.eyeseetea.malariacare.presentation.factory;
 
 
-import static com.google.android.gms.analytics.internal.zzy.r;
-
 import android.content.Context;
 import android.widget.TableLayout;
 

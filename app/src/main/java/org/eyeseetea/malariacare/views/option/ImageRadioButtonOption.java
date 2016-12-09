@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.views.option;
 
-import static org.eyeseetea.malariacare.R.id.question;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -10,7 +8,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
@@ -69,11 +66,11 @@ public class ImageRadioButtonOption extends LinearLayout {
         mRadioButton.setChecked(checked);
     }
 
-    public void setOnCheckedChangeListener (OnCheckedChangeListener onCheckedChangeListener){
+    public void setOnCheckedChangeListener(OnCheckedChangeListener onCheckedChangeListener) {
         mOnCheckedChangeListener = onCheckedChangeListener;
     }
 
-    public void setCounter(Question question){
+    public void setCounter(Question question) {
 
         Question optionCounter = question.findCounterByOption(mOption);
 
@@ -107,8 +104,9 @@ public class ImageRadioButtonOption extends LinearLayout {
         });
     }
 
-    public void notifyCheckedChange(Boolean value){
-        if (mOnCheckedChangeListener != null)
-            mOnCheckedChangeListener.onCheckedChanged(this,value);
+    public void notifyCheckedChange(Boolean value) {
+        if (mOnCheckedChangeListener != null) {
+            mOnCheckedChangeListener.onCheckedChanged(this, value);
+        }
     }
 }

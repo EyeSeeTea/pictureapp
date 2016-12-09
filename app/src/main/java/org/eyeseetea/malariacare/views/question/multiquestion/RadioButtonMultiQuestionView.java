@@ -24,7 +24,7 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import java.util.List;
 
 public class RadioButtonMultiQuestionView extends AOptionQuestionView implements IQuestionView,
-        IMultiQuestionView ,IImageQuestionView {
+        IMultiQuestionView, IImageQuestionView {
     TextCard header;
     ImageView image;
     RadioGroup radioGroup;

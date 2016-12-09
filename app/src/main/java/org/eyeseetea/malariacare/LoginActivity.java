@@ -48,7 +48,6 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
-import org.eyeseetea.malariacare.utils.Permissions;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
@@ -63,8 +62,7 @@ import java.util.ArrayList;
  * It shows only when the user has an open session.
  */
 public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity {
-
-    public static Permissions permissions;
+ 
     public static final String PULL_REQUIRED = "PULL_REQUIRED";
     public static final String DEFAULT_USER = "";
     public static final String DEFAULT_PASSWORD = "";

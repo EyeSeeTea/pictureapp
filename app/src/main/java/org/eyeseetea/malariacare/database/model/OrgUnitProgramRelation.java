@@ -73,14 +73,14 @@ public class OrgUnitProgramRelation extends BaseModel {
         return orgUnit;
     }
 
-    public void setOrgUnit(Long id_org_unit) {
-        this.id_org_unit = id_org_unit;
-        this.orgUnit = null;
-    }
-
     public void setOrgUnit(OrgUnit orgUnit) {
         this.orgUnit = orgUnit;
         this.id_org_unit = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
+    }
+
+    public void setOrgUnit(Long id_org_unit) {
+        this.id_org_unit = id_org_unit;
+        this.orgUnit = null;
     }
 
     public Program getProgram() {
@@ -94,14 +94,14 @@ public class OrgUnitProgramRelation extends BaseModel {
         return program;
     }
 
-    public void setProgram(Long id_program) {
-        this.id_program = id_program;
-        this.program = null;
-    }
-
     public void setProgram(Program program) {
         this.program = program;
         this.id_program = (program != null) ? program.getId_program() : null;
+    }
+
+    public void setProgram(Long id_program) {
+        this.id_program = id_program;
+        this.program = null;
     }
 
     @Override

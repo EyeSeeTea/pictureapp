@@ -3,10 +3,10 @@
     <string name="specific_language_font" translatable="false">saysettha_ot.ttf</string>
     <string name="user_push" translatable="false">LAMCS</string>
     <string name="pass_push" translatable="false">LAMCSadmin1</string>
-    <string name="monitor_row_title_act6x1" translatable="false">ACT6x1</string>
-    <string name="monitor_row_title_act6x2" translatable="false">ACT6x2</string>
-    <string name="monitor_row_title_act6x3" translatable="false">ACT6x3</string>
-    <string name="monitor_row_title_act6x4" translatable="false">ACT6x4</string>
+    <string name="ACT_x_6" translatable="false">ACT6x1</string>
+    <string name="ACT_x_12" translatable="false">ACT6x2</string>
+    <string name="ACT_x_18" translatable="false">ACT6x3</string>
+    <string name="ACT_x_24" translatable="false">ACT6x4</string>
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>

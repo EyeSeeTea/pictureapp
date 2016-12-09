@@ -108,7 +108,7 @@ public abstract class BaseLayoutUtils {
         LayoutUtils.setActionBarLogo(actionBar);
         LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
                 PreferencesState.getInstance().getContext().getResources().getString(
-                        R.string.app_name));
+                        R.string.malaria_case_based_reporting));
     }
 
     // Used to put the org unit name and the kind of survey instead of the app name

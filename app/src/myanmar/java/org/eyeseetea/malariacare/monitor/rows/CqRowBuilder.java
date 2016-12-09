@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 public class CqRowBuilder extends CounterRowBuilder {
 
     public CqRowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_cq));
+        super(context, context.getString(R.string.Cq));
     }
 
     @Override

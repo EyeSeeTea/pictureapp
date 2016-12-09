@@ -237,7 +237,8 @@ public class ExportData {
                 new String[]{""});
 
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                "Local " + PreferencesState.getInstance().getContext().getString(R.string.app_name)
+                "Local " + PreferencesState.getInstance().getContext().getString(
+                        R.string.malaria_case_based_reporting)
                         + " db " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
                         Calendar.getInstance().getTime()));
         //sets file as readable for external apps

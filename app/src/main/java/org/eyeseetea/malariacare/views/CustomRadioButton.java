@@ -141,7 +141,8 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
     }
 
     /**
-     * Set the Object font size. This will be determined by the scale and dimension parameters, both
+     * Set the Object font size. This will be determined by the scale and dimension parameters,
+     * both
      * one of [xsmall|small|medium|large|xlarge ] choices
      *
      * @param dimension size related to rest of screen objects

@@ -30,7 +30,7 @@
                 android:layout_weight="0.5"
                 android:gravity="left|center_vertical"
                 android:padding="7dip"
-                android:text="@string/header_title_sent"
+                android:text="@string/new_case_title"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/fragment_header_title"
                 android:textSize="@dimen/header_text_size"

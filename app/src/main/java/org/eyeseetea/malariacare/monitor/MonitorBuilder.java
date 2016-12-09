@@ -113,10 +113,10 @@ public class MonitorBuilder implements IWebViewBuilder {
      */
     public void addMessagesToView(WebView webView) {
         String json = String.format(UPDATE_MESSAGES_JSON,
-                context.getString(R.string.monitor_label),
-                context.getString(R.string.monitor_label_option_months),
-                context.getString(R.string.monitor_label_option_weeks),
-                context.getString(R.string.monitor_label_option_days));
+                context.getString(R.string.monitoring_title_dropdown),
+                context.getString(R.string.monitoring_label_option_months),
+                context.getString(R.string.monitoring_label_option_weeks),
+                context.getString(R.string.monitoring_label_option_days));
 
         //Inyect in browser
         String updateMessagesJS = String.format(JAVASCRIPT_UPDATE_MESSAGES, json);

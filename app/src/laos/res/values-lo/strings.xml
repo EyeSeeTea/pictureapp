@@ -7,12 +7,13 @@
 <string name="ok">"ຕົກລົງ
 "</string>
     <string name="cancel">"ຍົກເລີກ"</string>
-<string name="review">"ເບິ່ງຄືນ
+<string name="survey_review">"ເບິ່ງຄືນ
 "</string>
-<string name="send">"ສົ່ງ
+<string name="survey_send">"ສົ່ງ
 "</string>
-    <string name="settings_menu_about">"ກ່ຽວກັບ"</string>
-    <string name="settings_menu_configuration">"ການຕັ້ງຄ່າ"</string>
+    <string name="malaria_case_based_reporting">"ການເຝົ້າລະວັງກໍລະນີໄຂ້ຍຸງ"</string>
+
+    <string name="app_about">"ກ່ຽວກັບ"</string>
     <string name="settings_menu_licence">"ການໄດ້ຮັບອະນຸຍາດ"</string>
     <string name="dialog_title_delete_surveys">"ທ່ານຕ້ອງການຈະລຶບຂໍ້ມູນທັງໝົດທີ່ສົ່ງໄປແລ້ວບໍ?"</string>
     <string name="dialog_title_delete_survey">"ລຶບຂໍ້ມູນ"</string>
@@ -25,18 +26,18 @@
     <string name="assessment_title_info">"ຂໍ້ຄວາມເຕືອນ"</string>
     <string name="survey_info_exit">"ທ່ານຕ້ອງການອອກຈາກລະບົບບໍ?"</string>
     <string name="survey_info_exit_delete">"ຂໍ້ມູນກຳລັງຈະຖືກລຶບ"</string>
-    <string name="survey_title_completed">"ການປ້ອນຂໍ້ມູນ"</string>
-    <string name="survey_info_completed">"ການປ້ອນຂໍ້ມູນສຳເລັດແລ້ວ"</string>
+    <string name="survey_completed">"ການປ້ອນຂໍ້ມູນ"</string>
+    <string name="survey_completed_text">"ການປ້ອນຂໍ້ມູນສຳເລັດແລ້ວ"</string>
 <string name="exception_org_unit_not_valid">"ລະຫັດຮ້ານບໍ່ຖືກຕ້ອງ. 
 ກະລຸນາຕິດຕໍ່ອົງການ PSI ລາວ*ຜ່ານເບີ*"</string>
 <string name="exception_org_unit_banned">"ຮ້ານປິດ.
 ກະລຸນາຕິດຕໍ່ອົງການ PSI ລາວ*ຜ່ານເບີ*"</string>
     <string name="dynamic_error_phone_format">"ເບີໂທບໍ່ຖືກຕ້ອງ (xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
     <string name="dynamic_error_age">"ອາຍຸບໍ່ຖືກ"</string>
-    <string name="title_activity_settings">"ການຕັ້ງຄ່າ"</string>
-    <string name="settings_checkbox_customize_fonts">"ຂະໜາດຕົວອັກສອນ"</string>
-    <string name="settings_list_font_sizes">"ຂະໜາດຕົວອັກສອນ"</string>
-    <string name="settings_text_dhis_server_url">"DHIS Server URL"</string>
+    <string name="app_settings">"ການຕັ້ງຄ່າ"</string>
+    <string name="fonts_customise">"ຂະໜາດຕົວອັກສອນ"</string>
+    <string name="font_size">"ຂະໜາດຕົວອັກສອນ"</string>
+    <string name="server_name">"DHIS Server URL"</string>
     <string name="settings_select_language">"ພາສາ"</string>
     <string name="pref_header_general">"ທົ່ວໄປ"</string>
     <string name="font_size_level0">"ນ້ອຍສຸດ"</string>
@@ -50,8 +51,8 @@
     <string name="dialog_info_push_bad_credentials">"ກະລຸນາເຂົ້າລະບົບຄືນໃໝ່"</string>
     <string name="dialog_error_push_no_uid">"ບໍ່ມີຂໍ້ມູນ UID ຢູ່ໃນລະບົບ"</string>
     <string name="dialog_error_push_no_location">"ບໍ່ມີສະຖານທີ່"</string>
-    <string name="pref_server">"ເຊີເວີ"</string>
-    <string name="pref_visual">"ກວດເບິ່ງ"</string>
+    <string name="server">"ເຊີເວີ"</string>
+    <string name="app_visual">"ກວດເບິ່ງ"</string>
     <string name="number_0">"0"</string>
     <string name="number_1">"1"</string>
     <string name="number_2">"2"</string>
@@ -83,14 +84,15 @@
     <string name="dhis_url_error_bad_version">"ລະບົບ DHIS ບໍ່ຕອບສະໜອງ (ໃຊ້ສະເພາະກັບລຸ້ນ: 2.20, 2.21, 2.22)"</string>
     <string name="dhis_url_error_bad_credentials">"ໂປຣແກມນີ້ບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ນຳໃຊ້ຢູ່ໃນເຊີເວີດັ່ງກ່າວ"</string>
     <string name="settings_menu_monitoring">"ການຕິດຕາມ"</string>
-    <string name="monitor_label">"ກະລຸນາເລືອກໄລຍະເວລາ "</string>
-    <string name="monitor_label_option_months">"6 ເດືອນຜ່ານມາ"</string>
-    <string name="monitor_label_option_days">"6 ມື້ຜ່ານມາ"</string>
-    <string name="monitor_label_option_weeks">"6 ອາທິດຜ່ານມາ"</string>
-    <string name="monitor_table_title_suspected">"ກໍລະນີສົງໄສ ແລະ ເປັນໄຂ້ຍຸງ"</string>
-    <string name="monitor_table_title_stock">"ຈຳນວນທີ່ນຳໃຊ້"</string>
+    <string name="monitoring_title_dropdown">"ກະລຸນາເລືອກໄລຍະເວລາ "</string>
+    <string name="monitoring_title">ການຕິດຕາມ</string>
+    <string name="monitoring_label_option_months">"6 ເດືອນຜ່ານມາ"</string>
+    <string name="monitoring_label_option_days">"6 ມື້ຜ່ານມາ"</string>
+    <string name="monitoring_label_option_weeks">"6 ອາທິດຜ່ານມາ"</string>
+    <string name="monitoring_case_stats">"ກໍລະນີສົງໄສ ແລະ ເປັນໄຂ້ຍຸງ"</string>
+    <string name="consumption">"ຈຳນວນທີ່ນຳໃຊ້"</string>
     <string name="monitor_row_title_period">"ໄລຍະເວລາ"</string>
-    <string name="monitor_row_title_week">"ອາທິດ"</string>
+    <string name="monitoring_row_title_week">"ອາທິດ"</string>
     <string name="monitor_row_title_suspected">"ກໍລະນີສົງໄສວ່າເປັນໄຂ້ຍຸງ"</string>
     <string name="monitor_row_title_positive">"ເປັນໄຂ້ຍຸງ"</string>
     <string name="monitor_row_title_negative">"ບໍ່ເປັນໄຂ້ຍຸງ"</string>
@@ -99,16 +101,16 @@
 
     <!-- I think this is from Cambodia. Does it need to be removed? -->
     <string name="monitor_row_title_asmq">"AS/MQ"</string>
-    <string name="monitor_row_title_rdts">"RDTs"</string>
+    <string name="RDT">"RDTs"</string>
     <string name="monitor_row_title_positivity_rate">"ອັດຕາການຕິດເຊື້ອໄຂ້ຍຸງ"</string>
-    <string name="pf">"Pf"</string>
-    <string name="pv">"Pv"</string>
-    <string name="pfpv">"Pf+Pv"</string>
-    <string name="settings_menu_legal">"ຂໍ້ກຳນົດດ້ານນິຕິກຳ"</string>
-    <string name="settings_menu_copyright">"ສະຫງວນລິຂະສິດ"</string>
-    <string name="settings_menu_licenses">"ການອະນຸຍາດໃຫ້ນຳໃຊ້ໂປຣແກມ"</string>
-    <string name="settings_menu_eula">"EULA"</string>
-    <string name="monitor_row_title_day">"ວັນທີ"</string>
+    <string name="Pf">"Pf"</string>
+    <string name="Pv">"Pv"</string>
+    <string name="mixed">"Pf+Pv"</string>
+    <string name="app_legal">"ຂໍ້ກຳນົດດ້ານນິຕິກຳ"</string>
+    <string name="app_copyright">"ສະຫງວນລິຂະສິດ"</string>
+    <string name="app_software_licenses">"ການອະນຸຍາດໃຫ້ນຳໃຊ້ໂປຣແກມ"</string>
+    <string name="app_EULA">"EULA"</string>
+    <string name="monitoring_row_title_day">"ວັນທີ"</string>
     <string name="monitor_row_title_month">"ເດືອນ"</string>
     <string name="unrecognized_option">"ບໍ່ຮູ້ຈັກ"</string>
     <string name="progress_pull_building_survey">"ການດຳເນີນການສຳຫຼວດ "</string>
@@ -119,15 +121,15 @@
     <string name="number_10">"10"</string>
     <string name="number_11">"11"</string>
     <string name="number_12">"12"</string>
-    <string name="unsent_button">"ຍັງບໍ່ໄດ້ສົ່ງ"</string>
-    <string name="sent_button">"ສົ່ງແລ້ວ"</string>
+    <string name="unsent_data">"ຍັງບໍ່ໄດ້ສົ່ງ"</string>
+    <string name="sent_data">"ສົ່ງແລ້ວ"</string>
     <string name="monitor_button">"ການຕິດຕາມ"</string>
-    <string name="app_name">"ການເຝົ້າລະວັງກໍລະນີໄຂ້ຍຸງ"</string>
-    <string name="font_size_level0_title">"ນ້ອຍສຸດ"</string>
-    <string name="font_size_level1_title">"ນ້ອຍ"</string>
-    <string name="font_size_level2_title">"ປານກາງ"</string>
-    <string name="font_size_level3_title">"ໃຫ່ຍ"</string>
-    <string name="font_size_level4_title">"ໃຫ່ຍສຸດ"</string>
+
+    <string name="font_extra_small">"ນ້ອຍສຸດ"</string>
+    <string name="font_small">"ນ້ອຍ"</string>
+    <string name="font_medium">"ປານກາງ"</string>
+    <string name="font_large">"ໃຫ່ຍ"</string>
+    <string name="font_extra_large">"ໃຫ່ຍສຸດ"</string>
     <string name="toast_push_is_pushing">"ສົ່ງຂໍ້ມູນກ່ອນທີ່ຈະເຂົ້າໄປຕັ້ງຄ່າ."</string>
     <string name="dhis_url_error_generic">"ເຊີເວີຂອງລະບົບ DHIS ຂັດຂ້ອງ, ບໍ່ສາມາດທຳງານປົກກະຕິໄດ້"</string>
     <string name="option_counter">"ຍັງມີຄວາມຜິດຢູ່"</string>

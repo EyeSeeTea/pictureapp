@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 public class ACT6x2RowBuilder extends CounterRowBuilder {
 
     public ACT6x2RowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_act6x2));
+        super(context, context.getString(R.string.ACT_x_12));
     }
 
     @Override

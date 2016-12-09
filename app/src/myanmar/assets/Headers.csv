@@ -1,5 +1,5 @@
-1;'Patient Profile: Name, Phone, Residence';'Patient Profile: Name, Phone, Residence';1;1
-2;'Patient sex';'Patient sex';1;2
+1;'patient_profile_subtitle';'Patient Profile: Name, Phone, Residence';1;1
+2;'patient_sex_pregnancy';'Patient sex';1;2
 3;'Symptoms';'Symptoms';1;3
 4;'RDT';'RDT';1;4
 5;'RDT Negative';'RDT Negative';1;5

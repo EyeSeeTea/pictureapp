@@ -94,12 +94,13 @@ public class Utils {
         }
         Context context = PreferencesState.getInstance().getContext();
 
-        int identifier = context.getResources().getIdentifier(name.toLowerCase(), "string",
+        int identifier = context.getResources().getIdentifier(name, "string",
                 context.getPackageName());
         //if the id is 0 it not exist.
         if (identifier != 0) {
             name = context.getString(identifier);
         }
+
         return name;
     }
 

@@ -16,15 +16,15 @@ import java.io.IOException;
 /**
  * Created by idelcano on 03/08/2016.
  */
-@Migration(version = 19, databaseName = AppDatabase.NAME)
-public class Migration13ModifyValuesLastMigration extends BaseMigration {
+@Migration(version = 21, databaseName = AppDatabase.NAME)
+public class Migration21ModifyValuesLastMigration extends BaseMigration {
 
-    private static String TAG = ".Migration13";
+    private static String TAG = ".Migration21";
 
-    private static Migration13ModifyValuesLastMigration instance;
+    private static Migration21ModifyValuesLastMigration instance;
     private boolean postMigrationRequired;
 
-    public Migration13ModifyValuesLastMigration() {
+    public Migration21ModifyValuesLastMigration() {
         super();
         instance = this;
         postMigrationRequired = false;

@@ -19,10 +19,8 @@ public abstract class AKeyboardQuestionView extends LinearLayout {
     }
 
     protected void notifyAnswerChanged(String newValue) {
-        if (newValue.length() > 0) {
-            if (mOnAnswerChangedListener != null) {
-                mOnAnswerChangedListener.onAnswerChanged(this, newValue);
-            }
+        if (mOnAnswerChangedListener != null) {
+            mOnAnswerChangedListener.onAnswerChanged(this, newValue);
         }
     }
 

@@ -16,8 +16,6 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
-import org.eyeseetea.malariacare.views.TextCard;
 
 /**
  * Created by idelcano on 01/11/2016.
@@ -57,7 +55,7 @@ public class LayoutUtils extends BaseLayoutUtils {
 
         Spanned spannedSubTitle = Html.fromHtml(
                 String.format("<font color=\"#%s\"><b>%s</b></font>", colorString,
-                        volunteer+ " " + userName + ""));
+                        volunteer + " " + userName + ""));
         actionBar.setCustomView(R.layout.custom_action_bar);
         TextView title = (TextView) actionBar.getCustomView().findViewById(
                 R.id.action_bar_multititle_title);

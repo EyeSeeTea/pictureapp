@@ -264,6 +264,15 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         Log.d(TAG, "reloadTabs(" + tabs.size() + ")..DONE");
     }
 
+    @Override
+    public void reloadData() {
+
+    }
+
+    public void reloadHeader(Activity activity) {
+        HeaderUseCase.getInstance().hideHeader(activity);
+    }
+
     public class AsyncChangeTab extends AsyncTask<Void, Integer, View> {
 
         private Tab tab;
@@ -440,14 +449,5 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
 
             return null;
         }
-    }
-
-    @Override
-    public void reloadData() {
-
-    }
-
-    public void reloadHeader(Activity activity) {
-        HeaderUseCase.getInstance().hideHeader(activity);
     }
 }

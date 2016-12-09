@@ -584,13 +584,14 @@ public class DashboardActivity extends BaseActivity {
                         closeSurveyFragment();
                     }
                 });
-        msgConfirmation.setNegativeButton(R.string.survey_review, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int arg1) {
-                DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
-                        0).getQuestion());
-                hideReview();
-            }
-        });
+        msgConfirmation.setNegativeButton(R.string.survey_review,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
+                                0).getQuestion());
+                        hideReview();
+                    }
+                });
 
         msgConfirmation.create().show();
     }

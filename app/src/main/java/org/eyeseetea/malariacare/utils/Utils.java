@@ -19,8 +19,6 @@
 
 package org.eyeseetea.malariacare.utils;
 
-import static android.R.attr.name;
-
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
@@ -96,12 +94,12 @@ public class Utils {
         }
         Context context = PreferencesState.getInstance().getContext();
 
-            int identifier = context.getResources().getIdentifier(name, "string",
-                    context.getPackageName());
-            //if the id is 0 it not exist.
-            if (identifier != 0) {
-                name = context.getString(identifier);
-            }
+        int identifier = context.getResources().getIdentifier(name, "string",
+                context.getPackageName());
+        //if the id is 0 it not exist.
+        if (identifier != 0) {
+            name = context.getString(identifier);
+        }
 
         return name;
     }

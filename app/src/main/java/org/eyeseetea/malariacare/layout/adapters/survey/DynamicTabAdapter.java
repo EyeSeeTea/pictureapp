@@ -70,7 +70,6 @@ import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
-import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.factory.IQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.MultiQuestionViewFactory;
@@ -736,13 +735,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
                                 rowImageLabelView);
                     } else {
-                        adaptLayoutToTextOnly(tableRow.findViewById(R.id.question_text_container), rowImageLabelView);
+                        adaptLayoutToTextOnly(tableRow.findViewById(R.id.question_text_container),
+                                rowImageLabelView);
                     }
 
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
                             Utils.getInternationalizedString(screenQuestion.getForm_name()));
 
-                    if (!screenQuestion.getHelp_text().isEmpty()){
+                    if (!screenQuestion.getHelp_text().isEmpty()) {
                         ((TextCard) tableRow.findViewById(R.id.row_help_text)).setText(
                                 Utils.getInternationalizedString(screenQuestion.getHelp_text()));
                     }
@@ -782,9 +782,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
 
                     ((TextCard) tableRow.findViewById(R.id.row_switch_true)).setText(
-                            Utils.getInternationalizedString(screenQuestion.getAnswer().getOptions().get(0).getCode()));
+                            Utils.getInternationalizedString(
+                                    screenQuestion.getAnswer().getOptions().get(0).getCode()));
                     ((TextCard) tableRow.findViewById(R.id.row_switch_false)).setText(
-                            Utils.getInternationalizedString(screenQuestion.getAnswer().getOptions().get(1).getCode()));
+                            Utils.getInternationalizedString(
+                                    screenQuestion.getAnswer().getOptions().get(1).getCode()));
 
                     Switch switchView = (Switch) tableRow.findViewById(R.id.answer);
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
@@ -1350,13 +1352,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         isClicked = false;
                     }
                 });
-        msgConfirmation.setNegativeButton(R.string.survey_review, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int arg1) {
-                hideKeyboard(PreferencesState.getInstance().getContext());
-                review();
-                isClicked = false;
-            }
-        });
+        msgConfirmation.setNegativeButton(R.string.survey_review,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        hideKeyboard(PreferencesState.getInstance().getContext());
+                        review();
+                        isClicked = false;
+                    }
+                });
 
         msgConfirmation.create().show();
     }

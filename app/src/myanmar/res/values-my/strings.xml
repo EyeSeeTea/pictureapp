@@ -50,7 +50,8 @@
     <string name="invalid2_subtitle">C လိုင်းမပေါ် ၂ ကြိမ်</string> 
     <string name="invalid2_result">သွေးစစ်ကိရိယာမကောင်း (C လိုင်းမပေါ်)</string> 
     <string name="invalid2_result_text">သွေးစစ်ကိရိယာမကောင်း (C လိုင်းမပေါ်) ၂ ကြိမ်</string>
-     <string name="invalid2_result_subtext">လူနာကို အနီးဆုံးကျန်းမာရေးဌာနသို. လွှဲပို.ပြီးကြီးကြပ်သူအားဆက်သွယ်ပါ</string> 
+     <string name="invalid2_result_subtext">လူနာကို အနီးဆုံးကျန်းမာရေးဌာနသို. လွှဲပို.ပြီးကြီးကြပ်သူအားဆက်သွယ်ပါ</string>
+     
     <string name="invalid2_end_test">ပြီးဆုံးပါပြီ</string>
     <string name="drugs_referral">ဆေးဝါးများ/လွှဲပို.ခြင်း</string>
     <string name="drugs_referral_instructions">လူနာအား အေစီတီ (ACT) ဆေးလုံး ၁၂ လုံးနှင့် ပရိုင်မာကွင်း (Pq) ၂လုံးပေးပါ</string>

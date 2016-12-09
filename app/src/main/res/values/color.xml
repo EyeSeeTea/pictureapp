@@ -33,4 +33,5 @@
     <color name="fragment_header_title_text">@color/white</color>
     <color name="tab_pressed_background">@color/light_grey</color>
     <color name="tab_unpressed_background">@color/white</color>
+    <color name="spinner_color">@color/headerColor</color>
 </resources>

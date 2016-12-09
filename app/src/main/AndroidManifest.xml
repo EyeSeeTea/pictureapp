@@ -42,7 +42,7 @@
 
         <meta-data
             android:name="DATABASE"
-            android:value="EyeSeeTeaDB.db" />
+            android:value="malariacare.db" />
         <meta-data
             android:name="VERSION"
             android:value="1" />

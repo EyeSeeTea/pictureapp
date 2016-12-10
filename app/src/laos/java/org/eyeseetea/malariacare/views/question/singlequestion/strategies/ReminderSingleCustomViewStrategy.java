@@ -13,10 +13,10 @@ public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomVi
     }
 
     public void initWarningText(View rootView, Option option) {
-        mDynamicTabAdapter.initWarningText(rootView,option);
+        mDynamicTabAdapter.initWarningText(rootView, option);
     }
 
     public void initWarningValue(View rootView, Option option) {
-        mDynamicTabAdapter.initWarningValue(rootView,option);
+        mDynamicTabAdapter.initWarningValue(rootView, option);
     }
 }

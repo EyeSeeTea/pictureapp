@@ -667,7 +667,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     ProgressUtils.setProgressBarText(rowView, "");
                     List<Option> questionOptions = questionItem.getAnswer().getOptions();
 
-                    ReminderSingleCustomViewStrategy reminderStrategy = new ReminderSingleCustomViewStrategy(this);
+                    ReminderSingleCustomViewStrategy reminderStrategy =
+                            new ReminderSingleCustomViewStrategy(this);
 
                     //Question "header" is in the first option in Options.csv
                     if (questionOptions != null && questionOptions.size() > 0) {

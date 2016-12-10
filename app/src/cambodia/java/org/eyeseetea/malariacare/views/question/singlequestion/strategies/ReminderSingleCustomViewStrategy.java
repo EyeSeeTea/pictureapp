@@ -1,14 +1,11 @@
 package org.eyeseetea.malariacare.views.question.singlequestion.strategies;
 
 import android.view.View;
-import android.widget.TextView;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
-import org.eyeseetea.malariacare.views.TextCard;
 
-public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomViewStrategy{
+public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomViewStrategy {
 
     DynamicTabAdapter mDynamicTabAdapter;
 
@@ -17,10 +14,10 @@ public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomVi
     }
 
     public void initWarningText(View rootView, Option option) {
-        mDynamicTabAdapter.initWarningText(rootView,option);
+        mDynamicTabAdapter.initWarningText(rootView, option);
     }
 
     public void initWarningValue(View rootView, Option option) {
-        mDynamicTabAdapter.initWarningValue(rootView,option);
+        mDynamicTabAdapter.initWarningValue(rootView, option);
     }
 }

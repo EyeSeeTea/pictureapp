@@ -122,6 +122,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
 
         //Discard clicks on header|footer (which is attendend on newSurvey via super)
         if (!isPositionASurvey(position)) {
+            Log.d(TAG, "Position is not a survey");
             return;
         }
 
@@ -284,11 +285,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         this.surveys.clear();
         this.surveys.addAll(newListSurveys);
         this.adapter.notifyDataSetChanged();
-        try {
-            LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
         setListShown(true);
     }
 

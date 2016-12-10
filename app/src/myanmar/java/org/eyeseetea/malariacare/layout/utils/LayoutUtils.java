@@ -80,7 +80,10 @@ public class LayoutUtils extends BaseLayoutUtils {
         }
 
         int totalHeight = 0;
-        int desiredHeight = View.MeasureSpec.makeMeasureSpec(listView.getHeight(),
+        int itemHeight = listView.getHeight();
+        if(itemHeight==0)
+            return;
+        int desiredHeight = View.MeasureSpec.makeMeasureSpec(itemHeight,
                 View.MeasureSpec.AT_MOST);
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);

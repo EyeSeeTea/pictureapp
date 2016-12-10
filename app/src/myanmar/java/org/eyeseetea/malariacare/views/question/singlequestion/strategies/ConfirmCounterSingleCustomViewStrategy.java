@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
@@ -73,7 +74,8 @@ public class ConfirmCounterSingleCustomViewStrategy implements
             final Question question, Question questionCounter, View rootView) {
         //cancel
         ImageButton previousButton = (ImageButton) rootView.findViewById(R.id.back_btn);
-        previousButton.setOnClickListener(new View.OnClickListener() {
+
+        ((LinearLayout) previousButton.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDynamicTabAdapter.removeConfirmCounter(v);
@@ -84,7 +86,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         //confirm
         ImageButton nextButton = (ImageButton) rootView.findViewById(R.id.next_btn);
 
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) nextButton.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDynamicTabAdapter.removeConfirmCounter(v);

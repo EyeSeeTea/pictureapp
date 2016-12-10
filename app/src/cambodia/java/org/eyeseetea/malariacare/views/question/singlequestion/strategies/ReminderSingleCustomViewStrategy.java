@@ -8,7 +8,7 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.views.TextCard;
 
-public class ReminderSingleCustomViewStrategy {
+public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomViewStrategy{
 
     DynamicTabAdapter mDynamicTabAdapter;
 

@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.views.question.singlequestion.strategies;
 
-import static org.eyeseetea.malariacare.R.id.textcard_confirm_yes;
-
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,7 +9,7 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.views.TextCard;
 
-public class ReminderSingleCustomViewStrategy {
+public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomViewStrategy {
     public ReminderSingleCustomViewStrategy(DynamicTabAdapter dynamicTabAdapter) {
 
     }

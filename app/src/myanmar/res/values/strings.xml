@@ -46,7 +46,7 @@
     <string name="invalid1_result">Invalid</string> 
     <string name="invalid1_result_text">Number of Invalid Tests: 1</string>
     <string name="invalid1_result_subtext">Take a new sample and repeat.</string>
-    <string name="invalid1_test_again">Test again</string>
+    <string name="invalid1_end_test">Test again</string>
     <string name="invalid2_subtitle">Invalid Test 2</string> 
     <string name="invalid2_result">Invalid</string> 
     <string name="invalid2_result_text">Number of Invalid Tests: 12</string>

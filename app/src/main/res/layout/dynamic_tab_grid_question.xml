@@ -44,24 +44,7 @@
 
                 <include layout="@layout/no_scrolled_table"></include>
 
-
-                <TableLayout
-                    android:id="@+id/confirm_table"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:measureWithLargestChild="false"
-                    android:visibility="gone"
-                    android:weightSum="4">
-
-                    <include layout="@layout/dynamic_tab_row_question_image" />
-
-                    <include layout="@layout/dynamic_tab_row_question_text" />
-
-                    <include layout="@layout/dynamic_tab_row_confirm_yes" />
-
-                    <include layout="@layout/dynamic_tab_row_confirm_no" />
-                </TableLayout>
-
+                <include layout="@layout/confirm_table" />
             </LinearLayout>
         </LinearLayout>
 

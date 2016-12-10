@@ -46,7 +46,7 @@
     <string name="invalid1_result">无效</string> 
     <string name="invalid1_result_text">无效检测数：1</string>
      <string name="invalid1_result_subtext">采集新血样重新检测。确保血样和缓冲液被放入正确的孔中。</string> 
-    <string name="invalid1_test_again">再次检测</string>
+    <string name="invalid1_end_test">再次检测</string>
     <string name="invalid2_subtitle">无效检测 2</string> 
     <string name="invalid2_result">无效</string> 
     <string name="invalid2_result_text">无效检测数：2</string>

@@ -11,7 +11,7 @@
 11;'Code: Severe symptoms';'';'symptoms_severity_text';'symptoms_severity';'11V1JoHmO94';11;0;0;3;11;0;8;4;0;'question_images/p4_severe.png'
 12;'Code: RDT';'';'';'rdt_test_result';'12V1JoHmO94';12;0;0;4;12;0;14;4;1;
 13;'Code: RDT NEGATIVE';'';'';'negative_test';'13V1JoHmO94';13;0;0;5;13;0;18;4;0;'rdt_negative_image'
-14;'ConfirmInvalid';'';'';'ConfirmInvalid';'15V1JoHmO94';12;0;0;6;14;0;16;4;0;'rdt_invalid_image'
+14;'ConfirmInvalid';'';'';'invalid%s_subtitle';'15V1JoHmO94';12;0;0;6;14;0;16;4;0;'rdt_invalid_image'
 15;'Code: Treat';'';'';'Treatment';'16V1JoHmO94';2;0;0;7;15;0;14;8;0;
 16;'Code: Vomiting';'';'patient_advice_text_vomiting';'patient_advice_title_vomiting';'17V1JoHmO94';3;0;0;8;16;0;23;8;0;'question_images/p7_vomiting.png'
 17;'Code: Taking m';'';'patient_advice_text_medication_with_food';'patient_advice_title_medication_with_food';'18V1JoHmO94';4;0;0;8;17;0;23;8;0;'question_images/p7_taking.png'

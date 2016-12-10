@@ -40,7 +40,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -86,12 +85,13 @@ import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
+        .ConfirmCounterSingleCustomViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .ReminderSingleCustomViewStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import utils.PhoneMask;
 import utils.ProgressUtils;
 
 public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
@@ -274,6 +274,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void showConfirmCounter(final View view, final Option selectedOption,
             final Question question, Question questionCounter) {
+
+        ConfirmCounterSingleCustomViewStrategy confirmCounterStrategy =
+                new ConfirmCounterSingleCustomViewStrategy(this);
+        confirmCounterStrategy.showConfirmCounter(view, selectedOption, question, questionCounter);
+
+    }
+
+    public void showStandardConfirmCounter(final View view, final Option selectedOption,
+            final Question question,
+            Question questionCounter) {
         //Change question x confirm message
         View rootView = view.getRootView();
         final TextCard questionView = (TextCard) rootView.findViewById(R.id.question);
@@ -335,12 +345,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    private void removeConfirmCounter(View view) {
+    public void removeConfirmCounter(View view) {
         view.getRootView().findViewById(R.id.dynamic_tab_options_table).setVisibility(View.VISIBLE);
         view.getRootView().findViewById(R.id.confirm_table).setVisibility(View.GONE);
     }
 
-    private void saveOptionAndMove(View view, Option selectedOption, Question question) {
+    public void saveOptionAndMove(View view, Option selectedOption, Question question) {
         Value value = question.getValueBySession();
         //set new totalpages if the value is not null and the value change
         if (value != null && !readOnly) {

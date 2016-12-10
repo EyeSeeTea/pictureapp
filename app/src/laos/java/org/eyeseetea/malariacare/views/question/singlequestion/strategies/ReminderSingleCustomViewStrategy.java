@@ -5,7 +5,7 @@ import android.view.View;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 
-public class ReminderSingleCustomViewStrategy {
+public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomViewStrategy {
     DynamicTabAdapter mDynamicTabAdapter;
 
     public ReminderSingleCustomViewStrategy(DynamicTabAdapter dynamicTabAdapter) {

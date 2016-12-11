@@ -85,6 +85,23 @@ public class PreferencesState {
         return instance;
     }
 
+    /**
+     * Get credentials from sharedPreferences.
+     */
+    public static Credentials getCredentialsFromPreferences() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        String url = sharedPreferences.getString(context.getString(R.string.dhis_url), "");
+
+        String username = sharedPreferences.getString(context.getString(R.string.dhis_user), "");
+        String password = sharedPreferences.getString(context.getString(R.string.dhis_password),
+                "");
+        Credentials credentials = new Credentials(url, username, password);
+
+        return credentials;
+    }
+
     public void init(Context context) {
         this.context = context;
         scaleDimensionsMap = initScaleDimensionsMap();
@@ -260,7 +277,6 @@ public class PreferencesState {
         return languageCode;
     }
 
-
     /**
      * Saves a value into a preference
      */
@@ -311,23 +327,5 @@ public class PreferencesState {
                 instance.getContext());
         return sharedPreferences.getBoolean(
                 instance.getContext().getString(R.string.developer_option), false);
-    }
-
-
-    /**
-     * Get credentials from sharedPreferences.
-     */
-    public static Credentials getCredentialsFromPreferences() {
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-                context);
-        String url = sharedPreferences.getString(context.getString(R.string.dhis_url), "");
-
-        String username = sharedPreferences.getString(context.getString(R.string.dhis_user), "");
-        String password = sharedPreferences.getString(context.getString(R.string.dhis_password),
-                "");
-        Credentials credentials = new Credentials(url, username, password);
-
-        return credentials;
     }
 }

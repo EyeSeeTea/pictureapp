@@ -178,6 +178,7 @@ public class Program extends BaseModel {
         //Clear cache to enable reloading
         orgUnits = null;
     }
+
     public List<Tab> getTabs() {
         if (tabs == null) {
             tabs = new Select().from(Tab.class)

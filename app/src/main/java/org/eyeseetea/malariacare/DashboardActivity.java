@@ -309,8 +309,10 @@ public class DashboardActivity extends BaseActivity {
         if (surveyFragment == null) {
             surveyFragment = new SurveyFragment();
         }
-        replaceFragment(R.id.dashboard_details_container, surveyFragment);
         surveyFragment.reloadHeader(dashboardActivity);
+        replaceFragment(R.id.dashboard_details_container, surveyFragment);
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+        LayoutUtils.setSurveyActionBar(actionBar);
     }
 
     /**
@@ -483,6 +485,8 @@ public class DashboardActivity extends BaseActivity {
      * After that, loads the Assess fragment(DashboardUnSentFragment) in the Assess tab.
      */
     public void closeSurveyFragment() {
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+        LayoutUtils.setDashboardActionBar(actionBar);
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         isLoadingReview = false;
         ScoreRegister.clear();
@@ -584,13 +588,14 @@ public class DashboardActivity extends BaseActivity {
                         closeSurveyFragment();
                     }
                 });
-        msgConfirmation.setNegativeButton(R.string.survey_review, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int arg1) {
-                DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
-                        0).getQuestion());
-                hideReview();
-            }
-        });
+        msgConfirmation.setNegativeButton(R.string.survey_review,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
+                                0).getQuestion());
+                        hideReview();
+                    }
+                });
 
         msgConfirmation.create().show();
     }

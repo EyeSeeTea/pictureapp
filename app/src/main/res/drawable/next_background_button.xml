@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/dark_violet" />
+    <solid android:color="@color/dark_purple" />
     <corners
-        android:bottomLeftRadius="50dp"
-        android:bottomRightRadius="50dp"
-        android:topLeftRadius="50dp"
-        android:topRightRadius="50dp" />
+        android:bottomLeftRadius="@dimen/footer_navigation_size"
+        android:bottomRightRadius="@dimen/footer_navigation_size"
+        android:topLeftRadius="@dimen/footer_navigation_size"
+        android:topRightRadius="@dimen/footer_navigation_size" />
 </shape>

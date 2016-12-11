@@ -121,34 +121,6 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
     }
 
     /**
-     * Checks if the given position points to a real survey instead of a footer or header of the
-     * listview.
-     *
-     * @return true|false
-     */
-    private boolean isPositionASurvey(int position) {
-        return !isPositionFooter(position) && !isPositionHeader(position);
-    }
-
-    /**
-     * Checks if the given position is the header of the listview instead of a real survey
-     *
-     * @return true|false
-     */
-    private boolean isPositionHeader(int position) {
-        return position <= 0;
-    }
-
-    /**
-     * Checks if the given position is the footer of the listview instead of a real survey
-     *
-     * @return true|false
-     */
-    private boolean isPositionFooter(int position) {
-        return position == (this.surveys.size() + 1);
-    }
-
-    /**
      * Initializes the listview component, adding a listener for swiping right
      */
     private void initListView() {

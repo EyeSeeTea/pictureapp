@@ -129,7 +129,7 @@
     <string name="monitor_row_title_rdt_stockout">úmero no probado (Rdt desabastecido)</string>
     <string name="monitor_row_title_pregnant">"Pacientes embarazadas"</string>
     <string name="monitor_row_title_severe">"Pacientes graves"</string>
-    <string name="monitor_row_title_treatment">Número de referencias (Tratamiento)</string>
+    <string name="referrals">Número de referencias (Tratamiento)</string>
     <string name="monitor_row_title_rdt_testing">Número de referencias (pruebas RDT)</string>
     <string name="monitor_row_title_submission">"Envíos"</string>
     <string name="review_title">Por favor, compruebe</string>

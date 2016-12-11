@@ -126,7 +126,7 @@
     <string name="option_confirm">"Confirmar opción"</string>
     <string name="monitor_row_title_act_stockout">Número no tratadas (falta de existencias ACT)</string>
     <string name="monitor_row_title_denied">"Pacientes rechazados"</string>
-    <string name="monitor_row_title_rdt_stockout">úmero no probado (Rdt desabastecido)</string>
+    <string name="monitor_row_title_rdt_stockout">Número no probado (Rdt desabastecido)</string>
     <string name="monitor_row_title_pregnant">"Pacientes embarazadas"</string>
     <string name="monitor_row_title_severe">"Pacientes graves"</string>
     <string name="referrals">Número de referencias (Tratamiento)</string>

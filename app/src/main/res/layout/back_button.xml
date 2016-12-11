@@ -20,7 +20,7 @@
         android:scaleType="fitCenter"
         android:src="@drawable/back_button"
         android:text=""
-        android:textColor="@color/dark_violet"
+        android:textColor="@color/dark_purple"
         android:textSize="10dp" />
 
     <org.eyeseetea.malariacare.views.TextCard
@@ -33,7 +33,7 @@
         android:paddingRight="5dp"
         android:scaleType="centerInside"
         android:text=""
-        android:textColor="@color/dark_violet"
+        android:textColor="@color/dark_purple"
         android:textSize="10dp"
         app:tDimension="@string/font_size_level2"
         app:tFontName="@string/specific_language_font" />

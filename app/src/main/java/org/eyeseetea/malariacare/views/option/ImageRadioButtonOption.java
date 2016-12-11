@@ -17,17 +17,10 @@ import org.eyeseetea.malariacare.views.TextCard;
 
 public class ImageRadioButtonOption extends LinearLayout {
     Option mOption;
-
-    public interface OnCheckedChangeListener {
-        void onCheckedChanged(ImageRadioButtonOption imageRadioButton, boolean value);
-    }
-
     OnCheckedChangeListener mOnCheckedChangeListener;
-
     ImageView mImageView;
     RadioButton mRadioButton;
     TextCard mCounter;
-
     public ImageRadioButtonOption(Context context) {
         super(context);
 
@@ -108,5 +101,9 @@ public class ImageRadioButtonOption extends LinearLayout {
         if (mOnCheckedChangeListener != null) {
             mOnCheckedChangeListener.onCheckedChanged(this, value);
         }
+    }
+
+    public interface OnCheckedChangeListener {
+        void onCheckedChanged(ImageRadioButtonOption imageRadioButton, boolean value);
     }
 }

@@ -805,8 +805,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void setBottomLine(int tabType, List<Question> screenQuestions,
             Question screenQuestion) {
-        if (isMultipleQuestionTab(tabType) && screenQuestion.equals(
-                screenQuestions.get(screenQuestions.size() - 1))) {
+        if (isMultipleQuestionTab(tabType) && screenQuestion.getId_question().equals(
+                screenQuestions.get(screenQuestions.size() - 1).getId_question())) {
             LinearLayout view = (LinearLayout) lInflater.inflate(R.layout.bottom_screen_view,
                     tableLayout, false);
             tableLayout.addView(view);

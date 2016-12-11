@@ -97,14 +97,14 @@ public class SurveySchedule extends BaseModel {
         return survey;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-        this.id_survey = (survey != null) ? survey.getId_survey() : null;
-    }
-
     public void setSurvey(Long id_survey) {
         this.id_survey = id_survey;
         this.survey = null;
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
+        this.id_survey = (survey != null) ? survey.getId_survey() : null;
     }
 
     @Override

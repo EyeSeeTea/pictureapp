@@ -106,7 +106,6 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
             opts.inDensity = DisplayMetrics.DENSITY_HIGH;
             Drawable drawable = Drawable.createFromResourceStream(getResources(), null, ims, null,
                     opts);
-
             imageRadioButtonOption.setImageDrawable(drawable);
             ims.close();
         } catch (IOException e) {

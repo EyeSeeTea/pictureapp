@@ -40,10 +40,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -70,6 +70,7 @@ import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
+import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.factory.IQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.MultiQuestionViewFactory;
@@ -497,13 +498,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (questionItem.getPath() != null && !questionItem.getPath().equals("")
                 && questionItem.hasVisibleHeaderQuestion()) {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.questionImage);
-            putImageInImageView(questionItem.getInternationalizedPath(), imageView);
+            BaseLayoutUtils.putImageInImageView(questionItem.getInternationalizedPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
         }
 
         //Progress
         ProgressUtils.updateProgressBarStatus(rowView, navigationController.getCurrentPage(),
-                navigationController.getTotalPages());
+                navigationController.getCurrentTotalPages());
 
         TableRow tableRow = null;
         TableRow tableButtonRow = null;
@@ -796,9 +797,20 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     showOrHideChildren(screenQuestion);
                     break;
             }
+            setBottomLine(tabType, screenQuestions, screenQuestion);
         }
         rowView.requestLayout();
         return rowView;
+    }
+
+    private void setBottomLine(int tabType, List<Question> screenQuestions,
+            Question screenQuestion) {
+        if (isMultipleQuestionTab(tabType) && screenQuestion.getId_question().equals(
+                screenQuestions.get(screenQuestions.size() - 1).getId_question())) {
+            LinearLayout view = (LinearLayout) lInflater.inflate(R.layout.bottom_screen_view,
+                    tableLayout, false);
+            tableLayout.addView(view);
+        }
     }
 
     private void adaptLayoutToTextOnly(View viewWithText, ImageView rowImageLabelView) {
@@ -859,9 +871,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Create a buttons for navigate.
      */
     private View createNavigationButtonsBackButton(View navigationButtonsHolder) {
-        Button button = (Button) navigationButtonsHolder.findViewById(R.id.next_btn);
+        ImageButton button = (ImageButton) navigationButtonsHolder.findViewById(R.id.next_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
-        button.setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) button.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean questionsWithError = false;
@@ -879,9 +891,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
             }
         });
-        button = (Button) navigationButtonsHolder.findViewById(R.id.back_btn);
+        button = (ImageButton) navigationButtonsHolder.findViewById(R.id.back_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
-        button.setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) button.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 previous();
@@ -1293,7 +1305,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //the button is a framelayout that contains a imageview
         ImageView imageView = (ImageView) button.getChildAt(0);
         //Put image
-        putImageInImageView(option.getInternationalizedPath(), imageView);
+        BaseLayoutUtils.putImageInImageView(option.getInternationalizedPath(), imageView);
         //Associate option
         button.setTag(option);
 

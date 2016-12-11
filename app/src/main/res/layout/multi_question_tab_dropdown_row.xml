@@ -21,7 +21,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/input_edit_text_margin"
-            android:backgroundTint="@color/headerColor"
+            android:backgroundTint="@color/spinner_color"
             android:backgroundTintMode="add"
             android:gravity="right"
             android:paddingBottom="2dip"

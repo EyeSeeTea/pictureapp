@@ -14,7 +14,7 @@
         android:gravity="left"
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:paddingRight="@dimen/input_edit_text_right_padding"
-        android:textColor="@color/dark_violet"
+        android:textColor="@color/dark_purple"
         android:textSize="@dimen/input_number_edit_text_phone"
         app:tDimension="@string/font_size_level2"
         app:tFontName="@string/condensed_font_name" />

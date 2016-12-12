@@ -133,14 +133,14 @@ public class Tab extends BaseModel {
         return program;
     }
 
-    public void setProgram(Long id_program) {
-        this.id_program = id_program;
-        this.program = null;
-    }
-
     public void setProgram(Program program) {
         this.program = program;
         this.id_program = (program != null) ? program.getId_program() : null;
+    }
+
+    public void setProgram(Long id_program) {
+        this.id_program = id_program;
+        this.program = null;
     }
 
     public List<Header> getHeaders() {

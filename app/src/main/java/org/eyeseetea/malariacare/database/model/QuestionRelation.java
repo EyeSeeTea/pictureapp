@@ -111,14 +111,14 @@ public class QuestionRelation extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_question = (question != null) ? question.getId_question() : null;
-    }
-
     public void setQuestion(Long id_question) {
         this.id_question = id_question;
         this.question = null;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+        this.id_question = (question != null) ? question.getId_question() : null;
     }
 
     public int getOperation() {

@@ -15,6 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="100dp"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/question_padding_all"
             android:paddingRight="@dimen/question_padding_all"
@@ -23,11 +24,12 @@
             <ImageView
                 android:id="@+id/question_image_row"
                 android:layout_width="0px"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.25"
                 android:adjustViewBounds="true"
-                android:scaleType="fitXY" />
+                android:minHeight="100dp"
+                android:scaleType="fitCenter" />
 
 
             <LinearLayout

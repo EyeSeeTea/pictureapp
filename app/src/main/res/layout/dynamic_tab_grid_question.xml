@@ -64,7 +64,7 @@
         <!--Question-->
     </LinearLayout>
 
-    <include layout="@layout/snakbar"></include>
+    <include layout="@layout/snackbar"></include>
     <!--Horizontal Progress bar + text-->
     <RelativeLayout
         android:id="@+id/dynamic_footer"

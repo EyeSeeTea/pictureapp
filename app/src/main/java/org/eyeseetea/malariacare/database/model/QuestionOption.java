@@ -125,14 +125,14 @@ public class QuestionOption extends BaseModel {
         return option;
     }
 
-    public void setOption(Option option) {
-        this.option = option;
-        this.id_option = (option != null) ? option.getId_option() : null;
-    }
-
     public void setOption(Long id_option) {
         this.id_option = id_option;
         this.option = null;
+    }
+
+    public void setOption(Option option) {
+        this.option = option;
+        this.id_option = (option != null) ? option.getId_option() : null;
     }
 
     public Question getQuestion() {
@@ -146,14 +146,14 @@ public class QuestionOption extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_question = (question != null) ? question.getId_question() : null;
-    }
-
     public void setQuestion(Long id_question) {
         this.id_question = id_question;
         this.question = null;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+        this.id_question = (question != null) ? question.getId_question() : null;
     }
 
     public Match getMatch() {
@@ -167,14 +167,14 @@ public class QuestionOption extends BaseModel {
         return match;
     }
 
-    public void setMatch(Match match) {
-        this.match = match;
-        this.id_match = (match != null) ? match.getId_match() : null;
-    }
-
     public void setMatch(Long id_match) {
         this.id_match = id_match;
         this.match = null;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
+        this.id_match = (match != null) ? match.getId_match() : null;
     }
 
     /**

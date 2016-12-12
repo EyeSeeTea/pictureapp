@@ -129,14 +129,14 @@ public class Value extends BaseModel {
         return option;
     }
 
-    public void setOption(Option option) {
-        this.option = option;
-        this.id_option = (option != null) ? option.getId_option() : null;
-    }
-
     public void setOption(Long id_option) {
         this.id_option = id_option;
         this.option = null;
+    }
+
+    public void setOption(Option option) {
+        this.option = option;
+        this.id_option = (option != null) ? option.getId_option() : null;
     }
 
     public Question getQuestion() {
@@ -151,14 +151,14 @@ public class Value extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_question = (question != null) ? question.getId_question() : null;
-    }
-
     public void setQuestion(Long id_question) {
         this.id_question = id_question;
         this.question = null;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+        this.id_question = (question != null) ? question.getId_question() : null;
     }
 
     public String getValue() {
@@ -180,14 +180,14 @@ public class Value extends BaseModel {
         return survey;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-        this.id_survey = (survey != null) ? survey.getId_survey() : null;
-    }
-
     public void setSurvey(Long id_survey) {
         this.id_survey = id_survey;
         this.survey = null;
+    }
+
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
+        this.id_survey = (survey != null) ? survey.getId_survey() : null;
     }
 
     /**

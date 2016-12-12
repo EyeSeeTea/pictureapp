@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 public class TreatmentRowBuilder extends CounterRowBuilder {
 
     public TreatmentRowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_treatment));
+        super(context, context.getString(R.string.referrals));
     }
 
     @Override

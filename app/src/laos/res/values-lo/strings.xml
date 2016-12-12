@@ -145,7 +145,7 @@
     <string name="review_subtitle">"ສົ່ງ"</string>
     <string name="monitor_row_title_tested">"ໄດ້ກວດເລືອດ"</string>
     <string name="monitor_row_title_act_stockout">"ຈໍານວນຜູ້ທີ່ບໍ່ໄດ້ຮັບການປິ່ນປົວ ຍ້ອນຢາ ACT ໝົດ"</string>
-    <string name="monitor_row_title_treatment">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການປິ່ນປົວ"</string>
+    <string name="referrals">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການປິ່ນປົວ"</string>
     <string name="monitor_row_title_rdt_testing">"ຈໍານວນທີ່ສົ່ງ ເພື່ອຮັບການກວດເລືອດດ້ວຍ RDT"</string>
     <string name="not_tested">"ບໍ່ໄດ້ກວດເລືອດ"</string>
 

@@ -88,6 +88,10 @@ public class DashboardActivity extends BaseActivity {
      * Flags required to decide if the survey must be deleted or not
      */
     private boolean isBackPressed = false;
+    /**
+     * Flags required to decide if the survey read only
+     */
+    private boolean isReadOnly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +139,9 @@ public class DashboardActivity extends BaseActivity {
                     exitReviewOnChangeTab(null);
                 }
                 if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
-                    unsentFragment.reloadData();
+                    if (!isReadOnly) {
+                        unsentFragment.reloadData();
+                    }
                     unsentFragment.reloadHeader(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_improve))) {
@@ -309,8 +315,10 @@ public class DashboardActivity extends BaseActivity {
         if (surveyFragment == null) {
             surveyFragment = new SurveyFragment();
         }
-        replaceFragment(R.id.dashboard_details_container, surveyFragment);
         surveyFragment.reloadHeader(dashboardActivity);
+        replaceFragment(R.id.dashboard_details_container, surveyFragment);
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+        LayoutUtils.setSurveyActionBar(actionBar);
     }
 
     /**
@@ -483,10 +491,13 @@ public class DashboardActivity extends BaseActivity {
      * After that, loads the Assess fragment(DashboardUnSentFragment) in the Assess tab.
      */
     public void closeSurveyFragment() {
-        tabHost.getTabWidget().setVisibility(View.VISIBLE);
-        isLoadingReview = false;
-        ScoreRegister.clear();
         boolean isSent = false;
+        isReadOnly = false;
+        isLoadingReview = false;
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+        LayoutUtils.setDashboardActionBar(actionBar);
+        tabHost.getTabWidget().setVisibility(View.VISIBLE);
+        ScoreRegister.clear();
         if (Session.getSurvey() != null) {
             isSent = Session.getSurvey().isSent();
         }
@@ -625,6 +636,7 @@ public class DashboardActivity extends BaseActivity {
      * This method moves to the Assess tab and open the active survey.
      */
     public void openSentSurvey() {
+        isReadOnly = true;
         tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_assess));
         initSurvey();
     }

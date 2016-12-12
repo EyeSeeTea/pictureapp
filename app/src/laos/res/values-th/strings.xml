@@ -129,7 +129,7 @@
     <string name="monitor_row_title_rdt_stockout">"จำนวนไม่ได้ทดสอบ (ยาเสพติด)"</string>
     <string name="monitor_row_title_pregnant">"ผู้ป่วยตั้งครรภ์"</string>
     <string name="monitor_row_title_severe">"ผู้ป่วยอย่างรุนแรง"</string>
-    <string name="monitor_row_title_treatment">"จำนวนการอ้างอิง (รักษา)"</string>
+    <string name="referrals">"จำนวนการอ้างอิง (รักษา)"</string>
     <string name="monitor_row_title_rdt_testing">"จำนวนการอ้างอิง (ทดสอบ RDT)"</string>
     <string name="monitor_row_title_submission">"การยอม"</string>
     <string name="review_title">กรุณาตรวจสอบก่อน</string>

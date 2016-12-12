@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.views.question.singlequestion.strategies;
 
-import static org.eyeseetea.malariacare.R.id.questionImage;
-
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,10 +18,10 @@ public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomVi
 
     }
 
-    public void showQuestionInfo(View rootView, Question question){
+    public void showQuestionInfo(View rootView, Question question) {
         List<Option> questionOptions = question.getAnswer().getOptions();
 
-        showImage(rootView,question);
+        showImage(rootView, question);
 
         //Question "header" is in the first option in Options.csv
         if (questionOptions != null && questionOptions.size() > 0) {
@@ -35,10 +33,11 @@ public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomVi
         }
     }
 
-    private void showImage(View rootView, Question question){
+    private void showImage(View rootView, Question question) {
         if (question.getPath() != null && !question.getPath().equals("")) {
             ImageView imageView = (ImageView) rootView.findViewById(R.id.questionImageRow);
-            BaseLayoutUtils.putImageInImageViewDensityHight(question.getInternationalizedPath(), imageView);
+            BaseLayoutUtils.putImageInImageViewDensityHight(question.getInternationalizedPath(),
+                    imageView);
             imageView.setVisibility(View.VISIBLE);
         }
     }

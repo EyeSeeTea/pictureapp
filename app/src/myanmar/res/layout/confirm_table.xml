@@ -11,6 +11,7 @@
     tools:showIn="@layout/dynamic_tab_grid_question">
 
     <include layout="@layout/bottom_view"></include>
+
     <include layout="@layout/dynamic_tab_row_question_image" />
 
     <include layout="@layout/dynamic_tab_row_question_text" />

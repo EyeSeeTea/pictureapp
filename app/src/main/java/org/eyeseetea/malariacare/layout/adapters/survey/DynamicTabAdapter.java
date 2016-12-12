@@ -126,6 +126,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     View keyboardView;
     List<IMultiQuestionView> mMultiQuestionViews = new ArrayList<>();
+    IDynamicTabAdapterStrategy mDynamicTabAdapterStrategy;
     /**
      * Flag that indicates if the current survey in session is already sent or not (it affects
      * readonly settings)
@@ -141,8 +142,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Listener that detects taps on buttons & swipe
      */
     private SwipeTouchListener swipeTouchListener;
-
-    IDynamicTabAdapterStrategy mDynamicTabAdapterStrategy;
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);

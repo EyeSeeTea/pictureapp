@@ -314,6 +314,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         yesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                navigationController.increaseCounterRepetitions(selectedOption);
                 removeConfirmCounter(v);
                 saveOptionAndMove(view, selectedOption, question);
             }

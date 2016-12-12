@@ -115,11 +115,16 @@ public class NavigationController {
         return this.next(null);
     }
 
+    public void increaseCounterRepetitions(Option option) {
+        getCurrentNode().increaseRepetitions(option);
+    }
+
     public Question next(Option option) {
         Log.d(TAG, String.format("next(%s)...", option == null ? "" : option.getName()));
         QuestionNode nextNode;
+
         //Trigger counters -> no movement
-        if (!isInitialMove() && getCurrentNode().increaseRepetitions(option)) {
+        if (!isInitialMove() && existsPendingCounter(option)) {
             Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getName(),
                     getCurrentQuestion().getCode()));
             return getCurrentQuestion();
@@ -153,6 +158,19 @@ public class NavigationController {
         Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getName(),
                 nextQuestion.getCode()));
         return nextNode.getQuestion();
+    }
+
+    public boolean existsPendingCounter(Option option) {
+        Map<Long, QuestionCounter> counters = getCurrentNode().getCountersMap();
+
+        if (counters == null || counters.size() == 0) {
+            return false;
+        }
+
+        QuestionCounter questionCounter = counters.get(option.getId_option());
+        Integer limit = (int) Math.floor(option.getFactor());
+
+        return (questionCounter.isMaxCounterLimit(limit)) ? false : true;
     }
 
     /**

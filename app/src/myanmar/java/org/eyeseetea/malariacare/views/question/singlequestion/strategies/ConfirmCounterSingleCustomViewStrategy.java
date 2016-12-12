@@ -1,11 +1,7 @@
 package org.eyeseetea.malariacare.views.question.singlequestion.strategies;
 
 import static org.eyeseetea.malariacare.R.id.question;
-import static org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils.putImageInImageView;
 
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -15,15 +11,12 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.TextCard;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 public class ConfirmCounterSingleCustomViewStrategy implements
@@ -79,6 +72,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         ((LinearLayout) nextButton.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mDynamicTabAdapter.navigationController.increaseCounterRepetitions(selectedOption);
                 mDynamicTabAdapter.removeConfirmCounter(v);
                 mDynamicTabAdapter.saveOptionAndMove(view, selectedOption, question);
             }

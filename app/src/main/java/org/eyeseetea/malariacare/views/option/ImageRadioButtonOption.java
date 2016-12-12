@@ -21,6 +21,7 @@ public class ImageRadioButtonOption extends LinearLayout {
     ImageView mImageView;
     RadioButton mRadioButton;
     TextCard mCounter;
+
     public ImageRadioButtonOption(Context context) {
         super(context);
 

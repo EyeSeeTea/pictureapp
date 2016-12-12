@@ -67,6 +67,16 @@
                     android:textSize="@dimen/input_number_edit_text_phone"
                     app:tDimension="@string/font_size_level1"
                     app:tFontName="@string/condensed_font_name" />
+
+                <ImageView
+                    android:id="@+id/row_header_compulsory"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_toRightOf="@+id/row_header_text"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/compulsory"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

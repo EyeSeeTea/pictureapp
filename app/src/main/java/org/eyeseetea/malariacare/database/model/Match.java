@@ -92,15 +92,15 @@ public class Match extends BaseModel {
         return questionRelation;
     }
 
+    public void setQuestionRelation(Long id_question_relation) {
+        this.id_question_relation = id_question_relation;
+        this.questionRelation = null;
+    }
+
     public void setQuestionRelation(QuestionRelation questionRelation) {
         this.questionRelation = questionRelation;
         this.id_question_relation =
                 (questionRelation != null) ? questionRelation.getId_question_relation() : null;
-    }
-
-    public void setQuestionRelation(Long id_question_relation) {
-        this.id_question_relation = id_question_relation;
-        this.questionRelation = null;
     }
 
     /**

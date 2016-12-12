@@ -5,4 +5,8 @@
     <color name="questionLayoutBackground">#14b2be</color>
     <color name="dynamicProgressBarColor">#f78f38</color>
     <color name="intColor">#FFFFFF</color>
+
+    <color name="question_header_title">#000000</color>
+    <color name="question_header_subtitle">#000000</color>
+
 </resources>

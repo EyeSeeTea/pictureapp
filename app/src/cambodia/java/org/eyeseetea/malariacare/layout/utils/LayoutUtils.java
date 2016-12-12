@@ -26,4 +26,5 @@ public class LayoutUtils extends BaseLayoutUtils {
     public static void setDivider(DashboardActivity dashboardActivity) {
         return;
     }
+
 }

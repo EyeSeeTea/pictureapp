@@ -14,6 +14,8 @@ public abstract class AKeyboardQuestionView extends LinearLayout {
         super(context);
     }
 
+    public abstract void setHint(String hintValue);
+
     public void setOnAnswerChangedListener(onAnswerChangedListener onAnswerChangedListener) {
         mOnAnswerChangedListener = onAnswerChangedListener;
     }

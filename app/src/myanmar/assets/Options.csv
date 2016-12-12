@@ -1,38 +1,38 @@
-1;'Other';'Dropdown parent';0;4;1
-2;'Male';'No dataelementM';0;6;2
-3;'Female';'No dataelementF';0;6;3
-4;'Female pregnant';'No dataelementFP';0;6;4
+1;'patient_residence_village_other_option';'Dropdown parent';0;4;1
+2;'patient_sex_male';'No dataelementM';0;6;2
+3;'patient_sex_female';'No dataelementF';0;6;3
+4;'patient_sex_female_pregnant';'No dataelementFP';0;6;4
 5;'Hidden';'Female';0;7;5
 6;'Hidden';'Male';0;7;6
 7;'Hidden';'No pregnant';0;8;7
 8;'Hidden';'Pregnant';0;8;8
-9;'Yes';'Yes';0;9;9
-10;'No';'No';0;9;10
-11;'Yes';'Yes';0;10;11
-12;'No';'No';0;10;12
-13;'Yes';'Yes';0;11;13
-14;'No';'No';0;11;14
-15;'Negative';'Negative';0;12;15
-16;'Pf';'Pf';0;12;16
-17;'Pv';'Pv';0;12;17
-18;'Pf+Pv';'Pf+Pv';0;12;18
-19;'Invalid';'Invalid';2;12;19
-20;'Negative Test';'Negative Reminder';0;13;20
-21;'Negative Test Send';'Negative Reminder Button';0;13;21
+9;'symptoms_fever_yes';'Yes';0;9;9
+10;'symptoms_fever_no';'No';0;9;10
+11;'symptoms_care_sought_within_24h';'Within 24h';0;10;11
+12;'symptoms_care_sought_after_24h';'After 24h';0;10;12
+13;'symptoms_severity_yes';'Yes';0;11;13
+14;'symptoms_severity_no';'No';0;11;14
+15;'rdt_negative';'Negative';0;12;15
+16;'rdt_pf';'Pf';0;12;16
+17;'rdt_pv';'Pv';0;12;17
+18;'rdt_mixed';'Pf+Pv';0;12;18
+19;'rdt_invalid';'Invalid';2;12;19
+20;'negative_result_text';'Negative Reminder';0;13;20
+21;'negative_end_test';'Negative Reminder Button';0;13;21
 22;'Counter Header';'Counter H';0;14;22
 23;'Counter First button';'Counter F';0;14;23
 24;'Counter Second button';'Counter S';0;14;24
 25;'Pv';'Pv';0;15;25
 26;'PfPv';'Pf+Pv';0;15;26
-27;'Yes';'Yes';0;20;27
-28;'No';'No';0;20;28
-29;'Yes';'Yes';0;21;29
-30;'No';'No';0;21;30
-31;'Yes';'Yes';0;22;31
-32;'No';'No';0;22;32
-33;'Yes';'Yes';0;24;33
-34;'No';'No';0;24;34
-35;'Yes';'Yes';0;25;35
-36;'No';'No';0;25;36
-37;'Yes';'Yes';0;26;37
-38;'No';'No';0;26;38
+27;'follow_up_travelling_yes';'Yes';0;20;27
+28;'follow_up_travelling_no';'No';0;20;28
+29;'follow_up_LLIN_ITN_usage_yes';'Yes';0;21;29
+30;'follow_up_LLIN_ITN_usage_no';'No';0;21;30
+31;'follow_up_LLIN_ITN_ownership_yes';'Yes';0;22;31
+32;'follow_up_LLIN_ITN_ownership_no';'No';0;22;32
+33;'drugs_referral_ACTx12_yes';'Yes';0;24;33
+34;'drugs_referral_ACTx12_no';'No';0;24;34
+35;'drugs_referral_Pqx2_yes';'Yes';0;25;35
+36;'drugs_referral_Pqx2_no';'No';0;25;36
+37;'drugs_referral_yes';'Yes';0;26;37
+38;'drugs_referral_no';'No';0;26;38

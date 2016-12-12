@@ -48,7 +48,6 @@ import java.util.List;
 @Table(databaseName = AppDatabase.NAME)
 public class Question extends BaseModel {
 
-    private static final String TAG = "Question";
     /**
      * Constant that reflects a visible question in information
      */
@@ -65,6 +64,7 @@ public class Question extends BaseModel {
      * Constant that reflects a not visible question in information
      */
     public static final int QUESTION_NO_COMPULSORY = 0;
+    private static final String TAG = "Question";
     /**
      * Required to create a null Question value to enable caching when you're the last question.
      */
@@ -77,7 +77,7 @@ public class Question extends BaseModel {
     @Column
     String de_name;
     @Column
-    String short_name;
+    String help_text;
     @Column
     String form_name;
     @Column
@@ -160,13 +160,13 @@ public class Question extends BaseModel {
     public Question() {
     }
 
-    public Question(String code, String de_name, String short_name, String form_name, String uid,
+    public Question(String code, String de_name, String help_text, String form_name, String uid,
             Integer order_pos, Float numerator_w, Float denominator_w, String feedback,
             Integer output, Integer compulsory, Header header, Answer answer, Question question,
             CompositeScore compositeScore) {
         this.code = code;
         this.de_name = de_name;
-        this.short_name = short_name;
+        this.help_text = help_text;
         this.form_name = form_name;
         this.uid = uid;
         this.order_pos = order_pos;
@@ -408,12 +408,12 @@ public class Question extends BaseModel {
         this.de_name = de_name;
     }
 
-    public String getShort_name() {
-        return short_name;
+    public String getHelp_text() {
+        return help_text;
     }
 
-    public void setShort_name(String short_name) {
-        this.short_name = short_name;
+    public void setHelp_text(String help_text) {
+        this.help_text = help_text;
     }
 
     public String getForm_name() {
@@ -499,14 +499,14 @@ public class Question extends BaseModel {
         return header;
     }
 
-    public void setHeader(Header header) {
-        this.header = header;
-        this.id_header = (header != null) ? header.getId_header() : null;
-    }
-
     public void setHeader(Long id_header) {
         this.id_header = id_header;
         this.header = null;
+    }
+
+    public void setHeader(Header header) {
+        this.header = header;
+        this.id_header = (header != null) ? header.getId_header() : null;
     }
 
     public Integer getOutput() {
@@ -544,14 +544,14 @@ public class Question extends BaseModel {
         return answer;
     }
 
-    public void setAnswer(Answer answer) {
-        this.answer = answer;
-        this.id_answer = (answer != null) ? answer.getId_answer() : null;
-    }
-
     public void setAnswer(Long id_answer) {
         this.id_answer = id_answer;
         this.answer = null;
+    }
+
+    public void setAnswer(Answer answer) {
+        this.answer = answer;
+        this.id_answer = (answer != null) ? answer.getId_answer() : null;
     }
 
     //Is necessary use the question relations.
@@ -566,15 +566,15 @@ public class Question extends BaseModel {
         return question;
     }
 
+    public void setQuestion(Long id_parent) {
+        this.id_parent = id_parent;
+        this.question = null;
+    }
+
     @Deprecated
     public void setQuestion(Question question) {
         this.question = question;
         this.id_parent = (question != null) ? question.getId_question() : null;
-    }
-
-    public void setQuestion(Long id_parent) {
-        this.id_parent = id_parent;
-        this.question = null;
     }
 
     public CompositeScore getCompositeScore() {
@@ -588,15 +588,15 @@ public class Question extends BaseModel {
         return compositeScore;
     }
 
+    public void setCompositeScore(Long id_composite_score) {
+        this.id_composite_score = id_composite_score;
+        this.compositeScore = null;
+    }
+
     public void setCompositeScore(CompositeScore compositeScore) {
         this.compositeScore = compositeScore;
         this.id_composite_score =
                 (compositeScore != null) ? compositeScore.getId_composite_score() : null;
-    }
-
-    public void setCompositeScore(Long id_composite_score) {
-        this.id_composite_score = id_composite_score;
-        this.compositeScore = null;
     }
 
     public List<QuestionRelation> getQuestionRelations() {
@@ -1309,8 +1309,8 @@ public class Question extends BaseModel {
         if (de_name != null ? !de_name.equals(question.de_name) : question.de_name != null) {
             return false;
         }
-        if (short_name != null ? !short_name.equals(question.short_name)
-                : question.short_name != null) {
+        if (help_text != null ? !help_text.equals(question.help_text)
+                : question.help_text != null) {
             return false;
         }
         if (form_name != null ? !form_name.equals(question.form_name)
@@ -1372,7 +1372,7 @@ public class Question extends BaseModel {
         int result = (int) (id_question ^ (id_question >>> 32));
         result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (de_name != null ? de_name.hashCode() : 0);
-        result = 31 * result + (short_name != null ? short_name.hashCode() : 0);
+        result = 31 * result + (help_text != null ? help_text.hashCode() : 0);
         result = 31 * result + (form_name != null ? form_name.hashCode() : 0);
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (order_pos != null ? order_pos.hashCode() : 0);
@@ -1397,7 +1397,7 @@ public class Question extends BaseModel {
                 "id_question=" + id_question +
                 ", code='" + code + " " + '\'' +
                 ", de_name='" + de_name + " " + '\'' +
-                ", short_name='" + short_name + " " + '\'' +
+                ", help_text='" + help_text + " " + '\'' +
                 ", form_name='" + form_name + " " + '\'' +
                 ", uid='" + uid + " " + '\'' +
                 ", order_pos=" + order_pos +
@@ -1434,7 +1434,7 @@ public class Question extends BaseModel {
     }
 
     private boolean isNotAnswered(Question question) {
-        if (question.getValueBySession().getValue() == null
+        if (question.getValueBySession() == null || question.getValueBySession().getValue() == null
                 || question.getValueBySession().getValue().length() == 0) {
             return true;
         }

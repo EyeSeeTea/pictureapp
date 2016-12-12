@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.database;
 
-import org.eyeseetea.malariacare.database.migrations.Migration21ModifyValuesLastMigration;
 import org.eyeseetea.malariacare.database.migrations.Migration14AddQuestionReminder;
+import org.eyeseetea.malariacare.database.migrations.Migration21ModifyValuesLastMigration;
 import org.eyeseetea.malariacare.database.migrations.Migration2Database;
 
 /**

@@ -24,7 +24,7 @@
             android:background="@drawable/option_button"
             android:enabled="true"
             android:gravity="center"
-            android:text="@string/send"
+            android:text="@string/survey_send"
             android:textColor="@color/intColor"
             app:tDimension="@string/font_size_level2"
             app:tFontName="@string/specific_language_font" />

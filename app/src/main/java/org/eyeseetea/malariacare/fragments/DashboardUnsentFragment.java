@@ -111,7 +111,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
      * one in session is created.
      */
     private void initAdapter() {
-        this.adapter = new AssessmentAdapter(getString(R.string.assessment_title_header),
+        this.adapter = new AssessmentAdapter(getString(R.string.unsent_data),
                 this.surveys, getActivity());
     }
 
@@ -175,6 +175,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         View header = HeaderUseCase.getInstance().loadHeader(this.adapter.getHeaderLayout(),
                 inflater);
         View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
+
         ListView listView = getListView();
         if (header != null) {
             listView.addHeaderView(header);

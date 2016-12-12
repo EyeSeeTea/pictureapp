@@ -35,7 +35,7 @@ import java.util.List;
 public class PositivityRateRowBuilder extends MonitorRowBuilder {
 
     public PositivityRateRowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_positivity_rate));
+        super(context, context.getString(R.string.positivity_rate));
     }
 
     /**

@@ -31,11 +31,6 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
     }
 
     @Override
-    public void setImage(String path) {
-        return;
-    }
-
-    @Override
     public boolean hasError() {
         return editCard.getError() != null;
     }
@@ -50,6 +45,11 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
         if (value != null) {
             editCard.setText(value.getValue());
         }
+    }
+
+    @Override
+    public void setHint(String hintValue) {
+        editCard.setHint(hintValue);
     }
 
     private void init(final Context context) {

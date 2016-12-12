@@ -125,6 +125,10 @@ public class Option extends BaseModel {
         return Utils.getInternationalizedString(code);
     }
 
+    public String getInternationalizedName() {
+        return Utils.getInternationalizedString(name);
+    }
+
     public String getName() {
         return name;
     }

@@ -46,7 +46,7 @@
     <string name="invalid1_result">သွေးစစ်ကိရိယာမကောင်း (C လိုင်းမပေါ်)</string> 
     <string name="invalid1_result_text">သွေးစစ်ကိရိယာမကောင်း (C လိုင်းမပေါ်) ၁ ကြိမ်</string>
      <string name="invalid1_result_subtext">နောက်တစ်ကြိမ်စစ်ဆေးပါ။</string> 
-    <string name="invalid1_test_again">နောက်တစ်ကြိမ်စစ်ဆေးရန်</string>
+    <string name="invalid1_end_test">နောက်တစ်ကြိမ်စစ်ဆေးရန်</string>
     <string name="invalid2_subtitle">C လိုင်းမပေါ် ၂ ကြိမ်</string> 
     <string name="invalid2_result">သွေးစစ်ကိရိယာမကောင်း (C လိုင်းမပေါ်)</string> 
     <string name="invalid2_result_text">သွေးစစ်ကိရိယာမကောင်း (C လိုင်းမပေါ်) ၂ ကြိမ်</string>

@@ -2,10 +2,10 @@ package org.eyeseetea.malariacare.views.question.singlequestion.strategies;
 
 import android.view.View;
 
-import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.Question;
 
 public interface IReminderSingleCustomViewStrategy {
-    void initWarningText(View rootView, Option option);
+    void showQuestionInfo(View rootView, Question question);
 
-    void initWarningValue(View rootView, Option option);
+    void showAndHideViews(View rootView);
 }

@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.views.question.singlequestion.strategies;
 
 import static org.eyeseetea.malariacare.R.id.question;
+import static org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils.putImageInImageView;
 
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,7 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
+import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.TextCard;
 
@@ -43,8 +45,6 @@ public class ConfirmCounterSingleCustomViewStrategy implements
 
         showConfirmCounterViewAndHideCurrentQuestion(rootView);
 
-        hideStandardButtons(rootView);
-
         configureNavigationButtons(view, selectedOption, question, questionCounter, rootView);
 
         showQuestionHeader(questionCounter, rootView);
@@ -57,17 +57,6 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         //Show confirm on full screen
         rootView.findViewById(R.id.no_scrolled_table).setVisibility(View.GONE);
         rootView.findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
-    }
-
-    private void hideStandardButtons(View rootView) {
-        TextCard standardTextYes = (TextCard) rootView.findViewById(R.id.textcard_confirm_yes);
-        ImageView standardButtonYes = (ImageView) rootView.findViewById(R.id.confirm_yes);
-        standardTextYes.setVisibility(View.GONE);
-        standardButtonYes.setVisibility(View.GONE);
-        TextCard standardTextNo = (TextCard) rootView.findViewById(R.id.textcard_confirm_no);
-        ImageView standardButtonNo = (ImageView) rootView.findViewById(R.id.confirm_no);
-        standardTextNo.setVisibility(View.GONE);
-        standardButtonNo.setVisibility(View.GONE);
     }
 
     public void configureNavigationButtons(final View view, final Option selectedOption,
@@ -111,7 +100,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
     public void showQuestionImage(Question questionCounter, View rootView) {
         if (questionCounter.getPath() != null && !questionCounter.getPath().equals("")) {
             ImageView imageView = (ImageView) rootView.findViewById(R.id.questionImageRow);
-            putImageInImageView(questionCounter.getInternationalizedPath(),
+            BaseLayoutUtils.putImageInImageViewDensityHight(questionCounter.getInternationalizedPath(),
                     imageView);
             imageView.setVisibility(View.VISIBLE);
         }
@@ -130,25 +119,6 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         }
     }
 
-    public void putImageInImageView(String path, ImageView imageView) {
-        if (path == null || path.equals("")) {
-            return;
-        }
-        try {
-            InputStream ims = PreferencesState.getInstance().getContext().getAssets().open(path);
-
-            BitmapFactory.Options opts = new BitmapFactory.Options();
-            opts.inDensity = DisplayMetrics.DENSITY_HIGH;
-            Drawable drawable = Drawable.createFromResourceStream(
-                    PreferencesState.getInstance().getContext().getResources(), null, ims, null,
-                    opts);
-
-            imageView.setImageDrawable(drawable);
-            ims.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private String getInternationalizedName(String name) {
 

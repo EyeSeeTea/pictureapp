@@ -69,6 +69,8 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
+import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
+import org.eyeseetea.malariacare.layout.adapters.survey.strategies.IDynamicTabAdapterStrategy;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -138,6 +140,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private SwipeTouchListener swipeTouchListener;
 
+    IDynamicTabAdapterStrategy mDynamicTabAdapterStrategy;
+
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
@@ -171,6 +175,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         navigationController.setTotalPages(totalPages);
         isClicked = false;
+
+        mDynamicTabAdapterStrategy = new DynamicTabAdapterStrategy(this);
     }
 
     /**
@@ -509,7 +515,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //question image
         if (questionItem.getPath() != null && !questionItem.getPath().equals("")
-                && questionItem.hasVisibleHeaderQuestion()) {
+                && mDynamicTabAdapterStrategy.HasQuestionImageVisibleInHeader(
+                questionItem.getOutput())) {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.questionImage);
             BaseLayoutUtils.putImageInImageView(questionItem.getInternationalizedPath(), imageView);
             imageView.setVisibility(View.VISIBLE);
@@ -658,26 +665,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.WARNING:
                     View rootView = rowView.getRootView();
 
-                    //Show confirm on full screen
-                    rootView.findViewById(R.id.scrolled_table).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.no_scrolled_table).setVisibility(View.GONE);
-                    rootView.findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
-                    rootView.findViewById(R.id.no_container).setVisibility(View.GONE);
-
                     ProgressUtils.setProgressBarText(rowView, "");
-                    List<Option> questionOptions = questionItem.getAnswer().getOptions();
+
 
                     ReminderSingleCustomViewStrategy reminderStrategy =
                             new ReminderSingleCustomViewStrategy(this);
 
-                    //Question "header" is in the first option in Options.csv
-                    if (questionOptions != null && questionOptions.size() > 0) {
-                        reminderStrategy.initWarningText(rootView, questionOptions.get(0));
-                    }
-                    //Question "button" is in the second option in Options.csv
-                    if (questionOptions != null && questionOptions.size() > 1) {
-                        reminderStrategy.initWarningValue(rootView, questionOptions.get(1));
-                    }
+                    reminderStrategy.showAndHideViews(rootView);
+
+                    reminderStrategy.showQuestionInfo(rootView, questionItem);
 
                     break;
                 case Constants.INT:

@@ -10,12 +10,9 @@
     android:weightSum="4"
     tools:showIn="@layout/dynamic_tab_grid_question">
 
+    <include layout="@layout/bottom_view"></include>
     <include layout="@layout/dynamic_tab_row_question_image" />
 
     <include layout="@layout/dynamic_tab_row_question_text" />
-
-    <include layout="@layout/dynamic_tab_row_confirm_yes" />
-
-    <include layout="@layout/dynamic_tab_row_confirm_no" />
 </TableLayout>
             

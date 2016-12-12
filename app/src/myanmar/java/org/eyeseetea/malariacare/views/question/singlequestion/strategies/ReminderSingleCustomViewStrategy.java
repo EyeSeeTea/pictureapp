@@ -1,20 +1,49 @@
 package org.eyeseetea.malariacare.views.question.singlequestion.strategies;
 
+import static org.eyeseetea.malariacare.R.id.questionImage;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
+import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.views.TextCard;
+
+import java.util.List;
 
 public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomViewStrategy {
     public ReminderSingleCustomViewStrategy(DynamicTabAdapter dynamicTabAdapter) {
 
     }
 
-    public void initWarningText(View rootView, Option option) {
+    public void showQuestionInfo(View rootView, Question question){
+        List<Option> questionOptions = question.getAnswer().getOptions();
+
+        showImage(rootView,question);
+
+        //Question "header" is in the first option in Options.csv
+        if (questionOptions != null && questionOptions.size() > 0) {
+            showText(rootView, questionOptions.get(0));
+        }
+        //Question "button" is in the second option in Options.csv
+        if (questionOptions != null && questionOptions.size() > 1) {
+            configureNextButton(rootView, questionOptions.get(1));
+        }
+    }
+
+    private void showImage(View rootView, Question question){
+        if (question.getPath() != null && !question.getPath().equals("")) {
+            ImageView imageView = (ImageView) rootView.findViewById(R.id.questionImageRow);
+            BaseLayoutUtils.putImageInImageViewDensityHight(question.getInternationalizedPath(), imageView);
+            imageView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showText(View rootView, Option option) {
         TextView title = (TextView) rootView.findViewById(R.id.questionTextRow);
         title.setText(option.getInternationalizedCode());
         title.setTextSize(option.getOptionAttribute().getText_size());
@@ -24,22 +53,16 @@ public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomVi
         subTitle.setTextSize(option.getOptionAttribute().getText_size());
     }
 
-    public void initWarningValue(View rootView, Option option) {
-        hideStandardButtons(rootView);
-
+    private void configureNextButton(View rootView, Option option) {
         TextCard textNextButton = (TextCard) rootView.findViewById(R.id.next_txt);
         textNextButton.setText(option.getInternationalizedCode());
         textNextButton.setTextSize(option.getOptionAttribute().getText_size());
     }
 
-    private void hideStandardButtons(View rootView) {
-        TextCard standardTextYes = (TextCard) rootView.findViewById(R.id.textcard_confirm_yes);
-        ImageView standardButtonYes = (ImageView) rootView.findViewById(R.id.confirm_yes);
-        standardTextYes.setVisibility(View.GONE);
-        standardButtonYes.setVisibility(View.GONE);
-        TextCard standardTextNo = (TextCard) rootView.findViewById(R.id.textcard_confirm_no);
-        ImageView standardButtonNo = (ImageView) rootView.findViewById(R.id.confirm_no);
-        standardTextNo.setVisibility(View.GONE);
-        standardButtonNo.setVisibility(View.GONE);
+    public void showAndHideViews(View rootView) {
+        //Show confirm on full screen
+        rootView.findViewById(R.id.scrolled_table).setVisibility(View.GONE);
+        rootView.findViewById(R.id.no_scrolled_table).setVisibility(View.GONE);
+        rootView.findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
     }
 }

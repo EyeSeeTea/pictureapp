@@ -26,9 +26,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.DashboardAdapterStrategy;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.IAssessmentAdapterStrategy;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
@@ -172,4 +175,70 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
         super.notifyDataSetChanged();
     }
 
+    /**
+     * Checks if the given position points to a real survey and open it.
+     */
+    public void onClick(ListView l, int position, List<Survey> surveys) {
+        //Discard clicks on header|footer (which is attended on newSurvey via super)
+        if (!isPositionASurvey(l, surveys, position)) {
+            return;
+        }
+        //fixed the position in the list if the adapter have a header.
+        int fixedPosition = getFixedPosition(l);
+        //Put selected survey in session
+        Session.setSurvey(surveys.get(position - fixedPosition));
+        // Go to SurveyActivity
+        DashboardActivity.dashboardActivity.openSentSurvey();
+    }
+
+
+    /**
+     * Gets the number of displaced positions.
+     */
+    public int getFixedPosition(ListView l) {
+        int fixedPosition = 0;
+        if (l.getHeaderViewsCount() >= 1) {
+            fixedPosition = l.getHeaderViewsCount();
+        }
+        return fixedPosition;
+    }
+
+
+    /**
+     * Checks if the given position points to a real survey instead of a footer or header of the
+     * listview.
+     *
+     * @return true|false
+     */
+    public boolean isPositionASurvey(ListView l, List<Survey> surveys, int position) {
+        if (l.getHeaderViewsCount() > 0) {
+            if (isPositionHeader(position)) {
+                return false;
+            }
+            if (l.getFooterViewsCount() > 0) {
+                if (isPositionFooter(surveys, position + 1)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks if the given position is the header of the listview instead of a real survey
+     *
+     * @return true|false
+     */
+    public boolean isPositionHeader(int position) {
+        return position <= 0;
+    }
+
+    /**
+     * Checks if the given position is the footer of the listview instead of a real survey
+     *
+     * @return true|false
+     */
+    public boolean isPositionFooter(List<Survey> surveys, int position) {
+        return position == (surveys.size() + position);
+    }
 }

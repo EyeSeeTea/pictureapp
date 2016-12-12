@@ -1398,7 +1398,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Value value = question.getValueBySession();
                 if (isDone(value)) {
                     navigationController.isMovingToForward = false;
-                    if (!Session.getSurvey().isRDT() || !BuildConfig.reviewScreen) {
+                    if (!wasPatientTested() || !BuildConfig.reviewScreen) {
                         showDone();
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();
@@ -1410,6 +1410,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 next();
             }
         }, 750);
+    }
+
+    public boolean wasPatientTested() {
+        return Session.getSurvey().isRDT() || BuildConfig.patientTestedByDefault;
     }
 
     /**

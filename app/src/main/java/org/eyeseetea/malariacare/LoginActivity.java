@@ -62,7 +62,7 @@ import java.util.ArrayList;
  * It shows only when the user has an open session.
  */
 public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity {
- 
+
     public static final String PULL_REQUIRED = "PULL_REQUIRED";
     public static final String DEFAULT_USER = "";
     public static final String DEFAULT_PASSWORD = "";
@@ -236,6 +236,19 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         mLoginActivityStrategy.onBackPressed();
     }
 
+    private void init() {
+        initDataDownloadPeriodDropdown();
+        //Populate server with the current value
+        serverText = (EditText) findViewById(R.id.server_url);
+        serverText.setText(ServerAPIController.getServerUrl());
+
+        //Username, Password blanks to force real login
+        usernameEditText = (EditText) findViewById(R.id.username);
+        usernameEditText.setText(DEFAULT_USER);
+        passwordEditText = (EditText) findViewById(R.id.password);
+        passwordEditText.setText(DEFAULT_PASSWORD);
+    }
+
     public class AsyncInit extends AsyncTask<Void, Void, Exception> {
         Activity activity;
 
@@ -264,19 +277,6 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
             init();
         }
-    }
-
-    private void init() {
-        initDataDownloadPeriodDropdown();
-        //Populate server with the current value
-        serverText = (EditText) findViewById(R.id.server_url);
-        serverText.setText(ServerAPIController.getServerUrl());
-
-        //Username, Password blanks to force real login
-        usernameEditText = (EditText) findViewById(R.id.username);
-        usernameEditText.setText(DEFAULT_USER);
-        passwordEditText = (EditText) findViewById(R.id.password);
-        passwordEditText.setText(DEFAULT_PASSWORD);
     }
 }
 

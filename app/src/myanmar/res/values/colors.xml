@@ -22,6 +22,8 @@
     <color name="hint">@color/medium_purple</color>
     <color name="intColor">@color/dark_purple</color>
     <color name="spinner_color">@color/dark_purple</color>
+    <color name="question_title">@color/text_first_color</color>
+    <color name="question_subtitle">@color/medium_light_purple</color>
 
     <color name="pageIndicator_completed">@color/dark_purple</color>
     <color name="pageIndicator_pending">@color/light_purple</color>

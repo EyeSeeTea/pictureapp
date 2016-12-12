@@ -112,14 +112,14 @@ public class QuestionThreshold extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Long id_question) {
-        this.id_question = id_question;
-        this.question = null;
-    }
-
     public void setQuestion(Question question) {
         this.question = question;
         this.id_question = (question != null) ? question.getId_question() : null;
+    }
+
+    public void setQuestion(Long id_question) {
+        this.id_question = id_question;
+        this.question = null;
     }
 
     public Match getMatch() {
@@ -133,14 +133,14 @@ public class QuestionThreshold extends BaseModel {
         return match;
     }
 
-    public void setMatch(Long id_match) {
-        this.id_match = id_match;
-        this.match = null;
-    }
-
     public void setMatch(Match match) {
         this.match = match;
         this.id_match = (match != null) ? match.getId_match() : null;
+    }
+
+    public void setMatch(Long id_match) {
+        this.id_match = id_match;
+        this.match = null;
     }
 
     public Integer getMinValue() {

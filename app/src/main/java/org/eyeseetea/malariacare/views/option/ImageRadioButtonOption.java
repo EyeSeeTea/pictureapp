@@ -104,6 +104,11 @@ public class ImageRadioButtonOption extends LinearLayout {
         }
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        mRadioButton.setEnabled(enabled);
+    }
+
     public interface OnCheckedChangeListener {
         void onCheckedChanged(ImageRadioButtonOption imageRadioButton, boolean value);
     }

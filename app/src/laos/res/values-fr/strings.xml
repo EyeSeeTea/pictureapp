@@ -129,7 +129,7 @@
     <string name="monitor_row_title_rdt_stockout">"Nombre non testé (Rdt rupture de stock)</string>
     <string name="monitor_row_title_pregnant">"Patients encintes"</string>
     <string name="monitor_row_title_severe">"Patients graves"</string>
-    <string name="monitor_row_title_treatment">"Nombre de références (Traitement)"</string>
+    <string name="referrals">"Nombre de références (Traitement)"</string>
     <string name="monitor_row_title_rdt_testing">"Nombre de références (test TDR)"</string>
     <string name="monitor_row_title_submission">"Envoies"</string>
     <string name="review_title">"S'il vous plaît vérifier avant"</string>

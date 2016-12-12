@@ -214,4 +214,8 @@ public abstract class AQuestionAnswerChangedListener {
         ReadWriteDB.saveValuesDDL(question, selectedOption, question.getValueBySession());
         showOrHideChildren(question);
     }
+
+    protected boolean isMultipleQuestionTab(int tabType) {
+        return tabType == Constants.TAB_MULTI_QUESTION;
+    }
 }

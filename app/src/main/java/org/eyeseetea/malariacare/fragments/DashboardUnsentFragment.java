@@ -246,11 +246,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         this.surveys.clear();
         this.surveys.addAll(newListSurveys);
         this.adapter.notifyDataSetChanged();
-        try {
-            LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
         setListShown(true);
     }
 

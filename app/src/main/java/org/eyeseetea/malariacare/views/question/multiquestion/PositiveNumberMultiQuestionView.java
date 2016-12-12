@@ -33,11 +33,6 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
     }
 
     @Override
-    public void setImage(String path) {
-        return;
-    }
-
-    @Override
     public boolean hasError() {
         return numberPicker.getError() != null || positiveNumber == null;
     }

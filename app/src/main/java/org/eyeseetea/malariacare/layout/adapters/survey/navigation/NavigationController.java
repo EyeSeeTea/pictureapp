@@ -167,7 +167,7 @@ public class NavigationController {
             return null;
         }
 
-        //Moving backwars removes current node in screen (unless a special node)
+        //Moving backwards removes current node in screen (unless a special node)
         if (nonVisibleNode == null) {
             this.visited.remove(currentPosition);
             currentPosition--;

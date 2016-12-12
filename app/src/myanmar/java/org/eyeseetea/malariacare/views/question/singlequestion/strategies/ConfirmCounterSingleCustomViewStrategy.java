@@ -56,6 +56,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
     private void showConfirmCounterViewAndHideCurrentQuestion(View rootView) {
         //Show confirm on full screen
         rootView.findViewById(R.id.no_scrolled_table).setVisibility(View.GONE);
+        rootView.findViewById(R.id.scrolled_table).setVisibility(View.GONE);
         rootView.findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
     }
 

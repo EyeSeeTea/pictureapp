@@ -30,6 +30,6 @@ public class SingleQuestionAnswerChangedListener extends AQuestionAnswerChangedL
 
     @Override
     public void onAnswerChanged(View view, Option option) {
-
+        saveValue(view, option);
     }
 }

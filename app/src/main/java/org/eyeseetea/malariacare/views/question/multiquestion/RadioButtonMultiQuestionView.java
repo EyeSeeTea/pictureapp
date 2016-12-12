@@ -17,13 +17,14 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.CustomRadioButton;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
+import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
 import java.util.List;
 
 public class RadioButtonMultiQuestionView extends AOptionQuestionView implements IQuestionView,
-        IMultiQuestionView {
+        IMultiQuestionView, IImageQuestionView {
     TextCard header;
     ImageView image;
     RadioGroup radioGroup;

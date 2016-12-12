@@ -42,20 +42,20 @@ public class HeaderUseCase implements IHeaderCaseUse {
         int titleResource = 0, subtitleResource = 0;
         switch (tabTag) {
             case R.string.tab_tag_assess:
-                titleResource = R.string.header_title_unsent;
-                subtitleResource = R.string.header_subtitle_unsent;
+                titleResource = R.string.new_case_title;
+                subtitleResource = R.string.unsent_data;
                 break;
             case R.string.tab_tag_improve:
-                titleResource = R.string.header_title_sent;
-                subtitleResource = R.string.header_subtitle_sent;
+                titleResource = R.string.past_cases;
+                subtitleResource = R.string.sent_data;
                 break;
             case R.string.tab_tag_stock:
-                titleResource = R.string.header_title_stock;
-                subtitleResource = R.string.header_subtitle_stock;
+                titleResource = R.string.stock_control;
+                subtitleResource = R.string.receipts_balances;
                 break;
             case R.string.tab_tag_monitor:
-                titleResource = R.string.header_title_monitoring;
-                subtitleResource = R.string.header_subtitle_monitoring;
+                titleResource = R.string.monitoring_title;
+                subtitleResource = R.string.monitoring_time_period;
                 break;
         }
         setTitle(headerView, R.id.header_title, titleResource);

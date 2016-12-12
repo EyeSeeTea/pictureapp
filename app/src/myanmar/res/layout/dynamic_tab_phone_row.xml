@@ -9,7 +9,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@color/light_grey_violet" />
+        android:background="@color/light_grey_purple" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
             android:layout_margin="10dp"
             android:background="@drawable/option_button"
             android:gravity="center"
-            android:text="@string/send"
+            android:text="@string/survey_send"
             android:textColor="@color/intColor"
             app:tDimension="@string/font_size_level2"
             app:tFontName="@string/specific_language_font" />

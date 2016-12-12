@@ -24,7 +24,9 @@
     android:layout_height="wrap_content"
     android:background="@drawable/background_header"
     android:orientation="vertical"
-    android:padding="@dimen/dashboard_row_padding"
+    android:paddingLeft="@dimen/dashboard_row_padding"
+    android:paddingRight="@dimen/dashboard_row_padding"
+    android:paddingTop="@dimen/dashboard_row_padding"
     android:visibility="gone">
 
     <include layout="@layout/top_view"></include>
@@ -43,7 +45,7 @@
             android:background="@drawable/background_header"
             android:gravity="left|center_vertical"
             android:padding="5dip"
-            android:text="@string/header_title_sent"
+            android:text="@string/sent_data"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/fragment_header_title"
             android:textSize="@dimen/header_text_size"

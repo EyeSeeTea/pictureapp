@@ -67,6 +67,7 @@ public abstract class AQuestionAnswerChangedListener {
 
         showOrHideChildren(question);
     }
+
     /**
      * Hide or show the children question from a given question,  if is necessary  it reloads the
      * children questions values or refreshing the children questions answer component
@@ -212,5 +213,9 @@ public abstract class AQuestionAnswerChangedListener {
         }
         ReadWriteDB.saveValuesDDL(question, selectedOption, question.getValueBySession());
         showOrHideChildren(question);
+    }
+
+    protected boolean isMultipleQuestionTab(int tabType) {
+        return tabType == Constants.TAB_MULTI_QUESTION;
     }
 }

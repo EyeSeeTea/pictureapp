@@ -175,7 +175,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
             LayoutUtils.setActionBarLogo(actionBar);
             LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
-                    this.getResources().getString(R.string.app_name));
+                    this.getResources().getString(R.string.malaria_case_based_reporting));
         }
     }
 
@@ -216,20 +216,20 @@ public abstract class BaseActivity extends ActionBarActivity {
                 break;
             case R.id.action_about:
                 debugMessage("User asked for about");
-                showAlertWithHtmlMessageAndLastCommit(R.string.settings_menu_about, R.raw.about,
+                showAlertWithHtmlMessageAndLastCommit(R.string.app_about, R.raw.about,
                         BaseActivity.this);
                 break;
             case R.id.action_copyright:
                 debugMessage("User asked for copyright");
-                showAlertWithMessage(R.string.settings_menu_copyright, R.raw.copyright);
+                showAlertWithMessage(R.string.app_copyright, R.raw.copyright);
                 break;
             case R.id.action_licenses:
                 debugMessage("User asked for software licenses");
-                showAlertWithHtmlMessage(R.string.settings_menu_licenses, R.raw.licenses);
+                showAlertWithHtmlMessage(R.string.app_software_licenses, R.raw.licenses);
                 break;
             case R.id.action_eula:
                 debugMessage("User asked for EULA");
-                showAlertWithHtmlMessage(R.string.settings_menu_eula, R.raw.eula);
+                showAlertWithHtmlMessage(R.string.app_EULA, R.raw.eula);
                 break;
             case android.R.id.home:
                 debugMessage("Go back");

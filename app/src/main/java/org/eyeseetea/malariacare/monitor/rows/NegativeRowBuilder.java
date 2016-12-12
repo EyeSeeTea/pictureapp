@@ -29,7 +29,7 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 public class NegativeRowBuilder extends CounterRowBuilder {
 
     public NegativeRowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_negative));
+        super(context, context.getString(R.string.negative));
     }
 
     @Override

@@ -41,7 +41,7 @@
     <!--</PreferenceCategory>-->
     <PreferenceCategory
         android:key="pref_server"
-        android:title="@string/pref_server">
+        android:title="@string/server">
         <EditTextPreference
             android:defaultValue="@string/DHIS_DEFAULT_SERVER"
             android:inputType="textUri"
@@ -49,7 +49,7 @@
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/settings_text_dhis_server_url" />
+            android:title="@string/server_name" />
 
         <org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference
             android:defaultValue=""
@@ -63,7 +63,7 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_visual"
-        android:title="@string/pref_visual">
+        android:title="@string/app_visual">
         <!--<CheckBoxPreference-->
         <!--android:key="@string/show_num_dems"-->
         <!--android:title="@string/settings_checkbox_show_num_dems"-->
@@ -75,7 +75,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/customize_fonts"
-            android:title="@string/settings_checkbox_customize_fonts" />
+            android:title="@string/fonts_customise" />
 
         <!-- Allows the user to choose a ringtone in the 'notification' category. -->
         <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
@@ -88,7 +88,7 @@
             android:key="@string/font_sizes"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
-            android:title="@string/settings_list_font_sizes" />
+            android:title="@string/font_size" />
         <ListPreference
             android:defaultValue=""
             android:key="@string/language_code"

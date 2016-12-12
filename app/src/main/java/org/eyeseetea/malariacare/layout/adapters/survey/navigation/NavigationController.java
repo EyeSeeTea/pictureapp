@@ -54,7 +54,7 @@ public class NavigationController {
         this.currentPosition = -1;
     }
 
-    public int getTotalPages() {
+    public int getCurrentTotalPages() {
         return currentTotal;
     }
 

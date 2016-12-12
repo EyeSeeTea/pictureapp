@@ -90,11 +90,11 @@
     <string name="improve" translatable="false">Improve</string>
     <string name="monitor" translatable="false">Monitor</string>
     <string-array name="settings_array_titles_font_sizes" translatable="false">
-        <item>@string/font_size_level0_title</item>
-        <item>@string/font_size_level1_title</item>
-        <item>@string/font_size_level2_title</item>
-        <item>@string/font_size_level3_title</item>
-        <item>@string/font_size_level4_title</item>
+        <item>@string/font_extra_small</item>
+        <item>@string/font_small</item>
+        <item>@string/font_medium</item>
+        <item>@string/font_large</item>
+        <item>@string/font_extra_large</item>
     </string-array>
     <string-array name="settings_array_values_font_sizes" translatable="false">
         <item>@string/font_size_level0</item>
@@ -110,7 +110,7 @@
     <string name="is_pushing_key" translatable="false">ispushing</string>
     <string name="data_limited_by_date" translatable="false">data_limited_by_date</string>
 
-    <string name="monitor_table_title_suspected_header" translatable="false">@string/monitor_table_title_suspected</string>
-    <string name="monitor_table_title_stock_header" translatable="false">@string/monitor_table_title_stock</string>
+    <string name="monitor_table_title_suspected_header" translatable="false">@string/monitoring_case_stats</string>
+    <string name="monitor_table_title_stock_header" translatable="false">@string/consumption</string>
 
 </resources>

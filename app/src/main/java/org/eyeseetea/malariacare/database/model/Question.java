@@ -56,6 +56,14 @@ public class Question extends BaseModel {
      * Constant that reflects a not visible question in information
      */
     public static final int QUESTION_INVISIBLE = 0;
+    /**
+     * Constant that reflects a visible question in information
+     */
+    public static final int QUESTION_COMPULSORY = 1;
+    /**
+     * Constant that reflects a not visible question in information
+     */
+    public static final int QUESTION_NO_COMPULSORY = 0;
     private static final String TAG = "Question";
     /**
      * Required to create a null Question value to enable caching when you're the last question.
@@ -69,7 +77,7 @@ public class Question extends BaseModel {
     @Column
     String de_name;
     @Column
-    String short_name;
+    String help_text;
     @Column
     String form_name;
     @Column
@@ -110,6 +118,8 @@ public class Question extends BaseModel {
     Integer visible;
     @Column
     String path;
+    @Column
+    Integer compulsory;
     /**
      * Reference to associated compositeScore for this question (loaded lazily)
      */
@@ -150,13 +160,13 @@ public class Question extends BaseModel {
     public Question() {
     }
 
-    public Question(String code, String de_name, String short_name, String form_name, String uid,
+    public Question(String code, String de_name, String help_text, String form_name, String uid,
             Integer order_pos, Float numerator_w, Float denominator_w, String feedback,
-            Integer output, Header header, Answer answer, Question question,
+            Integer output, Integer compulsory, Header header, Answer answer, Question question,
             CompositeScore compositeScore) {
         this.code = code;
         this.de_name = de_name;
-        this.short_name = short_name;
+        this.help_text = help_text;
         this.form_name = form_name;
         this.uid = uid;
         this.order_pos = order_pos;
@@ -164,6 +174,7 @@ public class Question extends BaseModel {
         this.denominator_w = denominator_w;
         this.feedback = feedback;
         this.output = output;
+        this.compulsory = compulsory;
         this.parent = null;
 
         this.setHeader(header);
@@ -397,12 +408,12 @@ public class Question extends BaseModel {
         this.de_name = de_name;
     }
 
-    public String getShort_name() {
-        return short_name;
+    public String getHelp_text() {
+        return help_text;
     }
 
-    public void setShort_name(String short_name) {
-        this.short_name = short_name;
+    public void setHelp_text(String help_text) {
+        this.help_text = help_text;
     }
 
     public String getForm_name() {
@@ -455,6 +466,14 @@ public class Question extends BaseModel {
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+    }
+
+    public Boolean isCompulsory() {
+        return (this.compulsory == QUESTION_COMPULSORY);
+    }
+
+    public void setCompulsory(Integer compulsory) {
+        this.compulsory = compulsory;
     }
 
     public String getPath() {
@@ -1269,6 +1288,36 @@ public class Question extends BaseModel {
         return parents.get(0);
     }
 
+
+    public boolean isAnswered() {
+        return (this.getValueBySession() != null);
+    }
+
+    private boolean isNotAnswered(Question question) {
+        if (question.getValueBySession() == null || question.getValueBySession().getValue() == null
+                || question.getValueBySession().getValue().length() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean hasCompulsoryNotAnswered() {
+        List<Question> questions = new ArrayList<>();
+        //get all the questions in the same screen page
+        if (getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
+            questions = getQuestionsByTab(getHeader().getTab());
+        } else {
+            questions.add(this);
+        }
+        for (Question question : questions) {
+            if (question.isCompulsory() && !question.isHiddenBySurveyAndHeader(
+                    Session.getSurvey()) && isNotAnswered(question)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -1281,8 +1330,8 @@ public class Question extends BaseModel {
         if (de_name != null ? !de_name.equals(question.de_name) : question.de_name != null) {
             return false;
         }
-        if (short_name != null ? !short_name.equals(question.short_name)
-                : question.short_name != null) {
+        if (help_text != null ? !help_text.equals(question.help_text)
+                : question.help_text != null) {
             return false;
         }
         if (form_name != null ? !form_name.equals(question.form_name)
@@ -1330,6 +1379,10 @@ public class Question extends BaseModel {
         if (visible != null ? !visible.equals(question.visible) : question.visible != null) {
             return false;
         }
+        if (compulsory != null ? !compulsory.equals(question.compulsory)
+                : question.compulsory != null) {
+            return false;
+        }
         return !(id_composite_score != null ? !id_composite_score.equals(
                 question.id_composite_score) : question.id_composite_score != null);
 
@@ -1340,7 +1393,7 @@ public class Question extends BaseModel {
         int result = (int) (id_question ^ (id_question >>> 32));
         result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (de_name != null ? de_name.hashCode() : 0);
-        result = 31 * result + (short_name != null ? short_name.hashCode() : 0);
+        result = 31 * result + (help_text != null ? help_text.hashCode() : 0);
         result = 31 * result + (form_name != null ? form_name.hashCode() : 0);
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (order_pos != null ? order_pos.hashCode() : 0);
@@ -1355,6 +1408,7 @@ public class Question extends BaseModel {
         result = 31 * result + (visible != null ? visible.hashCode() : 0);
         result = 31 * result + (path != null ? path.hashCode() : 0);
         result = 31 * result + (total_questions != null ? total_questions.hashCode() : 0);
+        result = 31 * result + (compulsory != null ? compulsory.hashCode() : 0);
         return result;
     }
 
@@ -1364,7 +1418,7 @@ public class Question extends BaseModel {
                 "id_question=" + id_question +
                 ", code='" + code + " " + '\'' +
                 ", de_name='" + de_name + " " + '\'' +
-                ", short_name='" + short_name + " " + '\'' +
+                ", help_text='" + help_text + " " + '\'' +
                 ", form_name='" + form_name + " " + '\'' +
                 ", uid='" + uid + " " + '\'' +
                 ", order_pos=" + order_pos +
@@ -1373,6 +1427,7 @@ public class Question extends BaseModel {
                 ", denominator_w=" + denominator_w +
                 ", id_header=" + id_header +
                 ", id_answer=" + id_answer +
+                ", compulsory=" + compulsory +
                 ", output=" + output +
                 ", id_parent=" + id_parent +
                 ", id_composite_score=" + id_composite_score +

@@ -29,11 +29,6 @@ public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements
     }
 
     @Override
-    public void setImage(String path) {
-        return;
-    }
-
-    @Override
     public boolean hasError() {
         return false;
     }
@@ -48,6 +43,11 @@ public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements
         if (value != null) {
             editCard.setText(value.getValue());
         }
+    }
+
+    @Override
+    public void setHint(String hintValue) {
+        editCard.setHint(hintValue);
     }
 
     private void init(Context context) {

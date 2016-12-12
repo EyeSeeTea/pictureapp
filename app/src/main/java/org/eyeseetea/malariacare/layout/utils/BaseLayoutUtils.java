@@ -108,7 +108,7 @@ public abstract class BaseLayoutUtils {
         LayoutUtils.setActionBarLogo(actionBar);
         LayoutUtils.setActionBarText(actionBar, PreferencesState.getInstance().getOrgUnit(),
                 PreferencesState.getInstance().getContext().getResources().getString(
-                        R.string.app_name));
+                        R.string.malaria_case_based_reporting));
     }
 
     // Used to put the org unit name and the kind of survey instead of the app name
@@ -263,6 +263,18 @@ public abstract class BaseLayoutUtils {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
         return (metrics.widthPixels);
+    }
+
+    public static void setListRowBackgroundColor(View view) {
+        //No action. This method should be created in the variant.
+    }
+
+    public static void setSurveyActionBar(ActionBar actionBar) {
+        //No action. This method should be created in the variant.
+    }
+
+    public static void setDashboardActionBar(ActionBar actionBar) {
+        //No action. This method should be created in the variant.
     }
 
     public static void fixRowViewBackground(View row, int position) {

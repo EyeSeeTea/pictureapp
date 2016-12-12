@@ -96,11 +96,12 @@ public class PeriodRowBuilder extends MonitorRowBuilder {
 
     private void initWeekFormat() {
         WEEKS_FORMAT = String.format(WEEKS_FORMAT,
-                context.getString(R.string.monitor_row_title_week));
+                context.getString(R.string.monitoring_row_title_week));
     }
 
     private void initDayFormat() {
-        DAYS_FORMAT = String.format(DAYS_FORMAT, context.getString(R.string.monitor_row_title_day));
+        DAYS_FORMAT = String.format(DAYS_FORMAT,
+                context.getString(R.string.monitoring_row_title_day));
     }
 
     private void initMonthFormat() {

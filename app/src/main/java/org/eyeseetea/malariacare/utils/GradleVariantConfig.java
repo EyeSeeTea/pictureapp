@@ -20,6 +20,7 @@ public class GradleVariantConfig {
         }
         return false;
     }
+
     public static boolean isStockFragmentActive() {
         if (BuildConfig.activeStockFragment) {
             return true;

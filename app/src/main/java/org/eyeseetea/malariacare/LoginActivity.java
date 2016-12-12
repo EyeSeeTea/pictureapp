@@ -139,7 +139,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
-            askEula(R.string.settings_menu_eula, R.raw.eula, LoginActivity.this);
+            askEula(R.string.app_EULA, R.raw.eula, LoginActivity.this);
         } else {
             loginToDhis(serverUrl, username, password);
         }

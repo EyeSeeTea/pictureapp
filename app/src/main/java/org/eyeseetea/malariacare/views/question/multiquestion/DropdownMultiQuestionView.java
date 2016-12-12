@@ -45,11 +45,6 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     @Override
-    public void setImage(String path) {
-        return;
-    }
-
-    @Override
     public boolean hasError() {
         return false;
     }

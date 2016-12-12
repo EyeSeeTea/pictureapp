@@ -220,7 +220,7 @@ public class PopulateDB {
                         Question question = new Question();
                         question.setCode(line[1]);
                         question.setDe_name(line[2]);
-                        question.setShort_name(line[3]);
+                        question.setHelp_text(line[3]);
                         question.setForm_name(line[4]);
                         question.setUid(line[5]);
                         question.setOrder_pos(Integer.valueOf(line[6]));
@@ -238,6 +238,11 @@ public class PopulateDB {
                         question.setVisible(Integer.valueOf(line[14]));
                         if (line.length > 15 && !line[15].equals("")) {
                             question.setPath((line[15]));
+                        }
+                        if (line.length > 16 && !line[16].equals("")) {
+                            question.setCompulsory(Integer.valueOf(line[16]));
+                        } else {
+                            question.setCompulsory(Question.QUESTION_NO_COMPULSORY);
                         }
                         question.save();
                         questionList.put(Integer.valueOf(line[0]), question);
@@ -591,10 +596,10 @@ public class PopulateDB {
         //Save new option name for each option
         while ((line = reader.readNext()) != null) {
             for (Question question : questions) {
-                if (question.getUid().equals(line[5])) {
+                if (String.valueOf(question.getId_question()).equals((line[0]))) {
                     question.setCode(line[1]);
                     question.setDe_name(line[2]);
-                    question.setShort_name(line[3]);
+                    question.setHelp_text(line[3]);
                     question.setForm_name(line[4]);
                     //Update necessary from migration3
                     question.setTotalQuestions(Integer.valueOf(line[13]));
@@ -603,6 +608,11 @@ public class PopulateDB {
                     //Update necessary from migration7
                     if (line.length > 15 && !line[15].equals("")) {
                         question.setPath(line[15]);
+                    }
+                    if (line.length > 16 && !line[16].equals("")) {
+                        question.setCompulsory(Integer.valueOf(line[16]));
+                    } else {
+                        question.setCompulsory(Question.QUESTION_NO_COMPULSORY);
                     }
                     question.save();
                     break;
@@ -711,7 +721,7 @@ public class PopulateDB {
                             question = new Question();
                             question.setCode(line[1]);
                             question.setDe_name(line[2]);
-                            question.setShort_name(line[3]);
+                            question.setHelp_text(line[3]);
                             question.setForm_name(line[4]);
                             question.setUid(line[5]);
                             question.setOrder_pos(Integer.valueOf(line[6]));
@@ -729,6 +739,11 @@ public class PopulateDB {
                             question.setVisible(Integer.valueOf(line[14]));
                             if (line.length > 15 && !line[15].equals("")) {
                                 question.setPath((line[15]));
+                            }
+                            if (line.length > 16 && !line[16].equals("")) {
+                                question.setCompulsory(Integer.valueOf(line[16]));
+                            } else {
+                                question.setCompulsory(Question.QUESTION_NO_COMPULSORY);
                             }
                             question.save();
                         } else {

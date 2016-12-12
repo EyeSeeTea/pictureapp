@@ -39,10 +39,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -76,12 +76,16 @@ import org.eyeseetea.malariacare.presentation.factory.MultiQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.SingleQuestionViewFactory;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
+import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -298,6 +302,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Show confirm on full screen
         rootView.findViewById(R.id.no_scrolled_table).setVisibility(View.GONE);
+        rootView.findViewById(R.id.scrolled_table).setVisibility(View.GONE);
         rootView.findViewById(R.id.confirm_table).setVisibility(View.VISIBLE);
 
         //Show question image in counter alert
@@ -335,19 +340,25 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         view.getRootView().findViewById(R.id.confirm_table).setVisibility(View.GONE);
     }
 
-    private void saveOptionAndMove(View view, Option selectedOption, Question question) {
+    public void saveOptionAndMove(View view, Option selectedOption, Question question) {
         Value value = question.getValueBySession();
         //set new totalpages if the value is not null and the value change
         if (value != null && !readOnly) {
             navigationController.setTotalPages(question.getTotalQuestions());
         }
-        if (question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)) {
+
+        ReadWriteDB.saveValuesDDL(question, selectedOption, value);
+
+        if (question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
+                question.getOutput().equals(Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT)) {
             switchHiddenMatches(question, selectedOption);
-        } else {
-            ReadWriteDB.saveValuesDDL(question, selectedOption, value);
         }
-        darkenNonSelected(view, selectedOption);
-        LayoutUtils.highlightSelection(view, selectedOption);
+
+        if (view instanceof ImageView) {
+            darkenNonSelected(view, selectedOption);
+            LayoutUtils.highlightSelection(view, selectedOption);
+        }
+
         finishOrNext();
     }
 
@@ -380,8 +391,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * 1 no match position 0
      */
     public void switchHiddenMatches(Question question, Option option) {
-        if (!question.hasOutputWithOptions() || !question.getOutput().equals(
-                Constants.IMAGE_3_NO_DATAELEMENT)) {
+        if (!question.hasOutputWithOptions() || (!question.getOutput().equals(
+                Constants.IMAGE_3_NO_DATAELEMENT) && !question.getOutput().equals(
+                Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT))) {
             return;
         }
         //Find QuestionOptions
@@ -403,9 +415,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         int optionPosition = (option.getCode().equals(matchOption.getCode())) ? MATCH_POSITION
                 : DOESNT_MATCH_POSITION;
 
-        if (option.getQuestionBySession() != null) {
-            ReadWriteDB.deleteValue(option.getQuestionBySession());
-        }
         ReadWriteDB.saveValuesDDL(matchQuestion,
                 matchQuestion.getAnswer().getOptions().get(optionPosition),
                 matchQuestion.getValueBySession());
@@ -502,14 +511,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         //Progress
         ProgressUtils.updateProgressBarStatus(rowView, navigationController.getCurrentPage(),
-                navigationController.getTotalPages());
+                navigationController.getCurrentTotalPages());
 
         TableRow tableRow = null;
         TableRow tableButtonRow = null;
         List<Question> screenQuestions = new ArrayList<>();
 
         swipeTouchListener.clearClickableViews();
-        if (isMultipleQuestionTab(tabType)) {
+
+        if (isTabScrollable(questionItem, tabType)) {
             tableLayout = (TableLayout) rowView.findViewById(R.id.multi_question_options_table);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
@@ -666,23 +676,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             tableLayout, false);
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initIntValue(tableRow, value, tabType);
-                    tableRow.setVisibility(visibility);
-                    tableLayout.addView(tableRow);
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
                 case Constants.LONG_TEXT:
                     tableRow = (TableRow) lInflater.inflate(
                             R.layout.multi_question_tab_long_text_row, tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initLongTextValue(tableRow, value, tabType);
-                    tableRow.setVisibility(visibility);
-                    tableLayout.addView(tableRow);
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
                 case Constants.SHORT_TEXT:
                 case Constants.PHONE:
                 case Constants.POSITIVE_INT:
                 case Constants.RADIO_GROUP_HORIZONTAL:
+                case Constants.IMAGE_RADIO_GROUP:
+                case Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT:
                     //TODO: swipeTouchListener.addClickableView(button)
 
                     tableRow = new TableRow(context);
@@ -692,15 +702,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     if (questionView instanceof IMultiQuestionView) {
                         mMultiQuestionViews.add((IMultiQuestionView) questionView);
-
                         ((IMultiQuestionView) questionView).setHeader(
-                                screenQuestion.getForm_name());
+                                Utils.getInternationalizedString(screenQuestion.getForm_name()));
+                    }
+
+                    if (questionView instanceof AKeyboardQuestionView) {
+                        ((AKeyboardQuestionView) questionView).setHint(
+                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
                     }
 
                     configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
 
                     questionView.setEnabled(!readOnly);
-                    questionView.setImage(screenQuestion.getInternationalizedPath());
+
+                    if (questionView instanceof IImageQuestionView) {
+                        ((IImageQuestionView) questionView).setImage(
+                                screenQuestion.getInternationalizedPath());
+                    }
 
                     if (questionView instanceof AOptionQuestionView) {
                         ((AOptionQuestionView) questionView).setQuestion(screenQuestion);
@@ -714,9 +732,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     tableRow.addView((View) questionView);
 
-                    tableRow.setVisibility(visibility);
-
-                    tableLayout.addView(tableRow);
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
                 case Constants.QUESTION_LABEL:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_label_row,
@@ -725,66 +741,116 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     ImageView rowImageLabelView = ((ImageView) tableRow.findViewById(
                             R.id.question_image_row));
                     textCard.setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     if (screenQuestion.hasAssociatedImage()) {
                         LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
                                 rowImageLabelView);
                     } else {
-                        adaptLayoutToTextOnly(textCard, rowImageLabelView);
+                        adaptLayoutToTextOnly(tableRow.findViewById(R.id.question_text_container),
+                                rowImageLabelView);
                     }
+
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
-                    tableRow.setVisibility(visibility);
-                    tableLayout.addView(tableRow);
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
+
+                    if (!screenQuestion.getHelp_text().isEmpty()) {
+                        ((TextCard) tableRow.findViewById(R.id.row_help_text)).setText(
+                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
+                    }
+
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
                 case Constants.DROPDOWN_LIST:
                 case Constants.DROPDOWN_OU_LIST:
                     tableRow = (TableRow) lInflater.inflate(
                             R.layout.multi_question_tab_dropdown_row, tableLayout, false);
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     tableRow = populateSpinnerFromOptions(tableRow, screenQuestion);
                     initDropdownValue(tableRow, value);
-                    tableRow.setVisibility(visibility);
-                    tableLayout.addView(tableRow);
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
                 case Constants.SWITCH_BUTTON:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row,
                             tableLayout, false);
+
                     ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            screenQuestion.getForm_name());
+                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
+
+                    if (!screenQuestion.getHelp_text().isEmpty()) {
+                        ((TextCard) tableRow.findViewById(R.id.row_help_text)).setText(
+                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
+                    }
+
                     if (screenQuestion.hasAssociatedImage()) {
                         ImageView rowImageView = ((ImageView) tableRow.findViewById(
                                 R.id.question_image_row));
                         LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
                                 rowImageView);
                     }
+
                     ((TextCard) tableRow.findViewById(R.id.row_switch_true)).setText(
-                            screenQuestion.getAnswer().getOptions().get(0).getCode());
+                            Utils.getInternationalizedString(
+                                    screenQuestion.getAnswer().getOptions().get(0).getCode()));
                     ((TextCard) tableRow.findViewById(R.id.row_switch_false)).setText(
-                            screenQuestion.getAnswer().getOptions().get(1).getCode());
+                            Utils.getInternationalizedString(
+                                    screenQuestion.getAnswer().getOptions().get(1).getCode()));
+
                     Switch switchView = (Switch) tableRow.findViewById(R.id.answer);
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initSwitchOption(screenQuestion, switchView);
-                    tableRow.setVisibility(visibility);
-                    tableLayout.addView(tableRow);
+                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     showOrHideChildren(screenQuestion);
                     break;
             }
+            setBottomLine(tabType, screenQuestions, screenQuestion);
         }
         rowView.requestLayout();
         return rowView;
     }
 
-    private void adaptLayoutToTextOnly(TextCard textCard, ImageView rowImageLabelView) {
+    private void setBottomLine(int tabType, List<Question> screenQuestions,
+            Question screenQuestion) {
+        if (isMultipleQuestionTab(tabType) && screenQuestion.getId_question().equals(
+                screenQuestions.get(screenQuestions.size() - 1).getId_question())) {
+            LinearLayout view = (LinearLayout) lInflater.inflate(R.layout.bottom_screen_view,
+                    tableLayout, false);
+            tableLayout.addView(view);
+        }
+    }
+
+    private void setVisibilityAndAddRow(TableRow tableRow, Question screenQuestion,
+            int visibility) {
+        tableRow.setVisibility(visibility);
+        showCompulsory(tableRow, screenQuestion);
+        tableLayout.addView(tableRow);
+    }
+
+    private void showCompulsory(TableRow tableRow, Question screenQuestion) {
+        if (screenQuestion.isCompulsory()) {
+            ImageView rowCompulsoryView = ((ImageView) tableRow.findViewById(
+                    R.id.row_header_compulsory));
+            if (rowCompulsoryView != null) {
+                rowCompulsoryView.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private boolean isTabScrollable(Question questionItem, int tabType) {
+        return isMultipleQuestionTab(tabType)
+                || questionItem.getOutput() == Constants.IMAGE_RADIO_GROUP
+                || questionItem.getOutput() == Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT;
+    }
+
+    private void adaptLayoutToTextOnly(View viewWithText, ImageView rowImageLabelView) {
         //Modify the text weight if the label don't have a image.
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
                 LinearLayout.LayoutParams.MATCH_PARENT, 0f);
         rowImageLabelView.setLayoutParams(params);
         params = new LinearLayout.LayoutParams(0,
                 LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-        textCard.setLayoutParams(params);
+        viewWithText.setLayoutParams(params);
     }
 
     private void configureAnswerChangedListener(IQuestionViewFactory questionViewFactory,
@@ -835,9 +901,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Create a buttons for navigate.
      */
     private View createNavigationButtonsBackButton(View navigationButtonsHolder) {
-        Button button = (Button) navigationButtonsHolder.findViewById(R.id.next_btn);
+        ImageButton button = (ImageButton) navigationButtonsHolder.findViewById(R.id.next_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
-        button.setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) button.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean questionsWithError = false;
@@ -851,13 +917,44 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 Log.d(TAG, "Questions with failed validation " + failedValidations);
                 if (failedValidations == 0 && !questionsWithError) {
-                    finishOrNext();
+
+                    TableRow currentRow = (TableRow) tableLayout.getChildAt(0);
+
+                    if (currentRow.getChildAt(0) instanceof ImageRadioButtonSingleQuestionView) {
+
+                        navigationController.isMovingToForward = true;
+
+                        ImageRadioButtonSingleQuestionView imageRadioButtonSingleQuestionView =
+                                (ImageRadioButtonSingleQuestionView) currentRow.getChildAt(0);
+
+                        ImageRadioButtonOption selectedOptionView =
+                                imageRadioButtonSingleQuestionView.getSelectedOptionView();
+
+                        if (selectedOptionView != null) {
+                            final Question question = navigationController.getCurrentQuestion();
+                            Question counterQuestion = question.findCounterByOption(
+                                    selectedOptionView.getOption());
+                            if (counterQuestion == null) {
+                                saveOptionAndMove(selectedOptionView,
+                                        selectedOptionView.getOption(),
+                                        question);
+                            } else {
+                                showConfirmCounter(selectedOptionView,
+                                        selectedOptionView.getOption(),
+                                        question, counterQuestion);
+                            }
+                        }
+
+                    } else {
+                        finishOrNext();
+                    }
+
                 }
             }
         });
-        button = (Button) navigationButtonsHolder.findViewById(R.id.back_btn);
+        button = (ImageButton) navigationButtonsHolder.findViewById(R.id.back_btn);
         //Save the numberpicker value in the DB, and continue to the next screen.
-        button.setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) button.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 previous();
@@ -1290,6 +1387,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * value.
      */
     public void finishOrNext() {
+        if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
+            return;
+        }
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -1318,23 +1418,24 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void showDone() {
         final Activity activity = (Activity) context;
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
-                .setTitle(R.string.survey_title_completed)
-                .setMessage(R.string.survey_info_completed)
+                .setTitle(R.string.survey_completed)
+                .setMessage(R.string.survey_completed_text)
                 .setCancelable(false)
-                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         hideKeyboard(PreferencesState.getInstance().getContext());
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
                         isClicked = false;
                     }
                 });
-        msgConfirmation.setNegativeButton(R.string.review, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int arg1) {
-                hideKeyboard(PreferencesState.getInstance().getContext());
-                review();
-                isClicked = false;
-            }
-        });
+        msgConfirmation.setNegativeButton(R.string.survey_review,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        hideKeyboard(PreferencesState.getInstance().getContext());
+                        review();
+                        isClicked = false;
+                    }
+                });
 
         msgConfirmation.create().show();
     }

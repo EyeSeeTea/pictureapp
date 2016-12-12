@@ -24,4 +24,4 @@
 24;'Code: ACT x 12';'';'';'drugs_referral_ACT12_question';'9dV1JoHmO94';1;0;0;10;24;0;8;8;0;'question_images/p5_actx12.png';1
 25;'Code: Pq x 2';'';'';'drugs_referral_Pqx2_question';'9eV1JoHmO94';1;0;0;10;25;0;8;8;0;'question_images/p5_pqx2.png';1
 26;'Code: Referred';'';'';'drugs_referral_referred_question';'9fV1JoHmO94';1;0;0;10;26;0;8;8;0;'question_images/p5_referred.png';1
-27;'Code: Occupation';'';'follow_up_occupation_options';'follow_up_occupation_question';'24V1JoHmO94';8;0;0;9;27;0;1;8;0;'question_images/p8_occupation.png'
+27;'Code: Occupation';'';'follow_up_occupation_options';'follow_up_occupation_question';'24V1JoHmO94';8;0;0;9;27;0;1;8;0;'question_images/p8_occupation.png';0

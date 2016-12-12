@@ -114,14 +114,14 @@ public class Header extends BaseModel {
         return tab;
     }
 
-    public void setTab(Long id_tab) {
-        this.id_tab = id_tab;
-        this.tab = null;
-    }
-
     public void setTab(Tab tab) {
         this.tab = tab;
         this.id_tab = (tab != null) ? tab.getId_tab() : null;
+    }
+
+    public void setTab(Long id_tab) {
+        this.id_tab = id_tab;
+        this.tab = null;
     }
 
     public List<Question> getQuestions() {

@@ -34,7 +34,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -110,16 +109,7 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d(TAG, "onListItemClick");
         super.onListItemClick(l, v, position, id);
-
-        //Discard clicks on header|footer (which is attended on newSurvey via super)
-        if (!isPositionASurvey(position)) {
-            return;
-        }
-
-        //Put selected survey in session
-        Session.setSurvey(surveys.get(position - 1));
-        // Go to SurveyActivity
-        DashboardActivity.dashboardActivity.openSentSurvey();
+        adapter.onClick(l, position, surveys);
     }
 
     @Override
@@ -128,34 +118,6 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
         unregisterFragmentReceiver();
 
         super.onStop();
-    }
-
-    /**
-     * Checks if the given position points to a real survey instead of a footer or header of the
-     * listview.
-     *
-     * @return true|false
-     */
-    private boolean isPositionASurvey(int position) {
-        return !isPositionFooter(position) && !isPositionHeader(position);
-    }
-
-    /**
-     * Checks if the given position is the header of the listview instead of a real survey
-     *
-     * @return true|false
-     */
-    private boolean isPositionHeader(int position) {
-        return position <= 0;
-    }
-
-    /**
-     * Checks if the given position is the footer of the listview instead of a real survey
-     *
-     * @return true|false
-     */
-    private boolean isPositionFooter(int position) {
-        return position == (this.surveys.size() + 1);
     }
 
     /**

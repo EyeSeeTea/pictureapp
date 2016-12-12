@@ -81,8 +81,9 @@ public class LayoutUtils extends BaseLayoutUtils {
 
         int totalHeight = 0;
         int itemHeight = listView.getHeight();
-        if(itemHeight==0)
+        if (itemHeight == 0) {
             return;
+        }
         int desiredHeight = View.MeasureSpec.makeMeasureSpec(itemHeight,
                 View.MeasureSpec.AT_MOST);
 

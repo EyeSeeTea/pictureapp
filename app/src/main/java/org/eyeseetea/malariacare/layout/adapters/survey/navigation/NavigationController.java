@@ -170,6 +170,7 @@ public class NavigationController {
         QuestionCounter questionCounter = counters.get(option.getId_option());
         Integer limit = (int) Math.floor(option.getFactor());
 
+        if (questionCounter == null) return false;
         return (questionCounter.isMaxCounterLimit(limit)) ? false : true;
     }
 

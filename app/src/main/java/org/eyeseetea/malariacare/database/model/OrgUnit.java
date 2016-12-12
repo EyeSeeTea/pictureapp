@@ -158,14 +158,14 @@ public class OrgUnit extends BaseModel {
         return orgUnit;
     }
 
-    public void setOrgUnit(OrgUnit orgUnit) {
-        this.orgUnit = orgUnit;
-        this.id_parent = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
-    }
-
     public void setOrgUnit(Long id_parent) {
         this.id_parent = id_parent;
         this.orgUnit = null;
+    }
+
+    public void setOrgUnit(OrgUnit orgUnit) {
+        this.orgUnit = orgUnit;
+        this.id_parent = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
     }
 
     public OrgUnitLevel getOrgUnitLevel() {
@@ -179,15 +179,15 @@ public class OrgUnit extends BaseModel {
         return orgUnitLevel;
     }
 
+    public void setOrgUnitLevel(Long id_org_unit_level) {
+        this.id_org_unit_level = id_org_unit_level;
+        this.orgUnitLevel = null;
+    }
+
     public void setOrgUnitLevel(OrgUnitLevel orgUnitLevel) {
         this.orgUnitLevel = orgUnitLevel;
         this.id_org_unit_level =
                 (orgUnitLevel != null) ? orgUnitLevel.getId_org_unit_level() : null;
-    }
-
-    public void setOrgUnitLevel(Long id_org_unit_level) {
-        this.id_org_unit_level = id_org_unit_level;
-        this.orgUnitLevel = null;
     }
 
     public List<OrgUnit> getChildren() {

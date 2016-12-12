@@ -134,6 +134,8 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
         LayoutUtils.fixRowViewBackground(rowView, position);
 
 
+        LayoutUtils.setListRowBackgroundColor(rowView);
+
         return rowView;
     }
 

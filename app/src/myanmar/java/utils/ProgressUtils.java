@@ -20,7 +20,6 @@
 package utils;
 
 import android.content.Context;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,17 +49,15 @@ public class ProgressUtils {
         ImageView[] dots = new ImageView[totalPages];
         for (int i = 0; i < totalPages; i++) {
             dots[i] = new ImageView(view.getContext());
-            dots[i].setScaleType(ImageView.ScaleType.FIT_START);
-            dots[i].setPadding(15, 15, 0, 0);
+            ImageView imageView;
             if (i <= currentPage) {
-                dots[i].setImageDrawable(
-                        ResourcesCompat.getDrawable(view.getContext().getResources(),
-                                R.drawable.page_indicator_completed, null));
+                imageView = (ImageView) pager_indicator.inflate(view.getContext(),
+                        R.layout.navigation_dot_completed, null);
             } else {
-                dots[i].setImageDrawable(
-                        ResourcesCompat.getDrawable(view.getContext().getResources(),
-                                R.drawable.page_indicator_pending, null));
+                imageView = (ImageView) pager_indicator.inflate(view.getContext(),
+                        R.layout.navigation_dot_pending, null);
             }
+            dots[i] = imageView;
             pager_indicator.addView(dots[i], layoutParams);
         }
     }

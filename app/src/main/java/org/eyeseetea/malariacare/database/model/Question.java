@@ -499,14 +499,14 @@ public class Question extends BaseModel {
         return header;
     }
 
-    public void setHeader(Long id_header) {
-        this.id_header = id_header;
-        this.header = null;
-    }
-
     public void setHeader(Header header) {
         this.header = header;
         this.id_header = (header != null) ? header.getId_header() : null;
+    }
+
+    public void setHeader(Long id_header) {
+        this.id_header = id_header;
+        this.header = null;
     }
 
     public Integer getOutput() {
@@ -544,14 +544,14 @@ public class Question extends BaseModel {
         return answer;
     }
 
-    public void setAnswer(Long id_answer) {
-        this.id_answer = id_answer;
-        this.answer = null;
-    }
-
     public void setAnswer(Answer answer) {
         this.answer = answer;
         this.id_answer = (answer != null) ? answer.getId_answer() : null;
+    }
+
+    public void setAnswer(Long id_answer) {
+        this.id_answer = id_answer;
+        this.answer = null;
     }
 
     //Is necessary use the question relations.
@@ -566,15 +566,15 @@ public class Question extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Long id_parent) {
-        this.id_parent = id_parent;
-        this.question = null;
-    }
-
     @Deprecated
     public void setQuestion(Question question) {
         this.question = question;
         this.id_parent = (question != null) ? question.getId_question() : null;
+    }
+
+    public void setQuestion(Long id_parent) {
+        this.id_parent = id_parent;
+        this.question = null;
     }
 
     public CompositeScore getCompositeScore() {
@@ -588,15 +588,15 @@ public class Question extends BaseModel {
         return compositeScore;
     }
 
-    public void setCompositeScore(Long id_composite_score) {
-        this.id_composite_score = id_composite_score;
-        this.compositeScore = null;
-    }
-
     public void setCompositeScore(CompositeScore compositeScore) {
         this.compositeScore = compositeScore;
         this.id_composite_score =
                 (compositeScore != null) ? compositeScore.getId_composite_score() : null;
+    }
+
+    public void setCompositeScore(Long id_composite_score) {
+        this.id_composite_score = id_composite_score;
+        this.compositeScore = null;
     }
 
     public List<QuestionRelation> getQuestionRelations() {
@@ -1290,11 +1290,32 @@ public class Question extends BaseModel {
 
 
     public boolean isAnswered() {
-        if (this.getValueBySession() == null) {
-            return false;
-        } else {
+        return (this.getValueBySession() != null);
+    }
+
+    private boolean isNotAnswered(Question question) {
+        if (question.getValueBySession() == null || question.getValueBySession().getValue() == null
+                || question.getValueBySession().getValue().length() == 0) {
             return true;
         }
+        return false;
+    }
+
+    public boolean hasCompulsoryNotAnswered() {
+        List<Question> questions = new ArrayList<>();
+        //get all the questions in the same screen page
+        if (getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
+            questions = getQuestionsByTab(getHeader().getTab());
+        } else {
+            questions.add(this);
+        }
+        for (Question question : questions) {
+            if (question.isCompulsory() && !question.isHiddenBySurveyAndHeader(
+                    Session.getSurvey()) && isNotAnswered(question)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -1414,31 +1435,6 @@ public class Question extends BaseModel {
                 ", visible=" + visible +
                 ", path=" + path +
                 '}';
-    }
-
-    public boolean hasCompulsoryNotAnswered() {
-        List<Question> questions = new ArrayList<>();
-        //get all the questions in the same screen page
-        if (getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
-            questions = getQuestionsByTab(getHeader().getTab());
-        } else {
-            questions.add(this);
-        }
-        for (Question question : questions) {
-            if (question.isCompulsory() && !question.isHiddenBySurveyAndHeader(
-                    Session.getSurvey())) {
-                if (isNotAnswered(question)) return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isNotAnswered(Question question) {
-        if (question.getValueBySession() == null || question.getValueBySession().getValue() == null
-                || question.getValueBySession().getValue().length() == 0) {
-            return true;
-        }
-        return false;
     }
 
     private static class QuestionOrderComparator implements Comparator {

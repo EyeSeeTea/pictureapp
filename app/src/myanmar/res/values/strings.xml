@@ -53,7 +53,7 @@
     <string name="invalid2_result_subtext">Refer the patient to the nearest health facility and contact your supervisor.</string>
     <string name="invalid2_end_test">End test</string>
     <string name="drugs_referral">Drugs / Referral</string>
-    <string name="drugs_referral_instructions">Please give patient 12 ACT tablets, plus 2 Primaquine tablets. Note this is only an example treatment</string>
+    <string name="drugs_referral_instructions">Please give patient 12 ACT tablets, plus 2 Primaquine tablets. Note this is only an example treatment.</string>
     <string name="drugs_referral_ACT12_question">ACT x 12</string>
     <string name="drugs_referral_ACTx12_yes">Yes</string>
     <string name="drugs_referral_ACTx12_no">No</string>

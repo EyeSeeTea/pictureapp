@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/bottom_view"></include>
+        <include layout="@layout/bottom_view" />
 
         <LinearLayout
             android:id="@+id/switch_header"
@@ -101,7 +101,7 @@
                         android:textOff=""
                         android:textOn=""
                         android:thumb="@drawable/thumb"
-                        android:track="@drawable/track"></Switch>
+                        android:track="@drawable/track" />
 
                     <org.eyeseetea.malariacare.views.TextCard
                         android:id="@+id/row_switch_true"

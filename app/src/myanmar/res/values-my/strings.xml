@@ -115,7 +115,7 @@
     <string name="app_legal">ဥပဒေရေးရာ</string>
     <string name="app_copyright">Copyright</string>
     <string name="app_software_licenses">Software Licenses</string>
-    <string name="app_about">About</string>
+    <string name="app_about">ဤမှတ်တမ်းအကြောင်း</string>
     <string name="app_EULA">EULA</string>
     <string name="app_logout">Logout</string>
     <string name="settings_menu_logout_message">ဆာဗာသို့မဟုတ် orgunit ပြောင်းခြင်း re-ရဲ့ login ရန်လိုအပ်ပါသည်။ တိုင်း-ကိုစေလွှတ်တော်မစစ်တမ်းကောက်ဖျက်ပစ်လိမ့်မည်။ သငျသညျကိုဆက်လက်ချင်သေချာလား?</string>

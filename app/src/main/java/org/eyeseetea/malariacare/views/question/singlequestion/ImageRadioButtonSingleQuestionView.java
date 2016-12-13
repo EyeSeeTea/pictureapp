@@ -48,6 +48,12 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
     }
 
     @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        answersContainer.setEnabled(enabled);
+    }
+
+    @Override
     public void setOptions(List<Option> options) {
         for (Option option : options) {
             ImageRadioButtonOption imageRadioButtonOption = createOptionView(option);
@@ -63,6 +69,7 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
         putImageInImageRadioButton(option.getInternationalizedPath(), imageRadioButtonOption);
         imageRadioButtonOption.setOnCheckedChangeListener(this);
         imageRadioButtonOption.setOption(option, mQuestion);
+        imageRadioButtonOption.setEnabled(super.isEnabled());
         return imageRadioButtonOption;
     }
 

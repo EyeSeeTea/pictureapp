@@ -146,8 +146,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             }
 
             //Find button manually
-            for (int i = 0; i < ((RadioGroup) ((RadioGroup) radioGroup).getChildAt(
-                    0)).getChildCount(); i++) {
+            for (int i = 0; i < ((RadioGroup) radioGroup).getChildCount(); i++) {
                 View button = ((RadioGroup) radioGroup).getChildAt(i);
                 if (button.getId() == id) {
                     return (CustomRadioButton) button;

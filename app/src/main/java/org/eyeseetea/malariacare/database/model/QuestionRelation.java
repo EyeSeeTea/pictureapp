@@ -61,6 +61,7 @@ public class QuestionRelation extends BaseModel {
      * some related question) relationship
      */
     public static final int REMINDER = 4;
+
     private static final String TAG = ".QuestionRelation";
     @Column
     @PrimaryKey(autoincrement = true)

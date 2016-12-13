@@ -943,7 +943,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     TableRow currentRow = (TableRow) tableLayout.getChildAt(0);
 
-                    if (currentRow.getChildAt(0) instanceof ImageRadioButtonSingleQuestionView) {
+                    if (currentRow != null && currentRow.getChildAt(0) instanceof ImageRadioButtonSingleQuestionView) {
 
                         navigationController.isMovingToForward = true;
 
@@ -1409,7 +1409,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Value value = question.getValueBySession();
                 if (isDone(value)) {
                     navigationController.isMovingToForward = false;
-                    if (!Session.getSurvey().isRDT() || !BuildConfig.reviewScreen) {
+                    if (!wasPatientTested() || !BuildConfig.reviewScreen) {
                         showDone();
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();
@@ -1421,6 +1421,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 next();
             }
         }, 750);
+    }
+
+    public boolean wasPatientTested() {
+        return Session.getSurvey().isRDT() || BuildConfig.patientTestedByDefault;
     }
 
     /**
@@ -1510,13 +1514,39 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void goToQuestion(Question isMoveToQuestion) {
         navigationController.first();
+
+        Question currentQuestion;
+        boolean isQuestionFound = false;
+        
         //it is compared by uid because comparing by question it could be not equal by the same
         // question.
-        while (!isMoveToQuestion.getUid().equals(
-                navigationController.getCurrentQuestion().getUid())) {
-            next();
-            skipReminder();
+        while (!isQuestionFound) {
+
+            currentQuestion = navigationController.getCurrentQuestion();
+
+            int tabType = currentQuestion.getHeader().getTab().getType();
+            if (isMultipleQuestionTab(tabType)) {
+                List<Question> screenQuestions = currentQuestion.getQuestionsByTab(
+                        currentQuestion.getHeader().getTab());
+
+                for (Question question : screenQuestions) {
+                    if (isMoveToQuestion.getUid().equals(question.getUid())) {
+                        isQuestionFound = true;
+                    }
+                }
+            } else {
+                if (isMoveToQuestion.getUid().equals(currentQuestion.getUid())) {
+                    isQuestionFound = true;
+                }
+            }
+
+
+            if (!isQuestionFound) {
+                next();
+                skipReminder();
+            }
         }
+
         notifyDataSetChanged();
     }
 

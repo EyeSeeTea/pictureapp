@@ -96,6 +96,7 @@
     <string name="survey_review">评论</string>
     <string name="survey_send">发送</string>
     <string name="app_settings">设置：</string>
+    <string name="app_about">关于</string>
     <string name="server">服务器：</string>
     <string name="server_name">DHIS服务器URL</string>
     <string name="app_visual">视图：</string>

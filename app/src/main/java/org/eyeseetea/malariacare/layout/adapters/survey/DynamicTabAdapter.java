@@ -1503,13 +1503,39 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void goToQuestion(Question isMoveToQuestion) {
         navigationController.first();
+
+        Question currentQuestion;
+        boolean isQuestionFound = false;
+        
         //it is compared by uid because comparing by question it could be not equal by the same
         // question.
-        while (!isMoveToQuestion.getUid().equals(
-                navigationController.getCurrentQuestion().getUid())) {
-            next();
-            skipReminder();
+        while (!isQuestionFound) {
+
+            currentQuestion = navigationController.getCurrentQuestion();
+
+            int tabType = currentQuestion.getHeader().getTab().getType();
+            if (isMultipleQuestionTab(tabType)) {
+                List<Question> screenQuestions = currentQuestion.getQuestionsByTab(
+                        currentQuestion.getHeader().getTab());
+
+                for (Question question : screenQuestions) {
+                    if (isMoveToQuestion.getUid().equals(question.getUid())) {
+                        isQuestionFound = true;
+                    }
+                }
+            } else {
+                if (isMoveToQuestion.getUid().equals(currentQuestion.getUid())) {
+                    isQuestionFound = true;
+                }
+            }
+
+
+            if (!isQuestionFound) {
+                next();
+                skipReminder();
+            }
         }
+
         notifyDataSetChanged();
     }
 

@@ -82,7 +82,7 @@ public class ReviewFragment extends Fragment {
             boolean isReviewValue = true;
             for (QuestionRelation questionRelation : value.getQuestion().getQuestionRelations()) {
                 if (questionRelation.isACounter() || questionRelation.isAReminder()
-                        || questionRelation.isAWarning()) {
+                        || questionRelation.isAWarning() || questionRelation.isAMatch()) {
                     isReviewValue = false;
                 }
             }

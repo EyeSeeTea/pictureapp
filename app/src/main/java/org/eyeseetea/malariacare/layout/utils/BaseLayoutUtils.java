@@ -244,6 +244,25 @@ public abstract class BaseLayoutUtils {
         }
     }
 
+    public static void putImageInImageViewDensityHight(String path, ImageView imageView) {
+        if (path == null || path.equals("")) {
+            return;
+        }
+        try {
+            InputStream ims = PreferencesState.getInstance().getContext().getAssets().open(path);
+
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inDensity = DisplayMetrics.DENSITY_HIGH;
+            Drawable drawable = Drawable.createFromResourceStream(
+                    PreferencesState.getInstance().getContext().getResources(), null, ims, null,
+                    opts);
+
+            imageView.setImageDrawable(drawable);
+            ims.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Sets a Layout Width as 50% of screen pixel

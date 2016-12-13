@@ -1056,14 +1056,6 @@ public class Question extends BaseModel {
     }
 
     /**
-     * Returns if a question should have the image header visible or not.
-     */
-    public boolean hasVisibleHeaderQuestion() {
-        return output != Constants.SWITCH_BUTTON && output != Constants.QUESTION_LABEL
-                && output != Constants.RADIO_GROUP_HORIZONTAL;
-    }
-
-    /**
      * Checks if this question is triggered according to the current values of the given survey.
      * Only applies to question with answers DROPDOWN_DISABLED
      */

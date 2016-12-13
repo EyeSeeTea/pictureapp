@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.util.Log;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -651,6 +653,21 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     /**
+     * Returns the list of questions from answered values
+     */
+    public List<Question> getQuestionsFromValues() {
+        List<Question> questions = new Select()
+                .from(Question.class).as("q")
+                .join(Value.class, Join.JoinType.LEFT).as("v")
+                .on(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_QUESTION))
+                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)))
+                .where(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY))
+                        .eq(this.getId_survey()))
+                .orderBy(true, Question$Table.ORDER_POS).queryList();
+        return questions;
+    }
+
+    /**
      * Returns the list of previous schedules for this survey
      */
     public List<SurveySchedule> getSurveySchedules() {
@@ -707,17 +724,44 @@ public class Survey extends BaseModel implements VisitableToSDK {
         SurveyAnsweredRatio surveyAnsweredRatio;
         //First parent is always required and not calculated.
         int numRequired = 1;
+        int numAnswered = 0;
+
+        Program program = Program.getFirstProgram();
+        Tab tab = program.getTabs().get(0);
+        Question rootQuestion = Question.findRootQuestion(tab);
+        Question localQuestion = rootQuestion;
+        while (localQuestion.getSibling() != null) {
+            if (localQuestion.isCompulsory()) {
+                numRequired++;
+            }
+            localQuestion = localQuestion.getSibling();
+        }
+
         //Add children required by each parent (value+question)
         Survey survey = Survey.findById(id_survey);
         for (Value value : survey.getValuesFromDB()) {
-            numRequired += Question.countChildrenByOptionValue(value.getId_option());
+            if (value.getQuestion().isCompulsory()) {
+                numRequired += Question.countChildrenByOptionValue(value.getId_option());
+            }
         }
-        int numOptional = (int) countNumOptionalQuestionsAnswered();
-        int numAnswered = Value.countBySurvey(this);
-        surveyAnsweredRatio = new SurveyAnsweredRatio(numRequired + numOptional, numAnswered);
+        numAnswered += countCompulsoryBySurvey(this);
+        Log.d("survey anserewed", "num required: "+numRequired + " num answered: " + numAnswered);
+        surveyAnsweredRatio = new SurveyAnsweredRatio(numRequired, numAnswered);
 
         SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);
         return surveyAnsweredRatio;
+    }
+
+
+    public static int countCompulsoryBySurvey(Survey survey) {
+        List<Question> questions = survey.getQuestionsFromValues();
+        int countOfCompulsoryValues = 0;
+        for (Question question : questions) {
+            if (question.isCompulsory()) {
+                countOfCompulsoryValues++;
+            }
+        }
+        return countOfCompulsoryValues;
     }
 
     /**

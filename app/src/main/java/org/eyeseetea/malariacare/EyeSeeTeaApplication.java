@@ -22,33 +22,12 @@ package org.eyeseetea.malariacare;
 import android.app.Activity;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.index.Index;
 
-import org.eyeseetea.malariacare.database.PostMigration;
-import org.eyeseetea.malariacare.database.model.Match;
-import org.eyeseetea.malariacare.database.model.Match$Table;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionOption$Table;
-import org.eyeseetea.malariacare.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.database.model.QuestionRelation$Table;
-import org.eyeseetea.malariacare.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.database.model.QuestionThreshold$Table;
-import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.model.Value$Table;
-import org.eyeseetea.malariacare.database.utils.LocationMemory;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Permissions;
-import org.eyeseetea.malariacare.views.TypefaceCache;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by nacho on 04/08/15.
@@ -56,46 +35,14 @@ import io.fabric.sdk.android.Fabric;
 public class EyeSeeTeaApplication extends Dhis2Application {
 
     public static Permissions permissions;
+    private static final String TAG = ".EyeSeeTeaApplication";
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
-        PreferencesState.getInstance().init(getApplicationContext());
-        LocationMemory.getInstance().init(getApplicationContext());
-        TypefaceCache.getInstance().init(getApplicationContext());
-
-        FlowManager.init(this, "_EyeSeeTeaDB");
-        createDBIndexes();
-        PostMigration.launchPostMigration();
-
-        //Get maximum total of questions
-        if (!Tab.isEmpty()) {
-            Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
-        }
-
-
+        Log.d(TAG, "onCreate");
     }
 
-    private void createDBIndexes() {
-        new Index<QuestionOption>(Constants.QUESTION_OPTION_QUESTION_IDX).on(QuestionOption.class,
-                QuestionOption$Table.ID_QUESTION).enable();
-        new Index<QuestionOption>(Constants.QUESTION_OPTION_MATCH_IDX).on(QuestionOption.class,
-                QuestionOption$Table.ID_MATCH).enable();
-
-        new Index<QuestionRelation>(Constants.QUESTION_RELATION_OPERATION_IDX).on(
-                QuestionRelation.class, QuestionRelation$Table.OPERATION).enable();
-        new Index<QuestionRelation>(Constants.QUESTION_RELATION_QUESTION_IDX).on(
-                QuestionRelation.class, QuestionRelation$Table.ID_QUESTION).enable();
-
-        new Index<Match>(Constants.MATCH_QUESTION_RELATION_IDX).on(Match.class,
-                Match$Table.ID_QUESTION_RELATION).enable();
-
-        new Index<QuestionThreshold>(Constants.QUESTION_THRESHOLDS_QUESTION_IDX).on(
-                QuestionThreshold.class, QuestionThreshold$Table.ID_QUESTION).enable();
-
-        new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
-    }
 
     @Override
     public void onTerminate() {
@@ -105,7 +52,7 @@ public class EyeSeeTeaApplication extends Dhis2Application {
 
     @Override
     public Class<? extends Activity> getMainActivity() {
-        return new DashboardActivity().getClass();
+        return DashboardActivity.class;
     }
 
     @Override

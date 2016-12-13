@@ -78,7 +78,10 @@
     <string name="follow_up_travelling_yes">Yes</string>
     <string name="follow_up_travelling_no">No</string>
     <string name="follow_up_occupation_question">Occupation?</string>
-    <string name="follow_up_occupation_options">worksites, forest, plantation, village / city</string>
+    <string name="follow_up_occupation_option_worksites">worksites</string>
+    <string name="follow_up_occupation_option_forest">forest</string>
+    <string name="follow_up_occupation_option_plantation">plantation</string>
+    <string name="follow_up_occupation_option_village">village / city</string>
     <string name="follow_up_LLIN_ITN_usage_question">LLIN / ITN usage</string>
     <string name="follow_up_LLIN_ITN_usage_text">Did the patient sleep under a LLIN last night?</string>
     <string name="follow_up_LLIN_ITN_usage_yes">Yes</string>

@@ -18,9 +18,10 @@
 18;'Code: Side ef';'';'patient_advice_text_side_effects';'patient_advice_title_side_effects';'19V1JoHmO94';5;0;0;8;18;0;23;8;0;'question_images/p7_side_effects.png';0
 19;'Code: When to get';'';'patient_advice_text_help';'patient_advice_title_help';'20V1JoHmO94';6;0;0;8;19;0;23;8;0;'question_images/p7_help.png';0
 20;'Code: travelling';'';'follow_up_travelling_text';'follow_up_travelling_question';'21V1JoHmO94';7;0;0;9;20;0;8;8;0;'question_images/p8_travelling.png';0
-21;'Code: LLIN Q1';'';'follow_up_LLIN_ITN_usage_text';'follow_up_LLIN_ITN_usage_question';'22V1JoHmO94';8;0;0;9;21;0;8;8;0;'question_images/p8_llin1.png';0
-22;'Code: LLIN Q2';'';'follow_up_LLIN_ITN_ownership_text';'follow_up_LLIN_ITN_ownership_question';'23V1JoHmO94';9;0;0;9;22;0;8;8;0;'question_images/p8_llin2.png';0
+21;'Code: LLIN Q1';'';'follow_up_LLIN_ITN_usage_text';'follow_up_LLIN_ITN_usage_question';'22V1JoHmO94';9;0;0;9;21;0;8;8;0;'question_images/p8_llin1.png';0
+22;'Code: LLIN Q2';'';'follow_up_LLIN_ITN_ownership_text';'follow_up_LLIN_ITN_ownership_question';'23V1JoHmO94';10;0;0;9;22;0;8;8;0;'question_images/p8_llin2.png';0
 23;'Code: drugs label';'';'';'drugs_referral_instructions';'9cV1JoHmO94';1;0;0;10;23;0;23;8;0;'';0
 24;'Code: ACT x 12';'';'';'drugs_referral_ACT12_question';'9dV1JoHmO94';1;0;0;10;24;0;8;8;0;'question_images/p5_actx12.png';1
 25;'Code: Pq x 2';'';'';'drugs_referral_Pqx2_question';'9eV1JoHmO94';1;0;0;10;25;0;8;8;0;'question_images/p5_pqx2.png';1
 26;'Code: Referred';'';'';'drugs_referral_referred_question';'9fV1JoHmO94';1;0;0;10;26;0;8;8;0;'question_images/p5_referred.png';1
+27;'Code: Occupation';'';'follow_up_occupation_options';'follow_up_occupation_question';'24V1JoHmO94';8;0;0;9;27;0;1;8;0;'question_images/p8_occupation.png';0

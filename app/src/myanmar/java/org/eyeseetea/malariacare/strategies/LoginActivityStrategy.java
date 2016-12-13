@@ -50,7 +50,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
             finishAndGo(DashboardActivity.class);
         } else {
-            addDemoButton();
+            loginActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    addDemoButton();
+                }
+            });
         }
     }
 

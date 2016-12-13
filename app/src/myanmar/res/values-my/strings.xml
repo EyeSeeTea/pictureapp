@@ -80,7 +80,10 @@
     <string name="follow_up_travelling_yes">သွားခဲ့သည်</string>
     <string name="follow_up_travelling_no">မသွားခဲ့ပါ</string>
     <string name="follow_up_occupation_question">မည်သည့်နေရာသို.သွားခဲ့ပါသလဲ</string>
-    <string name="follow_up_occupation_options">အလုပ်ခွင်၊ တော၊ စိုက်ခင်း/ခြံ၊ အခြားရွာ/အခြားမြို.</string>
+    <string name="follow_up_occupation_option_worksites">အလုပ်ခွင်</string>
+    <string name="follow_up_occupation_option_forest">တော</string>
+    <string name="follow_up_occupation_option_plantation">စိုက်ခင်း/ခြံ</string>
+    <string name="follow_up_occupation_option_village">အခြားရွာ/အခြားမြို.</string>
     <string name="follow_up_LLIN_ITN_usage_question">ဆေးစိမ်ခြင်ထောင် အသုံးပြုမှု</string>
     <string name="follow_up_LLIN_ITN_usage_text">လူနာသည် မနေ.ညက ဆေးစိမ်ခြင်ထောင်အောက်တွင် အိပ်ခဲ့ပါသလား</string>
     <string name="follow_up_LLIN_ITN_usage_yes">အိပ်ခဲ့သည်</string>

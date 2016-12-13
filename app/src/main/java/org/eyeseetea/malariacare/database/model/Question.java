@@ -853,6 +853,7 @@ public class Question extends BaseModel {
                         .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
                 .where(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)).eq(
                         tab.getId_tab()))
+                .orderBy(true, Question$Table.ORDER_POS)
                 .queryList();
     }
 

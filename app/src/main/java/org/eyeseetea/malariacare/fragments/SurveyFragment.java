@@ -250,19 +250,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         getActivity().getApplicationContext().startService(surveysIntent);
     }
 
-    /**
-     * Reloads tabs info and notifies its adapter
-     */
-    private void reloadTabs(List<Tab> tabs) {
-        Log.d(TAG, "reloadTabs(" + tabs.size() + ")");
-
-        this.tabsList.clear();
-        this.tabsList.addAll(tabs);
-
-        new AsyncChangeTab(tabs.get(0)).execute((Void) null);
-
-        Log.d(TAG, "reloadTabs(" + tabs.size() + ")..DONE");
-    }
 
     @Override
     public void reloadData() {
@@ -273,12 +260,15 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         HeaderUseCase.getInstance().hideHeader(activity);
     }
 
-    public class AsyncChangeTab extends AsyncTask<Void, Integer, View> {
+    public class AsyncReloadAdaptersAndChangeTab extends AsyncTask<Void, Integer, View> {
 
-        private Tab tab;
+        private List<Tab> tabs;
+        private List<CompositeScore> compositeScores;
 
-        public AsyncChangeTab(Tab tab) {
-            this.tab = tab;
+        public AsyncReloadAdaptersAndChangeTab(List<Tab> tabs,
+                List<CompositeScore> compositeScores) {
+            this.tabs = tabs;
+            this.compositeScores = compositeScores;
         }
 
         @Override
@@ -289,9 +279,13 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
 
         @Override
         protected View doInBackground(Void... params) {
+            tabsList.clear();
+            tabsList.addAll(tabs);
+
+            tabAdaptersCache.reloadAdapters(tabs, compositeScores);
 
             Log.d(TAG, "doInBackground(" + Thread.currentThread().getId() + ")..");
-            View view = prepareTab(tab);
+            View view = prepareTab(tabs.get(0));
             Log.d(TAG, "doInBackground(" + Thread.currentThread().getId() + ")..DONE");
             return view;
         }
@@ -299,6 +293,8 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         @Override
         protected void onPostExecute(View viewContent) {
             super.onPostExecute(viewContent);
+
+            Tab tab = tabs.get(0);
 
             content.removeAllViews();
             content.addView(viewContent);
@@ -345,9 +341,8 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
                 Session.valuesLock.readLock().unlock();
             }
 
-            tabAdaptersCache.reloadAdapters(tabs, compositeScores);
-            reloadTabs(tabs);
-            stopProgress();
+            new AsyncReloadAdaptersAndChangeTab(tabs, compositeScores)
+                    .execute((Void) null);
         }
     }
 

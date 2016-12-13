@@ -21,7 +21,7 @@
         <ImageView
             android:id="@+id/radio_image"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/image_size"
             android:layout_marginRight="8dp"
             android:layout_weight="0.5" />
 

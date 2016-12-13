@@ -73,5 +73,6 @@
 
     <!--Text size for headers-->
     <dimen name="header_text_size">20dp</dimen>
+    <dimen name="image_size">100dp</dimen>
 
 </resources>

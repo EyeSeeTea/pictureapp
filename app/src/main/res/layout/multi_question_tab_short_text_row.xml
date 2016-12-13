@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/question_padding"
     android:paddingRight="@dimen/question_padding">
 
-    <include layout="@layout/row_header_item"></include>
+    <include layout="@layout/row_header_item" />
 
-    <include layout="@layout/short_text_item"></include>
+    <include layout="@layout/short_text_item" />
 </LinearLayout>

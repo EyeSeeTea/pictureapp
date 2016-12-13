@@ -34,3 +34,7 @@
 34;'drugs_referral_Pqx2_no';'No';0;25;34
 35;'drugs_referral_yes';'Yes';0;26;35
 36;'drugs_referral_no';'No';0;26;36
+37;'follow_up_occupation_option_worksites';'Worksites';0;27;37
+38;'follow_up_occupation_option_forest';'Forest';0;27;38
+39;'follow_up_occupation_option_plantation';'Plantation';0;27;39
+40;'follow_up_occupation_option_village';'Village';0;27;40

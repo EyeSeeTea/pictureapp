@@ -52,6 +52,7 @@ import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -943,7 +944,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     TableRow currentRow = (TableRow) tableLayout.getChildAt(0);
 
-                    if (currentRow != null && currentRow.getChildAt(0) instanceof ImageRadioButtonSingleQuestionView) {
+                    if (currentRow != null && currentRow.getChildAt(
+                            0) instanceof ImageRadioButtonSingleQuestionView) {
 
                         navigationController.isMovingToForward = true;
 
@@ -1399,6 +1401,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public void finishOrNext() {
         if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
+            Toast.makeText(PreferencesState.getInstance().getContext(),
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.error_compulsory_question_unanswered),
+                    Toast.LENGTH_LONG).show();
             return;
         }
         final Handler handler = new Handler();
@@ -1517,7 +1523,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         Question currentQuestion;
         boolean isQuestionFound = false;
-        
+
         //it is compared by uid because comparing by question it could be not equal by the same
         // question.
         while (!isQuestionFound) {

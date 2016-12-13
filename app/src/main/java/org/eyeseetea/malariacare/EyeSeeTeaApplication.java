@@ -52,7 +52,7 @@ public class EyeSeeTeaApplication extends Dhis2Application {
 
     @Override
     public Class<? extends Activity> getMainActivity() {
-        return new DashboardActivity().getClass();
+        return DashboardActivity.class;
     }
 
     @Override

@@ -54,32 +54,6 @@ public class SplashScreenActivity extends Activity {
         asyncInitApplication.execute((Void) null);
     }
 
-    public class AsyncInitApplication extends AsyncTask<Void, Void, Exception> {
-        Activity activity;
-
-        AsyncInitApplication(Activity activity) {
-            this.activity = activity;
-        }
-
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected Exception doInBackground(Void... params) {
-            init();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(final Exception exception) {
-            //Error
-            InitUseCase initUseCase = new InitUseCase(activity);
-            initUseCase.finishAndGo();
-        }
-    }
-
     private void init() {
         Fabric.with(this, new Crashlytics());
         PreferencesState.getInstance().init(getApplicationContext());
@@ -111,7 +85,6 @@ public class SplashScreenActivity extends Activity {
         }
     }
 
-
     private void createDBIndexes() {
         new Index<QuestionOption>(Constants.QUESTION_OPTION_QUESTION_IDX).on(QuestionOption.class,
                 QuestionOption$Table.ID_QUESTION).enable();
@@ -130,5 +103,31 @@ public class SplashScreenActivity extends Activity {
                 QuestionThreshold.class, QuestionThreshold$Table.ID_QUESTION).enable();
 
         new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
+    }
+
+    public class AsyncInitApplication extends AsyncTask<Void, Void, Exception> {
+        Activity activity;
+
+        AsyncInitApplication(Activity activity) {
+            this.activity = activity;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Exception doInBackground(Void... params) {
+            init();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final Exception exception) {
+            //Error
+            InitUseCase initUseCase = new InitUseCase(activity);
+            initUseCase.finishAndGo();
+        }
     }
 }

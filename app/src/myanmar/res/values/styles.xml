@@ -9,7 +9,6 @@
         <item name="logo">@drawable/pictureapp_logo</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:actionOverflowButtonStyle">@style/EyeSeeTheme.OverFlow</item>
-
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">

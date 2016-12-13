@@ -24,7 +24,7 @@
     android:fillViewport="true"
     android:orientation="vertical">
 
-    <include layout="@layout/common_header"></include>
+    <include layout="@layout/common_header" />
 
     <TabHost
         android:id="@+id/tabHost"
@@ -41,7 +41,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:background="@color/custom_background_grey"></TabWidget>
+                android:background="@color/custom_background_grey" />
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -86,7 +86,7 @@
                         android:id="@+id/dashboard_completed_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"></FrameLayout>
+                        android:orientation="vertical" />
                     <!-- list view will be automatically added here by the list fragment -->
                 </LinearLayout>
 
@@ -100,7 +100,7 @@
                         android:id="@+id/dashboard_stock_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"></FrameLayout>
+                        android:orientation="vertical" />
                     <!-- stock content view will be automatically added here by the fragment -->
                 </LinearLayout>
 
@@ -121,7 +121,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:background="@color/light_grey"
-                            android:focusable="true"></WebView>
+                            android:focusable="true" />
                     </FrameLayout>
                 </LinearLayout>
             </FrameLayout>

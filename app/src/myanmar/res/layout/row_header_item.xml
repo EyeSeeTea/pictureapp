@@ -8,7 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:layout_margin="@dimen/input_edit_text_margin"
+        android:layout_marginBottom="@dimen/input_edit_text_top_bottom"
+        android:layout_marginLeft="@dimen/input_edit_text_margin"
+        android:layout_marginRight="@dimen/input_edit_text_margin"
+        android:layout_marginTop="@dimen/input_edit_text_top_bottom"
         android:weightSum="1">
 
         <org.eyeseetea.malariacare.views.TextCard

@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,8 +56,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             CustomRadioButton radioButton = (CustomRadioButton) lInflater.inflate(
                     R.layout.uncheckeable_radiobutton, null);
             radioButton.setOption(option);
-            BaseLayoutUtils.setLayoutParamsAs50Percent(radioButton, context,
-                    0);
+            fixRadioButtonWidth(radioButton);
             radioButton.updateProperties(PreferencesState.getInstance().getScale(),
                     context.getString(R.string.font_size_level1),
                     context.getString(R.string.specific_language_font));
@@ -64,6 +64,23 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             radioGroup.setOnCheckedChangeListener(
                     new RadioGroupListener((View) radioGroup.getParent(), question));
         }
+    }
+
+    private void fixRadioButtonWidth(CustomRadioButton radioButton) {
+        Drawable radioButtonIcon = getResources().getDrawable(R.drawable.radio_on);
+        BaseLayoutUtils.setLayoutParamsAs50Percent(radioButton, context,
+                calculateFixedWidth(radioButtonIcon));
+    }
+
+    private int calculateFixedWidth(Drawable radioButtonIcon) {
+        int width = radioButtonIcon.getIntrinsicWidth();
+        int height = radioButtonIcon.getIntrinsicHeight();
+        int fixedHeight =
+                PreferencesState.getInstance().getContext().getResources()
+                        .getDimensionPixelSize(
+                                R.dimen.image_size);
+        int newHeightPercent = (fixedHeight * 100) / height;
+        return (newHeightPercent * width) / 100;
     }
 
     @Override

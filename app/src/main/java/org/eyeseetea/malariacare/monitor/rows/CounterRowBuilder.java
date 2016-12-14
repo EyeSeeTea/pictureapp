@@ -54,9 +54,6 @@ public abstract class CounterRowBuilder extends MonitorRowBuilder {
 
     @Override
     protected Object updateColumn(Object currentValue, SurveyMonitor surveyMonitor) {
-        if (currentValue.equals(SurveyMonitor.DEFAULT_INVALID_MONITOR_VALUE)) {
-            return SurveyMonitor.DEFAULT_INVALID_MONITOR_VALUE;
-        }
         Integer currentCount = (Integer) currentValue;
         return Integer.valueOf(currentCount + incrementCount(surveyMonitor));
     }

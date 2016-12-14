@@ -26,11 +26,6 @@ import org.eyeseetea.malariacare.database.model.Value;
  * Created by arrizabalaga on 26/02/16.
  */
 public class SurveyMonitor extends BaseSurveyMonitor {
-
-    /**
-     * Default monitor value
-     */
-    public final static String DEFAULT_INVALID_MONITOR_VALUE = "-";
     /**
      * Id of treatment question
      */

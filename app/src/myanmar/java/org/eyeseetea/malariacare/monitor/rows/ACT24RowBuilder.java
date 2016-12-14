@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 public class ACT24RowBuilder extends CounterRowBuilder {
     protected Object defaultValueColumn() {
         //// TODO: 14/12/2016 Remove it
-        return "-";
+        return SurveyMonitor.DEFAULT_INVALID_MONITOR_VALUE;
     }
 
     public ACT24RowBuilder(Context context) {

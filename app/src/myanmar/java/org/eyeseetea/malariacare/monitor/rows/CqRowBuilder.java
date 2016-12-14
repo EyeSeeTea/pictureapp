@@ -13,7 +13,7 @@ public class CqRowBuilder extends CounterRowBuilder {
     @Override
     protected Object defaultValueColumn() {
         //// TODO: 14/12/2016 Remove it 
-        return "-";
+        return SurveyMonitor.DEFAULT_INVALID_MONITOR_VALUE;
     }
 
     public CqRowBuilder(Context context) {

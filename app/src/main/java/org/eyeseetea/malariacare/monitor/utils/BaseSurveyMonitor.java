@@ -29,6 +29,11 @@ import org.eyeseetea.malariacare.database.model.Value;
 public class BaseSurveyMonitor {
 
     /**
+     * Default monitor value
+     */
+    public final static String DEFAULT_INVALID_MONITOR_VALUE = "-";
+
+    /**
      * Reference to inner survey
      */
     private Survey survey;

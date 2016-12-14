@@ -205,8 +205,10 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Returns the number of rtd tests for each survey
      */
     public Integer countRDT() {
+        int testCounter = testCounter();
+
         if (isRDTs()) {
-            return testCounter() + 1;
+            return testCounter > 0 ? testCounter : 1;
         } else {
             return 0;
         }

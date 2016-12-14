@@ -90,7 +90,7 @@ public class QuestionRelation extends BaseModel {
     }
 
 
-    public static List<QuestionRelation> listAllParentRelations() {
+    public static List<QuestionRelation> listAllParentChildRelations() {
         return new Select().all().from(QuestionRelation.class)
                 .where(Condition.column(QuestionRelation$Table.OPERATION).eq(
                         QuestionRelation.PARENT_CHILD)).queryList();

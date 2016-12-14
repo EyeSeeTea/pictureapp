@@ -291,7 +291,7 @@ public class Question extends BaseModel {
     public static Question findRootQuestion(Tab tab) {
 
         //Take every child question
-        List<QuestionRelation> questionRelations = QuestionRelation.listAllParentRelations();
+        List<QuestionRelation> questionRelations = QuestionRelation.listAllParentChildRelations();
 
         if (questionRelations == null || questionRelations.size() == 0) {
             //flow without relations
@@ -822,7 +822,7 @@ public class Question extends BaseModel {
     private Question getSiblingNoParent() {
 
         //Take every child question
-        List<QuestionRelation> questionRelations = QuestionRelation.listAllParentRelations();
+        List<QuestionRelation> questionRelations = QuestionRelation.listAllParentChildRelations();
         //Build a not in condition
         In in;
         if (questionRelations.size() == 0) {

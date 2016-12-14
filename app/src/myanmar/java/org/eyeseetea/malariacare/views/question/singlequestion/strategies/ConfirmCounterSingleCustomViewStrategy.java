@@ -74,6 +74,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
             public void onClick(View v) {
                 mDynamicTabAdapter.navigationController.increaseCounterRepetitions(selectedOption);
                 mDynamicTabAdapter.removeConfirmCounter(v);
+                mDynamicTabAdapter.reloadingQuestionFromInvalidOption = true;
                 mDynamicTabAdapter.saveOptionAndMove(view, selectedOption, question);
             }
         });

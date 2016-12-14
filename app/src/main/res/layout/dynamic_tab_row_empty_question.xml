@@ -14,7 +14,7 @@
 
     </LinearLayout>
 
-    <include layout="@layout/top_view"></include>
+    <include layout="@layout/dynamic_bottom_view"></include>
 </LinearLayout>
 
 

@@ -982,7 +982,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
             for (Value value : values) {
                 valuesString += "Value: " + value.getValue();
                 if (value.getOption() != null) {
-                    valuesString += " Option: " + value.getOption().getName();
+                    valuesString += " Option: " + value.getOption().getInternationalizedName();
                 }
                 if (value.getQuestion() != null) {
                     valuesString += " Question: " + value.getQuestion().getDe_name() + "\n";

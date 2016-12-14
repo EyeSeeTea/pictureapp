@@ -223,5 +223,29 @@
     <string name="review_subtitle">Transmission</string>
     <string name="not_tested">Not tested</string>
     <string name="system_defined">System defined</string>
-    <string name="no_data">no data</string>
+
+    <string name="patient_name_review_title">Name</string>
+    <string name="patient_age_review_title">Age</string>
+    <string name="patient_phone_review_title">Phone</string>
+    <string name="patient_residence_village_review_title">Residence</string>
+    <string name="patient_residence_village_other_review_title">Other</string>
+    <string name="patient_sex_pregnancy_review_title">Gender</string>
+    <string name="symptoms_fever_review_title">Fever</string>
+    <string name="symptoms_care_sought_review_title">Care sought</string>
+    <string name="symptoms_servere_review_title">Severe</string>
+    <string name="rdt_test_review_title">Rdt test</string>
+    <string name="negative_test_review_title">Negative</string>
+    <string name="invalid_review_title">Invalid</string>
+    <string name="treatment_review_title">Treatment</string>
+    <string name="patient_advice_vomiting_review_title">Vomiting</string>
+    <string name="patient_advice_side_effects_title">Side effects</string>
+    <string name="patient_advice_help_review_title">Help</string>
+    <string name="follow_up_travelling_review_title">Travelling</string>
+    <string name="follow_up_LLIN_ITN_usage_review_title">LLIN INT usage</string>
+    <string name="follow_up_LLIN_ITN_ownership_review_title">LLIN_INT ownership</string>
+    <string name="drugs_referral_instructions_review_title">Referral</string>
+    <string name="drugs_referral_ACT12_review_title">ACT12</string>
+    <string name="drugs_referral_PQx2_review_title">PQx2</string>
+    <string name="drugs_referral_referred_review_title">Referred</string>
+    <string name="follow_up_occupation_review_title">Occupation</string>
 </resources>

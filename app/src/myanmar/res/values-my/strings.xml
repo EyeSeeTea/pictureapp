@@ -226,4 +226,29 @@
     <string name="not_tested">စမျးသပျမ</string>
     <string name="system_defined">system ကိုသတ်မှတ်</string>
     <string name="no_data">အဘယ်သူမျှမဒေတာ</string>
+
+    <string name="patient_name_review_title">နာမတျောကို</string>
+    <string name="patient_age_review_title">အသက်အရွယ်</string>
+    <string name="patient_phone_review_title">ဖုန်းနံပါတ်</string>
+    <string name="patient_residence_village_review_title">နေအိမ်သို့</string>
+    <string name="patient_residence_village_other_review_title">အခြား</string>
+    <string name="patient_sex_pregnancy_review_title">ကျား</string>
+    <string name="symptoms_fever_review_title">အဖျားရောဂါ</string>
+    <string name="symptoms_care_sought_review_title">ရှာသောအခါဂရုစိုက်</string>
+    <string name="symptoms_servere_review_title">ပြင်းထန်သော</string>
+    <string name="rdt_test_review_title">Rdt စမ်းသပ်</string>
+    <string name="negative_test_review_title">အနုတ်</string>
+    <string name="invalid_review_title">မှားနေသော</string>
+    <string name="treatment_review_title">ကုသ</string>
+    <string name="patient_advice_vomiting_review_title">အန်</string>
+    <string name="patient_advice_side_effects_title">ဘေးထွက်ဆိုးကျိုး</string>
+    <string name="patient_advice_help_review_title">ကူညီပါ</string>
+    <string name="follow_up_travelling_review_title">ခရီးသွားလာ</string>
+    <string name="follow_up_LLIN_ITN_usage_review_title">LLIN INT အသုံးပြုမှု</string>
+    <string name="follow_up_LLIN_ITN_ownership_review_title">LLIN_INT ပိုင်ဆိုင်မှု</string>
+    <string name="drugs_referral_instructions_review_title">ရည်ညွန်း</string>
+    <string name="drugs_referral_ACT12_review_title">ACT12</string>
+    <string name="drugs_referral_PQx2_review_title">PQx2</string>
+    <string name="drugs_referral_referred_review_title">ရည်ညွှန်း</string>
+    <string name="follow_up_occupation_review_title">အလုပ်အကိုင်</string>
 </resources>

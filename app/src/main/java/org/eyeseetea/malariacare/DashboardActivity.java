@@ -537,15 +537,7 @@ public class DashboardActivity extends BaseActivity {
                 Session.setSurvey(null);
                 survey.delete();
                 isBackPressed = false;
-                return;
             }
-
-            //InProgress -> update status
-            if (isInProgress) {
-                survey.updateSurveyStatus();
-            }
-
-            //Completed | Sent -> no action
         }
     }
 

@@ -291,7 +291,7 @@ public class Question extends BaseModel {
     public static Question findRootQuestion(Tab tab) {
 
         //Take every child question
-        List<QuestionRelation> questionRelations = QuestionRelation.listAll();
+        List<QuestionRelation> questionRelations = QuestionRelation.listAllParentChildRelations();
 
         if (questionRelations == null || questionRelations.size() == 0) {
             //flow without relations
@@ -355,10 +355,22 @@ public class Question extends BaseModel {
                         Constants.COUNTER))
                 .and(Condition.column(
                         ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(
+                        Constants.QUESTION_LABEL))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(
+                        Constants.IMAGE_3_NO_DATAELEMENT))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(
+                        Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(
                         Constants.REMINDER))
                 .and(Condition.column(
                         ColumnAlias.columnWithTable("q", Question$Table.OUTPUT)).isNot(
                         Constants.WARNING))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.COMPULSORY)).eq(
+                        QUESTION_COMPULSORY))
                 .and(Condition.column(
                         ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(
                         QuestionRelation.PARENT_CHILD))
@@ -810,7 +822,7 @@ public class Question extends BaseModel {
     private Question getSiblingNoParent() {
 
         //Take every child question
-        List<QuestionRelation> questionRelations = QuestionRelation.listAll();
+        List<QuestionRelation> questionRelations = QuestionRelation.listAllParentChildRelations();
         //Build a not in condition
         In in;
         if (questionRelations.size() == 0) {
@@ -841,7 +853,7 @@ public class Question extends BaseModel {
         return this.sibling;
     }
 
-    public List<Question> getQuestionsByTab(Tab tab) {
+    public static List<Question> getQuestionsByTab(Tab tab) {
         //Select question from questionrelation where operator=1 and id_match in (..)
         return new Select().from(Question.class).as("q")
                 //Question + QuestioRelation
@@ -894,7 +906,7 @@ public class Question extends BaseModel {
     /**
      * Checks if this question is shown according to the values of the given survey
      */
-    public boolean isHiddenBySurvey(Survey survey) {
+    public boolean isHiddenBySurvey(long idSurvey) {
         //No question relations
         if (!hasParent()) {
             return false;
@@ -924,7 +936,7 @@ public class Question extends BaseModel {
                         ColumnAlias.columnWithTable("qr", QuestionRelation$Table.OPERATION)).eq(1))
                 //For the given survey
                 .and(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY)).eq(
-                        survey.getId_survey()))
+                        idSurvey))
                 //The child question in the relationship is 'this'
                 .and(Condition.column(
                         ColumnAlias.columnWithTable("qr", QuestionRelation$Table.ID_QUESTION)).eq(

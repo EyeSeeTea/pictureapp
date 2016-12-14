@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/question_padding"
+    android:paddingRight="@dimen/question_padding"
     android:orientation="vertical">
 
     <include layout="@layout/bottom_view"></include>
@@ -21,9 +23,10 @@
         <ImageView
             android:id="@+id/radio_image"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/image_size"
             android:layout_marginRight="8dp"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.5"
+            android:scaleType="fitStart" />
 
         <org.eyeseetea.malariacare.views.CustomRadioButton
             android:id="@+id/radio_button"

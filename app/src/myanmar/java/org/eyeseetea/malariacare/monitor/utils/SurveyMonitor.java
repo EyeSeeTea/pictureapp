@@ -257,8 +257,8 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     }
 
 
-    public Boolean isCq() {
+    public boolean isCq() {
         //// TODO: set the correct idQuestion and IDOption
-        return null;
+        return 0;
     }
 }

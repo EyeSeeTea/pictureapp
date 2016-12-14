@@ -5,9 +5,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="6dp"
-        android:layout_marginBottom="@dimen/input_edit_text_top_bottom"
         android:layout_marginLeft="@dimen/top_separator_line"
         android:layout_marginRight="@dimen/top_separator_line"
-        android:layout_marginTop="@dimen/input_edit_text_top_bottom"
         android:background="@drawable/bottom_border" />
 </merge>

@@ -8,14 +8,14 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 /**
  * Created by idelcano on 21/07/2016.
  */
-public class TreatmentRowBuilder extends CounterRowBuilder {
+public class ReferralOptionRowBuilder extends CounterRowBuilder {
 
-    public TreatmentRowBuilder(Context context) {
+    public ReferralOptionRowBuilder(Context context) {
         super(context, context.getString(R.string.referrals));
     }
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isTreatment()) ? 1 : 0;
+        return (surveyMonitor.isReferral()) ? 1 : 0;
     }
 }

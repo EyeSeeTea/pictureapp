@@ -16,7 +16,6 @@ public class PqRowBuilder extends CounterRowBuilder {
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        //// TODO: 25/11/2016  
-        return 0;
+        return (surveyMonitor.isPq()) ? 1 : 0;
     }
 }

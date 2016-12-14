@@ -60,21 +60,21 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
     public CustomRadioButton(Context context, Option option, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.setTag(option);
-        this.setText(option.getName());
+        this.setText(option.getInternationalizedCode());
         init(attrs, defStyle);
     }
 
     public CustomRadioButton(Context context, Option option) {
         super(context);
         this.setTag(option);
-        this.setText(option.getName());
+        this.setText(option.getInternationalizedCode());
         init(null, 0);
     }
 
     public CustomRadioButton(Context context, Option option, AttributeSet attrs) {
         super(context, attrs);
         this.setTag(option);
-        this.setText(option.getName());
+        this.setText(option.getInternationalizedCode());
         init(attrs, 0);
     }
 
@@ -240,7 +240,7 @@ public class CustomRadioButton extends RadioButton implements IEyeSeeView {
     public void setOption(Option option) {
         this.option = option;
         this.setTag(option);
-        this.setText(option.getName());
+        this.setText(option.getInternationalizedCode());
     }
 
     @Override

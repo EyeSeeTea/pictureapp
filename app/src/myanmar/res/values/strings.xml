@@ -25,7 +25,7 @@
     <string name="symptoms_fever_no">No</string>
     <string name="symptoms_care_sought">Care sought within 24 hours?</string>
     <string name="symptoms_care_sought_text"></string>
-    <string name="symptoms_care_sought_within_24h">Within 24 hours</string>
+    <string name="symptoms_care_sought_within_24h">W.i. 24h</string>
     <string name="symptoms_care_sought_after_24h">After 24 hours</string>
     <string name="symptoms_severity">Severity?</string>
     <string name="symptoms_severity_text"></string>

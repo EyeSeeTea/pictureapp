@@ -16,6 +16,9 @@ public class ACT6RowBuilder extends CounterRowBuilder {
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        if (surveyMonitor.isACT6() == null) {
+            return null;
+        }
         return (surveyMonitor.isACT6()) ? 1 : 0;
     }
 }

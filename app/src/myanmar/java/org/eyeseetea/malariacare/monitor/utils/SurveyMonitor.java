@@ -32,6 +32,18 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     protected final static Long ID_QUESTION_TREATMENT = 15l;
     /**
+     * Id of pq treatment question
+     */
+    protected final static Long ID_QUESTION_PQ_TREATMENT = 25l;
+    /**
+     * Id of act12 treatment question
+     */
+    protected final static Long ID_QUESTION_ACT12_TREATMENT = 24l;
+    /**
+     * Id of treatment question
+     */
+    protected final static Long ID_QUESTION_REFERRAL = 26l;
+    /**
      * Id of counter question
      */
     protected final static Long ID_QUESTION_COUNTER = 14l;
@@ -56,6 +68,15 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     final static Long ID_OPTION_SPECIE_PFPV = 18l;
     /**
+     * Id of referral yes option  of referral treatment
+     */
+    final static Long ID_OPTION_REFERRAL_YES = 35l;
+    /**
+     * Id of pq yes option  of pq treatment
+     */
+    final static Long ID_OPTION_TREATMENT_PQ = 33l;
+
+    /**
      * Id of Combined act treatment option
      */
     private final static Long ID_OPTION_TREATMENT_REFERER_HOSPITAL = 21l;
@@ -66,7 +87,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     /**
      * Id of  ACT6x2 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ACT12 = 18l;
+    private final static Long ID_OPTION_TREATMENT_ACT12 = 31l;
     /**
      * Id of ACT6x3 treatment option
      */
@@ -136,15 +157,14 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Tells if the given survey has Pf/Pv (mixed) or Pv  specie
      */
     public boolean isReferral() {
-        return (findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PFPV) != null || findValue(
-                ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PV) != null);
+        return (findValue(ID_QUESTION_REFERRAL, ID_OPTION_REFERRAL_YES) != null);
     }
 
     /**
      * Tells if the given survey is PV or PV+PF or referred to hospital
      */
     public boolean isTreatment() {
-        if (isReferral() || findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL)
+        if (findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL)
                 != null) {
             return true;
         } else {
@@ -156,41 +176,44 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     /**
      * Tells if the given survey is referred to hospital
      */
-    public boolean isACTStockout() {
+    public Boolean isACTStockout() {
         //// TODO: set the correct idQuestion and IDOption
-        return findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL) != null;
+        return null;
+        //return findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL) != null;
     }
 
     /**
      * Tells if the given survey treatment is act6x4
      */
-    public boolean isACT24() {
+    public Boolean isACT24() {
         //// TODO: set the correct idQuestion and IDOption
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT24);
+        return null;
+        //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT24);
     }
 
     /**
      * Tells if the given survey treatment is act6x3
      */
-    public boolean isACT18() {
+    public Boolean isACT18() {
         //// TODO: set the correct idQuestion and IDOption
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT18);
+        return null;
+        //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT18);
     }
 
     /**
      * Tells if the given survey treatment is act6x2
      */
     public boolean isACT12() {
-        //// TODO: set the correct idQuestion and IDOption
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT12);
+        return findOption(ID_QUESTION_ACT12_TREATMENT, ID_OPTION_TREATMENT_ACT12);
     }
 
     /**
      * Tells if the given survey treatment is act6x1
      */
-    public boolean isACT6() {
+    public Boolean isACT6() {
         //// TODO: set the correct idQuestion and IDOption
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6);
+        return null;
+        //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6);
     }
 
     /**
@@ -224,4 +247,13 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     }
 
 
+    public boolean isPq() {
+        return findOption(ID_QUESTION_PQ_TREATMENT, ID_OPTION_TREATMENT_PQ);
+    }
+
+
+    public Boolean isCq() {
+        //// TODO: set the correct idQuestion and IDOption
+        return null;
+    }
 }

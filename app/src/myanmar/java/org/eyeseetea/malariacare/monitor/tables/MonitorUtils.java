@@ -17,8 +17,8 @@ import org.eyeseetea.malariacare.monitor.rows.PositivityRateRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PqRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.PvRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.RDTRowBuilder;
+import org.eyeseetea.malariacare.monitor.rows.ReferralOptionRowBuilder;
 import org.eyeseetea.malariacare.monitor.rows.TestedRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.TreatmentRowBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class MonitorUtils extends AMonitorUtils {
         rowBuilders.add(new PfPvRowBuilder(context));
         rowBuilders.add(new NegativeRowBuilder(context));
         rowBuilders.add(new PositivityRateRowBuilder(context));
-        rowBuilders.add(new TreatmentRowBuilder(context));
+        rowBuilders.add(new ReferralOptionRowBuilder(context));
         return rowBuilders;
     }
 }

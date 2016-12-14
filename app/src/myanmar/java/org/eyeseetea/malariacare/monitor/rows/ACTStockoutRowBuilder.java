@@ -16,6 +16,9 @@ public class ACTStockoutRowBuilder extends CounterRowBuilder {
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
+        if (surveyMonitor.isACTStockout() == null) {
+            return null;
+        }
         return (surveyMonitor.isACTStockout()) ? 1 : 0;
     }
 }

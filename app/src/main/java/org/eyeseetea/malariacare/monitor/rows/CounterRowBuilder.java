@@ -54,8 +54,17 @@ public abstract class CounterRowBuilder extends MonitorRowBuilder {
 
     @Override
     protected Object updateColumn(Object currentValue, SurveyMonitor surveyMonitor) {
-        Integer currentCount = (Integer) currentValue;
-        return Integer.valueOf(currentCount + incrementCount(surveyMonitor));
+        Integer currentCount;
+        if (currentValue == null || currentValue.equals("") || currentValue.equals("-")) {
+            return "-";
+        }
+        currentCount = (Integer) currentValue;
+        Integer increment = incrementCount(surveyMonitor);
+        if (increment == null) {
+            return "-";
+        } else {
+            return Integer.valueOf(currentCount + increment);
+        }
     }
 
     /**

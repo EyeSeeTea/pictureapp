@@ -16,7 +16,9 @@ public class CqRowBuilder extends CounterRowBuilder {
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        //// TODO: 25/11/2016  
-        return 0;
+        if (surveyMonitor.isCq() == null) {
+            return null;
+        }
+        return (surveyMonitor.isCq()) ? 1 : 0;
     }
 }

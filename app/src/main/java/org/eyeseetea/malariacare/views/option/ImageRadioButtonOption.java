@@ -49,7 +49,6 @@ public class ImageRadioButtonOption extends LinearLayout {
             mImageView.getLayoutParams().height = (int) Math.round(
                     mImageView.getLayoutParams().height / 2);
         }
-        ;
 
         mImageView.setImageDrawable(drawable);
     }

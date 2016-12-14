@@ -24,10 +24,6 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         IConfirmCounterSingleCustomViewStrategy {
     DynamicTabAdapter mDynamicTabAdapter;
     private static final String TAG = ".ConfirmCounter";
-    /**
-     * Flag that indicates if the actual question option is clicked to prevent multiple clicks.
-     */
-    public static boolean isClicked;
 
     private String currentCounterValue = "";
 
@@ -49,6 +45,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         showQuestionHeader(questionCounter, rootView);
         showQuestionImage(questionCounter, rootView);
         showQuestionText(questionCounter, rootView);
+
     }
 
     private void showConfirmCounterViewAndHideCurrentQuestion(View rootView) {

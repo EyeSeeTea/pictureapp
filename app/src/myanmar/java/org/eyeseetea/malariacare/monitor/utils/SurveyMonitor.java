@@ -112,7 +112,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Tells if the given survey is tested and all are tested
      */
     public boolean isTested() {
-        return true;
+        return isPositive() || isNegative();
     }
 
     /**

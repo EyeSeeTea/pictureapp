@@ -26,11 +26,22 @@ import org.eyeseetea.malariacare.database.model.Value;
  * Created by arrizabalaga on 26/02/16.
  */
 public class SurveyMonitor extends BaseSurveyMonitor {
-
     /**
      * Id of treatment question
      */
     protected final static Long ID_QUESTION_TREATMENT = 15l;
+    /**
+     * Id of pq treatment question
+     */
+    protected final static Long ID_QUESTION_PQ_TREATMENT = 25l;
+    /**
+     * Id of act12 treatment question
+     */
+    protected final static Long ID_QUESTION_ACT12_TREATMENT = 24l;
+    /**
+     * Id of treatment question
+     */
+    protected final static Long ID_QUESTION_REFERRAL = 26l;
     /**
      * Id of counter question
      */
@@ -56,6 +67,15 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     final static Long ID_OPTION_SPECIE_PFPV = 18l;
     /**
+     * Id of referral yes option  of referral treatment
+     */
+    final static Long ID_OPTION_REFERRAL_YES = 35l;
+    /**
+     * Id of pq yes option  of pq treatment
+     */
+    final static Long ID_OPTION_TREATMENT_PQ = 33l;
+
+    /**
      * Id of Combined act treatment option
      */
     private final static Long ID_OPTION_TREATMENT_REFERER_HOSPITAL = 21l;
@@ -66,7 +86,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     /**
      * Id of  ACT6x2 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ACT12 = 18l;
+    private final static Long ID_OPTION_TREATMENT_ACT12 = 31l;
     /**
      * Id of ACT6x3 treatment option
      */
@@ -92,7 +112,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Tells if the given survey is tested and all are tested
      */
     public boolean isTested() {
-        return true;
+        return isPositive() || isNegative();
     }
 
     /**
@@ -136,15 +156,14 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Tells if the given survey has Pf/Pv (mixed) or Pv  specie
      */
     public boolean isReferral() {
-        return (findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PFPV) != null || findValue(
-                ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PV) != null);
+        return (findValue(ID_QUESTION_REFERRAL, ID_OPTION_REFERRAL_YES) != null);
     }
 
     /**
      * Tells if the given survey is PV or PV+PF or referred to hospital
      */
     public boolean isTreatment() {
-        if (isReferral() || findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL)
+        if (findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL)
                 != null) {
             return true;
         } else {
@@ -158,7 +177,8 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     public boolean isACTStockout() {
         //// TODO: set the correct idQuestion and IDOption
-        return findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL) != null;
+        //return findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL) != null;
+        return false;
     }
 
     /**
@@ -166,7 +186,9 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     public boolean isACT24() {
         //// TODO: set the correct idQuestion and IDOption
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT24);
+
+        //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT24);
+        return false;
     }
 
     /**
@@ -174,15 +196,15 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     public boolean isACT18() {
         //// TODO: set the correct idQuestion and IDOption
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT18);
+        //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT18);
+        return false;
     }
 
     /**
      * Tells if the given survey treatment is act6x2
      */
     public boolean isACT12() {
-        //// TODO: set the correct idQuestion and IDOption
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT12);
+        return findOption(ID_QUESTION_ACT12_TREATMENT, ID_OPTION_TREATMENT_ACT12);
     }
 
     /**
@@ -190,7 +212,8 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     public boolean isACT6() {
         //// TODO: set the correct idQuestion and IDOption
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6);
+        //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6);
+        return  false;
     }
 
     /**
@@ -205,8 +228,10 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Returns the number of rtd tests for each survey
      */
     public Integer countRDT() {
+        int testCounter = testCounter();
+
         if (isRDTs()) {
-            return testCounter() + 1;
+            return testCounter > 0 ? testCounter : 1;
         } else {
             return 0;
         }
@@ -224,4 +249,13 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     }
 
 
+    public boolean isPq() {
+        return findOption(ID_QUESTION_PQ_TREATMENT, ID_OPTION_TREATMENT_PQ);
+    }
+
+
+    public boolean isCq() {
+        //// TODO: set the correct idQuestion and IDOption
+        return false;
+    }
 }

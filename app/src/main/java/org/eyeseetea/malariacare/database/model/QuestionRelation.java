@@ -89,6 +89,13 @@ public class QuestionRelation extends BaseModel {
         this.setQuestion(question);
     }
 
+
+    public static List<QuestionRelation> listAllParentChildRelations() {
+        return new Select().all().from(QuestionRelation.class)
+                .where(Condition.column(QuestionRelation$Table.OPERATION).eq(
+                        QuestionRelation.PARENT_CHILD)).queryList();
+    }
+
     public static List<QuestionRelation> listAll() {
         return new Select().all().from(QuestionRelation.class).queryList();
     }

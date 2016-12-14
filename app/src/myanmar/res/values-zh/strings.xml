@@ -53,7 +53,7 @@
      <string name="invalid2_result_subtext">你已经得到了2次无效检测结果。请将病人转诊至最近的医疗机构并联系你的督导员。</string> 
     <string name="invalid2_end_test">结束检测</string>
     <string name="drugs_referral">药品/转诊</string>
-    <string name="drugs_referral_instructions">请给病人12片ACT和2片伯氨喹，并转诊至医疗机构。</string>
+    <string name="drugs_referral_instructions">请给病人12片ACT和2片伯氨喹，并转诊至医疗机构。注意這僅是一個示例處理。</string>
     <string name="drugs_referral_ACT12_question">ACT 12</string>
     <string name="drugs_referral_ACTx12_yes">是</string>
     <string name="drugs_referral_ACTx12_no">否</string>

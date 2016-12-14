@@ -143,6 +143,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Listener that detects taps on buttons & swipe
      */
     private SwipeTouchListener swipeTouchListener;
+    public boolean reloadingQuestionFromInvalidOption;
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);
@@ -739,7 +740,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         ((AOptionQuestionView) questionView).setOptions(
                                 screenQuestion.getAnswer().getOptions());
                     }
-                    questionView.setValue(value);
+
+                    if (!reloadingQuestionFromInvalidOption) {
+                        questionView.setValue(value);
+                    }
+
                     configureAnswerChangedListener(questionViewFactory, questionView);
 
                     addTagQuestion(screenQuestion, ((View) questionView).findViewById(R.id.answer));

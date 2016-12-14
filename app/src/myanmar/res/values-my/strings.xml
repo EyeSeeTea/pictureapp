@@ -55,7 +55,7 @@
      
     <string name="invalid2_end_test">ပြီးဆုံးပါပြီ</string>
     <string name="drugs_referral">ဆေးဝါးများ/လွှဲပို.ခြင်း</string>
-    <string name="drugs_referral_instructions">လူနာအား အေစီတီ (ACT) ဆေးလုံး ၁၂ လုံးနှင့် ပရိုင်မာကွင်း (Pq) ၂လုံးပေးပါ</string>
+    <string name="drugs_referral_instructions">လူနာအား အေစီတီ (ACT) ဆေးလုံး ၁၂ လုံးနှင့် ပရိုင်မာကွင်း (Pq) ၂လုံးပေးပါ ။ မှတ်ချက်ဤသာဥပမာတစ်ခုကုသမှုဖြစ်ပါသည်</string>
     <string name="drugs_referral_ACT12_question">အေစီတီ ACT ၁၂ လုံး</string>
     <string name="drugs_referral_ACTx12_yes">ပေး</string>
     <string name="drugs_referral_ACTx12_no">မပေး</string>

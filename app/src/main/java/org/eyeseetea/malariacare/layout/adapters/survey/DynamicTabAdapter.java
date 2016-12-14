@@ -948,7 +948,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     TableRow currentRow = (TableRow) tableLayout.getChildAt(0);
 
-                    if (currentRow != null && currentRow.getChildAt(0) instanceof ImageRadioButtonSingleQuestionView) {
+                    if (!readOnly && currentRow != null && currentRow.getChildAt(
+                            0) instanceof ImageRadioButtonSingleQuestionView) {
 
                         navigationController.isMovingToForward = true;
 

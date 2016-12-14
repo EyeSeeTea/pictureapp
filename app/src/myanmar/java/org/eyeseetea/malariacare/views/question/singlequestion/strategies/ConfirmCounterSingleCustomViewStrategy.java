@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
+import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -76,6 +77,10 @@ public class ConfirmCounterSingleCustomViewStrategy implements
                 mDynamicTabAdapter.removeConfirmCounter(v);
                 mDynamicTabAdapter.reloadingQuestionFromInvalidOption = true;
                 mDynamicTabAdapter.saveOptionAndMove(view, selectedOption, question);
+
+                if (selectedOption.getFactor() == Float.parseFloat(currentCounterValue)) {
+                    ReviewFragment.mLoadingReviewOfSurveyWithMaxCounter = true;
+                }
             }
         });
 

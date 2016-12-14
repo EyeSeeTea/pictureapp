@@ -6,17 +6,10 @@ package utils;
 public class PhoneMask {
 
     /**
-     * Formatted telephone mask: (xxx) xxx-xxx = 9 (020) xxxx-xxxx = 11  (030) xxx-xxxx = 10
+     * Plain telephone mask: between xxxxxxx = 7 and xxxxxxxxxxxxxxx = 15
      */
-    public static final String FORMATTED_PHONENUMBER_MASK =
-            "^((\\(020\\) ?\\d{4}-?\\d{3})|(\\(030\\) ?\\d{3}-?\\d{4})|(\\((?!020)(?!030)"
-                    + "\\d{3}\\) ?\\d{3}-?\\d{3}))$";
-
-    /**
-     * Plain telephone mask: xxxxxxxxx = 9 020xxxxxxxx = 11  030xxxxxxx = 10
-     */
-    public static final String PLAIN_PHONENUMBER_MASK =
-            "^(((020)\\d{8})|((030)\\d{7})|((?!020|030)\\d{3}\\d{6}))$";
+    public static final String PLAIN_PHONE_NUMBER_MASK =
+            "^\\d{5,15}$";
 
     /**
      * Formats number according to mask (xxx) xxx-xxx = 9 (020) xxxx-xxxx = 11  (030) xxx-xxxx = 10
@@ -28,25 +21,11 @@ public class PhoneMask {
         }
 
         //Already formatted -> done
-        if (phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK)) {
+        if (phoneValue.isEmpty() || phoneValue.matches(PLAIN_PHONE_NUMBER_MASK)) {
             return phoneValue;
         }
 
-        String formattedNumber;
-
-        if (phoneValue.length() == 11)
-        //NNNNNNNN -> (NNN) NNNN-NNNN
-        {
-            formattedNumber = "(" + phoneValue.substring(0, 3) + ") " + phoneValue.substring(3, 7)
-                    + "-" + phoneValue.substring(6, phoneValue.length());
-        } else
-        //NNNNNNNN -> (NNN) NNN-NNN || (NNN) NNN-NNNN
-        {
-            formattedNumber = "(" + phoneValue.substring(0, 3) + ") " + phoneValue.substring(3, 6)
-                    + "-" + phoneValue.substring(6, phoneValue.length());
-        }
-
-        return formattedNumber;
+        return phoneValue;
     }
 
     /**
@@ -61,7 +40,6 @@ public class PhoneMask {
         if (phoneValue == null) {
             phoneValue = "";
         }
-        return phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK)
-                || phoneValue.replace(" ", "").matches(PLAIN_PHONENUMBER_MASK);
+        return phoneValue.isEmpty() || phoneValue.matches(PLAIN_PHONE_NUMBER_MASK);
     }
 }

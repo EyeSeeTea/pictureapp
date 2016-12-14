@@ -10,15 +10,18 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
  */
 public class ACTStockoutRowBuilder extends CounterRowBuilder {
 
+    @Override
+    protected Object defaultValueColumn() {
+        //// TODO: 14/12/2016 Remove it
+        return "-";
+    }
+
     public ACTStockoutRowBuilder(Context context) {
         super(context, context.getString(R.string.monitor_row_title_act_stockout));
     }
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        if (surveyMonitor.isACTStockout() == null) {
-            return null;
-        }
         return (surveyMonitor.isACTStockout()) ? 1 : 0;
     }
 }

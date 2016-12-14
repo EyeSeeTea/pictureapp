@@ -10,15 +10,18 @@ import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
  */
 public class CqRowBuilder extends CounterRowBuilder {
 
+    @Override
+    protected Object defaultValueColumn() {
+        //// TODO: 14/12/2016 Remove it 
+        return "-";
+    }
+
     public CqRowBuilder(Context context) {
         super(context, context.getString(R.string.Cq));
     }
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        if (surveyMonitor.isCq() == null) {
-            return null;
-        }
         return (surveyMonitor.isCq()) ? 1 : 0;
     }
 }

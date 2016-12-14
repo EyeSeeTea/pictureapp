@@ -176,28 +176,29 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     /**
      * Tells if the given survey is referred to hospital
      */
-    public Boolean isACTStockout() {
+    public boolean isACTStockout() {
         //// TODO: set the correct idQuestion and IDOption
-        return null;
         //return findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL) != null;
+        return false;
     }
 
     /**
      * Tells if the given survey treatment is act6x4
      */
-    public Boolean isACT24() {
+    public boolean isACT24() {
         //// TODO: set the correct idQuestion and IDOption
-        return null;
+
         //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT24);
+        return false;
     }
 
     /**
      * Tells if the given survey treatment is act6x3
      */
-    public Boolean isACT18() {
+    public boolean isACT18() {
         //// TODO: set the correct idQuestion and IDOption
-        return null;
         //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT18);
+        return false;
     }
 
     /**
@@ -210,10 +211,10 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     /**
      * Tells if the given survey treatment is act6x1
      */
-    public Boolean isACT6() {
+    public boolean isACT6() {
         //// TODO: set the correct idQuestion and IDOption
-        return null;
         //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6);
+        return  false;
     }
 
     /**

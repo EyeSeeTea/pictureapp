@@ -41,7 +41,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
-                    android:layout_margin="@dimen/input_edit_text_margin"
+                    android:layout_marginBottom="@dimen/input_edit_text_top_bottom"
+                    android:layout_marginLeft="@dimen/input_edit_text_margin"
+                    android:layout_marginRight="@dimen/input_edit_text_margin"
+                    android:layout_marginTop="@dimen/input_edit_text_top_bottom"
                     android:gravity="right"
                     android:orientation="horizontal"
                     android:weightSum="1">
@@ -78,13 +81,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/input_edit_text_margin"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="@dimen/input_edit_text_margin"
+                    android:layout_marginRight="@dimen/input_edit_text_margin"
+                    android:layout_marginTop="@dimen/input_edit_text_top_bottom"
                     android:background="@color/light_purple">
 
                     <Spinner
                         android:id="@+id/answer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/input_edit_text_margin"
+                        android:layout_marginRight="@dimen/input_edit_text_margin"
                         android:backgroundTint="@color/dark_purple"
                         android:backgroundTintMode="add"
                         android:gravity="right"

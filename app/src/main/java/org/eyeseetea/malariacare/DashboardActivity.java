@@ -279,6 +279,8 @@ public class DashboardActivity extends BaseActivity {
      * This method initializes the reviewFragment
      */
     public void initReview() {
+        surveyFragment.mReviewMode = true;
+        
         if (reviewFragment == null) {
             reviewFragment = new ReviewFragment();
         }
@@ -422,9 +424,8 @@ public class DashboardActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         isMoveToLeft = true;
-        if (isReviewFragmentActive()) {
-            hideReview();
-        } else if (isSurveyFragmentActive()) {
+
+        if (isSurveyFragmentActive()) {
             onSurveyBackPressed();
         } else if (isReviewFragmentActive()) {
             onSurveyBackPressed();
@@ -563,6 +564,28 @@ public class DashboardActivity extends BaseActivity {
         showDone();
     }
 
+    public void sendSurvey(View view) {
+        surveyFragment.mReviewMode = false;
+        sendSurvey();
+    }
+
+    public void reviewSurvey(View view) {
+        reviewSurvey();
+    }
+
+    private void sendSurvey() {
+
+        Survey survey = Session.getSurvey();
+        survey.updateSurveyStatus();
+        closeSurveyFragment();
+    }
+
+    private void reviewSurvey() {
+        DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
+                0).getQuestion());
+        hideReview();
+    }
+
     /**
      * Called when the user clicks in other tab
      */
@@ -582,17 +605,13 @@ public class DashboardActivity extends BaseActivity {
                 .setCancelable(false)
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        Survey survey = Session.getSurvey();
-                        survey.updateSurveyStatus();
-                        closeSurveyFragment();
+                        sendSurvey();
                     }
                 });
         msgConfirmation.setNegativeButton(R.string.survey_review,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
-                                0).getQuestion());
-                        hideReview();
+                        reviewSurvey();
                     }
                 });
 

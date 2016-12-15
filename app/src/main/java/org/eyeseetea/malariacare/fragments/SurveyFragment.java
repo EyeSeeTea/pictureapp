@@ -88,6 +88,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
      * Flags required to decide if the survey must be deleted or not
      */
     private boolean isBackPressed = false;
+    public boolean mReviewMode = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -439,7 +440,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
          */
         private ITabAdapter buildAdapter(Tab tab) {
             if (tab.isDynamicTab() || tab.isMultiQuestionTab()) {
-                return new DynamicTabAdapter(tab, getActivity());
+                return new DynamicTabAdapter(tab, getActivity(), mReviewMode);
             }
 
             return null;

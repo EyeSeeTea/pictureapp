@@ -7,6 +7,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
 
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +39,25 @@ public class SwipeTouchListener implements View.OnTouchListener {
      */
     public boolean onTouch(View v, MotionEvent event) {
         if (scrollView != null) {
+            fixScrollEventY(event);
             scrollView.onTouchEvent(event);
+            return true;
         }
         return gestureDetector.onTouchEvent(event);
+    }
+
+
+    /**
+     * Fix the position of the touch removing the space of the navigation layout
+     */
+    private void fixScrollEventY(MotionEvent event) {
+        float x = event.getAxisValue(0);
+        float y = event.getAxisValue(1);
+        event.setLocation(x, y
+                - PreferencesState.getInstance().getContext().getResources().getDimensionPixelSize(
+
+
+                R.dimen.footer_navigation_size));
     }
 
     /**

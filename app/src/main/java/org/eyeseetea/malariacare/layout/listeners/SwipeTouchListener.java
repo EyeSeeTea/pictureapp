@@ -41,7 +41,6 @@ public class SwipeTouchListener implements View.OnTouchListener {
         if (scrollView != null) {
             fixScrollEventY(event);
             scrollView.onTouchEvent(event);
-            return true;
         }
         return gestureDetector.onTouchEvent(event);
     }

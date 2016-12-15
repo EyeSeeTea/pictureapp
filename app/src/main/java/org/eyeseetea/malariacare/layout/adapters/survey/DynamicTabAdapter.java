@@ -170,10 +170,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         int totalPages = navigationController.getCurrentQuestion().getTotalQuestions();
         if (readOnly) {
             if (Session.getSurvey() != null) {
-                Question lastQuestion = Session.getSurvey().findLastSavedQuestion();
-                if (lastQuestion != null) {
-                    totalPages = lastQuestion.getTotalQuestions();
-                }
+                totalPages = Session.getSurvey().getMaxTotalPages();
             }
         }
         navigationController.setTotalPages(totalPages);
@@ -1505,7 +1502,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         question = navigationController.getCurrentQuestion();
         value = question.getValueBySession();
-        //TODO: rhardjono: navigationController totalPages is not updating properly in survey review
         //set new page number if the value is null
         if (value == null && !readOnly) {
             navigationController.setTotalPages(

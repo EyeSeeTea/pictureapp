@@ -5,6 +5,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="6dp"
-        android:layout_margin="@dimen/top_separator_line"
+        android:layout_marginLeft="@dimen/top_separator_line"
+        android:layout_marginRight="@dimen/top_separator_line"
         android:background="@drawable/bottom_border" />
 </merge>

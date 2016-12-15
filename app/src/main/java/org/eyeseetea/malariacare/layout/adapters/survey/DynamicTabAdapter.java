@@ -65,6 +65,7 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.usecase.ToastUseCase;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
@@ -979,6 +980,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
 
                 }
+                if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
+                    ToastUseCase.showCompulsoryUnansweredToast();
+                    return;
+                }
             }
         });
         button = (ImageButton) navigationButtonsHolder.findViewById(R.id.back_btn);
@@ -1405,6 +1410,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public void finishOrNext() {
         if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
+            ToastUseCase.showCompulsoryUnansweredToast();
             return;
         }
         final Handler handler = new Handler();

@@ -65,6 +65,7 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.usecase.ToastUseCase;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
@@ -948,7 +949,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     TableRow currentRow = (TableRow) tableLayout.getChildAt(0);
 
-                    if (currentRow != null && currentRow.getChildAt(0) instanceof ImageRadioButtonSingleQuestionView) {
+                    if (currentRow != null && currentRow.getChildAt(
+                            0) instanceof ImageRadioButtonSingleQuestionView) {
 
                         navigationController.isMovingToForward = true;
 
@@ -977,6 +979,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         finishOrNext();
                     }
 
+                }
+                if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
+                    ToastUseCase.showCompulsoryUnansweredToast();
+                    return;
                 }
             }
         });
@@ -1404,6 +1410,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public void finishOrNext() {
         if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
+            ToastUseCase.showCompulsoryUnansweredToast();
             return;
         }
         final Handler handler = new Handler();
@@ -1522,7 +1529,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         Question currentQuestion;
         boolean isQuestionFound = false;
-        
+
         //it is compared by uid because comparing by question it could be not equal by the same
         // question.
         while (!isQuestionFound) {

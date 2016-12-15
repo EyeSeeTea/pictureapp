@@ -224,4 +224,5 @@
     <string name="not_tested">未测试</string>
     <string name="system_defined">系统定义</string>
     <string name="no_data">没有数据</string>
+    <string name="error_compulsory_question_unanswered">請為每一個問題必須回答。</string>
 </resources>

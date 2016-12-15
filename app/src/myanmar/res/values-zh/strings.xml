@@ -173,7 +173,7 @@
     <string name="survey_info_exit_delete"></string>
     <string name="exception_org_unit_not_valid"></string>
     <string name="exception_org_unit_banned"></string>
-    <string name="dynamic_error_phone_format"></string>
+    <string name="dynamic_error_phone_format">电话号码格式无效</string>
     <string name="dynamic_error_age">年龄无效</string>
     <string name="pref_header_general">一般</string>
     <string name="font_size_level0">x小</string>
@@ -224,4 +224,5 @@
     <string name="not_tested">未测试</string>
     <string name="system_defined">系统定义</string>
     <string name="no_data">没有数据</string>
+    <string name="error_compulsory_question_unanswered">請為每一個問題必須回答。</string>
 </resources>

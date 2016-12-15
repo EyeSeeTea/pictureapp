@@ -21,7 +21,9 @@ package org.eyeseetea.malariacare.layout.adapters.general;
 
 import android.content.Context;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.TextCard;
 
@@ -38,6 +40,16 @@ public class OptionArrayAdapter extends AddlArrayAdapter<Option> {
 
     @Override
     public void drawText(TextCard textCard, Option option) {
+        if (textCard.getmScale().equals(getContext().getString(R.string.font_size_system))) {
+            textCard.setTextSize(
+                    PreferencesState.getInstance().getContext().getResources().getDimension(
+                            R.dimen.input_number_edit_text_phone)
+                            / PreferencesState.getInstance().getContext().getResources()
+                            .getDisplayMetrics().density);
+        }
+        textCard.setmDimension(getContext().getResources().getString(R.string.font_size_level2));
+        textCard.setmFontName(
+                getContext().getResources().getString(R.string.specific_language_font));
         textCard.setText(Utils.getInternationalizedString(option.getCode()));
     }
 

@@ -989,12 +989,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     } else {
                         finishOrNext();
                     }
+                } else if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
+                    ToastUseCase.showCompulsoryUnansweredToast();
+                    isClicked = false;
+                    return;
                 } else {
                     isClicked = false;
-                }
-                if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
-                    ToastUseCase.showCompulsoryUnansweredToast();
-                    return;
                 }
             }
         });

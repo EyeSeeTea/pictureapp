@@ -420,6 +420,10 @@ public class Question extends BaseModel {
         this.de_name = de_name;
     }
 
+    public String getInternationalizedCodeDe_Name() {
+        return Utils.getInternationalizedString(de_name);
+    }
+
     public String getHelp_text() {
         return help_text;
     }
@@ -1441,6 +1445,7 @@ public class Question extends BaseModel {
                 ", path=" + path +
                 '}';
     }
+
 
     private static class QuestionOrderComparator implements Comparator {
 

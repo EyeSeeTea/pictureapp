@@ -741,7 +741,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                                 screenQuestion.getAnswer().getOptions());
                     }
 
-                    if (!reloadingQuestionFromInvalidOption) {
+                    if (reloadingQuestionFromInvalidOption) {
+                        reloadingQuestionFromInvalidOption = false;
+                    } else {
                         questionView.setValue(value);
                     }
 

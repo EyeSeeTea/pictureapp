@@ -26,6 +26,7 @@ import android.util.Log;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Permissions;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
@@ -41,6 +42,7 @@ public class EyeSeeTeaApplication extends Dhis2Application {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
+        PreferencesState.getInstance().init(getApplicationContext());
     }
 
 

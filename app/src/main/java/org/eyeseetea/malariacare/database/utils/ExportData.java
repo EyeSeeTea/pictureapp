@@ -2,6 +2,8 @@ package org.eyeseetea.malariacare.database.utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 
@@ -230,27 +232,21 @@ public class ExportData {
      * This method create the email intent
      */
     private static Intent createEmailIntent(Activity activity, File data) {
-        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-        emailIntent.setType("*/*");
+        final Uri uri = FileProvider.getUriForFile(activity, BuildConfig.AuthoritiesProvider, data);
 
-        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-                new String[]{""});
-
-        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                "Local " + PreferencesState.getInstance().getContext().getString(
+        final Intent chooser = ShareCompat.IntentBuilder.from(activity)
+                .setType("application/zip")
+                .setSubject("Local " + PreferencesState.getInstance().getContext().getString(
                         R.string.malaria_case_based_reporting)
                         + " db " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
-                        Calendar.getInstance().getTime()));
-        //sets file as readable for external apps
-        data.setReadable(true, false);
-        Log.d(TAG, data.toURI() + "");
-        emailIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(activity,
-                "org.eyeseetea.malariacare.database.utils.ExportData", data));
-        Intent chooser = Intent.createChooser(
-                emailIntent,
-                activity.getResources().getString(R.string.export_data_option_title));
-        return chooser;
+                        Calendar.getInstance().getTime()))
+                .setStream(uri)
+                .setChooserTitle(
+                        activity.getResources().getString(R.string.export_data_option_title))
+                .createChooserIntent()
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
+        return chooser;
     }
 
     /**

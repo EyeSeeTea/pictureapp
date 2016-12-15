@@ -979,8 +979,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         finishOrNext();
                     }
 
-                }
-                if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
+                } else if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
                     ToastUseCase.showCompulsoryUnansweredToast();
                     return;
                 }

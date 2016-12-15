@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -112,17 +113,25 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
         Value value = (Value) getItem(position);
 
         // Get the row layout
-        View rowView = this.lInflater.inflate(getRecordLayout(), parent, false);
+        TableRow rowView = (TableRow) this.lInflater.inflate(getRecordLayout(), parent, false);
 
         //Sets the value text in the row and add the question as tag.
-        TextCard textCard = (TextCard) rowView.findViewById(R.id.review_content_text);
-        textCard.setText((value.getOption() != null) ? value.getOption().getInternationalizedCode()
-                : value.getValue());
+        TextCard questionTextCard = (TextCard) rowView.findViewById(R.id.review_title_text);
+        questionTextCard.setText((value.getQuestion() != null) ?
+                value.getQuestion().getInternationalizedCodeDe_Name() + ": "
+                : "");
+        if (questionTextCard.getText().equals("")) {
+            questionTextCard.setVisibility(View.GONE);
+        }
+        TextCard valueTextCard = (TextCard) rowView.findViewById(R.id.review_content_text);
+        valueTextCard.setText(
+                (value.getOption() != null) ? value.getOption().getInternationalizedCode()
+                        : value.getValue());
         if ((value.getQuestion() != null)) {
-            textCard.setTag(value.getQuestion());
+            rowView.setTag(value.getQuestion());
 
             //Adds click listener to hide the fragment and go to the clicked question.
-            textCard.setOnClickListener(new View.OnClickListener() {
+            rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Question question = (Question) v.getTag();
@@ -131,7 +140,7 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
             });
 
             if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
-                textCard.setBackgroundColor(
+                rowView.setBackgroundColor(
                         Color.parseColor("#" + value.getOption().getBackground_colour()));
             }
 

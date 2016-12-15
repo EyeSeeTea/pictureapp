@@ -745,7 +745,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
             }
         }
         numAnswered += countCompulsoryBySurvey(this);
-        Log.d("survey anserewed", "num required: "+numRequired + " num answered: " + numAnswered);
+        Log.d("survey anserewed", "num required: " + numRequired + " num answered: " + numAnswered);
         surveyAnsweredRatio = new SurveyAnsweredRatio(numRequired, numAnswered);
 
         SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);
@@ -1019,6 +1019,21 @@ public class Survey extends BaseModel implements VisitableToSDK {
         }
     }
 
+    /**
+     * This method get the return the highest number of total pages in the survey question values.
+     */
+    public int getMaxTotalPages() {
+        List<Value> values = getValuesFromDB();
+        int totalPages = 0;
+        for (Value value : values) {
+            if (value.getQuestion() != null
+                    && value.getQuestion().getTotalQuestions() > totalPages) {
+                totalPages = value.getQuestion().getTotalQuestions();
+            }
+        }
+        return totalPages;
+    }
+
     @Override
     public void accept(IConvertToSDKVisitor IConvertToSDKVisitor) throws Exception {
         IConvertToSDKVisitor.visit(this);
@@ -1091,14 +1106,5 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 '}';
     }
 
-    public Question findLastSavedQuestion() {
-        List<Value> values = getValuesFromDB();
-        for (Value value : values) {
-            if (value.getQuestion() != null && !value.getQuestion().hasChildren()) {
-                return value.getQuestion();
-            }
-        }
-        return null;
-    }
 
 }

@@ -224,4 +224,5 @@
     <string name="not_tested">Not tested</string>
     <string name="system_defined">System defined</string>
     <string name="no_data">no data</string>
+    <string name="error_compulsory_question_unanswered">Please provide an answer for every compulsory question.</string>
 </resources>

@@ -288,6 +288,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 new ConfirmCounterSingleCustomViewStrategy(this);
         confirmCounterStrategy.showConfirmCounter(view, selectedOption, question, questionCounter);
 
+        isClicked = false;
     }
 
     public void showStandardConfirmCounter(final View view, final Option selectedOption,
@@ -305,8 +306,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             public void onClick(View v) {
                 //Leave current question as it was
                 removeConfirmCounter(v);
-                isClicked = false;
                 notifyDataSetChanged();
+                isClicked = false;
             }
         });
 
@@ -559,6 +560,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         navigationButtonHolder = rowView.findViewById(R.id.snackbar);
         if (GradleVariantConfig.isButtonNavigationActive()) {
             createNavigationButtonsBackButton(navigationButtonHolder);
+            isClicked = false;
         }
         Log.d(TAG, "Questions in actual tab: " + screenQuestions.size());
         for (Question screenQuestion : screenQuestions) {
@@ -836,6 +838,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             setBottomLine(tabType, screenQuestions, screenQuestion);
         }
         rowView.requestLayout();
+        reloadingQuestionFromInvalidOption = false;
         return rowView;
     }
 
@@ -935,6 +938,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         ((LinearLayout) button.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isClicked) {
+                    Log.d(TAG, "onClick ignored to avoid double click");
+                    return;
+                }
+                Log.d(TAG, "onClicked");
+
+                isClicked = true;
                 boolean questionsWithError = false;
 
                 for (IMultiQuestionView multiquestionView : mMultiQuestionViews) {
@@ -973,15 +983,18 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                                         selectedOptionView.getOption(),
                                         question, counterQuestion);
                             }
+                        } else {
+                            isClicked = false;
                         }
-
                     } else {
                         finishOrNext();
                     }
-
                 } else if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
                     ToastUseCase.showCompulsoryUnansweredToast();
+                    isClicked = false;
                     return;
+                } else {
+                    isClicked = false;
                 }
             }
         });
@@ -1410,6 +1423,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public void finishOrNext() {
         if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
             ToastUseCase.showCompulsoryUnansweredToast();
+            isClicked = false;
             return;
         }
         final Handler handler = new Handler();

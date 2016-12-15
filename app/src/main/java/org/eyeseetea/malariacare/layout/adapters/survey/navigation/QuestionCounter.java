@@ -36,7 +36,7 @@ public class QuestionCounter {
         Integer currentRepetitions = toInteger(ReadWriteDB.readValueQuestion(counterQuestion));
         Log.i(TAG, String.format("Counter %s updated, current value %d", counterQuestion.getCode(),
                 currentRepetitions));
-        return !(limit == infinite_counter_number || currentRepetitions != limit);
+        return !(limit == infinite_counter_number || currentRepetitions < limit);
     }
 
     private int toInteger(String currentRepetitions) {

@@ -60,6 +60,9 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             radioButton.updateProperties(PreferencesState.getInstance().getScale(),
                     context.getString(R.string.font_size_level1),
                     context.getString(R.string.specific_language_font));
+
+            radioButton.setEnabled(radioGroup.isEnabled());
+
             radioGroup.addView(radioButton);
             radioGroup.setOnCheckedChangeListener(
                     new RadioGroupListener((View) radioGroup.getParent(), question));

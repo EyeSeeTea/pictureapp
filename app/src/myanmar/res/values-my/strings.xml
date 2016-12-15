@@ -175,7 +175,7 @@
     <string name="survey_info_exit_delete">တိုးတက်မှုအတွက်စစ်တမ်းကောက်ဖျက်ပစ်ပါလိမ့်မည်</string>
     <string name="exception_org_unit_not_valid"></string>
     <string name="exception_org_unit_banned"></string>
-    <string name="dynamic_error_phone_format"></string>
+    <string name="dynamic_error_phone_format">ဖုန်းနံပါတ်အဘို့အမှားနေသော format နဲ့</string>
     <string name="dynamic_error_age">မှားနေသောအသက်အရွယ်</string>
     <string name="pref_header_general">ယေဘုယျ</string>
     <string name="font_size_level0">x ကသေးငယ်</string>
@@ -227,4 +227,5 @@
     <string name="system_defined">system ကိုသတ်မှတ်</string>
     <string name="no_data">အဘယ်သူမျှမဒေတာ</string>
     <string name="error_compulsory_question_unanswered">စာနယ်ဇင်းအဖြေကိုအစဉ်အမြဲ Y ကိုမသင်မနေရမေးခွန်းများကိုပေးပါ။</string>
+    <string name="work_in_progress">တိုးတက်မှုအတွက်အလုပ်</string>
 </resources>

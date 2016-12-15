@@ -226,7 +226,7 @@
     <string name="not_tested">စမျးသပျမ</string>
     <string name="system_defined">system ကိုသတ်မှတ်</string>
     <string name="no_data">အဘယ်သူမျှမဒေတာ</string>
-
+    <string name="error_compulsory_question_unanswered">စာနယ်ဇင်းအဖြေကိုအစဉ်အမြဲ Y ကိုမသင်မနေရမေးခွန်းများကိုပေးပါ။</string>
     <string name="patient_name_review_title">နာမတျောကို</string>
     <string name="patient_age_review_title">အသက်အရွယ်</string>
     <string name="patient_phone_review_title">ဖုန်းနံပါတ်</string>

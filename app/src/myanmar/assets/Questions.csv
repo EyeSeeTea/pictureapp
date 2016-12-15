@@ -10,7 +10,7 @@
 10;'Code: Did seek';'symptoms_care_sought_review_title';'symptoms_care_sought_text';'symptoms_care_sought';'10V1JoHmO94';10;0;0;3;10;0;8;4;0;'question_images/p4_seek.png';0
 11;'Code: Severe symptoms';'symptoms_servere_review_title';'symptoms_severity_text';'symptoms_severity';'11V1JoHmO94';11;0;0;3;11;0;8;4;0;'question_images/p4_severe.png';1
 12;'Code: RDT';'rdt_test_review_title';'';'rdt_test_result';'12V1JoHmO94';12;0;0;4;12;0;25;4;1;'';1
-13;'Code: RDT NEGATIVE';'negative_test_review_title';'';'negative_test';'13V1JoHmO94';13;0;0;5;13;0;18;4;0;'rdt_negative_image';1
+13;'Code: RDT NEGATIVE';'negative_test_review_title';'';'negative_test';'13V1JoHmO94';13;0;0;5;13;0;18;4;0;'rdt_negative_image';0
 14;'ConfirmInvalid';'invalid_review_title';'';'invalid%s_subtitle';'15V1JoHmO94';12;0;0;6;14;0;16;4;0;'rdt_invalid_image';0
 15;'Code: Treat';'treatment_review_title';'';'Work in progress';'16V1JoHmO94';2;0;0;7;15;0;21;7;0;'question_images/work_in_progress.png'
 16;'Code: Vomiting';'patient_advice_vomiting_review_title';'patient_advice_text_vomiting';'patient_advice_title_vomiting';'17V1JoHmO94';3;0;0;8;16;0;23;7;0;'question_images/p7_vomiting.png';0

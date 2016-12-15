@@ -224,7 +224,7 @@
     <string name="not_tested">未测试</string>
     <string name="system_defined">系统定义</string>
     <string name="no_data">没有数据</string>
-
+    <string name="error_compulsory_question_unanswered">請為每一個問題必須回答。</string>
     <string name="patient_name_review_title">名稱</string>
     <string name="patient_age_review_title">年齡</string>
     <string name="patient_phone_review_title">電話</string>

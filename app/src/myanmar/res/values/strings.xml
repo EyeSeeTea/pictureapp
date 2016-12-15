@@ -223,7 +223,8 @@
     <string name="review_subtitle">Transmission</string>
     <string name="not_tested">Not tested</string>
     <string name="system_defined">System defined</string>
-
+    <string name="no_data">no data</string>
+    <string name="error_compulsory_question_unanswered">Please provide an answer for every compulsory question.</string>
     <string name="patient_name_review_title">Name</string>
     <string name="patient_age_review_title">Age</string>
     <string name="patient_phone_review_title">Phone</string>

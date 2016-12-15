@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.views.question.singlequestion.strategies;
 
 import static org.eyeseetea.malariacare.R.id.question;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import java.util.List;
 public class ConfirmCounterSingleCustomViewStrategy implements
         IConfirmCounterSingleCustomViewStrategy {
     DynamicTabAdapter mDynamicTabAdapter;
+    private static final String TAG = ".ConfirmCounter";
 
     private String currentCounterValue = "";
 
@@ -62,8 +64,15 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         ((LinearLayout) previousButton.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (DynamicTabAdapter.isClicked) {
+                    Log.d(TAG, "onClick ignored to avoid double click");
+                    return;
+                } else {
+                    Log.d(TAG, "onClick ignored to avoid double click NOT");
+                }
                 mDynamicTabAdapter.removeConfirmCounter(v);
                 mDynamicTabAdapter.notifyDataSetChanged();
+                DynamicTabAdapter.isClicked = false;
             }
         });
 
@@ -73,6 +82,12 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         ((LinearLayout) nextButton.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mDynamicTabAdapter.reloadingQuestionFromInvalidOption) {
+                    Log.d(TAG, "onClick ignored to avoid double click");
+                    return;
+                } else {
+                    Log.d(TAG, "onClick");
+                }
                 mDynamicTabAdapter.navigationController.increaseCounterRepetitions(selectedOption);
                 mDynamicTabAdapter.removeConfirmCounter(v);
                 mDynamicTabAdapter.reloadingQuestionFromInvalidOption = true;

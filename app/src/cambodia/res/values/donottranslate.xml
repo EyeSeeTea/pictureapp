@@ -9,4 +9,5 @@
     <string name="review_title" translatable="false">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>
     <string name="review_subtitle" translatable="false">ធ្វើការបញ្ជូន</string>
     <string name="DHIS_DEFAULT_SERVER" translatable="false">https://www.psi-mis.org</string>
+    <string name="work_in_progress" translatable="false">Work in progress</string>
 </resources>

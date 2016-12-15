@@ -22,9 +22,6 @@ import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by idelcano on 09/06/2016.
- */
 public class ReviewFragment extends Fragment {
 
     public static final String TAG = ".ReviewFragment";
@@ -32,11 +29,12 @@ public class ReviewFragment extends Fragment {
     LayoutInflater lInflater;
     private List<Value> values;
 
+    public static boolean mLoadingReviewOfSurveyWithMaxCounter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-
     }
 
     @Override

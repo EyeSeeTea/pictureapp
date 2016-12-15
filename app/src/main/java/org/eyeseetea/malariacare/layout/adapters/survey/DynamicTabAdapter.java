@@ -144,8 +144,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Listener that detects taps on buttons & swipe
      */
     private SwipeTouchListener swipeTouchListener;
+    private boolean mReviewMode = false;
 
-    public DynamicTabAdapter(Tab tab, Context context) {
+    public DynamicTabAdapter(Tab tab, Context context, boolean reviewMode) {
+        mReviewMode = reviewMode;
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
         this.id_layout = R.layout.form_without_score;
@@ -170,10 +172,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         int totalPages = navigationController.getCurrentQuestion().getTotalQuestions();
         if (readOnly) {
             if (Session.getSurvey() != null) {
-                Question lastQuestion = Session.getSurvey().findLastSavedQuestion();
-                if (lastQuestion != null) {
-                    totalPages = lastQuestion.getTotalQuestions();
-                }
+                totalPages = Session.getSurvey().getMaxTotalPages();
             }
         }
         navigationController.setTotalPages(totalPages);
@@ -962,7 +961,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     TableRow currentRow = (TableRow) tableLayout.getChildAt(0);
 
-                    if (currentRow != null && currentRow.getChildAt(
+                    if (!readOnly && currentRow != null && currentRow.getChildAt(
                             0) instanceof ImageRadioButtonSingleQuestionView) {
 
                         navigationController.isMovingToForward = true;
@@ -977,7 +976,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             final Question question = navigationController.getCurrentQuestion();
                             Question counterQuestion = question.findCounterByOption(
                                     selectedOptionView.getOption());
-                            if (counterQuestion == null) {
+                            if (counterQuestion == null || mReviewMode) {
                                 saveOptionAndMove(selectedOptionView,
                                         selectedOptionView.getOption(),
                                         question);
@@ -1512,7 +1511,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         question = navigationController.getCurrentQuestion();
         value = question.getValueBySession();
-        //TODO: rhardjono: navigationController totalPages is not updating properly in survey review
         //set new page number if the value is null
         if (value == null && !readOnly) {
             navigationController.setTotalPages(
@@ -1551,7 +1549,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         Question currentQuestion;
         boolean isQuestionFound = false;
-
+        
         //it is compared by uid because comparing by question it could be not equal by the same
         // question.
         while (!isQuestionFound) {

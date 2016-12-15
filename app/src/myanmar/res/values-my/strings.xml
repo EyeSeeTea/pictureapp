@@ -175,7 +175,7 @@
     <string name="survey_info_exit_delete">တိုးတက်မှုအတွက်စစ်တမ်းကောက်ဖျက်ပစ်ပါလိမ့်မည်</string>
     <string name="exception_org_unit_not_valid"></string>
     <string name="exception_org_unit_banned"></string>
-    <string name="dynamic_error_phone_format"></string>
+    <string name="dynamic_error_phone_format">ဖုန်းနံပါတ်အဘို့အမှားနေသော format နဲ့</string>
     <string name="dynamic_error_age">မှားနေသောအသက်အရွယ်</string>
     <string name="pref_header_general">ယေဘုယျ</string>
     <string name="font_size_level0">x ကသေးငယ်</string>

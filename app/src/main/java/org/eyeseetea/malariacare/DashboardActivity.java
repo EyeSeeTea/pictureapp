@@ -279,6 +279,8 @@ public class DashboardActivity extends BaseActivity {
      * This method initializes the reviewFragment
      */
     public void initReview() {
+        surveyFragment.mReviewMode = true;
+        
         if (reviewFragment == null) {
             reviewFragment = new ReviewFragment();
         }
@@ -563,6 +565,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void sendSurvey(View view) {
+        surveyFragment.mReviewMode = false;
         sendSurvey();
     }
 
@@ -571,6 +574,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void sendSurvey() {
+
         Survey survey = Session.getSurvey();
         survey.updateSurveyStatus();
         closeSurveyFragment();

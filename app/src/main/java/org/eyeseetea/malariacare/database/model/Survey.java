@@ -35,6 +35,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -1107,4 +1108,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
 
+    public Float getCounterValue(Question question, Option selectedOption) {
+        Question optionCounter = question.findCounterByOption(selectedOption);
+
+        if (optionCounter == null) {
+            return 0f;
+        }
+
+        String counterValue = ReadWriteDB.readValueQuestion(optionCounter);
+        if (counterValue == null || counterValue.isEmpty()) {
+            return 0f;
+        }
+
+        return Float.parseFloat(counterValue);
+    }
 }

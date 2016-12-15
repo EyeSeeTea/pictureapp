@@ -173,7 +173,7 @@
     <string name="survey_info_exit_delete"></string>
     <string name="exception_org_unit_not_valid"></string>
     <string name="exception_org_unit_banned"></string>
-    <string name="dynamic_error_phone_format"></string>
+    <string name="dynamic_error_phone_format">电话号码格式无效</string>
     <string name="dynamic_error_age">年龄无效</string>
     <string name="pref_header_general">一般</string>
     <string name="font_size_level0">x小</string>

@@ -848,6 +848,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             Question screenQuestion) {
         if (isMultipleQuestionTab(tabType) && screenQuestion.getId_question().equals(
                 screenQuestions.get(screenQuestions.size() - 1).getId_question())) {
+
             LinearLayout view = (LinearLayout) lInflater.inflate(R.layout.bottom_screen_view,
                     tableLayout, false);
             tableLayout.addView(view);
@@ -1225,6 +1226,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     break;
                 }
             }
+        }
+
+        //Readonly (not clickable, enabled)
+        if (readOnly) {
+            dropdown.setEnabled(false);
+            return;
         }
     }
 

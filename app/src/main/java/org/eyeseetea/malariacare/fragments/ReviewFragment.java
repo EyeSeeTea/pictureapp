@@ -16,8 +16,6 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
-import org.eyeseetea.malariacare.fragments.strategies.IReviewFragmentStrategy;
-import org.eyeseetea.malariacare.fragments.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 
@@ -33,8 +31,6 @@ public class ReviewFragment extends Fragment {
 
     public static boolean mLoadingReviewOfSurveyWithMaxCounter;
 
-    private IReviewFragmentStrategy mReviewFragmentStrategy = new ReviewFragmentStrategy(this);
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -48,8 +44,6 @@ public class ReviewFragment extends Fragment {
         this.lInflater = LayoutInflater.from(getActivity().getApplicationContext());
         View view = inflater.inflate(R.layout.review_layout,
                 container, false);
-
-        mReviewFragmentStrategy.OnCreateView(view);
 
         initAdapter();
         initListView(view);

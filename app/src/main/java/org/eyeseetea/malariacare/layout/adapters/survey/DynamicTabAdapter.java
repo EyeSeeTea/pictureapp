@@ -144,8 +144,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Listener that detects taps on buttons & swipe
      */
     private SwipeTouchListener swipeTouchListener;
+    private boolean mReviewMode = false;
 
-    public DynamicTabAdapter(Tab tab, Context context) {
+    public DynamicTabAdapter(Tab tab, Context context, boolean reviewMode) {
+        mReviewMode = reviewMode;
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
         this.id_layout = R.layout.form_without_score;
@@ -976,7 +978,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             final Question question = navigationController.getCurrentQuestion();
                             Question counterQuestion = question.findCounterByOption(
                                     selectedOptionView.getOption());
-                            if (counterQuestion == null) {
+                            if (counterQuestion == null || mReviewMode) {
                                 saveOptionAndMove(selectedOptionView,
                                         selectedOptionView.getOption(),
                                         question);

@@ -118,6 +118,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public static View navigationButtonHolder;
     private final Context context;
     public NavigationController navigationController;
+    public boolean reloadingQuestionFromInvalidOption;
     Tab tab;
     LayoutInflater lInflater;
     TableLayout tableLayout = null;
@@ -143,7 +144,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Listener that detects taps on buttons & swipe
      */
     private SwipeTouchListener swipeTouchListener;
-    public boolean reloadingQuestionFromInvalidOption;
 
     public DynamicTabAdapter(Tab tab, Context context) {
         this.lInflater = LayoutInflater.from(context);

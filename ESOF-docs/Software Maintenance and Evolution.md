@@ -1,4 +1,4 @@
-#**4º Relatório - Verificação e Validação de Software**
+#**5º Relatório - Manutenção e Validação do Software**
 
 ##**Índice**
 
@@ -19,12 +19,16 @@ Para se avançar com a alteração feita ao software com o objetivo de melhorá-
 ****
 ##**Evolução e manutenção** <a name ="evol"></a>
 
-A forma mais fácil de facilitar a descoberta de possíveis funcionalidades a adicionar a um projeto consiste em explorar as issues listadas no repositorio do projeto. Depois de analisarmos a lista das issues, especificamente as que tinham a tag *Feature* concluímos que não éramos capazes de as desenvolver. Deste modo, decidimos analisar com cuidado a aplicaçao, verificando que, para visualizar as respostas ao questionário, o utilizador tem de fazer slide para ver as seguintes ou anteriores. De modo a melhorar este aspeto, decidimos desenvolver uma *dialog box*, indicando ao utilizador o que tem de fazer, como referido anteriormente.
+Acrescentar cenas do Better Code Hub quando estiver a funcionar
 
 
 ****
 ##**Implementação da feature**<a name="imp"></a>
 
+A forma mais fácil de facilitar a descoberta de possíveis funcionalidades a adicionar a um projeto consiste em explorar as issues listadas no repositorio do projeto. Depois de analisarmos a lista das issues, especificamente as que tinham a tag *Feature* concluímos que não éramos capazes de as desenvolver. Deste modo, decidimos analisar com cuidado a aplicaçao, verificando que, para visualizar as respostas ao questionário, o utilizador tem de fazer slide para ver as seguintes ou anteriores. De modo a melhorar este aspeto, decidimos desenvolver uma *dialog box*, indicando ao utilizador o que tem de fazer, como referido anteriormente.
+
+
+[Link do pull request](https://github.com/EyeSeeTea/pictureapp/pull/666)
 
 
 ****

@@ -34,6 +34,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -57,6 +58,7 @@ import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -93,6 +95,10 @@ import java.util.regex.Pattern;
  * Created by Jose on 21/04/2015.
  */
 public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
+
+
+
+
 
     private final static String TAG=".DynamicTabAdapter";
 
@@ -138,6 +144,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private boolean readOnly;
 
     public DynamicTabAdapter(Tab tab, Context context) {
+
+
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
         this.id_layout = R.layout.form_without_score;
@@ -903,6 +911,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         }
 
+    }
+
+
+    protected void onCreate(Bundle savedInstanceState) {
+
+        AlertDialog.Builder altdial = new AlertDialog.Builder(this);
+        altdial.setMessage("Swipe left to advance and right to go back!").setCancelable(false)
+                .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = altdial.create();
+        alert.setTitle("Instructions");
+        alert.show();
     }
 
 }

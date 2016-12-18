@@ -29,7 +29,7 @@ A forma mais fácil de facilitar a descoberta de possíveis funcionalidades a ad
 
 
 
-
+![Feature](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/feature.png?raw=true)
 
 ****
 ##**Pull request**<a name="pull"></a>

@@ -18,8 +18,8 @@ Para se avançar com a alteração feita ao software com o objetivo de melhorá-
 
 ****
 ##**Evolução e manutenção** <a name ="evol"></a>
-(identificaçao da feature)
-A forma mais fácil de facilitar a descoberta de possiveis funcionalidades a adicionar a um projeto consiste em explorar as issues listadas no repositorio do projeto. Depois de analisarmos a lista das issues, reparámos que algumas estavam listadas com a tag "Feature" mas excluindo as que já estavam implementadas ou que  a sua prioridade era baixa, não nos restavam nenhuma issue. Por isso, depois de analisar a aplicaçao ,decidimos torna-la mais intuitiva, visto que ao rever um questionario já feito o utilizador não sabe como mudar de pergunta. Ao nos apercebermos disto , decidimos implementar um aviso de forma a que o utiliazdor saiba o que fazer.
+
+A forma mais fácil de facilitar a descoberta de possíveis funcionalidades a adicionar a um projeto consiste em explorar as issues listadas no repositorio do projeto. Depois de analisarmos a lista das issues, especificamente as que tinham a tag *Feature* concluímos que não éramos capazes de as desenvolver. Deste modo, decidimos analisar com cuidado a aplicaçao, verificando que, para visualizar as respostas ao questionário, o utilizador tem de fazer slide para ver as seguintes ou anteriores. De modo a melhorar este aspeto, decidimos desenvolver uma *dialog box*, indicando ao utilizador o que tem de fazer, como referido anteriormente.
 
 
 ****

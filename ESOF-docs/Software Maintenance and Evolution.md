@@ -27,7 +27,30 @@ Acrescentar cenas do Better Code Hub quando estiver a funcionar
 
 A forma mais fácil de facilitar a descoberta de possíveis funcionalidades a adicionar a um projeto consiste em explorar as issues listadas no repositorio do projeto. Depois de analisarmos a lista das issues, especificamente as que tinham a tag *Feature* concluímos que não éramos capazes de as desenvolver. Deste modo, decidimos analisar com cuidado a aplicaçao, verificando que, para visualizar as respostas ao questionário, o utilizador tem de fazer slide para ver as seguintes ou anteriores. De modo a melhorar este aspeto, decidimos desenvolver uma *dialog box*, indicando ao utilizador o que tem de fazer, como referido anteriormente.
 
+Após a analise do codigo e da documentação do projeto, o ficheiro a alterar para implementar a feature foi identificado. Este processo foi rápido e simples devido à boa documentação e à boa estruturação do código. O ficheiro alterado foi DynamicTabAdapter.java e acrescentados os seguintes pedaços de código :
+```java
+import android.os.Bundle;
 
+```
+
+```java
+
+ protected void onCreate(Bundle savedInstanceState) {
+ 
+         AlertDialog.Builder altdial = new AlertDialog.Builder(this);
+         altdial.setMessage("Swipe left to advance and right to go back!").setCancelable(false)
+                 .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                     @Override
+                     public void onClick(DialogInterface dialog, int which) {
+                         dialog.cancel();
+                     }
+                 });
+ 
+         AlertDialog alert = altdial.create();
+         alert.setTitle("Instructions");
+         alert.show();
+     }
+```
 
 ![Feature](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/feature.png?raw=true)
 

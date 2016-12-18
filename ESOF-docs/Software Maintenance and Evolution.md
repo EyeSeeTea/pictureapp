@@ -147,7 +147,7 @@ O código adicionado faz com que mal a página de visualização das respostas s
 ****
 ##**Pull request**<a name="pull"></a>
 
-[Link do pull request](https://github.com/EyeSeeTea/pictureapp/pull/666)
+O pull request pode ser visto [aqui](https://github.com/EyeSeeTea/pictureapp/pull/666). Na altura da submissão do relatório, este não tinha sido aceite.
 
 
 

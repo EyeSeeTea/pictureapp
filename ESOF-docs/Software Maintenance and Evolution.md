@@ -142,7 +142,6 @@ import android.os.Bundle;
 
 O código adicionado faz com que mal a página de visualização das respostas seja carregada, uma *dialog box* apareça com as devidas instruçoes de navegação. Primeiro, é criado o *builder* da janela com um tema default. Segue-se a customização da mesma com a mensagem principal, a opção de a janela poder desaparecer e a configuração do botão para a fechar. Finalmente é definido o título e é executada  a função para mostrar imediatamente a mensagem. 
 
-![Feature](https://github.com/tomasvcaldas/FEUP-ESOF-MALARIASURV/blob/master/ESOF-docs/Images/feature.png?raw=true =100x20)
 
 ****
 ##**Pull request**<a name="pull"></a>

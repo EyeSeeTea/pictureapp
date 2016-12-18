@@ -28,11 +28,13 @@ Acrescentar cenas do Better Code Hub quando estiver a funcionar
 A forma mais fácil de facilitar a descoberta de possíveis funcionalidades a adicionar a um projeto consiste em explorar as issues listadas no repositorio do projeto. Depois de analisarmos a lista das issues, especificamente as que tinham a tag *Feature* concluímos que não éramos capazes de as desenvolver. Deste modo, decidimos analisar com cuidado a aplicaçao, verificando que, para visualizar as respostas ao questionário, o utilizador tem de fazer slide para ver as seguintes ou anteriores. De modo a melhorar este aspeto, decidimos desenvolver uma *dialog box*, indicando ao utilizador o que tem de fazer, como referido anteriormente.
 
 
-[Link do pull request](https://github.com/EyeSeeTea/pictureapp/pull/666)
+
 
 
 ****
 ##**Pull request**<a name="pull"></a>
+
+[Link do pull request](https://github.com/EyeSeeTea/pictureapp/pull/666)
 
 
 

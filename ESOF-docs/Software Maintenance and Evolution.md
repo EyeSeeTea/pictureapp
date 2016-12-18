@@ -21,6 +21,9 @@ Para se avançar com a alteração feita ao software com o objetivo de melhorá-
 
 [![BCH compliance](https://bettercodehub.com/edge/badge/inesferreira7/FEUP-ESOF-MALARIASURV)](https://bettercodehub.com)
 
+Para avaliar a qualidade da aplicação, foi utilizada a ferramenta Better Code Hub. Esta ferramenta avalia a aplicação e determina fatores como legibilidade, manutenibilidade e capacidade de evolução. Para tal, os seguintes são calculados os seguintes pontos:
+* Ola
+
 
 ****
 ##**Implementação da feature**<a name="imp"></a>

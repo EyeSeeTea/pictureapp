@@ -11,6 +11,9 @@
 ****
 ##**Introdução** <a name ="intro"></a>
 
+Manutenção ou evolução de software é descrito como o processo de otimização e melhoria de um software já desenvolvido. Esta fase, que ocorre durante o desenvolvimento de um software, envolve a melhoria de funcionalidades, correção e prevenção de erros, adaptação a diferentes mudanças do sistema, bem como o requerimento de novas funcionalidades por parte dos utilizadores.
+
+Para se avançar com a alteração feita ao software com o objetivo de melhorá-lo, é necessário ter em conta as partes deste que serão alteradas. Deve ser garantido que as alterações são feitas de forma correta, isto é,as mudanças ou funcionalidades implementadas no código não mudam o comportamento expectável do software.
 
 
 ****

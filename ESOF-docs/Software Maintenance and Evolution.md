@@ -19,7 +19,7 @@ Para se avançar com a alteração feita ao software com o objetivo de melhorá-
 ****
 ##**Evolução e manutenção** <a name ="evol"></a>
 
-Acrescentar cenas do Better Code Hub quando estiver a funcionar
+[![BCH compliance](https://bettercodehub.com/edge/badge/inesferreira7/FEUP-ESOF-MALARIASURV)](https://bettercodehub.com)
 
 
 ****

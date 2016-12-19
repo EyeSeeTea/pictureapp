@@ -12,8 +12,8 @@
         tools:replace="android:allowBackup, android:icon">
 
         <provider
-            android:name="org.eyeseetea.malariacare.database.utils.SCMMDBProvider"
-            android:authorities="org.eyeseetea.malariacare.database.utils.SCMMExportData"
+            android:name=".database.utils.SCMMDBProvider"
+            android:authorities="org.eyeseetea.malariacare.database.utils.SCMMDBProvider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:node="merge">
@@ -22,5 +22,4 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
-
 </manifest>

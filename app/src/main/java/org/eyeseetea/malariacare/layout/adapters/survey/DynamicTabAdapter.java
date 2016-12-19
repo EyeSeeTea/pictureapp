@@ -22,6 +22,7 @@ package org.eyeseetea.malariacare.layout.adapters.survey;
 import static org.eyeseetea.malariacare.R.id.question;
 import static org.eyeseetea.malariacare.database.model.Option.DOESNT_MATCH_POSITION;
 import static org.eyeseetea.malariacare.database.model.Option.MATCH_POSITION;
+import static org.eyeseetea.malariacare.database.utils.Session.getSurvey;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -153,7 +154,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.id_layout = R.layout.form_without_score;
 
         this.navigationController = initNavigationController(tab);
-        this.readOnly = Session.getSurvey() != null && !Session.getSurvey().isInProgress();
+        this.readOnly = getSurvey() != null && !getSurvey().isInProgress();
         this.isSwipeAdded = false;
         //On create dynamictabadapter, if is not readonly and has value not null it should come
         // from reviewFragment
@@ -500,8 +501,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rowView.requestLayout();
         Question questionItem = (Question) this.getItem(position);
         // We get values from DB and put them in Session
-        if (Session.getSurvey() != null) {
-            Session.getSurvey().getValuesFromDB();
+        if (getSurvey() != null) {
+            getSurvey().getValuesFromDB();
         } else {
             //The survey in session is null when the user closes the surveyFragment, but the
             // getView is called.
@@ -574,7 +575,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             // Se get the value from Session
             int visibility = View.GONE;
-            if (!screenQuestion.isHiddenBySurveyAndHeader(Session.getSurvey())
+            if (!screenQuestion.isHiddenBySurveyAndHeader(getSurvey())
                     || !isMultipleQuestionTab(tabType)) {
                 visibility = View.VISIBLE;
             }
@@ -847,7 +848,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             Question screenQuestion) {
         if (isMultipleQuestionTab(tabType) && screenQuestion.getId_question().equals(
                 screenQuestions.get(screenQuestions.size() - 1).getId_question())) {
-
             LinearLayout view = (LinearLayout) lInflater.inflate(R.layout.bottom_screen_view,
                     tableLayout, false);
             tableLayout.addView(view);
@@ -974,9 +974,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                         if (selectedOptionView != null) {
                             final Question question = navigationController.getCurrentQuestion();
+
+                            Option selectedOption = selectedOptionView.getOption();
+
                             Question counterQuestion = question.findCounterByOption(
-                                    selectedOptionView.getOption());
-                            if (counterQuestion == null || mReviewMode) {
+                                    selectedOption);
+                            if (counterQuestion == null || (mReviewMode
+                                    && isCounterValueEqualToMax(question, selectedOption))) {
                                 saveOptionAndMove(selectedOptionView,
                                         selectedOptionView.getOption(),
                                         question);
@@ -1009,6 +1013,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         });
         return navigationButtonsHolder;
+    }
+
+    private boolean isCounterValueEqualToMax(Question question, Option selectedOption) {
+
+        Float counterValue = Session.getSurvey().getCounterValue(question, selectedOption);
+
+        Float maxCounter = selectedOption.getFactor();
+
+        return counterValue.equals(maxCounter);
     }
 
     private void setTextSettings(TextCard textOption, Option currentOption) {
@@ -1280,7 +1293,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean toggleChild(TableRow row, Question rowQuestion, Question childQuestion) {
         if (childQuestion.getId_question().equals(rowQuestion.getId_question())) {
-            if (rowQuestion.isHiddenBySurveyAndHeader(Session.getSurvey())) {
+            if (rowQuestion.isHiddenBySurveyAndHeader(getSurvey())) {
                 row.setVisibility(View.GONE);
                 hideDefaultValue(rowQuestion);
             } else {
@@ -1457,7 +1470,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     public boolean wasPatientTested() {
-        return Session.getSurvey().isRDT() || BuildConfig.patientTestedByDefault;
+        return getSurvey().isRDT() || BuildConfig.patientTestedByDefault;
     }
 
     /**
@@ -1549,7 +1562,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         Question currentQuestion;
         boolean isQuestionFound = false;
-        
+
         //it is compared by uid because comparing by question it could be not equal by the same
         // question.
         while (!isQuestionFound) {

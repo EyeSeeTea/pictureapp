@@ -72,6 +72,7 @@ android {
             buildConfigField "boolean", "multiuser", "false"
             buildConfigField "boolean", "activeStockFragment", "false"
             buildConfigField "boolean", "patientTestedByDefault", "false"
+            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.database.utils.KHDBProvider\""
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la_bb'
@@ -85,6 +86,7 @@ android {
             buildConfigField "boolean", "multiuser", "false"
             buildConfigField "boolean", "activeStockFragment", "false"
             buildConfigField "boolean", "patientTestedByDefault", "false"
+            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.database.utils.LADBProvider\""
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
@@ -98,6 +100,7 @@ android {
             buildConfigField "boolean", "multiuser", "true"
             buildConfigField "boolean", "activeStockFragment", "true"
             buildConfigField "boolean", "patientTestedByDefault", "true"
+            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.database.utils.SCMMDBProvider\""
         }
     }
 

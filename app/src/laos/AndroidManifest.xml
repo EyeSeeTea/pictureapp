@@ -12,8 +12,8 @@
         tools:replace="android:allowBackup, android:icon">
 
         <provider
-            android:name="org.eyeseetea.malariacare.database.utils.LADBProvider"
-            android:authorities="org.eyeseetea.malariacare.database.utils.LAExportData"
+            android:name=".database.utils.LADBProvider"
+            android:authorities="org.eyeseetea.malariacare.database.utils.LADBProvider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:node="merge">

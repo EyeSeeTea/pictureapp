@@ -13,6 +13,8 @@
         android:orientation="vertical">
 
     </LinearLayout>
+
+    <include layout="@layout/dynamic_bottom_view"></include>
 </LinearLayout>
 
 

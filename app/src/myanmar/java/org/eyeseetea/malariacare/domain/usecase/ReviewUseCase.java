@@ -7,8 +7,12 @@ import android.view.ViewGroup;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.views.TextCard;
+
+import java.util.HashMap;
 
 /**
  * Created by idelcano on 15/12/2016.
@@ -42,9 +46,10 @@ public class ReviewUseCase {
                 }
             });
 
-            if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
+            HashMap<Tab, Integer> tabs = Session.getSurvey().getAnsweredTabs();
+            if (tabs.get(value.getQuestion().getHeader().getTab()) % 2 == 0) {
                 rowView.setBackgroundColor(
-                        Color.parseColor("#" + value.getOption().getBackground_colour()));
+                        Color.parseColor("#9c7f9b"));
             }
 
         }

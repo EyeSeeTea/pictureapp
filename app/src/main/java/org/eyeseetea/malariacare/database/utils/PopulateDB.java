@@ -794,4 +794,28 @@ public class PopulateDB {
             }
         }
     }
+
+
+    /**
+     * Migration used to add a new parent-child relation in lao
+     */
+    public static void createMissingRelationInLao() {
+        //new match relation in csv
+        //29;29
+        //new QuestionOption in csv
+        //45;1;1;29
+        //new QuestionRelation in csv
+        //29;1;6
+        Long childId = 6l;
+        Long parentId = 1l;
+        Float optionId = 1f;
+        QuestionRelation questionRelation = new QuestionRelation(Question.findByID(childId),
+                QuestionRelation.PARENT_CHILD);
+        questionRelation.save();
+        Match match = new Match(questionRelation);
+        match.save();
+        QuestionOption questionOption
+                = new QuestionOption(Option.findById(optionId), Question.findByID(parentId), match);
+        questionOption.save();
+    }
 }

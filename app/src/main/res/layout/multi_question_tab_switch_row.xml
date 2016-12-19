@@ -36,6 +36,8 @@
                     android:layout_gravity="left"
                     android:adjustViewBounds="true"
                     android:gravity="left"
+                    android:paddingBottom="@dimen/image_padding"
+                    android:paddingTop="@dimen/image_padding"
                     android:scaleType="fitCenter" />
             </LinearLayout>
 

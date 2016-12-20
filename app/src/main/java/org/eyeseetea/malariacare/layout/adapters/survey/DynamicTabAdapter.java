@@ -756,35 +756,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
-/*                case Constants.QUESTION_LABEL:
-                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_label_row,
-                            tableLayout, false);
-                    TextCard textCard = (TextCard) tableRow.findViewById(R.id.row_header_text);
-
-                    ImageView rowImageLabelView = ((ImageView) tableRow.findViewById(
-                            R.id.question_image_row));
-
-                    textCard.setText(
-                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
-
-                    if (screenQuestion.hasAssociatedImage()) {
-                        LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
-                                rowImageLabelView);
-                    } else {
-                        adaptLayoutToTextOnly(tableRow.findViewById(R.id.question_text_container),
-                                rowImageLabelView);
-                    }
-
-                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
-
-                    if (!screenQuestion.getHelp_text().isEmpty()) {
-                        ((TextCard) tableRow.findViewById(R.id.row_help_text)).setText(
-                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
-                    }
-
-                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
-                    break;*/
                 case Constants.DROPDOWN_LIST:
                 case Constants.DROPDOWN_OU_LIST:
                     tableRow = (TableRow) lInflater.inflate(

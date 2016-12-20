@@ -32,6 +32,7 @@
             android:id="@+id/row_header_compulsory"
             android:layout_width="0dp"
             android:layout_height="10dp"
+            android:layout_gravity="right|center_vertical"
             android:layout_toRightOf="@+id/row_header_text"
             android:layout_weight="0.1"
             android:adjustViewBounds="true"

@@ -30,6 +30,8 @@
                 android:layout_gravity="left"
                 android:adjustViewBounds="true"
                 android:gravity="left"
+                android:paddingBottom="@dimen/image_padding"
+                android:paddingTop="@dimen/image_padding"
                 android:scaleType="fitCenter" />
 
             <LinearLayout
@@ -68,11 +70,11 @@
                         android:id="@+id/row_header_compulsory"
                         android:layout_width="0dp"
                         android:layout_height="10dp"
-                        android:layout_gravity="right"
+                        android:layout_gravity="right|center_vertical"
                         android:layout_toRightOf="@+id/row_header_text"
                         android:layout_weight="0.1"
                         android:adjustViewBounds="true"
-                        android:gravity="right"
+                        android:gravity="right|center_vertical"
                         android:scaleType="fitCenter"
                         android:src="@drawable/compulsory"
                         android:visibility="invisible" />

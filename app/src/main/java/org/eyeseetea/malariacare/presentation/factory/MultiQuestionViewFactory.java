@@ -15,6 +15,7 @@ import org.eyeseetea.malariacare.views.question.multiquestion.PhoneMultiQuestion
 import org.eyeseetea.malariacare.views.question.multiquestion.PositiveNumberMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.RadioButtonMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.ShortTextMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.SwitchMultiQuestionView;
 
 public class MultiQuestionViewFactory implements IQuestionViewFactory {
     public IQuestionView getView(Context context, int typeQuestion) {
@@ -32,6 +33,8 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
             case Constants.DROPDOWN_LIST:
             case Constants.DROPDOWN_OU_LIST:
                 return new DropdownMultiQuestionView(context);
+            case Constants.SWITCH_BUTTON:
+                return new SwitchMultiQuestionView(context);
         }
 
         throw new IllegalArgumentException("Not exists any question for type " + typeQuestion);

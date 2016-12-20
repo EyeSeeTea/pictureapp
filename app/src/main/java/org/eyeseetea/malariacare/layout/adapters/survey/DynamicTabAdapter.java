@@ -39,7 +39,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -711,6 +710,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.QUESTION_LABEL:
                 case Constants.DROPDOWN_LIST:
                 case Constants.DROPDOWN_OU_LIST:
+                case Constants.SWITCH_BUTTON:
                     //TODO: swipeTouchListener.addClickableView(button)
 
                     tableRow = new TableRow(context);
@@ -723,6 +723,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         ((IMultiQuestionView) questionView).setHeader(
                                 Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     }
+
+                    addTagQuestion(screenQuestion, (View) questionView);
 
                     configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
 
@@ -742,51 +744,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                                 screenQuestion.getAnswer().getOptions());
                     }
 
+                    if (!readOnly) {
+                        configureAnswerChangedListener(questionViewFactory, questionView);
+                    }
+
                     if (reloadingQuestionFromInvalidOption) {
                         reloadingQuestionFromInvalidOption = false;
                     } else {
                         questionView.setValue(value);
                     }
 
-                    configureAnswerChangedListener(questionViewFactory, questionView);
-
-                    addTagQuestion(screenQuestion, (View) questionView);
-
                     tableRow.addView((View) questionView);
 
                     setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
-                    break;
-                case Constants.SWITCH_BUTTON:
-                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row,
-                            tableLayout, false);
-
-                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
-
-                    if (!screenQuestion.getHelp_text().isEmpty()) {
-                        ((TextCard) tableRow.findViewById(R.id.row_help_text)).setText(
-                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
-                    }
-
-                    if (screenQuestion.hasAssociatedImage()) {
-                        ImageView rowImageView = ((ImageView) tableRow.findViewById(
-                                R.id.question_image_row));
-                        LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
-                                rowImageView);
-                    }
-
-                    ((TextCard) tableRow.findViewById(R.id.row_switch_true)).setText(
-                            Utils.getInternationalizedString(
-                                    screenQuestion.getAnswer().getOptions().get(0).getCode()));
-                    ((TextCard) tableRow.findViewById(R.id.row_switch_false)).setText(
-                            Utils.getInternationalizedString(
-                                    screenQuestion.getAnswer().getOptions().get(1).getCode()));
-
-                    Switch switchView = (Switch) tableRow.findViewById(R.id.answer);
-                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
-                    initSwitchOption(screenQuestion, switchView);
-                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
-                    showOrHideChildren(screenQuestion);
                     break;
             }
             setBottomLine(tabType, screenQuestions, screenQuestion);
@@ -1514,43 +1484,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Initialize the default switch value or load the saved value
-     *
-     * @param question       is the question in the view
-     * @param switchQuestion is the switch view
-     */
-    private void initSwitchOption(Question question, Switch switchQuestion) {
-
-        //Take option
-        Option selectedOption = question.getOptionBySession();
-        if (selectedOption == null) {
-            //the 0 option is the right option and is true in the switch, the 1 option is the
-            // left option and is false
-            boolean isDefaultOption = false;
-            boolean switchValue = false;
-            if (question.getAnswer().getOptions().get(0).getOptionAttribute().getDefaultOption()
-                    == 1) {
-                selectedOption = question.getAnswer().getOptions().get(0);
-                isDefaultOption = true;
-                switchValue = true;
-            } else if (question.getAnswer().getOptions().get(
-                    1).getOptionAttribute().getDefaultOption() == 1) {
-                selectedOption = question.getAnswer().getOptions().get(1);
-                isDefaultOption = true;
-                switchValue = false;
-            }
-            if (isDefaultOption) {
-                switchQuestion.setChecked(switchValue);
-                ReadWriteDB.saveValuesDDL(question, selectedOption, null);
-            }
-        } else {
-            switchQuestion.setChecked(findSwitchBoolean(question));
-        }
-        switchQuestion.setOnCheckedChangeListener(
-                new SwitchButtonListener(question, switchQuestion));
-    }
-
-    /**
      * Save the switch option and check children questions
      *
      * @param question  is the question in the view
@@ -1564,24 +1497,5 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
         ReadWriteDB.saveValuesDDL(question, selectedOption, question.getValueBySession());
         showOrHideChildren(question);
-    }
-
-    public class SwitchButtonListener implements CompoundButton.OnCheckedChangeListener {
-
-        private Question question;
-        private Switch switchButton;
-
-        public SwitchButtonListener(Question question, Switch switchButton) {
-            this.question = question;
-            this.switchButton = switchButton;
-        }
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (!buttonView.isShown()) {
-                return;
-            }
-            saveSwitchOption(question, isChecked);
-        }
     }
 }

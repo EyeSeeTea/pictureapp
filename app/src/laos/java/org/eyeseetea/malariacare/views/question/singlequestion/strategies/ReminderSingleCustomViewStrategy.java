@@ -27,7 +27,7 @@ public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomVi
         }
         //Question "button" is in the second option in Options.csv
         if (questionOptions != null && questionOptions.size() > 1) {
-            mDynamicTabAdapter.initWarningText(rootView, questionOptions.get(1));
+            mDynamicTabAdapter.initWarningValue(rootView, questionOptions.get(1));
         }
     }
 

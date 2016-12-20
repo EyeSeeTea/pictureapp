@@ -803,12 +803,12 @@ public class PopulateDB {
         //new match relation in csv
         //29;29
         //new QuestionOption in csv
-        //45;1;1;29
+        //45;5;13;29
         //new QuestionRelation in csv
         //29;1;6
         Long childId = 6l;
-        Long parentId = 1l;
-        Float optionId = 1f;
+        Long parentId = 5l;
+        Float optionId = 13f;
         QuestionRelation questionRelation = new QuestionRelation(Question.findByID(childId),
                 QuestionRelation.PARENT_CHILD);
         questionRelation.save();

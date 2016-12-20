@@ -109,6 +109,11 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
     }
 
     @Override
+    public void setHelpText(String helpText) {
+
+    }
+
+    @Override
     public void setValue(Value value) {
         if (value == null || value.getValue() == null) {
             return;

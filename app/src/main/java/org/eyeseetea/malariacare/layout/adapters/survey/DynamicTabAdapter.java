@@ -710,6 +710,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.RADIO_GROUP_HORIZONTAL:
                 case Constants.IMAGE_RADIO_GROUP:
                 case Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT:
+                case Constants.QUESTION_LABEL:
                     //TODO: swipeTouchListener.addClickableView(button)
 
                     tableRow = new TableRow(context);
@@ -723,12 +724,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                                 Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     }
 
-                    if (questionView instanceof AKeyboardQuestionView) {
-                        ((AKeyboardQuestionView) questionView).setHint(
-                                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
-                    }
-
                     configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
+
+                    questionView.setHelpText(
+                            Utils.getInternationalizedString(screenQuestion.getHelp_text()));
 
                     questionView.setEnabled(!readOnly);
 
@@ -751,20 +750,23 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     configureAnswerChangedListener(questionViewFactory, questionView);
 
-                    addTagQuestion(screenQuestion, ((View) questionView).findViewById(R.id.answer));
+                    addTagQuestion(screenQuestion, (View) questionView);
 
                     tableRow.addView((View) questionView);
 
                     setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
-                case Constants.QUESTION_LABEL:
+/*                case Constants.QUESTION_LABEL:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_label_row,
                             tableLayout, false);
                     TextCard textCard = (TextCard) tableRow.findViewById(R.id.row_header_text);
+
                     ImageView rowImageLabelView = ((ImageView) tableRow.findViewById(
                             R.id.question_image_row));
+
                     textCard.setText(
                             Utils.getInternationalizedString(screenQuestion.getForm_name()));
+
                     if (screenQuestion.hasAssociatedImage()) {
                         LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
                                 rowImageLabelView);
@@ -782,7 +784,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
 
                     setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
-                    break;
+                    break;*/
                 case Constants.DROPDOWN_LIST:
                 case Constants.DROPDOWN_OU_LIST:
                     tableRow = (TableRow) lInflater.inflate(
@@ -892,7 +894,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (questionView instanceof AKeyboardQuestionView) {
             ((AKeyboardQuestionView) questionView).setOnAnswerChangedListener(
                     questionViewFactory.getStringAnswerChangedListener(tableLayout, this));
-        } else {
+        } else if (questionView instanceof AOptionQuestionView) {
             ((AOptionQuestionView) questionView).setOnAnswerChangedListener(
                     questionViewFactory.getOptionAnswerChangedListener(tableLayout, this));
         }

@@ -54,6 +54,11 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
     }
 
     @Override
+    public void setHelpText(String helpText) {
+
+    }
+
+    @Override
     public void setOptions(List<Option> options) {
         for (Option option : options) {
             ImageRadioButtonOption imageRadioButtonOption = createOptionView(option);

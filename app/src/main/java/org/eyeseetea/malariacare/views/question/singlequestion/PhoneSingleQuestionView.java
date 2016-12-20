@@ -37,15 +37,15 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
     }
 
     @Override
+    public void setHelpText(String helpText) {
+        editCard.setHint(helpText);
+    }
+
+    @Override
     public void setValue(Value value) {
         if (value != null) {
             editCard.setText(value.getValue());
         }
-    }
-
-    @Override
-    public void setHint(String hintValue) {
-        editCard.setHint(hintValue);
     }
 
     private void init(final Context context) {

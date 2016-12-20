@@ -55,6 +55,11 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     @Override
+    public void setHelpText(String helpText) {
+
+    }
+
+    @Override
     public void setValue(Value value) {
         if (value == null || value.getValue() == null) {
             return;

@@ -41,15 +41,15 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
     }
 
     @Override
+    public void setHelpText(String helpText) {
+        editCard.setHint(helpText);
+    }
+
+    @Override
     public void setValue(Value value) {
         if (value != null) {
             editCard.setText(value.getValue());
         }
-    }
-
-    @Override
-    public void setHint(String hintValue) {
-        editCard.setHint(hintValue);
     }
 
     private void init(final Context context) {

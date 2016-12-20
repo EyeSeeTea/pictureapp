@@ -46,8 +46,8 @@ public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements
     }
 
     @Override
-    public void setHint(String hintValue) {
-        editCard.setHint(hintValue);
+    public void setHelpText(String helpText) {
+        editCard.setHint(helpText);
     }
 
     private void init(Context context) {

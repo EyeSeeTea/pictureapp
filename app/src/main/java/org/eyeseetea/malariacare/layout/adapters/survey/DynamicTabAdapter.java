@@ -850,16 +850,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 || questionItem.getOutput() == Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT;
     }
 
-    private void adaptLayoutToTextOnly(View viewWithText, ImageView rowImageLabelView) {
-        //Modify the text weight if the label don't have a image.
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.MATCH_PARENT, 0f);
-        rowImageLabelView.setLayoutParams(params);
-        params = new LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-        viewWithText.setLayoutParams(params);
-    }
-
     private void configureAnswerChangedListener(IQuestionViewFactory questionViewFactory,
             IQuestionView questionView) {
         if (questionView instanceof AKeyboardQuestionView) {

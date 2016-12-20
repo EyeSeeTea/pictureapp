@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.LabelMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PhoneMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PositiveNumberMultiQuestionView;
@@ -28,6 +29,9 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
                 return new RadioButtonMultiQuestionView(context);
             case Constants.QUESTION_LABEL:
                 return new LabelMultiQuestionView(context);
+            case Constants.DROPDOWN_LIST:
+            case Constants.DROPDOWN_OU_LIST:
+                return new DropdownMultiQuestionView(context);
         }
 
         throw new IllegalArgumentException("Not exists any question for type " + typeQuestion);

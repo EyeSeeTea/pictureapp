@@ -38,7 +38,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -67,7 +66,6 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.ToastUseCase;
-import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
@@ -711,6 +709,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.IMAGE_RADIO_GROUP:
                 case Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT:
                 case Constants.QUESTION_LABEL:
+                case Constants.DROPDOWN_LIST:
+                case Constants.DROPDOWN_OU_LIST:
                     //TODO: swipeTouchListener.addClickableView(button)
 
                     tableRow = new TableRow(context);
@@ -756,27 +756,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                     setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
-                case Constants.DROPDOWN_LIST:
-                case Constants.DROPDOWN_OU_LIST:
-                    tableRow = (TableRow) lInflater.inflate(
-                            R.layout.multi_question_tab_dropdown_row, tableLayout, false);
-                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
-
-                    ImageView rowImageView = ((ImageView) tableRow.findViewById(
-                            R.id.question_image_row));
-                    if (screenQuestion.hasAssociatedImage()) {
-                        LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
-                                rowImageView);
-                    } else {
-                        rowImageView.setVisibility(View.GONE);
-                    }
-
-                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
-                    tableRow = populateSpinnerFromOptions(tableRow, screenQuestion);
-                    initDropdownValue(tableRow, value);
-                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
-                    break;
                 case Constants.SWITCH_BUTTON:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row,
                             tableLayout, false);
@@ -790,7 +769,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     }
 
                     if (screenQuestion.hasAssociatedImage()) {
-                        rowImageView = ((ImageView) tableRow.findViewById(
+                        ImageView rowImageView = ((ImageView) tableRow.findViewById(
                                 R.id.question_image_row));
                         LayoutUtils.makeImageVisible(screenQuestion.getInternationalizedPath(),
                                 rowImageView);
@@ -880,18 +859,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                             TableRow.LayoutParams.MATCH_PARENT, 1));
         }
-    }
-
-    /**
-     * Populat the dropdown (spinners) from question answer options
-     */
-    private TableRow populateSpinnerFromOptions(TableRow tableRow, Question question) {
-        Spinner dropdown_list = (Spinner) tableRow.findViewById(R.id.answer);
-        // In case the option is selected, we will need to show num/dems
-        List<Option> optionList = new ArrayList<>(question.getAnswer().getOptions());
-        optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
-        dropdown_list.setAdapter(new OptionArrayAdapter(context, optionList));
-        return tableRow;
     }
 
     /**
@@ -1167,46 +1134,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (!isMultipleQuestionTab(tabType)) {
             //Take focus and open keyboard
             openKeyboard(editCard);
-        }
-    }
-
-    /**
-     * Adds listener to the dropdown and sets the default or saved value
-     */
-    private void initDropdownValue(TableRow row, Value value) {
-        Spinner dropdown = (Spinner) row.findViewById(R.id.answer);
-        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                Option option = (Option) parent.getItemAtPosition(position);
-                Question question = (Question) parent.getTag();
-                if (question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)) {
-                    switchHiddenMatches(question, option);
-                } else {
-                    ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
-                }
-                showOrHideChildren(question);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        if (value != null && value.getValue() != null) {
-            for (int i = 0; i < dropdown.getAdapter().getCount(); i++) {
-                Option option = (Option) dropdown.getItemAtPosition(i);
-                if (option.equals(value.getOption())) {
-                    dropdown.setSelection(i);
-                    break;
-                }
-            }
-        }
-
-        //Readonly (not clickable, enabled)
-        if (readOnly) {
-            dropdown.setEnabled(false);
-            return;
         }
     }
 

@@ -1310,6 +1310,21 @@ public class Question extends BaseModel {
         return false;
     }
 
+
+    /**
+     * Returns if the question is a counter or not
+     */
+    public boolean isACounter() {
+        for (QuestionRelation questionRelation : this.getQuestionRelations()) {
+            if (questionRelation.isACounter()) {
+                if (questionRelation.getQuestion().equals(this)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean hasCompulsoryNotAnswered() {
         List<Question> questions = new ArrayList<>();
         //get all the questions in the same screen page

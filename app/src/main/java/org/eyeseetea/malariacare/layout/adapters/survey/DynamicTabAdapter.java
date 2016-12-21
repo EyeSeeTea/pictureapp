@@ -31,15 +31,12 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -685,15 +682,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     reminderStrategy.showQuestionInfo(rootView, questionItem);
 
                     break;
-                case Constants.LONG_TEXT:
-                    tableRow = (TableRow) lInflater.inflate(
-                            R.layout.multi_question_tab_long_text_row, tableLayout, false);
-                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
-                            Utils.getInternationalizedString(screenQuestion.getForm_name()));
-                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
-                    initLongTextValue(tableRow, value, tabType);
-                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
-                    break;
                 case Constants.SHORT_TEXT:
                 case Constants.PHONE:
                 case Constants.POSITIVE_INT:
@@ -705,6 +693,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.DROPDOWN_OU_LIST:
                 case Constants.SWITCH_BUTTON:
                 case Constants.INT:
+                case Constants.LONG_TEXT:
                     //TODO: swipeTouchListener.addClickableView(button)
 
                     tableRow = new TableRow(context);
@@ -982,14 +971,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         textOption.setWidth(frameLayout.getWidth());
     }
 
-    private void showKeyboard(Context c, View v) {
-        Log.d(TAG, "KEYBOARD SHOW ");
-        keyboardView = v;
-        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        keyboard.showSoftInput(v, 0);
-    }
-
     /**
      * hide keyboard using a provided view
      */
@@ -1026,43 +1007,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private void addTagQuestion(Question question, View viewById) {
         viewById.setTag(question);
-    }
-
-    /**
-     * Adds listener to the Editcard and sets the default or saved value
-     */
-    private void initLongTextValue(TableRow row, Value value, int tabType) {
-        final EditCard editCard = (EditCard) row.findViewById(R.id.answer);
-
-        //Has value? show it
-        if (value != null) {
-            editCard.setText(value.getValue());
-        }
-
-        if (!readOnly) {
-            editCard.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    //Save the editCard value in the DB, and continue to the next screen.
-                    Question question = (Question) editCard.getTag();
-                    ReadWriteDB.saveValuesText(question, String.valueOf(s));
-                }
-            });
-        } else {
-            editCard.setEnabled(false);
-        }
-        if (!isMultipleQuestionTab(tabType)) {
-            //Take focus and open keyboard
-            openKeyboard(editCard);
-        }
     }
 
     /**
@@ -1195,25 +1139,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    /**
-     * Open keyboard and add listeners to click/next option.
-     */
-    private void openKeyboard(final EditText editText) {
-        if (!readOnly) {
-            editText.requestFocus();
-            editText.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //Show keypad
-                    Question question = (Question) editText.getTag();
-                    if (isMultipleQuestionTab(question.getHeader().getTab().getType())) {
-                        return;
-                    }
-                    showKeyboard(context, editText);
-                }
-            }, 300);
-        }
-    }
 
     /**
      * Attach an option with its button in view, adding the listener

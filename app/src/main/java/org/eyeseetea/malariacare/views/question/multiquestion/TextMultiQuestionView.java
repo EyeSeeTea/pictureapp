@@ -12,12 +12,12 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
-public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
+public class TextMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
         IMultiQuestionView {
     TextCard header;
     EditCard editCard;
 
-    public ShortTextMultiQuestionView(Context context) {
+    public TextMultiQuestionView(Context context) {
         super(context);
 
         init(context);
@@ -45,13 +45,17 @@ public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements
         }
     }
 
+    public void setInputType(int value) {
+        editCard.setInputType(value);
+    }
+
     @Override
     public void setHelpText(String helpText) {
         editCard.setHint(helpText);
     }
 
     private void init(Context context) {
-        inflate(context, R.layout.multi_question_tab_short_text_row, this);
+        inflate(context, R.layout.multi_question_tab_text_row, this);
 
         header = (TextCard) findViewById(R.id.row_header_text);
         editCard = (EditCard) findViewById(R.id.answer);

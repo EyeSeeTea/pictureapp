@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.presentation.factory;
 
 import android.content.Context;
+import android.text.InputType;
 import android.widget.TableLayout;
 
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
@@ -15,14 +16,23 @@ import org.eyeseetea.malariacare.views.question.multiquestion.NumberMultiQuestio
 import org.eyeseetea.malariacare.views.question.multiquestion.PhoneMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PositiveNumberMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.RadioButtonMultiQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.ShortTextMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.SwitchMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.TextMultiQuestionView;
 
 public class MultiQuestionViewFactory implements IQuestionViewFactory {
     public IQuestionView getView(Context context, int typeQuestion) {
         switch (typeQuestion) {
             case Constants.SHORT_TEXT:
-                return new ShortTextMultiQuestionView(context);
+                TextMultiQuestionView shortTextMultiQuestionView = new TextMultiQuestionView(
+                        context);
+                shortTextMultiQuestionView.setInputType(
+                        InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
+                return shortTextMultiQuestionView;
+            case Constants.LONG_TEXT:
+                TextMultiQuestionView longTextMultiQuestionView = new TextMultiQuestionView(
+                        context);
+                longTextMultiQuestionView.setInputType(InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE);
+                return longTextMultiQuestionView;
             case Constants.PHONE:
                 return new PhoneMultiQuestionView(context);
             case Constants.INT:

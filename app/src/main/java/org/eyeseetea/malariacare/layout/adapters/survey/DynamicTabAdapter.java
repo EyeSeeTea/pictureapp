@@ -542,15 +542,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         swipeTouchListener.clearClickableViews();
 
+        tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
         if (isTabScrollable(questionItem, tabType)) {
-            tableLayout = (TableLayout) rowView.findViewById(R.id.multi_question_options_table);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
             screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
             swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
                     R.id.scrolled_table)).findViewById(R.id.table_scroll));
         } else {
-            tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.GONE);
             screenQuestions.add(questionItem);
@@ -837,21 +836,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     showOrHideChildren(screenQuestion);
                     break;
             }
-            setBottomLine(tabType, screenQuestions, screenQuestion);
         }
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
         return rowView;
-    }
-
-    private void setBottomLine(int tabType, List<Question> screenQuestions,
-            Question screenQuestion) {
-        if (isMultipleQuestionTab(tabType) && screenQuestion.getId_question().equals(
-                screenQuestions.get(screenQuestions.size() - 1).getId_question())) {
-            LinearLayout view = (LinearLayout) lInflater.inflate(R.layout.bottom_screen_view,
-                    tableLayout, false);
-            tableLayout.addView(view);
-        }
     }
 
     private void setVisibilityAndAddRow(TableRow tableRow, Question screenQuestion,

@@ -75,11 +75,6 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
                 return false;
             }
         });
-
-/*        if (!isMultipleQuestionTab(tabType)) {
-            //Add button to listener
-            swipeTouchListener.addClickableView(button);
-        }*/
     }
 
     private void validateAnswer(Context context) {

@@ -685,13 +685,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     reminderStrategy.showQuestionInfo(rootView, questionItem);
 
                     break;
-                case Constants.INT:
-                    tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_int_row,
-                            tableLayout, false);
-                    addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
-                    initIntValue(tableRow, value, tabType);
-                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
-                    break;
                 case Constants.LONG_TEXT:
                     tableRow = (TableRow) lInflater.inflate(
                             R.layout.multi_question_tab_long_text_row, tableLayout, false);
@@ -711,6 +704,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.DROPDOWN_LIST:
                 case Constants.DROPDOWN_OU_LIST:
                 case Constants.SWITCH_BUTTON:
+                case Constants.INT:
                     //TODO: swipeTouchListener.addClickableView(button)
 
                     tableRow = new TableRow(context);
@@ -1028,42 +1022,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Adds listener to the Editcard and sets the default or saved value
-     */
-    private void initIntValue(TableRow row, Value value, int tabType) {
-        final EditCard numberPicker = (EditCard) row.findViewById(R.id.answer);
-
-        //Has value? show it
-        if (value != null) {
-            numberPicker.setText(value.getValue());
-        }
-
-        if (!readOnly) {
-            numberPicker.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    //Save the numberpicker value in the DB, and continue to the next screen.
-                    saveValue(numberPicker);
-                }
-            });
-        } else {
-            numberPicker.setEnabled(false);
-        }
-        if (!isMultipleQuestionTab(tabType)) {
-            //Take focus and open keyboard
-            openKeyboard(numberPicker);
-        }
-    }
-
-    /**
      * Adds question as tag in a view to identify the answers
      */
     private void addTagQuestion(Question question, View viewById) {
@@ -1235,15 +1193,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 switchView.setChecked(findSwitchBoolean(rowQuestion));
                 break;
         }
-    }
-
-    /**
-     * Save value in DB and check the children
-     */
-    private void saveValue(EditCard editCard) {
-        Question question = (Question) editCard.getTag();
-        ReadWriteDB.saveValuesText(question, editCard.getText().toString());
-        showOrHideChildren(question);
     }
 
     /**

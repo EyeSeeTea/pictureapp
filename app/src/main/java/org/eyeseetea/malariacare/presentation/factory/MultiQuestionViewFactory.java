@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.LabelMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.NumberMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PhoneMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PositiveNumberMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.RadioButtonMultiQuestionView;
@@ -24,6 +25,8 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
                 return new ShortTextMultiQuestionView(context);
             case Constants.PHONE:
                 return new PhoneMultiQuestionView(context);
+            case Constants.INT:
+                return new NumberMultiQuestionView(context);
             case Constants.POSITIVE_INT:
                 return new PositiveNumberMultiQuestionView(context);
             case Constants.RADIO_GROUP_HORIZONTAL:

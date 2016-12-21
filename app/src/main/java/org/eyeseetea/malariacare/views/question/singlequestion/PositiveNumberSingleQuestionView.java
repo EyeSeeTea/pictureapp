@@ -76,11 +76,6 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
                 return false;
             }
         });
-
-/*        if (!isMultipleQuestionTab(tabType)) {
-            //Add button to listener
-            swipeTouchListener.addClickableView(button);
-        }*/
     }
 
     private void validateAnswer(Context context) {

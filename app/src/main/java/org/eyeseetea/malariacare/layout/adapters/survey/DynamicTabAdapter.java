@@ -575,7 +575,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             Value value = screenQuestion.getValueBySession();
             int typeQuestion = screenQuestion.getOutput();
             switch (typeQuestion) {
-                case Constants.IMAGES_2:
+/*                case Constants.IMAGES_2:
                 case Constants.IMAGES_4:
                 case Constants.IMAGES_6:
                     List<Option> options = screenQuestion.getAnswer().getOptions();
@@ -603,7 +603,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                         initOptionButton(frameLayout, currentOption, value);
                     }
-                    break;
+                    break;*/
                 case Constants.IMAGES_3:
                 case Constants.IMAGE_3_NO_DATAELEMENT:
                     List<Option> opts = screenQuestion.getAnswer().getOptions();
@@ -680,6 +680,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.LONG_TEXT:
                 case Constants.REMINDER:
                 case Constants.WARNING:
+                case Constants.IMAGES_2:
+                case Constants.IMAGES_4:
+                case Constants.IMAGES_6:
                     tableRow = new TableRow(context);
 
                     IQuestionView questionView = questionViewFactory.getView(context,

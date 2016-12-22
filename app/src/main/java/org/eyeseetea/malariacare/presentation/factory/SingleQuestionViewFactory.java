@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.ImageOptionSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PhoneSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
@@ -30,6 +31,10 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
             case Constants.REMINDER:
             case Constants.WARNING:
                 return new ReminderSingleQuestionView(context);
+            case Constants.IMAGES_2:
+            case Constants.IMAGES_4:
+            case Constants.IMAGES_6:
+                return new ImageOptionSingleQuestionView(context);
         }
 
         throw new IllegalArgumentException("Not exists any question for type " + typeQuestion);

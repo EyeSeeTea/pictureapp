@@ -9,23 +9,19 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-
-import java.io.IOException;
 
 /**
- * Created by idelcano on 29/09/2016.
+ * Created by idelcano on 03/08/2016.
  */
+@Migration(version = 21, databaseName = AppDatabase.NAME)
+public class Migration21LaoNewRelation extends BaseMigration {
 
-@Migration(version = 14, databaseName = AppDatabase.NAME)
-public class Migration14AddQuestionReminder extends BaseMigration {
+    private static String TAG = ".Migration21 only lao";
 
-    private static String TAG = ".Migration12";
-
-    private static Migration14AddQuestionReminder instance;
+    private static Migration21LaoNewRelation instance;
     private boolean postMigrationRequired;
 
-    public Migration14AddQuestionReminder() {
+    public Migration21LaoNewRelation() {
         super();
         instance = this;
         postMigrationRequired = false;
@@ -41,12 +37,7 @@ public class Migration14AddQuestionReminder extends BaseMigration {
 
         //Data? Add new default data
         if (instance.hasData()) {
-            try {
-                PopulateDB.addNotTestedRemminder(
-                        PreferencesState.getInstance().getContext().getAssets());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            PopulateDB.createMissingRelationInLao();
         }
 
         //This operation wont be done again

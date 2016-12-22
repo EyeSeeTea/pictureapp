@@ -13,6 +13,7 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PhoneSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.ReminderSingleQuestionView;
 
 
 public class SingleQuestionViewFactory implements IQuestionViewFactory {
@@ -26,6 +27,9 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
                 return new ImageRadioButtonSingleQuestionView(context);
             case Constants.IMAGE_RADIO_GROUP:
                 return new ImageRadioButtonSingleQuestionView(context);
+            case Constants.REMINDER:
+            case Constants.WARNING:
+                return new ReminderSingleQuestionView(context);
         }
 
         throw new IllegalArgumentException("Not exists any question for type " + typeQuestion);

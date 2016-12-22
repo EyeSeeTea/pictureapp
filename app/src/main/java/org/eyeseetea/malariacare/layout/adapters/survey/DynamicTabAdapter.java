@@ -82,12 +82,11 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .ConfirmCounterSingleCustomViewStrategy;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies
-        .ReminderSingleCustomViewStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -667,21 +666,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         initOptionButton(frameLayout, currentOption, value);
                     }
                     break;
-                case Constants.REMINDER:
-                case Constants.WARNING:
-                    View rootView = rowView.getRootView();
-
-                    ProgressUtils.setProgressBarText(rowView, "");
-
-
-                    ReminderSingleCustomViewStrategy reminderStrategy =
-                            new ReminderSingleCustomViewStrategy(this);
-
-                    reminderStrategy.showAndHideViews(rootView);
-
-                    reminderStrategy.showQuestionInfo(rootView, questionItem);
-
-                    break;
                 case Constants.SHORT_TEXT:
                 case Constants.PHONE:
                 case Constants.POSITIVE_INT:
@@ -694,8 +678,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.SWITCH_BUTTON:
                 case Constants.INT:
                 case Constants.LONG_TEXT:
-                    //TODO: swipeTouchListener.addClickableView(button)
-
+                case Constants.REMINDER:
+                case Constants.WARNING:
                     tableRow = new TableRow(context);
 
                     IQuestionView questionView = questionViewFactory.getView(context,
@@ -737,7 +721,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         questionView.setValue(value);
                     }
 
+                    setupNavigationByQuestionView(rowView.getRootView(), questionView);
+
                     tableRow.addView((View) questionView);
+
+                    swipeTouchListener.addClickableView(tableRow);
 
                     setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
                     break;
@@ -747,6 +735,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
         return rowView;
+    }
+
+    private void setupNavigationByQuestionView(View rootView, IQuestionView questionView) {
+        if (questionView instanceof INavigationQuestionView) {
+            INavigationQuestionView navigationQuestionView = (INavigationQuestionView) questionView;
+
+            TextCard textNextButton = (TextCard) rootView.findViewById(R.id.next_txt);
+            textNextButton.setText(navigationQuestionView.nextText());
+            textNextButton.setTextSize(navigationQuestionView.nextTextSize());
+        }
     }
 
     private void setBottomLine(int tabType, List<Question> screenQuestions,
@@ -918,23 +916,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             textOption.setVisibility(View.GONE);
         }
         textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
-    }
-
-    public void initWarningValue(View rootView, Option option) {
-        ImageView errorImage = (ImageView) rootView.findViewById(R.id.confirm_yes);
-        errorImage.setImageResource(R.drawable.option_button);
-        //Add button to listener
-        swipeTouchListener.addClickableView(errorImage);
-        //Add text into the button
-        TextView okText = (TextView) rootView.findViewById(R.id.textcard_confirm_yes);
-        okText.setText(option.getInternationalizedCode());
-        okText.setTextSize(option.getOptionAttribute().getText_size());
-    }
-
-    public void initWarningText(View rootView, Option option) {
-        TextView okText = (TextView) rootView.findViewById(R.id.questionTextRow);
-        okText.setText(option.getInternationalizedCode());
-        okText.setTextSize(option.getOptionAttribute().getText_size());
     }
 
     /**

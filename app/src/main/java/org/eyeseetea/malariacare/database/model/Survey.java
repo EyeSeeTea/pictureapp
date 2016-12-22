@@ -1122,4 +1122,19 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
         return Float.parseFloat(counterValue);
     }
+
+    public HashMap<Tab, Integer> getAnsweredTabs() {
+        HashMap<Tab, Integer> tabs = new HashMap<Tab, Integer>();
+
+        List<Value> values = getValuesFromDB();
+        int tabSize = 0;
+        for (Value value : values) {
+            Tab tab = value.getQuestion().getHeader().getTab();
+            if (!tabs.containsKey(tab)) {
+                tabs.put(tab, tabSize);
+                tabSize++;
+            }
+        }
+        return tabs;
+    }
 }

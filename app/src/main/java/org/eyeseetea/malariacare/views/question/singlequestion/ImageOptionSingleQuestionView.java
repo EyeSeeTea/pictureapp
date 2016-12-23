@@ -24,7 +24,7 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
     Question mQuestion;
 
     List<ImageOptionView> mImageOptionViews = new ArrayList<>();
-    private int mColumnsCount;
+    private int mColumnsCount = 1;
 
     public ImageOptionSingleQuestionView(Context context) {
         super(context);

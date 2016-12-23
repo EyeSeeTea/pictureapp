@@ -29,9 +29,16 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
             case Constants.IMAGES_2:
             case Constants.IMAGES_4:
             case Constants.IMAGES_6:
+            case Constants.IMAGES_5:
+                ImageOptionSingleQuestionView twoColumnsImageOptionSingleQuestionView =
+                        new ImageOptionSingleQuestionView(context);
+                twoColumnsImageOptionSingleQuestionView.setColumnsCount(2);
+                return twoColumnsImageOptionSingleQuestionView;
+            case Constants.IMAGES_3:
+            case Constants.IMAGE_3_NO_DATAELEMENT:
                 ImageOptionSingleQuestionView imageOptionSingleQuestionView =
                         new ImageOptionSingleQuestionView(context);
-                imageOptionSingleQuestionView.setColumnsCount(2);
+                imageOptionSingleQuestionView.setColumnsCount(1);
                 return imageOptionSingleQuestionView;
         }
 

@@ -24,11 +24,9 @@ import static org.eyeseetea.malariacare.database.model.Option.DOESNT_MATCH_POSIT
 import static org.eyeseetea.malariacare.database.model.Option.MATCH_POSITION;
 import static org.eyeseetea.malariacare.database.utils.Session.getSurvey;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.Log;
@@ -47,7 +45,6 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -106,10 +103,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * tabs
      */
     public static int failedValidations;
-    /**
-     * Flag that indicates the number of failed validations by the active screen in multiquestion
-     * tabs
-     */
+
     public static View navigationButtonHolder;
     private final Context context;
     public NavigationController navigationController;
@@ -535,8 +529,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         ProgressUtils.updateProgressBarStatus(rowView, navigationController.getCurrentPage(),
                 navigationController.getCurrentTotalPages());
 
-        TableRow tableRow = null;
-        TableRow tableButtonRow = null;
         List<Question> screenQuestions = new ArrayList<>();
 
         swipeTouchListener.clearClickableViews();
@@ -564,186 +556,81 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Log.d(TAG, "Questions in actual tab: " + screenQuestions.size());
         for (Question screenQuestion : screenQuestions) {
 
-            IQuestionViewFactory questionViewFactory;
+            renderQuestion(rowView, tabType, screenQuestion);
 
-            if (isMultipleQuestionTab(tabType)) {
-                questionViewFactory = new MultiQuestionViewFactory();
-            } else {
-                questionViewFactory = new SingleQuestionViewFactory();
-            }
-
-            // Se get the value from Session
-            int visibility = View.GONE;
-            if (!screenQuestion.isHiddenBySurveyAndHeader(getSurvey())
-                    || !isMultipleQuestionTab(tabType)) {
-                visibility = View.VISIBLE;
-            }
-            Value value = screenQuestion.getValueBySession();
-            int typeQuestion = screenQuestion.getOutput();
-            switch (typeQuestion) {
-/*                case Constants.IMAGES_2:
-                case Constants.IMAGES_4:
-                case Constants.IMAGES_6:
-                    List<Option> options = screenQuestion.getAnswer().getOptions();
-                    for (int i = 0; i < options.size(); i++) {
-                        Option currentOption = options.get(i);
-                        int optionID = R.id.option2;
-                        int counterID = R.id.counter2;
-                        int mod = i % 2;
-                        //First item per row requires a new row
-                        if (mod == 0) {
-                            tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row,
-                                    tableLayout, false);
-                            tableLayout.addView(tableRow);
-                            optionID = R.id.option1;
-                            counterID = R.id.counter1;
-                        }
-                        //Add counter value if possible
-                        addCounterValue(screenQuestion, currentOption, tableRow, counterID);
-
-                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
-                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
-                        setTextSettings(textOption, currentOption);
-                        frameLayout.setBackgroundColor(
-                                Color.parseColor("#" + currentOption.getBackground_colour()));
-
-                        initOptionButton(frameLayout, currentOption, value);
-                    }
-                    break;*/
-                case Constants.IMAGES_3:
-                case Constants.IMAGE_3_NO_DATAELEMENT:
-                    List<Option> opts = screenQuestion.getAnswer().getOptions();
-                    for (int i = 0; i < opts.size(); i++) {
-
-                        Option currentOption = opts.get(i);
-
-                        tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row_singleitem,
-                                tableLayout, false);
-                        tableLayout.addView(tableRow);
-
-                        //Add counter value if possible
-                        addCounterValue(screenQuestion, currentOption, tableRow, R.id.counter1);
-
-                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(0);
-                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
-                        setTextSettings(textOption, currentOption);
-
-                        frameLayout.setBackgroundColor(
-                                Color.parseColor("#" + currentOption.getBackground_colour()));
-
-                        initOptionButton(frameLayout, currentOption, value);
-                    }
-                    break;
-                case Constants.IMAGES_5:
-                    List<Option> answerOptions = screenQuestion.getAnswer().getOptions();
-                    for (int i = 0; i < answerOptions.size(); i++) {
-                        Option currentOption = answerOptions.get(i);
-                        int counterID = R.id.counter2;
-
-                        int mod = i % 2;
-                        //First item per row requires a new row
-                        if (mod == 0) {
-                            //Every new row admits 2 options
-                            tableRow = (TableRow) lInflater.inflate(R.layout.dynamic_tab_row,
-                                    tableLayout, false);
-                            tableLayout.addView(tableRow);
-                            counterID = R.id.counter1;
-                        }
-
-                        //Add counter value if possible
-                        addCounterValue(screenQuestion, currentOption, tableRow, counterID);
-
-                        FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
-                        if (i == 4) {
-                            TableRow.LayoutParams params = new TableRow.LayoutParams(
-                                    TableRow.LayoutParams.MATCH_PARENT,
-                                    TableRow.LayoutParams.MATCH_PARENT, 1f);
-                            //remove the unnecessary second imageview.
-                            tableRow.removeViewAt(mod + 1);
-                            frameLayout.setLayoutParams(params);
-                        }
-                        frameLayout.setBackgroundColor(
-                                Color.parseColor("#" + currentOption.getBackground_colour()));
-
-                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
-                        setTextSettings(textOption, currentOption);
-
-
-                        initOptionButton(frameLayout, currentOption, value);
-                    }
-                    break;
-                case Constants.SHORT_TEXT:
-                case Constants.PHONE:
-                case Constants.POSITIVE_INT:
-                case Constants.RADIO_GROUP_HORIZONTAL:
-                case Constants.IMAGE_RADIO_GROUP:
-                case Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT:
-                case Constants.QUESTION_LABEL:
-                case Constants.DROPDOWN_LIST:
-                case Constants.DROPDOWN_OU_LIST:
-                case Constants.SWITCH_BUTTON:
-                case Constants.INT:
-                case Constants.LONG_TEXT:
-                case Constants.REMINDER:
-                case Constants.WARNING:
-                case Constants.IMAGES_2:
-                case Constants.IMAGES_4:
-                case Constants.IMAGES_6:
-                    tableRow = new TableRow(context);
-
-                    IQuestionView questionView = questionViewFactory.getView(context,
-                            screenQuestion.getOutput());
-
-                    if (questionView instanceof IMultiQuestionView) {
-                        mMultiQuestionViews.add((IMultiQuestionView) questionView);
-                        ((IMultiQuestionView) questionView).setHeader(
-                                Utils.getInternationalizedString(screenQuestion.getForm_name()));
-                    }
-
-                    addTagQuestion(screenQuestion, (View) questionView);
-
-                    configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
-
-                    questionView.setHelpText(
-                            Utils.getInternationalizedString(screenQuestion.getHelp_text()));
-
-                    questionView.setEnabled(!readOnly);
-
-                    if (questionView instanceof IImageQuestionView) {
-                        ((IImageQuestionView) questionView).setImage(
-                                screenQuestion.getInternationalizedPath());
-                    }
-
-                    if (questionView instanceof AOptionQuestionView) {
-                        ((AOptionQuestionView) questionView).setQuestion(screenQuestion);
-                        ((AOptionQuestionView) questionView).setOptions(
-                                screenQuestion.getAnswer().getOptions());
-                    }
-
-                    if (!readOnly) {
-                        configureAnswerChangedListener(questionViewFactory, questionView);
-                    }
-
-                    if (reloadingQuestionFromInvalidOption) {
-                        reloadingQuestionFromInvalidOption = false;
-                    } else {
-                        questionView.setValue(value);
-                    }
-
-                    setupNavigationByQuestionView(rowView.getRootView(), questionView);
-
-                    tableRow.addView((View) questionView);
-
-                    swipeTouchListener.addClickableView(tableRow);
-
-                    setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
-                    break;
-            }
             setBottomLine(tabType, screenQuestions, screenQuestion);
         }
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
         return rowView;
+    }
+
+    public void renderQuestion(View rowView, int tabType, Question screenQuestion) {
+        TableRow tableRow;
+        IQuestionViewFactory questionViewFactory;
+
+        if (isMultipleQuestionTab(tabType)) {
+            questionViewFactory = new MultiQuestionViewFactory();
+        } else {
+            questionViewFactory = new SingleQuestionViewFactory();
+        }
+
+        // Se get the value from Session
+        int visibility = View.GONE;
+        if (!screenQuestion.isHiddenBySurveyAndHeader(getSurvey())
+                || !isMultipleQuestionTab(tabType)) {
+            visibility = View.VISIBLE;
+        }
+        Value value = screenQuestion.getValueBySession();
+
+        tableRow = new TableRow(context);
+
+        IQuestionView questionView = questionViewFactory.getView(context,
+                screenQuestion.getOutput());
+
+        if (questionView instanceof IMultiQuestionView) {
+            mMultiQuestionViews.add((IMultiQuestionView) questionView);
+            ((IMultiQuestionView) questionView).setHeader(
+                    Utils.getInternationalizedString(screenQuestion.getForm_name()));
+        }
+
+        addTagQuestion(screenQuestion, (View) questionView);
+
+        configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
+
+        questionView.setHelpText(
+                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
+
+        questionView.setEnabled(!readOnly);
+
+        if (questionView instanceof IImageQuestionView) {
+            ((IImageQuestionView) questionView).setImage(
+                    screenQuestion.getInternationalizedPath());
+        }
+
+        if (questionView instanceof AOptionQuestionView) {
+            ((AOptionQuestionView) questionView).setQuestion(screenQuestion);
+            ((AOptionQuestionView) questionView).setOptions(
+                    screenQuestion.getAnswer().getOptions());
+        }
+
+        if (!readOnly) {
+            configureAnswerChangedListener(questionViewFactory, questionView);
+        }
+
+        if (reloadingQuestionFromInvalidOption) {
+            reloadingQuestionFromInvalidOption = false;
+        } else {
+            questionView.setValue(value);
+        }
+
+        setupNavigationByQuestionView(rowView.getRootView(), questionView);
+
+        tableRow.addView((View) questionView);
+
+        swipeTouchListener.addClickableView(tableRow);
+
+        setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
     }
 
     private void setupNavigationByQuestionView(View rootView, IQuestionView questionView) {
@@ -915,45 +802,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Float maxCounter = selectedOption.getFactor();
 
         return counterValue.equals(maxCounter);
-    }
-
-    private void setTextSettings(TextCard textOption, Option currentOption) {
-        //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in
-        // donottranslate laos file.
-        if (currentOption.getOptionAttribute().hasHorizontalAlignment()
-                && currentOption.getOptionAttribute().hasVerticalAlignment()) {
-            textOption.setText(currentOption.getInternationalizedCode());
-            textOption.setGravity(currentOption.getOptionAttribute().getGravity());
-        } else {
-            textOption.setVisibility(View.GONE);
-        }
-        textOption.setTextSize(currentOption.getOptionAttribute().getText_size());
-    }
-
-    /**
-     * Adds current Counter value to image option
-     *
-     * @param question      Current question
-     * @param currentOption Current option
-     * @param tableRow      Row where the counter is gonna be added
-     */
-    private void addCounterValue(Question question, Option currentOption, TableRow tableRow,
-            int counterID) {
-        Question optionCounter = question.findCounterByOption(currentOption);
-        if (optionCounter == null) {
-            return;
-        }
-        String counterValue = ReadWriteDB.readValueQuestion(optionCounter);
-        if (counterValue == null || counterValue.isEmpty()) {
-            return;
-        }
-
-        TextView counterText = (TextView) tableRow.findViewById(counterID);
-        String counterTextValue = context.getResources().getString(R.string.option_counter);
-
-        //Repetitions: 3
-        counterText.setText(counterTextValue + counterValue);
-        counterText.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -1132,38 +980,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-
-    /**
-     * Attach an option with its button in view, adding the listener
-     */
-    private void initOptionButton(FrameLayout button, Option option, Value value) {
-        // value = null --> first time calling initOptionButton
-        //Highlight button
-        if (value != null && value.getValue().equals(option.getName())) {
-            LayoutUtils.highlightSelection(button, option);
-        } else if (value != null) {
-            LayoutUtils.overshadow(button);
-        }
-
-        //the button is a framelayout that contains a imageview
-        ImageView imageView = (ImageView) button.getChildAt(0);
-        //Put image
-        BaseLayoutUtils.putImageInImageView(option.getInternationalizedPath(), imageView);
-        //Associate option
-        button.setTag(option);
-
-        //Readonly (not clickable, enabled)
-        if (readOnly) {
-            button.setEnabled(false);
-            return;
-        }
-
-        //Add button to listener
-        swipeTouchListener.addClickableView(button);
-
-        resizeTextWidth(button, (TextCard) button.getChildAt(1));
-    }
-
     /**
      * Advance to the next question with delay applied or finish survey according to question and
      * value.
@@ -1204,7 +1020,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Show a final dialog to announce the survey is over without reviewfragment.
      */
     private void showDone() {
-        final Activity activity = (Activity) context;
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
                 .setTitle(R.string.survey_completed)
                 .setMessage(R.string.survey_completed_text)

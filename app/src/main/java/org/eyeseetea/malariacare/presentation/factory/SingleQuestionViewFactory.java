@@ -2,13 +2,8 @@ package org.eyeseetea.malariacare.presentation.factory;
 
 
 import android.content.Context;
-import android.widget.TableLayout;
 
-import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
-import org.eyeseetea.malariacare.layout.listeners.question.SingleQuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
-import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageOptionSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
@@ -34,22 +29,25 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
             case Constants.IMAGES_2:
             case Constants.IMAGES_4:
             case Constants.IMAGES_6:
-                return new ImageOptionSingleQuestionView(context);
+                ImageOptionSingleQuestionView imageOptionSingleQuestionView =
+                        new ImageOptionSingleQuestionView(context);
+                imageOptionSingleQuestionView.setColumnsCount(2);
+                return imageOptionSingleQuestionView;
         }
 
         throw new IllegalArgumentException("Not exists any question for type " + typeQuestion);
     }
-
+/*
     @Override
     public AKeyboardQuestionView.onAnswerChangedListener getStringAnswerChangedListener(
             TableLayout tableLayout,
             DynamicTabAdapter dynamicTabAdapter) {
-        return new SingleQuestionAnswerChangedListener(tableLayout, dynamicTabAdapter);
+        return new QuestionAnswerChangedListener(tableLayout, dynamicTabAdapter);
     }
 
     @Override
     public AOptionQuestionView.onAnswerChangedListener getOptionAnswerChangedListener(
             TableLayout tableLayout, DynamicTabAdapter dynamicTabAdapter) {
-        return new SingleQuestionAnswerChangedListener(tableLayout, dynamicTabAdapter);
-    }
+        return new QuestionAnswerChangedListener(tableLayout, dynamicTabAdapter);
+    }*/
 }

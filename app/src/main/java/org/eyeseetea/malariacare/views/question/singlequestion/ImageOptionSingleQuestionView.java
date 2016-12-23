@@ -1,24 +1,30 @@
 package org.eyeseetea.malariacare.views.question.singlequestion;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.NonNull;
+import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.layout.adapters.question.ImageQuestionOptionsAdapter;
+import org.eyeseetea.malariacare.views.option.ImageOptionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageOptionSingleQuestionView extends AOptionQuestionView implements
-        IQuestionView {
+        IQuestionView, ImageOptionView.OnOptionSelectedListener {
 
-    RecyclerView mImageOptionsRecyclerView;
-    ImageQuestionOptionsAdapter mImageQuestionOptionsAdapter;
+    TableLayout mImageOptionsContainer;
+    Question mQuestion;
+
+    List<ImageOptionView> mImageOptionViews = new ArrayList<>();
+    private int mColumnsCount;
 
     public ImageOptionSingleQuestionView(Context context) {
         super(context);
@@ -28,19 +34,64 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
 
     @Override
     public void setOptions(List<Option> options) {
-        mImageQuestionOptionsAdapter = new ImageQuestionOptionsAdapter(options);
+        TableRow tableRow = null;
 
-        mImageOptionsRecyclerView.setAdapter(mImageQuestionOptionsAdapter);
+        for (int i = 0; i < options.size(); i++) {
+            Option option = options.get(i);
+
+            if (isNewRow(i)) {
+                tableRow = new TableRow(getContext());
+
+                tableRow.setLayoutParams(
+                        new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
+                                TableLayout.LayoutParams.MATCH_PARENT, 1));
+
+                mImageOptionsContainer.addView(tableRow);
+            }
+
+            ImageOptionView imageOptionView = createOptionView(option);
+
+            tableRow.addView(imageOptionView);
+            mImageOptionViews.add(imageOptionView);
+        }
+    }
+
+    public void setColumnsCount(int columnsCount) {
+        mColumnsCount = columnsCount;
+    }
+
+    public boolean isNewRow(int i) {
+        return i % mColumnsCount == 0;
+    }
+
+    @NonNull
+    private ImageOptionView createOptionView(Option option) {
+        ImageOptionView imageOptionView = new ImageOptionView(getContext());
+        imageOptionView.setOption(option, mQuestion);
+        imageOptionView.setOnOptionSelectedListener(this);
+        imageOptionView.setEnabled(isEnabled());
+
+        imageOptionView.setLayoutParams(
+                new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
+                        TableRow.LayoutParams.MATCH_PARENT, 1));
+
+        return imageOptionView;
     }
 
     @Override
     public void setQuestion(Question question) {
-
+        mQuestion = question;
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        mImageOptionsRecyclerView.setEnabled(enabled);
+        super.setEnabled(enabled);
+
+        for (int i = 0; i < mImageOptionViews.size(); i++) {
+            ImageOptionView imageOptionView = mImageOptionViews.get(i);
+
+            imageOptionView.setEnabled(enabled);
+        }
     }
 
     @Override
@@ -50,15 +101,27 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
 
     @Override
     public void setValue(Value value) {
+        if (value == null || value.getValue() == null) {
+            return;
+        }
 
+        for (int i = 0; i < mImageOptionViews.size(); i++) {
+            ImageOptionView imageOptionView = mImageOptionViews.get(i);
 
+            boolean selected = imageOptionView.getOption().equals(value.getOption());
+
+            imageOptionView.setSelectedOption(selected);
+        }
     }
 
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_row_images_question, this);
 
-        mImageOptionsRecyclerView = (RecyclerView) findViewById(R.id.answer);
+        mImageOptionsContainer = (TableLayout) findViewById(R.id.answer);
+    }
 
-        mImageOptionsRecyclerView.setLayoutManager(new GridLayoutManager(context, 2));
+    @Override
+    public void onOptionSelected(View view, Option option) {
+        notifyAnswerChanged(option);
     }
 }

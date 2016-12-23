@@ -2,13 +2,8 @@ package org.eyeseetea.malariacare.presentation.factory;
 
 import android.content.Context;
 import android.text.InputType;
-import android.widget.TableLayout;
 
-import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
-import org.eyeseetea.malariacare.layout.listeners.question.MultiQuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
-import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.LabelMultiQuestionView;
@@ -53,7 +48,7 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
         throw new IllegalArgumentException("Not exists any question for type " + typeQuestion);
     }
 
-    @Override
+/*    @Override
     public AKeyboardQuestionView.onAnswerChangedListener getStringAnswerChangedListener(
             TableLayout tableLayout,
             DynamicTabAdapter dynamicTabAdapter) {
@@ -64,5 +59,5 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
     public AOptionQuestionView.onAnswerChangedListener getOptionAnswerChangedListener(
             TableLayout tableLayout, DynamicTabAdapter dynamicTabAdapter) {
         return new MultiQuestionAnswerChangedListener(tableLayout);
-    }
+    }*/
 }

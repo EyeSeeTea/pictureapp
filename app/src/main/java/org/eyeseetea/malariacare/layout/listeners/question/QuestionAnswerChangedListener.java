@@ -9,27 +9,37 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 
 
-public class SingleQuestionAnswerChangedListener extends AQuestionAnswerChangedListener implements
+public class QuestionAnswerChangedListener extends AQuestionAnswerChangedListener implements
         AKeyboardQuestionView.onAnswerChangedListener, AOptionQuestionView.onAnswerChangedListener {
 
     private DynamicTabAdapter mDynamicTabAdapter;
+    private boolean mAdvanceToNextQuestion;
 
-    public SingleQuestionAnswerChangedListener(TableLayout tableLayout,
-            DynamicTabAdapter dynamicTabAdapter) {
+    public QuestionAnswerChangedListener(TableLayout tableLayout,
+            DynamicTabAdapter dynamicTabAdapter, boolean advanceToNextQuestion) {
         super(tableLayout);
 
-        this.mDynamicTabAdapter = dynamicTabAdapter;
+        mDynamicTabAdapter = dynamicTabAdapter;
+        mAdvanceToNextQuestion = advanceToNextQuestion;
     }
 
     @Override
     public void onAnswerChanged(View view, String newValue) {
-        mDynamicTabAdapter.navigationController.isMovingToForward = true;
         saveValue(view, newValue);
-        mDynamicTabAdapter.finishOrNext();
+
+        if (mAdvanceToNextQuestion) {
+            mDynamicTabAdapter.navigationController.isMovingToForward = true;
+            mDynamicTabAdapter.finishOrNext();
+        }
     }
 
     @Override
     public void onAnswerChanged(View view, Option option) {
-        saveValue(view, option);
+        if (mAdvanceToNextQuestion) {
+            mDynamicTabAdapter.OnOptionAnswered(view, option);
+        } else {
+            saveValue(view, option);
+        }
     }
+
 }

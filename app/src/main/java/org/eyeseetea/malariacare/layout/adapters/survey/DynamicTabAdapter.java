@@ -67,6 +67,7 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationCon
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.IDynamicTabAdapterStrategy;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
+import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.factory.IQuestionViewFactory;
@@ -222,15 +223,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 isClicked = true;
                 Log.d(TAG, "onClick");
-                navigationController.isMovingToForward = true;
                 final Option selectedOption = (Option) view.getTag();
-                final Question question = navigationController.getCurrentQuestion();
-                Question counterQuestion = question.findCounterByOption(selectedOption);
-                if (counterQuestion == null) {
-                    saveOptionAndMove(view, selectedOption, question);
-                } else {
-                    showConfirmCounter(view, selectedOption, question, counterQuestion);
-                }
+
+                OnOptionAnswered(view, selectedOption);
             }
 
             /**
@@ -272,6 +267,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         };
 
         listView.setOnTouchListener(swipeTouchListener);
+    }
+
+    public void OnOptionAnswered(View view, Option selectedOption) {
+        navigationController.isMovingToForward = true;
+        final Question question = navigationController.getCurrentQuestion();
+        Question counterQuestion = question.findCounterByOption(selectedOption);
+        if (counterQuestion == null) {
+            saveOptionAndMove(view, selectedOption, question);
+        } else {
+            showConfirmCounter(view, selectedOption, question, counterQuestion);
+        }
     }
 
     private void showConfirmCounter(final View view, final Option selectedOption,
@@ -785,12 +791,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void configureAnswerChangedListener(IQuestionViewFactory questionViewFactory,
             IQuestionView questionView) {
+
         if (questionView instanceof AKeyboardQuestionView) {
             ((AKeyboardQuestionView) questionView).setOnAnswerChangedListener(
-                    questionViewFactory.getStringAnswerChangedListener(tableLayout, this));
+                    new QuestionAnswerChangedListener(tableLayout, this,
+                            !GradleVariantConfig.isButtonNavigationActive()));
         } else if (questionView instanceof AOptionQuestionView) {
             ((AOptionQuestionView) questionView).setOnAnswerChangedListener(
-                    questionViewFactory.getOptionAnswerChangedListener(tableLayout, this));
+                    new QuestionAnswerChangedListener(tableLayout, this,
+                            !GradleVariantConfig.isButtonNavigationActive()));
         }
     }
 

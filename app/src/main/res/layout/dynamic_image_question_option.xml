@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/imageOptionContainer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="0.5">
 
     <ImageView
         android:id="@+id/optionImage"
@@ -36,4 +37,4 @@
         android:visibility="gone"
         app:tDimension="@string/font_size_level1"
         app:tFontName="@string/specific_language_font" />
-</RelativeLayout>
+</FrameLayout>

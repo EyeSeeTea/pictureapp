@@ -24,9 +24,18 @@ public class ReminderSingleQuestionViewHelper {
         okText.setTextSize(option.getOptionAttribute().getText_size());
     }
 
-    public static void setWarningValue(View rootView, Option option) {
-        ImageView errorImage = (ImageView) rootView.findViewById(R.id.confirm_yes);
-        errorImage.setImageResource(R.drawable.option_button);
+    public static void setWarningValue(View rootView, final Option option,
+            final ReminderSingleQuestionView reminderSingleQuestionView) {
+        ImageView imageOK = (ImageView) rootView.findViewById(R.id.confirm_yes);
+        imageOK.setImageResource(R.drawable.option_button);
+
+        imageOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reminderSingleQuestionView.notifyAnswerChanged(option);
+            }
+        });
+
         TextView okText = (TextView) rootView.findViewById(R.id.textcard_confirm_yes);
         okText.setText(option.getInternationalizedCode());
         okText.setTextSize(option.getOptionAttribute().getText_size());

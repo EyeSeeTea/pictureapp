@@ -82,4 +82,7 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
 
         return navigationOption.getOptionAttribute().getText_size();
     }
+
+    public void notifyAnswerChanged(Option option) {
+    }
 }

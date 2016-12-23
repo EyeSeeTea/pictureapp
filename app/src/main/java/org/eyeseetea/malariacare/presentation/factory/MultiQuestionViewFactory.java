@@ -45,19 +45,6 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
                 return new SwitchMultiQuestionView(context);
         }
 
-        throw new IllegalArgumentException("Not exists any question for type " + typeQuestion);
+        return null;
     }
-
-/*    @Override
-    public AKeyboardQuestionView.onAnswerChangedListener getStringAnswerChangedListener(
-            TableLayout tableLayout,
-            DynamicTabAdapter dynamicTabAdapter) {
-        return new MultiQuestionAnswerChangedListener(tableLayout);
-    }
-
-    @Override
-    public AOptionQuestionView.onAnswerChangedListener getOptionAnswerChangedListener(
-            TableLayout tableLayout, DynamicTabAdapter dynamicTabAdapter) {
-        return new MultiQuestionAnswerChangedListener(tableLayout);
-    }*/
 }

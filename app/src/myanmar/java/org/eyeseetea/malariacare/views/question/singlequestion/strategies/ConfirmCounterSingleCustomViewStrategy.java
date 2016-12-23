@@ -91,7 +91,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
                 mDynamicTabAdapter.navigationController.increaseCounterRepetitions(selectedOption);
                 mDynamicTabAdapter.removeConfirmCounter(v);
                 mDynamicTabAdapter.reloadingQuestionFromInvalidOption = true;
-                mDynamicTabAdapter.saveOptionAndMove(view, selectedOption, question);
+                mDynamicTabAdapter.saveOptionValue(view, selectedOption, question,true);
 
                 if (selectedOption.getFactor() == Float.parseFloat(currentCounterValue)) {
                     ReviewFragment.mLoadingReviewOfSurveyWithMaxCounter = true;

@@ -42,19 +42,6 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
                 return imageOptionSingleQuestionView;
         }
 
-        throw new IllegalArgumentException("Not exists any question for type " + typeQuestion);
+        return null;
     }
-/*
-    @Override
-    public AKeyboardQuestionView.onAnswerChangedListener getStringAnswerChangedListener(
-            TableLayout tableLayout,
-            DynamicTabAdapter dynamicTabAdapter) {
-        return new QuestionAnswerChangedListener(tableLayout, dynamicTabAdapter);
-    }
-
-    @Override
-    public AOptionQuestionView.onAnswerChangedListener getOptionAnswerChangedListener(
-            TableLayout tableLayout, DynamicTabAdapter dynamicTabAdapter) {
-        return new QuestionAnswerChangedListener(tableLayout, dynamicTabAdapter);
-    }*/
 }

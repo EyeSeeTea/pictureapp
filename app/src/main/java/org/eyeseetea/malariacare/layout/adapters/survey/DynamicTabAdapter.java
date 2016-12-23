@@ -206,23 +206,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         swipeTouchListener = new SwipeTouchListener(context) {
             /**
-             * Click listener for image option
-             * @param view
-             */
-            public void onClick(final View view) {
-                if (isClicked) {
-                    Log.d(TAG, "onClick ignored to avoid double click");
-                    return;
-                }
-
-                isClicked = true;
-                Log.d(TAG, "onClick");
-                final Option selectedOption = (Option) view.getTag();
-
-                OnOptionAnswered(view, selectedOption);
-            }
-
-            /**
              * Swipe right listener moves to previous question
              */
             public void onSwipeRight() {
@@ -263,14 +246,56 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         listView.setOnTouchListener(swipeTouchListener);
     }
 
-    public void OnOptionAnswered(View view, Option selectedOption) {
+    public void OnOptionAnswered(View view, Option selectedOption, boolean moveToNextQuestion) {
         navigationController.isMovingToForward = true;
-        final Question question = navigationController.getCurrentQuestion();
+        Question question = (Question) view.getTag();
+
         Question counterQuestion = question.findCounterByOption(selectedOption);
         if (counterQuestion == null) {
-            saveOptionAndMove(view, selectedOption, question);
+            saveOptionValue(view, selectedOption, question, moveToNextQuestion);
         } else {
             showConfirmCounter(view, selectedOption, question, counterQuestion);
+        }
+    }
+
+    public void saveTextValue(View view, String newValue, boolean moveToNextQuestion) {
+        Question question = (Question) view.getTag();
+        ReadWriteDB.saveValuesText(question, newValue);
+
+        if (moveToNextQuestion) {
+            navigationController.isMovingToForward = true;
+            finishOrNext();
+        } else {
+            showOrHideChildren(question);
+        }
+
+    }
+
+    public void saveOptionValue(View view, Option selectedOption, Question question,
+            boolean moveToNextQuestion) {
+        Value value = question.getValueBySession();
+        //set new totalpages if the value is not null and the value change
+        if (value != null && !readOnly) {
+            navigationController.setTotalPages(question.getTotalQuestions());
+        }
+
+        ReadWriteDB.saveValuesDDL(question, selectedOption, value);
+
+        if (question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
+                question.getOutput().equals(Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT)) {
+            switchHiddenMatches(question, selectedOption);
+        }
+
+        if (view instanceof ImageView) {
+            darkenNonSelected(view, selectedOption);
+            LayoutUtils.highlightSelection(view, selectedOption);
+        }
+
+        if (moveToNextQuestion) {
+            navigationController.isMovingToForward = true;
+            finishOrNext();
+        } else {
+            showOrHideChildren(question);
         }
     }
 
@@ -311,7 +336,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             public void onClick(View v) {
                 navigationController.increaseCounterRepetitions(selectedOption);
                 removeConfirmCounter(v);
-                saveOptionAndMove(view, selectedOption, question);
+                saveOptionValue(view, selectedOption, question, true);
             }
         });
 
@@ -353,28 +378,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public void removeConfirmCounter(View view) {
         view.getRootView().findViewById(R.id.dynamic_tab_options_table).setVisibility(View.VISIBLE);
         view.getRootView().findViewById(R.id.confirm_table).setVisibility(View.GONE);
-    }
-
-    public void saveOptionAndMove(View view, Option selectedOption, Question question) {
-        Value value = question.getValueBySession();
-        //set new totalpages if the value is not null and the value change
-        if (value != null && !readOnly) {
-            navigationController.setTotalPages(question.getTotalQuestions());
-        }
-
-        ReadWriteDB.saveValuesDDL(question, selectedOption, value);
-
-        if (question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
-                question.getOutput().equals(Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT)) {
-            switchHiddenMatches(question, selectedOption);
-        }
-
-        if (view instanceof ImageView) {
-            darkenNonSelected(view, selectedOption);
-            LayoutUtils.highlightSelection(view, selectedOption);
-        }
-
-        finishOrNext();
     }
 
     private void darkenNonSelected(View view, Option selectedOption) {
@@ -588,49 +591,52 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         IQuestionView questionView = questionViewFactory.getView(context,
                 screenQuestion.getOutput());
 
-        if (questionView instanceof IMultiQuestionView) {
-            mMultiQuestionViews.add((IMultiQuestionView) questionView);
-            ((IMultiQuestionView) questionView).setHeader(
-                    Utils.getInternationalizedString(screenQuestion.getForm_name()));
+        if (questionView != null) {
+
+            if (questionView instanceof IMultiQuestionView) {
+                mMultiQuestionViews.add((IMultiQuestionView) questionView);
+                ((IMultiQuestionView) questionView).setHeader(
+                        Utils.getInternationalizedString(screenQuestion.getForm_name()));
+            }
+
+            addTagQuestion(screenQuestion, (View) questionView);
+
+            configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
+
+            questionView.setHelpText(
+                    Utils.getInternationalizedString(screenQuestion.getHelp_text()));
+
+            questionView.setEnabled(!readOnly);
+
+            if (questionView instanceof IImageQuestionView) {
+                ((IImageQuestionView) questionView).setImage(
+                        screenQuestion.getInternationalizedPath());
+            }
+
+            if (questionView instanceof AOptionQuestionView) {
+                ((AOptionQuestionView) questionView).setQuestion(screenQuestion);
+                ((AOptionQuestionView) questionView).setOptions(
+                        screenQuestion.getAnswer().getOptions());
+            }
+
+            if (!readOnly) {
+                configureAnswerChangedListener(questionView);
+            }
+
+            if (reloadingQuestionFromInvalidOption) {
+                reloadingQuestionFromInvalidOption = false;
+            } else {
+                questionView.setValue(value);
+            }
+
+            setupNavigationByQuestionView(rowView.getRootView(), questionView);
+
+            tableRow.addView((View) questionView);
+
+            swipeTouchListener.addClickableView(tableRow);
+
+            setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
         }
-
-        addTagQuestion(screenQuestion, (View) questionView);
-
-        configureLayoutParams(tabType, tableRow, (LinearLayout) questionView);
-
-        questionView.setHelpText(
-                Utils.getInternationalizedString(screenQuestion.getHelp_text()));
-
-        questionView.setEnabled(!readOnly);
-
-        if (questionView instanceof IImageQuestionView) {
-            ((IImageQuestionView) questionView).setImage(
-                    screenQuestion.getInternationalizedPath());
-        }
-
-        if (questionView instanceof AOptionQuestionView) {
-            ((AOptionQuestionView) questionView).setQuestion(screenQuestion);
-            ((AOptionQuestionView) questionView).setOptions(
-                    screenQuestion.getAnswer().getOptions());
-        }
-
-        if (!readOnly) {
-            configureAnswerChangedListener(questionViewFactory, questionView);
-        }
-
-        if (reloadingQuestionFromInvalidOption) {
-            reloadingQuestionFromInvalidOption = false;
-        } else {
-            questionView.setValue(value);
-        }
-
-        setupNavigationByQuestionView(rowView.getRootView(), questionView);
-
-        tableRow.addView((View) questionView);
-
-        swipeTouchListener.addClickableView(tableRow);
-
-        setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
     }
 
     private void setupNavigationByQuestionView(View rootView, IQuestionView questionView) {
@@ -676,8 +682,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 || questionItem.getOutput() == Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT;
     }
 
-    private void configureAnswerChangedListener(IQuestionViewFactory questionViewFactory,
-            IQuestionView questionView) {
+    private void configureAnswerChangedListener(IQuestionView questionView) {
 
         if (questionView instanceof AKeyboardQuestionView) {
             ((AKeyboardQuestionView) questionView).setOnAnswerChangedListener(
@@ -761,9 +766,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                                     selectedOption);
                             if (counterQuestion == null || (mReviewMode
                                     && isCounterValueEqualToMax(question, selectedOption))) {
-                                saveOptionAndMove(selectedOptionView,
+                                saveOptionValue(selectedOptionView,
                                         selectedOptionView.getOption(),
-                                        question);
+                                        question, true);
                             } else {
                                 showConfirmCounter(selectedOptionView,
                                         selectedOptionView.getOption(),

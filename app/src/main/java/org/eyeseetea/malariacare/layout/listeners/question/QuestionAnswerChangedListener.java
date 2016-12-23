@@ -9,7 +9,7 @@ import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 
 
-public class QuestionAnswerChangedListener extends AQuestionAnswerChangedListener implements
+public class QuestionAnswerChangedListener implements
         AKeyboardQuestionView.onAnswerChangedListener, AOptionQuestionView.onAnswerChangedListener {
 
     private DynamicTabAdapter mDynamicTabAdapter;
@@ -17,7 +17,6 @@ public class QuestionAnswerChangedListener extends AQuestionAnswerChangedListene
 
     public QuestionAnswerChangedListener(TableLayout tableLayout,
             DynamicTabAdapter dynamicTabAdapter, boolean advanceToNextQuestion) {
-        super(tableLayout);
 
         mDynamicTabAdapter = dynamicTabAdapter;
         mAdvanceToNextQuestion = advanceToNextQuestion;
@@ -25,21 +24,12 @@ public class QuestionAnswerChangedListener extends AQuestionAnswerChangedListene
 
     @Override
     public void onAnswerChanged(View view, String newValue) {
-        saveValue(view, newValue);
-
-        if (mAdvanceToNextQuestion) {
-            mDynamicTabAdapter.navigationController.isMovingToForward = true;
-            mDynamicTabAdapter.finishOrNext();
-        }
+        mDynamicTabAdapter.saveTextValue(view, newValue, mAdvanceToNextQuestion);
     }
 
     @Override
     public void onAnswerChanged(View view, Option option) {
-        if (mAdvanceToNextQuestion) {
-            mDynamicTabAdapter.OnOptionAnswered(view, option);
-        } else {
-            saveValue(view, option);
-        }
+        mDynamicTabAdapter.OnOptionAnswered(view, option, mAdvanceToNextQuestion);
     }
 
 }

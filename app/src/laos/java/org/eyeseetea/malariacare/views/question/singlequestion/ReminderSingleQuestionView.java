@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.views.question.singlequestion;
 
 import android.content.Context;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
@@ -9,7 +8,6 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
-import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
 import java.util.List;
@@ -32,7 +30,7 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
         }
         //Question "button" is in the second option in Options.csv
         if (options != null && options.size() > 1) {
-            ReminderSingleQuestionViewHelper.setWarningValue(this, options.get(1));
+            ReminderSingleQuestionViewHelper.setWarningValue(this, options.get(1), this);
         }
     }
 
@@ -57,5 +55,9 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
 
     private void init(Context context) {
         inflate(context, R.layout.dynamic_tab_reminder_row, this);
+    }
+
+    public void notifyAnswerChanged(Option option) {
+        super.notifyAnswerChanged(option);
     }
 }

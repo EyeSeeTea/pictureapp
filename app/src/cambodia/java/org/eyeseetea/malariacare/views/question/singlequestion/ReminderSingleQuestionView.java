@@ -32,7 +32,7 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
         }
         //Question "button" is in the second option in Options.csv
         if (options != null && options.size() > 1) {
-            ReminderSingleQuestionViewHelper.setWarningValue(this, options.get(1));
+            ReminderSingleQuestionViewHelper.setWarningValue(this, options.get(1),this);
         }
     }
 
@@ -57,5 +57,9 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
 
     private void init(Context context) {
         inflate(context, R.layout.dynamic_tab_reminder_row, this);
+    }
+
+    public void notifyAnswerChanged(Option option) {
+        super.notifyAnswerChanged(option);
     }
 }

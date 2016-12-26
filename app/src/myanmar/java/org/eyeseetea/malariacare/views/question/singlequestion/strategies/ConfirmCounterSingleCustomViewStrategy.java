@@ -70,7 +70,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
                 } else {
                     Log.d(TAG, "onClick ignored to avoid double click NOT");
                 }
-                mDynamicTabAdapter.removeConfirmCounter(v);
+                removeConfirmCounter(v);
                 mDynamicTabAdapter.notifyDataSetChanged();
                 DynamicTabAdapter.isClicked = false;
             }
@@ -89,7 +89,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
                     Log.d(TAG, "onClick");
                 }
                 mDynamicTabAdapter.navigationController.increaseCounterRepetitions(selectedOption);
-                mDynamicTabAdapter.removeConfirmCounter(v);
+                removeConfirmCounter(v);
                 mDynamicTabAdapter.reloadingQuestionFromInvalidOption = true;
                 mDynamicTabAdapter.saveOptionValue(view, selectedOption, question,true);
 
@@ -160,5 +160,10 @@ public class ConfirmCounterSingleCustomViewStrategy implements
 
 
         return String.valueOf((Integer.parseInt(counterValue) + 1));
+    }
+
+    private void removeConfirmCounter(View view) {
+        view.getRootView().findViewById(R.id.dynamic_tab_options_table).setVisibility(View.VISIBLE);
+        view.getRootView().findViewById(R.id.confirm_table).setVisibility(View.GONE);
     }
 }

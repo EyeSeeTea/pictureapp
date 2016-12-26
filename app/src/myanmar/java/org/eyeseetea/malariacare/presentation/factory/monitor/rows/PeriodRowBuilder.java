@@ -22,6 +22,7 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonitor;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.TimePeriodCalculator;
@@ -31,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Builds the header with the time columns
@@ -42,7 +44,8 @@ public class PeriodRowBuilder extends MonitorRowBuilder {
      * Date format for months periods: 'Jan'
      */
     //private static final String MONTH_FORMAT="MMM";
-    private static String MONTHS_FORMAT = "'%s' MM";
+    private static String MONTHS_NUMBER_FORMAT = "MM";
+    private static String MONTHS_TEXT_FORMAT = "MMMM";
 
     /**
      * Date format for weeks periods 'Week 09'
@@ -55,11 +58,10 @@ public class PeriodRowBuilder extends MonitorRowBuilder {
     //private static final String DAYS_FORMAT="EEE";
     private static String DAYS_FORMAT = "'%s' dd";
 
-    public PeriodRowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_period));
+    public PeriodRowBuilder(Context context, int titleId) {
+        super(context, context.getString(titleId));
         initWeekFormat();
         initDayFormat();
-        initMonthFormat();
         initData();
     }
 
@@ -104,11 +106,6 @@ public class PeriodRowBuilder extends MonitorRowBuilder {
                 context.getString(R.string.monitoring_row_title_day));
     }
 
-    private void initMonthFormat() {
-        MONTHS_FORMAT = String.format(MONTHS_FORMAT,
-                context.getString(R.string.monitor_row_title_month));
-    }
-
     /**
      * Loads period times info
      */
@@ -123,7 +120,9 @@ public class PeriodRowBuilder extends MonitorRowBuilder {
      */
     private void initMonthsData() {
         List<Date> monthsDates = TimePeriodCalculator.getInstance().getMonthPeriodDates();
-        initTimeData(monthsDates, new SimpleDateFormat(MONTHS_FORMAT), monthsData);
+        initTimeDataForMonth(monthsDates,
+                new SimpleDateFormat(MONTHS_NUMBER_FORMAT, Locale.ENGLISH),
+                new SimpleDateFormat(MONTHS_TEXT_FORMAT, Locale.ENGLISH), monthsData);
     }
 
     /**
@@ -149,5 +148,36 @@ public class PeriodRowBuilder extends MonitorRowBuilder {
         for (int i = 0; i < Constants.MONITOR_HISTORY_SIZE; i++) {
             data[i] = formatter.format(dates.get(i));
         }
+    }
+
+    private void initTimeDataForMonth(List<Date> dates, SimpleDateFormat numberFormatter,
+            SimpleDateFormat textFormatter, Object[] data) {
+        for (int i = 0; i < Constants.MONITOR_HISTORY_SIZE; i++) {
+            data[i] = getInternationalizeMonth(numberFormatter.format(dates.get(i)),
+                    textFormatter.format(dates.get(i)));
+        }
+    }
+
+    private String getInternationalizeMonth(String monthNumber, String monthText) {
+        String monthStringName = "monitoring_month_%s_%s";
+        String monthTextResult = "";
+
+        if (monthNumber != null && monthText != null) {
+            Context context = PreferencesState.getInstance().getContext();
+
+            monthStringName = String.format(monthStringName, monthNumber, monthText);
+
+            int identifier = context.getResources().getIdentifier(monthStringName, "string",
+                    context.getPackageName());
+
+            //if the id is 0 it not exist.
+            if (identifier != 0) {
+                monthTextResult = context.getString(identifier);
+            }
+        } else {
+            monthTextResult = monthText;
+        }
+
+        return monthTextResult;
     }
 }

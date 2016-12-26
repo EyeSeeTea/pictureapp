@@ -1,21 +1,21 @@
-package org.eyeseetea.malariacare.monitor.tables;
+package org.eyeseetea.malariacare.presentation.factory.monitor.tables;
 
 import android.content.Context;
 
-import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.ASMQRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.DHAPIPRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.NegativeRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.NotTestedRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.PeriodRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.PfPvRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.PfRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.PositiveRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.PositivityRateRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.PvRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.RDTRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.ReferralRowBuilder;
-import org.eyeseetea.malariacare.monitor.rows.SuspectedRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.ASMQRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.DHAPIPRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.NegativeRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.NotTestedRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PeriodRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PfPvRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PfRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PositiveRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PositivityRateRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PvRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.RDTRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.ReferralRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.SuspectedRowBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

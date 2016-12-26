@@ -26,55 +26,55 @@ import org.eyeseetea.malariacare.database.model.Value;
  * Created by arrizabalaga on 26/02/16.
  */
 public class SurveyMonitor extends BaseSurveyMonitor {
-
     /**
      * Id of treatment question
      */
-    protected final static Long ID_QUESTION_TREATMENT = 11l;
+    protected final static Long ID_QUESTION_TREATMENT = 15l;
+    /**
+     * Id of pq treatment question
+     */
+    protected final static Long ID_QUESTION_PQ_TREATMENT = 25l;
+    /**
+     * Id of act12 treatment question
+     */
+    protected final static Long ID_QUESTION_ACT12_TREATMENT = 24l;
+    /**
+     * Id of treatment question
+     */
+    protected final static Long ID_QUESTION_REFERRAL = 26l;
     /**
      * Id of counter question
      */
-    protected final static Long ID_QUESTION_COUNTER = 6l;
-    /**
-     * Id of first question is tested? (positive, negative, not tested)
-     */
-    final static Long ID_QUESTION_IS_RDT_TESTED = 1l;
-    /**
-     * Id of not tested
-     */
-    final static Long ID_OPTION_RDT_YES_TESTED = 1l;
-    /**
-     * Id of not tested
-     */
-    final static Long ID_OPTION_RDT_NOT_TESTED = 2l;
+    protected final static Long ID_QUESTION_COUNTER = 14l;
     /**
      * Id of specie question(test result)
      */
-    final static Long ID_QUESTION_RDT_TEST_RESULT = 5l;
+    final static Long ID_QUESTION_RDT_TEST_RESULT = 12l;
     /**
      * Id of negative  of rdt tst result
      */
-    final static Long ID_OPTION_TEST_NEGATIVE = 9l;
+    final static Long ID_OPTION_TEST_NEGATIVE = 15l;
     /**
      * Id of pv specie option  of rdt tst result
      */
-    final static Long ID_OPTION_SPECIE_PF = 10l;
+    final static Long ID_OPTION_SPECIE_PF = 16l;
     /**
      * Id of pv specie option  of rdt tst result
      */
-    final static Long ID_OPTION_SPECIE_PV = 11l;
+    final static Long ID_OPTION_SPECIE_PV = 17l;
     /**
      * Id of pf/pv (mixed) specie option  of rdt tst result
      */
-    final static Long ID_OPTION_SPECIE_PFPV = 12l;
+    final static Long ID_OPTION_SPECIE_PFPV = 18l;
     /**
-     * Id of reason question (pregnant, severe, denied, drug)
+     * Id of referral yes option  of referral treatment
      */
-    private final static Long ID_QUESTION_REASON = 2l;
+    final static Long ID_OPTION_REFERRAL_YES = 35l;
     /**
-     * Id of rdt stockout reason option
+     * Id of pq yes option  of pq treatment
      */
-    private final static Long ID_OPTION_RDT_STOCKOUT = 6l;
+    final static Long ID_OPTION_TREATMENT_PQ = 33l;
+
     /**
      * Id of Combined act treatment option
      */
@@ -82,19 +82,19 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     /**
      * Id of ACT6x1 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ACT6X1 = 17l;
+    private final static Long ID_OPTION_TREATMENT_ACT6 = 17l;
     /**
      * Id of  ACT6x2 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ACT6X2 = 18l;
+    private final static Long ID_OPTION_TREATMENT_ACT12 = 31l;
     /**
      * Id of ACT6x3 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ACT6X3 = 19l;
+    private final static Long ID_OPTION_TREATMENT_ACT18 = 19l;
     /**
      * Id of ACT6x4 treatment option
      */
-    private final static Long ID_OPTION_TREATMENT_ACT6X4 = 20l;
+    private final static Long ID_OPTION_TREATMENT_ACT24 = 20l;
 
 
     public SurveyMonitor(Survey survey) {
@@ -102,31 +102,17 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     }
 
     /**
-     * Tells if the given survey is tested
-     */
-    public boolean isSuspected() {
-        return (isTested() || isNotTested());
-    }
-
-    /**
-     * Tells if the given survey is not tested
-     */
-    public boolean isNotTested() {
-        return findValue(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_NOT_TESTED) != null;
-    }
-
-    /**
-     * Tells if the given survey is tested
-     */
-    public boolean isTested() {
-        return findValue(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_YES_TESTED) != null;
-    }
-
-    /**
-     * Tells if the given survey is Rated(the same of is tested in Lao).
+     * Tells if the given survey is Rated(all was tested in myanmar).
      */
     public boolean isRated() {
         return isTested();
+    }
+
+    /**
+     * Tells if the given survey is tested and all are tested
+     */
+    public boolean isTested() {
+        return isPositive() || isNegative();
     }
 
     /**
@@ -170,22 +156,14 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Tells if the given survey has Pf/Pv (mixed) or Pv  specie
      */
     public boolean isReferral() {
-        return (findValue(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PFPV) != null || findValue(
-                ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_SPECIE_PV) != null);
-    }
-
-    /**
-     * Tells if the given survey is not tested number of referrals(RDT testing)
-     */
-    public boolean isRDTTesting() {
-        return findValue(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_NOT_TESTED) != null;
+        return (findValue(ID_QUESTION_REFERRAL, ID_OPTION_REFERRAL_YES) != null);
     }
 
     /**
      * Tells if the given survey is PV or PV+PF or referred to hospital
      */
     public boolean isTreatment() {
-        if (isReferral() || findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL)
+        if (findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL)
                 != null) {
             return true;
         } else {
@@ -198,57 +176,62 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Tells if the given survey is referred to hospital
      */
     public boolean isACTStockout() {
-        return findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL) != null;
-    }
-
-    /**
-     * Tells if the given survey not tested by stockout
-     */
-    public boolean isRDTStockout() {
-        return findValue(ID_QUESTION_REASON, ID_OPTION_RDT_STOCKOUT) != null;
+        //// TODO: set the correct idQuestion and IDOption
+        //return findValue(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_REFERER_HOSPITAL) != null;
+        return false;
     }
 
     /**
      * Tells if the given survey treatment is act6x4
      */
-    public boolean isACT6x4() {
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X4);
+    public boolean isACT24() {
+        //// TODO: set the correct idQuestion and IDOption
+
+        //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT24);
+        return false;
     }
 
     /**
      * Tells if the given survey treatment is act6x3
      */
-    public boolean isACT6x3() {
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X3);
+    public boolean isACT18() {
+        //// TODO: set the correct idQuestion and IDOption
+        //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT18);
+        return false;
     }
 
     /**
      * Tells if the given survey treatment is act6x2
      */
-    public boolean isACT6x2() {
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X2);
+    public boolean isACT12() {
+        return findOption(ID_QUESTION_ACT12_TREATMENT, ID_OPTION_TREATMENT_ACT12);
     }
 
     /**
      * Tells if the given survey treatment is act6x1
      */
-    public boolean isACT6x1() {
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6X1);
+    public boolean isACT6() {
+        //// TODO: set the correct idQuestion and IDOption
+        //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6);
+        return  false;
     }
 
     /**
      * Tells if the given survey is a RDT tested
      */
     public boolean isRDTs() {
-        return findOption(ID_QUESTION_IS_RDT_TESTED, ID_OPTION_RDT_YES_TESTED);
+        //all the sent surveys has rdt test in myanmar
+        return true;
     }
 
     /**
      * Returns the number of rtd tests for each survey
      */
     public Integer countRDT() {
+        int testCounter = testCounter();
+
         if (isRDTs()) {
-            return testCounter() + 1;
+            return testCounter > 0 ? testCounter : 1;
         } else {
             return 0;
         }
@@ -266,4 +249,13 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     }
 
 
+    public boolean isPq() {
+        return findOption(ID_QUESTION_PQ_TREATMENT, ID_OPTION_TREATMENT_PQ);
+    }
+
+
+    public boolean isCq() {
+        //// TODO: set the correct idQuestion and IDOption
+        return false;
+    }
 }

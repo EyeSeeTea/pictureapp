@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.eyeseetea.malariacare.monitor.utils;
+package org.eyeseetea.malariacare.presentation.factory.monitor.utils;
 
 import org.eyeseetea.malariacare.database.model.Survey;
 

@@ -26,14 +26,14 @@ import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonito
 /**
  * Created by arrizabalaga on 26/02/16.
  */
-public class NotTestedRowBuilder extends CounterRowBuilder {
+public class PositiveRowBuilder extends CounterRowBuilder {
 
-    public NotTestedRowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_not_tested));
+    public PositiveRowBuilder(Context context) {
+        super(context, context.getString(R.string.monitor_row_title_positive));
     }
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isNotTested()) ? 1 : 0;
+        return (surveyMonitor.isPositive()) ? 1 : 0;
     }
 }

@@ -16,24 +16,42 @@
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.eyeseetea.malariacare.presentation.factory.monitor.rows;
-
-import android.content.Context;
-
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonitor;
+package org.eyeseetea.malariacare.presentation.factory.monitor.utils;
 
 /**
+ * POJO that represents a PositivityRate for the monitor
  * Created by arrizabalaga on 26/02/16.
  */
-public class NotTestedRowBuilder extends CounterRowBuilder {
+public class PositivityRate {
 
-    public NotTestedRowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_not_tested));
+    /**
+     * Counter for the num of positive cases
+     */
+    int numPositive;
+
+    /**
+     * Counter for the num of suspected cases (positive, negative, not tested)
+     */
+    int numSuspected;
+
+    public PositivityRate() {
     }
 
-    @Override
-    protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isNotTested()) ? 1 : 0;
+    public void incNumPositive() {
+        numPositive++;
     }
+
+    public void incNumSuspected() {
+        numSuspected++;
+    }
+
+    public String toString() {
+        if (numSuspected == 0) {
+            return "0%";
+        }
+
+        float rate = ((float) numPositive / numSuspected) * 100;
+        return String.format("%.0f%%", rate);
+    }
+
 }

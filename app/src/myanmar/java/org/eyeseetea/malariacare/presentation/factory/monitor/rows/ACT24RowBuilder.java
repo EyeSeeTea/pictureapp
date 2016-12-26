@@ -8,15 +8,13 @@ import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonito
 /**
  * Created by idelcano on 21/07/2016.
  */
-public class RDTStockoutRowBuilder extends CounterRowBuilder {
-
-    public RDTStockoutRowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_rdt_stockout));
+public class ACT24RowBuilder extends CounterRowBuilder {
+    public ACT24RowBuilder(Context context) {
+        super(context, context.getString(R.string.ACT_x_24));
     }
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isRDTStockout()) ? 1 : 0;
+        return (surveyMonitor.isACT24()) ? 1 : 0;
     }
 }
-

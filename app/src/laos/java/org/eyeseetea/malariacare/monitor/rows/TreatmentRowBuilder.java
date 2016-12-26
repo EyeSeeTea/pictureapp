@@ -1,9 +1,9 @@
-package org.eyeseetea.malariacare.monitor.rows;
+package org.eyeseetea.malariacare.presentation.factory.monitor.rows;
 
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
+import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonitor;
 
 /**
  * Created by idelcano on 21/07/2016.

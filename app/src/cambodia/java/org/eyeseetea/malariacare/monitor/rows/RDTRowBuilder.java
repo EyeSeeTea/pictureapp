@@ -16,12 +16,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.eyeseetea.malariacare.monitor.rows;
+package org.eyeseetea.malariacare.presentation.factory.monitor.rows;
 
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
+import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonitor;
 
 /**
  * Created by arrizabalaga on 26/02/16.

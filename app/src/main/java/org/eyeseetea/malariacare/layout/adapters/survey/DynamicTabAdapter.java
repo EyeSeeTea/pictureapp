@@ -259,13 +259,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } else {
             showOrHideChildren(question);
         }
-
     }
 
     public void saveOptionValue(View view, Option selectedOption, Question question,
             boolean moveToNextQuestion) {
         Value value = question.getValueBySession();
-        //set new totalpages if the value is not null and the value change
+
         if (value != null && !readOnly) {
             navigationController.setTotalPages(question.getTotalQuestions());
         }
@@ -350,13 +349,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return 0F;
     }
 
-    /**
-     * No scores required
-     */
-    @Override
-    public void initializeSubscore() {
-    }
-
     @Override
     public String getName() {
         return tab.getName();
@@ -426,8 +418,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         List<Question> screenQuestions = new ArrayList<>();
 
-        swipeTouchListener.clearClickableViews();
-
         if (isTabScrollable(questionItem, tabType)) {
             tableLayout = (TableLayout) rowView.findViewById(R.id.multi_question_options_table);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
@@ -441,12 +431,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.GONE);
             screenQuestions.add(questionItem);
         }
-        //this method removes all the clicable views
-        swipeTouchListener.clearClickableViews();
+
         navigationButtonHolder = rowView.findViewById(R.id.snackbar);
 
         if (GradleVariantConfig.isButtonNavigationActive()) {
-            createNavigationButtonsBackButton(navigationButtonHolder);
+            initializeNavigationButtons(navigationButtonHolder);
             isClicked = false;
         }
 
@@ -457,6 +446,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             setBottomLine(tabType, screenQuestions, screenQuestion);
         }
+
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
         return rowView;
@@ -610,12 +600,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    /**
-     * Create a buttons for navigate.
-     */
-    private View createNavigationButtonsBackButton(View navigationButtonsHolder) {
+    private void initializeNavigationButtons(View navigationButtonsHolder) {
         ImageButton button = (ImageButton) navigationButtonsHolder.findViewById(R.id.next_btn);
-        //Save the numberpicker value in the DB, and continue to the next screen.
+
         ((LinearLayout) button.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -691,7 +678,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 previous();
             }
         });
-        return navigationButtonsHolder;
     }
 
     private boolean isCounterValueEqualToMax(Question question, Option selectedOption) {
@@ -703,9 +689,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return counterValue.equals(maxCounter);
     }
 
-    /**
-     * hide keyboard using a provided view
-     */
     private void hideKeyboard(Context c, View v) {
         Log.d(TAG, "KEYBOARD HIDE ");
         InputMethodManager keyboard = (InputMethodManager) c.getSystemService(
@@ -745,7 +728,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Hide or show the childen question from a given question,  if is necessary  it reloads the
      * children questions values or refreshing the children questions answer component
      *
-     * TODO: Duplicate code in AQuestionAnswerChangedListener line 43
      * this code will be delete when DynamicTabAdapter refactoring will be completed
      *
      * @param question is the parent question
@@ -828,11 +810,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    /**
-     * when a question is shown this method set the correct value.
-     *
-     * @param rowQuestion is the question in the view
-     */
     private void showDefaultValue(TableRow tableRow, Question rowQuestion) {
         if (rowQuestion.getValueBySession() != null) {
             return;
@@ -1028,10 +1005,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
-    /**
-     * When the user swip back from review fragment the navigationController should go to the last
-     * question
-     */
     private void goToLastQuestion() {
         navigationController.first();
         Value value = null;
@@ -1044,9 +1017,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         notifyDataSetChanged();
     }
 
-    /**
-     * Skips the reminder question in the navigation
-     */
     private void skipReminder() {
         for (QuestionRelation relation : navigationController.getCurrentQuestion()
                 .getQuestionRelations()) {
@@ -1056,14 +1026,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    /**
-     * Save the switch option and check children questions
-     *
-     * @param question  is the question in the view
-     * @param isChecked is the value to be saved
-     */
     private void saveSwitchOption(Question question, boolean isChecked) {
-        //Take option
         Option selectedOption = findSwitchOption(question, isChecked);
         if (selectedOption == null) {
             return;

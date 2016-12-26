@@ -35,7 +35,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,7 +65,6 @@ import org.eyeseetea.malariacare.layout.adapters.survey.strategies.IDynamicTabAd
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
-import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.presentation.factory.IQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.MultiQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.SingleQuestionViewFactory;
@@ -279,11 +277,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             switchHiddenMatches(question, selectedOption);
         }
 
-        if (view instanceof ImageView) {
-            darkenNonSelected(view, selectedOption);
-            LayoutUtils.highlightSelection(view, selectedOption);
-        }
-
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
             finishOrNext();
@@ -300,29 +293,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         confirmCounterStrategy.showConfirmCounter(view, selectedOption, question, questionCounter);
 
         isClicked = false;
-    }
-
-    private void darkenNonSelected(View view, Option selectedOption) {
-        swipeTouchListener.clearClickableViews();
-        //A Warning or Reminder (not a real option)
-        if (selectedOption == null) {
-            return;
-        }
-        //A question with real options -> darken non selected
-        ViewGroup vgTable = (ViewGroup) view.getParent().getParent();
-        for (int rowPos = 0; rowPos < vgTable.getChildCount(); rowPos++) {
-            ViewGroup vgRow = (ViewGroup) vgTable.getChildAt(rowPos);
-            for (int itemPos = 0; itemPos < vgRow.getChildCount(); itemPos++) {
-                View childItem = vgRow.getChildAt(itemPos);
-                if (childItem instanceof ImageView) {
-                    //We dont want the user to click anything else
-                    Option otherOption = (Option) childItem.getTag();
-                    if (selectedOption.getId_option() != otherOption.getId_option()) {
-                        LayoutUtils.overshadow((FrameLayout) childItem);
-                    }
-                }
-            }
-        }
     }
 
     /**

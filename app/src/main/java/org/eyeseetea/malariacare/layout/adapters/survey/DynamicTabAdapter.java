@@ -123,10 +123,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * readonly settings)
      */
     private boolean readOnly;
-    /**
-     * Flag that indicates if the swipe listener has been already added to the listview container
-     */
-    private boolean isSwipeAdded;
+
     /**
      * Flag that indicates the number of failed validations by the active screen in multiquestion
      * tabs
@@ -143,7 +140,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         this.navigationController = initNavigationController(tab);
         this.readOnly = getSurvey() != null && !getSurvey().isInProgress();
-        this.isSwipeAdded = false;
+
         //On create dynamictabadapter, if is not readonly and has value not null it should come
         // from reviewFragment
         if (!readOnly) {
@@ -200,10 +197,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     public void addOnSwipeListener(final ListView listView) {
-        if (isSwipeAdded) {
-            return;
-        }
-
         swipeTouchListener = new SwipeTouchListener(context) {
             /**
              * Swipe right listener moves to previous question
@@ -481,10 +474,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //this method removes all the clicable views
         swipeTouchListener.clearClickableViews();
         navigationButtonHolder = rowView.findViewById(R.id.snackbar);
+
         if (GradleVariantConfig.isButtonNavigationActive()) {
             createNavigationButtonsBackButton(navigationButtonHolder);
             isClicked = false;
         }
+
         Log.d(TAG, "Questions in actual tab: " + screenQuestions.size());
         for (Question screenQuestion : screenQuestions) {
 

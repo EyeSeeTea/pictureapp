@@ -18,13 +18,15 @@
  */
 package org.eyeseetea.malariacare.presentation.factory.monitor.utils;
 
+import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.model.Value;
 
 /**
  * Decorator that tells if a survey has specific info
  * Created by arrizabalaga on 26/02/16.
  */
-public class SurveyMonitor extends BaseSurveyMonitor {
+public class SurveyMonitor {
 
     /**
      * Id of first question (positive, negative, not tested)
@@ -75,29 +77,31 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     private final static Long ID_OPTION_TREATMENT_DHA_PIP = 12l;
 
+    private Survey mSurvey;
+
     public SurveyMonitor(Survey survey) {
-        super(survey);
+        mSurvey = survey;
     }
 
     /**
      * Tells if the given survey has Pf specie
      */
     public boolean isPf() {
-        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PF) != null;
+        return Value.findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PF, mSurvey) != null;
     }
 
     /**
      * Tells if the given survey has Pv specie
      */
     public boolean isPv() {
-        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PV) != null;
+        return Value.findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PV, mSurvey) != null;
     }
 
     /**
      * Tells if the given survey has Pf/Pv (mixed)  specie
      */
     public boolean isPfPv() {
-        return findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV) != null;
+        return Value.findValue(ID_QUESTION_SPECIE, ID_OPTION_SPECIE_PFPV, mSurvey) != null;
     }
 
     public boolean isRated() {
@@ -108,14 +112,14 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Tells if the given survey test  is positive
      */
     public boolean isPositive() {
-        return findValue(ID_QUESTION_RDT, ID_OPTION_RDT_POSITIVE) != null;
+        return Value.findValue(ID_QUESTION_RDT, ID_OPTION_RDT_POSITIVE, mSurvey) != null;
     }
 
     /**
      * Tells if the given survey is negative
      */
     public boolean isNegative() {
-        return findValue(ID_QUESTION_RDT, ID_OPTION_RDT_NEGATIVE) != null;
+        return Value.findValue(ID_QUESTION_RDT, ID_OPTION_RDT_NEGATIVE, mSurvey) != null;
     }
 
     /**
@@ -129,36 +133,37 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      * Tells if the given survey is not tested
      */
     public boolean isNotTested() {
-        return findValue(ID_QUESTION_RDT, ID_OPTION_RDT_NOT_TESTED) != null;
+        return Value.findValue(ID_QUESTION_RDT, ID_OPTION_RDT_NOT_TESTED, mSurvey) != null;
     }
 
     /**
      * Tells if the given survey is referral
      */
     public boolean isReferral() {
-        return findValue(SurveyMonitor.ID_QUESTION_TREATMENT,
-                SurveyMonitor.ID_OPTION_TREATMENT_REFERRAL) != null;
+        return Value.findValue(SurveyMonitor.ID_QUESTION_TREATMENT,
+                SurveyMonitor.ID_OPTION_TREATMENT_REFERRAL, mSurvey) != null;
     }
 
     /**
      * Tells if the given survey has DHA-PIP treatment
      */
     public boolean isDHAPIP() {
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP);
+        return Option.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP, mSurvey);
     }
 
     /**
      * Tells if the given survey has Eurartesim treatment
      */
     public boolean isASMQ() {
-        return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ASMQ);
+        return Option.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ASMQ, mSurvey);
     }
 
     /**
      * Tells if the given survey is a RDT survey (positive or negative)
      */
     public boolean isRDT() {
-        return findOption(ID_QUESTION_RDT, ID_OPTION_RDT_POSITIVE) || findOption(ID_QUESTION_RDT,
-                ID_OPTION_RDT_NEGATIVE);
+        return Option.findOption(ID_QUESTION_RDT, ID_OPTION_RDT_POSITIVE, mSurvey)
+                || Option.findOption(ID_QUESTION_RDT,
+                ID_OPTION_RDT_NEGATIVE, mSurvey);
     }
 }

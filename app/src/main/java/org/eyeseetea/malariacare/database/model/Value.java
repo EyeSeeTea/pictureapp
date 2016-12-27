@@ -191,6 +191,32 @@ public class Value extends BaseModel {
     }
 
     /**
+     * Looks for the value with the given question
+     */
+    public static Value findValue(Long idQuestion, Survey survey) {
+        for (Value value : survey.getValues()) {
+            if (value.matchesQuestion(idQuestion)) {
+                return value;
+            }
+        }
+        //No matches -> null
+        return null;
+    }
+
+    /**
+     * Looks for the value with the given question + option
+     */
+    public static Value findValue(Long idQuestion, Long idOption, Survey survey) {
+        for (Value value : survey.getValues()) {
+            if (value.matchesQuestionOption(idQuestion, idOption)) {
+                return value;
+            }
+        }
+        //No matches -> null
+        return null;
+    }
+
+    /**
      * The value is 'Positive' from a dropdown
      *
      * @return true|false

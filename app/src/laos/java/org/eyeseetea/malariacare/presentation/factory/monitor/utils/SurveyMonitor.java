@@ -105,6 +105,10 @@ public class SurveyMonitor {
         mSurvey = survey;
     }
 
+    public Survey getSurvey() {
+        return mSurvey;
+    }
+
     /**
      * Tells if the given survey is tested
      */

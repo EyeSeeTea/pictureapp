@@ -113,4 +113,11 @@
     <string name="monitor_table_title_suspected_header" translatable="false">@string/monitoring_case_stats</string>
     <string name="monitor_table_title_stock_header" translatable="false">@string/consumption</string>
 
+    <!--oldSdk-->
+    <string name="description" translatable="false">ImageView description</string>
+    <string name="login" translatable="false">Log in</string>
+    <string name="regular_font_name" translatable="false">@string/medium_font_name</string>
+
+
+
 </resources>

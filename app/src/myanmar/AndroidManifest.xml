@@ -9,7 +9,7 @@
         android:icon="@drawable/pictureapp_logo"
         android:label="@string/malaria_case_based_reporting"
         android:theme="@style/EyeSeeTheme"
-        tools:replace="android:allowBackup, android:icon">
+        tools:replace="android:allowBackup, android:icon, android:theme">
 
         <provider
             android:name=".database.utils.SCMMDBProvider"

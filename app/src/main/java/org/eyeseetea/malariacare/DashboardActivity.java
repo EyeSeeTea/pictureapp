@@ -280,7 +280,7 @@ public class DashboardActivity extends BaseActivity {
      */
     public void initReview() {
         surveyFragment.mReviewMode = true;
-        
+
         if (reviewFragment == null) {
             reviewFragment = new ReviewFragment();
         }

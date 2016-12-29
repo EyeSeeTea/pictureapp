@@ -30,15 +30,11 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
-
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
-import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.sdk.SdkController;
+import org.eyeseetea.malariacare.sdk.SdkLoginController;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
-import org.hisp.dhis.android.sdk.controllers.DhisService;
-import org.hisp.dhis.android.sdk.events.UiEvent;
-import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
 public class ProgressActivity extends Activity {
 
@@ -75,7 +71,7 @@ public class ProgressActivity extends Activity {
             step(getBaseContext().getResources().getString(R.string.cancellingPull));
             if (PullController.getInstance().finishPullJob()) {
                 Log.d(TAG, "Logging out from sdk...");
-                DhisService.logOutUser(ProgressActivity.this);
+                SdkLoginController.logOutUser(ProgressActivity.this);
             }
         }
     }
@@ -83,13 +79,7 @@ public class ProgressActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        try {
-            Dhis2Application.bus.register(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Dhis2Application.bus.unregister(this);
-            Dhis2Application.bus.register(this);
-        }
+        SdkController.register(this);
         launchPull();
     }
 
@@ -105,7 +95,7 @@ public class ProgressActivity extends Activity {
 
     private void unregisterBus() {
         try {
-            Dhis2Application.bus.unregister(this);
+            SdkController.unregister(this);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
@@ -123,7 +113,8 @@ public class ProgressActivity extends Activity {
         });
     }
 
-    @Subscribe
+    //// FIXME: 28/12/16 
+    //@Subscribe
     public void onProgressChange(final SyncProgressStatus syncProgressStatus) {
         if (syncProgressStatus == null) {
             return;
@@ -165,7 +156,7 @@ public class ProgressActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         //A crash during a pull requires to start from scratch -> logout
                         Log.d(TAG, "Logging out from sdk...");
-                        DhisService.logOutUser(ProgressActivity.this);
+                        SdkLoginController.logOutUser(ProgressActivity.this);
                     }
                 })
                 .create()
@@ -188,7 +179,7 @@ public class ProgressActivity extends Activity {
         //If is not active, we need restart the process
         if (!PULL_IS_ACTIVE) {
             try {
-                Dhis2Application.bus.unregister(this);
+                SdkController.unregister(this);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -224,15 +215,12 @@ public class ProgressActivity extends Activity {
         PullController.getInstance().pull(this);
     }
 
-    @Subscribe
-    public void onLogoutFinished(UiEvent uiEvent) {
-        //No event or not a logout event -> done
-        if (uiEvent == null || !uiEvent.getEventType().equals(UiEvent.UiEventType.USER_LOG_OUT)) {
-            return;
-        }
+    //// FIXME: 28/12/16
+    //@Subscribe
+    public void onLogoutFinished() {
         Log.d(TAG, "Logging out from sdk...OK");
-        LogoutUseCase logoutUseCase = new LogoutUseCase(this);
-        logoutUseCase.execute();
+
+        SdkLoginController.logOutAndMove(this);
         //Go to login
         finishAndGo(LoginActivity.class);
     }

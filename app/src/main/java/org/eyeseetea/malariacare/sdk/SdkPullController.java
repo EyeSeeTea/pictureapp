@@ -6,9 +6,6 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.ProgressActivity;
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
 import org.hisp.dhis.client.sdk.core.common.preferences.ResourceType;
@@ -40,10 +37,11 @@ public class SdkPullController extends SdkController {
 
 
     /**
-     * This flag is used to control the async downloads before initialise the conversion from sdk to the app db
+     * This flag is used to control the async downloads before initialise the conversion from sdk to
+     * the app db
      */
-    public static int asyncDownloads=0;
-    public static boolean pullData=false;
+    public static int asyncDownloads = 0;
+    public static boolean pullData = false;
     private static final String TAG = ".SdkPullController";
     static List<org.hisp.dhis.client.sdk.models.program.Program> sdkPrograms;
     static HashMap<org.hisp.dhis.client.sdk.models.program.Program, List<OrganisationUnit>>
@@ -86,22 +84,26 @@ public class SdkPullController extends SdkController {
 
     public static void loadLastData() {
         //// FIXME: 16/11/2016  limit by last data
-        pullData=true;
+        pullData = true;
         loadMetaData();
     }
 
 
     private static void pullFail() {
         //// FIXME: 16/11/201
+        /*
         ProgressActivity.showException("Unexpected error");
+        */
     }
 
-    private static void next(String msg){
+    private static void next(String msg) {
+        /*
         ProgressActivity.step(msg);
+        */
     }
 
     public static void loadData() {
-        pullData=true;
+        pullData = true;
         loadMetaData();
     }
 
@@ -118,11 +120,12 @@ public class SdkPullController extends SdkController {
     }
 
 
-
     private static void convertData() {
-        if(asyncDownloads==0) {
+        if (asyncDownloads == 0) {
             if (!errorOnPull) {
+                /*
                 PullController.getInstance().startConversion();
+                */
                 postFinish();
             } else {
                 pullFail();
@@ -134,7 +137,10 @@ public class SdkPullController extends SdkController {
      * Pull the programs and all the metadata
      */
     public static void getPrograms() {
-        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string.progress_push_preparing_program));
+        /*
+        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string
+        .progress_push_preparing_program));
+        */
         Set<ProgramType> programType = new HashSet<ProgramType>();
         programType.add(WITHOUT_REGISTRATION);
         D2.me().programs().pull(ProgramFields.ALL, programType).
@@ -198,7 +204,10 @@ public class SdkPullController extends SdkController {
      * Pull the ProgramStages and continues the pull with the ProgramStageSections
      */
     public static void getProgramStages() {
-        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string.progress_push_preparing_program_stages));
+        /*
+        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string
+        .progress_push_preparing_program_stages));
+        */
         Observable<List<ProgramStage>> programStageObservable =
                 D2.programStages().pull();
         programStageObservable.
@@ -228,7 +237,10 @@ public class SdkPullController extends SdkController {
      * getProgramStageDataElements
      */
     public static void getProgramStageSections() {
-        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string.progress_push_preparing_program_stage_sections));
+        /*
+        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string
+        .progress_push_preparing_program_stage_sections));
+        */
         Observable<List<ProgramStageSection>> programStageSectionObservable =
                 D2.programStageSections().pull();
         programStageSectionObservable.
@@ -256,7 +268,10 @@ public class SdkPullController extends SdkController {
      * Pull the ProgramStageDataElements and continues the pull with the getDataElements
      */
     public static void getProgramStageDataElements() {
-        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string.progress_push_preparing_program_stage_dataElements));
+        /*
+        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string
+        .progress_push_preparing_program_stage_dataElements));
+        */
         Observable<List<ProgramStageDataElement>> programStageDataElementObservable =
                 D2.programStageDataElements().pull();
         programStageDataElementObservable.
@@ -284,7 +299,10 @@ public class SdkPullController extends SdkController {
      * Pull the dataElements and finish the pull of metadata
      */
     public static void getDataElements() {
-        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string.progress_push_preparing_dataElements));
+        /*
+        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string
+        .progress_push_preparing_dataElements));
+        */
         Observable<List<DataElement>> dataElementObservable =
                 D2.dataElements().pull();
         dataElementObservable.
@@ -297,7 +315,7 @@ public class SdkPullController extends SdkController {
                         //getOrganisationUnits();
                         //finish of metadata pull
                         asyncDownloads--;
-                        if(pullData) {
+                        if (pullData) {
                             loadDataValues();
                         }
                         convertData();
@@ -312,12 +330,14 @@ public class SdkPullController extends SdkController {
                     }
                 });
     }
+
     /**
      * This method gets a organisation unit and program for each program(with organisation units)
      * and removes it(it removes the organisation unit and the program without organisation units)
      */
     private static ProgramAndOrganisationUnitDict getProgramAndOrganisationUnit() {
-        if (sdkPrograms == null || sdkPrograms.size() == 0 || programsAndOrganisationUnits==null || programsAndOrganisationUnits.size()==0) {
+        if (sdkPrograms == null || sdkPrograms.size() == 0 || programsAndOrganisationUnits == null
+                || programsAndOrganisationUnits.size() == 0) {
             return null;
         }
 
@@ -393,7 +413,10 @@ public class SdkPullController extends SdkController {
      */
     //// FIXME: 16/11/2016  this method is return a timeout exception
     private static void getEventsFromListByProgramAndOrganisationUnit() {
-        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string.progress_push_preparing_events));
+        /*
+        ProgressActivity.step(PreferencesState.getInstance().getContext().getString(R.string
+        .progress_push_preparing_events));
+        */
         final ProgramAndOrganisationUnitDict programAndOrganisationUnitDict =
                 getProgramAndOrganisationUnit();
         if (programAndOrganisationUnitDict == null) {
@@ -516,6 +539,8 @@ public class SdkPullController extends SdkController {
     }
 
     private static void showException(String message) {
+        /*
         ProgressActivity.showException(message);
+        */
     }
 }

@@ -27,6 +27,7 @@ public class SdkPushController extends SdkController {
      * This method is called before the conversion from surveys to sdk events
      */
     public static void sendEventChanges() {
+        /*
         final Set<String> eventUids= new HashSet<>();
         for(EventFlow eventFlow:SdkQueries.getEvents()){
             eventUids.add(eventFlow.getUId());
@@ -55,12 +56,16 @@ public class SdkPushController extends SdkController {
                                 "Error pushing Events: " + throwable.getLocalizedMessage());
                     }
                 });
+        */
     }
 
     private static void errorOnPushEvents(Set<String> eventUids) {
         //// FIXME: 24/11/201
         //The quarantine workflow is only in pictureapp.
+        /*
+
         PushController.setSurveysAsQuarantine();
+        */
     }
 
 }

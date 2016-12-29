@@ -19,14 +19,9 @@
 
 package org.eyeseetea.malariacare.sdk;
 
-import android.content.Context;
-
 import com.fasterxml.jackson.databind.JsonNode;
 
-import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
-import org.eyeseetea.malariacare.database.model.User;
-import org.eyeseetea.malariacare.database.utils.Session;
 import org.hisp.dhis.client.sdk.android.api.persistence.DbDhis;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.AttributeFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataElementFlow;
@@ -62,7 +57,7 @@ public abstract class SdkController {
     };
 
     //from pull controller
-    public static void register(Context context) {
+    public static void register(Object object) {
         /*try {
             //Dhis2Application.bus.register(context);
         } catch (Exception e) {
@@ -72,7 +67,7 @@ public abstract class SdkController {
         */
     }
 
-    public static void unregister(Context context) {
+    public static void unregister(Object object) {
         /*try {
             //Dhis2Application.bus.unregister(context);
         } catch (Exception e) {
@@ -82,17 +77,23 @@ public abstract class SdkController {
 
 
     public static void postProgress(String msg) {
+        /*
         ProgressActivity.step(msg);
+        */
     }
 
     public static void postException(Exception ex) {
+        /*
         ProgressActivity.cancellPull("error",ex.getMessage());
+        */
     }
 
     public static void postFinish() {
+        /*
         User user = User.getLoggedUser();
         Session.setUser(user);
         ProgressActivity.postFinish();
+        */
     }
 
     public static boolean finishPullJob() {

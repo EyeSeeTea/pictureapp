@@ -24,8 +24,9 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.importer.VisitableFromS
 import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
-import org.hisp.dhis.android.sdk.persistence.models.DataValue;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataValueFlow;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +38,12 @@ public class DataValueExtended implements VisitableFromSDK {
     private final static String TAG = ".DataValueExtended";
     private final static String REGEXP_FACTOR = ".*\\[([0-9]*)\\]";
 
-    DataValue dataValue;
+    DataValueFlow dataValue;
 
     public DataValueExtended() {
     }
 
-    public DataValueExtended(DataValue dataValue) {
+    public DataValueExtended(DataValueFlow dataValue) {
         this.dataValue = dataValue;
     }
 
@@ -51,7 +52,7 @@ public class DataValueExtended implements VisitableFromSDK {
         visitor.visit(this);
     }
 
-    public DataValue getDataValue() {
+    public DataValueFlow getDataValue() {
         return dataValue;
     }
 
@@ -80,6 +81,16 @@ public class DataValueExtended implements VisitableFromSDK {
         }
 
         //Log.w(TAG,String.format("Cannot find option '%s'",dataValue.getValue()));
+        return null;
+    }
+
+    public Collator getDataElement() {
+        //// FIXME: 28/12/16
+        return null;
+    }
+
+    public Collator getValue() {
+        //// FIXME: 28/12/16
         return null;
     }
 }

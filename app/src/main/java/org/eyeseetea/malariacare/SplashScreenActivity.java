@@ -6,30 +6,21 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.index.Index;
 
 import org.eyeseetea.malariacare.database.PostMigration;
-import org.eyeseetea.malariacare.database.model.Match;
-import org.eyeseetea.malariacare.database.model.Match$Table;
 import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionOption$Table;
-import org.eyeseetea.malariacare.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.database.model.QuestionRelation$Table;
-import org.eyeseetea.malariacare.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.database.model.QuestionThreshold$Table;
 import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.model.Value$Table;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.InitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
-import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.sdk.SdkQueries;
 import org.eyeseetea.malariacare.views.TypefaceCache;
+import org.hisp.dhis.client.sdk.android.api.D2;
 
 import java.io.IOException;
 
@@ -58,8 +49,14 @@ public class SplashScreenActivity extends Activity {
         LocationMemory.getInstance().init(getApplicationContext());
         TypefaceCache.getInstance().init(getApplicationContext());
 
-        FlowManager.init(this, "_EyeSeeTeaDB");
-        createDBIndexes();
+        D2.init(this);
+        FlowConfig flowConfig = new FlowConfig
+                .Builder(this)
+                //// FIXME: 28/12/16 Uncomment
+                //.addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
+                .build();
+        FlowManager.init(flowConfig);
+        SdkQueries.createDBIndexes();
         PostMigration.launchPostMigration();
 
         //Get maximum total of questions
@@ -83,26 +80,6 @@ public class SplashScreenActivity extends Activity {
         }
     }
 
-    private void createDBIndexes() {
-        new Index<QuestionOption>(Constants.QUESTION_OPTION_QUESTION_IDX).on(QuestionOption.class,
-                QuestionOption$Table.ID_QUESTION).enable();
-        new Index<QuestionOption>(Constants.QUESTION_OPTION_MATCH_IDX).on(QuestionOption.class,
-                QuestionOption$Table.ID_MATCH).enable();
-
-        new Index<QuestionRelation>(Constants.QUESTION_RELATION_OPERATION_IDX).on(
-                QuestionRelation.class, QuestionRelation$Table.OPERATION).enable();
-        new Index<QuestionRelation>(Constants.QUESTION_RELATION_QUESTION_IDX).on(
-                QuestionRelation.class, QuestionRelation$Table.ID_QUESTION).enable();
-
-        new Index<Match>(Constants.MATCH_QUESTION_RELATION_IDX).on(Match.class,
-                Match$Table.ID_QUESTION_RELATION).enable();
-
-        new Index<QuestionThreshold>(Constants.QUESTION_THRESHOLDS_QUESTION_IDX).on(
-                QuestionThreshold.class, QuestionThreshold$Table.ID_QUESTION).enable();
-
-        new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
-    }
-
     public class AsyncInitApplication extends AsyncTask<Void, Void, Exception> {
         Activity activity;
 
@@ -117,6 +94,7 @@ public class SplashScreenActivity extends Activity {
 
         @Override
         protected Exception doInBackground(Void... params) {
+
             init();
             return null;
         }

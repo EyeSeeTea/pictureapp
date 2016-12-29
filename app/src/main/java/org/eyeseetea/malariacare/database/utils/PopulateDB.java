@@ -43,10 +43,7 @@ import org.eyeseetea.malariacare.database.model.Score;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.hisp.dhis.android.sdk.persistence.models.DataValue;
-import org.hisp.dhis.android.sdk.persistence.models.Event;
-import org.hisp.dhis.android.sdk.persistence.models.FailedItem;
-import org.hisp.dhis.android.sdk.persistence.preferences.DateTimeManager;
+import org.eyeseetea.malariacare.sdk.SdkController;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -370,12 +367,7 @@ public class PopulateDB {
      * Deletes all data from the sdk database
      */
     public static void wipeSDKData() {
-        Delete.tables(
-                Event.class,
-                DataValue.class,
-                FailedItem.class
-        );
-        DateTimeManager.getInstance().delete();
+        SdkController.wipeSDKData();
     }
 
     public static void addTotalQuestions(AssetManager assetManager, List<Question> questions)

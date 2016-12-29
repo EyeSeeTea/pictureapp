@@ -20,6 +20,7 @@
 package org.eyeseetea.malariacare;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.util.Log;
@@ -28,12 +29,11 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Permissions;
-import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 
 /**
  * Created by nacho on 04/08/15.
  */
-public class EyeSeeTeaApplication extends Dhis2Application {
+public class EyeSeeTeaApplication extends Application {
 
     public static Permissions permissions;
     private static final String TAG = ".EyeSeeTeaApplication";
@@ -52,7 +52,8 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         FlowManager.destroy();
     }
 
-    @Override
+    //// FIXME: 28/12/16
+    //@Override
     public Class<? extends Activity> getMainActivity() {
         return DashboardActivity.class;
     }

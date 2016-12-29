@@ -27,6 +27,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -40,28 +41,25 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.otto.Subscribe;
-
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.sdk.SdkLoginController;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.hisp.dhis.android.sdk.controllers.DhisService;
-import org.hisp.dhis.android.sdk.events.UiEvent;
-import org.hisp.dhis.android.sdk.job.NetworkJob;
-import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
+import org.hisp.dhis.client.sdk.ui.activities.AbsLoginActivity;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import okhttp3.HttpUrl;
 
 /**
  * Login Screen.
  * It shows only when the user has an open session.
  */
-public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity {
+public class LoginActivity extends AbsLoginActivity {
 
     public static final String PULL_REQUIRED = "PULL_REQUIRED";
     public static final String DEFAULT_USER = "";
@@ -84,6 +82,11 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         Log.d(TAG, "onCreate");
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
+    }
+
+    @Override
+    protected void onLoginButtonClicked(Editable serverUrl, Editable username, Editable password) {
+
     }
 
     private void initDataDownloadPeriodDropdown() {
@@ -129,7 +132,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         }
     }
 
-    @Override
+    //@Override
     public void login(String serverUrl, String username, String password) {
         //This method is overriden to capture credentials data
         this.serverUrl = serverUrl;
@@ -191,27 +194,27 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
      */
     public void loginToDhis(String serverUrl, String username, String password) {
         //Delegate real login attempt to parent in sdk
-        super.login(serverUrl, username, password);
+        //// FIXME: 28/12/16
+        //super.login(serverUrl, username, password);
     }
 
     /**
      * This logout is called from the success user autentication, and try to login in the server
      * with the correct userdata.
      */
-    @Subscribe
-    public void onLogoutFinished(UiEvent uiEvent) {
-        //No event or not a logout event -> done
-        if (uiEvent == null || !uiEvent.getEventType().equals(UiEvent.UiEventType.USER_LOG_OUT)) {
-            return;
-        }
-        HttpUrl serverUri = HttpUrl.parse(serverUrl);
-        DhisService.logInUser(serverUri, ServerAPIController.getSDKCredentials());
+    //// FIXME: 28/12/16
+    //@Subscribe
+    public void onLogoutFinished( ) {
+        SdkLoginController.logInUser(serverUrl, ServerAPIController.getSDKCredentials());
     }
 
-    @Subscribe
-    public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
+    //// FIXME: 28/12/16
+    //@Subscribe
+    public void onLoginFinished( ) {
+        /*
         if (result != null && result.getResourceType().equals(ResourceType.USERS)) {
             if (result.getResponseHolder().getApiException() == null) {
+
                 Credentials credentials = new Credentials(serverUrl, username, password);
                 mLoginUseCase.execute(credentials);
                 //The first login is only to authenticate the user, and is need logout from the
@@ -228,6 +231,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
                 onLoginFail(result.getResponseHolder().getApiException());
             }
         }
+    */
     }
 
 
@@ -258,7 +262,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
 
         @Override
         protected void onPreExecute() {
-            bar = (ProgressBar) activity.findViewById(R.id.progress_bar);
+            bar = (ProgressBar) activity.findViewById(R.id.progress_bar_circular);
             bar.setVisibility(View.VISIBLE);
             activity.findViewById(R.id.login_views_container).setVisibility(View.GONE);
         }

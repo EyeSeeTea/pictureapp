@@ -5,15 +5,12 @@ import android.content.DialogInterface;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.squareup.otto.Subscribe;
-
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
-import org.hisp.dhis.android.sdk.controllers.DhisService;
-import org.hisp.dhis.android.sdk.events.UiEvent;
-import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
+import org.eyeseetea.malariacare.sdk.SdkController;
+import org.eyeseetea.malariacare.sdk.SdkLoginController;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
@@ -27,14 +24,14 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onCreate() {
         //Register into sdk bug for listening to logout events
-        Dhis2Application.bus.register(this);
+        SdkController.register(this);
     }
 
     @Override
     public void onStop() {
         try {
             //Unregister from bus before leaving
-            Dhis2Application.bus.unregister(this);
+            SdkController.unregister(this);
         } catch (Exception e) {
         }
     }
@@ -57,7 +54,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                         .setPositiveButton(android.R.string.yes,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface arg0, int arg1) {
-                                        DhisService.logOutUser(mBaseActivity);
+                                        SdkLoginController.logOutUser(mBaseActivity);
                                     }
                                 })
                         .setNegativeButton(android.R.string.no,
@@ -73,12 +70,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         return true;
     }
 
-    @Subscribe
-    public void onLogoutFinished(UiEvent uiEvent) {
-        //No event or not a logout event -> done
-        if (uiEvent == null || !uiEvent.getEventType().equals(UiEvent.UiEventType.USER_LOG_OUT)) {
-            return;
-        }
+    //// FIXME: 28/12/16
+    //@Subscribe
+    public void onLogoutFinished() {
 
         LogoutUseCase logoutUseCase = new LogoutUseCase(mBaseActivity);
         logoutUseCase.execute();

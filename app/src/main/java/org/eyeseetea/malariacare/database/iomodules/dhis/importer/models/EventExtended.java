@@ -23,12 +23,13 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.IConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.VisitableFromSDK;
-import org.hisp.dhis.android.sdk.persistence.models.Event;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by arrizabalaga on 5/11/15.
@@ -39,12 +40,12 @@ public class EventExtended implements VisitableFromSDK {
     public final static String AMERICAN_DATE_FORMAT = "yyyy-MM-dd";
     public static final int MAX_MONTHS_LOADED = -6;
     private final static String TAG = ".EventExtended";
-    Event event;
+    EventFlow event;
 
     public EventExtended() {
     }
 
-    public EventExtended(Event event) {
+    public EventExtended(EventFlow event) {
         this.event = event;
     }
 
@@ -75,7 +76,7 @@ public class EventExtended implements VisitableFromSDK {
         visitor.visit(this);
     }
 
-    public Event getEvent() {
+    public EventFlow getEvent() {
         return event;
     }
 
@@ -87,7 +88,7 @@ public class EventExtended implements VisitableFromSDK {
             return null;
         }
 
-        return parseDate(event.getCreated());
+        return event.getCreated().toDate();
     }
 
     /**
@@ -98,7 +99,7 @@ public class EventExtended implements VisitableFromSDK {
             return null;
         }
 
-        return parseDate(event.getLastUpdated());
+        return event.getLastUpdated().toDate();
     }
 
     /**
@@ -109,7 +110,7 @@ public class EventExtended implements VisitableFromSDK {
             return null;
         }
 
-        return parseDate(event.getEventDate());
+        return event.getEventDate().toDate();
     }
 
     /**
@@ -120,7 +121,7 @@ public class EventExtended implements VisitableFromSDK {
             return null;
         }
 
-        return parseDate(event.getDueDate());
+        return event.getDueDate().toDate();
     }
 
     private Date parseDate(String dateAsString) {
@@ -132,7 +133,7 @@ public class EventExtended implements VisitableFromSDK {
         try {
             return simpleDateFormat.parse(dateAsString);
         } catch (ParseException e) {
-            Log.e(TAG, String.format("Event (%s) cannot parse date %s", event.getUid(),
+            Log.e(TAG, String.format("Event (%s) cannot parse date %s", event.getUId(),
                     e.getLocalizedMessage()));
             return null;
         }
@@ -145,5 +146,10 @@ public class EventExtended implements VisitableFromSDK {
         calendar.add(Calendar.MONTH, MAX_MONTHS_LOADED);
         return eventDate.compareTo(calendar.getTime()) < 0;
 
+    }
+
+    public List<DataValueExtended> getDataValues() {
+        //// FIXME: 09/11/2016
+        return null;
     }
 }

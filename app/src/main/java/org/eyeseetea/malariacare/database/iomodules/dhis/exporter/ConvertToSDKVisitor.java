@@ -25,10 +25,10 @@ import android.os.Build;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
-import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.FailedItemExtended;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
@@ -39,11 +39,8 @@ import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.ShowException;
-import org.hisp.dhis.android.sdk.persistence.models.DataValue;
-import org.hisp.dhis.android.sdk.persistence.models.Event;
-import org.hisp.dhis.android.sdk.persistence.models.FailedItem;
-import org.hisp.dhis.android.sdk.persistence.models.FailedItem$Table;
-import org.hisp.dhis.android.sdk.persistence.models.ImportSummary;
+import org.hisp.dhis.client.sdk.models.common.importsummary.ImportSummary;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,7 +70,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * List of events that are going to be pushed
      */
-    List<Event> events;
+    List<EventExtended> events;
 
     ConvertToSDKVisitor(Context context) {
         this.context = context;
@@ -107,7 +104,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         }
 
         Log.d(TAG, String.format("Creating event for survey (%d) ...", survey.getId_survey()));
-        Event event = buildEvent(survey);
+        EventExtended event = buildEvent(survey);
 
         //Turn question values into dataValues
         Log.d(TAG, "Creating datavalues from questions...");
@@ -146,7 +143,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Builds several datavalues from the mainScore of the survey
      */
-    private void buildControlDataElements(Survey survey, Event event) {
+    private void buildControlDataElements(Survey survey, EventExtended event) {
         //save phonemetadata
         PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
         buildAndSaveDataValue(PushClient.PHONEMETADA_UID, phoneMetaData.getPhone_metaData(), event);
@@ -172,8 +169,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      * @param UID   is the dataElement uid
      * @param value is the value
      */
-    private void buildAndSaveDataValue(String UID, String value, Event event) {
-        DataValue dataValue = new DataValue();
+    private void buildAndSaveDataValue(String UID, String value, EventExtended event) {
+        DataValueExtended dataValue = new DataValueExtended();
         dataValue.setDataElement(UID);
         dataValue.setLocalEventId(event.getLocalId());
         dataValue.setEvent(event.getEvent());
@@ -188,10 +185,10 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Builds an event from a survey
      */
-    private Event buildEvent(Survey survey) throws Exception {
-        Event event = new Event();
+    private EventExtended buildEvent(Survey survey) throws Exception {
+        EventExtended event = new EventExtended();
 
-        event.setStatus(Event.STATUS_COMPLETED);
+        event.setStatus(EventExtended.STATUS_COMPLETED);
         event.setFromServer(false);
         event.setOrganisationUnitId(getSafeOrgUnitUID(survey));
         event.setProgramId(survey.getProgram().getUid());
@@ -216,22 +213,22 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Fulfills the dates of the event
      */
-    private Event updateEventDates(Survey survey, Event event) {
+    private EventExtended updateEventDates(Survey survey, EventExtended event) {
 
         //Sent date 'now' (this change will be saves after successful push)
         //currentSurvey.setEventDate(new Date());
 
         //Creation date is null because it is used by sdk to POST|PUT we always POST a new survey
-        event.setLastUpdated(EventExtended.format(survey.getCompletionDate()));
-        event.setEventDate(EventExtended.format(survey.getCompletionDate()));
-        event.setDueDate(EventExtended.format(survey.getScheduledDate()));
+        event.setLastUpdated(new DateTime(survey.getCompletionDate().getTime()));
+        event.setEventDate(new DateTime(survey.getCompletionDate().getTime()));
+        event.setDueDate(new DateTime(survey.getScheduledDate().getTime()));
         return event;
     }
 
     /**
      * Updates the location of the current event that it is being processed
      */
-    private Event updateEventLocation(Survey survey, Event event) throws Exception {
+    private EventExtended updateEventLocation(Survey survey, EventExtended event) throws Exception {
         Location lastLocation = LocationMemory.get(survey.getId_survey());
 
         //No location + not required -> done
@@ -248,7 +245,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Annotates the survey and event that has been processed
      */
-    private void annotateSurveyAndEvent(Survey survey, Event event) {
+    private void annotateSurveyAndEvent(Survey survey, EventExtended event) {
         surveys.add(survey);
         events.add(event);
 
@@ -262,12 +259,14 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         Log.d(TAG, String.format("ImportSummary %d surveys savedSurveyStatus", surveys.size()));
         for (int i = 0; i < surveys.size(); i++) {
             Survey iSurvey = surveys.get(i);
-            Event iEvent = events.get(i);
+            EventExtended iEvent = events.get(i);
             //Sets all the surveys as completed because the survey has as state: "sending" at
             // this moment and the sending process is finish.
             iSurvey.setStatus(Constants.SURVEY_COMPLETED);
             ImportSummary importSummary = importSummaryMap.get(iEvent.getLocalId());
-            FailedItem failedItem = hasConflict(iEvent.getLocalId());
+            FailedItemExtended failedItem = new FailedItemExtended(
+                    FailedItemExtended.hasConflict(iEvent.getLocalId()));
+
             if (hasImportSummaryErrors(importSummary)) {
                 //Sets the survey status as quarantine to prevent wrong importSummaries (F.E. in
                 // network failures).
@@ -300,17 +299,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         }
     }
 
-    /**
-     * Checks whether the given event contains errors in SDK FailedItem table or has been
-     * successful.
-     * If not return null, it is becouse this item had a conflict.
-     */
-    private FailedItem hasConflict(long localId) {
-        return new Select()
-                .from(FailedItem.class)
-                .where(Condition.column(FailedItem$Table.ITEMID)
-                        .is(localId)).querySingle();
-    }
 
     /**
      * Checks whether the given importSummary contains errors or has been successful.

@@ -24,6 +24,8 @@ import android.util.Log;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.IConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.VisitableFromSDK;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
+import org.hisp.dhis.client.sdk.models.event.Event;
+import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,9 +42,17 @@ public class EventExtended implements VisitableFromSDK {
     public final static String AMERICAN_DATE_FORMAT = "yyyy-MM-dd";
     public static final int MAX_MONTHS_LOADED = -6;
     private final static String TAG = ".EventExtended";
+
+
+    public static final Event.EventStatus STATUS_ACTIVE = Event.EventStatus.ACTIVE;
+    public static final Event.EventStatus STATUS_COMPLETED = Event.EventStatus.COMPLETED;
+    public static final Event.EventStatus STATUS_FUTURE_VISIT = Event.EventStatus.SCHEDULE;
+    public static final Event.EventStatus STATUS_SKIPPED = Event.EventStatus.SKIPPED;
+
     EventFlow event;
 
     public EventExtended() {
+        this.event = new EventFlow();
     }
 
     public EventExtended(EventFlow event) {
@@ -151,5 +161,66 @@ public class EventExtended implements VisitableFromSDK {
     public List<DataValueExtended> getDataValues() {
         //// FIXME: 09/11/2016
         return null;
+    }
+
+    public String getOrganisationUnitId() {
+        return event.getOrgUnit();
+    }
+
+    public String getUid() {
+        return event.getUId();
+    }
+
+    public Long getLocalId() {
+        return event.getId();
+    }
+
+    public void delete() {
+        event.delete();
+    }
+
+    public void setStatus(Event.EventStatus statusCompleted) {
+        event.setStatus(statusCompleted);
+    }
+
+    //// FIXME: 09/11/2016
+    public void setFromServer(boolean value) {
+        return;
+    }
+
+    public void setOrganisationUnitId(String orgUnitUID) {
+        event.setOrgUnit(orgUnitUID);
+    }
+
+    public void setProgramId(String uid) {
+        event.setProgram(uid);
+    }
+
+    public void setProgramStageId(String uid) {
+        event.setProgramStage(uid);
+    }
+
+    public void save() {
+        event.save();
+    }
+
+    public void setLastUpdated(DateTime time) {
+        event.setLastUpdated(time);
+    }
+
+    public void setEventDate(DateTime dateTime) {
+        event.setEventDate(dateTime);
+    }
+
+    public void setDueDate(DateTime dateTime) {
+        event.setDueDate(dateTime);
+    }
+
+    public void setLatitude(double latitude) {
+        event.setLatitude(latitude);
+    }
+
+    public void setLongitude(double longitude) {
+        event.setLongitude(longitude);
     }
 }

@@ -25,6 +25,7 @@ import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataValueFlow;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class DataValueExtended implements VisitableFromSDK {
     DataValueFlow dataValue;
 
     public DataValueExtended() {
+        dataValue = new DataValueFlow();
     }
 
     public DataValueExtended(DataValueFlow dataValue) {
@@ -84,13 +86,43 @@ public class DataValueExtended implements VisitableFromSDK {
         return null;
     }
 
-    public Collator getDataElement() {
+    public String getDataElement() {
         //// FIXME: 28/12/16
-        return null;
+        return dataValue.getDataElement();
     }
 
-    public Collator getValue() {
-        //// FIXME: 28/12/16
-        return null;
+    public String getValue() {
+        return dataValue.getValue();
+    }
+
+    public String getEvent() {
+        return dataValue.getEvent();
+    }
+
+    public void setDataElement(String uid) {
+        dataValue.setDataElement(uid);
+    }
+    public void setLocalEventId(Long id) {
+        dataValue.setLocalId(id);
+    }
+
+    public void setEvent(EventFlow event) {
+        dataValue.setEvent(event.getUId());
+    }
+
+    public void setProvidedElsewhere(boolean b) {
+        dataValue.setProvidedElsewhere(b);
+    }
+
+    public void setStoredBy(String name) {
+        dataValue.setStoredBy(name);
+    }
+
+    public void setValue(String value) {
+        dataValue.setValue(value);
+    }
+
+    public void save() {
+        dataValue.save();
     }
 }

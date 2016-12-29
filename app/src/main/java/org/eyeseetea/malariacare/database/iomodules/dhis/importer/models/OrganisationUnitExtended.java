@@ -30,15 +30,15 @@ package org.eyeseetea.malariacare.database.iomodules.dhis.importer.models;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.IConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.VisitableFromSDK;
-import org.hisp.dhis.android.sdk.persistence.models.OrganisationUnit;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitFlow;
 
 public class OrganisationUnitExtended implements VisitableFromSDK {
-    OrganisationUnit orgUnit;
+    OrganisationUnitFlow orgUnit;
 
     public OrganisationUnitExtended() {
     }
 
-    public OrganisationUnitExtended(OrganisationUnit orgUnit) {
+    public OrganisationUnitExtended(OrganisationUnitFlow orgUnit) {
         this.orgUnit = orgUnit;
     }
 
@@ -47,8 +47,23 @@ public class OrganisationUnitExtended implements VisitableFromSDK {
         visitor.visit(this);
     }
 
-    public OrganisationUnit getOrgUnit() {
+    public OrganisationUnitFlow getOrgUnit() {
         return orgUnit;
     }
 
+    public String getId() {
+        return orgUnit.getUId();
+    }
+
+    public String getLabel() {
+        return orgUnit.getDisplayName();
+    }
+
+    public int getLevel() {
+        return orgUnit.getLevel();
+    }
+
+    public String getParent() {
+        return orgUnit.getParent().getUId();
+    }
 }

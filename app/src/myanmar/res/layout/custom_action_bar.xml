@@ -25,22 +25,22 @@
     android:paddingBottom="6dip"
     android:paddingTop="6dip">
 
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/action_bar_multititle_title"
         android:layout_width="fill_parent"
         android:layout_height="22dip"
         android:width="0dp"
         android:gravity="center"
         android:paddingLeft="20dp"
-        android:textSize="18dip"
-        app:tFontName="@string/light_font" />
+        android:textSize="18dp"/>
 
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/action_bar_multititle_subtitle"
         android:layout_width="fill_parent"
         android:layout_height="22dip"
         android:width="0dp"
         android:gravity="center"
-        android:textSize="18dip"
-        app:tFontName="@string/light_font" />
+        android:textSize="18dp"/>
+
+    <!--android:textSize="?attr/font_small"-->
 </LinearLayout>

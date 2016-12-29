@@ -11,7 +11,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Phone;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
-import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;

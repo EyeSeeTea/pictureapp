@@ -7,7 +7,7 @@ import android.view.View;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.IHeaderCaseUse;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 /**
  * Created by idelcano on 05/12/2016.
@@ -27,7 +27,7 @@ public class HeaderUseCase implements IHeaderCaseUse {
     }
 
     private static void setTitle(View view, int keyId, int titleString) {
-        TextCard title = (TextCard) view.findViewById(keyId);
+        CustomTextView title = (CustomTextView) view.findViewById(keyId);
         title.setText(view.getContext().getString(titleString));
     }
 

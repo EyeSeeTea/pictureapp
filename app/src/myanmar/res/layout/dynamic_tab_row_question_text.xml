@@ -14,7 +14,7 @@
 
         <include layout="@layout/bottom_view"></include>
 
-        <org.eyeseetea.malariacare.views.TextCard
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/questionTextRow"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -22,18 +22,18 @@
             android:layout_marginRight="@dimen/question_horizontal_margin"
             android:text="@android:string/yes"
             android:textColor="@color/question_title"
-            app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/specific_language_font" />
+            android:textSize="?attr/font_small"
+            app:font_name="@string/specific_language_font" />
 
-        <org.eyeseetea.malariacare.views.TextCard
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/questionSubText"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/question_horizontal_margin"
             android:layout_marginRight="@dimen/question_horizontal_margin"
             android:textColor="@color/question_subtitle"
-            app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/specific_language_font" />
+            android:textSize="?attr/font_small"
+            app:font_name="@string/specific_language_font" />
 
         <include layout="@layout/top_view"></include>
     </LinearLayout>

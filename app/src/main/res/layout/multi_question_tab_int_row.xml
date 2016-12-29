@@ -16,7 +16,7 @@
 
         <include layout="@layout/row_header_item" />
 
-        <org.eyeseetea.malariacare.views.EditCard
+        <org.eyeseetea.sdk.presentation.views.CustomEditText
             android:id="@+id/answer"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
             android:inputType="number"
             android:paddingLeft="@dimen/question_padding_all"
             android:paddingRight="@dimen/question_padding_all"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textSize="?attr/font_small"/>
     </LinearLayout>
 
 </TableRow>

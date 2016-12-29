@@ -13,7 +13,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
-import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ImageRadioButtonOption extends LinearLayout {
@@ -114,7 +113,7 @@ public class ImageRadioButtonOption extends LinearLayout {
     public void setEnabled(boolean enabled) {
         mRadioButton.setEnabled(enabled);
     }
-    
+
     public interface OnCheckedChangeListener {
         void onCheckedChanged(ImageRadioButtonOption imageRadioButton, boolean value);
     }

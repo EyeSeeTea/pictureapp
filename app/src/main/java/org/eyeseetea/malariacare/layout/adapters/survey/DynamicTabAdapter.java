@@ -81,8 +81,6 @@ import org.eyeseetea.malariacare.presentation.factory.SingleQuestionViewFactory;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.EditCard;
-import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -94,6 +92,8 @@ import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .ReminderSingleCustomViewStrategy;
+import org.eyeseetea.sdk.presentation.views.CustomEditText;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -296,7 +296,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             Question questionCounter) {
         //Change question x confirm message
         View rootView = view.getRootView();
-        final TextCard questionView = (TextCard) rootView.findViewById(R.id.question);
+        final CustomTextView questionView = (CustomTextView) rootView.findViewById(R.id.question);
         questionView.setText(questionCounter.getInternationalizedForm_name());
         ProgressUtils.setProgressBarText(rootView, "");
         //cancel
@@ -338,19 +338,19 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Question "header" is in the first option in Options.csv
         List<Option> questionOptions = questionCounter.getAnswer().getOptions();
         if (questionOptions.get(0) != null) {
-            TextCard textCard = (TextCard) rootView.findViewById(R.id.questionTextRow);
+            CustomTextView textCard = (CustomTextView) rootView.findViewById(R.id.questionTextRow);
             textCard.setText(questionOptions.get(0).getInternationalizedCode());
             textCard.setTextSize(questionOptions.get(0).getOptionAttribute().getText_size());
         }
         //Question "confirm button" is in the second option in Options.csv
         if (questionOptions.get(1) != null) {
-            TextCard confirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_yes);
+            CustomTextView confirmTextCard = (CustomTextView) rootView.findViewById(R.id.textcard_confirm_yes);
             confirmTextCard.setText(questionOptions.get(1).getInternationalizedCode());
             confirmTextCard.setTextSize(questionOptions.get(1).getOptionAttribute().getText_size());
         }
         //Question "no confirm button" is in the third option in Options.csv
         if (questionOptions.get(2) != null) {
-            TextCard noConfirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_no);
+            CustomTextView noConfirmTextCard = (CustomTextView) rootView.findViewById(R.id.textcard_confirm_no);
             noConfirmTextCard.setText(questionOptions.get(2).getInternationalizedCode());
             noConfirmTextCard.setTextSize(questionOptions.get(
                     2).getOptionAttribute().getText_size());
@@ -510,7 +510,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         //Question
-        TextCard headerView = (TextCard) rowView.findViewById(question);
+        CustomTextView headerView = (CustomTextView) rowView.findViewById(question);
 
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(),
@@ -603,7 +603,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         addCounterValue(screenQuestion, currentOption, tableRow, counterID);
 
                         FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(mod);
-                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                        CustomTextView textOption = (CustomTextView) frameLayout.getChildAt(1);
                         setTextSettings(textOption, currentOption);
                         frameLayout.setBackgroundColor(
                                 Color.parseColor("#" + currentOption.getBackground_colour()));
@@ -626,7 +626,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         addCounterValue(screenQuestion, currentOption, tableRow, R.id.counter1);
 
                         FrameLayout frameLayout = (FrameLayout) tableRow.getChildAt(0);
-                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                        CustomTextView textOption = (CustomTextView) frameLayout.getChildAt(1);
                         setTextSettings(textOption, currentOption);
 
                         frameLayout.setBackgroundColor(
@@ -666,7 +666,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         frameLayout.setBackgroundColor(
                                 Color.parseColor("#" + currentOption.getBackground_colour()));
 
-                        TextCard textOption = (TextCard) frameLayout.getChildAt(1);
+                        CustomTextView textOption = (CustomTextView) frameLayout.getChildAt(1);
                         setTextSettings(textOption, currentOption);
 
 
@@ -698,7 +698,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.LONG_TEXT:
                     tableRow = (TableRow) lInflater.inflate(
                             R.layout.multi_question_tab_long_text_row, tableLayout, false);
-                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
+                    ((CustomTextView) tableRow.findViewById(R.id.row_header_text)).setText(
                             Utils.getInternationalizedString(screenQuestion.getForm_name()));
                     addTagQuestion(screenQuestion, tableRow.findViewById(R.id.answer));
                     initLongTextValue(tableRow, value, tabType);
@@ -760,7 +760,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.QUESTION_LABEL:
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_label_row,
                             tableLayout, false);
-                    TextCard textCard = (TextCard) tableRow.findViewById(R.id.row_header_text);
+                    CustomTextView textCard = (CustomTextView) tableRow.findViewById(R.id.row_header_text);
                     ImageView rowImageLabelView = ((ImageView) tableRow.findViewById(
                             R.id.question_image_row));
                     textCard.setText(
@@ -773,11 +773,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                                 rowImageLabelView);
                     }
 
-                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
+                    ((CustomTextView) tableRow.findViewById(R.id.row_header_text)).setText(
                             Utils.getInternationalizedString(screenQuestion.getForm_name()));
 
                     if (!screenQuestion.getHelp_text().isEmpty()) {
-                        ((TextCard) tableRow.findViewById(R.id.row_help_text)).setText(
+                        ((CustomTextView) tableRow.findViewById(R.id.row_help_text)).setText(
                                 Utils.getInternationalizedString(screenQuestion.getHelp_text()));
                     }
 
@@ -787,7 +787,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 case Constants.DROPDOWN_OU_LIST:
                     tableRow = (TableRow) lInflater.inflate(
                             R.layout.multi_question_tab_dropdown_row, tableLayout, false);
-                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
+                    ((CustomTextView) tableRow.findViewById(R.id.row_header_text)).setText(
                             Utils.getInternationalizedString(screenQuestion.getForm_name()));
 
                     ImageView rowImageView = ((ImageView) tableRow.findViewById(
@@ -808,11 +808,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     tableRow = (TableRow) lInflater.inflate(R.layout.multi_question_tab_switch_row,
                             tableLayout, false);
 
-                    ((TextCard) tableRow.findViewById(R.id.row_header_text)).setText(
+                    ((CustomTextView) tableRow.findViewById(R.id.row_header_text)).setText(
                             Utils.getInternationalizedString(screenQuestion.getForm_name()));
 
                     if (!screenQuestion.getHelp_text().isEmpty()) {
-                        ((TextCard) tableRow.findViewById(R.id.row_help_text)).setText(
+                        ((CustomTextView) tableRow.findViewById(R.id.row_help_text)).setText(
                                 Utils.getInternationalizedString(screenQuestion.getHelp_text()));
                     }
 
@@ -823,10 +823,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                                 rowImageView);
                     }
 
-                    ((TextCard) tableRow.findViewById(R.id.row_switch_true)).setText(
+                    ((CustomTextView) tableRow.findViewById(R.id.row_switch_true)).setText(
                             Utils.getInternationalizedString(
                                     screenQuestion.getAnswer().getOptions().get(0).getCode()));
-                    ((TextCard) tableRow.findViewById(R.id.row_switch_false)).setText(
+                    ((CustomTextView) tableRow.findViewById(R.id.row_switch_false)).setText(
                             Utils.getInternationalizedString(
                                     screenQuestion.getAnswer().getOptions().get(1).getCode()));
 
@@ -1024,7 +1024,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return counterValue.equals(maxCounter);
     }
 
-    private void setTextSettings(TextCard textOption, Option currentOption) {
+    private void setTextSettings(CustomTextView textOption, Option currentOption) {
         //Fixme To show a text in laos language: change "KhmerOS.ttf" to the new laos font in
         // donottranslate laos file.
         if (currentOption.getOptionAttribute().hasHorizontalAlignment()
@@ -1084,7 +1084,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Used to set the text widht like the framelayout size
      * to prevent a resize of the frameLayout if the textoption is more bigger.
      */
-    private void resizeTextWidth(FrameLayout frameLayout, TextCard textOption) {
+    private void resizeTextWidth(FrameLayout frameLayout, CustomTextView textOption) {
         textOption.setWidth(frameLayout.getWidth());
     }
 
@@ -1131,7 +1131,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Adds listener to the Editcard and sets the default or saved value
      */
     private void initIntValue(TableRow row, Value value, int tabType) {
-        final EditCard numberPicker = (EditCard) row.findViewById(R.id.answer);
+        final CustomEditText numberPicker = (CustomEditText) row.findViewById(R.id.answer);
 
         //Has value? show it
         if (value != null) {
@@ -1174,7 +1174,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Adds listener to the Editcard and sets the default or saved value
      */
     private void initLongTextValue(TableRow row, Value value, int tabType) {
-        final EditCard editCard = (EditCard) row.findViewById(R.id.answer);
+        final CustomEditText editCard = (CustomEditText) row.findViewById(R.id.answer);
 
         //Has value? show it
         if (value != null) {
@@ -1349,7 +1349,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
-                final EditCard editCard = (EditCard) tableRow.findViewById(R.id.answer);
+                final CustomEditText editCard = (CustomEditText) tableRow.findViewById(R.id.answer);
                 editCard.setText("");
                 break;
             case Constants.DROPDOWN_LIST:
@@ -1380,7 +1380,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     /**
      * Save value in DB and check the children
      */
-    private void saveValue(EditCard editCard) {
+    private void saveValue(CustomEditText editCard) {
         Question question = (Question) editCard.getTag();
         ReadWriteDB.saveValuesText(question, editCard.getText().toString());
         showOrHideChildren(question);
@@ -1434,7 +1434,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         //Add button to listener
         swipeTouchListener.addClickableView(button);
 
-        resizeTextWidth(button, (TextCard) button.getChildAt(1));
+        resizeTextWidth(button, (CustomTextView) button.getChildAt(1));
     }
 
     /**

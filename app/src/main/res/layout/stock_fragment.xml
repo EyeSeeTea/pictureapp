@@ -21,16 +21,16 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:scaleType="fitCenter"
-                android:src="@drawable/work_in_progress"></ImageView>
+                android:src="@drawable/work_in_progress"/>
 
-            <org.eyeseetea.malariacare.views.TextCard
+            <org.eyeseetea.sdk.presentation.views.CustomTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/work_in_progress"
                 android:textColor="@color/dark_purple"
-                android:textSize="24dp"></org.eyeseetea.malariacare.views.TextCard>
+                android:textSize="?attr/font_medium"/>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

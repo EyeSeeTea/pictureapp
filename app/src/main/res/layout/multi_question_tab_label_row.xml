@@ -38,23 +38,21 @@
                 android:paddingLeft="@dimen/question_padding_all"
                 android:paddingRight="@dimen/question_padding_all">
 
-                <org.eyeseetea.malariacare.views.TextCard
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
                     android:id="@+id/row_header_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/question_header_title"
-                    android:textSize="@dimen/input_number_edit_text_phone"
-                    app:tDimension="@string/font_size_level1"
-                    app:tFontName="@string/condensed_font_name" />
+                    android:textSize="?attr/font_medium"
+                    app:font_name="@string/condensed_font_name" />
 
-                <org.eyeseetea.malariacare.views.TextCard
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
                     android:id="@+id/row_help_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/question_header_subtitle"
-                    android:textSize="@dimen/input_number_edit_text_phone"
-                    app:tDimension="@string/font_size_level1"
-                    app:tFontName="@string/condensed_font_name" />
+                    android:textSize="?attr/font_medium"
+                    app:font_name="@string/condensed_font_name" />
             </LinearLayout>
 
 

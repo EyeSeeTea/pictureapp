@@ -9,7 +9,7 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class ReminderSingleCustomViewStrategy implements IReminderSingleCustomVi
     }
 
     private void configureNextButton(View rootView, Option option) {
-        TextCard textNextButton = (TextCard) rootView.findViewById(R.id.next_txt);
+        CustomTextView textNextButton = (CustomTextView) rootView.findViewById(R.id.next_txt);
         textNextButton.setText(option.getInternationalizedCode());
         textNextButton.setTextSize(option.getOptionAttribute().getText_size());
     }

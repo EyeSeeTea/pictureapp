@@ -9,7 +9,7 @@
     android:gravity="center_horizontal">
 
 
-    <org.eyeseetea.malariacare.views.TextCard xmlns:android="http://schemas.android.com/apk/res/android"
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/review_title_text"
         android:layout_width="wrap_content"
@@ -17,10 +17,9 @@
         android:gravity="center"
         android:text="@string/empty_string"
         android:textColor="@color/white"
-        android:textSize="@dimen/default_review_fragment_font_size"
-        app:tDimension="@string/font_size_level3"
-        app:tFontName="@string/specific_language_font" />
-    <org.eyeseetea.malariacare.views.TextCard xmlns:android="http://schemas.android.com/apk/res/android"
+        android:textSize="?attr/font_large"
+        app:font_name="@string/specific_language_font" />
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/review_content_text"
         android:layout_width="wrap_content"
@@ -28,7 +27,6 @@
         android:gravity="center"
         android:text="@string/empty_string"
         android:textColor="@color/white"
-        android:textSize="@dimen/default_review_fragment_font_size"
-        app:tDimension="@string/font_size_level3"
-        app:tFontName="@string/specific_language_font" />
+        android:textSize="?attr/font_large"
+        app:font_name="@string/specific_language_font" />
 </TableRow>

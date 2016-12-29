@@ -41,7 +41,7 @@ public class ReviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        this.lInflater = LayoutInflater.from(getActivity().getApplicationContext());
+        this.lInflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.review_layout,
                 container, false);
 

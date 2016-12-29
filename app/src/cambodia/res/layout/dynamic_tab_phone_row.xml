@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/phone_row_padding"
     android:paddingRight="@dimen/phone_row_padding">
 
-    <org.eyeseetea.malariacare.views.EditCard
+    <org.eyeseetea.sdk.presentation.views.CustomEditText
         android:id="@+id/answer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

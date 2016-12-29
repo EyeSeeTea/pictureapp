@@ -1,15 +1,11 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
-import static com.google.android.gms.internal.zzng.ex;
-
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;

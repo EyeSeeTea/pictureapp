@@ -36,7 +36,7 @@
         android:layout_height="fill_parent"
         android:orientation="horizontal">
 
-        <org.eyeseetea.malariacare.views.TextCard
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/header_title"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
@@ -48,13 +48,12 @@
             android:text="@string/sent_data"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/fragment_header_title"
-            android:textSize="@dimen/header_text_size"
-            app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/condensed_font_name" />
-        <!--android:textSize="@dimen/dashboard_text_size"-->
+            android:textSize="?attr/font_small"
+            app:font_name="@string/condensed_font_name" />
+
         <include layout="@layout/vertical_divisor_view"></include>
 
-        <org.eyeseetea.malariacare.views.TextCard
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/header_subtitle"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
@@ -66,10 +65,9 @@
             android:padding="5dip"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/fragment_header_subtitle"
-            android:textSize="@dimen/header_text_size"
             android:textStyle="bold"
-            app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/condensed_font_name" />
+            android:textSize="?attr/font_small"
+            app:font_name="@string/condensed_font_name" />
     </LinearLayout>
 
     <include layout="@layout/header_bottom_view"></include>

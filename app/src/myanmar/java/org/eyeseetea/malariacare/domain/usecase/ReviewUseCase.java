@@ -10,7 +10,7 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.HashMap;
 
@@ -23,14 +23,16 @@ public class ReviewUseCase {
     public static View createViewRow(ViewGroup rowView, Value value) {
 
         //Sets the value text in the row and add the question as tag.
-        TextCard questionTextCard = (TextCard) rowView.findViewById(R.id.review_title_text);
+        CustomTextView questionTextCard = (CustomTextView) rowView.findViewById(
+                R.id.review_title_text);
         questionTextCard.setText((value.getQuestion() != null) ?
                 value.getQuestion().getInternationalizedCodeDe_Name() + ": "
                 : "");
         if (questionTextCard.getText().equals("")) {
             questionTextCard.setVisibility(View.GONE);
         }
-        TextCard valueTextCard = (TextCard) rowView.findViewById(R.id.review_content_text);
+        CustomTextView valueTextCard = (CustomTextView) rowView.findViewById(
+                R.id.review_content_text);
         valueTextCard.setText(
                 (value.getOption() != null) ? value.getOption().getInternationalizedCode()
                         : value.getValue());

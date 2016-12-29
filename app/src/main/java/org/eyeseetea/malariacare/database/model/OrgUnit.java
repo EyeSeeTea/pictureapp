@@ -22,7 +22,7 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -31,7 +31,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class OrgUnit extends BaseModel {
 
     @Column
@@ -91,7 +91,8 @@ public class OrgUnit extends BaseModel {
      * Returns all the orgunits from the db
      */
     public static List<OrgUnit> getAllOrgUnit() {
-        return new Select().all().from(OrgUnit.class).orderBy(OrgUnit$Table.NAME).queryList();
+        return new Select().from(OrgUnit.class)
+                .orderBy(OrderBy.fromProperty(OrgUnit_Table.name)).queryList();
     }
 
     /**
@@ -115,8 +116,8 @@ public class OrgUnit extends BaseModel {
      * @param name Name of the orgunit
      */
     public static String findUIDByName(String name) {
-        OrgUnit orgUnit = new Select().from(OrgUnit.class).where(
-                Condition.column(OrgUnit$Table.NAME).eq(name)).querySingle();
+        OrgUnit orgUnit = new Select().from(OrgUnit.class)
+                .where(OrgUnit_Table.name.eq(name)).querySingle();
         if (orgUnit == null) {
             return null;
         }
@@ -152,7 +153,7 @@ public class OrgUnit extends BaseModel {
             if (this.id_parent == null) return null;
             orgUnit = new Select()
                     .from(OrgUnit.class)
-                    .where(Condition.column(OrgUnit$Table.ID_ORG_UNIT)
+                    .where(OrgUnit_Table.id_org_unit
                             .is(id_parent)).querySingle();
         }
         return orgUnit;
@@ -173,7 +174,7 @@ public class OrgUnit extends BaseModel {
             if (this.id_org_unit_level == null) return null;
             orgUnitLevel = new Select()
                     .from(OrgUnitLevel.class)
-                    .where(Condition.column(OrgUnitLevel$Table.ID_ORG_UNIT_LEVEL)
+                    .where(OrgUnitLevel_Table.id_org_unit_level
                             .is(id_org_unit_level)).querySingle();
         }
         return orgUnitLevel;
@@ -193,7 +194,7 @@ public class OrgUnit extends BaseModel {
     public List<OrgUnit> getChildren() {
         if (this.children == null) {
             this.children = new Select().from(OrgUnit.class)
-                    .where(Condition.column(OrgUnit$Table.ID_PARENT).eq(
+                    .where(OrgUnit_Table.id_parent.eq(
                             this.getId_org_unit())).queryList();
         }
         return children;
@@ -202,7 +203,7 @@ public class OrgUnit extends BaseModel {
     public List<Survey> getSurveys() {
         if (this.surveys == null) {
             this.surveys = new Select().from(Survey.class)
-                    .where(Condition.column(Survey$Table.ID_ORG_UNIT).eq(
+                    .where(Survey_Table.id_org_unit.eq(
                             this.getId_org_unit())).queryList();
         }
         return surveys;
@@ -212,7 +213,7 @@ public class OrgUnit extends BaseModel {
         if (programs == null) {
             List<OrgUnitProgramRelation> orgUnitProgramRelations = new Select().from(
                     OrgUnitProgramRelation.class)
-                    .where(Condition.column(OrgUnitProgramRelation$Table.ID_ORG_UNIT).eq(
+                    .where(OrgUnitProgramRelation_Table.id_org_unit.eq(
                             this.getId_org_unit()))
                     .queryList();
             this.programs = new ArrayList<>();

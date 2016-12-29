@@ -24,7 +24,6 @@ import android.view.Gravity;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -33,7 +32,7 @@ import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.List;
 
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class OptionAttribute extends BaseModel {
 
     /**
@@ -107,7 +106,7 @@ public class OptionAttribute extends BaseModel {
     public static OptionAttribute findById(Long id) {
         return new Select()
                 .from(OptionAttribute.class)
-                .where(Condition.column(OptionAttribute$Table.ID_OPTION_ATTRIBUTE).eq(
+                .where(OptionAttribute_Table.id_option_attribute.eq(
                         id)).querySingle();
     }
 

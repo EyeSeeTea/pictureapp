@@ -24,19 +24,17 @@ import android.util.Log;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
 /**
  * Created by Jose on 25/05/2015.
  */
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 
 public class QuestionRelation extends BaseModel {
 
@@ -91,13 +89,13 @@ public class QuestionRelation extends BaseModel {
 
 
     public static List<QuestionRelation> listAllParentChildRelations() {
-        return new Select().all().from(QuestionRelation.class)
-                .where(Condition.column(QuestionRelation$Table.OPERATION).eq(
+        return new Select().from(QuestionRelation.class)
+                .where(QuestionRelation_Table.operation.eq(
                         QuestionRelation.PARENT_CHILD)).queryList();
     }
 
     public static List<QuestionRelation> listAll() {
-        return new Select().all().from(QuestionRelation.class).queryList();
+        return new Select().from(QuestionRelation.class).queryList();
     }
 
     public long getId_question_relation() {
@@ -113,7 +111,7 @@ public class QuestionRelation extends BaseModel {
             if (id_question == null) return null;
             question = new Select()
                     .from(Question.class)
-                    .where(Condition.column(Question$Table.ID_QUESTION)
+                    .where(Question_Table.id_question
                             .is(id_question)).querySingle();
         }
         return question;
@@ -159,12 +157,13 @@ public class QuestionRelation extends BaseModel {
     public List<Match> getMatches() {
         if (matches == null) {
             this.matches = new Select().from(Match.class)
-                    .indexedBy(Constants.MATCH_QUESTION_RELATION_IDX)
-                    .where(Condition.column(Match$Table.ID_QUESTION_RELATION).eq(
+                    //// FIXME: 29/12/16
+                    //.indexedBy(Constants.MATCH_QUESTION_RELATION_IDX)
+                    .where(Match_Table.id_question_relation.eq(
                             this.getId_question_relation()))
                     .queryList();
         }
-        return this.matches;
+        return matches;
     }
 
     /**

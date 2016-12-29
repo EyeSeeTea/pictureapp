@@ -22,19 +22,17 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
 /**
  * Created by Jose on 25/05/2015.
  */
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class Match extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
@@ -60,14 +58,13 @@ public class Match extends BaseModel {
     }
 
     public static List<Match> listAll() {
-        return new Select().all().from(Match.class).queryList();
+        return new Select().from(Match.class).queryList();
     }
 
     public List<QuestionOption> getQuestionOptions() {
         if (questionOptions == null) {
             this.questionOptions = new Select().from(QuestionOption.class)
-                    .indexedBy(Constants.QUESTION_OPTION_MATCH_IDX)
-                    .where(Condition.column(QuestionOption$Table.ID_MATCH).eq(this.getId_match()))
+                    .where(QuestionOption_Table.id_match.eq(this.getId_match()))
                     .queryList();
         }
         return this.questionOptions;
@@ -86,7 +83,7 @@ public class Match extends BaseModel {
             if (id_question_relation == null) return null;
             questionRelation = new Select()
                     .from(QuestionRelation.class)
-                    .where(Condition.column(QuestionRelation$Table.ID_QUESTION_RELATION)
+                    .where(QuestionRelation_Table.id_question_relation
                             .is(id_question_relation)).querySingle();
         }
         return questionRelation;
@@ -109,7 +106,7 @@ public class Match extends BaseModel {
     public QuestionThreshold getQuestionThreshold() {
         //Find threshold with this match
         return new Select().from(QuestionThreshold.class)
-                .where(Condition.column(Match$Table.ID_MATCH)
+                .where(Match_Table.id_match
                         .is(id_match)).querySingle();
     }
 

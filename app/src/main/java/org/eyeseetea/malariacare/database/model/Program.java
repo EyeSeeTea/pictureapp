@@ -22,9 +22,10 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
-import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
 import com.raizlabs.android.dbflow.sql.language.Join;
+import com.raizlabs.android.dbflow.sql.language.Method;
+import com.raizlabs.android.dbflow.sql.language.OrderBy;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -33,7 +34,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class Program extends BaseModel {
 
     @Column
@@ -74,7 +75,7 @@ public class Program extends BaseModel {
     }
 
     public static List<Program> getAllPrograms() {
-        return new Select().all().from(Program.class).queryList();
+        return new Select().from(Program.class).queryList();
     }
 
     public static Program getFirstProgram() {
@@ -85,20 +86,22 @@ public class Program extends BaseModel {
 
         int maxTotalQuestions = 0;
         Program p = Program.getFirstProgram();
+        Question qMax = SQLite.select(Method.max(Question_Table.total_questions),
+                Question_Table.total_questions)
+                .from(Question.class).as(AppDatabase.questionName)
+                .join(Header.class, Join.JoinType.INNER).as(AppDatabase.headerName)
+                .on(Question_Table.id_header.withTable(AppDatabase.questionAlias)
+                        .eq(Header_Table.id_header.withTable(AppDatabase.headerAlias)))
 
-        Question qMax = new Select(Question$Table.TOTAL_QUESTIONS).method("MAX",
-                Question$Table.TOTAL_QUESTIONS)
-                .from(Question.class).as("q")
-                .join(Header.class, Join.JoinType.INNER).as("h")
-                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
-                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
-                .join(Tab.class, Join.JoinType.INNER).as("t")
-                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
-                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
-                .join(Program.class, Join.JoinType.INNER).as("p")
-                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_PROGRAM))
-                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
-                .where(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).eq(
+                .join(Tab.class, Join.JoinType.INNER).as(AppDatabase.tabName)
+                .on(Header_Table.id_tab.withTable(AppDatabase.tabAlias)
+                        .eq(Tab_Table.id_tab.withTable(AppDatabase.tabAlias)))
+
+                .join(Program.class, Join.JoinType.INNER).as(AppDatabase.programName)
+                .on(Tab_Table.id_program.withTable(AppDatabase.tabAlias)
+                        .eq(Program_Table.id_program.withTable(AppDatabase.programAlias)))
+
+                .where(Program_Table.uid.withTable(AppDatabase.programAlias).eq(
                         p.getUid()))
                 .querySingle();
 
@@ -144,7 +147,7 @@ public class Program extends BaseModel {
     public List<Program> getPrograms() {
         if (programs == null) {
             this.programs = new Select().from(Program.class)
-                    .where(Condition.column(Program$Table.ID_PROGRAM).eq(this.getId_program()))
+                    .where(Program_Table.id_program.eq(this.getId_program()))
                     .queryList();
         }
         return this.programs;
@@ -154,7 +157,7 @@ public class Program extends BaseModel {
         if (orgUnits == null) {
             List<OrgUnitProgramRelation> orgUnitProgramRelations = new Select().from(
                     OrgUnitProgramRelation.class)
-                    .where(Condition.column(OrgUnitProgramRelation$Table.ID_PROGRAM).eq(
+                    .where(OrgUnitProgramRelation_Table.id_program.eq(
                             this.getId_program()))
                     .queryList();
             this.orgUnits = new ArrayList<>();
@@ -182,8 +185,9 @@ public class Program extends BaseModel {
     public List<Tab> getTabs() {
         if (tabs == null) {
             tabs = new Select().from(Tab.class)
-                    .where(Condition.column(Tab$Table.ID_PROGRAM).eq(this.getId_program()))
-                    .orderBy(Tab$Table.ORDER_POS).queryList();
+                    .where(Tab_Table.id_program.eq(this.getId_program()))
+                    .orderBy(OrderBy.fromProperty(Tab_Table.order_pos).descending())
+                    .queryList();
         }
         return tabs;
     }

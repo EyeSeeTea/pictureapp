@@ -22,7 +22,8 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.OrderBy;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -30,7 +31,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 
 import java.util.List;
 
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class Header extends BaseModel {
 
     @Column
@@ -67,8 +68,8 @@ public class Header extends BaseModel {
 
     public static Header findById(Long id) {
         return new Select()
-                .from(Header.class)
-                .where(Condition.column(Header$Table.ID_HEADER).eq(id)).querySingle();
+        .from(Header.class)
+        .where(Header_Table.id_header.eq(id)).querySingle();
     }
 
     public Long getId_header() {
@@ -104,11 +105,11 @@ public class Header extends BaseModel {
     }
 
     public Tab getTab() {
-        if (tab == null) {
-            if (id_tab == null) return null;
+        if(tab==null){
+            if(id_tab==null) return null;
             tab = new Select()
                     .from(Tab.class)
-                    .where(Condition.column(Tab$Table.ID_TAB)
+                    .where((Tab_Table.id_tab)
                             .is(id_tab)).querySingle();
         }
         return tab;
@@ -125,10 +126,10 @@ public class Header extends BaseModel {
     }
 
     public List<Question> getQuestions() {
-        if (this.questions == null) {
+        if (this.questions == null){
             this.questions = new Select().from(Question.class)
-                    .where(Condition.column(Question$Table.ID_HEADER).eq(this.getId_header()))
-                    .orderBy(Question$Table.ORDER_POS).queryList();
+                    .where(Question_Table.id_header.eq(this.getId_header()))
+                    .orderBy(OrderBy.fromProperty(Question_Table.order_pos)).queryList();
         }
         return questions;
     }
@@ -137,9 +138,9 @@ public class Header extends BaseModel {
      * getNumber Of Question Parents Header
      */
     public long getNumberOfQuestionParents() {
-        return new Select().count().from(Question.class)
-                .where(Condition.column(Question$Table.ID_HEADER).eq(getId_header()))
-                .and(Condition.column(Question$Table.ID_PARENT).isNull()).count();
+        return SQLite.selectCountOf().from(Question.class)
+                .where(Question_Table.id_header.eq(getId_header()))
+                .and(Question_Table.id_parent.isNull()).count();
     }
 
     @Override

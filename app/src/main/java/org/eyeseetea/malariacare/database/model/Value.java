@@ -19,12 +19,17 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import static org.eyeseetea.malariacare.database.AppDatabase.questionAlias;
+import static org.eyeseetea.malariacare.database.AppDatabase.questionName;
+import static org.eyeseetea.malariacare.database.AppDatabase.valueAlias;
+import static org.eyeseetea.malariacare.database.AppDatabase.valueName;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
-import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
 import com.raizlabs.android.dbflow.sql.language.Join;
+import com.raizlabs.android.dbflow.sql.language.OrderBy;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -33,7 +38,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class Value extends BaseModel {
 
     @Column
@@ -84,9 +89,9 @@ public class Value extends BaseModel {
         if (survey == null || survey.getId_survey() == null) {
             return 0;
         }
-        return (int) new Select().count()
+        return (int) SQLite.selectCountOf()
                 .from(Value.class)
-                .where(Condition.column(Value$Table.ID_SURVEY).eq(survey.getId_survey())).count();
+                .where(Value_Table.id_survey.eq(survey.getId_survey())).count();
     }
 
     /**
@@ -97,13 +102,13 @@ public class Value extends BaseModel {
             return new ArrayList<>();
         }
 
-        return new Select().from(Value.class).as("v")
-                .join(Question.class, Join.JoinType.LEFT).as("q")
-                .on(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_QUESTION))
-                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_QUESTION)))
-                .where(Condition.column(ColumnAlias.columnWithTable("v", Value$Table.ID_SURVEY))
-                        .eq(survey.getId_survey())).orderBy(true,
-                        Question$Table.ORDER_POS).queryList();
+        return new Select().from(Value.class).as(valueName)
+                .join(Question.class, Join.JoinType.LEFT_OUTER).as(questionName)
+                .on(Value_Table.id_question.withTable(valueAlias)
+                        .eq(Question_Table.id_question.withTable(questionAlias)))
+                .where(Value_Table.id_survey.withTable(valueAlias)
+                        .eq(survey.getId_survey()))
+                .orderBy(OrderBy.fromProperty(Question_Table.order_pos).ascending()).queryList();
     }
 
     public Long getId_value() {
@@ -123,7 +128,7 @@ public class Value extends BaseModel {
             if (id_option == null) return null;
             option = new Select()
                     .from(Option.class)
-                    .where(Condition.column(Option$Table.ID_OPTION)
+                    .where(Option_Table.id_option
                             .is(id_option)).querySingle();
         }
         return option;
@@ -144,7 +149,7 @@ public class Value extends BaseModel {
             if (id_question == null) return null;
             question = new Select()
                     .from(Question.class)
-                    .where(Condition.column(Question$Table.ID_QUESTION)
+                    .where(Question_Table.id_question
                             .is(id_question)).querySingle();
         }
 
@@ -174,7 +179,7 @@ public class Value extends BaseModel {
             if (id_survey == null) return null;
             survey = new Select()
                     .from(Survey.class)
-                    .where(Condition.column(Survey$Table.ID_SURVEY)
+                    .where(Survey_Table.id_survey
                             .is(id_survey)).querySingle();
         }
         return survey;

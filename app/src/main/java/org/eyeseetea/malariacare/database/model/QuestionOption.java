@@ -22,8 +22,6 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
-import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -35,7 +33,7 @@ import java.util.List;
 /**
  * Created by Jose on 25/05/2015.
  */
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class QuestionOption extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
@@ -80,10 +78,10 @@ public class QuestionOption extends BaseModel {
             return null;
         }
 
-        return new Select().all().from(QuestionOption.class)
-                .where(Condition.column(QuestionOption$Table.ID_QUESTION)
+        return new Select().from(QuestionOption.class)
+                .where(QuestionOption_Table.id_question
                         .is(questionWithOption.getId_question()))
-                .and(Condition.column(QuestionOption$Table.ID_OPTION)
+                .and(QuestionOption_Table.id_option
                         .is(option.getId_option()))
                 .queryList();
     }
@@ -92,18 +90,16 @@ public class QuestionOption extends BaseModel {
      * Find questionOptions related with the given questionRelation by its match
      */
     public static List<QuestionOption> findByQuestionRelation(QuestionRelation questionRelation) {
-        return new Select().all().from(QuestionOption.class).as("qo")
-                .join(Match.class, Join.JoinType.LEFT).as("m")
-                .on(Condition.column(
-                        ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_MATCH))
-                        .eq(ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH)))
-                .where(Condition.column(
-                        ColumnAlias.columnWithTable("m", Match$Table.ID_QUESTION_RELATION)).eq(
+        return new Select().from(QuestionOption.class).as(AppDatabase.questionOptionName)
+                .join(Match.class, Join.JoinType.LEFT_OUTER).as(AppDatabase.matchName)
+                .on(QuestionOption_Table.id_match.withTable(AppDatabase.questionOptionAlias)
+                        .eq(Match_Table.id_match.withTable(AppDatabase.matchAlias)))
+                .where(Match_Table.id_question_relation.withTable(AppDatabase.matchAlias).eq(
                         questionRelation.getId_question_relation())).queryList();
     }
 
     public static List<QuestionOption> listAll() {
-        return new Select().all().from(QuestionOption.class).queryList();
+        return new Select().from(QuestionOption.class).queryList();
     }
 
     public long getId_question_option() {
@@ -119,15 +115,10 @@ public class QuestionOption extends BaseModel {
             if (id_option == null) return null;
             option = new Select()
                     .from(Option.class)
-                    .where(Condition.column(Option$Table.ID_OPTION)
+                    .where(Option_Table.id_option
                             .is(id_option)).querySingle();
         }
         return option;
-    }
-
-    public void setOption(Option option) {
-        this.option = option;
-        this.id_option = (option != null) ? option.getId_option() : null;
     }
 
     public void setOption(Long id_option) {
@@ -135,20 +126,20 @@ public class QuestionOption extends BaseModel {
         this.option = null;
     }
 
+    public void setOption(Option option) {
+        this.option = option;
+        this.id_option = (option != null) ? option.getId_option() : null;
+    }
+
     public Question getQuestion() {
         if (question == null) {
             if (id_question == null) return null;
             question = new Select()
                     .from(Question.class)
-                    .where(Condition.column(Question$Table.ID_QUESTION)
+                    .where(Question_Table.id_question
                             .is(id_question)).querySingle();
         }
         return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
-        this.id_question = (question != null) ? question.getId_question() : null;
     }
 
     public void setQuestion(Long id_question) {
@@ -156,25 +147,30 @@ public class QuestionOption extends BaseModel {
         this.question = null;
     }
 
+    public void setQuestion(Question question) {
+        this.question = question;
+        this.id_question = (question != null) ? question.getId_question() : null;
+    }
+
     public Match getMatch() {
         if (match == null) {
             if (id_match == null) return null;
             match = new Select()
                     .from(Match.class)
-                    .where(Condition.column(Match$Table.ID_MATCH)
+                    .where(Match_Table.id_match
                             .is(id_match)).querySingle();
         }
         return match;
     }
 
-    public void setMatch(Match match) {
-        this.match = match;
-        this.id_match = (match != null) ? match.getId_match() : null;
-    }
-
     public void setMatch(Long id_match) {
         this.id_match = id_match;
         this.match = null;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
+        this.id_match = (match != null) ? match.getId_match() : null;
     }
 
     /**

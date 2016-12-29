@@ -697,7 +697,7 @@ public class PopulateDB {
                             }
                             option.save();
                         } else {
-                            option = Option.findById(Float.valueOf(line[0]));
+                            option = Option.findById(Long.valueOf(line[0]));
                         }
                         optionList.put(Integer.valueOf(line[0]), option);
                         break;
@@ -800,7 +800,7 @@ public class PopulateDB {
         //29;1;6
         Long childId = 6l;
         Long parentId = 5l;
-        Float optionId = 13f;
+        Long optionId = 13l;
         QuestionRelation questionRelation = new QuestionRelation(Question.findByID(childId),
                 QuestionRelation.PARENT_CHILD);
         questionRelation.save();

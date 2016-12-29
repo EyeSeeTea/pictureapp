@@ -22,18 +22,16 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.List;
 
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class Option extends BaseModel {
 
     //FIXME A 'Yes' answer shows children questions, this should be configurable by some
@@ -99,10 +97,10 @@ public class Option extends BaseModel {
         return new Select().from(Option.class).queryList();
     }
 
-    public static Option findById(Float id) {
+    public static Option findById(Long id) {
         return new Select()
                 .from(Option.class)
-                .where(Condition.column(Option$Table.ID_OPTION).eq(id)).querySingle();
+                .where(Option_Table.id_option.eq(id)).querySingle();
     }
 
     public Long getId_option() {
@@ -150,7 +148,7 @@ public class Option extends BaseModel {
             if (id_answer == null) return null;
             answer = new Select()
                     .from(Answer.class)
-                    .where(Condition.column(Answer$Table.ID_ANSWER)
+                    .where(Answer_Table.id_answer
                             .is(id_answer)).querySingle();
         }
         return answer;
@@ -164,7 +162,7 @@ public class Option extends BaseModel {
     public OptionAttribute getOptionAttribute() {
         if (optionAttribute == null) {
             optionAttribute = new Select().from(OptionAttribute.class)
-                    .where(Condition.column(OptionAttribute$Table.ID_OPTION_ATTRIBUTE).eq(
+                    .where(OptionAttribute_Table.id_option_attribute.eq(
                             id_option_attribute)).querySingle();
         }
         return optionAttribute;
@@ -233,8 +231,7 @@ public class Option extends BaseModel {
     public List<Value> getValues() {
         if (values == null) {
             values = new Select().from(Value.class)
-                    .where(Condition.column(Value$Table.ID_OPTION).eq(
-                            this.getId_option())).queryList();
+                    .where(Value_Table.id_option.eq(this.getId_option())).queryList();
         }
         return values;
     }
@@ -294,9 +291,10 @@ public class Option extends BaseModel {
             return null;
         }
         List<Value> returnValues = new Select().from(Value.class)
-                .indexedBy(Constants.VALUE_IDX)
-                .where(Condition.column(Value$Table.ID_OPTION).eq(this.getId_option()))
-                .and(Condition.column(Value$Table.ID_SURVEY).eq(survey.getId_survey())).queryList();
+                //// FIXME: 29/12/16  indexed
+                //.indexedBy(Constants.VALUE_IDX)
+                .where(Value_Table.id_option.eq(this.getId_option()))
+                .and(Value_Table.id_survey.eq(survey.getId_survey())).queryList();
 
         return (returnValues.size() == 0) ? null : returnValues.get(0).getQuestion();
     }

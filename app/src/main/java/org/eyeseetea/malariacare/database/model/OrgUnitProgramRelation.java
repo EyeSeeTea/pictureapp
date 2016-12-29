@@ -22,7 +22,6 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -31,7 +30,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 /**
  * Created by ivan.arrizabalaga on 14/02/15.
  */
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class OrgUnitProgramRelation extends BaseModel {
 
     @Column
@@ -67,7 +66,7 @@ public class OrgUnitProgramRelation extends BaseModel {
             if (id_org_unit == null) return null;
             orgUnit = new Select()
                     .from(OrgUnit.class)
-                    .where(Condition.column(OrgUnit$Table.ID_ORG_UNIT)
+                    .where(OrgUnit_Table.id_org_unit
                             .is(id_org_unit)).querySingle();
         }
         return orgUnit;
@@ -88,7 +87,7 @@ public class OrgUnitProgramRelation extends BaseModel {
             if (id_program == null) return null;
             program = new Select()
                     .from(Program.class)
-                    .where(Condition.column(Program$Table.ID_PROGRAM)
+                    .where(Program_Table.id_program
                             .is(id_program)).querySingle();
         }
         return program;

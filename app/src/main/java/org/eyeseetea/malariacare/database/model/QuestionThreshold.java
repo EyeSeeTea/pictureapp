@@ -24,7 +24,6 @@ import android.util.Log;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -35,7 +34,7 @@ import java.util.List;
 /**
  * Created by Jose on 25/05/2015.
  */
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class QuestionThreshold extends BaseModel {
     private static final String TAG = ".QuestionThreshold";
     @Column
@@ -106,7 +105,7 @@ public class QuestionThreshold extends BaseModel {
             if (id_question == null) return null;
             question = new Select()
                     .from(Question.class)
-                    .where(Condition.column(Question$Table.ID_QUESTION)
+                    .where(Question_Table.id_question
                             .is(id_question)).querySingle();
         }
         return question;
@@ -127,7 +126,7 @@ public class QuestionThreshold extends BaseModel {
             if (id_match == null) return null;
             match = new Select()
                     .from(Match.class)
-                    .where(Condition.column(Match$Table.ID_MATCH)
+                    .where(Match_Table.id_match
                             .is(id_match)).querySingle();
         }
         return match;

@@ -28,7 +28,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 
 import java.util.List;
 
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class TabGroup extends BaseModel {
 
     @Column

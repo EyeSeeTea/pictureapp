@@ -29,6 +29,7 @@ import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -222,5 +223,13 @@ public class EventExtended implements VisitableFromSDK {
 
     public void setLongitude(double longitude) {
         event.setLongitude(longitude);
+    }
+
+    public static List<EventExtended> getExtendedList(List<EventFlow> events){
+        List <EventExtended> eventExtendeds = new ArrayList<>();
+        for(EventFlow pojoFlow:events){
+            eventExtendeds.add(new EventExtended(pojoFlow));
+        }
+        return eventExtendeds;
     }
 }

@@ -90,9 +90,15 @@ public abstract class SdkController {
 
     public static void postFinish() {
         /*
+        //Fixme maybe it is not the best place to reload the logged user.(Without reload the user
+        // after pull, the user had diferent id and application crash).
         User user = User.getLoggedUser();
         Session.setUser(user);
-        ProgressActivity.postFinish();
+
+
+        ProgressActivity.postFinish(); //new way in malariapp
+        //in pictureapp
+        Dhis2Application.getEventBus().post(new SyncProgressStatus());
         */
     }
 

@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.sdk.SdkController;
 import org.eyeseetea.malariacare.sdk.SdkLoginController;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
@@ -51,9 +52,10 @@ public class ProgressActivity extends Activity {
      * Used for control autopull from login
      */
     public static Boolean PULL_CANCEL = false;
+    private static Activity progressActivity;
     public ProgressActivityStrategy progressVariantAdapter = new ProgressActivityStrategy(this);
-    ProgressBar progressBar;
-    TextView textView;
+    static ProgressBar progressBar;
+    static TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,17 +63,18 @@ public class ProgressActivity extends Activity {
         setContentView(R.layout.activity_progress);
         PULL_CANCEL = false;
         PULL_IS_ACTIVE = true;
+        progressActivity=this;
         prepareUI();
     }
 
-    private void cancellPull() {
+    private static void cancellPull() {
         if (PULL_IS_ACTIVE) {
             PULL_CANCEL = true;
             PULL_IS_ACTIVE = false;
-            step(getBaseContext().getResources().getString(R.string.cancellingPull));
+            step(PreferencesState.getInstance().getContext().getResources().getString(R.string.cancellingPull));
             if (PullController.getInstance().finishPullJob()) {
                 Log.d(TAG, "Logging out from sdk...");
-                SdkLoginController.logOutUser(ProgressActivity.this);
+                SdkLoginController.logOutUser(progressActivity);
             }
         }
     }
@@ -166,7 +169,7 @@ public class ProgressActivity extends Activity {
     /**
      * Prints the step in the progress bar
      */
-    private void step(final String msg) {
+    private static void step(final String msg) {
         final int currentProgress = progressBar.getProgress();
         progressBar.setProgress(currentProgress + 1);
         textView.setText(msg);

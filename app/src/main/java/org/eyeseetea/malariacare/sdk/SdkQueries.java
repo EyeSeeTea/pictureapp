@@ -7,6 +7,7 @@ import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataElementFlow;
@@ -200,5 +201,10 @@ public class SdkQueries {
 
         new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
         */
+    }
+
+    public static void saveBatch(List<?> surveys) {
+        //new SaveModelTransaction<>(
+        //        ProcessModelInfo.withModels(surveys)).onExecute();
     }
 }

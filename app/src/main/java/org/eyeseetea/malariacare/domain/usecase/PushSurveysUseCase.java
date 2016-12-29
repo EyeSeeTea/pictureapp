@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.squareup.okhttp.HttpUrl;
-import com.squareup.otto.Subscribe;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;

@@ -32,6 +32,9 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.importer.IConvertFromSD
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.VisitableFromSDK;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitFlow;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OrganisationUnitExtended implements VisitableFromSDK {
     OrganisationUnitFlow orgUnit;
 
@@ -65,5 +68,15 @@ public class OrganisationUnitExtended implements VisitableFromSDK {
 
     public String getParent() {
         return orgUnit.getParent().getUId();
+    }
+
+
+    public static List<OrganisationUnitExtended> getExtendedList(
+            List<OrganisationUnitFlow> flowList) {
+        List<OrganisationUnitExtended> extendedsList = new ArrayList<>();
+        for (OrganisationUnitFlow flowPojo : flowList) {
+            extendedsList.add(new OrganisationUnitExtended(flowPojo));
+        }
+        return extendedsList;
     }
 }

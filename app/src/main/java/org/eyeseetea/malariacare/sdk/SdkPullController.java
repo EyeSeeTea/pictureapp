@@ -5,7 +5,7 @@ import static org.hisp.dhis.client.sdk.models.program.ProgramType.WITHOUT_REGIST
 import android.content.Context;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.ProgressActivity;
+import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
 import org.hisp.dhis.client.sdk.core.common.preferences.ResourceType;
@@ -37,7 +37,8 @@ public class SdkPullController extends SdkController {
 
 
     /**
-     * This flag is used to control the async downloads before initialise the conversion from sdk to
+     * This flag is used to control the async downloads before initialise the conversion from sdk
+     * to
      * the app db
      */
     public static int asyncDownloads = 0;
@@ -47,6 +48,13 @@ public class SdkPullController extends SdkController {
     static HashMap<org.hisp.dhis.client.sdk.models.program.Program, List<OrganisationUnit>>
             programsAndOrganisationUnits;
     public static boolean errorOnPull = false;
+
+
+    public static void clearPullFlags(Context context) {
+        //// FIXME: 29/12/16
+        //   LoadingController.clearLoadFlag(context, ResourceType.ASSIGNEDPROGRAMS);
+        //   LoadingController.clearLoadFlag(context, ResourceType.ASSIGNEDPROGRAMSWITHOUTEXTRAS);
+    }
 
     public static void setMaxEvents(int maxEvents) {
         //TrackerController.setMaxEvents(maxEvents);
@@ -73,6 +81,8 @@ public class SdkPullController extends SdkController {
         resourceTypes.add(ResourceType.PROGRAMS);
         resourceTypes.add(ResourceType.OPTION_SETS);
         resourceTypes.add(ResourceType.EVENTS);
+        //mising from old sdk
+        //LoadingController.enableLoading(context, ResourceType.ASSIGNEDPROGRAMSWITHOUTEXTRAS);
         enableMetaDataFlags(resourceTypes, context);
     }
 
@@ -82,8 +92,8 @@ public class SdkPullController extends SdkController {
         }
     }
 
-    public static void loadLastData() {
-        //// FIXME: 16/11/2016  limit by last data
+
+    public static void loadMetaDataAndData() {
         pullData = true;
         loadMetaData();
     }
@@ -107,7 +117,7 @@ public class SdkPullController extends SdkController {
         loadMetaData();
     }
 
-    private static void loadMetaData() {
+    public static void loadMetaData() {
         asyncDownloads++;
         //Pull metadata
         getPrograms();
@@ -123,9 +133,7 @@ public class SdkPullController extends SdkController {
     private static void convertData() {
         if (asyncDownloads == 0) {
             if (!errorOnPull) {
-                /*
                 PullController.getInstance().startConversion();
-                */
                 postFinish();
             } else {
                 pullFail();

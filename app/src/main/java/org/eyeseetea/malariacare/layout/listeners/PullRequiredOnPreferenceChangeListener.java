@@ -3,12 +3,10 @@ package org.eyeseetea.malariacare.layout.listeners;
 
 import android.preference.Preference;
 
-import com.squareup.okhttp.HttpUrl;
-
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.hisp.dhis.android.sdk.controllers.DhisService;
+import org.eyeseetea.malariacare.sdk.SdkLoginController;
 
 public class PullRequiredOnPreferenceChangeListener implements
         Preference.OnPreferenceChangeListener {
@@ -43,7 +41,7 @@ public class PullRequiredOnPreferenceChangeListener implements
     }
 
     private void hardcodedLoginInSDK() {
-        HttpUrl serverUri = HttpUrl.parse(PreferencesState.getInstance().getDhisURL());
-        DhisService.logInUser(serverUri, ServerAPIController.getSDKCredentials());
+        SdkLoginController.logInUser(PreferencesState.getInstance().getDhisURL(),
+                ServerAPIController.getSDKCredentials());
     }
 }

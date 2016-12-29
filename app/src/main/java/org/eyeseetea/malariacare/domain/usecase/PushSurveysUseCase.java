@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare.domain.usecase;
 import android.content.Context;
 import android.util.Log;
 
-import com.squareup.okhttp.HttpUrl;
 
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
@@ -88,7 +87,7 @@ public class PushSurveysUseCase {
         startProgress();
 
         //Init sdk login
-        SdkLoginController.login(HttpUrl.parse(ServerAPIController.getServerUrl()),
+        SdkLoginController.logInUser(ServerAPIController.getServerUrl(),
                 ServerAPIController.getSDKCredentials());
     }
 

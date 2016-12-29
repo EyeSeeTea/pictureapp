@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -52,8 +53,7 @@ public class SplashScreenActivity extends Activity {
         D2.init(this);
         FlowConfig flowConfig = new FlowConfig
                 .Builder(this)
-                //// FIXME: 28/12/16 Uncomment
-                //.addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
+                .addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
                 .build();
         FlowManager.init(flowConfig);
         SdkQueries.createDBIndexes();

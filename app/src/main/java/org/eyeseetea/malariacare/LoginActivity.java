@@ -262,7 +262,9 @@ public class LoginActivity extends AbsLoginActivity {
 
         @Override
         protected void onPreExecute() {
-            bar = (ProgressBar) activity.findViewById(R.id.progress_bar_circular);
+            //// FIXME: 30/12/16  Fix mising progressbar
+            //bar = (ProgressBar) activity.findViewById(R.id.progress_bar_circular);
+            bar = (ProgressBar) activity.findViewById(R.id.progress_bar);
             bar.setVisibility(View.VISIBLE);
             activity.findViewById(R.id.login_views_container).setVisibility(View.GONE);
         }

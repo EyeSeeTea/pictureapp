@@ -347,8 +347,8 @@ public class Question extends BaseModel {
     /**
      * Counts the number of required children questions by a option.
      */
-    public static int countChildrenByOptionValue(int id_option) {
-        return SQLite.selectCountOf()
+    public static int countChildrenByOptionValue(long id_option) {
+        return (int) SQLite.selectCountOf()
                 .from(Question.class).as(questionName)
 
                 .join(QuestionRelation.class, Join.JoinType.INNER).as(questionRelationName)

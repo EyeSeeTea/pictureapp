@@ -751,8 +751,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         Survey survey = Survey.findById(id_survey);
         for (Value value : survey.getValuesFromDB()) {
             if (value.getQuestion().isCompulsory()) {
-                numRequired += Question.countChildrenByOptionValue(
-                        Integer.parseInt(String.valueOf(value.getId_option())));
+                numRequired += Question.countChildrenByOptionValue(value.getId_option());
             }
         }
         numAnswered += countCompulsoryBySurvey(this);

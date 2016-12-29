@@ -14,7 +14,7 @@ import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
-import org.hisp.dhis.android.sdk.ui.views.FontButton;
+import org.hisp.dhis.client.sdk.ui.views.FontButton;
 
 import java.io.IOException;
 

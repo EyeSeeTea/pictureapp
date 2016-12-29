@@ -14,9 +14,10 @@ import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView implements IQuestionView {
-    EditCard editCard;
+    CustomEditText mCustomEditText;
     Button sendButton;
 
 
@@ -28,32 +29,32 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
 
     @Override
     public void setEnabled(boolean enabled) {
-        editCard.setEnabled(enabled);
+        mCustomEditText.setEnabled(enabled);
         sendButton.setEnabled(enabled);
 
         if (enabled) {
-            showKeyboard(editCard);
+            showKeyboard(mCustomEditText);
         }
     }
 
     @Override
     public void setValue(Value value) {
         if (value != null) {
-            editCard.setText(value.getValue());
+            mCustomEditText.setText(value.getValue());
         }
     }
 
     @Override
     public void setHint(String hintValue) {
-        editCard.setHint(hintValue);
+        mCustomEditText.setHint(hintValue);
     }
 
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_phone_row, this);
 
-        editCard = (EditCard) findViewById(R.id.answer);
-        editCard.setFocusable(true);
-        editCard.setFocusableInTouchMode(true);
+        mCustomEditText = (CustomEditText) findViewById(R.id.answer);
+        mCustomEditText.setFocusable(true);
+        mCustomEditText.setFocusableInTouchMode(true);
 
         sendButton = (Button) findViewById(R.id.row_phone_btn);
 
@@ -64,7 +65,7 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
             }
         });
 
-        editCard.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mCustomEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -84,12 +85,12 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
 
     private void validateAnswer(Context context) {
         try {
-            Phone phone = new Phone(editCard.getText().toString());
-            hideKeyboard(editCard);
+            Phone phone = new Phone(mCustomEditText.getText().toString());
+            hideKeyboard(mCustomEditText);
             notifyAnswerChanged(phone.getValue());
 
         } catch (InvalidPhoneException e) {
-            editCard.setError(
+            mCustomEditText.setError(
                     context.getString(R.string.dynamic_error_phone_format));
         }
     }

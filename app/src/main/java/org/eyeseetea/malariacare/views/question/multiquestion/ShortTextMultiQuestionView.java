@@ -1,21 +1,25 @@
 package org.eyeseetea.malariacare.views.question.multiquestion;
 
+import static com.google.android.gms.internal.zzng.ex;
+
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomEditText;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
         IMultiQuestionView {
-    TextCard header;
-    EditCard editCard;
+    CustomTextView header;
+    CustomEditText mCustomEditText;
 
     public ShortTextMultiQuestionView(Context context) {
         super(context);
@@ -35,28 +39,32 @@ public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements
 
     @Override
     public void setEnabled(boolean enabled) {
-        editCard.setEnabled(enabled);
+        mCustomEditText.setEnabled(enabled);
     }
 
     @Override
     public void setValue(Value value) {
         if (value != null) {
-            editCard.setText(value.getValue());
+            mCustomEditText.setText(value.getValue());
         }
     }
 
     @Override
     public void setHint(String hintValue) {
-        editCard.setHint(hintValue);
+        mCustomEditText.setHint(hintValue);
     }
 
     private void init(Context context) {
+
         inflate(context, R.layout.multi_question_tab_short_text_row, this);
 
-        header = (TextCard) findViewById(R.id.row_header_text);
-        editCard = (EditCard) findViewById(R.id.answer);
+        header = (CustomTextView) findViewById(R.id.row_header_text);
+        mCustomEditText = (CustomEditText) findViewById(R.id.answer);
 
-        editCard.addTextChangedListener(new TextWatcher() {
+        double sizeHeader = header.getTextSize();
+        double sizeedit = header.getTextSize();
+
+        mCustomEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
             }

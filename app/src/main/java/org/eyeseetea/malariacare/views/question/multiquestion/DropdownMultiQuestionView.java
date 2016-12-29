@@ -14,12 +14,13 @@ import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
 public class DropdownMultiQuestionView extends AOptionQuestionView implements IQuestionView,
         IMultiQuestionView {
-    TextCard header;
+    CustomTextView header;
     Spinner spinnerOptions;
     Question question;
 
@@ -72,7 +73,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     private void init(final Context context) {
         inflate(context, R.layout.multi_question_tab_phone_row, this);
 
-        header = (TextCard) findViewById(R.id.row_header_text);
+        header = (CustomTextView) findViewById(R.id.row_header_text);
         spinnerOptions = (Spinner) findViewById(R.id.answer);
 
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

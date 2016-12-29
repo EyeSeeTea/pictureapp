@@ -49,7 +49,7 @@
                     android:orientation="horizontal"
                     android:weightSum="1">
 
-                    <org.eyeseetea.malariacare.views.TextCard
+                    <org.eyeseetea.sdk.presentation.views.CustomTextView
                         android:id="@+id/row_header_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                         android:paddingLeft="@dimen/input_edit_text_left_padding"
                         android:paddingRight="@dimen/input_edit_text_right_padding"
                         android:textColor="@color/dark_purple"
-                        android:textSize="@dimen/input_number_edit_text_phone" />
+                        android:text="?attr/font_medium" />
 
                     <ImageView
                         android:id="@+id/row_header_compulsory"

@@ -21,12 +21,13 @@ import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
 public class RadioButtonMultiQuestionView extends AOptionQuestionView implements IQuestionView,
         IMultiQuestionView, IImageQuestionView {
-    TextCard header;
+    CustomTextView header;
     ImageView image;
     RadioGroup radioGroup;
     Context context;
@@ -123,7 +124,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
     private void init(final Context context) {
         View view = inflate(context, R.layout.multi_question_radio_button_row, this);
-        header = (TextCard) view.findViewById(R.id.row_header_text);
+        header = (CustomTextView) view.findViewById(R.id.row_header_text);
         image = (ImageView) view.findViewById(R.id.question_image_row);
         radioGroup = (RadioGroup) view.findViewById(R.id.answer);
     }

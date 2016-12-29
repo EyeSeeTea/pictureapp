@@ -13,11 +13,13 @@ import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomEditText;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
         IMultiQuestionView {
-    TextCard header;
-    EditCard numberPicker;
+    CustomTextView header;
+    CustomEditText numberPicker;
 
     PositiveNumber positiveNumber;
 
@@ -58,8 +60,8 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
     private void init(final Context context) {
         inflate(context, R.layout.multi_question_tab_positive_int_row, this);
 
-        header = (TextCard) findViewById(R.id.row_header_text);
-        numberPicker = (EditCard) findViewById(R.id.answer);
+        header = (CustomTextView) findViewById(R.id.row_header_text);
+        numberPicker = (CustomEditText) findViewById(R.id.answer);
 
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override

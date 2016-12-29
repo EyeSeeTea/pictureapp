@@ -19,9 +19,8 @@
         android:gravity="center"
         android:inputType="number"
         android:maxLength="2"
-        android:textSize="@dimen/input_number_edit_text"
-        app:tDimension="@string/font_size_level2"
-        app:tFontName="@string/condensed_font_name" />
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/condensed_font_name" />
 
     <Button
         android:id="@+id/dynamic_positiveInt_btn"

@@ -47,7 +47,7 @@
             app:tFontName="@string/specific_language_font" />
     </LinearLayout>
 
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/counter1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,8 +55,7 @@
         android:lines="1"
         android:padding="5dip"
         android:textColor="@color/black"
-        android:textSize="16dp"
         android:visibility="gone"
-        app:tDimension="@string/font_size_level1"
+        android:textSize="?attr/font_small"
         app:tFontName="@string/specific_language_font" />
 </LinearLayout>

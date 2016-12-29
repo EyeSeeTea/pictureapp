@@ -14,13 +14,14 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ImageRadioButtonOption extends LinearLayout {
     Option mOption;
     OnCheckedChangeListener mOnCheckedChangeListener;
     ImageView mImageView;
     RadioButton mRadioButton;
-    TextCard mCounter;
+    CustomTextView mCounter;
 
     public ImageRadioButtonOption(Context context) {
         super(context);
@@ -93,7 +94,7 @@ public class ImageRadioButtonOption extends LinearLayout {
 
         mImageView = (ImageView) findViewById(R.id.radio_image);
         mRadioButton = (RadioButton) findViewById(R.id.radio_button);
-        mCounter = (TextCard) findViewById(R.id.counter1);
+        mCounter = (CustomTextView) findViewById(R.id.counter1);
 
         mRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

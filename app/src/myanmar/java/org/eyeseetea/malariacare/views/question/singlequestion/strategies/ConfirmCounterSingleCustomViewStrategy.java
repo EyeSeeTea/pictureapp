@@ -23,9 +23,8 @@ import java.util.List;
 
 public class ConfirmCounterSingleCustomViewStrategy implements
         IConfirmCounterSingleCustomViewStrategy {
-    DynamicTabAdapter mDynamicTabAdapter;
     private static final String TAG = ".ConfirmCounter";
-
+    DynamicTabAdapter mDynamicTabAdapter;
     private String currentCounterValue = "";
 
     public ConfirmCounterSingleCustomViewStrategy(DynamicTabAdapter dynamicTabAdapter) {
@@ -34,7 +33,6 @@ public class ConfirmCounterSingleCustomViewStrategy implements
 
     public void showConfirmCounter(final View view, final Option selectedOption,
             Question question, Question questionCounter) {
-
         View rootView = view.getRootView();
 
         currentCounterValue = getCounterValue(question, selectedOption);
@@ -70,7 +68,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
                 } else {
                     Log.d(TAG, "onClick ignored to avoid double click NOT");
                 }
-                mDynamicTabAdapter.removeConfirmCounter(v);
+                removeConfirmCounter(v);
                 mDynamicTabAdapter.notifyDataSetChanged();
                 DynamicTabAdapter.isClicked = false;
             }
@@ -89,9 +87,9 @@ public class ConfirmCounterSingleCustomViewStrategy implements
                     Log.d(TAG, "onClick");
                 }
                 mDynamicTabAdapter.navigationController.increaseCounterRepetitions(selectedOption);
-                mDynamicTabAdapter.removeConfirmCounter(v);
+                removeConfirmCounter(v);
                 mDynamicTabAdapter.reloadingQuestionFromInvalidOption = true;
-                mDynamicTabAdapter.saveOptionAndMove(view, selectedOption, question);
+                mDynamicTabAdapter.saveOptionValue(view, selectedOption, question, true);
 
                 if (selectedOption.getFactor() == Float.parseFloat(currentCounterValue)) {
                     ReviewFragment.mLoadingReviewOfSurveyWithMaxCounter = true;
@@ -138,7 +136,6 @@ public class ConfirmCounterSingleCustomViewStrategy implements
 
 
     private String getInternationalizedName(String name) {
-
         if (name.contains("%s")) {
             name = String.format(name, currentCounterValue);
         }
@@ -158,7 +155,11 @@ public class ConfirmCounterSingleCustomViewStrategy implements
             return "1";
         }
 
-
         return String.valueOf((Integer.parseInt(counterValue) + 1));
+    }
+
+    private void removeConfirmCounter(View view) {
+        view.getRootView().findViewById(R.id.dynamic_tab_options_table).setVisibility(View.VISIBLE);
+        view.getRootView().findViewById(R.id.confirm_table).setVisibility(View.GONE);
     }
 }

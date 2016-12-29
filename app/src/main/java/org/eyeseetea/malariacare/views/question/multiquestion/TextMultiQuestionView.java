@@ -29,11 +29,6 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     }
 
     @Override
-    public boolean hasError() {
-        return false;
-    }
-
-    @Override
     public void setEnabled(boolean enabled) {
         editCard.setEnabled(enabled);
     }
@@ -45,14 +40,17 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
         }
     }
 
-    public void setInputType(int value) {
-        editCard.setInputType(value);
-    }
-
     @Override
     public void setHelpText(String helpText) {
         editCard.setHint(helpText);
     }
+
+
+    @Override
+    public boolean hasError() {
+        return false;
+    }
+
 
     private void init(Context context) {
         inflate(context, R.layout.multi_question_tab_text_row, this);
@@ -74,5 +72,9 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
                 notifyAnswerChanged(String.valueOf(s));
             }
         });
+    }
+
+    public void setInputType(int value) {
+        editCard.setInputType(value);
     }
 }

@@ -40,11 +40,6 @@ public class LabelMultiQuestionView extends LinearLayout implements IQuestionVie
     }
 
     @Override
-    public boolean hasError() {
-        return false;
-    }
-
-    @Override
     public void setEnabled(boolean enabled) {
     }
 
@@ -55,6 +50,11 @@ public class LabelMultiQuestionView extends LinearLayout implements IQuestionVie
 
     @Override
     public void setValue(Value value) {
+    }
+
+    @Override
+    public boolean hasError() {
+        return false;
     }
 
     private void init(Context context) {

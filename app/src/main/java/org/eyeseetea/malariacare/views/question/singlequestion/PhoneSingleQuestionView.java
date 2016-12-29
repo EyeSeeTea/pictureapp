@@ -19,7 +19,6 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
     EditCard editCard;
     Button sendButton;
 
-
     public PhoneSingleQuestionView(Context context) {
         super(context);
 

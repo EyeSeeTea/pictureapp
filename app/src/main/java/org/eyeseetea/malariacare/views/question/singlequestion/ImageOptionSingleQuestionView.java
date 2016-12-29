@@ -60,24 +60,6 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
         mColumnsCount = columnsCount;
     }
 
-    public boolean isNewRow(int i) {
-        return i % mColumnsCount == 0;
-    }
-
-    @NonNull
-    private ImageOptionView createOptionView(Option option) {
-        ImageOptionView imageOptionView = new ImageOptionView(getContext());
-        imageOptionView.setOption(option, mQuestion);
-        imageOptionView.setOnOptionSelectedListener(this);
-        imageOptionView.setEnabled(isEnabled());
-
-        imageOptionView.setLayoutParams(
-                new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
-                        TableRow.LayoutParams.MATCH_PARENT, 1));
-
-        return imageOptionView;
-    }
-
     @Override
     public void setQuestion(Question question) {
         mQuestion = question;
@@ -112,6 +94,24 @@ public class ImageOptionSingleQuestionView extends AOptionQuestionView implement
 
             imageOptionView.setSelectedOption(selected);
         }
+    }
+
+    public boolean isNewRow(int i) {
+        return i % mColumnsCount == 0;
+    }
+
+    @NonNull
+    private ImageOptionView createOptionView(Option option) {
+        ImageOptionView imageOptionView = new ImageOptionView(getContext());
+        imageOptionView.setOption(option, mQuestion);
+        imageOptionView.setOnOptionSelectedListener(this);
+        imageOptionView.setEnabled(isEnabled());
+
+        imageOptionView.setLayoutParams(
+                new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
+                        TableRow.LayoutParams.MATCH_PARENT, 1));
+
+        return imageOptionView;
     }
 
     private void init(final Context context) {

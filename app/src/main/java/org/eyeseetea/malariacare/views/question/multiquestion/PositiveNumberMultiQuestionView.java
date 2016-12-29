@@ -33,11 +33,6 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
     }
 
     @Override
-    public boolean hasError() {
-        return numberPicker.getError() != null || positiveNumber == null;
-    }
-
-    @Override
     public void setEnabled(boolean enabled) {
         numberPicker.setEnabled(enabled);
     }
@@ -52,6 +47,11 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
         if (value != null) {
             numberPicker.setText(value.getValue());
         }
+    }
+
+    @Override
+    public boolean hasError() {
+        return numberPicker.getError() != null || positiveNumber == null;
     }
 
     private void init(final Context context) {

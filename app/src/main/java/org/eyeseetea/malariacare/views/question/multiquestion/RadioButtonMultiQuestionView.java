@@ -69,23 +69,6 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         }
     }
 
-    private void fixRadioButtonWidth(CustomRadioButton radioButton) {
-        Drawable radioButtonIcon = getResources().getDrawable(R.drawable.radio_on);
-        BaseLayoutUtils.setLayoutParamsAs50Percent(radioButton, context,
-                calculateFixedWidth(radioButtonIcon));
-    }
-
-    private int calculateFixedWidth(Drawable radioButtonIcon) {
-        int width = radioButtonIcon.getIntrinsicWidth();
-        int height = radioButtonIcon.getIntrinsicHeight();
-        int fixedHeight =
-                PreferencesState.getInstance().getContext().getResources()
-                        .getDimensionPixelSize(
-                                R.dimen.image_size);
-        int newHeightPercent = (fixedHeight * 100) / height;
-        return (newHeightPercent * width) / 100;
-    }
-
     @Override
     public void setHeader(String headerValue) {
         header.setText(headerValue);
@@ -96,11 +79,6 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         if (path != null && !path.equals("")) {
             BaseLayoutUtils.makeImageVisible(path, image);
         }
-    }
-
-    @Override
-    public boolean hasError() {
-        return false;
     }
 
     @Override
@@ -125,6 +103,10 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         }
     }
 
+    @Override
+    public boolean hasError() {
+        return false;
+    }
 
     private void init(final Context context) {
         View view = inflate(context, R.layout.multi_question_radio_button_row, this);
@@ -132,6 +114,24 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         image = (ImageView) view.findViewById(R.id.question_image_row);
         radioGroup = (RadioGroup) view.findViewById(R.id.answer);
     }
+
+    private void fixRadioButtonWidth(CustomRadioButton radioButton) {
+        Drawable radioButtonIcon = getResources().getDrawable(R.drawable.radio_on);
+        BaseLayoutUtils.setLayoutParamsAs50Percent(radioButton, context,
+                calculateFixedWidth(radioButtonIcon));
+    }
+
+    private int calculateFixedWidth(Drawable radioButtonIcon) {
+        int width = radioButtonIcon.getIntrinsicWidth();
+        int height = radioButtonIcon.getIntrinsicHeight();
+        int fixedHeight =
+                PreferencesState.getInstance().getContext().getResources()
+                        .getDimensionPixelSize(
+                                R.dimen.image_size);
+        int newHeightPercent = (fixedHeight * 100) / height;
+        return (newHeightPercent * width) / 100;
+    }
+
 
     public class RadioGroupListener implements RadioGroup.OnCheckedChangeListener {
         private View viewHolder;

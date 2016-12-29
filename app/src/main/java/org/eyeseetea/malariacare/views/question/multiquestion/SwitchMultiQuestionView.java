@@ -50,7 +50,6 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
         falseOption = options.get(1);
 
         switchTrueTextView.setText(Utils.getInternationalizedString(trueOption.getCode()));
-
         switchFalseTextView.setText(Utils.getInternationalizedString(falseOption.getCode()));
     }
 
@@ -62,11 +61,6 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
     @Override
     public void setHeader(String headerValue) {
         headerView.setText(headerValue);
-    }
-
-    @Override
-    public boolean hasError() {
-        return false;
     }
 
     @Override
@@ -102,18 +96,18 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
         }
         if (isDefaultOption) {
             switchView.setChecked(switchValue);
-
-            if (switchValue) {
-                notifyAnswerChanged(trueOption);
-            } else {
-                notifyAnswerChanged(falseOption);
-            }
+            notifyAnswerChanged((switchValue) ? trueOption : falseOption);
         }
     }
 
     @Override
     public void setHelpText(String helpText) {
         helpTextView.setText(helpText);
+    }
+
+    @Override
+    public boolean hasError() {
+        return false;
     }
 
     private void init(Context context) {
@@ -127,11 +121,7 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
         switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    notifyAnswerChanged(trueOption);
-                } else {
-                    notifyAnswerChanged(falseOption);
-                }
+                notifyAnswerChanged((isChecked) ? trueOption : falseOption);
             }
         });
     }

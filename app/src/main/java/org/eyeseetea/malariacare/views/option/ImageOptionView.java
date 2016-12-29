@@ -18,18 +18,12 @@ import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.TextCard;
 
 public class ImageOptionView extends LinearLayout {
-    public interface OnOptionSelectedListener {
-        void onOptionSelected(View view, Option option);
-    }
-
-    Option mOption;
-    OnOptionSelectedListener mOnOptionSelectedListener;
-
     public FrameLayout mOptionContainerView;
     public TextCard mOptionTextCard;
     public ImageView mOptionImageView;
     public TextCard mOptionCounterTextCard;
-
+    Option mOption;
+    OnOptionSelectedListener mOnOptionSelectedListener;
     private Boolean mSelectedOption;
 
     public ImageOptionView(Context context) {
@@ -118,5 +112,9 @@ public class ImageOptionView extends LinearLayout {
                 }
             }
         });
+    }
+
+    public interface OnOptionSelectedListener {
+        void onOptionSelected(View view, Option option);
     }
 }

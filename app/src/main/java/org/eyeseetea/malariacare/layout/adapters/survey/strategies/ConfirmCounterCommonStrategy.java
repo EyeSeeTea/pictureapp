@@ -15,9 +15,8 @@ import java.util.List;
 import utils.ProgressUtils;
 
 public class ConfirmCounterCommonStrategy {
-    private DynamicTabAdapter mDynamicTabAdapter;
-
     public static boolean isClicked;
+    private DynamicTabAdapter mDynamicTabAdapter;
 
     public ConfirmCounterCommonStrategy(DynamicTabAdapter dynamicTabAdapter) {
         mDynamicTabAdapter = dynamicTabAdapter;

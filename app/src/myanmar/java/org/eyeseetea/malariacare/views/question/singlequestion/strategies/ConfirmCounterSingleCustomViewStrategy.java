@@ -23,9 +23,8 @@ import java.util.List;
 
 public class ConfirmCounterSingleCustomViewStrategy implements
         IConfirmCounterSingleCustomViewStrategy {
-    DynamicTabAdapter mDynamicTabAdapter;
     private static final String TAG = ".ConfirmCounter";
-
+    DynamicTabAdapter mDynamicTabAdapter;
     private String currentCounterValue = "";
 
     public ConfirmCounterSingleCustomViewStrategy(DynamicTabAdapter dynamicTabAdapter) {
@@ -34,7 +33,6 @@ public class ConfirmCounterSingleCustomViewStrategy implements
 
     public void showConfirmCounter(final View view, final Option selectedOption,
             Question question, Question questionCounter) {
-
         View rootView = view.getRootView();
 
         currentCounterValue = getCounterValue(question, selectedOption);
@@ -91,7 +89,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
                 mDynamicTabAdapter.navigationController.increaseCounterRepetitions(selectedOption);
                 removeConfirmCounter(v);
                 mDynamicTabAdapter.reloadingQuestionFromInvalidOption = true;
-                mDynamicTabAdapter.saveOptionValue(view, selectedOption, question,true);
+                mDynamicTabAdapter.saveOptionValue(view, selectedOption, question, true);
 
                 if (selectedOption.getFactor() == Float.parseFloat(currentCounterValue)) {
                     ReviewFragment.mLoadingReviewOfSurveyWithMaxCounter = true;
@@ -138,7 +136,6 @@ public class ConfirmCounterSingleCustomViewStrategy implements
 
 
     private String getInternationalizedName(String name) {
-
         if (name.contains("%s")) {
             name = String.format(name, currentCounterValue);
         }
@@ -157,7 +154,6 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         if (counterValue == null || counterValue.isEmpty()) {
             return "1";
         }
-
 
         return String.valueOf((Integer.parseInt(counterValue) + 1));
     }

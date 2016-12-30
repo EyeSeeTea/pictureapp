@@ -78,6 +78,6 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     }
 
     public void setInputType(int value) {
-        editCard.setInputType(value);
+        mCustomEditText.setInputType(value);
     }
 }

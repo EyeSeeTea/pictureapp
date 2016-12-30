@@ -37,7 +37,7 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
 
     @Override
     public void setHelpText(String helpText) {
-        editCard.setHint(helpText);
+        mCustomEditText.setHint(helpText);
     }
 
     @Override

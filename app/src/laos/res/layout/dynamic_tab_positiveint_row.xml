@@ -34,7 +34,7 @@
         android:gravity="center"
         android:text="@string/survey_send"
         android:textColor="@color/intColor"
-        app:tDimension="@string/font_size_level2"
-        app:tFontName="@string/specific_language_font" />
+        app:bDimension="@string/font_size_level2"
+        app:bFontName="@string/specific_language_font" />
 
 </LinearLayout>

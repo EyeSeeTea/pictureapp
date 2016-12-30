@@ -15,13 +15,13 @@ import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ImageOptionView extends LinearLayout {
     public FrameLayout mOptionContainerView;
-    public TextCard mOptionTextCard;
+    public CustomTextView mOptionTextView;
     public ImageView mOptionImageView;
-    public TextCard mOptionCounterTextCard;
+    public CustomTextView mOptionCounterTextView;
     Option mOption;
     OnOptionSelectedListener mOnOptionSelectedListener;
     private Boolean mSelectedOption;
@@ -53,10 +53,10 @@ public class ImageOptionView extends LinearLayout {
 
         if (option.getOptionAttribute().hasHorizontalAlignment()
                 && option.getOptionAttribute().hasVerticalAlignment()) {
-            mOptionTextCard.setText(Utils.getInternationalizedString(option.getCode()));
-            mOptionTextCard.setGravity(option.getOptionAttribute().getGravity());
+            mOptionTextView.setText(Utils.getInternationalizedString(option.getCode()));
+            mOptionTextView.setGravity(option.getOptionAttribute().getGravity());
         } else {
-            mOptionTextCard.setVisibility(View.GONE);
+            mOptionTextView.setVisibility(View.GONE);
         }
 
         setCounter(question);
@@ -91,8 +91,8 @@ public class ImageOptionView extends LinearLayout {
 
         String counterTextValue = getContext().getResources().getString(R.string.option_counter);
 
-        mOptionCounterTextCard.setText(counterTextValue + counterValue);
-        mOptionCounterTextCard.setVisibility(View.VISIBLE);
+        mOptionCounterTextView.setText(counterTextValue + counterValue);
+        mOptionCounterTextView.setVisibility(View.VISIBLE);
     }
 
     private void init(final Context context) {
@@ -100,8 +100,8 @@ public class ImageOptionView extends LinearLayout {
 
         mOptionContainerView = (FrameLayout) findViewById(R.id.imageOptionContainer);
         mOptionImageView = (ImageView) findViewById(R.id.optionImage);
-        mOptionTextCard = (TextCard) findViewById(R.id.optionText);
-        mOptionCounterTextCard = (TextCard) findViewById(R.id.optionCounterText);
+        mOptionTextView = (CustomTextView) findViewById(R.id.optionText);
+        mOptionCounterTextView = (CustomTextView) findViewById(R.id.optionCounterText);
 
         mOptionImageView.setOnClickListener(new OnClickListener() {
             @Override

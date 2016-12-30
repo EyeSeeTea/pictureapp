@@ -19,5 +19,5 @@
         android:singleLine="true"
         android:textColor="@color/intColor"
         android:textSize="?attr/font_medium"
-        app:tFontName="@string/condensed_font_name" />
+        app:font_name="@string/condensed_font_name" />
 </LinearLayout>

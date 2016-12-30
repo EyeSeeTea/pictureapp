@@ -33,5 +33,5 @@
     android:paddingTop="2dip"
     android:text=""
     android:textSize="@dimen/radio_button_option"
-    app:tDimension="@string/font_size_level2"
-    app:tFontName="@string/specific_language_font" />
+    app:rDimension="@string/font_size_level2"
+    app:rFontName="@string/specific_language_font" />

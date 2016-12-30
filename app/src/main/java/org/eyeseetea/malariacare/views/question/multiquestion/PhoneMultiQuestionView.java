@@ -42,7 +42,7 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
 
     @Override
     public void setHelpText(String helpText) {
-        editCard.setHint(helpText);
+        mCustomEditText.setHint(helpText);
     }
 
     @Override

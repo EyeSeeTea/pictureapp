@@ -11,11 +11,11 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
@@ -24,13 +24,13 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
     //the 0 option is the right option and is true in the switch, the 1 option is the
     // left option and is false
 
-    TextCard headerView;
-    TextCard helpTextView;
+    CustomTextView headerView;
+    CustomTextView helpTextView;
     ImageView imageView;
     Switch switchView;
 
-    TextCard switchTrueTextView;
-    TextCard switchFalseTextView;
+    CustomTextView switchTrueTextView;
+    CustomTextView switchFalseTextView;
 
     Option trueOption;
     Option falseOption;
@@ -43,8 +43,8 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
 
     @Override
     public void setOptions(List<Option> options) {
-        switchTrueTextView = (TextCard) findViewById(R.id.row_switch_true);
-        switchFalseTextView = (TextCard) findViewById(R.id.row_switch_false);
+        switchTrueTextView = (CustomTextView) findViewById(R.id.row_switch_true);
+        switchFalseTextView = (CustomTextView) findViewById(R.id.row_switch_false);
 
         trueOption = options.get(0);
         falseOption = options.get(1);
@@ -113,8 +113,8 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
     private void init(Context context) {
         inflate(context, R.layout.multi_question_tab_switch_row, this);
 
-        headerView = (TextCard) findViewById(R.id.row_header_text);
-        helpTextView = (TextCard) findViewById(R.id.row_help_text);
+        headerView = (CustomTextView) findViewById(R.id.row_header_text);
+        helpTextView = (CustomTextView) findViewById(R.id.row_help_text);
         imageView = ((ImageView) findViewById(R.id.question_image_row));
         switchView = (Switch) findViewById(R.id.answer);
 

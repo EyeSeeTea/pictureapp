@@ -43,8 +43,8 @@
             android:paddingTop="4dp"
 
             android:textSize="@dimen/radio_button_option"
-            app:tDimension="@string/font_size_level2"
-            app:tFontName="@string/specific_language_font" />
+            app:rDimension="@string/font_size_level2"
+            app:rFontName="@string/specific_language_font" />
     </LinearLayout>
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
@@ -57,5 +57,5 @@
         android:textColor="@color/black"
         android:visibility="gone"
         android:textSize="?attr/font_small"
-        app:tFontName="@string/specific_language_font" />
+        app:rFontName="@string/specific_language_font" />
 </LinearLayout>

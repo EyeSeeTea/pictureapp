@@ -71,7 +71,6 @@ import org.eyeseetea.malariacare.presentation.factory.SingleQuestionViewFactory;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -528,7 +527,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (questionView instanceof INavigationQuestionView) {
             INavigationQuestionView navigationQuestionView = (INavigationQuestionView) questionView;
 
-            TextCard textNextButton = (TextCard) rootView.findViewById(R.id.next_txt);
+            CustomTextView textNextButton = (CustomTextView) rootView.findViewById(R.id.next_txt);
             textNextButton.setText(navigationQuestionView.nextText());
             textNextButton.setTextSize(navigationQuestionView.nextTextSize());
         }

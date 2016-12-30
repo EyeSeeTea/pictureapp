@@ -47,7 +47,6 @@ public class EventExtended implements VisitableFromSDK {
 
     public static final Event.EventStatus STATUS_ACTIVE = Event.EventStatus.ACTIVE;
     public static final Event.EventStatus STATUS_COMPLETED = Event.EventStatus.COMPLETED;
-    public static final Event.EventStatus STATUS_FUTURE_VISIT = Event.EventStatus.SCHEDULE;
     public static final Event.EventStatus STATUS_SKIPPED = Event.EventStatus.SKIPPED;
 
     EventFlow event;

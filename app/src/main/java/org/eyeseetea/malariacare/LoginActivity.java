@@ -42,7 +42,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.sdk.SdkLoginController;
@@ -52,8 +51,6 @@ import org.hisp.dhis.client.sdk.ui.activities.AbsLoginActivity;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-
-import okhttp3.HttpUrl;
 
 /**
  * Login Screen.
@@ -204,13 +201,13 @@ public class LoginActivity extends AbsLoginActivity {
      */
     //// FIXME: 28/12/16
     //@Subscribe
-    public void onLogoutFinished( ) {
+    public void onLogoutFinished() {
         SdkLoginController.logInUser(serverUrl, ServerAPIController.getSDKCredentials());
     }
 
     //// FIXME: 28/12/16
     //@Subscribe
-    public void onLoginFinished( ) {
+    public void onLoginFinished() {
         /*
         if (result != null && result.getResourceType().equals(ResourceType.USERS)) {
             if (result.getResponseHolder().getApiException() == null) {
@@ -243,13 +240,13 @@ public class LoginActivity extends AbsLoginActivity {
     private void init() {
         initDataDownloadPeriodDropdown();
         //Populate server with the current value
-        serverText = (EditText) findViewById(R.id.server_url);
+        serverText = (EditText) findViewById(R.id.edittext_server_url);
         serverText.setText(ServerAPIController.getServerUrl());
 
         //Username, Password blanks to force real login
-        usernameEditText = (EditText) findViewById(R.id.username);
+        usernameEditText = (EditText) findViewById(R.id.edittext_username);
         usernameEditText.setText(DEFAULT_USER);
-        passwordEditText = (EditText) findViewById(R.id.password);
+        passwordEditText = (EditText) findViewById(R.id.edittext_password);
         passwordEditText.setText(DEFAULT_PASSWORD);
     }
 
@@ -264,9 +261,9 @@ public class LoginActivity extends AbsLoginActivity {
         protected void onPreExecute() {
             //// FIXME: 30/12/16  Fix mising progressbar
             //bar = (ProgressBar) activity.findViewById(R.id.progress_bar_circular);
-            bar = (ProgressBar) activity.findViewById(R.id.progress_bar);
+            bar = (ProgressBar) activity.findViewById(R.id.progress_bar_circular);
             bar.setVisibility(View.VISIBLE);
-            activity.findViewById(R.id.login_views_container).setVisibility(View.GONE);
+            activity.findViewById(R.id.layout_login_views).setVisibility(View.GONE);
         }
 
         @Override
@@ -279,7 +276,7 @@ public class LoginActivity extends AbsLoginActivity {
         protected void onPostExecute(final Exception exception) {
             //Error
             bar.setVisibility(View.GONE);
-            activity.findViewById(R.id.login_views_container).setVisibility(View.VISIBLE);
+            activity.findViewById(R.id.layout_login_views).setVisibility(View.VISIBLE);
 
             init();
         }

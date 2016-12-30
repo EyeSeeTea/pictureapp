@@ -13,11 +13,12 @@ import org.eyeseetea.malariacare.domain.entity.Phone;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomButton;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView implements IQuestionView {
     CustomEditText mCustomEditText;
-    Button sendButton;
+    CustomButton sendButton;
 
     public PhoneSingleQuestionView(Context context) {
         super(context);
@@ -54,7 +55,7 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
         mCustomEditText.setFocusable(true);
         mCustomEditText.setFocusableInTouchMode(true);
 
-        sendButton = (Button) findViewById(R.id.row_phone_btn);
+        sendButton = (CustomButton) findViewById(R.id.row_phone_btn);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override

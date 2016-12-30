@@ -22,11 +22,13 @@
         android:textSize="?attr/font_medium"
         app:font_name="@string/condensed_font_name" />
 
-    <Button
+    <org.eyeseetea.sdk.presentation.views.CustomButton
         android:id="@+id/row_phone_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_weight="0.4"
-        android:text="@string/ok" />
+        android:text="@string/ok"
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/condensed_font_name"/>
 </LinearLayout>

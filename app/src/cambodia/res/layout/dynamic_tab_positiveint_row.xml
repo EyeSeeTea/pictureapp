@@ -22,12 +22,14 @@
         android:textSize="?attr/font_medium"
         app:font_name="@string/condensed_font_name" />
 
-    <Button
+    <org.eyeseetea.sdk.presentation.views.CustomButton
         android:id="@+id/dynamic_positiveInt_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_weight="0.5"
-        android:text="@string/ok" />
+        android:text="@string/ok"
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/condensed_font_name" />
 
 </LinearLayout>

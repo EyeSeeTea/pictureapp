@@ -13,12 +13,13 @@ import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomButton;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionView implements
         IQuestionView {
     CustomEditText numberPicker;
-    Button sendButton;
+    CustomButton sendButton;
 
     public PositiveNumberSingleQuestionView(Context context) {
         super(context);
@@ -55,7 +56,7 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         numberPicker.setFocusable(true);
         numberPicker.setFocusableInTouchMode(true);
 
-        sendButton = (Button) findViewById(R.id.dynamic_positiveInt_btn);
+        sendButton = (CustomButton) findViewById(R.id.dynamic_positiveInt_btn);
 
         sendButton.setOnClickListener(new OnClickListener() {
             @Override

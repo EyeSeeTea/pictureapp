@@ -252,6 +252,7 @@
     <string name="drugs_referral_referred_review_title">ရည်ညွှန်း</string>
     <string name="follow_up_occupation_review_title">အလုပ်အကိုင်</string>
     <string name="work_in_progress">တိုးတက်မှုအတွက်အလုပ်</string>
+    <string name="dynamic_error_number">မမှန်ကန်တဲ့အရေအတွက်</string>
     <string name="stock_balance">မနေ.ကလက်ကျန်</string>
     <string name="receipts">ရရှိ </string>
     <string name="used_today">ယနေ.သုံး</string>

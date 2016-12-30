@@ -6,20 +6,18 @@ import android.text.TextWatcher;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.domain.entity.Phone;
-import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
+import org.eyeseetea.malariacare.views.EditCard;
+import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.sdk.presentation.views.CustomEditText;
-import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
-public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
+public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
         IMultiQuestionView {
-    CustomTextView header;
-    CustomEditText mCustomEditText;
+    TextCard header;
+    EditCard numberPicker;
 
-    public PhoneMultiQuestionView(Context context) {
+    public NumberMultiQuestionView(Context context) {
         super(context);
 
         init(context);
@@ -32,43 +30,46 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
 
     @Override
     public boolean hasError() {
-        return mCustomEditText.getError() != null;
+        return numberPicker.getError() != null;
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        mCustomEditText.setEnabled(enabled);
+        numberPicker.setEnabled(enabled);
     }
 
     @Override
     public void setHelpText(String helpText) {
-        editCard.setHint(helpText);
+        numberPicker.setHint(helpText);
     }
 
     @Override
     public void setValue(Value value) {
         if (value != null) {
-            mCustomEditText.setText(value.getValue());
+            numberPicker.setText(value.getValue());
         }
     }
 
     private void init(final Context context) {
-        inflate(context, R.layout.multi_question_tab_phone_row, this);
+        inflate(context, R.layout.multi_question_tab_int_row, this);
 
-        header = (CustomTextView) findViewById(R.id.row_header_text);
-        mCustomEditText = (CustomEditText) findViewById(R.id.answer);
+        header = (TextCard) findViewById(R.id.row_header_text);
+        numberPicker = (EditCard) findViewById(R.id.answer);
 
-        mCustomEditText.addTextChangedListener(new TextWatcher() {
+        numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                try {
-                    Phone phone = new Phone(mCustomEditText.getText().toString());
-                    notifyAnswerChanged(phone.getValue());
 
-                } catch (InvalidPhoneException e) {
-                    mCustomEditText.setError(
-                            context.getString(R.string.dynamic_error_phone_format));
+                try {
+                    int value = Integer.parseInt(s.toString());
+                    notifyAnswerChanged(String.valueOf(value));
+
+                } catch (NumberFormatException e) {
+                    numberPicker.setError(
+                            context.getString(R.string.dynamic_error_number));
                 }
+
+                notifyAnswerChanged(numberPicker.getText().toString());
             }
 
             @Override

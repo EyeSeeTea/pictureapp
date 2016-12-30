@@ -1,33 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/bottom_view" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include layout="@layout/bottom_view" />
+        android:id="@+id/switch_header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/question_padding_all"
+        android:paddingRight="@dimen/question_padding_all"
+        android:weightSum="1">
 
         <LinearLayout
-            android:id="@+id/switch_header"
-            android:layout_width="match_parent"
+            android:layout_width="0px"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/question_padding_all"
-            android:paddingRight="@dimen/question_padding_all"
-            android:weightSum="1">
-
-            <LinearLayout
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:layout_weight="0.25"
-                android:gravity="left"
-                android:minHeight="@dimen/image_size">
+            android:layout_gravity="left"
+            android:layout_weight="0.25"
+            android:gravity="left"
+            android:minHeight="@dimen/image_size">
 
                 <ImageView
                     android:id="@+id/question_image_row"
@@ -41,13 +36,13 @@
                     android:scaleType="fitCenter" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_weight="0.75"
-                android:gravity="right"
-                android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="0.75"
+            android:gravity="right"
+            android:orientation="vertical">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
                     android:id="@+id/row_header_text"
@@ -70,15 +65,15 @@
                     android:textSize="?attr/font_medium"
                     app:font_name="@string/condensed_font_name" />
 
-                <LinearLayout
-                    android:id="@+id/switch_answer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:gravity="right"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/question_padding_all"
-                    android:paddingRight="@dimen/question_padding_all">
+            <LinearLayout
+                android:id="@+id/switch_answer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/question_padding_all"
+                android:paddingRight="@dimen/question_padding_all">
 
                     <org.eyeseetea.sdk.presentation.views.CustomTextView
                         android:id="@+id/row_switch_false"
@@ -90,16 +85,16 @@
                         android:textSize="?attr/font_medium"
                         app:font_name="@string/condensed_font_name" />
 
-                    <Switch
-                        android:id="@+id/answer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:switchMinWidth="56dp"
-                        android:textOff=""
-                        android:textOn=""
-                        android:thumb="@drawable/thumb"
-                        android:track="@drawable/track" />
+                <Switch
+                    android:id="@+id/answer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:switchMinWidth="56dp"
+                    android:textOff=""
+                    android:textOn=""
+                    android:thumb="@drawable/thumb"
+                    android:track="@drawable/track" />
 
                     <org.eyeseetea.sdk.presentation.views.CustomTextView
                         android:id="@+id/row_switch_true"
@@ -114,5 +109,3 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-</TableRow>

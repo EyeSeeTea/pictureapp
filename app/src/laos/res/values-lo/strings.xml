@@ -199,4 +199,5 @@
     <string name="developer_option_summary">ຄຸນນະສົມບັດນີ້ເປີດໃຊ້ວຽກທາງເລືອກການພັດທະນາ</string>
     <string name="developer_option_title">ທາງເລືອກໃນການສະແດງໃຫ້ເຫັນການພັດທະນາ</string>
     <string name="export_data_option_title">ຖານຂໍ້ມູນການສົ່ງອອກ</string>
+    <string name="dynamic_error_number">ຈໍານວນທີ່ບໍ່ຖືກຕ້ອງ</string>
 </resources>

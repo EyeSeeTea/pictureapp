@@ -49,7 +49,6 @@ import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
-import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -300,12 +299,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
             content.removeAllViews();
             content.addView(viewContent);
             ITabAdapter tabAdapter = tabAdaptersCache.findAdapter(tab);
-            if (tab.getType() == Constants.TAB_AUTOMATIC ||
-                    tab.getType() == Constants.TAB_ADHERENCE ||
-                    tab.getType() == Constants.TAB_IQATAB ||
-                    tab.getType() == Constants.TAB_SCORE_SUMMARY) {
-                tabAdapter.initializeSubscore();
-            }
+
             ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
             if (tabAdapter instanceof DynamicTabAdapter) {
                 ((DynamicTabAdapter) tabAdapter).addOnSwipeListener(listViewTab);

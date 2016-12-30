@@ -37,15 +37,15 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
     }
 
     @Override
+    public void setHelpText(String helpText) {
+        numberPicker.setHint(helpText);
+    }
+
+    @Override
     public void setValue(Value value) {
         if (value != null) {
             numberPicker.setText(value.getValue());
         }
-    }
-
-    @Override
-    public void setHint(String hintValue) {
-        numberPicker.setHint(hintValue);
     }
 
     private void init(final Context context) {
@@ -75,11 +75,6 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
                 return false;
             }
         });
-
-/*        if (!isMultipleQuestionTab(tabType)) {
-            //Add button to listener
-            swipeTouchListener.addClickableView(button);
-        }*/
     }
 
     private void validateAnswer(Context context) {

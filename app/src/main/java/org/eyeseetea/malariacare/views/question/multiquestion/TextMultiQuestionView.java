@@ -12,12 +12,12 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
-public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
+public class TextMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
         IMultiQuestionView {
     CustomTextView header;
     CustomEditText mCustomEditText;
 
-    public ShortTextMultiQuestionView(Context context) {
+    public TextMultiQuestionView(Context context) {
         super(context);
 
         init(context);
@@ -26,11 +26,6 @@ public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements
     @Override
     public void setHeader(String headerValue) {
         header.setText(headerValue);
-    }
-
-    @Override
-    public boolean hasError() {
-        return false;
     }
 
     @Override
@@ -46,13 +41,19 @@ public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements
     }
 
     @Override
-    public void setHint(String hintValue) {
-        mCustomEditText.setHint(hintValue);
+    public void setHelpText(String helpText) {
+        mCustomEditText.setHint(helpText);
     }
 
-    private void init(Context context) {
 
-        inflate(context, R.layout.multi_question_tab_short_text_row, this);
+    @Override
+    public boolean hasError() {
+        return false;
+    }
+
+
+    private void init(Context context) {
+        inflate(context, R.layout.multi_question_tab_text_row, this);
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
         mCustomEditText = (CustomEditText) findViewById(R.id.answer);
@@ -74,5 +75,9 @@ public class ShortTextMultiQuestionView extends AKeyboardQuestionView implements
                 notifyAnswerChanged(String.valueOf(s));
             }
         });
+    }
+
+    public void setInputType(int value) {
+        editCard.setInputType(value);
     }
 }

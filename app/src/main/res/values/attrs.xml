@@ -18,13 +18,6 @@
   -->
 
 <resources>
-    <!-- CustomRadioButton: Radiobutton with adaptative text size and text font -->
-    <declare-styleable name="CustomRadioButton">
-        <attr name="rDimension" format="string|reference" />
-        <attr name="rScale" format="string|reference" />
-        <attr name="rFontName" format="string|reference" />
-    </declare-styleable>
-
     <!-- FontCustomizableButton: Button with adaptative text size and text font-->
     <declare-styleable name="CustomButton">
         <attr name="bDimension" format="string|reference" />

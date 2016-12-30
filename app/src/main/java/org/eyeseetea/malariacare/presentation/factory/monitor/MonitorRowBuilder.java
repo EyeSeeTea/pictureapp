@@ -121,6 +121,17 @@ public abstract class MonitorRowBuilder {
     }
 
     /**
+     * Inits a list of defaults values (most of times 0 but it could be a
+     */
+    private Object[] initData() {
+        Object[] data = new Object[Constants.STOCK_HISTORY_SIZE];
+        for (int i = 0; i < Constants.STOCK_HISTORY_SIZE; i++) {
+            data[i] = defaultValueColumn();
+        }
+        return data;
+    }
+
+    /**
      * Updates row info with the survey
      */
     public void addSurvey(Survey survey) {
@@ -162,7 +173,7 @@ public abstract class MonitorRowBuilder {
      * first item
      */
     private String getDataAsJSON(Object[] data) {
-        List<String> dataAsString = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
+        List<String> dataAsString = new ArrayList<>(Constants.STOCK_HISTORY_SIZE);
         dataAsString.add(this.rowTitle);
         for (int i = 0; i < data.length; i++) {
             dataAsString.add(data[i].toString());
@@ -176,7 +187,7 @@ public abstract class MonitorRowBuilder {
      * first item
      */
     private String getDataCapitalizedAsJSON(Object[] data) {
-        List<String> dataAsString = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
+        List<String> dataAsString = new ArrayList<>(Constants.STOCK_HISTORY_SIZE);
         dataAsString.add(this.rowTitle);
         for (int i = 0; i < data.length; i++) {
             dataAsString.add(WordUtils.capitalize(data[i].toString()));
@@ -247,16 +258,5 @@ public abstract class MonitorRowBuilder {
         this.daysData[columnIndex] = updateColumn(this.daysData[columnIndex], surveyMonitor);
     }
 
-
-    /**
-     * Inits a list of defaults values (most of times 0 but it could be a
-     */
-    private Object[] initData() {
-        Object[] data = new Object[Constants.MONITOR_HISTORY_SIZE];
-        for (int i = 0; i < Constants.MONITOR_HISTORY_SIZE; i++) {
-            data[i] = defaultValueColumn();
-        }
-        return data;
-    }
 
 }

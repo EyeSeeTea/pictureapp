@@ -30,9 +30,9 @@ import java.util.List;
  * Defines the structure of the second table in the monitor
  * Created by arrizabalaga on 25/02/16.
  */
-public class StockTableBuilder extends MonitorTableBuilder {
+public class ConsumptionTableBuilder extends MonitorTableBuilder {
 
-    public StockTableBuilder(Context context) {
+    public ConsumptionTableBuilder(Context context) {
         super(context, context.getString(R.string.monitor_table_title_stock_header));
     }
 

@@ -48,12 +48,12 @@ public class MonitorBuilder implements IWebViewBuilder {
      * })
      */
     private static final String JAVASCRIPT_UPDATE_MESSAGES =
-            "javascript:monitor.updateMessages(%s)";
+            "javascript:statistics.updateMessages(%s)";
 
     /**
      * Inyect javascript to reload tables
      */
-    private static final String JAVASCRIPT_RELOAD_TABLES = "javascript:monitor.drawTables()";
+    private static final String JAVASCRIPT_RELOAD_TABLES = "javascript:statistics.drawTables()";
 
     /**
      * JSON map with pairs to translate webview interface

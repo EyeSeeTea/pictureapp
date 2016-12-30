@@ -21,7 +21,6 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockBuilder;
-import org.eyeseetea.malariacare.services.MonitorService;
 import org.eyeseetea.malariacare.services.StockService;
 import org.eyeseetea.malariacare.webview.IWebView;
 import org.eyeseetea.malariacare.webview.IWebViewBuilder;
@@ -82,7 +81,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
         //Ask for data
         Intent surveysIntent = new Intent(getActivity().getApplicationContext(),
                 StockService.class);
-        surveysIntent.putExtra(MonitorService.SERVICE_METHOD, StockService.PREPARE_STOCK_DATA);
+        surveysIntent.putExtra(StockService.SERVICE_METHOD, StockService.PREPARE_STOCK_DATA);
         getActivity().startService(surveysIntent);
 
         super.onResume();
@@ -105,7 +104,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
         if (mStockReceiver == null) {
             mStockReceiver = new StockReceiver();
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mStockReceiver,
-                    new IntentFilter(MonitorService.PREPARE_MONITOR_DATA));
+                    new IntentFilter(StockService.PREPARE_STOCK_DATA));
         }
 
     }

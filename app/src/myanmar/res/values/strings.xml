@@ -250,5 +250,15 @@
     <string name="drugs_referral_referred_review_title">Referred</string>
     <string name="follow_up_occupation_review_title">Occupation</string>
     <string name="work_in_progress">Work in progress</string>
+    <string name="stock_balance">Balance</string>
+    <string name="receipts">Receipts</string>
+    <string name="used_today">Used Today</string>
+    <string name="available">Available</string>
+    <string name="status">Status</string>
+    <string name="see_receipt">See Receipt</string>
+    <string name="new_receipt">New Receipt</string>
+    <string name="see_balance">See Balance</string>
+    <string name="new_balance">New Balance</string>
+
 
 </resources>

@@ -36,12 +36,12 @@ public abstract class MonitorTableBuilder {
     /**
      * Javascript that adds a new table to the monitor
      */
-    private static final String JAVASCRIPT_ADD_TABLE = "javascript:monitor.addTable(\"%s\")";
+    private static final String JAVASCRIPT_ADD_TABLE = "javascript:statistics.addTable(\"%s\")";
 
     /**
      * Javascript that adds a new row to the table
      */
-    private static final String JAVASCRIPT_ADD_ROW = "javascript:monitor.addRow(\"%s\",%s)";
+    private static final String JAVASCRIPT_ADD_ROW = "javascript:statistics.addRow(\"%s\",%s)";
 
     /**
      * Reference to the context to translate strings

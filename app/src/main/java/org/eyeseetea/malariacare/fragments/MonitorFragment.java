@@ -142,14 +142,14 @@ public class MonitorFragment extends Fragment implements IDashboardFragment, IWe
         }
     }
 
-    public void reloadWebView(final IWebViewBuilder monitorBuilder) {
+    public void reloadWebView(final IWebViewBuilder iWebViewBuilder) {
         initWebView();
         //onPageFinish load data
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                monitorBuilder.addDataToView(webView);
+                iWebViewBuilder.addDataToView(webView);
             }
         });
         //Load html

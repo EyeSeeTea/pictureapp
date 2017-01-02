@@ -1,4 +1,4 @@
-ºpackage org.eyeseetea.malariacare.database.migrations;
+package org.eyeseetea.malariacare.database.migrations;
 
         import android.database.sqlite.SQLiteDatabase;
 

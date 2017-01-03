@@ -29,8 +29,8 @@ public class Migration22TreatmentMatrix extends BaseMigration {
 
     @Override
     public void migrate(SQLiteDatabase database) {
-        addColumn(database, User.class, "organisation", "long");
-        addColumn(database, User.class, "supervisor", "long");
+        addColumn(database, User.class, "organisation", "Integer");
+        addColumn(database, User.class, "supervisor", "Integer");
     }
 
 }

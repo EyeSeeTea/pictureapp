@@ -585,6 +585,11 @@ public class PopulateDB {
         reader.close();
     }
 
+    /**
+     * Method to update the old questions and add new ones. Use before all headers and answers are inserted.
+     * @param assetManager Needed to open the csv with the questions.
+     * @throws IOException If there is a problem opening the csv.
+     */
     public static void updateQuestions(AssetManager assetManager) throws IOException {
         List<Question> questions = Question.getAllQuestions();
         //Reset inner references
@@ -595,19 +600,28 @@ public class PopulateDB {
         String line[];
         //Save new option name for each option
         while ((line = reader.readNext()) != null) {
+            boolean added = false;
             for (Question question : questions) {
                 if (String.valueOf(question.getId_question()).equals((line[0]))) {
+                    added = true;
                     question.setCode(line[1]);
                     question.setDe_name(line[2]);
                     question.setHelp_text(line[3]);
                     question.setForm_name(line[4]);
-                    //Update necessary from migration3
+                    question.setUid(line[5]);
+                    question.setOrder_pos(Integer.valueOf(line[6]));
+                    question.setNumerator_w(Float.valueOf(line[7]));
+                    question.setDenominator_w(Float.valueOf(line[8]));
+                    question.setHeader(Header.findById(Long.parseLong(line[9])));
+                    if (!line[10].equals("")) {
+                        question.setAnswer(Answer.findById(Long.parseLong(line[10])));
+                    }
+
+                    question.setOutput(Integer.valueOf(line[12]));
                     question.setTotalQuestions(Integer.valueOf(line[13]));
-                    //Update necessary from migration4
                     question.setVisible(Integer.valueOf(line[14]));
-                    //Update necessary from migration7
                     if (line.length > 15 && !line[15].equals("")) {
-                        question.setPath(line[15]);
+                        question.setPath((line[15]));
                     }
                     if (line.length > 16 && !line[16].equals("")) {
                         question.setCompulsory(Integer.valueOf(line[16]));
@@ -618,8 +632,178 @@ public class PopulateDB {
                     break;
                 }
             }
+            if (!added) {
+                Question question = new Question();
+                question.setCode(line[1]);
+                question.setDe_name(line[2]);
+                question.setHelp_text(line[3]);
+                question.setForm_name(line[4]);
+                question.setUid(line[5]);
+                question.setOrder_pos(Integer.valueOf(line[6]));
+                question.setNumerator_w(Float.valueOf(line[7]));
+                question.setDenominator_w(Float.valueOf(line[8]));
+                question.setHeader(Header.findById(Long.parseLong(line[9])));
+                if (!line[10].equals("")) {
+                    question.setAnswer(Answer.findById(Long.parseLong(line[10])));
+                }
+
+                question.setOutput(Integer.valueOf(line[12]));
+                question.setTotalQuestions(Integer.valueOf(line[13]));
+                question.setVisible(Integer.valueOf(line[14]));
+                if (line.length > 15 && !line[15].equals("")) {
+                    question.setPath((line[15]));
+                }
+                if (line.length > 16 && !line[16].equals("")) {
+                    question.setCompulsory(Integer.valueOf(line[16]));
+                } else {
+                    question.setCompulsory(Question.QUESTION_NO_COMPULSORY);
+                }
+                question.insert();
+            }
         }
         reader.close();
+    }
+
+    /**
+     * Method to update the old answers and add new ones.
+     * @param assetManager Needed to open the csv with the answers.
+     * @throws IOException If there is a problem opening the csv.
+     */
+    public static void updateAnswers(AssetManager assetManager) throws IOException {
+        List<Answer> answers = Answer.getAllAnswers();
+        //Reset inner references
+        cleanInnerLists();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(ANSWERS_CSV)),
+                SEPARATOR, QUOTECHAR);
+        String line[];
+        //Save new answers
+        while ((line = reader.readNext()) != null) {
+            boolean added = false;
+            for (Answer answer : answers) {
+                if (answer.getId_answer().equals(Long.parseLong(line[0]))) {
+                    answer.setName(line[1]);
+                    answer.save();
+                    added=true;
+                    break;
+                }
+            }
+            if(!added){
+                Answer answer=new Answer();
+                answer.setName(line[1]);
+                answer.insert();
+            }
+        }
+    }
+
+    /**
+     * Method to update the old headers and add new ones from the csv. Use before inserting all tabs.
+     *
+     * @param assetManager Needed to open the csv with the headers.
+     * @throws IOException If there is a problem opening the csv.
+     */
+    public static void updateHeaders(AssetManager assetManager) throws IOException {
+        List<Header> headers = Header.getAllHeaders();
+        //Reset inner references
+        cleanInnerLists();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(HEADERS_CSV)),
+                SEPARATOR, QUOTECHAR);
+        String line[];
+        //Save new answers
+        while ((line = reader.readNext()) != null) {
+            boolean added = false;
+            for (Header header : headers) {
+                if (header.getId_header().equals(Long.parseLong(line[0]))) {
+                    header.setShort_name(line[1]);
+                    header.setName(line[2]);
+                    header.setOrder_pos(Integer.valueOf(line[3]));
+                    header.setTab(Tab.findById(Long.valueOf(line[4])));
+                    header.save();
+                    added=true;
+                    break;
+                }
+            }
+            if(!added){
+                Header header=new Header();
+                header.setShort_name(line[1]);
+                header.setName(line[2]);
+                header.setOrder_pos(Integer.valueOf(line[3]));
+                header.setTab(Tab.findById(Long.valueOf(line[4])));
+                header.insert();
+            }
+
+        }
+    }
+
+    /**
+     * Method to update the old programs and add new ones from the csv.
+     * @param assetManager Needed to open the csv with the programs.
+     * @throws IOException If there is a problem opening the csv.
+     */
+    public static void updatePrograms(AssetManager assetManager) throws IOException {
+        List<Program> programs = Program.getAllPrograms();
+        //Reset inner references
+        cleanInnerLists();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PROGRAMS_CSV)),
+                SEPARATOR, QUOTECHAR);
+        String line[];
+        //Save new answers
+        while ((line = reader.readNext()) != null) {
+            boolean added = false;
+            for (Program program : programs) {
+                if (program.getId_program() == Long.parseLong(line[0])) {
+                    program.setUid(line[1]);
+                    program.setName(line[2]);
+                    program.save();
+                    added = true;
+                    break;
+                }
+            }
+            if (!added) {
+                Program program = new Program();
+                program.setUid(line[1]);
+                program.setName(line[2]);
+                program.insert();
+
+            }
+        }
+
+
+    }
+    /**
+     * Method to update the old tabs and add new ones from the csv. Use before insert all programs.
+     * @param assetManager Needed to open the csv with the tabs.
+     * @throws IOException If there is a problem opening the csv.
+     */
+    public static void updateTabs(AssetManager assetManager) throws IOException {
+        List<Tab> tabs = Tab.getAllTabs();
+        //Reset inner references
+        cleanInnerLists();
+        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(TABS_CSV)),
+                SEPARATOR, QUOTECHAR);
+        String line[];
+        //Save new answers
+        while ((line = reader.readNext()) != null) {
+            boolean added = false;
+            for (Tab tab : tabs) {
+                if (tab.getId_tab() == Long.parseLong(line[0])) {
+                    tab.setName(line[1]);
+                    tab.setOrder_pos(Integer.valueOf(line[2]));
+                    tab.setProgram(Program.findById(Long.valueOf(line[3])));
+                    tab.setType(Integer.valueOf(line[4]));
+                    tab.save();
+                    added = true;
+                    break;
+                }
+            }
+            if (!added) {
+                Tab tab = new Tab();
+                tab.setName(line[1]);
+                tab.setOrder_pos(Integer.valueOf(line[2]));
+                tab.setProgram(Program.findById(Long.valueOf(line[3])));
+                tab.setType(Integer.valueOf(line[4]));
+                tab.insert();
+            }
+        }
     }
 
     public static void addNotTestedRemminder(AssetManager assetManager) throws IOException {

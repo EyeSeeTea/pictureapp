@@ -16,8 +16,6 @@ public class Treatment extends BaseModel {
     @PrimaryKey(autoincrement = true)
     long id_treatment;
     @Column
-    long id_drug_combination;
-    @Column
     long id_organisation;
     @Column
     String diagnosis;
@@ -31,7 +29,6 @@ public class Treatment extends BaseModel {
     public Treatment(long id_treatment, long id_drug_combination, long id_organisation,
             String diagnosis, String message) {
         this.id_treatment = id_treatment;
-        this.id_drug_combination = id_drug_combination;
         this.id_organisation = id_organisation;
         this.diagnosis = diagnosis;
         this.message = message;
@@ -45,13 +42,6 @@ public class Treatment extends BaseModel {
         this.id_treatment = id_treatment;
     }
 
-    public long getId_drug_combination() {
-        return id_drug_combination;
-    }
-
-    public void setId_drug_combination(long id_drug_combination) {
-        this.id_drug_combination = id_drug_combination;
-    }
 
     public long getId_organisation() {
         return id_organisation;
@@ -85,7 +75,6 @@ public class Treatment extends BaseModel {
         Treatment treatment = (Treatment) o;
 
         if (id_treatment != treatment.id_treatment) return false;
-        if (id_drug_combination != treatment.id_drug_combination) return false;
         if (id_organisation != treatment.id_organisation) return false;
         if (diagnosis != null ? !diagnosis.equals(treatment.diagnosis)
                 : treatment.diagnosis != null) {
@@ -98,7 +87,6 @@ public class Treatment extends BaseModel {
     @Override
     public int hashCode() {
         int result = (int) (id_treatment ^ (id_treatment >>> 32));
-        result = 31 * result + (int) (id_drug_combination ^ (id_drug_combination >>> 32));
         result = 31 * result + (int) (id_organisation ^ (id_organisation >>> 32));
         result = 31 * result + (diagnosis != null ? diagnosis.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
@@ -109,7 +97,6 @@ public class Treatment extends BaseModel {
     public String toString() {
         return "Treatment{" +
                 "id_treatment=" + id_treatment +
-                ", id_drug_combination=" + id_drug_combination +
                 ", id_organisation=" + id_organisation +
                 ", diagnosis='" + diagnosis + '\'' +
                 ", message='" + message + '\'' +

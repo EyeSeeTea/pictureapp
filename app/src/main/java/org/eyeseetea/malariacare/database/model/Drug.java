@@ -19,14 +19,17 @@ public class Drug extends BaseModel {
     String name;
     @Column
     int dose;
+    @Column
+    String question_code;
 
     public Drug() {
     }
 
-    public Drug(long id_drug, String name, int dose) {
+    public Drug(long id_drug, String name, int dose, String question_code) {
         this.id_drug = id_drug;
         this.name = name;
         this.dose = dose;
+        this.question_code = question_code;
     }
 
     public long getId_drug() {
@@ -53,6 +56,13 @@ public class Drug extends BaseModel {
         this.dose = dose;
     }
 
+    public String getQuestion_code() {
+        return question_code;
+    }
+
+    public void setQuestion_code(String question_code) {
+        this.question_code = question_code;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -63,7 +73,9 @@ public class Drug extends BaseModel {
 
         if (id_drug != drug.id_drug) return false;
         if (dose != drug.dose) return false;
-        return name != null ? name.equals(drug.name) : drug.name == null;
+        if (name != null ? !name.equals(drug.name) : drug.name != null) return false;
+        return question_code != null ? question_code.equals(drug.question_code)
+                : drug.question_code == null;
 
     }
 
@@ -72,6 +84,7 @@ public class Drug extends BaseModel {
         int result = (int) (id_drug ^ (id_drug >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + dose;
+        result = 31 * result + (question_code != null ? question_code.hashCode() : 0);
         return result;
     }
 
@@ -81,6 +94,7 @@ public class Drug extends BaseModel {
                 "id_drug=" + id_drug +
                 ", name='" + name + '\'' +
                 ", dose=" + dose +
+                ", question_code='" + question_code + '\'' +
                 '}';
     }
 }

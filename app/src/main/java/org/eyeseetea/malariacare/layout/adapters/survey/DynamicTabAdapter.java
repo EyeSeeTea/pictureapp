@@ -57,7 +57,6 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.domain.usecase.ToastUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
@@ -68,6 +67,7 @@ import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.presentation.factory.IQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.MultiQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.SingleQuestionViewFactory;
+import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -662,7 +662,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         finishOrNext();
                     }
                 } else if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
-                    ToastUseCase.showCompulsoryUnansweredToast();
+                    UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();
                     isClicked = false;
                     return;
                 } else {
@@ -854,7 +854,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public void finishOrNext() {
         if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
-            ToastUseCase.showCompulsoryUnansweredToast();
+
+            UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();
             isClicked = false;
             return;
         }

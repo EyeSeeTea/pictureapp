@@ -17,13 +17,16 @@ public class DrugCombination extends BaseModel {
     long id_drug_combination;
     @Column
     long id_drug;
+    @Column
+    long id_treatment;
 
     public DrugCombination() {
     }
 
-    public DrugCombination(long id_drug_combination, long id_drug) {
+    public DrugCombination(long id_drug_combination, long id_drug, long id_treatment) {
         this.id_drug_combination = id_drug_combination;
         this.id_drug = id_drug;
+        this.id_treatment = id_treatment;
     }
 
     public long getId_drug_combination() {
@@ -42,6 +45,14 @@ public class DrugCombination extends BaseModel {
         this.id_drug = id_drug;
     }
 
+    public long getId_treatment() {
+        return id_treatment;
+    }
+
+    public void setId_treatment(long id_treatment) {
+        this.id_treatment = id_treatment;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,7 +61,8 @@ public class DrugCombination extends BaseModel {
         DrugCombination that = (DrugCombination) o;
 
         if (id_drug_combination != that.id_drug_combination) return false;
-        return id_drug == that.id_drug;
+        if (id_drug != that.id_drug) return false;
+        return id_treatment == that.id_treatment;
 
     }
 
@@ -58,6 +70,7 @@ public class DrugCombination extends BaseModel {
     public int hashCode() {
         int result = (int) (id_drug_combination ^ (id_drug_combination >>> 32));
         result = 31 * result + (int) (id_drug ^ (id_drug >>> 32));
+        result = 31 * result + (int) (id_treatment ^ (id_treatment >>> 32));
         return result;
     }
 
@@ -66,6 +79,7 @@ public class DrugCombination extends BaseModel {
         return "DrugCombination{" +
                 "id_drug_combination=" + id_drug_combination +
                 ", id_drug=" + id_drug +
+                ", id_treatment=" + id_treatment +
                 '}';
     }
 }

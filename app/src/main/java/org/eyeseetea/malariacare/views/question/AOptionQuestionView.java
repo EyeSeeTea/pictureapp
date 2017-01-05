@@ -10,7 +10,7 @@ import org.eyeseetea.malariacare.database.model.Question;
 import java.util.List;
 
 public abstract class AOptionQuestionView extends LinearLayout {
-    onAnswerChangedListener mOnAnswerChangedListener;
+    private onAnswerChangedListener mOnAnswerChangedListener;
 
     public AOptionQuestionView(Context context) {
         super(context);

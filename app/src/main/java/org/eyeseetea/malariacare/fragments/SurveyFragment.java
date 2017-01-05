@@ -300,12 +300,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
             content.removeAllViews();
             content.addView(viewContent);
             ITabAdapter tabAdapter = tabAdaptersCache.findAdapter(tab);
-            if (tab.getType() == Constants.TAB_AUTOMATIC ||
-                    tab.getType() == Constants.TAB_ADHERENCE ||
-                    tab.getType() == Constants.TAB_IQATAB ||
-                    tab.getType() == Constants.TAB_SCORE_SUMMARY) {
-                tabAdapter.initializeSubscore();
-            }
+
             ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
             if (tabAdapter instanceof DynamicTabAdapter) {
                 ((DynamicTabAdapter) tabAdapter).addOnSwipeListener(listViewTab);

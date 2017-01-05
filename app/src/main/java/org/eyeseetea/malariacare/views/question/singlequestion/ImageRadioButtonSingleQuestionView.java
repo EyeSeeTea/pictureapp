@@ -54,23 +54,16 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
     }
 
     @Override
+    public void setHelpText(String helpText) {
+
+    }
+
+    @Override
     public void setOptions(List<Option> options) {
         for (Option option : options) {
             ImageRadioButtonOption imageRadioButtonOption = createOptionView(option);
             answersContainer.addView(imageRadioButtonOption);
         }
-    }
-
-    @NonNull
-    private ImageRadioButtonOption createOptionView(Option option) {
-        ImageRadioButtonOption imageRadioButtonOption = new ImageRadioButtonOption(
-                getContext());
-        imageRadioButtonOption.setText(option.getInternationalizedCode());
-        putImageInImageRadioButton(option.getInternationalizedPath(), imageRadioButtonOption);
-        imageRadioButtonOption.setOnCheckedChangeListener(this);
-        imageRadioButtonOption.setOption(option, mQuestion);
-        imageRadioButtonOption.setEnabled(super.isEnabled());
-        return imageRadioButtonOption;
     }
 
     @Override
@@ -93,6 +86,19 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
             }
         }
     }
+
+    @NonNull
+    private ImageRadioButtonOption createOptionView(Option option) {
+        ImageRadioButtonOption imageRadioButtonOption = new ImageRadioButtonOption(
+                getContext());
+        imageRadioButtonOption.setText(option.getInternationalizedCode());
+        putImageInImageRadioButton(option.getInternationalizedPath(), imageRadioButtonOption);
+        imageRadioButtonOption.setOnCheckedChangeListener(this);
+        imageRadioButtonOption.setOption(option, mQuestion);
+        imageRadioButtonOption.setEnabled(super.isEnabled());
+        return imageRadioButtonOption;
+    }
+
 
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_row_empty_question, this);

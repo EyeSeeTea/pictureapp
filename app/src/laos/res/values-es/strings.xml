@@ -185,4 +185,5 @@
     <string name="developer_option_summary">Esta opción activa las opciones de desarrollador</string>
     <string name="developer_option_title">Mostrar opciones de desarrollador</string>
     <string name="export_data_option_title">Exportar base de datos</string>
+    <string name="dynamic_error_number">Número invalido</string>
 </resources>

@@ -133,4 +133,6 @@
     <string name="developer_option_summary">This feature activates the developer options</string>
     <string name="developer_option_title">Show developer options</string>
     <string name="export_data_option_title">Export database</string>
+    <string name="dynamic_error_number">Invalid Number</string>
+
 </resources>

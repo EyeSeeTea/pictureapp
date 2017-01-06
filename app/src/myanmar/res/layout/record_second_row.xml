@@ -8,17 +8,17 @@
     android:layout_gravity="center"
     android:orientation="horizontal">
 
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
-        android:text="Details"
+        android:text="@string/details"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/white"
+        android:textSize="?attr/font_small"
         android:textStyle="bold"
-        app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/medium_font_name" />
+        app:font_name="@string/medium_font_name" />
 
 </LinearLayout>

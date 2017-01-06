@@ -1,33 +1,17 @@
-package org.eyeseetea.malariacare.domain.usecase;
+package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.IHeaderCaseUse;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
-/**
- * Created by idelcano on 05/12/2016.
- */
+public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
 
-public class HeaderUseCase implements IHeaderCaseUse {
-    /**
-     * Singleton reference
-     */
-    private static HeaderUseCase instance;
-
-    public static HeaderUseCase getInstance() {
-        if (instance == null) {
-            instance = new HeaderUseCase();
-        }
-        return instance;
-    }
 
     private static void setTitle(View view, int keyId, int titleString) {
-        TextCard title = (TextCard) view.findViewById(keyId);
+        CustomTextView title = (CustomTextView) view.findViewById(keyId);
         title.setText(view.getContext().getString(titleString));
     }
 
@@ -70,7 +54,6 @@ public class HeaderUseCase implements IHeaderCaseUse {
         headerView.setVisibility(View.GONE);
     }
 
-    @Nullable
     private View getHeaderView(Activity activity) {
         if (activity == null) {
             return null;

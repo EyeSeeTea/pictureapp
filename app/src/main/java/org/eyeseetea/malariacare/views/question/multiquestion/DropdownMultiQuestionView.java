@@ -13,18 +13,18 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DropdownMultiQuestionView extends AOptionQuestionView implements IQuestionView,
         IMultiQuestionView, IImageQuestionView {
-    TextCard header;
+    CustomTextView header;
     Spinner spinnerOptions;
     ImageView imageView;
     Question question;
@@ -51,11 +51,6 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     @Override
     public void setHeader(String headerValue) {
         header.setText(headerValue);
-    }
-
-    @Override
-    public boolean hasError() {
-        return false;
     }
 
     @Override
@@ -92,10 +87,15 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         }
     }
 
+    @Override
+    public boolean hasError() {
+        return false;
+    }
+
     private void init(final Context context) {
         inflate(context, R.layout.multi_question_tab_dropdown_row, this);
 
-        header = (TextCard) findViewById(R.id.row_header_text);
+        header = (CustomTextView) findViewById(R.id.row_header_text);
         spinnerOptions = (Spinner) findViewById(R.id.answer);
         imageView = ((ImageView) findViewById(R.id.question_image_row));
 

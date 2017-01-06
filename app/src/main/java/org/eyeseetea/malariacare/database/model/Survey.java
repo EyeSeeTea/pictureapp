@@ -995,26 +995,25 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
     /**
      * This method removes the children question values from when a parent question is removed
+     *
+     * @removeCounters is used to prevent to remove the counter when change the some question in the
+     * same level
+     * This changed was required because the counter need be child of the question+option who tigger
+     * the counter.
      */
-    public void removeChildrenValuesFromQuestionRecursively(Question question) {
+    public void removeChildrenValuesFromQuestionRecursively(Question question,
+            boolean removeCounters) {
         List<Value> values = getValuesFromDB();
         List<Question> questionChildren = question.getChildren();
         for (int i = values.size() - 1; i > 0; i--) {
-            //This loop removes the Counter questions. We should include here the Warning or
-            // Reminder questions if is necessary in the future.
-            for (QuestionRelation questionRelation : question.getQuestionRelations()) {
-                if (questionRelation.isACounter()) {
-                    if (questionRelation.getQuestion().equals(question)) {
-                        removeValue(values.get(i));
-                        break;
-                    }
-                }
-            }
             //This loop removes recursively the values on the children question
             if (questionChildren.contains(values.get(i).getQuestion())) {
-                removeValue(values.get(i));
+                //Remove the children values but if the child value is a counter is not removed in the first level
+                if (!values.get(i).getQuestion().isACounter() || removeCounters) {
+                    removeValue(values.get(i));
+                }
                 for (Question child : questionChildren) {
-                    removeChildrenValuesFromQuestionRecursively(child);
+                    removeChildrenValuesFromQuestionRecursively(child, true);
                 }
             }
         }

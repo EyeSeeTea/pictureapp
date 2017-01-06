@@ -2,7 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <org.eyeseetea.malariacare.views.EditCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/answer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +14,6 @@
         android:inputType="textShortMessage"
         android:singleLine="true"
         android:textColor="@color/intColor"
-        android:textSize="@dimen/input_number_edit_text_phone"
-        app:tDimension="@string/font_size_level2"
-        app:tFontName="@string/condensed_font_name" />
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/condensed_font_name" />
 </merge>

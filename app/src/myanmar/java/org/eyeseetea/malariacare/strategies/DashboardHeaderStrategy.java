@@ -5,17 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.views.TextCard;
-
-/**
- * Created by ina on 20/12/2016.
- */
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
 
 
     private static void setTitle(View view, int keyId, int titleString) {
-        TextCard title = (TextCard) view.findViewById(keyId);
+        CustomTextView title = (CustomTextView) view.findViewById(keyId);
         title.setText(view.getContext().getString(titleString));
     }
 

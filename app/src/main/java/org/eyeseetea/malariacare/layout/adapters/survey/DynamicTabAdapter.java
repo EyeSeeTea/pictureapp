@@ -71,8 +71,6 @@ import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.EditCard;
-import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -83,6 +81,8 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .ConfirmCounterSingleCustomViewStrategy;
+import org.eyeseetea.sdk.presentation.views.CustomEditText;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -390,7 +390,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         //Question
-        TextCard headerView = (TextCard) rowView.findViewById(question);
+        CustomTextView headerView = (CustomTextView) rowView.findViewById(question);
 
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(),
@@ -523,7 +523,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (questionView instanceof INavigationQuestionView) {
             INavigationQuestionView navigationQuestionView = (INavigationQuestionView) questionView;
 
-            TextCard textNextButton = (TextCard) rootView.findViewById(R.id.next_txt);
+            CustomTextView textNextButton = (CustomTextView) rootView.findViewById(R.id.next_txt);
             textNextButton.setText(navigationQuestionView.nextText());
             textNextButton.setTextSize(navigationQuestionView.nextTextSize());
         }
@@ -806,7 +806,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
-                final EditCard editCard = (EditCard) tableRow.findViewById(R.id.answer);
+                final CustomEditText editCard = (CustomEditText) tableRow.findViewById(R.id.answer);
                 editCard.setText("");
                 break;
             case Constants.DROPDOWN_LIST:

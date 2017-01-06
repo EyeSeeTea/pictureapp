@@ -60,7 +60,7 @@
         android:paddingTop="0dp"
         android:progress="0" />
 
-    <org.eyeseetea.malariacare.views.CustomButton
+    <org.eyeseetea.sdk.presentation.views.CustomButton
         android:id="@+id/cancelPullButton"
         style="?android:textAppearanceSmall"
         android:layout_width="wrap_content"
@@ -74,9 +74,7 @@
         android:padding="12dp"
         android:text="@string/cancel"
         android:textColor="@color/white"
-        android:textSize="@dimen/medium_text_size"
+        android:textSize="?attr/font_medium"
         android:textStyle="bold"
-        app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/bold_font_name" />
-
+        app:font_name="@string/bold_font_name" />
 </RelativeLayout>

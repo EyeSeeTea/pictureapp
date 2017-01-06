@@ -34,8 +34,8 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        this.lInflater = LayoutInflater.from(getActivity().getApplicationContext());
-        View view = lInflater.inflate(R.layout.stock_fragment,
+
+        View view = inflater.inflate(R.layout.stock_fragment,
                 container, false);
         return view;
     }

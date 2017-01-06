@@ -4,22 +4,21 @@ import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
-import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomButton;
+import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionView implements
         IQuestionView {
-    EditText numberPicker;
-    Button sendButton;
+    CustomEditText numberPicker;
+    CustomButton sendButton;
 
     public PositiveNumberSingleQuestionView(Context context) {
         super(context);
@@ -52,11 +51,11 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_positiveint_row, this);
 
-        numberPicker = (EditCard) findViewById(R.id.answer);
+        numberPicker = (CustomEditText) findViewById(R.id.answer);
         numberPicker.setFocusable(true);
         numberPicker.setFocusableInTouchMode(true);
 
-        sendButton = (Button) findViewById(R.id.dynamic_positiveInt_btn);
+        sendButton = (CustomButton) findViewById(R.id.dynamic_positiveInt_btn);
 
         sendButton.setOnClickListener(new OnClickListener() {
             @Override

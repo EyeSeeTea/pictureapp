@@ -29,11 +29,6 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
     }
 
     @Override
-    public boolean hasError() {
-        return numberPicker.getError() != null;
-    }
-
-    @Override
     public void setEnabled(boolean enabled) {
         numberPicker.setEnabled(enabled);
     }
@@ -48,6 +43,11 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
         if (value != null) {
             numberPicker.setText(value.getValue());
         }
+    }
+
+    @Override
+    public boolean hasError() {
+        return numberPicker.getError() != null;
     }
 
     private void init(final Context context) {

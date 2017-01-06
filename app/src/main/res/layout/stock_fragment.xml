@@ -21,7 +21,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:scaleType="fitCenter"
-                android:src="@drawable/work_in_progress"/>
+                android:src="@drawable/work_in_progress" />
 
             <org.eyeseetea.sdk.presentation.views.CustomTextView
                 android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:gravity="center"
                 android:text="@string/work_in_progress"
                 android:textColor="@color/dark_purple"
-                android:textSize="?attr/font_medium"/>
+                android:textSize="?attr/font_medium" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

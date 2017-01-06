@@ -58,9 +58,6 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
         header = (CustomTextView) findViewById(R.id.row_header_text);
         mCustomEditText = (CustomEditText) findViewById(R.id.answer);
 
-        double sizeHeader = header.getTextSize();
-        double sizeedit = header.getTextSize();
-
         mCustomEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {

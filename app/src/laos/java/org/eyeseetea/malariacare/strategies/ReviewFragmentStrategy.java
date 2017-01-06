@@ -14,7 +14,7 @@ import org.eyeseetea.malariacare.views.TextCard;
  * Created by ina on 20/12/2016.
  */
 
-public class ReviewFragmentStrategy  extends AReviewFragmentStrategy  {
+public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
     public TableRow createViewRow(TableRow rowView, Value value) {
         //Sets the value text in the row and add the question as tag.

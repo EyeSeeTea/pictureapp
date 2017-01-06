@@ -18,7 +18,6 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="56.0dip"
     android:orientation="vertical">
@@ -29,7 +28,7 @@
         android:layout_height="28dip"
         android:width="0dp"
         android:paddingLeft="20dp"
-        android:textSize="18dp"/>
+        android:textSize="18dp" />
 
     <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/action_bar_multititle_subtitle"
@@ -38,6 +37,4 @@
         android:width="0dp"
         android:paddingLeft="20dp"
         android:textSize="18dp" />
-
-    <!--android:textSize="?attr/font_small"-->
 </LinearLayout>

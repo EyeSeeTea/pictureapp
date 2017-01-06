@@ -31,11 +31,6 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
     }
 
     @Override
-    public boolean hasError() {
-        return mCustomEditText.getError() != null;
-    }
-
-    @Override
     public void setEnabled(boolean enabled) {
         mCustomEditText.setEnabled(enabled);
     }
@@ -50,6 +45,11 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
         if (value != null) {
             mCustomEditText.setText(value.getValue());
         }
+    }
+
+    @Override
+    public boolean hasError() {
+        return mCustomEditText.getError() != null;
     }
 
     private void init(final Context context) {

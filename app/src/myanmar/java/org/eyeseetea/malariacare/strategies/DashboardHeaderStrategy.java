@@ -7,10 +7,6 @@ import android.view.View;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
-/**
- * Created by idelcano on 05/12/2016.
- */
-
 public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
 
 

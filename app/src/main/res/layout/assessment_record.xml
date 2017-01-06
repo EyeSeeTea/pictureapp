@@ -40,12 +40,9 @@
             android:gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/black"
-            android:textStyle="bold"
             android:textSize="?attr/font_small"
+            android:textStyle="bold"
             app:font_name="@string/medium_font_name" />
-        <!--android:textSize="@dimen/dashboard_text_size"-->
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -65,12 +62,9 @@
             android:gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/black"
-            android:textStyle="bold"
             android:textSize="?attr/font_small"
+            android:textStyle="bold"
             app:font_name="@string/medium_font_name" />
-        <!--android:textSize="@dimen/dashboard_text_size"-->
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -90,12 +84,9 @@
             android:text="@string/lorem_ipsum"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/black"
-            android:textStyle="bold"
             android:textSize="?attr/font_small"
+            android:textStyle="bold"
             app:font_name="@string/medium_font_name" />
-        <!--android:textSize="@dimen/dashboard_text_size"-->
-
-
     </LinearLayout>
 
 </TableRow>

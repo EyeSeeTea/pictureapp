@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DropdownMultiQuestionView extends AOptionQuestionView implements IQuestionView,
-        IMultiQuestionView,IImageQuestionView {
+        IMultiQuestionView, IImageQuestionView {
     CustomTextView header;
     Spinner spinnerOptions;
     ImageView imageView;
@@ -51,11 +51,6 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     @Override
     public void setHeader(String headerValue) {
         header.setText(headerValue);
-    }
-
-    @Override
-    public boolean hasError() {
-        return false;
     }
 
     @Override
@@ -90,6 +85,11 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
                 break;
             }
         }
+    }
+
+    @Override
+    public boolean hasError() {
+        return false;
     }
 
     private void init(final Context context) {

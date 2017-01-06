@@ -12,7 +12,7 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <include layout="@layout/bottom_view"></include>
+        <include layout="@layout/bottom_view" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/questionTextRow"
@@ -35,7 +35,8 @@
             android:textSize="?attr/font_small"
             app:font_name="@string/specific_language_font" />
 
-        <include layout="@layout/top_view"></include>
+        <include layout="@layout/top_view" />
+
     </LinearLayout>
 
 </TableRow>

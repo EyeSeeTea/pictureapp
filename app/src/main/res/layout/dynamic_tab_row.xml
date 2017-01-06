@@ -37,8 +37,8 @@
             android:gravity="bottom"
             android:padding="5dip"
             android:textColor="@color/black"
-            android:visibility="gone"
             android:textSize="?attr/font_small"
+            android:visibility="gone"
             app:font_name="@string/specific_language_font" />
     </FrameLayout>
 
@@ -59,11 +59,11 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:fontFamily="?attr/font_medium"
             android:gravity="center"
             android:padding="5dip"
             android:text=""
             android:textColor="@color/white"
-            android:fontFamily="?attr/font_medium"
             app:font_name="@string/specific_language_font" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
@@ -71,11 +71,11 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:fontFamily="?attr/font_small"
             android:gravity="bottom"
             android:padding="5dip"
             android:textColor="@color/black"
             android:visibility="gone"
-            android:fontFamily="?attr/font_small"
             app:font_name="@string/specific_language_font" />
     </FrameLayout>
 </TableRow>

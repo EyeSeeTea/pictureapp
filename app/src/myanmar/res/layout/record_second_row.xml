@@ -14,11 +14,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
-        android:text="Details"
+        android:text="@string/details"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/white"
-        android:textStyle="bold"
         android:textSize="?attr/font_small"
+        android:textStyle="bold"
         app:font_name="@string/medium_font_name" />
 
 </LinearLayout>

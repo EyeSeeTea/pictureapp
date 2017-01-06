@@ -98,7 +98,8 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
-            customRadioButton.setChecked(((Option)customRadioButton.getTag()).equals(value.getOption()));
+            customRadioButton.setChecked(
+                    ((Option) customRadioButton.getTag()).equals(value.getOption()));
         }
     }
 

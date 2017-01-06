@@ -19,8 +19,6 @@
 
 package org.eyeseetea.malariacare;
 
-import static android.R.attr.x;
-
 import android.app.Activity;
 import android.content.Context;
 import android.support.multidex.MultiDex;
@@ -37,18 +35,15 @@ import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
  */
 public class EyeSeeTeaApplication extends Dhis2Application {
 
-    public static Permissions permissions;
     private static final String TAG = ".EyeSeeTeaApplication";
+    public static Permissions permissions;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
         PreferencesState.getInstance().init(getApplicationContext());
-
     }
-
-
 
     @Override
     public void onTerminate() {
@@ -66,6 +61,4 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
-
 }

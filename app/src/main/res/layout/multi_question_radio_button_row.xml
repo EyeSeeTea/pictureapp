@@ -77,8 +77,8 @@
                         android:visibility="invisible" />
                 </LinearLayout>
 
+                <include layout="@layout/radio" />
 
-                <include layout="@layout/radio"></include>
             </LinearLayout>
         </LinearLayout>
 

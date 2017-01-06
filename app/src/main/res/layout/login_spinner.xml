@@ -22,5 +22,5 @@
     <Spinner
         android:id="@+id/data_spinner"
         android:layout_width="match_parent"
-        android:layout_height="34dp"></Spinner>
+        android:layout_height="34dp" />
 </LinearLayout>

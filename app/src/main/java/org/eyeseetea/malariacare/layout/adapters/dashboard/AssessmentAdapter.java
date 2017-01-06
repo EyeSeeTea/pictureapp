@@ -240,6 +240,6 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
      * @return true|false
      */
     public boolean isPositionFooter(List<Survey> surveys, int position, int headerSize) {
-        return position >= ( surveys.size() + headerSize);
+        return position >= (surveys.size() + headerSize);
     }
 }

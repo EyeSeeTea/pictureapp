@@ -29,7 +29,7 @@
     android:paddingTop="@dimen/dashboard_row_padding"
     android:visibility="gone">
 
-    <include layout="@layout/top_view"></include>
+    <include layout="@layout/top_view" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -51,7 +51,7 @@
             android:textSize="?attr/font_small"
             app:font_name="@string/condensed_font_name" />
 
-        <include layout="@layout/vertical_divisor_view"></include>
+        <include layout="@layout/vertical_divisor_view" />
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/header_subtitle"
@@ -65,10 +65,11 @@
             android:padding="5dip"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/fragment_header_subtitle"
-            android:textStyle="bold"
             android:textSize="?attr/font_small"
+            android:textStyle="bold"
             app:font_name="@string/condensed_font_name" />
     </LinearLayout>
 
-    <include layout="@layout/header_bottom_view"></include>
+    <include layout="@layout/header_bottom_view" />
+
 </LinearLayout>

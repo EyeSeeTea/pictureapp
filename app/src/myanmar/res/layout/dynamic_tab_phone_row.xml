@@ -21,7 +21,7 @@
         android:paddingLeft="@dimen/question_padding"
         android:paddingRight="@dimen/question_padding">
 
-        <include layout="@layout/phone_item"></include>
+        <include layout="@layout/phone_item" />
 
         <org.eyeseetea.sdk.presentation.views.CustomButton
             android:id="@+id/row_phone_btn"

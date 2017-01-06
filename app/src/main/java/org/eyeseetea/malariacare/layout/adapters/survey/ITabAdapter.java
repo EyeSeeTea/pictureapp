@@ -26,13 +26,11 @@ import android.widget.BaseAdapter;
  */
 public interface ITabAdapter {
 
-    public void initializeSubscore();
+    BaseAdapter getAdapter();
 
-    public BaseAdapter getAdapter();
+    Float getScore();
 
-    public Float getScore();
+    int getLayout();
 
-    public int getLayout();
-
-    public String getName();
+    String getName();
 }

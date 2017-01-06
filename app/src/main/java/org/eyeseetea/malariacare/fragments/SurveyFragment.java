@@ -44,11 +44,11 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -258,7 +258,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     }
 
     public void reloadHeader(Activity activity) {
-        HeaderUseCase.getInstance().hideHeader(activity);
+        DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 
     public class AsyncReloadAdaptersAndChangeTab extends AsyncTask<Void, Integer, View> {
@@ -300,12 +300,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
             content.removeAllViews();
             content.addView(viewContent);
             ITabAdapter tabAdapter = tabAdaptersCache.findAdapter(tab);
-            if (tab.getType() == Constants.TAB_AUTOMATIC ||
-                    tab.getType() == Constants.TAB_ADHERENCE ||
-                    tab.getType() == Constants.TAB_IQATAB ||
-                    tab.getType() == Constants.TAB_SCORE_SUMMARY) {
-                tabAdapter.initializeSubscore();
-            }
+
             ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
             if (tabAdapter instanceof DynamicTabAdapter) {
                 ((DynamicTabAdapter) tabAdapter).addOnSwipeListener(listViewTab);

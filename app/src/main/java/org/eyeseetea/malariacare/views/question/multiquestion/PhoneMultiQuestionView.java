@@ -31,13 +31,13 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
     }
 
     @Override
-    public boolean hasError() {
-        return editCard.getError() != null;
+    public void setEnabled(boolean enabled) {
+        editCard.setEnabled(enabled);
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
-        editCard.setEnabled(enabled);
+    public void setHelpText(String helpText) {
+        editCard.setHint(helpText);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
     }
 
     @Override
-    public void setHint(String hintValue) {
-        editCard.setHint(hintValue);
+    public boolean hasError() {
+        return editCard.getError() != null;
     }
 
     private void init(final Context context) {

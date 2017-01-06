@@ -14,6 +14,7 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
     @Override
     public boolean HasQuestionImageVisibleInHeader(Integer output) {
         return output != Constants.SWITCH_BUTTON && output != Constants.QUESTION_LABEL
-                && output != Constants.RADIO_GROUP_HORIZONTAL;
+                && output != Constants.RADIO_GROUP_HORIZONTAL && output != Constants.REMINDER
+                && output != Constants.WARNING;
     }
 }

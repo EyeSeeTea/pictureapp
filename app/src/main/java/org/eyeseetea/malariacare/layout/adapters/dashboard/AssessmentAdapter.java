@@ -211,14 +211,15 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
      * @return true|false
      */
     public boolean isPositionASurvey(ListView l, List<Survey> surveys, int position) {
-        if (l.getHeaderViewsCount() > 0) {
+        int headerSize = l.getHeaderViewsCount();
+        if (headerSize > 0) {
             if (isPositionHeader(position)) {
                 return false;
             }
-            if (l.getFooterViewsCount() > 0) {
-                if (isPositionFooter(surveys, position + 1)) {
-                    return false;
-                }
+        }
+        if (l.getFooterViewsCount() > 0) {
+            if (isPositionFooter(surveys, position, headerSize)) {
+                return false;
             }
         }
         return true;
@@ -238,7 +239,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
      *
      * @return true|false
      */
-    public boolean isPositionFooter(List<Survey> surveys, int position) {
-        return position == (surveys.size() + position);
+    public boolean isPositionFooter(List<Survey> surveys, int position, int headerSize) {
+        return position >= ( surveys.size() + headerSize);
     }
 }

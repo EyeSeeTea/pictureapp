@@ -15,9 +15,9 @@ import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +112,6 @@ public class ReviewFragment extends Fragment {
     }
 
     public void reloadHeader(Activity activity) {
-        HeaderUseCase.getInstance().hideHeader(activity);
+        DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 }

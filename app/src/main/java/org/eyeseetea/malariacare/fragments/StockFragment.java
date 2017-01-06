@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.webview.IWebView;
 import org.eyeseetea.malariacare.webview.IWebViewBuilder;
 
@@ -53,7 +53,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
     }
 
     public void reloadHeader(Activity activity) {
-        HeaderUseCase.getInstance().init(activity, R.string.tab_tag_stock);
+        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_stock);
     }
 
     @Override

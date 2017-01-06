@@ -67,6 +67,10 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     final static Long ID_OPTION_SPECIE_PFPV = 18l;
     /**
+     * Id of negative  of rdt tst result
+     */
+    final static Long ID_OPTION_INVALID = 19l;
+    /**
      * Id of referral yes option  of referral treatment
      */
     final static Long ID_OPTION_REFERRAL_YES = 35l;
@@ -213,7 +217,7 @@ public class SurveyMonitor extends BaseSurveyMonitor {
     public boolean isACT6() {
         //// TODO: set the correct idQuestion and IDOption
         //return findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ACT6);
-        return  false;
+        return false;
     }
 
     /**
@@ -229,12 +233,18 @@ public class SurveyMonitor extends BaseSurveyMonitor {
      */
     public Integer countRDT() {
         int testCounter = testCounter();
-
-        if (isRDTs()) {
+        if (isInvalid()) {
             return testCounter > 0 ? testCounter : 1;
+        } else if (isRDTs()) {
+            //the rdt is a test too
+            return testCounter + 1;
         } else {
             return 0;
         }
+    }
+
+    private boolean isInvalid() {
+        return findOption(ID_QUESTION_RDT_TEST_RESULT, ID_OPTION_INVALID);
     }
 
     /**

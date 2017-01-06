@@ -57,7 +57,6 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.domain.usecase.ToastUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
@@ -68,6 +67,7 @@ import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.presentation.factory.IQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.MultiQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.SingleQuestionViewFactory;
+import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -418,15 +418,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         List<Question> screenQuestions = new ArrayList<>();
 
+        tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
         if (isTabScrollable(questionItem, tabType)) {
-            tableLayout = (TableLayout) rowView.findViewById(R.id.multi_question_options_table);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
             screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
             swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
                     R.id.scrolled_table)).findViewById(R.id.table_scroll));
         } else {
-            tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.GONE);
             screenQuestions.add(questionItem);
@@ -441,10 +440,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         Log.d(TAG, "Questions in actual tab: " + screenQuestions.size());
         for (Question screenQuestion : screenQuestions) {
-
             renderQuestion(rowView, tabType, screenQuestion);
-
-            setBottomLine(tabType, screenQuestions, screenQuestion);
         }
 
         rowView.requestLayout();
@@ -530,16 +526,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             CustomTextView textNextButton = (CustomTextView) rootView.findViewById(R.id.next_txt);
             textNextButton.setText(navigationQuestionView.nextText());
             textNextButton.setTextSize(navigationQuestionView.nextTextSize());
-        }
-    }
-
-    private void setBottomLine(int tabType, List<Question> screenQuestions,
-            Question screenQuestion) {
-        if (isMultipleQuestionTab(tabType) && screenQuestion.getId_question().equals(
-                screenQuestions.get(screenQuestions.size() - 1).getId_question())) {
-            LinearLayout view = (LinearLayout) lInflater.inflate(R.layout.bottom_screen_view,
-                    tableLayout, false);
-            tableLayout.addView(view);
         }
     }
 
@@ -662,7 +648,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         finishOrNext();
                     }
                 } else if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
-                    ToastUseCase.showCompulsoryUnansweredToast();
+                    UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();
                     isClicked = false;
                     return;
                 } else {
@@ -854,7 +840,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public void finishOrNext() {
         if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
-            ToastUseCase.showCompulsoryUnansweredToast();
+
+            UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();
             isClicked = false;
             return;
         }
@@ -867,7 +854,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 if (isDone(value)) {
                     navigationController.isMovingToForward = false;
                     if (!wasPatientTested() || !BuildConfig.reviewScreen) {
-                        showDone();
+                        surveyShowDone();
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();
                         hideKeyboard(PreferencesState.getInstance().getContext());
@@ -887,7 +874,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     /**
      * Show a final dialog to announce the survey is over without reviewfragment.
      */
-    private void showDone() {
+    private void surveyShowDone() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
                 .setTitle(R.string.survey_completed)
                 .setMessage(R.string.survey_completed_text)
@@ -895,6 +882,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         hideKeyboard(PreferencesState.getInstance().getContext());
+                        Session.getSurvey().updateSurveyStatus();
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
                         isClicked = false;
                     }

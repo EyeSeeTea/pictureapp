@@ -250,4 +250,5 @@
     <string name="drugs_referral_referred_review_title">推薦</string>
     <string name="follow_up_occupation_review_title">佔用</string>
     <string name="work_in_progress">工作正在进行中</string>
+    <string name="dynamic_error_number">无效号码</string>
 </resources>

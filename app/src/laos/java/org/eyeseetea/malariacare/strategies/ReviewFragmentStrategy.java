@@ -1,8 +1,8 @@
-package org.eyeseetea.malariacare.domain.usecase;
+package org.eyeseetea.malariacare.strategies;
 
 import android.graphics.Color;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -11,12 +11,12 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.views.TextCard;
 
 /**
- * Created by idelcano on 15/12/2016.
+ * Created by ina on 20/12/2016.
  */
 
-public class ReviewUseCase {
+public class ReviewFragmentStrategy  extends AReviewFragmentStrategy  {
 
-    public static View createViewRow(ViewGroup rowView, Value value) {
+    public TableRow createViewRow(TableRow rowView, Value value) {
         //Sets the value text in the row and add the question as tag.
         TextCard textCard = (TextCard) rowView.findViewById(R.id.review_content_text);
         textCard.setText((value.getOption() != null) ? value.getOption().getInternationalizedCode()

@@ -250,5 +250,5 @@
     <string name="drugs_referral_referred_review_title">Referred</string>
     <string name="follow_up_occupation_review_title">Occupation</string>
     <string name="work_in_progress">Work in progress</string>
-
+    <string name="dynamic_error_number">Invalid number</string>
 </resources>

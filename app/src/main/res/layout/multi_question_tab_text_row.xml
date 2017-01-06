@@ -12,5 +12,5 @@
 
     <include layout="@layout/row_header_item" />
 
-    <include layout="@layout/short_text_item" />
+    <include layout="@layout/text_item" />
 </LinearLayout>

@@ -33,13 +33,13 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
     }
 
     @Override
-    public boolean hasError() {
-        return numberPicker.getError() != null || positiveNumber == null;
+    public void setEnabled(boolean enabled) {
+        numberPicker.setEnabled(enabled);
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
-        numberPicker.setEnabled(enabled);
+    public void setHelpText(String helpText) {
+        numberPicker.setHint(helpText);
     }
 
     @Override
@@ -50,10 +50,9 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
     }
 
     @Override
-    public void setHint(String hintValue) {
-        numberPicker.setHint(hintValue);
+    public boolean hasError() {
+        return numberPicker.getError() != null || positiveNumber == null;
     }
-
 
     private void init(final Context context) {
         inflate(context, R.layout.multi_question_tab_positive_int_row, this);

@@ -868,7 +868,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 if (isDone(value)) {
                     navigationController.isMovingToForward = false;
                     if (!wasPatientTested() || !BuildConfig.reviewScreen) {
-                        showDone();
+                        surveyShowDone();
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();
                         hideKeyboard(PreferencesState.getInstance().getContext());
@@ -888,7 +888,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     /**
      * Show a final dialog to announce the survey is over without reviewfragment.
      */
-    private void showDone() {
+    private void surveyShowDone() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
                 .setTitle(R.string.survey_completed)
                 .setMessage(R.string.survey_completed_text)
@@ -896,6 +896,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         hideKeyboard(PreferencesState.getInstance().getContext());
+                        Session.getSurvey().updateSurveyStatus();
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
                         isClicked = false;
                     }

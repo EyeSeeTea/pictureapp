@@ -418,14 +418,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         List<Question> screenQuestions = new ArrayList<>();
 
-        tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
         if (isTabScrollable(questionItem, tabType)) {
+            tableLayout = (TableLayout) rowView.findViewById(R.id.multi_question_options_table);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
             screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
             swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
                     R.id.scrolled_table)).findViewById(R.id.table_scroll));
         } else {
+            tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.GONE);
             screenQuestions.add(questionItem);
@@ -439,6 +440,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         Log.d(TAG, "Questions in actual tab: " + screenQuestions.size());
+
+        swipeTouchListener.clearClickableViews();
         for (Question screenQuestion : screenQuestions) {
             renderQuestion(rowView, tabType, screenQuestion);
         }

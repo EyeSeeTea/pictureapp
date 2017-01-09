@@ -6,7 +6,7 @@
     android:background="@color/questionHeaderColor"
     android:orientation="vertical">
 
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/review_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +15,6 @@
         android:paddingLeft="10dip"
         android:text="@string/review_title"
         android:textColor="@color/questionHeaderTextColor"
-        android:textSize="@dimen/default_review_fragment_font_size"
-        app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/specific_language_font" />
+        android:textSize="?attr/font_large"
+        app:font_name="@string/specific_language_font" />
 </LinearLayout>

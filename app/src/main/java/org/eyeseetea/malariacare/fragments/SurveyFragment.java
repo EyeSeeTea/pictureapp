@@ -44,11 +44,12 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -257,7 +258,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     }
 
     public void reloadHeader(Activity activity) {
-        HeaderUseCase.getInstance().hideHeader(activity);
+        DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 
     public class AsyncReloadAdaptersAndChangeTab extends AsyncTask<Void, Integer, View> {

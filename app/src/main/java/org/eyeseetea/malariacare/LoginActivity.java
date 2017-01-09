@@ -49,6 +49,7 @@ import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
 import org.hisp.dhis.android.sdk.job.NetworkJob;
@@ -92,7 +93,7 @@ public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.Login
         }
         //Add left text for the spinner "title"
         findViewById(R.id.date_spinner_container).setVisibility(View.VISIBLE);
-        TextView textView = (TextView) findViewById(R.id.data_text_view);
+        CustomTextView textView = (CustomTextView) findViewById(R.id.data_text_view);
         textView.setText(R.string.download);
 
         //add options

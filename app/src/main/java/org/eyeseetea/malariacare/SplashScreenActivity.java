@@ -29,7 +29,6 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.InitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.TypefaceCache;
 
 import java.io.IOException;
 
@@ -56,7 +55,6 @@ public class SplashScreenActivity extends Activity {
     private void init() {
         Fabric.with(this, new Crashlytics());
         LocationMemory.getInstance().init(getApplicationContext());
-        TypefaceCache.getInstance().init(getApplicationContext());
 
         FlowManager.init(this, "_EyeSeeTeaDB");
         createDBIndexes();

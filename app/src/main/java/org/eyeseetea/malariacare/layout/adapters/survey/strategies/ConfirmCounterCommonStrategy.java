@@ -8,7 +8,7 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class ConfirmCounterCommonStrategy {
             Question questionCounter) {
         //Change question x confirm message
         View rootView = view.getRootView();
-        final TextCard questionView = (TextCard) rootView.findViewById(R.id.question);
+        final CustomTextView questionView = (CustomTextView) rootView.findViewById(R.id.question);
         questionView.setText(questionCounter.getInternationalizedForm_name());
         ProgressUtils.setProgressBarText(rootView, "");
         //cancel
@@ -69,19 +69,21 @@ public class ConfirmCounterCommonStrategy {
         //Question "header" is in the first option in Options.csv
         List<Option> questionOptions = questionCounter.getAnswer().getOptions();
         if (questionOptions.get(0) != null) {
-            TextCard textCard = (TextCard) rootView.findViewById(R.id.questionTextRow);
+            CustomTextView textCard = (CustomTextView) rootView.findViewById(R.id.questionTextRow);
             textCard.setText(questionOptions.get(0).getInternationalizedCode());
             textCard.setTextSize(questionOptions.get(0).getOptionAttribute().getText_size());
         }
         //Question "confirm button" is in the second option in Options.csv
         if (questionOptions.get(1) != null) {
-            TextCard confirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_yes);
+            CustomTextView confirmTextCard = (CustomTextView) rootView.findViewById(
+                    R.id.textcard_confirm_yes);
             confirmTextCard.setText(questionOptions.get(1).getInternationalizedCode());
             confirmTextCard.setTextSize(questionOptions.get(1).getOptionAttribute().getText_size());
         }
         //Question "no confirm button" is in the third option in Options.csv
         if (questionOptions.get(2) != null) {
-            TextCard noConfirmTextCard = (TextCard) rootView.findViewById(R.id.textcard_confirm_no);
+            CustomTextView noConfirmTextCard = (CustomTextView) rootView.findViewById(
+                    R.id.textcard_confirm_no);
             noConfirmTextCard.setText(questionOptions.get(2).getInternationalizedCode());
             noConfirmTextCard.setTextSize(questionOptions.get(
                     2).getOptionAttribute().getText_size());

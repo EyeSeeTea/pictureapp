@@ -23,13 +23,10 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
-/**
- * Created by adrian on 30/04/15.
- */
 public class TabArrayAdapter extends AddlArrayAdapter<Tab> {
 
     public TabArrayAdapter(Context context, List<Tab> tabs) {
@@ -37,8 +34,8 @@ public class TabArrayAdapter extends AddlArrayAdapter<Tab> {
     }
 
     @Override
-    public void drawText(TextCard textCard, Tab tab) {
-        textCard.setText(tab.getName());
+    public void drawText(CustomTextView customTextView, Tab tab) {
+        customTextView.setText(tab.getName());
     }
 
 }

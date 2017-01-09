@@ -174,8 +174,7 @@ public class User extends BaseModel {
         if (organisation != user.organisation) return false;
         if (supervisor != user.supervisor) return false;
         if (uid != null ? !uid.equals(user.uid) : user.uid != null) return false;
-        if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        return surveys != null ? surveys.equals(user.surveys) : user.surveys == null;
+        return name != null ? name.equals(user.name) : user.name == null;
 
     }
 
@@ -186,10 +185,8 @@ public class User extends BaseModel {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (int) (organisation ^ (organisation >>> 32));
         result = 31 * result + (int) (supervisor ^ (supervisor >>> 32));
-        result = 31 * result + (surveys != null ? surveys.hashCode() : 0);
         return result;
     }
-
 
     @Override
     public String toString() {

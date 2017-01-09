@@ -380,6 +380,22 @@ public class Question extends BaseModel {
                 .count();
     }
 
+    public static List<Question> getQuestionsByTab(Tab tab) {
+        //Select question from questionrelation where operator=1 and id_match in (..)
+        return new Select().from(Question.class).as("q")
+                //Question + QuestioRelation
+                .join(Header.class, Join.JoinType.LEFT).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                .join(Tab.class, Join.JoinType.LEFT).as("t")
+                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                .where(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)).eq(
+                        tab.getId_tab()))
+                .orderBy(true, Question$Table.ORDER_POS)
+                .queryList();
+    }
+
     /**
      * Creates a false question that lets cache siblings better
      */
@@ -515,14 +531,14 @@ public class Question extends BaseModel {
         return header;
     }
 
-    public void setHeader(Long id_header) {
-        this.id_header = id_header;
-        this.header = null;
-    }
-
     public void setHeader(Header header) {
         this.header = header;
         this.id_header = (header != null) ? header.getId_header() : null;
+    }
+
+    public void setHeader(Long id_header) {
+        this.id_header = id_header;
+        this.header = null;
     }
 
     public Integer getOutput() {
@@ -560,14 +576,14 @@ public class Question extends BaseModel {
         return answer;
     }
 
-    public void setAnswer(Long id_answer) {
-        this.id_answer = id_answer;
-        this.answer = null;
-    }
-
     public void setAnswer(Answer answer) {
         this.answer = answer;
         this.id_answer = (answer != null) ? answer.getId_answer() : null;
+    }
+
+    public void setAnswer(Long id_answer) {
+        this.id_answer = id_answer;
+        this.answer = null;
     }
 
     //Is necessary use the question relations.
@@ -582,15 +598,15 @@ public class Question extends BaseModel {
         return question;
     }
 
-    public void setQuestion(Long id_parent) {
-        this.id_parent = id_parent;
-        this.question = null;
-    }
-
     @Deprecated
     public void setQuestion(Question question) {
         this.question = question;
         this.id_parent = (question != null) ? question.getId_question() : null;
+    }
+
+    public void setQuestion(Long id_parent) {
+        this.id_parent = id_parent;
+        this.question = null;
     }
 
     public CompositeScore getCompositeScore() {
@@ -604,15 +620,15 @@ public class Question extends BaseModel {
         return compositeScore;
     }
 
-    public void setCompositeScore(Long id_composite_score) {
-        this.id_composite_score = id_composite_score;
-        this.compositeScore = null;
-    }
-
     public void setCompositeScore(CompositeScore compositeScore) {
         this.compositeScore = compositeScore;
         this.id_composite_score =
                 (compositeScore != null) ? compositeScore.getId_composite_score() : null;
+    }
+
+    public void setCompositeScore(Long id_composite_score) {
+        this.id_composite_score = id_composite_score;
+        this.compositeScore = null;
     }
 
     public List<QuestionRelation> getQuestionRelations() {
@@ -855,22 +871,6 @@ public class Question extends BaseModel {
             this.sibling = buildNullQuestion();
         }
         return this.sibling;
-    }
-
-    public static List<Question> getQuestionsByTab(Tab tab) {
-        //Select question from questionrelation where operator=1 and id_match in (..)
-        return new Select().from(Question.class).as("q")
-                //Question + QuestioRelation
-                .join(Header.class, Join.JoinType.LEFT).as("h")
-                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
-                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
-                .join(Tab.class, Join.JoinType.LEFT).as("t")
-                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
-                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
-                .where(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)).eq(
-                        tab.getId_tab()))
-                .orderBy(true, Question$Table.ORDER_POS)
-                .queryList();
     }
 
     public List<QuestionThreshold> getQuestionThresholds() {
@@ -1308,6 +1308,19 @@ public class Question extends BaseModel {
             return true;
         }
         return false;
+    }
+
+
+    /**
+     * Returns if the question is a counter or not
+     */
+    public boolean isACounter() {
+        QuestionRelation questionRelation = new Select().from(QuestionRelation.class).where(
+                Condition.column(QuestionRelation$Table.OPERATION).eq(
+                        QuestionRelation.COUNTER)).and(
+                Condition.column(QuestionRelation$Table.ID_QUESTION).eq(
+                        this.getId_question())).querySingle();
+        return questionRelation != null;
     }
 
     public boolean hasCompulsoryNotAnswered() {

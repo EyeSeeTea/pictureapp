@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
@@ -16,11 +18,16 @@ public class Treatment extends BaseModel {
     @PrimaryKey(autoincrement = true)
     long id_treatment;
     @Column
-    long id_organisation;
+    Long id_organisation;
     @Column
     String diagnosis;
     @Column
     String message;
+
+    /**
+     * Reference to organisation (loaded lazily)
+     */
+    Organisation organisation;
 
 
     public Treatment() {
@@ -43,12 +50,27 @@ public class Treatment extends BaseModel {
     }
 
 
-    public long getId_organisation() {
-        return id_organisation;
+    public Organisation getOrganisation() {
+        if (organisation == null) {
+            if (id_organisation == null) {
+                return null;
+            }
+            organisation = new Select()
+                    .from(Organisation.class)
+                    .where(Condition.column(Organisation$Table.ID_ORGANISATION)
+                            .is(id_organisation)).querySingle();
+        }
+        return organisation;
     }
 
-    public void setId_organisation(long id_organisation) {
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
+        this.id_organisation = (organisation != null) ? organisation.getId_organisation() : null;
+    }
+
+    public void setOrganisation(Long id_organisation) {
         this.id_organisation = id_organisation;
+        organisation = null;
     }
 
     public String getDiagnosis() {

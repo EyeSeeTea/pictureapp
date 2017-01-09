@@ -17,7 +17,7 @@
   ~  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.eyeseetea.malariacare.views.CustomRadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+<org.eyeseetea.sdk.presentation.views.CustomRadioButton xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/RadioButtonNullStyle"
     android:layout_width="wrap_content"
@@ -32,6 +32,5 @@
     android:paddingRight="@dimen/input_edit_text_left_padding"
     android:paddingTop="2dip"
     android:text=""
-    android:textSize="@dimen/radio_button_option"
-    app:tDimension="@string/font_size_level2"
-    app:tFontName="@string/specific_language_font" />
+    android:textSize="?attr/font_medium"
+    app:font_name="@string/specific_language_font" />

@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/phone_row_padding"
     android:paddingRight="@dimen/phone_row_padding">
 
-    <org.eyeseetea.malariacare.views.EditCard
+    <org.eyeseetea.sdk.presentation.views.CustomEditText
         android:id="@+id/answer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -19,15 +19,16 @@
         android:imeOptions="actionDone"
         android:inputType="phone"
         android:singleLine="true"
-        android:textSize="@dimen/input_number_edit_text_phone"
-        app:tDimension="@string/font_size_level2"
-        app:tFontName="@string/condensed_font_name" />
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/condensed_font_name" />
 
-    <Button
+    <org.eyeseetea.sdk.presentation.views.CustomButton
         android:id="@+id/row_phone_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_weight="0.4"
-        android:text="@string/ok" />
+        android:text="@string/ok"
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/condensed_font_name"/>
 </LinearLayout>

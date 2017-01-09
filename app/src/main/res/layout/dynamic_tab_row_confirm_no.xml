@@ -23,7 +23,7 @@
             android:scaleType="fitCenter"
             android:src="@drawable/option_button" />
 
-        <org.eyeseetea.malariacare.views.TextCard
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/textcard_confirm_no"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
@@ -32,8 +32,7 @@
             android:padding="5dip"
             android:text="@android:string/no"
             android:textColor="@color/white"
-            android:textSize="40dp"
-            app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/specific_language_font" />
+            android:textSize="?attr/font_medium"
+            app:font_name="@string/specific_language_font" />
     </FrameLayout>
 </LinearLayout>

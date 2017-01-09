@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:visibility="invisible">
 
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/data_text_view"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
@@ -17,10 +17,10 @@
         android:paddingLeft="7dp"
         android:singleLine="true"
         android:textSize="@dimen/medium_text_size"
-        app:font="@string/regular_font_name" />
+        app:font_name="@string/regular_font_name" />
 
     <Spinner
         android:id="@+id/data_spinner"
         android:layout_width="match_parent"
-        android:layout_height="34dp"></Spinner>
+        android:layout_height="34dp" />
 </LinearLayout>

@@ -35,7 +35,7 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.DashboardAdapterStrategy;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.IAssessmentAdapterStrategy;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -143,7 +143,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
     }
 
     public void showDate(View rowView, int viewId, Date dateValue) {
-        TextCard eventDateTextCard = (TextCard) rowView.findViewById(viewId);
+        CustomTextView eventDateTextCard = (CustomTextView) rowView.findViewById(viewId);
         if (dateValue != null) {
 
             //it show dd/mm/yy in europe, mm/dd/yy in america, etc.
@@ -155,7 +155,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
     }
 
     public void showInfo(View rowView, int viewId, String infoValue) {
-        TextCard info = (TextCard) rowView.findViewById(viewId);
+        CustomTextView info = (CustomTextView) rowView.findViewById(viewId);
         //Load a font which support Khmer character
         Typeface tf = Typeface.createFromAsset(context.getAssets(),
                 "fonts/" + context.getString(R.string.specific_language_font));
@@ -165,7 +165,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
     }
 
     public void showRDT(View rowView, int viewId, String RDTValue) {
-        TextCard rdt = (TextCard) rowView.findViewById(viewId);
+        CustomTextView rdt = (CustomTextView) rowView.findViewById(viewId);
 
         rdt.setText(RDTValue);
     }
@@ -211,14 +211,15 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
      * @return true|false
      */
     public boolean isPositionASurvey(ListView l, List<Survey> surveys, int position) {
-        if (l.getHeaderViewsCount() > 0) {
+        int headerSize = l.getHeaderViewsCount();
+        if (headerSize > 0) {
             if (isPositionHeader(position)) {
                 return false;
             }
-            if (l.getFooterViewsCount() > 0) {
-                if (isPositionFooter(surveys, position + 1)) {
-                    return false;
-                }
+        }
+        if (l.getFooterViewsCount() > 0) {
+            if (isPositionFooter(surveys, position, headerSize)) {
+                return false;
             }
         }
         return true;
@@ -238,7 +239,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
      *
      * @return true|false
      */
-    public boolean isPositionFooter(List<Survey> surveys, int position) {
-        return position == (surveys.size() + position);
+    public boolean isPositionFooter(List<Survey> surveys, int position, int headerSize) {
+        return position >= (surveys.size() + headerSize);
     }
 }

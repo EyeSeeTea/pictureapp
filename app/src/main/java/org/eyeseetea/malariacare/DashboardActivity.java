@@ -279,7 +279,7 @@ public class DashboardActivity extends BaseActivity {
      */
     public void initReview() {
         surveyFragment.mReviewMode = true;
-        
+
         if (reviewFragment == null) {
             reviewFragment = new ReviewFragment();
         }
@@ -557,7 +557,7 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the exit Review button
      */
     public void exitReview(View view) {
-        showDone();
+        reviewShowDone();
     }
 
     public void sendSurvey(View view) {
@@ -594,7 +594,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Show a final dialog to announce the survey is over
      */
-    public void showDone() {
+    public void reviewShowDone() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(this)
                 .setTitle(R.string.survey_completed)
                 .setMessage(R.string.survey_completed_text)

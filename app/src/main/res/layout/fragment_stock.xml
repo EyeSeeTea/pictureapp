@@ -40,7 +40,7 @@
                         android:layout_gravity="center"
                         android:orientation="horizontal">
 
-                        <org.eyeseetea.malariacare.views.CustomButton
+                        <org.eyeseetea.sdk.presentation.views.CustomButton
                             android:id="@+id/fragment_stock_see_receipt"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -54,10 +54,10 @@
                             android:text="@string/see_receipt"
                             android:textAllCaps="false"
                             android:textColor="@android:color/white"
-                            app:tDimension="@string/font_size_level1"
-                            app:tFontName="@string/condensed_font_name" />
+                            android:textSize="?attr/font_small"
+                            app:font="@string/condensed_font_name" />
 
-                        <org.eyeseetea.malariacare.views.CustomButton
+                        <org.eyeseetea.sdk.presentation.views.CustomButton
                             android:id="@+id/fragment_stock_new_receipt"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -71,8 +71,8 @@
                             android:text="@string/new_receipt"
                             android:textAllCaps="false"
                             android:textColor="@android:color/white"
-                            app:tDimension="@string/font_size_level1"
-                            app:tFontName="@string/condensed_font_name" />
+                            android:textSize="?attr/font_small"
+                            app:font="@string/condensed_font_name" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -81,7 +81,7 @@
                         android:layout_gravity="center"
                         android:orientation="horizontal">
 
-                        <org.eyeseetea.malariacare.views.CustomButton
+                        <org.eyeseetea.sdk.presentation.views.CustomButton
                             android:id="@+id/fragment_stock_see_balance"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -95,10 +95,10 @@
                             android:text="@string/see_balance"
                             android:textAllCaps="false"
                             android:textColor="@android:color/white"
-                            app:tDimension="@string/font_size_level1"
-                            app:tFontName="@string/condensed_font_name" />
+                            android:textSize="?attr/font_small"
+                            app:font="@string/condensed_font_name" />
 
-                        <org.eyeseetea.malariacare.views.CustomButton
+                        <org.eyeseetea.sdk.presentation.views.CustomButton
                             android:id="@+id/fragment_stock_new_balance"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -112,8 +112,8 @@
                             android:text="@string/new_balance"
                             android:textAllCaps="false"
                             android:textColor="@android:color/white"
-                            app:tDimension="@string/font_size_level1"
-                            app:tFontName="@string/condensed_font_name" />
+                            android:textSize="?attr/font_small"
+                            app:font="@string/condensed_font_name" />
 
 
                     </LinearLayout>

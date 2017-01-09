@@ -129,6 +129,7 @@ dependencies {
     compile project(':DBFlowORM:DBFlow-Core')
     compile project(':DBFlowORM:DBFlow')
     compile project(':sdk:app')
+    compile project(':EyeSeeTea-sdk')
 
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;

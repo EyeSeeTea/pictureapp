@@ -35,8 +35,8 @@ import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
  */
 public class EyeSeeTeaApplication extends Dhis2Application {
 
-    public static Permissions permissions;
     private static final String TAG = ".EyeSeeTeaApplication";
+    public static Permissions permissions;
 
     @Override
     public void onCreate() {
@@ -44,7 +44,6 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         Log.d(TAG, "onCreate");
         PreferencesState.getInstance().init(getApplicationContext());
     }
-
 
     @Override
     public void onTerminate() {
@@ -62,6 +61,4 @@ public class EyeSeeTeaApplication extends Dhis2Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
-
 }

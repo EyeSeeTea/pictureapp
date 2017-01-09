@@ -6,16 +6,16 @@ import android.text.TextWatcher;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.views.EditCard;
-import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomEditText;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class TextMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
         IMultiQuestionView {
-    TextCard header;
-    EditCard editCard;
+    CustomTextView header;
+    CustomEditText mCustomEditText;
 
     public TextMultiQuestionView(Context context) {
         super(context);
@@ -30,19 +30,19 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
 
     @Override
     public void setEnabled(boolean enabled) {
-        editCard.setEnabled(enabled);
+        mCustomEditText.setEnabled(enabled);
     }
 
     @Override
     public void setValue(Value value) {
         if (value != null) {
-            editCard.setText(value.getValue());
+            mCustomEditText.setText(value.getValue());
         }
     }
 
     @Override
     public void setHelpText(String helpText) {
-        editCard.setHint(helpText);
+        mCustomEditText.setHint(helpText);
     }
 
 
@@ -55,10 +55,10 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     private void init(Context context) {
         inflate(context, R.layout.multi_question_tab_text_row, this);
 
-        header = (TextCard) findViewById(R.id.row_header_text);
-        editCard = (EditCard) findViewById(R.id.answer);
+        header = (CustomTextView) findViewById(R.id.row_header_text);
+        mCustomEditText = (CustomEditText) findViewById(R.id.answer);
 
-        editCard.addTextChangedListener(new TextWatcher() {
+        mCustomEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -75,6 +75,6 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     }
 
     public void setInputType(int value) {
-        editCard.setInputType(value);
+        mCustomEditText.setInputType(value);
     }
 }

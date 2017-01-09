@@ -38,9 +38,9 @@ import android.webkit.WebViewClient;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorBuilder;
 import org.eyeseetea.malariacare.services.MonitorService;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.malariacare.webview.IWebView;
 import org.eyeseetea.malariacare.webview.IWebViewBuilder;
 
@@ -186,7 +186,7 @@ public class MonitorFragment extends Fragment implements IDashboardFragment, IWe
     }
 
     public void reloadHeader(Activity activity) {
-        HeaderUseCase.getInstance().init(activity, R.string.tab_tag_monitor);
+        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_monitor);
     }
 
     /**

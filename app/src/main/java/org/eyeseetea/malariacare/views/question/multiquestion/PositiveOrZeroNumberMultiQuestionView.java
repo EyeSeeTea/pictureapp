@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.PositiveOrZeroNumber;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveOrZeroNumberException;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
@@ -65,6 +66,7 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
         header = (CustomTextView) findViewById(R.id.row_header_text);
         numberPicker = (CustomEditText) findViewById(R.id.answer);
 
+        Validation.getInstance().addInput(numberPicker);
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -72,10 +74,10 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
                     positiveOrZeroNumber = PositiveOrZeroNumber.parse(
                             numberPicker.getText().toString());
                     notifyAnswerChanged(String.valueOf(positiveOrZeroNumber.getValue()));
+                    Validation.getInstance().removeInputError(numberPicker);
 
                 } catch (InvalidPositiveOrZeroNumberException e) {
-                    numberPicker.setError(
-                            context.getString(R.string.dynamic_error_age));
+                    Validation.getInstance().addinvalidInput(numberPicker, context.getString(R.string.dynamic_error_age));
                 }
             }
 

@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Phone;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
@@ -58,15 +59,17 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
         header = (CustomTextView) findViewById(R.id.row_header_text);
         mCustomEditText = (CustomEditText) findViewById(R.id.answer);
 
+        Validation.getInstance().addInput(mCustomEditText);
         mCustomEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
                     Phone phone = new Phone(mCustomEditText.getText().toString());
                     notifyAnswerChanged(phone.getValue());
+                    Validation.getInstance().removeInputError(mCustomEditText);
 
                 } catch (InvalidPhoneException e) {
-                    mCustomEditText.setError(
+                    Validation.getInstance().addinvalidInput(mCustomEditText,
                             context.getString(R.string.dynamic_error_phone_format));
                 }
             }

@@ -3,9 +3,11 @@ package org.eyeseetea.malariacare.views.question.multiquestion;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -56,6 +58,7 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
         header = (CustomTextView) findViewById(R.id.row_header_text);
         numberPicker = (CustomEditText) findViewById(R.id.answer);
 
+        Validation.getInstance().addInput(numberPicker);
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -65,8 +68,8 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
                     notifyAnswerChanged(String.valueOf(value));
 
                 } catch (NumberFormatException e) {
-                    numberPicker.setError(
-                            context.getString(R.string.dynamic_error_number));
+                    Validation.getInstance().addinvalidInput(numberPicker, context.getString(R.string.dynamic_error_number));
+                    //numberPicker.setError(context.getString(R.string.dynamic_error_number));
                 }
 
                 notifyAnswerChanged(numberPicker.getText().toString());

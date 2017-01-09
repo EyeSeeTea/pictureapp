@@ -776,6 +776,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         switch (rowQuestion.getOutput()) {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
+            case Constants.POSITIVE_OR_ZERO_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
@@ -803,6 +804,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         switch (rowQuestion.getOutput()) {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
+            case Constants.POSITIVE_OR_ZERO_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:

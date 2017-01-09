@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
@@ -16,9 +18,17 @@ public class TreatmentMatch extends BaseModel {
     @PrimaryKey(autoincrement = true)
     long id_treatment_match;
     @Column
-    long id_treatment;
+    Long id_treatment;
     @Column
-    long id_match;
+    Long id_match;
+    /**
+     * Reference to the treatment (loaded lazily)
+     */
+    Treatment treatment;
+    /**
+     * Reference to the match (loaded lazily)
+     */
+    Match match;
 
 
     public TreatmentMatch() {
@@ -39,21 +49,53 @@ public class TreatmentMatch extends BaseModel {
         this.id_treatment_match = id_treatment_match;
     }
 
-    public long getId_treatment() {
-        return id_treatment;
+    public Treatment getTreatment() {
+        if (treatment == null) {
+            if (id_treatment == null) {
+                return null;
+            }
+            treatment = new Select()
+                    .from(Treatment.class)
+                    .where(Condition.column(Treatment$Table.ID_TREATMENT)
+                            .is(id_treatment)).querySingle();
+
+    }
+    return treatment;
+    }
+
+    public void setTreatment(Treatment treatment) {
+        this.treatment = treatment;
+        id_treatment = (treatment != null) ? treatment.id_treatment : null;
     }
 
     public void setId_treatment(long id_treatment) {
         this.id_treatment = id_treatment;
+        treatment = null;
     }
 
-    public long getId_match() {
-        return id_match;
+    public Match getMatch() {
+        if (match == null) {
+            if (id_match == null) {
+                return null;
+            }
+            match = new Select()
+                    .from(Match.class)
+                    .where(Condition.column(Match$Table.ID_MATCH)
+                            .is(id_match)).querySingle();
+        }
+        return match;
     }
 
-    public void setId_match(long id_match) {
+    public void setMatch(Match match) {
+        this.match = match;
+        id_match = (match != null) ? match.id_match : null;
+    }
+
+    public void setMatch(Long id_match) {
         this.id_match = id_match;
+        match = null;
     }
+
 
     @Override
     public boolean equals(Object o) {

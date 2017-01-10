@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
@@ -21,6 +23,12 @@ public class Organisation extends BaseModel {
     String name;
 
     public Organisation() {
+    }
+    public static Organisation findById(long id) {
+        return new Select()
+                .from(Organisation.class)
+                .where(Condition.column(Organisation$Table.ID_ORGANISATION).is(id))
+                .querySingle();
     }
 
     public long getId_organisation() {
@@ -76,4 +84,6 @@ public class Organisation extends BaseModel {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+
 }

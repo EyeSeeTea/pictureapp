@@ -28,12 +28,15 @@ import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Answer;
+import org.eyeseetea.malariacare.database.model.Drug;
+import org.eyeseetea.malariacare.database.model.DrugCombination;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.OrgUnitLevel;
+import org.eyeseetea.malariacare.database.model.Organisation;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
@@ -42,6 +45,8 @@ import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Score;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.database.model.Treatment;
+import org.eyeseetea.malariacare.database.model.TreatmentMatch;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.Event;
@@ -68,6 +73,11 @@ public class PopulateDB {
     public static final String MATCHES = "Matches.csv";
     public static final String QUESTION_RELATIONS_CSV = "QuestionRelations.csv";
     public static final String QUESTION_THRESHOLDS_CSV = "QuestionThresholds.csv";
+    public static final String DRUG_COMBINATIONS_CSV = "DrugCombinations.csv";
+    public static final String DRUGS_CSV = "Drugs.csv";
+    public static final String ORGANISATIONS_CSV = "Organisations.csv";
+    public static final String TREATMENT_MATCHES_CSV = "TreatmentMatches.csv";
+    public static final String TREATMENT_CSV = "Treatments.csv";
 
     public static final String ORG_UNIT_LEVEL_CSV = "OrgUnitLevel.csv";
     public static final String ORG_UNIT_CSV = "OrgUnit.csv";
@@ -84,7 +94,12 @@ public class PopulateDB {
             QUESTION_RELATIONS_CSV,
             MATCHES,
             QUESTION_OPTIONS_CSV,
-            QUESTION_THRESHOLDS_CSV);
+            QUESTION_THRESHOLDS_CSV,
+            DRUGS_CSV,
+            ORGANISATIONS_CSV,
+            TREATMENT_CSV,
+            DRUG_COMBINATIONS_CSV,
+            TREATMENT_MATCHES_CSV);
     private static final List<String> tables2updateQuestions = Arrays.asList(
             OPTION_ATTRIBUTES_CSV,
             OPTIONS_CSV,
@@ -281,6 +296,22 @@ public class PopulateDB {
                             questionThreshold.setMaxValue(Integer.valueOf(line[4]));
                         }
                         questionThreshold.save();
+                        break;
+                    case DRUGS_CSV:
+                        populateDrugs(line);
+                        break;
+                    case ORGANISATIONS_CSV:
+                        populateOrganisations(line);
+                        break;
+                    case TREATMENT_CSV:
+                        populateTreatments(line);
+                        break;
+                    case DRUG_COMBINATIONS_CSV:
+                        populateDrugCombinations(line);
+                        break;
+                    case TREATMENT_MATCHES_CSV:
+                        populateTreatmentMatches(line);
+                        break;
                 }
             }
             reader.close();
@@ -288,6 +319,8 @@ public class PopulateDB {
         //Free references since the maps are static
         cleanInnerLists();
     }
+
+
 
     public static void populateDummyData(AssetManager assetManager) throws IOException {
         //Reset inner references
@@ -621,6 +654,65 @@ public class PopulateDB {
         }
         reader.close();
     }
+
+    /**
+     * Method to populate each row of TreatmentMatches.csv, execute after populateTreatments and populateMatches.
+     * @param line
+     */
+    private static void populateTreatmentMatches(String[] line) {
+        TreatmentMatch treatmentMatch=new TreatmentMatch();
+        treatmentMatch.setTreatment(Treatment.findById(Long.parseLong(line[1])));
+        treatmentMatch.setMatch(Match.findById(Long.parseLong(line[2])));
+        treatmentMatch.save();
+    }
+
+    /**
+     *  Method to populate each row of DrugCombinations.csv, execute after populateDrugs and populateTreatments.
+     * @param line The row of the csv to populate.
+     */
+    private static void populateDrugCombinations(String[] line) {
+        DrugCombination drugCombination=new DrugCombination();
+        drugCombination.setDrug(Drug.findById(Long.parseLong(line[1])));
+        drugCombination.setTreatment(Treatment.findById(Long.parseLong(line[2])));
+        drugCombination.save();
+    }
+
+    /**
+     * Method to populate each row of Treatment.csv, execute after populateOrganisations.
+     * @param line The row of the csv to populate.
+     */
+    private static void populateTreatments(String[] line) {
+        Treatment treatment=new Treatment();
+        treatment.setOrganisation(Organisation.findById(Long.parseLong(line[1])));
+        treatment.setDiagnosis(line[2]);
+        treatment.setMessage(line[3]);
+        treatment.save();
+    }
+
+    /**
+     * Method to populate each row of Organisation.csv.
+     * @param line The row of the csv to populate.
+     */
+    private static void populateOrganisations(String[] line) {
+        Organisation organisation=new Organisation();
+        organisation.setUid(line[1]);
+        organisation.setName(line[2]);
+        organisation.save();
+    }
+
+    /**
+     * Method to populate the Drugs.csv.
+     * @param line The row of the csv to add to db.
+     */
+    private static void populateDrugs(String line[]) {
+        Drug drug=new Drug();
+        drug.setName(line[1]);
+        drug.setDose(Integer.parseInt(line[2]));
+        drug.setQuestion_code(line[3]);
+        drug.save();
+    }
+
+
 
     public static void addNotTestedRemminder(AssetManager assetManager) throws IOException {
         //Reset inner references

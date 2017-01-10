@@ -41,6 +41,14 @@ public class Treatment extends BaseModel {
         this.message = message;
     }
 
+    public static Treatment findById(long id) {
+        return new Select()
+                .from(Treatment.class)
+                .where(Condition.column(Treatment$Table.ID_TREATMENT).is(id))
+                .querySingle();
+
+    }
+
     public long getId_treatment() {
         return id_treatment;
     }
@@ -124,4 +132,6 @@ public class Treatment extends BaseModel {
                 ", message='" + message + '\'' +
                 '}';
     }
+
+
 }

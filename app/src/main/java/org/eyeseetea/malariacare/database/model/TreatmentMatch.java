@@ -68,7 +68,7 @@ public class TreatmentMatch extends BaseModel {
         id_treatment = (treatment != null) ? treatment.id_treatment : null;
     }
 
-    public void setId_treatment(long id_treatment) {
+    public void setTreatment(long id_treatment) {
         this.id_treatment = id_treatment;
         treatment = null;
     }

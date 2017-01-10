@@ -59,6 +59,13 @@ public class Match extends BaseModel {
         setQuestionRelation(questionRelation);
     }
 
+    public static Match findById(long id) {
+        return new Select()
+                .from(Match.class)
+                .where(Condition.column(Match$Table.ID_MATCH).is(id))
+                .querySingle();
+    }
+
     public static List<Match> listAll() {
         return new Select().all().from(Match.class).queryList();
     }
@@ -152,4 +159,6 @@ public class Match extends BaseModel {
                 ", id_question_relation=" + id_question_relation +
                 '}';
     }
+
+
 }

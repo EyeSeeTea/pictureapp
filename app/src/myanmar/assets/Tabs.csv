@@ -7,4 +7,4 @@
 7;'Treatment / Give ACT strip and Primaquine tablets, selecting the drugs given to the patient';7;1;9
 8;'patient_advice';8;1;10
 9;'follow_up';9;1;10
-10;'drugs_referral';10;1;11
+10;'tab_dynamic_treatment';10;1;11

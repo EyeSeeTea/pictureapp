@@ -91,6 +91,12 @@ public class QuestionRelation extends BaseModel {
         this.setQuestion(question);
     }
 
+    public static QuestionRelation findById(Long id) {
+        return new Select()
+                .from(QuestionRelation.class)
+                .where(Condition.column(QuestionRelation$Table.ID_QUESTION).is(id))
+                .querySingle();
+    }
 
     public static List<QuestionRelation> listAllParentChildRelations() {
         return new Select().all().from(QuestionRelation.class)
@@ -234,4 +240,6 @@ public class QuestionRelation extends BaseModel {
                 ", operation=" + operation +
                 '}';
     }
+
+
 }

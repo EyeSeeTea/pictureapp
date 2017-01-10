@@ -77,6 +77,10 @@ public class Tab extends BaseModel {
                         Session.getSurvey().getProgram().getId_program()))
                 .orderBy(Tab$Table.ORDER_POS).queryList();
     }
+    public static List<Tab> getAllTabs() {
+        return new Select().all().from(Tab.class).queryList();
+    }
+
 
     /**
      * Checks if TAB table is empty or has no data
@@ -84,6 +88,7 @@ public class Tab extends BaseModel {
     public static boolean isEmpty() {
         return new Select().count().from(Tab.class).count() == 0;
     }
+
 
     public Long getId_tab() {
         return id_tab;

@@ -93,6 +93,10 @@ public class QuestionThreshold extends BaseModel {
         return null;
     }
 
+    public static List<QuestionThreshold> getAllQuestionThresholds() {
+        return new Select().all().from(QuestionThreshold.class).queryList();
+    }
+
     public long getId_question_threshold() {
         return id_question_threshold;
     }

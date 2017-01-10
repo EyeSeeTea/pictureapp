@@ -94,7 +94,7 @@ public class QuestionRelation extends BaseModel {
     public static QuestionRelation findById(Long id) {
         return new Select()
                 .from(QuestionRelation.class)
-                .where(Condition.column(QuestionRelation$Table.ID_QUESTION).is(id))
+                .where(Condition.column(QuestionRelation$Table.ID_QUESTION_RELATION).is(id))
                 .querySingle();
     }
 

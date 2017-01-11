@@ -9,8 +9,9 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
 
@@ -41,10 +42,10 @@ public class Migration22AddStockCsvs extends BaseMigration {
         if (instance.hasData()) {
             try {
                 AssetManager assetManager = PreferencesState.getInstance().getContext().getAssets();
-                PopulateDB.updateAnswers(assetManager);
-                PopulateDB.updatePrograms(assetManager);
-                PopulateDB.updateTabs(assetManager);
-                PopulateDB.updateHeaders(assetManager);
+                UpdateDB.updateAnswers(assetManager);
+                UpdateDB.updatePrograms(assetManager);
+                UpdateDB.updateTabs(assetManager);
+                UpdateDB.updateHeaders(assetManager);
                 PopulateDB.updateQuestions(assetManager);
 
             } catch (IOException e) {

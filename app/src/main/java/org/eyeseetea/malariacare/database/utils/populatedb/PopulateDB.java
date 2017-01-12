@@ -18,7 +18,7 @@
  */
 
 
-package org.eyeseetea.malariacare.database.utils;
+package org.eyeseetea.malariacare.database.utils.populatedb;
 
 import android.content.res.AssetManager;
 import android.support.annotation.Nullable;
@@ -49,6 +49,8 @@ import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Treatment;
 import org.eyeseetea.malariacare.database.model.TreatmentMatch;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.Event;
 import org.hisp.dhis.android.sdk.persistence.models.FailedItem;
@@ -56,7 +58,9 @@ import org.hisp.dhis.android.sdk.persistence.preferences.DateTimeManager;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -320,8 +324,6 @@ public class PopulateDB {
         //Free references since the maps are static
         cleanInnerLists();
     }
-
-
 
     public static void populateDummyData(AssetManager assetManager) throws IOException {
         //Reset inner references
@@ -619,13 +621,6 @@ public class PopulateDB {
         reader.close();
     }
 
-    /**
-     * Method to update the old questions and add new ones. Use before all headers and answers are
-     * inserted.
-     *
-     * @param assetManager Needed to open the csv with the questions.
-     * @throws IOException If there is a problem opening the csv.
-     */
     public static void updateQuestions(AssetManager assetManager) throws IOException {
         List<Question> questions = Question.getAllQuestions();
         //Reset inner references
@@ -636,53 +631,31 @@ public class PopulateDB {
         String line[];
         //Save new option name for each option
         while ((line = reader.readNext()) != null) {
-            boolean added = false;
             for (Question question : questions) {
                 if (String.valueOf(question.getId_question()).equals((line[0]))) {
-                    added = true;
-                    populateQuestions(line, question);
+                    question.setCode(line[1]);
+                    question.setDe_name(line[2]);
+                    question.setHelp_text(line[3]);
+                    question.setForm_name(line[4]);
+                    //Update necessary from migration3
+                    question.setTotalQuestions(Integer.valueOf(line[13]));
+                    //Update necessary from migration4
+                    question.setVisible(Integer.valueOf(line[14]));
+                    //Update necessary from migration7
+                    if (line.length > 15 && !line[15].equals("")) {
+                        question.setPath(line[15]);
+                    }
+                    if (line.length > 16 && !line[16].equals("")) {
+                        question.setCompulsory(Integer.valueOf(line[16]));
+                    } else {
+                        question.setCompulsory(Question.QUESTION_NO_COMPULSORY);
+                    }
                     question.save();
                     break;
                 }
             }
-            if (!added) {
-                Question question = populateQuestions(line, null);
-                question.insert();
-            }
         }
         reader.close();
-    }
-
-
-    /**
-     * Method to update the old tabs and add new ones from the csv. Use after insert all programs.
-     *
-     * @param assetManager Needed to open the csv with the tabs.
-     * @throws IOException If there is a problem opening the csv.
-     */
-    public static void updateTabs(AssetManager assetManager) throws IOException {
-        List<Tab> tabs = Tab.getAllTabs();
-        //Reset inner references
-        cleanInnerLists();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(TABS_CSV)),
-                SEPARATOR, QUOTECHAR);
-        String line[];
-        //Save new answers
-        while ((line = reader.readNext()) != null) {
-            boolean added = false;
-            for (Tab tab : tabs) {
-                if (tab.getId_tab() == Long.parseLong(line[0])) {
-                    populateTab(line, tab);
-                    tab.save();
-                    added = true;
-                    break;
-                }
-            }
-            if (!added) {
-                Tab tab = populateTab(line, null);
-                tab.insert();
-            }
-        }
     }
 
     public static void updateQuestionThresholds(AssetManager assetManager) throws IOException {
@@ -1015,7 +988,6 @@ public class PopulateDB {
             populateTreatmentMatches(line);
         }
     }
-
 
 
 

@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.database.migrations;
 
+import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -8,23 +9,22 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
 
 /**
- * Created by idelcano on 03/08/2016.
+ * Created by manuel on 3/01/17.
  */
-@Migration(version = 21, databaseName = AppDatabase.NAME)
-public class Migration21ModifyValuesLastMigration extends BaseMigration {
-
-    private static String TAG = ".Migration21";
-
-    private static Migration21ModifyValuesLastMigration instance;
+@Migration(version = 22, databaseName = AppDatabase.NAME)
+public class Migration22AddStockCsvs extends BaseMigration {
+    private static String TAG = ".Migration22";
+    private static Migration22AddStockCsvs instance;
     private boolean postMigrationRequired;
 
-    public Migration21ModifyValuesLastMigration() {
+    public Migration22AddStockCsvs() {
         super();
         instance = this;
         postMigrationRequired = false;
@@ -41,13 +41,16 @@ public class Migration21ModifyValuesLastMigration extends BaseMigration {
         //Data? Add new default data
         if (instance.hasData()) {
             try {
-                PopulateDB.addOptionAttributes(
-                        PreferencesState.getInstance().getContext().getAssets());
-                PopulateDB.updateOptionNames(
-                        PreferencesState.getInstance().getContext().getAssets());
-                PopulateDB.updateQuestions(PreferencesState.getInstance().getContext().getAssets());
+                AssetManager assetManager = PreferencesState.getInstance().getContext().getAssets();
+                UpdateDB.updateAnswers(assetManager);
+                UpdateDB.updatePrograms(assetManager);
+                UpdateDB.updateTabs(assetManager);
+                UpdateDB.updateHeaders(assetManager);
+                UpdateDB.updateAndAddQuestions(assetManager);
+
             } catch (IOException e) {
                 e.printStackTrace();
+                Log.e(TAG, "Error updating database" + e.getMessage());
             }
         }
 
@@ -55,8 +58,6 @@ public class Migration21ModifyValuesLastMigration extends BaseMigration {
         instance.postMigrationRequired = false;
     }
 
-    public void onPreMigrate() {
-    }
 
     @Override
     public void migrate(SQLiteDatabase database) {
@@ -65,6 +66,7 @@ public class Migration21ModifyValuesLastMigration extends BaseMigration {
 
     @Override
     public void onPostMigrate() {
+        postMigrationRequired = true;
     }
 
     /**
@@ -73,4 +75,5 @@ public class Migration21ModifyValuesLastMigration extends BaseMigration {
     private boolean hasData() {
         return Program.getFirstProgram() != null;
     }
+
 }

@@ -68,6 +68,12 @@ public class Tab extends BaseModel {
         setProgram(program);
     }
 
+    public static Tab findById(Long id) {
+        return new Select()
+                .from(Tab.class)
+                .where(Condition.column(Tab$Table.ID_TAB).eq(id)).querySingle();
+    }
+
     /*
      * Return tabs filter by program and order by orderpos field
      */
@@ -88,7 +94,6 @@ public class Tab extends BaseModel {
     public static boolean isEmpty() {
         return new Select().count().from(Tab.class).count() == 0;
     }
-
 
     public Long getId_tab() {
         return id_tab;

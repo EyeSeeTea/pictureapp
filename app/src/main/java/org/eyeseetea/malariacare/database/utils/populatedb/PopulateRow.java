@@ -52,7 +52,6 @@ public class PopulateRow {
             answer = new Answer();
         }
         answer.setName(line[1]);
-        answer.insert();
         return answer;
     }
 

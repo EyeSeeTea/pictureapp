@@ -115,6 +115,7 @@ public class UpdateDB {
             } else {
                 PopulateRow.populateProgram(line, null).insert();
             }
+            i++;
         }
 
 

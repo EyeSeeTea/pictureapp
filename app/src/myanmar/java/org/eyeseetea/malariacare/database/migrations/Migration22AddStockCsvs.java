@@ -46,7 +46,7 @@ public class Migration22AddStockCsvs extends BaseMigration {
                 UpdateDB.updatePrograms(assetManager);
                 UpdateDB.updateTabs(assetManager);
                 UpdateDB.updateHeaders(assetManager);
-                PopulateDB.updateQuestions(assetManager);
+                UpdateDB.updateAndAddQuestions(assetManager);
 
             } catch (IOException e) {
                 e.printStackTrace();

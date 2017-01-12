@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.database.utils.populatedb;
 
 import android.content.res.AssetManager;
-import android.nfc.cardemulation.HostApduService;
 
 import com.opencsv.CSVReader;
 
@@ -28,9 +27,9 @@ public class CreateRelationsIdCsvDB {
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.HEADERS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
-        Long idToAdd;
-        while ((idToAdd = Long.parseLong(reader.readNext()[0])) != null) {
-            csvIds.add(idToAdd);
+        String[] idToAdd;
+        while ((idToAdd = reader.readNext()) != null) {
+            csvIds.add(Long.parseLong(idToAdd[0]));
         }
         for (int i = 0; i < headers.size(); i++) {
             headerFK.put(csvIds.get(i), headers.get(i));
@@ -43,11 +42,11 @@ public class CreateRelationsIdCsvDB {
         HashMap<Long, Answer> answerFK = new HashMap<>();
         List<Answer> answers = Answer.getAllAnswers();
         List<Long> csvIds = new ArrayList<>();
-        Long idToAdd;
         CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.ANSWERS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
-        while ((idToAdd = Long.parseLong(reader.readNext()[0])) != null) {
-            csvIds.add(idToAdd);
+        String[] idToAdd;
+        while ((idToAdd = reader.readNext()) != null) {
+            csvIds.add(Long.parseLong(idToAdd[0]));
         }
         for (int i = 0; i < answers.size(); i++) {
             answerFK.put(csvIds.get(i), answers.get(i));
@@ -61,9 +60,9 @@ public class CreateRelationsIdCsvDB {
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.TABS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
-        Long idToAdd;
-        while ((idToAdd = Long.parseLong(reader.readNext()[0])) != null) {
-            csvIds.add(idToAdd);
+        String[] idToAdd;
+        while ((idToAdd = reader.readNext()) != null) {
+            csvIds.add(Long.parseLong(idToAdd[0]));
         }
         for (int i = 0; i < headers.size(); i++) {
             tabFK.put(csvIds.get(i), headers.get(i));
@@ -78,9 +77,9 @@ public class CreateRelationsIdCsvDB {
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.PROGRAMS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
-        Long idToAdd;
-        while ((idToAdd = Long.parseLong(reader.readNext()[0])) != null) {
-            csvIds.add(idToAdd);
+        String[] idToAdd;
+        while ((idToAdd = reader.readNext()) != null) {
+            csvIds.add(Long.parseLong(idToAdd[0]));
         }
         for (int i = 0; i < headers.size(); i++) {
             programFK.put(csvIds.get(i), headers.get(i));

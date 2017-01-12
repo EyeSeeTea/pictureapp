@@ -37,10 +37,10 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
 
     @Override
     public void setOptions(List<Option> options) {
-        List<Option> optionList = new ArrayList<>(question.getAnswer().getOptions());
+        List<Option> optionList = new ArrayList<>(options);
         optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
 
-        spinnerOptions.setAdapter(new OptionArrayAdapter(getContext(), options));
+        spinnerOptions.setAdapter(new OptionArrayAdapter(getContext(), optionList));
     }
 
     @Override

@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 
+import java.util.List;
+
 /**
  * Created by manuel on 2/01/17.
  */
@@ -29,6 +31,10 @@ public class Organisation extends BaseModel {
                 .from(Organisation.class)
                 .where(Condition.column(Organisation$Table.ID_ORGANISATION).is(id))
                 .querySingle();
+    }
+
+    public static List<Organisation> getAllOrganisations() {
+        return new Select().all().from(Organisation.class).queryList();
     }
 
     public long getId_organisation() {

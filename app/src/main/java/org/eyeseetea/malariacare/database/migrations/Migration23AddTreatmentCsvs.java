@@ -9,8 +9,8 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
 
@@ -42,18 +42,17 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
         if (instance.hasData()) {
             try {
                 AssetManager assetManager = PreferencesState.getInstance().getContext().getAssets();
-                PopulateDB.updateTabs(assetManager);
-                PopulateDB.updateQuestions(assetManager);
-                PopulateDB.updateQuestionRelation(assetManager);
-                PopulateDB.updateMatches(assetManager);
-                PopulateDB.updateQuestionRelation(assetManager);
-                PopulateDB.updateQuestionOption(assetManager);
-                PopulateDB.updateQuestionThresholds(assetManager);
-                PopulateDB.addAllDrugs(assetManager);
-                PopulateDB.addAllOrganisations(assetManager);
-                PopulateDB.addAllTreatments(assetManager);
-                PopulateDB.addAllDrugCombination(assetManager);
-                PopulateDB.addAllTreatmentMatches(assetManager);
+                UpdateDB.updateTabs(assetManager);
+                UpdateDB.updateAndAddQuestions(assetManager);
+                UpdateDB.updateQuestionRelation(assetManager);
+                UpdateDB.updateMatches(assetManager);
+                UpdateDB.updateQuestionOption(assetManager);
+                UpdateDB.updateQuestionThresholds(assetManager);
+                UpdateDB.updateDrugs(assetManager);
+                UpdateDB.updateOrganisations(assetManager);
+                UpdateDB.updateTreatments(assetManager);
+                UpdateDB.updateDrugCombination(assetManager);
+                UpdateDB.updateTreatmentMatches(assetManager);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e(TAG, "Error updating database" + e.getMessage());

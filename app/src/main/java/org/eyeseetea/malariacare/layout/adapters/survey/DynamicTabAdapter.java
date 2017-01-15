@@ -238,7 +238,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     public void OnOptionAnswered(View view, Option selectedOption, boolean moveToNextQuestion) {
-        navigationController.isMovingToForward = true;
+        if (moveToNextQuestion) {
+            navigationController.isMovingToForward = true;
+        }
+
         Question question = (Question) view.getTag();
 
         Question counterQuestion = question.findCounterByOption(selectedOption);
@@ -730,19 +733,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             View view = tableLayout.getChildAt(i);
             if (view instanceof TableRow) {
                 TableRow row = (TableRow) view;
-                View answerView = view.findViewById(R.id.answer);
-                if (answerView == null) {
-                    continue;
-                }
-                Question rowQuestion = (Question) answerView.getTag();
-                if (rowQuestion == null) {
-                    continue;
-                }
-                List<Question> questionChildren = question.getChildren();
-                if (questionChildren != null && questionChildren.size() > 0) {
-                    for (Question childQuestion : questionChildren) {
-                        //if the table row question is child of the modified question...
-                        toggleChild(row, rowQuestion, childQuestion);
+
+                View targetView = row.getChildAt(0);
+
+                if (targetView instanceof IMultiQuestionView
+                        || targetView instanceof IQuestionView) {
+
+                    Question rowQuestion = (Question) targetView.getTag();
+                    if (rowQuestion == null) {
+                        continue;
+                    }
+                    List<Question> questionChildren = question.getChildren();
+                    if (questionChildren != null && questionChildren.size() > 0) {
+                        for (Question childQuestion : questionChildren) {
+                            //if the table row question is child of the modified question...
+                            toggleChild(row, rowQuestion, childQuestion);
+                        }
                     }
                 }
             }

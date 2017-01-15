@@ -23,9 +23,9 @@
                 android:id="@+id/multi_question_options_table"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:measureWithLargestChild="false"></TableLayout>
+                android:measureWithLargestChild="false" />
 
-            <include layout="@layout/dynamic_bottom_view"></include>
+            <include layout="@layout/dynamic_bottom_view" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

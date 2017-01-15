@@ -238,8 +238,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     public void OnOptionAnswered(View view, Option selectedOption, boolean moveToNextQuestion) {
-        if (moveToNextQuestion)
+        if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
+        }
 
         Question question = (Question) view.getTag();
 
@@ -735,7 +736,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                 View targetView = row.getChildAt(0);
 
-                if (targetView instanceof IMultiQuestionView || targetView instanceof IQuestionView) {
+                if (targetView instanceof IMultiQuestionView
+                        || targetView instanceof IQuestionView) {
 
                     Question rowQuestion = (Question) targetView.getTag();
                     if (rowQuestion == null) {

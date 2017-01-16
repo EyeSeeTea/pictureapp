@@ -239,7 +239,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     public void OnOptionAnswered(View view, Option selectedOption, boolean moveToNextQuestion) {
-        navigationController.isMovingToForward = true;
+        if (moveToNextQuestion) {
+            navigationController.isMovingToForward = true;
+        }
+
         Question question = (Question) view.getTag();
 
         Question counterQuestion = question.findCounterByOption(selectedOption);
@@ -420,14 +423,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         List<Question> screenQuestions = new ArrayList<>();
 
-        tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
         if (isTabScrollable(questionItem, tabType)) {
+            tableLayout = (TableLayout) rowView.findViewById(R.id.multi_question_options_table);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
             screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
             swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
                     R.id.scrolled_table)).findViewById(R.id.table_scroll));
         } else {
+            tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.GONE);
             screenQuestions.add(questionItem);
@@ -441,6 +445,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         Log.d(TAG, "Questions in actual tab: " + screenQuestions.size());
+
+        swipeTouchListener.clearClickableViews();
         for (Question screenQuestion : screenQuestions) {
             renderQuestion(rowView, tabType, screenQuestion);
         }
@@ -729,19 +735,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             View view = tableLayout.getChildAt(i);
             if (view instanceof TableRow) {
                 TableRow row = (TableRow) view;
-                View answerView = view.findViewById(R.id.answer);
-                if (answerView == null) {
-                    continue;
-                }
-                Question rowQuestion = (Question) answerView.getTag();
-                if (rowQuestion == null) {
-                    continue;
-                }
-                List<Question> questionChildren = question.getChildren();
-                if (questionChildren != null && questionChildren.size() > 0) {
-                    for (Question childQuestion : questionChildren) {
-                        //if the table row question is child of the modified question...
-                        toggleChild(row, rowQuestion, childQuestion);
+
+                View targetView = row.getChildAt(0);
+
+                if (targetView instanceof IMultiQuestionView
+                        || targetView instanceof IQuestionView) {
+
+                    Question rowQuestion = (Question) targetView.getTag();
+                    if (rowQuestion == null) {
+                        continue;
+                    }
+                    List<Question> questionChildren = question.getChildren();
+                    if (questionChildren != null && questionChildren.size() > 0) {
+                        for (Question childQuestion : questionChildren) {
+                            //if the table row question is child of the modified question...
+                            toggleChild(row, rowQuestion, childQuestion);
+                        }
                     }
                 }
             }

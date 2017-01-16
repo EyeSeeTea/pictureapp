@@ -62,6 +62,8 @@ public class QuestionRelation extends BaseModel {
      */
     public static final int REMINDER = 4;
 
+    public static final int TREATMENT_MATCH = 5;
+
     private static final String TAG = ".QuestionRelation";
     @Column
     @PrimaryKey(autoincrement = true)

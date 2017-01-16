@@ -38,7 +38,7 @@ public class CreateRelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < headers.size(); i++) {
+        for (int i = 0; i < headers.size() && i < csvIds.size(); i++) {
             headerFK.put(csvIds.get(i), headers.get(i));
         }
         return headerFK;
@@ -55,7 +55,7 @@ public class CreateRelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < answers.size(); i++) {
+        for (int i = 0; i < answers.size() && i < csvIds.size(); i++) {
             answerFK.put(csvIds.get(i), answers.get(i));
         }
         return answerFK;
@@ -71,7 +71,7 @@ public class CreateRelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < tabs.size(); i++) {
+        for (int i = 0; i < tabs.size() && i < csvIds.size(); i++) {
             tabFK.put(csvIds.get(i), tabs.get(i));
         }
         return tabFK;
@@ -88,7 +88,7 @@ public class CreateRelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < programs.size(); i++) {
+        for (int i = 0; i < programs.size() && i < csvIds.size(); i++) {
             programFK.put(csvIds.get(i), programs.get(i));
         }
         return programFK;
@@ -107,7 +107,7 @@ public class CreateRelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < questionRelations.size(); i++) {
+        for (int i = 0; i < questionRelations.size() && i < csvIds.size(); i++) {
             questionRelationsFK.put(csvIds.get(i), questionRelations.get(i));
         }
         return questionRelationsFK;
@@ -125,7 +125,7 @@ public class CreateRelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < questions.size(); i++) {
+        for (int i = 0; i < questions.size() && i < csvIds.size(); i++) {
             questionFK.put(csvIds.get(i), questions.get(i));
         }
         return questionFK;
@@ -161,7 +161,7 @@ public class CreateRelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < matches.size(); i++) {
+        for (int i = 0; i < matches.size() && i < csvIds.size(); i++) {
             matchesFK.put(csvIds.get(i), matches.get(i));
         }
         return matchesFK;
@@ -179,7 +179,7 @@ public class CreateRelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < organisations.size(); i++) {
+        for (int i = 0; i < organisations.size() && i < csvIds.size(); i++) {
             organisationFK.put(csvIds.get(i), organisations.get(i));
         }
         return organisationFK;
@@ -197,7 +197,7 @@ public class CreateRelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < drugs.size(); i++) {
+        for (int i = 0; i < drugs.size() && i < csvIds.size(); i++) {
             drugFK.put(csvIds.get(i), drugs.get(i));
         }
         return drugFK;
@@ -215,7 +215,7 @@ public class CreateRelationsIdCsvDB {
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < treatments.size(); i++) {
+        for (int i = 0; i < treatments.size() && i < csvIds.size(); i++) {
             treatmentFK.put(csvIds.get(i), treatments.get(i));
         }
         return treatmentFK;

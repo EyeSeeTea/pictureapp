@@ -87,6 +87,24 @@ public class Tab extends BaseModel {
         return new Select().all().from(Tab.class).queryList();
     }
 
+    /**
+     * Method to delete tabs in cascade.
+     *
+     * @param names The array of names to delete.
+     */
+    public static void deleteTab(String[] names) {
+        List<Tab> tabs = getAllTabs();
+        for (Tab tab : tabs) {
+            for (String name : names) {
+                if (tab.getName().equals(name)) {
+                    Header.deleteHeaders(tab.getHeaders());
+                    tab.delete();
+                    break;
+                }
+            }
+        }
+    }
+
 
     /**
      * Checks if TAB table is empty or has no data

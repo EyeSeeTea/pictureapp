@@ -108,6 +108,25 @@ public class QuestionRelation extends BaseModel {
         return new Select().all().from(QuestionRelation.class).queryList();
     }
 
+    /**
+     * Method to delete in cascade the questions passed.
+     */
+    public static void deleteQuestionRelations(List<QuestionRelation> questionRelations) {
+        for (QuestionRelation questionRelation : questionRelations) {
+            Match.deleteMatches(questionRelation.getAllMatches());
+            questionRelation.delete();
+        }
+    }
+
+    /**
+     * Method to get the matches with the id of this question relation
+     */
+    public List<Match> getAllMatches() {
+        return new Select().from(Match.class)
+                .where(Condition.column(Match$Table.ID_QUESTION_RELATION).eq(
+                        getId_question_relation())).queryList();
+    }
+
     public long getId_question_relation() {
         return id_question_relation;
     }

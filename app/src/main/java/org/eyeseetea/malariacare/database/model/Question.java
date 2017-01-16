@@ -397,6 +397,39 @@ public class Question extends BaseModel {
     }
 
     /**
+     * Method to delete questions in cascade.
+     *
+     * @param questions The questions to delete.
+     */
+    public static void deleteQuestions(List<Question> questions) {
+        for (Question question : questions) {
+            QuestionOption.deleteQuestionOptions(question.getQuestionsOptions());
+            QuestionThreshold.deleteQuestionThresholds(question.getQuestionsThresholds());
+            QuestionRelation.deleteQuestionRelations(question.getQuestionRelations());
+            question.delete();
+        }
+    }
+
+    /**
+     * Method to get all questionOptions related by id
+     */
+    public List<QuestionOption> getQuestionsOptions() {
+        return new Select().from(QuestionOption.class)
+                .where(Condition.column(QuestionOption$Table.ID_QUESTION).eq(
+                        getId_question())).queryList();
+    }
+
+    /**
+     * Method to get all questionThresholds related by id
+     */
+    public List<QuestionThreshold> getQuestionsThresholds() {
+        return new Select().from(QuestionThreshold.class)
+                .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(
+                        getId_question())).queryList();
+    }
+
+
+    /**
      * Creates a false question that lets cache siblings better
      */
     private Question buildNullQuestion() {

@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.Program;
+import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
 
@@ -41,8 +42,10 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
         Log.d(TAG, "Post Migrate");
         if (instance.hasData()) {
             try {
+                Tab.deleteTab(new String[]{"drugs_referral"});
                 AssetManager assetManager = PreferencesState.getInstance().getContext().getAssets();
                 UpdateDB.updateTabs(assetManager);
+                UpdateDB.updateHeaders(assetManager);
                 UpdateDB.updateAndAddQuestions(assetManager);
                 UpdateDB.updateQuestionRelation(assetManager);
                 UpdateDB.updateMatches(assetManager);

@@ -46,6 +46,17 @@ public class TreatmentMatch extends BaseModel {
         return new Select().all().from(TreatmentMatch.class).queryList();
     }
 
+    /**
+     * Method to delete a list of treatmentMatches.
+     *
+     * @param treatmentMatches The list to delete.
+     */
+    public static void deleteTreatmentMatches(List<TreatmentMatch> treatmentMatches) {
+        for (TreatmentMatch treatmentMatch : treatmentMatches) {
+            treatmentMatch.delete();
+        }
+    }
+
 
     public long getId_treatment_match() {
         return id_treatment_match;
@@ -132,4 +143,6 @@ public class TreatmentMatch extends BaseModel {
                 ", id_match=" + id_match +
                 '}';
     }
+
+
 }

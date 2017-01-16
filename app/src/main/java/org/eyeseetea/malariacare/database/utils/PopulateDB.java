@@ -820,7 +820,4 @@ public class PopulateDB {
                 = new QuestionOption(Option.findById(optionId), Question.findByID(parentId), match);
         questionOption.save();
     }
-
-    public static void updateQuestionOutput(AssetManager assets) {
-    }
 }

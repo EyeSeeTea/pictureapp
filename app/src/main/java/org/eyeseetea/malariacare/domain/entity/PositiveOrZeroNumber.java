@@ -41,9 +41,7 @@ public class PositiveOrZeroNumber {
         if (!(o instanceof PositiveOrZeroNumber)) return false;
 
         PositiveOrZeroNumber other = (PositiveOrZeroNumber) o;
-        if (this.value != other.value) return false;
-
-        return true;
+        return (this.value == other.value);
     }
 
     @Override

@@ -285,13 +285,13 @@ public class PopulateDB {
                         questionOption.setQuestion(questionList.get(Integer.valueOf(line[1])));
                         questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
                         if (!line[3].equals("")) {
-                            questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
+                            questionOption.setMatch(matchList.get(Long.valueOf(line[3])));
                         }
                         questionOption.save();
                         break;
                     case QUESTION_THRESHOLDS_CSV:
                         QuestionThreshold questionThreshold = new QuestionThreshold();
-                        questionThreshold.setMatch(matchList.get(Integer.valueOf(line[1])));
+                        questionThreshold.setMatch(matchList.get(Long.valueOf(line[1])));
                         questionThreshold.setQuestion(questionList.get(Integer.valueOf(line[2])));
                         if (!line[3].equals("")) {
                             questionThreshold.setMinValue(Integer.valueOf(line[3]));

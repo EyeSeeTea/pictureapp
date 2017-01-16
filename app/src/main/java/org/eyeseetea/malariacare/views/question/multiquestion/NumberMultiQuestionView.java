@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare.views.question.multiquestion;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
@@ -68,7 +67,8 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
                     notifyAnswerChanged(String.valueOf(value));
 
                 } catch (NumberFormatException e) {
-                    Validation.getInstance().addinvalidInput(numberPicker, context.getString(R.string.dynamic_error_number));
+                    Validation.getInstance().addinvalidInput(numberPicker,
+                            context.getString(R.string.dynamic_error_number));
                     //numberPicker.setError(context.getString(R.string.dynamic_error_number));
                 }
 

@@ -11,33 +11,13 @@ import java.util.List;
  */
 
 public class Validation {
-    static Validation instance;
-    static List<Object> activeInputs;
-    static HashMap<Object, String> invalidInputs;
+    private static Validation instance;
+    private static List<Object> activeInputs;
+    private static HashMap<Object, String> invalidInputs;
 
     public Validation() {
         activeInputs = new ArrayList<>();
         invalidInputs = new HashMap<>();
-    }
-
-    public void removeInputError(Object view) {
-        invalidInputs.remove(view);
-    }
-
-    public void addInput(Object view) {
-        activeInputs.add(view);
-    }
-
-    public void addinvalidInput(Object view, String error) {
-        invalidInputs.put(view, error);
-    }
-
-    public List<Object> getActiveInputs() {
-        return activeInputs;
-    }
-
-    public HashMap<Object, String> getInvalidInputs() {
-        return invalidInputs;
     }
 
     public static Validation init() {
@@ -67,6 +47,26 @@ public class Validation {
                 ((TextView) activeInput).setError(error);
             }
         }
+    }
+
+    public void removeInputError(Object view) {
+        invalidInputs.remove(view);
+    }
+
+    public void addInput(Object view) {
+        activeInputs.add(view);
+    }
+
+    public void addinvalidInput(Object view, String error) {
+        invalidInputs.put(view, error);
+    }
+
+    public List<Object> getActiveInputs() {
+        return activeInputs;
+    }
+
+    public HashMap<Object, String> getInvalidInputs() {
+        return invalidInputs;
     }
 }
 

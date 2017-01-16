@@ -1,15 +1,14 @@
 package org.eyeseetea.malariacare.database.migrations;
 
-        import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase;
 
-        import com.raizlabs.android.dbflow.annotation.Migration;
-        import com.raizlabs.android.dbflow.config.FlowManager;
-        import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
-        import com.raizlabs.android.dbflow.structure.ModelAdapter;
+import com.raizlabs.android.dbflow.annotation.Migration;
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
+import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
-        import org.eyeseetea.malariacare.database.AppDatabase;
-        import org.eyeseetea.malariacare.database.model.Question;
-        import org.eyeseetea.malariacare.database.model.User;
+import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.model.User;
 
 /**
  * Created by manuel on 2/01/17.

@@ -42,6 +42,10 @@ public class User extends BaseModel {
     String uid;
     @Column
     String name;
+    @Column
+    long organisation;
+    @Column
+    long supervisor;
 
     /**
      * List of surveys of this user
@@ -54,6 +58,16 @@ public class User extends BaseModel {
     public User(String uid, String name) {
         this.uid = uid;
         this.name = name;
+    }
+
+    public User(long id_user, String uid, String name, long organisation, long supervisor,
+            List<Survey> surveys) {
+        this.id_user = id_user;
+        this.uid = uid;
+        this.name = name;
+        this.organisation = organisation;
+        this.supervisor = supervisor;
+        this.surveys = surveys;
     }
 
     public static User getLoggedUser() {
@@ -133,16 +147,34 @@ public class User extends BaseModel {
         return surveys;
     }
 
+    public long getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(long organisation) {
+        this.organisation = organisation;
+    }
+
+    public long getSupervisor() {
+        return supervisor;
+    }
+
+    public void setSupervisor(long supervisor) {
+        this.supervisor = supervisor;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         User user = (User) o;
 
         if (id_user != user.id_user) return false;
+        if (organisation != user.organisation) return false;
+        if (supervisor != user.supervisor) return false;
         if (uid != null ? !uid.equals(user.uid) : user.uid != null) return false;
-        return !(name != null ? !name.equals(user.name) : user.name != null);
+        return name != null ? name.equals(user.name) : user.name == null;
 
     }
 
@@ -151,15 +183,20 @@ public class User extends BaseModel {
         int result = (int) (id_user ^ (id_user >>> 32));
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (int) (organisation ^ (organisation >>> 32));
+        result = 31 * result + (int) (supervisor ^ (supervisor >>> 32));
         return result;
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id_user +
+                "id_user=" + id_user +
                 ", uid='" + uid + '\'' +
                 ", name='" + name + '\'' +
+                ", organisation=" + organisation +
+                ", supervisor=" + supervisor +
+                ", surveys=" + surveys +
                 '}';
     }
 }

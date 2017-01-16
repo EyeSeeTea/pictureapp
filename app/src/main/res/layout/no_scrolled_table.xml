@@ -6,5 +6,9 @@
     android:orientation="vertical"
     android:visibility="gone">
 
-    <include layout="@layout/options_table" />
+    <TableLayout
+        android:id="@+id/dynamic_tab_options_table"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:measureWithLargestChild="false" />
 </LinearLayout>

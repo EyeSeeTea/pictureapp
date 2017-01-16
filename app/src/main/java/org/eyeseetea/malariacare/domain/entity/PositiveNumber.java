@@ -4,7 +4,7 @@ import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException
 
 public class PositiveNumber {
 
-    private static int value;
+    private int value;
 
     public PositiveNumber(int value) throws InvalidPositiveNumberException {
         if (!isValid(value)) {

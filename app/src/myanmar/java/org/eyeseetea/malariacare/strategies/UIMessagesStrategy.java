@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.domain.usecase;
+package org.eyeseetea.malariacare.strategies;
 
 import android.widget.Toast;
 
@@ -6,12 +6,12 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
 /**
- * Created by idelcano on 14/12/2016.
+ * Created by ina on 20/12/2016.
  */
 
-public class ToastUseCase {
+public class UIMessagesStrategy extends AUIMessagesStrategy {
 
-    public static void showCompulsoryUnansweredToast() {
+    public void showCompulsoryUnansweredToast() {
         Toast.makeText(PreferencesState.getInstance().getContext(),
                 PreferencesState.getInstance().getContext().getString(
                         R.string.error_compulsory_question_unanswered),

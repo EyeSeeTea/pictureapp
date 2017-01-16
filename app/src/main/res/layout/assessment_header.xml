@@ -26,7 +26,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/dashboard_row_padding">
 
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/header_title"
         android:layout_width="0dip"
         android:layout_height="fill_parent"
@@ -38,12 +38,10 @@
         android:text="@string/assessment_sent_date"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/fragment_header_title_text"
-        app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/condensed_font_name" />
-    <!--android:textSize="@dimen/dashboard_text_size"-->
+        android:textSize="?attr/font_small"
+        app:font_name="@string/condensed_font_name" />
 
-
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:layout_width="0dip"
         android:layout_height="fill_parent"
         android:layout_gravity="center"
@@ -55,12 +53,10 @@
         android:text="@string/assessment_title_rdt"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="@color/fragment_header_title_text"
-        app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/condensed_font_name" />
-    <!--android:textSize="@dimen/dashboard_text_size"-->
+        android:textSize="?attr/font_small"
+        app:font_name="@string/condensed_font_name" />
 
-
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:layout_width="0dip"
         android:layout_height="fill_parent"
         android:layout_gravity="center"
@@ -72,9 +68,6 @@
         android:text="@string/assessment_title_info"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="@color/fragment_header_title_text"
-        app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/condensed_font_name" />
-    <!--android:textSize="@dimen/dashboard_text_size"-->
-
-
+        android:textSize="?attr/font_small"
+        app:font_name="@string/condensed_font_name" />
 </TableRow>

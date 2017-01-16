@@ -15,7 +15,7 @@
         android:paddingLeft="@dimen/question_padding"
         android:paddingRight="@dimen/question_padding">
 
-        <org.eyeseetea.malariacare.views.CustomButton
+        <org.eyeseetea.sdk.presentation.views.CustomButton
             android:id="@+id/multi_question_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,8 +26,8 @@
             android:gravity="center"
             android:text="@string/survey_send"
             android:textColor="@color/intColor"
-            app:tDimension="@string/font_size_level2"
-            app:tFontName="@string/specific_language_font" />
+            android:textSize="?attr/font_medium"
+            app:font_name="@string/specific_language_font" />
     </LinearLayout>
 
 </TableRow>

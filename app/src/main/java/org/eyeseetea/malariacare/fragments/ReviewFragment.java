@@ -15,9 +15,9 @@ import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +25,10 @@ import java.util.List;
 public class ReviewFragment extends Fragment {
 
     public static final String TAG = ".ReviewFragment";
+    public static boolean mLoadingReviewOfSurveyWithMaxCounter;
     protected IDashboardAdapter adapter;
     LayoutInflater lInflater;
     private List<Value> values;
-
-    public static boolean mLoadingReviewOfSurveyWithMaxCounter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,7 @@ public class ReviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        this.lInflater = LayoutInflater.from(getActivity().getApplicationContext());
+        this.lInflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.review_layout,
                 container, false);
 
@@ -112,6 +111,6 @@ public class ReviewFragment extends Fragment {
     }
 
     public void reloadHeader(Activity activity) {
-        HeaderUseCase.getInstance().hideHeader(activity);
+        DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 }

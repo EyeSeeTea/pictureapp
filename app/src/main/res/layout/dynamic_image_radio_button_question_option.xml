@@ -28,7 +28,7 @@
             android:layout_weight="0.5"
             android:scaleType="fitStart" />
 
-        <org.eyeseetea.malariacare.views.CustomRadioButton
+        <org.eyeseetea.sdk.presentation.views.CustomRadioButton
             android:id="@+id/radio_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -41,13 +41,11 @@
             android:paddingLeft="25dp"
             android:paddingRight="4dp"
             android:paddingTop="4dp"
-
-            android:textSize="@dimen/radio_button_option"
-            app:tDimension="@string/font_size_level2"
-            app:tFontName="@string/specific_language_font" />
+            android:textSize="?attr/font_medium"
+            app:font_name="@string/specific_language_font" />
     </LinearLayout>
 
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/counter1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,8 +53,7 @@
         android:lines="1"
         android:padding="5dip"
         android:textColor="@color/black"
-        android:textSize="16dp"
         android:visibility="gone"
-        app:tDimension="@string/font_size_level1"
-        app:tFontName="@string/specific_language_font" />
+        android:textSize="?attr/font_small"
+        app:font_name="@string/specific_language_font" />
 </LinearLayout>

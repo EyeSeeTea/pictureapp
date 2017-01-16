@@ -20,7 +20,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter" />
 
-        <org.eyeseetea.malariacare.views.TextCard
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/textoption1"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
@@ -29,11 +29,10 @@
             android:padding="5dip"
             android:text=""
             android:textColor="@color/white"
-            android:textSize="40dp"
-            app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/specific_language_font" />
+            android:textSize="?attr/font_medium"
+            app:font_name="@string/specific_language_font" />
 
-        <org.eyeseetea.malariacare.views.TextCard
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/counter1"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
@@ -41,9 +40,8 @@
             android:gravity="bottom"
             android:padding="5dip"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="?attr/font_small"
             android:visibility="gone"
-            app:tDimension="@string/font_size_level1"
-            app:tFontName="@string/specific_language_font" />
+            app:font_name="@string/specific_language_font" />
     </FrameLayout>
 </TableRow>

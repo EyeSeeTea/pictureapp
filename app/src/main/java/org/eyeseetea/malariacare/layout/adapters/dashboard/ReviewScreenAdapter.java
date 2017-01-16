@@ -9,7 +9,7 @@ import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.domain.usecase.ReviewUseCase;
+import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 
 import java.util.List;
 
@@ -111,7 +111,8 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
 
         TableRow rowView = (TableRow) this.lInflater.inflate(getRecordLayout(), parent, false);
 
-        ReviewUseCase.createViewRow(rowView, value);
-        return rowView;
+        ReviewFragmentStrategy reviewFragmentStrategy = new ReviewFragmentStrategy();
+
+        return reviewFragmentStrategy.createViewRow(rowView, value);
     }
 }

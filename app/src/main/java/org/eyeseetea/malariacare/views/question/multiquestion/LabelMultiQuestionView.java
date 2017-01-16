@@ -8,16 +8,16 @@ import android.widget.LinearLayout;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
-import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class LabelMultiQuestionView extends LinearLayout implements IQuestionView,
         IMultiQuestionView, IImageQuestionView {
-    TextCard header;
+    CustomTextView header;
     ImageView imageView;
-    TextCard helpTextView;
+    CustomTextView helpTextView;
 
     public LabelMultiQuestionView(Context context) {
         super(context);
@@ -60,9 +60,9 @@ public class LabelMultiQuestionView extends LinearLayout implements IQuestionVie
     private void init(Context context) {
         inflate(context, R.layout.multi_question_tab_label_row, this);
 
-        header = (TextCard) findViewById(R.id.row_header_text);
+        header = (CustomTextView) findViewById(R.id.row_header_text);
         imageView = ((ImageView) findViewById(R.id.question_image_row));
-        helpTextView = (TextCard) findViewById(R.id.row_help_text);
+        helpTextView = (CustomTextView) findViewById(R.id.row_help_text);
     }
 
     private void adaptLayoutToTextOnly(View viewWithText, ImageView rowImageLabelView) {

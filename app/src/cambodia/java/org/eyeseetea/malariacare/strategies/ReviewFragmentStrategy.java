@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.domain.usecase;
+package org.eyeseetea.malariacare.strategies;
 
 import android.graphics.Color;
 import android.view.View;
@@ -8,24 +8,26 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 /**
- * Created by idelcano on 15/12/2016.
+ * Created by ina on 20/12/2016.
  */
 
-public class ReviewUseCase {
+public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
-    public static View createViewRow(TableRow rowView, Value value) {
+    public TableRow createViewRow(TableRow rowView, Value value) {
         //Sets the value text in the row and add the question as tag.
-        TextCard textCard = (TextCard) rowView.findViewById(R.id.review_content_text);
-        textCard.setText((value.getOption() != null) ? value.getOption().getInternationalizedCode()
-                : value.getValue());
+        CustomTextView customTextView = (CustomTextView) rowView.findViewById(
+                R.id.review_content_text);
+        customTextView.setText(
+                (value.getOption() != null) ? value.getOption().getInternationalizedCode()
+                        : value.getValue());
         if ((value.getQuestion() != null)) {
-            textCard.setTag(value.getQuestion());
+            customTextView.setTag(value.getQuestion());
 
             //Adds click listener to hide the fragment and go to the clicked question.
-            textCard.setOnClickListener(new View.OnClickListener() {
+            customTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Question question = (Question) v.getTag();
@@ -34,7 +36,7 @@ public class ReviewUseCase {
             });
 
             if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
-                textCard.setBackgroundColor(
+                customTextView.setBackgroundColor(
                         Color.parseColor("#" + value.getOption().getBackground_colour()));
             }
 

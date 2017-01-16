@@ -2,7 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,9 +14,8 @@
         android:paddingTop="2dip"
         android:text="@string/empty_string"
         android:textColor="@color/questionHeaderTextColor"
-        android:textSize="24sp"
+        android:textSize="?attr/font_medium"
         android:textStyle="bold"
         android:typeface="sans"
-        app:tDimension="@string/font_size_level2"
-        app:tFontName="@string/condensed_font_name" />
+        app:font_name="@string/condensed_font_name" />
 </merge>

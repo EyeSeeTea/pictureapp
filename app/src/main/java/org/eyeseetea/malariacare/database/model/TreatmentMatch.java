@@ -76,8 +76,8 @@ public class TreatmentMatch extends BaseModel {
                     .where(Condition.column(Treatment$Table.ID_TREATMENT)
                             .is(id_treatment)).querySingle();
 
-    }
-    return treatment;
+        }
+        return treatment;
     }
 
     public void setTreatment(Treatment treatment) {

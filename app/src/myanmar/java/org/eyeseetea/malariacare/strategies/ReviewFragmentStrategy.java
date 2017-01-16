@@ -39,7 +39,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
             if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
                 rowView.setBackgroundColor(
                         Color.parseColor(
-                                "#" + value.getOption().getBackground_colour());
+                                "#" + value.getOption().getBackground_colour()));
             }
 
         }

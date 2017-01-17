@@ -2,20 +2,23 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.domain.usecase.ALogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
-import org.eyeseetea.malariacare.data.sdk.SdkController;
-import org.eyeseetea.malariacare.data.sdk.SdkLoginController;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
+    static String TAG = "BaseActivityStrategy";
     private static final int MENU_ITEM_LOGOUT = 99;
     private static final int MENU_ITEM_LOGOUT_ORDER = 106;
+
+    LogoutUseCase logoutUseCase = new LogoutUseCase(mBaseActivity);
 
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
@@ -23,17 +26,10 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onCreate() {
-        //Register into sdk bug for listening to logout events
-        SdkController.register(this);
     }
 
     @Override
     public void onStop() {
-        try {
-            //Unregister from bus before leaving
-            SdkController.unregister(this);
-        } catch (Exception e) {
-        }
     }
 
     @Override
@@ -54,7 +50,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                         .setPositiveButton(android.R.string.yes,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface arg0, int arg1) {
-                                        SdkLoginController.logOutUser(mBaseActivity);
+                                        logout();
                                     }
                                 })
                         .setNegativeButton(android.R.string.no,
@@ -70,14 +66,19 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         return true;
     }
 
-    //// FIXME: 28/12/16
-    //@Subscribe
-    public void onLogoutFinished() {
-
+    public void logout() {
         LogoutUseCase logoutUseCase = new LogoutUseCase(mBaseActivity);
-        logoutUseCase.execute();
 
-        mBaseActivity.finishAndGo(LoginActivity.class);
+        logoutUseCase.execute(new ALogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                mBaseActivity.finishAndGo(LoginActivity.class);
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.d(TAG,message);
+            }
+        });
     }
-
 }

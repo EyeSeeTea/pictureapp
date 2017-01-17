@@ -13,6 +13,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.domain.usecase.ALogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.data.sdk.SdkController;
 import org.eyeseetea.malariacare.data.sdk.SdkLoginController;
@@ -68,10 +69,20 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public void onLogoutFinished( ) {
         Log.i(TAG, "Logging out from sdk...OK");
         LogoutUseCase logoutUseCase = new LogoutUseCase(settingsActivity);
-        logoutUseCase.execute();
-        Intent loginIntent = new Intent(settingsActivity, LoginActivity.class);
-        settingsActivity.finish();
-        settingsActivity.startActivity(loginIntent);
+        logoutUseCase.execute(new ALogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                Intent loginIntent = new Intent(settingsActivity, LoginActivity.class);
+                settingsActivity.finish();
+                settingsActivity.startActivity(loginIntent);
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.d(TAG, message);
+            }
+        });
+
     }
 
 }

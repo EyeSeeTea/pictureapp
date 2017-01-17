@@ -37,7 +37,6 @@ public class SdkLoginController extends SdkController {
         D2.me().signIn(username, password);
     }
 
-
     public static UserCredentials getCredentials(String username, String password) {
         if (sdkCredentials == null) {
             sdkCredentials = new UserCredentials(username, password);
@@ -46,7 +45,7 @@ public class SdkLoginController extends SdkController {
     }
 
     public static void logOutAndMove(Context context) {
-        LogoutUseCase logoutUseCase = new LogoutUseCase(context);
-        logoutUseCase.execute();
+/*        LogoutUseCase logoutUseCase = new LogoutUseCase(context);
+        logoutUseCase.execute();*/
     }
 }

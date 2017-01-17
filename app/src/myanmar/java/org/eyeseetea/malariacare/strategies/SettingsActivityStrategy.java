@@ -14,8 +14,8 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
-import org.eyeseetea.malariacare.sdk.SdkController;
-import org.eyeseetea.malariacare.sdk.SdkLoginController;
+import org.eyeseetea.malariacare.data.sdk.SdkController;
+import org.eyeseetea.malariacare.data.sdk.SdkLoginController;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 

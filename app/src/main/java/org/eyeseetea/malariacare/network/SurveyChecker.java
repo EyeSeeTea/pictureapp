@@ -11,11 +11,9 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventEx
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.sdk.SdkController;
+import org.eyeseetea.malariacare.data.sdk.SdkController;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataValueFlow;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.json.JSONObject;
 
 import java.io.IOException;

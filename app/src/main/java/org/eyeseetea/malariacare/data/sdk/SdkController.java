@@ -17,7 +17,7 @@
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.sdk;
+package org.eyeseetea.malariacare.data.sdk;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

@@ -43,7 +43,7 @@ import org.eyeseetea.malariacare.database.model.Score;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.sdk.SdkController;
+import org.eyeseetea.malariacare.data.sdk.SdkController;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

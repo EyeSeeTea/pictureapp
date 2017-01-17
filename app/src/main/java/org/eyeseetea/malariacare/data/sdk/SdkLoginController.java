@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.sdk;
+package org.eyeseetea.malariacare.data.sdk;
 
 import android.app.Activity;
 import android.content.Context;

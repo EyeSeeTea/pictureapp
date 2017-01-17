@@ -1,27 +1,12 @@
-package org.eyeseetea.malariacare.sdk;
+package org.eyeseetea.malariacare.data.sdk;
 
-import android.util.Log;
-
-import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
-import org.hisp.dhis.client.sdk.android.api.D2;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
-import org.hisp.dhis.client.sdk.models.common.importsummary.ImportSummary;
-import org.hisp.dhis.client.sdk.models.event.Event;
-
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by idelcano on 15/11/2016.
  */
 
-public class SdkPushController extends SdkController {
+public class SdkPushController extends SdkController{
     /**
      * Push the events in sdk database
      * This method is called before the conversion from surveys to sdk events

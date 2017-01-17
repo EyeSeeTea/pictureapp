@@ -36,9 +36,9 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.sdk.SdkController;
-import org.eyeseetea.malariacare.sdk.SdkPullController;
-import org.eyeseetea.malariacare.sdk.SdkQueries;
+import org.eyeseetea.malariacare.data.sdk.SdkController;
+import org.eyeseetea.malariacare.data.sdk.SdkPullController;
+import org.eyeseetea.malariacare.data.sdk.SdkQueries;
 import org.hisp.dhis.client.sdk.models.program.ProgramType;
 
 import java.util.Calendar;
@@ -49,7 +49,7 @@ import java.util.List;
  * A static controller that orchestrate the pull process
  * Created by arrizabalaga on 4/11/15.
  */
-public class PullController {
+public class PullController  {
     public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
     public static final int NUMBER_OF_MONTHS = 0;
     private static PullController instance;

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -55,6 +56,7 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         numberPicker.setFocusable(true);
         numberPicker.setFocusableInTouchMode(true);
 
+        Validation.getInstance().addInput(numberPicker);
         sendButton = (CustomButton) findViewById(R.id.dynamic_positiveInt_btn);
 
         sendButton.setOnClickListener(new OnClickListener() {
@@ -82,8 +84,9 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
             PositiveNumber positiveNumber = PositiveNumber.parse(numberPicker.getText().toString());
             hideKeyboard(numberPicker);
             notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
-
+            Validation.getInstance().removeInputError(numberPicker);
         } catch (InvalidPositiveNumberException e) {
+            Validation.getInstance().addinvalidInput(numberPicker, context.getString(R.string.dynamic_error_age));
             numberPicker.setError(context.getString(R.string.dynamic_error_age));
         }
     }

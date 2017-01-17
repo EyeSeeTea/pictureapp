@@ -57,6 +57,7 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
@@ -375,6 +376,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         mMultiQuestionViews.clear();
+        Validation.init();
         //init validation control(used only in multiquestions tabs)
         failedValidations = 0;
         //Inflate the layout
@@ -785,6 +787,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         switch (rowQuestion.getOutput()) {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
+            case Constants.POSITIVE_OR_ZERO_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
@@ -812,6 +815,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         switch (rowQuestion.getOutput()) {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
+            case Constants.POSITIVE_OR_ZERO_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
@@ -848,6 +852,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * value.
      */
     public void finishOrNext() {
+        if (Validation.hasErrors()) {
+            Validation.showErrors();
+            isClicked = false;
+            return;
+        }
         if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
 
             UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();

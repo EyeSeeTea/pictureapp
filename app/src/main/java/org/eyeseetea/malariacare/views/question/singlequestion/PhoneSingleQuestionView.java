@@ -9,6 +9,7 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Phone;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -56,6 +57,7 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
 
         sendButton = (CustomButton) findViewById(R.id.row_phone_btn);
 
+        Validation.getInstance().addInput(mCustomEditText);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,10 +83,9 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
             Phone phone = new Phone(mCustomEditText.getText().toString());
             hideKeyboard(mCustomEditText);
             notifyAnswerChanged(phone.getValue());
-
+            Validation.getInstance().removeInputError(mCustomEditText);
         } catch (InvalidPhoneException e) {
-            mCustomEditText.setError(
-                    context.getString(R.string.dynamic_error_phone_format));
+            Validation.getInstance().addinvalidInput(mCustomEditText, context.getString(R.string.dynamic_error_phone_format));
         }
     }
 

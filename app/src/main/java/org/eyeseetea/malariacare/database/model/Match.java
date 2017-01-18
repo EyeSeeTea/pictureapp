@@ -23,6 +23,8 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
+import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -105,6 +107,17 @@ public class Match extends BaseModel {
         return new Select().from(TreatmentMatch.class)
                 .where(Condition.column(TreatmentMatch$Table.ID_MATCH).eq(
                         match.getId_match())).queryList();
+    }
+
+
+    public Treatment getTreatment() {
+        return new Select().from(Treatment.class).as("t").join(TreatmentMatch.class,
+                Join.JoinType.LEFT).as("tm")
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Treatment$Table.ID_TREATMENT))
+                        .eq(ColumnAlias.columnWithTable("tm",
+                                TreatmentMatch$Table.ID_TREATMENT))).where(Condition.column(
+                        ColumnAlias.columnWithTable("tm", TreatmentMatch$Table.ID_MATCH)).is(
+                        id_match)).querySingle();
     }
 
 

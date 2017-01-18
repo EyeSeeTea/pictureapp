@@ -4,6 +4,8 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
+import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -54,6 +56,17 @@ public class Treatment extends BaseModel {
     public static List<Treatment> getAllTreatments() {
         return new Select().all().from(Treatment.class).queryList();
     }
+
+    public List<Drug> getDrugsForTreatment() {
+        return new Select().from(Drug.class).as("d")
+                .join(DrugCombination.class, Join.JoinType.LEFT).as("dc")
+                .on(Condition.column(ColumnAlias.columnWithTable("d", Drug$Table.ID_DRUG))
+                        .eq(ColumnAlias.columnWithTable("dc", DrugCombination$Table.ID_DRUG)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("dc", DrugCombination$Table.ID_TREATMENT))
+                        .is(id_treatment)).queryList();
+    }
+
 
     public long getId_treatment() {
         return id_treatment;

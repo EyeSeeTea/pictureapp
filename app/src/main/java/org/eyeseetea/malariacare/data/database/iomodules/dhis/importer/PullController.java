@@ -36,9 +36,9 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.sdk.SdkController;
-import org.eyeseetea.malariacare.data.sdk.SdkPullController;
-import org.eyeseetea.malariacare.data.sdk.SdkQueries;
+import org.eyeseetea.malariacare.data.remote.SdkController;
+import org.eyeseetea.malariacare.data.remote.SdkPullController;
+import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.hisp.dhis.client.sdk.models.program.ProgramType;
 
 import java.util.Calendar;

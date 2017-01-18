@@ -16,11 +16,13 @@ import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
+import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.InitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
-import org.eyeseetea.malariacare.data.sdk.SdkQueries;
+import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.views.TypefaceCache;
 import org.hisp.dhis.client.sdk.android.api.D2;
 
@@ -68,7 +70,8 @@ public class SplashScreenActivity extends Activity {
         try {
             if (!BuildConfig.multiuser) {
                 Log.i(TAG, "Creating demo login from dashboard ...");
-                LoginUseCase loginUseCase = new LoginUseCase(this);
+                IUserAccountRepository userAccountRepository = new UserAccountRepository(this);
+                LoginUseCase loginUseCase = new LoginUseCase(userAccountRepository);
 
                 Credentials demoCrededentials = Credentials.createDemoCredentials();
 

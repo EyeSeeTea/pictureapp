@@ -1,85 +1,104 @@
 package org.eyeseetea.malariacare.data.repositories;
 
+import static com.raizlabs.android.dbflow.config.FlowLog.Level.I;
+
 import android.content.Context;
 
-import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.IUserAccountDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.remote.UserAccountDhisSDKDataSource;
+import org.eyeseetea.malariacare.domain.boundary.IRepositoryCallback;
 import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
-import org.hisp.dhis.client.sdk.android.api.D2;
-import org.hisp.dhis.client.sdk.core.common.network.Configuration;
-
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 
 public class UserAccountRepository implements IUserAccountRepository {
-    private Context mContext;
+    IUserAccountDataSource userAccountLocalDataSource;
+    IUserAccountDataSource userAccountRemoteDataSource;
 
-    public UserAccountRepository(Context context){
-        mContext = context;
+    public UserAccountRepository(Context context) {
+
+        userAccountLocalDataSource = new UserAccountLocalDataSource(context);
+        userAccountRemoteDataSource = new UserAccountDhisSDKDataSource();
     }
 
     @Override
-    public void removeCurrentUserAccount(RemoveCurrentUserAccountCallback callback) {
-        User loggedUser = User.getLoggedUser();
-
-        if (Session.getCredentials().isDemoCredentials()) {
-            executeLocalLogout(loggedUser);
-            callback.onSuccess();
-        } else {
-            executeDhisLogout(loggedUser, callback);
-        }
+    public void login(final Credentials credentials, final IRepositoryCallback<UserAccount> callback) {
+        if (credentials.isDemoCredentials())
+            localLogin(credentials, callback);
+        else
+            remoteLogin(credentials, callback);
     }
 
-    private void executeDhisLogout(final User user, final RemoveCurrentUserAccountCallback callback) {
-        Configuration configuration = new Configuration(
-                PreferencesState.getInstance().getDhisURL());
+    @Override
+    public void logout(final IRepositoryCallback<Void> callback) {
 
-        D2.configure(configuration)
-                .flatMap(new Func1<Void, Observable<Boolean>>() {
-                    @Override
-                    public Observable<Boolean> call(Void aVoid) {
-                        return D2.me().signOut();
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Boolean>() {
-                    @Override
-                    public void call(Boolean result) {
-                        executeLocalLogout(user);
-                        callback.onSuccess();
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                });
+        //TODO: jsanchez fix find out IsDemo from current UserAccount getting from DataSource
+        Credentials credentials = Session.getCredentials();
+
+        if (credentials.isDemoCredentials())
+            localLogout(callback);
+        else
+            remoteLogout(callback);
     }
 
-    private void executeLocalLogout(User user) {
-        if (user != null) {
-            user.delete();
-        }
+    private void remoteLogout(final IRepositoryCallback<Void> callback) {
+        userAccountRemoteDataSource.logout(new IDataSourceCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                localLogout(callback);
+            }
 
-        clearCredentials();
-
-        Session.logout();
-
-        PopulateDB.wipeDatabase();
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        });
     }
 
-    private void clearCredentials() {
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,
-                mContext.getString(R.string.DHIS_DEFAULT_SERVER));
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, "");
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, "");
-        PreferencesState.getInstance().reloadPreferences();
+    private void remoteLogin(final Credentials credentials,
+            final IRepositoryCallback<UserAccount> callback) {
+        userAccountRemoteDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
+            @Override
+            public void onSuccess(UserAccount result) {
+                localLogin(credentials,callback);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        });
+    }
+
+    private void localLogout(final IRepositoryCallback<Void> callback){
+        userAccountLocalDataSource.logout(new IDataSourceCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                callback.onSuccess(null);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        });
+    }
+
+    private void localLogin(Credentials credentials,final IRepositoryCallback<UserAccount> callback){
+        userAccountLocalDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
+            @Override
+            public void onSuccess(UserAccount userAccount) {
+                callback.onSuccess(userAccount);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        });
     }
 }

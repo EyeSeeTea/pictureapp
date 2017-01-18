@@ -46,6 +46,8 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
+import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
@@ -691,7 +693,8 @@ public class DashboardActivity extends BaseActivity {
             try {
                 if (!BuildConfig.multiuser) {
                     Log.i(TAG, "Creating demo login from dashboard ...");
-                    LoginUseCase loginUseCase = new LoginUseCase(dashboardActivity);
+                    IUserAccountRepository userAccountRepository = new UserAccountRepository(dashboardActivity);
+                    LoginUseCase loginUseCase = new LoginUseCase(userAccountRepository);
 
                     Credentials demoCrededentials = Credentials.createDemoCredentials();
 

@@ -31,8 +31,8 @@ import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.data.sdk.SdkController;
-import org.eyeseetea.malariacare.data.sdk.SdkPushController;
+import org.eyeseetea.malariacare.data.remote.SdkController;
+import org.eyeseetea.malariacare.data.remote.SdkPushController;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.models.common.importsummary.ImportSummary;
 

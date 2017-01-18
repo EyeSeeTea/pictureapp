@@ -9,8 +9,8 @@ import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.SyncProgr
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.network.SurveyChecker;
-import org.eyeseetea.malariacare.data.sdk.SdkController;
-import org.eyeseetea.malariacare.data.sdk.SdkLoginController;
+import org.eyeseetea.malariacare.data.remote.SdkController;
+import org.eyeseetea.malariacare.data.remote.SdkLoginController;
 
 import java.util.ArrayList;
 import java.util.List;

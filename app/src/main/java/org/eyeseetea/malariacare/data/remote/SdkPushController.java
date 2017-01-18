@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.sdk;
+package org.eyeseetea.malariacare.data.remote;
 
 import java.util.Set;
 

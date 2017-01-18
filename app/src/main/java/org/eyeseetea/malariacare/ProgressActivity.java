@@ -33,8 +33,8 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.sdk.SdkController;
-import org.eyeseetea.malariacare.data.sdk.SdkLoginController;
+import org.eyeseetea.malariacare.data.remote.SdkController;
+import org.eyeseetea.malariacare.data.remote.SdkLoginController;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
 
 public class ProgressActivity extends Activity {

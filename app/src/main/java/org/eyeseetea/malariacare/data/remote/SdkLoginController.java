@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.sdk;
+package org.eyeseetea.malariacare.data.remote;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 
 import org.eyeseetea.malariacare.LoginActivity;
-import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.core.common.network.UserCredentials;
 

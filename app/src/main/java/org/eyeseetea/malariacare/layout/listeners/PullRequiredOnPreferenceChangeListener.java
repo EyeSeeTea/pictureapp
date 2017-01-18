@@ -6,7 +6,7 @@ import android.preference.Preference;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.data.sdk.SdkLoginController;
+import org.eyeseetea.malariacare.data.remote.SdkLoginController;
 
 public class PullRequiredOnPreferenceChangeListener implements
         Preference.OnPreferenceChangeListener {

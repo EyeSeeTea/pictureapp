@@ -1,8 +1,6 @@
 package org.eyeseetea.malariacare.strategies;
 
 
-import static android.R.attr.settingsActivity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +14,6 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
-import org.eyeseetea.malariacare.data.sdk.SdkLoginController;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {

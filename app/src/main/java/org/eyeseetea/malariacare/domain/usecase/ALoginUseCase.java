@@ -11,12 +11,9 @@ public abstract class ALoginUseCase {
     public interface Callback {
         void onLoginSuccess();
         void onLoginError(String message);
-    }
 
-    protected Context context;
-
-    public ALoginUseCase(Context context) {
-        this.context = context;
+        //TODO: jsanchez fix
+        //void onInvalidCredentials();
     }
 
     public abstract void execute(Credentials credentials,Callback callback);

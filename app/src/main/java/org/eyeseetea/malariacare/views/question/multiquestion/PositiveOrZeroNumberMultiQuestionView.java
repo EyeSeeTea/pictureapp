@@ -6,19 +6,28 @@ import android.text.TextWatcher;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.domain.entity.PositiveOrZeroNumber;
 import org.eyeseetea.malariacare.domain.entity.Validation;
+import org.eyeseetea.malariacare.domain.exception.InvalidPositiveOrZeroNumberException;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
-public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQuestionView,
+/**
+ * Created by idelcano on 09/01/2017.
+ */
+
+public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView implements
+        IQuestionView,
         IMultiQuestionView {
     CustomTextView header;
     CustomEditText numberPicker;
 
-    public NumberMultiQuestionView(Context context) {
+    PositiveOrZeroNumber positiveOrZeroNumber;
+
+    public PositiveOrZeroNumberMultiQuestionView(Context context) {
         super(context);
 
         init(context);
@@ -48,11 +57,11 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
 
     @Override
     public boolean hasError() {
-        return numberPicker.getError() != null;
+        return numberPicker.getError() != null || positiveOrZeroNumber == null;
     }
 
     private void init(final Context context) {
-        inflate(context, R.layout.multi_question_tab_int_row, this);
+        inflate(context, R.layout.multi_question_tab_positive_int_row, this);
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
         numberPicker = (CustomEditText) findViewById(R.id.answer);
@@ -61,18 +70,16 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-
                 try {
-                    int value = Integer.parseInt(s.toString());
-                    notifyAnswerChanged(String.valueOf(value));
+                    positiveOrZeroNumber = PositiveOrZeroNumber.parse(
+                            numberPicker.getText().toString());
+                    notifyAnswerChanged(String.valueOf(positiveOrZeroNumber.getValue()));
+                    Validation.getInstance().removeInputError(numberPicker);
 
-                } catch (NumberFormatException e) {
+                } catch (InvalidPositiveOrZeroNumberException e) {
                     Validation.getInstance().addinvalidInput(numberPicker,
-                            context.getString(R.string.dynamic_error_number));
-                    //numberPicker.setError(context.getString(R.string.dynamic_error_number));
+                            context.getString(R.string.dynamic_error_age));
                 }
-
-                notifyAnswerChanged(numberPicker.getText().toString());
             }
 
             @Override

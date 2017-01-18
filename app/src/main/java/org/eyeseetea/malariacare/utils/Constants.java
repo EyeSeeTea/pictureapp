@@ -31,7 +31,8 @@ public class Constants {
             SWITCH_BUTTON = 22,
             QUESTION_LABEL = 23,
             IMAGE_RADIO_GROUP_NO_DATAELEMENT = 24,
-            IMAGE_RADIO_GROUP = 25;
+            IMAGE_RADIO_GROUP = 25,
+            POSITIVE_OR_ZERO_INT = 26;
 
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(

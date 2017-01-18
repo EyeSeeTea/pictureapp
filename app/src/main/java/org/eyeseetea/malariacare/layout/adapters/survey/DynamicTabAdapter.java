@@ -57,6 +57,7 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
@@ -238,7 +239,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     public void OnOptionAnswered(View view, Option selectedOption, boolean moveToNextQuestion) {
-        navigationController.isMovingToForward = true;
+        if (moveToNextQuestion) {
+            navigationController.isMovingToForward = true;
+        }
+
         Question question = (Question) view.getTag();
 
         Question counterQuestion = question.findCounterByOption(selectedOption);
@@ -372,6 +376,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         mMultiQuestionViews.clear();
+        Validation.init();
         //init validation control(used only in multiquestions tabs)
         failedValidations = 0;
         //Inflate the layout
@@ -418,14 +423,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         List<Question> screenQuestions = new ArrayList<>();
 
-        tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
         if (isTabScrollable(questionItem, tabType)) {
+            tableLayout = (TableLayout) rowView.findViewById(R.id.multi_question_options_table);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
             screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
             swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
                     R.id.scrolled_table)).findViewById(R.id.table_scroll));
         } else {
+            tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.GONE);
             screenQuestions.add(questionItem);
@@ -439,6 +445,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         Log.d(TAG, "Questions in actual tab: " + screenQuestions.size());
+
+        swipeTouchListener.clearClickableViews();
         for (Question screenQuestion : screenQuestions) {
             renderQuestion(rowView, tabType, screenQuestion);
         }
@@ -727,19 +735,22 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             View view = tableLayout.getChildAt(i);
             if (view instanceof TableRow) {
                 TableRow row = (TableRow) view;
-                View answerView = view.findViewById(R.id.answer);
-                if (answerView == null) {
-                    continue;
-                }
-                Question rowQuestion = (Question) answerView.getTag();
-                if (rowQuestion == null) {
-                    continue;
-                }
-                List<Question> questionChildren = question.getChildren();
-                if (questionChildren != null && questionChildren.size() > 0) {
-                    for (Question childQuestion : questionChildren) {
-                        //if the table row question is child of the modified question...
-                        toggleChild(row, rowQuestion, childQuestion);
+
+                View targetView = row.getChildAt(0);
+
+                if (targetView instanceof IMultiQuestionView
+                        || targetView instanceof IQuestionView) {
+
+                    Question rowQuestion = (Question) targetView.getTag();
+                    if (rowQuestion == null) {
+                        continue;
+                    }
+                    List<Question> questionChildren = question.getChildren();
+                    if (questionChildren != null && questionChildren.size() > 0) {
+                        for (Question childQuestion : questionChildren) {
+                            //if the table row question is child of the modified question...
+                            toggleChild(row, rowQuestion, childQuestion);
+                        }
                     }
                 }
             }
@@ -776,6 +787,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         switch (rowQuestion.getOutput()) {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
+            case Constants.POSITIVE_OR_ZERO_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
@@ -803,6 +815,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         switch (rowQuestion.getOutput()) {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
+            case Constants.POSITIVE_OR_ZERO_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
@@ -839,6 +852,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * value.
      */
     public void finishOrNext() {
+        if (Validation.hasErrors()) {
+            Validation.showErrors();
+            isClicked = false;
+            return;
+        }
         if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
 
             UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();

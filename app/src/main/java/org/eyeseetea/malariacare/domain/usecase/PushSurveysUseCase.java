@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PushSurveysUseCase {
+
+    public interface Callback {
+        void onPushFinished();
+        void onPushError(String message);
+    }
+
     public static final String TAG = ".PushSurveysUseCase";
     private Context context;
     private Callback mCallback;
@@ -167,10 +173,6 @@ public class PushSurveysUseCase {
         }
     }
 
-    public interface Callback {
-        void onPushFinished();
 
-        void onPushError(String message);
-    }
 }
 

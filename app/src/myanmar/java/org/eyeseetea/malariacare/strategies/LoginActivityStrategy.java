@@ -13,12 +13,16 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.User;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.hisp.dhis.client.sdk.ui.views.FontButton;
 
 import java.io.IOException;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
+
+    private static final String TAG = ".LoginActivityStrategy";
+
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
     }
@@ -77,9 +81,17 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
                 Credentials demoCrededentials = Credentials.createDemoCredentials();
 
-                loginActivity.mLoginUseCase.execute(demoCrededentials);
+                loginActivity.mLoginUseCase.execute(demoCrededentials, new ALoginUseCase.Callback() {
+                    @Override
+                    public void onLoginSuccess() {
+                        finishAndGo(DashboardActivity.class);
+                    }
 
-                finishAndGo(DashboardActivity.class);
+                    @Override
+                    public void onLoginError(String message) {
+                        Log.d(TAG, message);
+                    }
+                });
             }
         });
     }

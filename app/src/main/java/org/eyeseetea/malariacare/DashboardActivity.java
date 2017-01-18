@@ -47,6 +47,7 @@ import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
@@ -694,7 +695,17 @@ public class DashboardActivity extends BaseActivity {
 
                     Credentials demoCrededentials = Credentials.createDemoCredentials();
 
-                    loginUseCase.execute(demoCrededentials);
+                    loginUseCase.execute(demoCrededentials, new ALoginUseCase.Callback() {
+                        @Override
+                        public void onLoginSuccess() {
+                            Log.d(TAG, "Login Success");
+                        }
+
+                        @Override
+                        public void onLoginError(String message) {
+                            Log.d(TAG, message);
+                        }
+                    });
                 }
 
                 PopulateDB.initDataIfRequired(getAssets());

@@ -42,11 +42,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.data.sdk.SdkLoginController;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.hisp.dhis.client.sdk.core.common.preferences.ResourceType;
 import org.hisp.dhis.client.sdk.ui.activities.AbsLoginActivity;
 
 import java.io.InputStream;
@@ -79,11 +82,6 @@ public class LoginActivity extends AbsLoginActivity {
         Log.d(TAG, "onCreate");
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
-    }
-
-    @Override
-    protected void onLoginButtonClicked(Editable serverUrl, Editable username, Editable password) {
-
     }
 
     private void initDataDownloadPeriodDropdown() {
@@ -129,19 +127,13 @@ public class LoginActivity extends AbsLoginActivity {
         }
     }
 
-    //@Override
-    public void login(String serverUrl, String username, String password) {
-        //This method is overriden to capture credentials data
-        this.serverUrl = serverUrl;
-        this.username = username;
-        this.password = password;
-
-
+    @Override
+    protected void onLoginButtonClicked(Editable server, Editable username, Editable password) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
             askEula(R.string.app_EULA, R.raw.eula, LoginActivity.this);
         } else {
-            loginToDhis(serverUrl, username, password);
+            login(server.toString(), username.toString(), password.toString());
         }
     }
 
@@ -164,7 +156,7 @@ public class LoginActivity extends AbsLoginActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         rememberEulaAccepted(context);
-                        loginToDhis(serverUrl, username, password);
+                        login(serverUrl, username, password);
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).create();
@@ -186,30 +178,26 @@ public class LoginActivity extends AbsLoginActivity {
         editor.commit();
     }
 
-    /**
-     * User SDK function to login
-     */
-    public void loginToDhis(String serverUrl, String username, String password) {
-        //Delegate real login attempt to parent in sdk
-        //// FIXME: 28/12/16
-        //super.login(serverUrl, username, password);
+    public void login(String serverUrl, String username, String password) {
+        Credentials credentials = new Credentials(serverUrl, username, password);
+        mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
+            @Override
+            public void onLoginSuccess() {
+                mLoginActivityStrategy.finishAndGo();
+            }
+
+            @Override
+            public void onLoginError(String message) {
+                Log.e(TAG, message);
+            }
+        });
     }
 
-    /**
-     * This logout is called from the success user autentication, and try to login in the server
-     * with the correct userdata.
-     */
-    //// FIXME: 28/12/16
-    //@Subscribe
-    public void onLogoutFinished() {
-        SdkLoginController.logInUser(serverUrl, ServerAPIController.getSDKCredentials());
-    }
 
     //// FIXME: 28/12/16
     //@Subscribe
     public void onLoginFinished() {
-        /*
-        if (result != null && result.getResourceType().equals(ResourceType.USERS)) {
+/*        if (result != null && result.getResourceType().equals(ResourceType.USERS)) {
             if (result.getResponseHolder().getApiException() == null) {
 
                 Credentials credentials = new Credentials(serverUrl, username, password);
@@ -227,8 +215,7 @@ public class LoginActivity extends AbsLoginActivity {
             } else {
                 onLoginFail(result.getResponseHolder().getApiException());
             }
-        }
-    */
+        }*/
     }
 
 

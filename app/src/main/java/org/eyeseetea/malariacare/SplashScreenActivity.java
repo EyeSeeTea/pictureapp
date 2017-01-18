@@ -17,6 +17,7 @@ import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.InitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.data.sdk.SdkQueries;
@@ -71,7 +72,17 @@ public class SplashScreenActivity extends Activity {
 
                 Credentials demoCrededentials = Credentials.createDemoCredentials();
 
-                loginUseCase.execute(demoCrededentials);
+                loginUseCase.execute(demoCrededentials, new ALoginUseCase.Callback() {
+                    @Override
+                    public void onLoginSuccess() {
+                        Log.d(TAG, "Login Success");
+                    }
+
+                    @Override
+                    public void onLoginError(String message) {
+                        Log.d(TAG, message);
+                    }
+                });
             }
 
             PopulateDB.initDataIfRequired(getAssets());

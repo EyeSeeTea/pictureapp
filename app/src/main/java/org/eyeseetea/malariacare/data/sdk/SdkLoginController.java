@@ -30,6 +30,7 @@ public class SdkLoginController extends SdkController {
     }
 
     public static void logInUser(String url, UserCredentials userCredentials) {
+
         //// FIXME: 28/12/16  Add server configuration
         D2.me().signIn(userCredentials.getUsername(), userCredentials.getPassword());
     }

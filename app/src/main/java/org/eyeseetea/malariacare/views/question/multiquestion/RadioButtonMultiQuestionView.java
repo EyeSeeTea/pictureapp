@@ -105,6 +105,9 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
 
     @Override
     public boolean hasError() {
+        if (question.isCompulsory() && radioGroup.getCheckedRadioButtonId() == -1) {
+            return true;
+        }
         return false;
     }
 

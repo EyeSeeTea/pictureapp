@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,9 +86,22 @@ public class Treatment {
         List<Question> questions = new ArrayList<>();
         List<Drug> drugs = treatment.getDrugsForTreatment();
 
+        Question treatmentQuestion = new Question();
+        treatmentQuestion.setOutput(Constants.QUESTION_LABEL);
+        treatmentQuestion.setForm_name(treatment.getDiagnosis());
+        treatmentQuestion.setHelp_text(treatment.getMessage());
+        treatmentQuestion.setCompulsory(0);
+        treatmentQuestion.setHeader((long) 7);
+        questions.add(treatmentQuestion);
+
         for (Drug drug : drugs) {
-            questions.add(Question.findByUID(drug.getQuestion_code()));
-            Log.d(TAG, "Question: " + questions.get(questions.size() - 1) + "\n");
+            Question question = Question.findByUID(drug.getQuestion_code());
+            if (question != null) {
+                questions.add(question);
+            }
+            if (!questions.isEmpty()) {
+                Log.d(TAG, "Question: " + questions.get(questions.size() - 1) + "\n");
+            }
         }
 
         return questions;

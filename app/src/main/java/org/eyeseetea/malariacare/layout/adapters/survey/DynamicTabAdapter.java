@@ -52,11 +52,13 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
@@ -404,6 +406,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         int tabType = questionItem.getHeader().getTab().getType();
         if (isMultipleQuestionTab(tabType)) {
             headerView.setText(questionItem.getHeader().getTab().getInternationalizedName());
+        } else if (isDynamicTreatmentTab(tabType)) {
+            headerView.setText(questionItem.getHeader().getTab().getInternationalizedName());
         } else {
             headerView.setText(questionItem.getInternationalizedForm_name());
         }
@@ -423,11 +427,21 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         List<Question> screenQuestions = new ArrayList<>();
 
+        Survey survey = getSurvey();
+
+
         if (isTabScrollable(questionItem, tabType)) {
             tableLayout = (TableLayout) rowView.findViewById(R.id.multi_question_options_table);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
-            screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
+            if (tabType == Constants.TAB_DYNAMIC_TREATMENT) {
+                Treatment treatment = new Treatment(getSurvey());
+                if (treatment.hasTreatment()) {
+                    screenQuestions = treatment.getQuestions();
+                }
+            } else {
+                screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
+            }
             swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
                     R.id.scrolled_table)).findViewById(R.id.table_scroll));
         } else {
@@ -460,7 +474,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         TableRow tableRow;
         IQuestionViewFactory questionViewFactory;
 
-        if (isMultipleQuestionTab(tabType)) {
+        if (isMultipleQuestionTab(tabType) || isDynamicTreatmentTab(tabType)) {
             questionViewFactory = new MultiQuestionViewFactory();
         } else {
             questionViewFactory = new SingleQuestionViewFactory();
@@ -555,7 +569,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private boolean isTabScrollable(Question questionItem, int tabType) {
-        return isMultipleQuestionTab(tabType)
+        return isMultipleQuestionTab(tabType) || isDynamicTreatmentTab(tabType)
                 || questionItem.getOutput() == Constants.IMAGE_RADIO_GROUP
                 || questionItem.getOutput() == Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT;
     }
@@ -574,7 +588,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void configureLayoutParams(int tabType, TableRow tableRow, LinearLayout questionView) {
-        if (isMultipleQuestionTab(tabType)) {
+        if (isMultipleQuestionTab(tabType) || isDynamicTreatmentTab(tabType)) {
 
             tableRow.setLayoutParams(
                     new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -655,7 +669,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     } else {
                         finishOrNext();
                     }
-                } else if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
+                } else if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()
+                        || isDynamicTreatmentTab(
+                        navigationController.getCurrentQuestion().getHeader().getTab().getType())) {
                     UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();
                     isClicked = false;
                     return;
@@ -709,6 +725,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean isMultipleQuestionTab(int tabType) {
         return tabType == Constants.TAB_MULTI_QUESTION;
+    }
+
+    private boolean isDynamicTreatmentTab(int tabType) {
+        return tabType == Constants.TAB_DYNAMIC_TREATMENT;
     }
 
     /**

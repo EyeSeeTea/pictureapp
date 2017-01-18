@@ -9,7 +9,8 @@ import android.view.MenuItem;
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.domain.usecase.ALogoutUseCase;
+import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
+import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
@@ -18,7 +19,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private static final int MENU_ITEM_LOGOUT = 99;
     private static final int MENU_ITEM_LOGOUT_ORDER = 106;
 
-    LogoutUseCase logoutUseCase = new LogoutUseCase(mBaseActivity);
+    LogoutUseCase mLogoutUseCase;
+    IUserAccountRepository mUserAccountRepository;
 
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
@@ -26,6 +28,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onCreate() {
+        mUserAccountRepository = new UserAccountRepository(mBaseActivity);
+        mLogoutUseCase = new LogoutUseCase(mUserAccountRepository);
     }
 
     @Override
@@ -67,9 +71,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     public void logout() {
-        LogoutUseCase logoutUseCase = new LogoutUseCase(mBaseActivity);
-
-        logoutUseCase.execute(new ALogoutUseCase.Callback() {
+        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
                 mBaseActivity.finishAndGo(LoginActivity.class);
@@ -77,7 +79,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
             @Override
             public void onLogoutError(String message) {
-                Log.d(TAG,message);
+                Log.d(TAG, message);
             }
         });
     }

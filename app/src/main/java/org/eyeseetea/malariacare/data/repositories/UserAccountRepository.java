@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.domain.usecase;
+package org.eyeseetea.malariacare.data.repositories;
 
 import android.content.Context;
 
@@ -7,9 +7,9 @@ import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.core.common.network.Configuration;
-import org.hisp.dhis.client.sdk.models.user.UserAccount;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -17,25 +17,28 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class LogoutUseCase extends ALogoutUseCase {
-    public LogoutUseCase(Context context) {
-        super(context);
+public class UserAccountRepository implements IUserAccountRepository {
+    private Context mContext;
+
+    public UserAccountRepository(Context context){
+        mContext = context;
     }
 
     @Override
-    public void execute(Callback callback) {
+    public void removeCurrentUserAccount(RemoveCurrentUserAccountCallback callback) {
         User loggedUser = User.getLoggedUser();
 
         if (Session.getCredentials().isDemoCredentials()) {
             executeLocalLogout(loggedUser);
-            callback.onLogoutSuccess();
+            callback.onSuccess();
+        } else {
+            executeDhisLogout(loggedUser, callback);
         }
-        else
-            executeDhisLogout(loggedUser,callback);
     }
 
-    private void executeDhisLogout(final User user, final Callback callback){
-        Configuration configuration = new Configuration(PreferencesState.getInstance().getDhisURL());
+    private void executeDhisLogout(final User user, final RemoveCurrentUserAccountCallback callback) {
+        Configuration configuration = new Configuration(
+                PreferencesState.getInstance().getDhisURL());
 
         D2.configure(configuration)
                 .flatMap(new Func1<Void, Observable<Boolean>>() {
@@ -50,12 +53,12 @@ public class LogoutUseCase extends ALogoutUseCase {
                     @Override
                     public void call(Boolean result) {
                         executeLocalLogout(user);
-                        callback.onLogoutSuccess();
+                        callback.onSuccess();
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        callback.onLogoutError(throwable.getMessage());
+                        callback.onError(throwable);
                     }
                 });
     }
@@ -74,11 +77,9 @@ public class LogoutUseCase extends ALogoutUseCase {
 
     private void clearCredentials() {
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,
-                context.getString(R.string.DHIS_DEFAULT_SERVER));
+                mContext.getString(R.string.DHIS_DEFAULT_SERVER));
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, "");
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, "");
         PreferencesState.getInstance().reloadPreferences();
     }
-
-
 }

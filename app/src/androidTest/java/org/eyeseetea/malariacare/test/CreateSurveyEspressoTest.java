@@ -25,7 +25,7 @@
 //
 //import org.eyeseetea.malariacare.CreateSurveyActivity;
 //import org.eyeseetea.malariacare.R;
-//import org.eyeseetea.malariacare.database.utils.Session;
+//import org.eyeseetea.malariacare.data.database.utils.Session;
 //import org.junit.Before;
 //import org.junit.BeforeClass;
 //import org.junit.Rule;

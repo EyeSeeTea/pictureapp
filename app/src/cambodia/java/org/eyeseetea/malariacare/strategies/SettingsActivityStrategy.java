@@ -10,7 +10,7 @@ import com.squareup.otto.Subscribe;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
-import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
+import org.eyeseetea.malariacare.data.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
 import org.hisp.dhis.android.sdk.job.NetworkJob;

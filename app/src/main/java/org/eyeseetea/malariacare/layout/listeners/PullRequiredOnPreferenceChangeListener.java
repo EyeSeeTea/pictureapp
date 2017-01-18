@@ -4,7 +4,7 @@ package org.eyeseetea.malariacare.layout.listeners;
 import android.preference.Preference;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.data.sdk.SdkLoginController;
 

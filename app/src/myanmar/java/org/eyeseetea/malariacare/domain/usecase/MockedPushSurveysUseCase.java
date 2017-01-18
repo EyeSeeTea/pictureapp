@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
-import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 
 import java.util.List;
 

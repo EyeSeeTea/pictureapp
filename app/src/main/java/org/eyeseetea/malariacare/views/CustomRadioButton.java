@@ -28,8 +28,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 public class CustomRadioButton extends RadioButton implements IEyeSeeView {
     private Context context = getContext();

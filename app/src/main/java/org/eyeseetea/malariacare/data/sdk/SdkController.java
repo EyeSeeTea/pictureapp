@@ -21,7 +21,7 @@ package org.eyeseetea.malariacare.data.sdk;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
+import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.EventExtended;
 import org.hisp.dhis.client.sdk.android.api.persistence.DbDhis;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.AttributeFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataElementFlow;

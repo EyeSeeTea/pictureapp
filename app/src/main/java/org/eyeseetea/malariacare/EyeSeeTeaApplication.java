@@ -27,7 +27,7 @@ import android.util.Log;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Permissions;
 
 /**

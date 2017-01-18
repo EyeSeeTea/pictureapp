@@ -21,7 +21,7 @@ package org.eyeseetea.malariacare.monitor.rows;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 import org.eyeseetea.malariacare.monitor.utils.TimePeriodCalculator;

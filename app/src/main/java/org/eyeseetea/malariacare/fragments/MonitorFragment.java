@@ -36,8 +36,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.monitor.MonitorBuilder;
 import org.eyeseetea.malariacare.services.MonitorService;

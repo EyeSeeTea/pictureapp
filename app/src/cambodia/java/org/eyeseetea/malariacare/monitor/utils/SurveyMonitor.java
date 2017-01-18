@@ -18,7 +18,7 @@
  */
 package org.eyeseetea.malariacare.monitor.utils;
 
-import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 
 /**
  * Decorator that tells if a survey has specific info

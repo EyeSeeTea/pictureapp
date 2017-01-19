@@ -15,6 +15,7 @@ import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.OptionAttribute;
+import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Organisation;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
@@ -385,6 +386,10 @@ public class UpdateDB {
     }
 
     public static void updateOptions(AssetManager assetManager) throws IOException {
+        List<Option> optionToDelete = Question.getOptions("4YY1JoHmO94");
+        for (Option option : optionToDelete) {
+            option.delete();
+        }
         List<Option> options = Option.getAllOptions();
         HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(assetManager);
         HashMap<Long, OptionAttribute> optionAttributeIds =
@@ -403,6 +408,17 @@ public class UpdateDB {
                         null).insert();
             }
             i++;
+        }
+
+        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
+        for (OrgUnit orgUnit : orgUnits) {
+            Option option = new Option();
+            option.setCode(orgUnit.getName());
+            option.setName(orgUnit.getUid());
+            option.setFactor((float) 0);
+            option.setId_option((long) 0);
+            option.setAnswer(Question.getAnswer("4YY1JoHmO94"));
+            option.save();
         }
 
     }

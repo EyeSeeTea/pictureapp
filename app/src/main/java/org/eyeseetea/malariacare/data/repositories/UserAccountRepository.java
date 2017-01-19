@@ -1,13 +1,10 @@
 package org.eyeseetea.malariacare.data.repositories;
 
-import static com.raizlabs.android.dbflow.config.FlowLog.Level.I;
-
 import android.content.Context;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.IUserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.UserAccountLocalDataSource;
-import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.UserAccountDhisSDKDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IRepositoryCallback;
@@ -26,11 +23,13 @@ public class UserAccountRepository implements IUserAccountRepository {
     }
 
     @Override
-    public void login(final Credentials credentials, final IRepositoryCallback<UserAccount> callback) {
-        if (credentials.isDemoCredentials())
+    public void login(final Credentials credentials,
+            final IRepositoryCallback<UserAccount> callback) {
+        if (credentials.isDemoCredentials()) {
             localLogin(credentials, callback);
-        else
+        } else {
             remoteLogin(credentials, callback);
+        }
     }
 
     @Override
@@ -39,10 +38,11 @@ public class UserAccountRepository implements IUserAccountRepository {
         //TODO: jsanchez fix find out IsDemo from current UserAccount getting from DataSource
         Credentials credentials = Session.getCredentials();
 
-        if (credentials.isDemoCredentials())
+        if (credentials.isDemoCredentials()) {
             localLogout(callback);
-        else
+        } else {
             remoteLogout(callback);
+        }
     }
 
     private void remoteLogout(final IRepositoryCallback<Void> callback) {
@@ -64,7 +64,7 @@ public class UserAccountRepository implements IUserAccountRepository {
         userAccountRemoteDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount result) {
-                localLogin(credentials,callback);
+                localLogin(credentials, callback);
             }
 
             @Override
@@ -74,7 +74,7 @@ public class UserAccountRepository implements IUserAccountRepository {
         });
     }
 
-    private void localLogout(final IRepositoryCallback<Void> callback){
+    private void localLogout(final IRepositoryCallback<Void> callback) {
         userAccountLocalDataSource.logout(new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
@@ -88,7 +88,8 @@ public class UserAccountRepository implements IUserAccountRepository {
         });
     }
 
-    private void localLogin(Credentials credentials,final IRepositoryCallback<UserAccount> callback){
+    private void localLogin(Credentials credentials,
+            final IRepositoryCallback<UserAccount> callback) {
         userAccountLocalDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount userAccount) {

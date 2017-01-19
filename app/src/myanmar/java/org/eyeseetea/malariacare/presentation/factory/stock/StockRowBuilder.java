@@ -147,9 +147,11 @@ public abstract class StockRowBuilder {
      * first item
      */
     private String getDataAsJSON(Object[] data) {
+        if (data == null) return "";
         List<String> dataAsString = new ArrayList<>(Constants.STOCK_HISTORY_SIZE);
         dataAsString.add(this.rowTitle);
         for (int i = 0; i < data.length; i++) {
+            if (data[i]==null) continue;
             dataAsString.add(data[i].toString());
         }
         return convertListStringToJSON(dataAsString);

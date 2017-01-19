@@ -312,4 +312,6 @@
     <string name="tr_22_act_18_pq32">Give ACT18\' strip and 32 primaquine tablets</string>
     <string name="tr_23_act_24_pq48">Give ACT24\' strip and 48 primaquine tablets</string>
     <string name="tab_dynamic_treatment">Dynamic treatment</string>
+    <string name="dynamic_treatment_yes">ရှိသည်</string>
+    <string name="dynamic_treatment_no">မရှိပါ</string>
 </resources>

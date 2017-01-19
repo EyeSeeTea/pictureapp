@@ -277,6 +277,7 @@ public class Question extends BaseModel {
                 .querySingle();
     }
 
+
     /**
      * Find the first root question in the given tab
      *
@@ -436,6 +437,29 @@ public class Question extends BaseModel {
         Question noSiblingQuestion = new Question();
         noSiblingQuestion.setId_question(NULL_SIBLING_ID);
         return noSiblingQuestion;
+    }
+
+    public static List<Option> getOptions(String UID) {
+        return new Select().from(Option.class).as("o")
+                .join(Answer.class, Join.JoinType.LEFT).as("a")
+                .on(Condition.column(ColumnAlias.columnWithTable("o", Option$Table.ID_ANSWER))
+                        .eq(ColumnAlias.columnWithTable("a", Answer$Table.ID_ANSWER)))
+                .join(Question.class, Join.JoinType.LEFT).as("q")
+                .on(Condition.column(ColumnAlias.columnWithTable("a", Answer$Table.ID_ANSWER))
+                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_ANSWER)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.UID))
+                        .eq(UID)).queryList();
+    }
+
+    public static Answer getAnswer(String UID) {
+        return new Select().from(Answer.class).as("a")
+                .join(Question.class, Join.JoinType.LEFT).as("q")
+                .on(Condition.column(ColumnAlias.columnWithTable("a", Answer$Table.ID_ANSWER))
+                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_ANSWER)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.UID))
+                        .eq(UID)).querySingle();
     }
 
     /**

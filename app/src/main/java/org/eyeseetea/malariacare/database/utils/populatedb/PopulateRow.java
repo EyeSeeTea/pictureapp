@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.database.model.DrugCombination;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.Organisation;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
@@ -226,6 +227,23 @@ public class PopulateRow {
         drug.setQuestion_code(line[3]);
         return drug;
     }
+
+    static Option populateOption(String[] line, HashMap<Long, Answer> answerFK,
+            HashMap<Long, OptionAttribute> optionAttributeFK, @Nullable Option option) {
+        if (option == null) {
+            option = new Option();
+        }
+        option.setCode(line[1]);
+        option.setName(line[2]);
+        option.setFactor(Float.valueOf(line[3]));
+        option.setAnswer(answerFK.get(Long.valueOf(line[4])));
+        if (line[5] != null && !line[5].isEmpty()) {
+            option.setOptionAttribute(
+                    optionAttributeFK.get(Long.valueOf(line[5])));
+        }
+        return option;
+    }
+
 
 
 }

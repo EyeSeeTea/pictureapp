@@ -14,6 +14,8 @@ import org.eyeseetea.malariacare.database.model.DrugCombination;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.OptionAttribute;
+import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.Organisation;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
@@ -38,9 +40,9 @@ public class UpdateDB {
 
     public static void updateAndAddQuestions(AssetManager assetManager) throws IOException {
         List<Question> questionsDB = Question.getAllQuestions();
-        HashMap<Long, Header> headerHashMap = CreateRelationsIdCsvDB.getHeaderFKRelationCsvDB(
+        HashMap<Long, Header> headerHashMap = RelationsIdCsvDB.getHeaderFKRelationCsvDB(
                 assetManager);
-        HashMap<Long, Answer> answerHashMap = CreateRelationsIdCsvDB.getAnswerFKRelationCsvDB(
+        HashMap<Long, Answer> answerHashMap = RelationsIdCsvDB.getAnswerFKRelationCsvDB(
                 assetManager);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(assetManager.open(PopulateDB.QUESTIONS_CSV)),
@@ -94,7 +96,7 @@ public class UpdateDB {
      */
     public static void updateHeaders(AssetManager assetManager) throws IOException {
         List<Header> headers = Header.getAllHeaders();
-        HashMap<Long, Tab> tabIds = CreateRelationsIdCsvDB.getTabsIdRelationsCsvDB(assetManager);
+        HashMap<Long, Tab> tabIds = RelationsIdCsvDB.getTabsIdRelationsCsvDB(assetManager);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(assetManager.open(PopulateDB.HEADERS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
@@ -144,7 +146,7 @@ public class UpdateDB {
      */
     public static void updateTabs(AssetManager assetManager) throws IOException {
         List<Tab> tabs = Tab.getAllTabs();
-        HashMap<Long, Program> programIds = CreateRelationsIdCsvDB.getProgramIdRelationCsvDB(
+        HashMap<Long, Program> programIds = RelationsIdCsvDB.getProgramIdRelationCsvDB(
                 assetManager);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(assetManager.open(PopulateDB.TABS_CSV)),
@@ -165,7 +167,7 @@ public class UpdateDB {
     public static void updateMatches(AssetManager assetManager) throws IOException {
         List<Match> matches = Match.listAll();
         HashMap<Long, QuestionRelation> questionsrelationIds =
-                CreateRelationsIdCsvDB.getQuestionRelationIdRelationCsvDB(assetManager);
+                RelationsIdCsvDB.getQuestionRelationIdRelationCsvDB(assetManager);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(assetManager.open(PopulateDB.MATCHES)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
@@ -184,7 +186,7 @@ public class UpdateDB {
 
     public static void updateQuestionRelation(AssetManager assetManager) throws IOException {
         List<QuestionRelation> questionRelations = QuestionRelation.listAll();
-        HashMap<Long, Question> questionIds = CreateRelationsIdCsvDB.getQuestionIdRelationCsvDB(
+        HashMap<Long, Question> questionIds = RelationsIdCsvDB.getQuestionIdRelationCsvDB(
                 assetManager);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(assetManager.open(PopulateDB.QUESTION_RELATIONS_CSV)),
@@ -208,11 +210,11 @@ public class UpdateDB {
 
     public static void updateQuestionOption(AssetManager assetManager) throws IOException {
         List<QuestionOption> questionOptions = QuestionOption.listAll();
-        HashMap<Long, Match> matchIds = CreateRelationsIdCsvDB.getMatchIdRelationCsvDB(
+        HashMap<Long, Match> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
                 assetManager);
-        HashMap<Long, Question> questionsIds = CreateRelationsIdCsvDB.getQuestionIdRelationCsvDB(
+        HashMap<Long, Question> questionsIds = RelationsIdCsvDB.getQuestionIdRelationCsvDB(
                 assetManager);
-        HashMap<Long, Option> optionsIds = CreateRelationsIdCsvDB.getOptionIdRelationCsvDB(
+        HashMap<Long, Option> optionsIds = RelationsIdCsvDB.getOptionIdRelationCsvDB(
                 assetManager);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(assetManager.open(PopulateDB.QUESTION_OPTIONS_CSV)),
@@ -235,9 +237,9 @@ public class UpdateDB {
 
     public static void updateQuestionThresholds(AssetManager assetManager) throws IOException {
         List<QuestionThreshold> questionThresholds = QuestionThreshold.getAllQuestionThresholds();
-        HashMap<Long, Match> matchIds = CreateRelationsIdCsvDB.getMatchIdRelationCsvDB(
+        HashMap<Long, Match> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
                 assetManager);
-        HashMap<Long, Question> questionsIds = CreateRelationsIdCsvDB.getQuestionIdRelationCsvDB(
+        HashMap<Long, Question> questionsIds = RelationsIdCsvDB.getQuestionIdRelationCsvDB(
                 assetManager);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(assetManager.open(PopulateDB.QUESTION_THRESHOLDS_CSV)),
@@ -313,7 +315,7 @@ public class UpdateDB {
     public static void updateTreatments(AssetManager assetManager) throws IOException {
         List<Treatment> treatments = Treatment.getAllTreatments();
         HashMap<Long, Organisation> organisationIds =
-                CreateRelationsIdCsvDB.getOrganisationIdRelationCsvDB(assetManager);
+                RelationsIdCsvDB.getOrganisationIdRelationCsvDB(assetManager);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(assetManager.open(PopulateDB.TREATMENT_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
@@ -337,8 +339,8 @@ public class UpdateDB {
      */
     public static void updateDrugCombination(AssetManager assetManager) throws IOException {
         List<DrugCombination> drugCombinations = DrugCombination.getAllDrugCombination();
-        HashMap<Long, Drug> drugIds = CreateRelationsIdCsvDB.getDrugIdRelationCsvDB(assetManager);
-        HashMap<Long, Treatment> treatmentIds = CreateRelationsIdCsvDB.getTreatmentIdRelationCsvDB(
+        HashMap<Long, Drug> drugIds = RelationsIdCsvDB.getDrugIdRelationCsvDB(assetManager);
+        HashMap<Long, Treatment> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
                 assetManager);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(assetManager.open(PopulateDB.DRUG_COMBINATIONS_CSV)),
@@ -363,9 +365,9 @@ public class UpdateDB {
      */
     public static void updateTreatmentMatches(AssetManager assetManager) throws IOException {
         List<TreatmentMatch> treatmentMatches = TreatmentMatch.getAllTreatmentMatches();
-        HashMap<Long, Treatment> treatmentIds = CreateRelationsIdCsvDB.getTreatmentIdRelationCsvDB(
+        HashMap<Long, Treatment> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
                 assetManager);
-        HashMap<Long, Match> matchIds = CreateRelationsIdCsvDB.getMatchIdRelationCsvDB(
+        HashMap<Long, Match> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
                 assetManager);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(assetManager.open(PopulateDB.TREATMENT_MATCHES_CSV)),
@@ -382,5 +384,60 @@ public class UpdateDB {
             i++;
         }
     }
+
+    public static void updateOptions(AssetManager assetManager) throws IOException {
+        List<Option> optionToDelete = Question.getOptions("4YY1JoHmO94");
+        for (Option option : optionToDelete) {
+            option.delete();
+        }
+        List<Option> options = Option.getAllOptions();
+        HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(assetManager);
+        HashMap<Long, OptionAttribute> optionAttributeIds =
+                RelationsIdCsvDB.getOptionAttributeIdRelationCsvDB(assetManager);
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(assetManager.open(PopulateDB.OPTIONS_CSV)),
+                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+        String line[];
+        int i = 0;
+        while ((line = reader.readNext()) != null) {
+            if (i < options.size()) {
+                PopulateRow.populateOption(line, answersIds, optionAttributeIds,
+                        options.get(i)).save();
+            } else {
+                PopulateRow.populateOption(line, answersIds, optionAttributeIds,
+                        null).insert();
+            }
+            i++;
+        }
+
+        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
+        for (OrgUnit orgUnit : orgUnits) {
+            Option option = new Option();
+            option.setCode(orgUnit.getName());
+            option.setName(orgUnit.getUid());
+            option.setFactor((float) 0);
+            option.setId_option((long) 0);
+            option.setAnswer(Question.getAnswer("4YY1JoHmO94"));
+            option.save();
+        }
+
+    }
+
+    public static void insertLastLines(int numeberLines, AssetManager assetManager)
+            throws IOException {
+        HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(assetManager);
+        HashMap<Long, OptionAttribute> optionAttributeIds =
+                RelationsIdCsvDB.getOptionAttributeIdRelationCsvDB(assetManager);
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(assetManager.open(PopulateDB.OPTIONS_CSV)),
+                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+        List<String[]> lines = reader.readAll();
+
+        for (int i = lines.size() - numeberLines - 1; i < lines.size(); i++) {
+            PopulateRow.populateOption(lines.get(i), answersIds, optionAttributeIds,
+                    null).insert();
+        }
+    }
+
 
 }

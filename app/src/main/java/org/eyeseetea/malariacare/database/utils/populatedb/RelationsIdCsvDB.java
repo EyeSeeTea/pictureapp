@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.database.model.Drug;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.Organisation;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
@@ -26,7 +27,7 @@ import java.util.List;
  * Created by manuel on 11/01/17.
  */
 
-public class CreateRelationsIdCsvDB {
+public class RelationsIdCsvDB {
     static HashMap<Long, Header> getHeaderFKRelationCsvDB(AssetManager assetManager)
             throws IOException {
         HashMap<Long, Header> headerFK = new HashMap<>();
@@ -219,6 +220,23 @@ public class CreateRelationsIdCsvDB {
             treatmentFK.put(csvIds.get(i), treatments.get(i));
         }
         return treatmentFK;
+    }
+    static HashMap<Long, OptionAttribute> getOptionAttributeIdRelationCsvDB(AssetManager assetManager)
+            throws IOException {
+        HashMap<Long, OptionAttribute> optionAttributeFK = new HashMap<>();
+        List<OptionAttribute> optionAttributes = OptionAttribute.getAllOptionAttributes();
+        List<Long> csvIds = new ArrayList<>();
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(assetManager.open(PopulateDB.OPTION_ATTRIBUTES_CSV)),
+                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+        String[] idToAdd;
+        while ((idToAdd = reader.readNext()) != null) {
+            csvIds.add(Long.parseLong(idToAdd[0]));
+        }
+        for (int i = 0; i < optionAttributes.size() && i < csvIds.size(); i++) {
+            optionAttributeFK.put(csvIds.get(i), optionAttributes.get(i));
+        }
+        return optionAttributeFK;
     }
 
 }

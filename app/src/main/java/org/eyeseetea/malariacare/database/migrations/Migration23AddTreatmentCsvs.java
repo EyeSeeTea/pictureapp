@@ -56,6 +56,8 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
                 UpdateDB.updateTreatments(assetManager);
                 UpdateDB.updateDrugCombination(assetManager);
                 UpdateDB.updateTreatmentMatches(assetManager);
+                UpdateDB.updateQuestionOption(assetManager);
+                UpdateDB.insertLastLines(2, assetManager);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e(TAG, "Error updating database" + e.getMessage());

@@ -2,7 +2,6 @@ package org.eyeseetea.malariacare.data.remote;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.IUserAccountDataSource;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.hisp.dhis.client.sdk.android.api.D2;
@@ -34,22 +33,30 @@ public class UserAccountDhisSDKDataSource implements IUserAccountDataSource {
     }
 
     @Override
-    public void login(final Credentials credentials, final IDataSourceCallback<UserAccount> callback) {
+    public void login(final Credentials credentials,
+            final IDataSourceCallback<UserAccount> callback) {
         Configuration configuration = new Configuration(credentials.getServerURL());
 
         D2.configure(configuration)
-                .flatMap(new Func1<Void, Observable<org.hisp.dhis.client.sdk.models.user.UserAccount>>() {
-                    @Override
-                    public Observable<org.hisp.dhis.client.sdk.models.user.UserAccount> call(Void aVoid) {
-                        return D2.me().signIn(credentials.getUsername(), credentials.getPassword());
-                    }
-                })
+                .flatMap(
+                        new Func1<Void, Observable<org.hisp.dhis.client.sdk.models.user
+                                .UserAccount>>() {
+                            @Override
+                            public Observable<org.hisp.dhis.client.sdk.models.user.UserAccount>
+                            call(
+                                    Void aVoid) {
+                                return D2.me().signIn(credentials.getUsername(),
+                                        credentials.getPassword());
+                            }
+                        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<org.hisp.dhis.client.sdk.models.user.UserAccount>() {
                     @Override
-                    public void call(org.hisp.dhis.client.sdk.models.user.UserAccount dhisUserAccount) {
-                        UserAccount userAccount = new UserAccount(credentials.getUsername(), credentials.isDemoCredentials());
+                    public void call(
+                            org.hisp.dhis.client.sdk.models.user.UserAccount dhisUserAccount) {
+                        UserAccount userAccount = new UserAccount(credentials.getUsername(),
+                                credentials.isDemoCredentials());
                         callback.onSuccess(userAccount);
                     }
                 }, new Action1<Throwable>() {

@@ -79,10 +79,21 @@ public class ReadWriteDB {
 
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
             if (value == null) {
-                value = new Value(option, question, Session.getSurvey());
+                Survey survey = null;
+                if (question.isStockQuestion()) {
+                    survey = Session.getStockSurvey();
+                } else {
+                    survey = Session.getMalariaSurvey();
+                }
+                value = new Value(option, question, survey);
             } else {
                 if (!value.getOption().equals(option) && question.hasChildren()) {
-                    Survey survey = Session.getSurvey();
+                    Survey survey = null;
+                    if (question.isStockQuestion()) {
+                        survey = Session.getStockSurvey();
+                    } else {
+                        survey = Session.getMalariaSurvey();
+                    }
                     survey.removeChildrenValuesFromQuestionRecursively(question, false);
                 }
                 value.setOption(option);
@@ -97,10 +108,15 @@ public class ReadWriteDB {
     public static void saveValuesText(Question question, String answer) {
 
         Value value = question.getValueBySession();
-
+        Survey survey = null;
+        if (question.isStockQuestion()) {
+            survey = Session.getStockSurvey();
+        } else {
+            survey = Session.getMalariaSurvey();
+        }
         // If the value is not found we create one
         if (value == null) {
-            value = new Value(answer, question, Session.getSurvey());
+            value = new Value(answer, question, survey);
         } else {
             value.setOption((Long) null);
             value.setValue(answer);

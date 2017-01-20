@@ -43,9 +43,9 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
@@ -58,6 +58,8 @@ import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
+
+import java.util.List;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -457,7 +459,7 @@ public class DashboardActivity extends BaseActivity {
      */
     private void onSurveyBackPressed() {
         Log.d(TAG, "onBackPressed");
-        Survey survey = Session.getSurvey();
+        Survey survey = Session.getMalariaSurvey();
         if (!survey.isSent()) {
             int infoMessage = survey.isInProgress() ? R.string.survey_info_exit_delete
                     : R.string.survey_info_exit;
@@ -499,8 +501,8 @@ public class DashboardActivity extends BaseActivity {
         LayoutUtils.setDashboardActionBar(actionBar);
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         ScoreRegister.clear();
-        if (Session.getSurvey() != null) {
-            isSent = Session.getSurvey().isSent();
+        if (Session.getMalariaSurvey() != null) {
+            isSent = Session.getMalariaSurvey().isSent();
         }
         if (isBackPressed) {
             beforeExit();
@@ -529,13 +531,15 @@ public class DashboardActivity extends BaseActivity {
 
 
     public void beforeExit() {
-        Survey survey = Session.getSurvey();
+        Survey survey = Session.getMalariaSurvey();
+        Survey stockSurvey=Session.getStockSurvey();
         if (survey != null) {
             boolean isInProgress = survey.isInProgress();
             survey.getValuesFromDB();
             //Exit + InProgress -> delete
             if (isBackPressed && isInProgress) {
-                Session.setSurvey(null);
+                Session.setMalariaSurvey(null);
+                Session.setStockSurvey(null);
                 survey.delete();
                 isBackPressed = false;
             }
@@ -546,11 +550,23 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the New Survey button
      */
     public void newSurvey(View view) {
-        Program program = new Select().from(Program.class).querySingle();
+        List<Program> programs = new Select().from(Program.class).queryList();
+        Program myanmarProgram = null;
+        Program stockProgram = null;
+        for (Program program : programs) {
+            if (program.getUid().equals("RjBwXyc5I66")) {
+                myanmarProgram = program;
+            } else if (program.getUid().equals("GnAx3VLVfUi")) {
+                stockProgram = program;
+            }
+        }
         // Put new survey in session
-        Survey survey = new Survey(null, program, Session.getUser());
+        Survey survey = new Survey(null, myanmarProgram, Session.getUser());
         survey.save();
-        Session.setSurvey(survey);
+        Session.setMalariaSurvey(survey);
+        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser());
+        stockSurvey.save();
+        Session.setStockSurvey(stockSurvey);
         //Look for coordinates
         prepareLocationListener(survey);
 
@@ -575,13 +591,13 @@ public class DashboardActivity extends BaseActivity {
 
     private void sendSurvey() {
 
-        Survey survey = Session.getSurvey();
+        Survey survey = Session.getMalariaSurvey();
         survey.updateSurveyStatus();
         closeSurveyFragment();
     }
 
     private void reviewSurvey() {
-        DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
+        DashboardActivity.moveToQuestion = (Session.getMalariaSurvey().getValues().get(
                 0).getQuestion());
         hideReview();
     }

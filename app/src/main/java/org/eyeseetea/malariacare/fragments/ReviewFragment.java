@@ -73,7 +73,7 @@ public class ReviewFragment extends Fragment {
 
     private List<Value> getReviewValues() {
         List<Value> reviewValues = new ArrayList<>();
-        Survey survey = Session.getSurvey();
+        Survey survey = Session.getMalariaSurvey();
         List<Value> allValues = survey.getValuesFromDB();
         for (Value value : allValues) {
             boolean isReviewValue = true;

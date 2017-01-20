@@ -786,7 +786,11 @@ public class Question extends BaseModel {
      * Gets the value of this question in the current survey in session
      */
     public Value getValueBySession() {
-        return this.getValueBySurvey(Session.getSurvey());
+        if (!isStockQuestion()) {
+            return this.getValueBySurvey(Session.getMalariaSurvey());
+        } else {
+            return this.getValueBySurvey(Session.getStockSurvey());
+        }
     }
 
     /**
@@ -812,7 +816,11 @@ public class Question extends BaseModel {
      * Gets the option of this question in the current survey in session
      */
     public Option getOptionBySession() {
-        return this.getOptionBySurvey(Session.getSurvey());
+        if (!isStockQuestion()) {
+            return this.getOptionBySurvey(Session.getMalariaSurvey());
+        } else {
+            return this.getOptionBySurvey(Session.getStockSurvey());
+        }
     }
 
     /**
@@ -1367,6 +1375,12 @@ public class Question extends BaseModel {
         return false;
     }
 
+    public boolean isStockQuestion() {
+        if (header != null && header.getName().equals("Stock")) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Returns if the question is a counter or not
@@ -1389,8 +1403,14 @@ public class Question extends BaseModel {
             questions.add(this);
         }
         for (Question question : questions) {
+            Survey survey = null;
+            if (isStockQuestion()) {
+                survey = Session.getStockSurvey();
+            } else {
+                survey = Session.getMalariaSurvey();
+            }
             if (question.isCompulsory() && !question.isHiddenBySurveyAndHeader(
-                    Session.getSurvey()) && isNotAnswered(question)) {
+                    survey) && isNotAnswered(question)) {
                 return true;
             }
         }

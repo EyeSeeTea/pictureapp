@@ -22,7 +22,7 @@ package org.eyeseetea.malariacare.layout.adapters.survey;
 import static org.eyeseetea.malariacare.R.id.question;
 import static org.eyeseetea.malariacare.database.model.Option.DOESNT_MATCH_POSITION;
 import static org.eyeseetea.malariacare.database.model.Option.MATCH_POSITION;
-import static org.eyeseetea.malariacare.database.utils.Session.getSurvey;
+import static org.eyeseetea.malariacare.database.utils.Session.getMalariaSurvey;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -140,7 +140,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.id_layout = R.layout.form_without_score;
 
         this.navigationController = initNavigationController(tab);
-        this.readOnly = getSurvey() != null && !getSurvey().isInProgress();
+        this.readOnly = getMalariaSurvey() != null && !getMalariaSurvey().isInProgress();
 
         //On create dynamictabadapter, if is not readonly and has value not null it should come
         // from reviewFragment
@@ -158,8 +158,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         int totalPages = navigationController.getCurrentQuestion().getTotalQuestions();
         if (readOnly) {
-            if (Session.getSurvey() != null) {
-                totalPages = Session.getSurvey().getMaxTotalPages();
+            if (Session.getMalariaSurvey() != null) {
+                totalPages = Session.getMalariaSurvey().getMaxTotalPages();
             }
         }
         navigationController.setTotalPages(totalPages);
@@ -387,9 +387,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rowView.getLayoutParams().height = parent.getHeight();
         rowView.requestLayout();
         Question questionItem = (Question) this.getItem(position);
+
+
         // We get values from DB and put them in Session
-        if (getSurvey() != null) {
-            getSurvey().getValuesFromDB();
+        if (Session.getMalariaSurvey() != null) {
+            if (Session.getStockSurvey() != null) {
+                Session.getStockSurvey().getValuesFromDB();
+            }
+            Session.getMalariaSurvey().getValuesFromDB();
         } else {
             //The survey in session is null when the user closes the surveyFragment, but the
             // getView is called.
@@ -427,15 +432,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         List<Question> screenQuestions = new ArrayList<>();
 
-        Survey survey = getSurvey();
-
 
         if (isTabScrollable(questionItem, tabType)) {
             tableLayout = (TableLayout) rowView.findViewById(R.id.multi_question_options_table);
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
             if (tabType == Constants.TAB_DYNAMIC_TREATMENT) {
-                Treatment treatment = new Treatment(getSurvey());
+                Treatment treatment = new Treatment(getMalariaSurvey());
                 if (treatment.hasTreatment()) {
                     screenQuestions = treatment.getQuestions();
                 }
@@ -482,7 +485,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         // Se get the value from Session
         int visibility = View.GONE;
-        if (!screenQuestion.isHiddenBySurveyAndHeader(getSurvey())
+
+        Survey survey = null;
+        if (screenQuestion.isStockQuestion()) {
+            survey = Session.getStockSurvey();
+        } else {
+            survey = Session.getMalariaSurvey();
+        }
+
+        if (!screenQuestion.isHiddenBySurveyAndHeader(survey)
                 || !isMultipleQuestionTab(tabType)) {
             visibility = View.VISIBLE;
         }
@@ -692,7 +703,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private boolean isCounterValueEqualToMax(Question question, Option selectedOption) {
 
-        Float counterValue = Session.getSurvey().getCounterValue(question, selectedOption);
+        Survey survey = null;
+        if (question.isStockQuestion()) {
+            survey = Session.getStockSurvey();
+        } else {
+            survey = Session.getMalariaSurvey();
+        }
+
+        Float counterValue = survey.getCounterValue(question, selectedOption);
 
         Float maxCounter = selectedOption.getFactor();
 
@@ -786,7 +804,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean toggleChild(TableRow row, Question rowQuestion, Question childQuestion) {
         if (childQuestion.getId_question().equals(rowQuestion.getId_question())) {
-            if (rowQuestion.isHiddenBySurveyAndHeader(getSurvey())) {
+            Survey survey = null;
+            if (rowQuestion.isStockQuestion()) {
+                survey = Session.getStockSurvey();
+            } else {
+                survey = Session.getMalariaSurvey();
+            }
+            if (rowQuestion.isHiddenBySurveyAndHeader(survey)) {
                 row.setVisibility(View.GONE);
                 hideDefaultValue(rowQuestion);
             } else {
@@ -906,7 +930,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     public boolean wasPatientTested() {
-        return getSurvey().isRDT() || BuildConfig.patientTestedByDefault;
+        return getMalariaSurvey().isRDT() || BuildConfig.patientTestedByDefault;
     }
 
     /**
@@ -920,7 +944,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         hideKeyboard(PreferencesState.getInstance().getContext());
-                        Session.getSurvey().updateSurveyStatus();
+                        Session.getMalariaSurvey().updateSurveyStatus();
+                        Session.getStockSurvey().updateSurveyStatus();
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
                         isClicked = false;
                     }

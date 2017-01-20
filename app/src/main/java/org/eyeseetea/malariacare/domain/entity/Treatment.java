@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.database.model.Drug;
 import org.eyeseetea.malariacare.database.model.Match;
+import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold;
@@ -97,12 +98,18 @@ public class Treatment {
         for (Drug drug : drugs) {
             Question question = Question.findByUID(drug.getQuestion_code());
             if (question != null) {
+                if (isPq(question)) {
+                    question.setForm_name(getPqTitleDose(drug.getDose()));
+                } else if (isCq(question)) {
+                    question.setForm_name(getCqTitleDose(drug.getDose()));
+                }
                 questions.add(question);
             }
             if (!questions.isEmpty()) {
                 Log.d(TAG, "Question: " + questions.get(questions.size() - 1) + "\n");
             }
         }
+        questions.add(Question.findByUID("9fV1JoHmO94"));
 
         return questions;
     }
@@ -115,4 +122,61 @@ public class Treatment {
     public org.eyeseetea.malariacare.database.model.Treatment getTreatment() {
         return mTreatment;
     }
+
+
+    private boolean isPq(Question question) {
+        if (question.getUid().equals("Sttahtf0iHZ")) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isCq(Question question) {
+        if (question.getUid().equals("jZvZ4Q39J6s")) {
+            return true;
+        }
+        return false;
+    }
+
+    private String getPqTitleDose(int dose) {
+        switch (dose) {
+            case 2:
+                return "drugs_2_of_Pq_review_title";
+            case 4:
+                return "drugs_4_of_Pq_review_title";
+            case 6:
+                return "drugs_6_of_Pq_review_title";
+            case 16:
+                return "drugs_16_of_Pq_review_title";
+            case 32:
+                return "drugs_32_of_Pq_review_title";
+            case 48:
+                return "drugs_48_of_Pq_review_title";
+        }
+        return "drugs_referral_Pq_review_title";
+    }
+
+    private String getCqTitleDose(int dose) {
+        switch (dose) {
+            case 4:
+                return "drugs_4_of_Cq_review_title";
+            case 5:
+                return "drugs_5_of_Cq_review_title";
+            case 7:
+                return "drugs_7_of_Cq_review_title";
+            case 10:
+                return "drugs_10_of_Cq_review_title";
+        }
+        return "drugs_referral_Cq_review_title";
+    }
+
+    private void setAnswerYesOptionFactor(int dose, Question question) {
+        List<Option> options = question.getAnswer().getOptions();
+        for (Option option : options) {
+            if (option.getName().equals("Yes")) {
+                option.setFactor((float) dose);
+            }
+        }
+    }
+
 }

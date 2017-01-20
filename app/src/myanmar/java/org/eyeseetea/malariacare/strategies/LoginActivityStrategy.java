@@ -88,8 +88,18 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                     }
 
                     @Override
-                    public void onLoginError(String message) {
-                        Log.d(TAG, message);
+                    public void onServerURLNotValid() {
+                        Log.e(this.getClass().getSimpleName(), "Server url not valid");
+                    }
+
+                    @Override
+                    public void onInvalidCredentials() {
+                        Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                    }
+
+                    @Override
+                    public void onNetworkError() {
+                        Log.e(this.getClass().getSimpleName(), "Network Error");
                     }
                 });
             }

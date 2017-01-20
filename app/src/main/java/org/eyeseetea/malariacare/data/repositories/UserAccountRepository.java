@@ -19,7 +19,7 @@ public class UserAccountRepository implements IUserAccountRepository {
     public UserAccountRepository(Context context) {
 
         userAccountLocalDataSource = new UserAccountLocalDataSource(context);
-        userAccountRemoteDataSource = new UserAccountDhisSDKDataSource();
+        userAccountRemoteDataSource = new UserAccountDhisSDKDataSource(context);
     }
 
     @Override

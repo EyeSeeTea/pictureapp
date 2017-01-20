@@ -16,13 +16,13 @@ import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
 import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.InitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
-import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.views.TypefaceCache;
 import org.hisp.dhis.client.sdk.android.api.D2;
 
@@ -82,8 +82,18 @@ public class SplashScreenActivity extends Activity {
                     }
 
                     @Override
-                    public void onLoginError(String message) {
-                        Log.d(TAG, message);
+                    public void onServerURLNotValid() {
+                        Log.e(this.getClass().getSimpleName(), "Server url not valid");
+                    }
+
+                    @Override
+                    public void onInvalidCredentials() {
+                        Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                    }
+
+                    @Override
+                    public void onNetworkError() {
+                        Log.e(this.getClass().getSimpleName(), "Network Error");
                     }
                 });
             }

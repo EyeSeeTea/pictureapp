@@ -40,6 +40,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
@@ -71,9 +72,7 @@ public class LoginActivity extends AbsLoginActivity {
     EditText serverText;
     EditText usernameEditText;
     EditText passwordEditText;
-    private String serverUrl;
-    private String username;
-    private String password;
+
 
     private ProgressBar bar;
 
@@ -157,7 +156,8 @@ public class LoginActivity extends AbsLoginActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         rememberEulaAccepted(context);
-                        login(serverUrl, username, password);
+                        login(serverText.toString(), usernameEditText.toString(),
+                                passwordEditText.toString());
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).create();
@@ -181,6 +181,7 @@ public class LoginActivity extends AbsLoginActivity {
 
     public void login(String serverUrl, String username, String password) {
         Credentials credentials = new Credentials(serverUrl, username, password);
+
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {
@@ -188,10 +189,25 @@ public class LoginActivity extends AbsLoginActivity {
             }
 
             @Override
-            public void onLoginError(String message) {
-                Log.e(TAG, message);
+            public void onServerURLNotValid() {
+                serverText.setError("Server url not valid");
+                showError("Server url not valid");
+            }
+
+            @Override
+            public void onInvalidCredentials() {
+                showError("Invalid credentials");
+            }
+
+            @Override
+            public void onNetworkError() {
+                showError("There is a problem with the network, try again later.");
             }
         });
+    }
+
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
 

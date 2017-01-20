@@ -693,7 +693,8 @@ public class DashboardActivity extends BaseActivity {
             try {
                 if (!BuildConfig.multiuser) {
                     Log.i(TAG, "Creating demo login from dashboard ...");
-                    IUserAccountRepository userAccountRepository = new UserAccountRepository(dashboardActivity);
+                    IUserAccountRepository userAccountRepository = new UserAccountRepository(
+                            dashboardActivity);
                     LoginUseCase loginUseCase = new LoginUseCase(userAccountRepository);
 
                     Credentials demoCrededentials = Credentials.createDemoCredentials();
@@ -705,8 +706,18 @@ public class DashboardActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void onLoginError(String message) {
-                            Log.d(TAG, message);
+                        public void onServerURLNotValid() {
+                            Log.e(this.getClass().getSimpleName(), "Server url not valid");
+                        }
+
+                        @Override
+                        public void onInvalidCredentials() {
+                            Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                        }
+
+                        @Override
+                        public void onNetworkError() {
+                            Log.e(this.getClass().getSimpleName(), "Network Error");
                         }
                     });
                 }

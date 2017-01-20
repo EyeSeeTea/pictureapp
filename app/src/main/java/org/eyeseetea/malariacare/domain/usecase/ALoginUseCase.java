@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import android.content.Context;
-
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 
 /**
@@ -10,10 +8,12 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 public abstract class ALoginUseCase {
     public interface Callback {
         void onLoginSuccess();
-        void onLoginError(String message);
 
-        //TODO: jsanchez fix
-        //void onInvalidCredentials();
+        void onServerURLNotValid();
+
+        void onInvalidCredentials();
+
+        void onNetworkError();
     }
 
     public abstract void execute(Credentials credentials,Callback callback);

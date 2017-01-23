@@ -8,13 +8,13 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.LabelMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.NumberMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.NumberRadioButtonMultiquestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PhoneMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PositiveNumberMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PositiveOrZeroNumberMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.RadioButtonMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.SwitchMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.TextMultiQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.NumberRadioButtonMultiquestionView;
 
 public class MultiQuestionViewFactory implements IQuestionViewFactory {
     public IQuestionView getView(Context context, int typeQuestion) {

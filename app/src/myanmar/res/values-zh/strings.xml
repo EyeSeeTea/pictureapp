@@ -312,4 +312,13 @@
     <string name="tab_dynamic_treatment">Dynamic treatment</string>
     <string name="dynamic_treatment_yes">是</string>
     <string name="dynamic_treatment_no">否</string>
+    <string name="stock_balance">库存数</string>
+    <string name="receipts">入库数</string>
+    <string name="used_today">今日用量</string>
+    <string name="available">可用数</string>
+    <string name="status">状态</string>
+    <string name="see_receipt">查看之前入库信息</string>
+    <string name="new_receipt">新入库物资登记</string>
+    <string name="see_balance">查看之前校正库存登记</string>
+    <string name="new_balance">校正实际库存登记</string>
 </resources>

@@ -115,6 +115,10 @@ public class Constants {
      * Max columns for the monitor activity (6 months by default)
      */
     public static final int MONITOR_HISTORY_SIZE = 6;
+    /**
+     * Max columns for the stock tab (the different type of drugs)
+     */
+    public static final int STOCK_HISTORY_SIZE = 7;
 
     /**
      * Intent extra param that states that the login is being done due to an attempt to change the

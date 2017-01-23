@@ -8,7 +8,7 @@ import android.webkit.WebView;
 
 public interface IWebView {
 
-    void reloadWebView(final IWebViewBuilder monitorBuilder);
+    void reloadWebView(final IWebViewBuilder iWebViewBuilder);
 
     WebView initWebView();
 

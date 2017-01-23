@@ -325,4 +325,15 @@
     <string name="dynamic_treatment_yes">Yes</string>
     <string name="dynamic_treatment_no">No</string>
 
+    <string name="stock_balance">Balance</string>
+    <string name="receipts">Receipts</string>
+    <string name="used_today">Used Today</string>
+    <string name="available">Available</string>
+    <string name="status">Status</string>
+    <string name="see_receipt">See Receipt</string>
+    <string name="new_receipt">New Receipt</string>
+    <string name="see_balance">See Balance</string>
+    <string name="new_balance">New Balance</string>
+
+
 </resources>

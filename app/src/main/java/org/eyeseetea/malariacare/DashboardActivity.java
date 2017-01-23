@@ -52,11 +52,11 @@ import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
-import org.eyeseetea.malariacare.fragments.StockFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 import java.util.List;
@@ -73,9 +73,9 @@ public class DashboardActivity extends BaseActivity {
     MonitorFragment monitorFragment;
     DashboardUnsentFragment unsentFragment;
     DashboardSentFragment sentFragment;
-    StockFragment stockFragment;
     ReviewFragment reviewFragment;
     SurveyFragment surveyFragment;
+    DashboardActivityStrategy mDashboardActivityStrategy;
     /**
      * Flag that controls the fragment change animations
      */
@@ -99,7 +99,7 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-
+        mDashboardActivityStrategy = new DashboardActivityStrategy();
         AsyncPopulateDB asyncPopulateDB = new AsyncPopulateDB(this);
         asyncPopulateDB.execute((Void) null);
         dashboardActivity = this;
@@ -151,8 +151,7 @@ public class DashboardActivity extends BaseActivity {
                     sentFragment.reloadHeader(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_stock))) {
-                    stockFragment.reloadData();
-                    stockFragment.reloadHeader(dashboardActivity);
+                    mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
                     monitorFragment.reloadData();
@@ -304,10 +303,7 @@ public class DashboardActivity extends BaseActivity {
      * This method initializes the Stock fragment(StockFragment)
      */
     public void initStock() {
-        stockFragment = new StockFragment();
-        stockFragment.setArguments(getIntent().getExtras());
-        stockFragment.reloadData();
-        replaceFragment(R.id.dashboard_stock_container, stockFragment);
+        isMoveToLeft = mDashboardActivityStrategy.showStockFragment(this, isMoveToLeft);
     }
 
     /**

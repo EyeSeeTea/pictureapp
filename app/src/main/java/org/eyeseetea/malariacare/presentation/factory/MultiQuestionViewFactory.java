@@ -14,6 +14,7 @@ import org.eyeseetea.malariacare.views.question.multiquestion.PositiveOrZeroNumb
 import org.eyeseetea.malariacare.views.question.multiquestion.RadioButtonMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.SwitchMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.TextMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.NumberRadioButtonMultiquestionView;
 
 public class MultiQuestionViewFactory implements IQuestionViewFactory {
     public IQuestionView getView(Context context, int typeQuestion) {
@@ -46,6 +47,8 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
                 return new DropdownMultiQuestionView(context);
             case Constants.SWITCH_BUTTON:
                 return new SwitchMultiQuestionView(context);
+            case Constants.DYNAMIC_TREATMENT_SWITCH_NUMBER:
+                return new NumberRadioButtonMultiquestionView(context);
         }
 
         return null;

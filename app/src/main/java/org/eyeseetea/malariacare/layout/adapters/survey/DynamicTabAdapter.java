@@ -81,6 +81,7 @@ import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.NumberRadioButtonMultiquestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .ConfirmCounterSingleCustomViewStrategy;
@@ -88,6 +89,7 @@ import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import utils.ProgressUtils;
@@ -119,6 +121,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     View keyboardView;
     List<IMultiQuestionView> mMultiQuestionViews = new ArrayList<>();
     IDynamicTabAdapterStrategy mDynamicTabAdapterStrategy;
+    /**
+     * Added to save the dose by a quetion id when questions are dynamic treatment questions
+     */
+    HashMap<Long, Integer> doseByQuestion;
     /**
      * Flag that indicates if the current survey in session is already sent or not (it affects
      * readonly settings)
@@ -438,9 +444,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
             if (tabType == Constants.TAB_DYNAMIC_TREATMENT) {
-                Treatment treatment = new Treatment(getMalariaSurvey());
+                Treatment treatment = new Treatment(getMalariaSurvey(), Session.getStockSurvey());
                 if (treatment.hasTreatment()) {
                     screenQuestions = treatment.getQuestions();
+                    doseByQuestion = treatment.getDoseByQuestion();
                 }
             } else {
                 screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
@@ -532,6 +539,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         screenQuestion.getAnswer().getOptions());
             }
 
+            if (questionView instanceof NumberRadioButtonMultiquestionView) {
+                if (doseByQuestion != null) {
+                    ((NumberRadioButtonMultiquestionView) questionView).setDose(
+                            doseByQuestion.get(screenQuestion.getId_question()));
+                }
+                ((NumberRadioButtonMultiquestionView) questionView).setQuestion(screenQuestion);
+                ((NumberRadioButtonMultiquestionView) questionView).setOptions(
+                        screenQuestion.getAnswer().getOptions());
+            }
+
             if (!readOnly) {
                 configureAnswerChangedListener(questionView);
             }
@@ -593,6 +610,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             !GradleVariantConfig.isButtonNavigationActive()));
         } else if (questionView instanceof AOptionQuestionView) {
             ((AOptionQuestionView) questionView).setOnAnswerChangedListener(
+                    new QuestionAnswerChangedListener(tableLayout, this,
+                            !GradleVariantConfig.isButtonNavigationActive()));
+        } else if (questionView instanceof NumberRadioButtonMultiquestionView) {
+            ((NumberRadioButtonMultiquestionView) questionView).setOnAnswerChangedListener(
                     new QuestionAnswerChangedListener(tableLayout, this,
                             !GradleVariantConfig.isButtonNavigationActive()));
         }

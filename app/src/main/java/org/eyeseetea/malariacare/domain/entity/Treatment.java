@@ -13,23 +13,29 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Treatment {
 
     private static final String TAG = ".Treatment";
-    private Survey mSurvey;
+    private Survey mMalariaSurvey;
+    private Survey mStockSurvey;
     private List<Question> mQuestions;
     private org.eyeseetea.malariacare.database.model.Treatment mTreatment;
+    private HashMap<Long, Integer> doseByQuestion;
 
-    public Treatment(Survey survey) {
-        mSurvey = survey;
+    public Treatment(Survey malariaSurvey, Survey stockSurvey) {
+        mMalariaSurvey = malariaSurvey;
+        mStockSurvey = stockSurvey;
+        doseByQuestion = new HashMap<>();
     }
 
     public boolean hasTreatment() {
         mTreatment = getTreatmentFromSurvey();
         if (mTreatment != null) {
             mQuestions = getQuestionsForTreatment(mTreatment);
+            removeOldQuestionsFromSurvey();
         }
 
         return mTreatment != null;
@@ -38,7 +44,7 @@ public class Treatment {
 
     private org.eyeseetea.malariacare.database.model.Treatment getTreatmentFromSurvey() {
 
-        List<Value> values = mSurvey.getValues();
+        List<Value> values = mMalariaSurvey.getValues();
 
         List<Match> ageMatches = new ArrayList<>();
         List<Match> pregnantMatches = new ArrayList<>();
@@ -103,6 +109,7 @@ public class Treatment {
                 } else if (isCq(question)) {
                     question.setForm_name(getCqTitleDose(drug.getDose()));
                 }
+                doseByQuestion.put(question.getId_question(), drug.getDose());
                 questions.add(question);
             }
             if (!questions.isEmpty()) {
@@ -117,6 +124,10 @@ public class Treatment {
 
     public List<Question> getQuestions() {
         return mQuestions;
+    }
+
+    public HashMap<Long, Integer> getDoseByQuestion() {
+        return doseByQuestion;
     }
 
     public org.eyeseetea.malariacare.database.model.Treatment getTreatment() {
@@ -177,6 +188,23 @@ public class Treatment {
                 option.setFactor((float) dose);
             }
         }
+    }
+
+    private void removeOldQuestionsFromSurvey() {
+        List<Value> values = mStockSurvey.getValues();
+        for (Value value : values) {
+            boolean isInQuestions = false;
+            for (Question question : mQuestions) {
+                if (value.getQuestion().getId_question() == question.getId_question()) {
+                    isInQuestions = true;
+                }
+            }
+            if (!isInQuestions) {
+                values.remove(value);
+                value.delete();
+            }
+        }
+
     }
 
 }

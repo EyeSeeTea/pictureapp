@@ -21,18 +21,14 @@ import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
 import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
-import org.eyeseetea.malariacare.domain.usecase.InitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
 import org.eyeseetea.malariacare.views.TypefaceCache;
 import org.hisp.dhis.client.sdk.android.api.D2;
 
 import java.io.IOException;
 
 import io.fabric.sdk.android.Fabric;
-
-/**
- * Created by idelcano on 12/12/2016.
- */
 
 public class SplashScreenActivity extends Activity {
 
@@ -126,8 +122,8 @@ public class SplashScreenActivity extends Activity {
         @Override
         protected void onPostExecute(final Exception exception) {
             //Error
-            InitUseCase initUseCase = new InitUseCase(activity);
-            initUseCase.finishAndGo();
+            SplashActivityStrategy splashActivityStrategy = new SplashActivityStrategy(activity);
+            splashActivityStrategy.finishAndGo();
         }
     }
 }

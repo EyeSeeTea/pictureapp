@@ -3,14 +3,12 @@ package org.eyeseetea.malariacare.domain.usecase;
 import android.content.Context;
 import android.util.Log;
 
-
 import org.eyeseetea.malariacare.data.database.iomodules.dhis.exporter.PushController;
 import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.network.SurveyChecker;
-import org.eyeseetea.malariacare.data.remote.SdkController;
-import org.eyeseetea.malariacare.data.remote.SdkLoginController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +17,7 @@ public class PushSurveysUseCase {
 
     public interface Callback {
         void onPushFinished();
+
         void onPushError(String message);
     }
 
@@ -93,13 +92,15 @@ public class PushSurveysUseCase {
         startProgress();
 
         //Init sdk login
-        SdkLoginController.logInUser(ServerAPIController.getServerUrl(),
-                ServerAPIController.getSDKCredentials());
+        //TODO:jsanchez Login in sdk should be transparent to the use case and be done internally
+        // from IPushController
+        /*SdkLoginController.logInUser(ServerAPIController.getServerUrl(),
+                ServerAPIController.getSDKCredentials());*/
     }
 
     //// FIXME: 28/12/16 call on loginprepush finish
     //@Subscribe
-    public void callbackLoginPrePush( ) {
+    public void callbackLoginPrePush() {
         Log.d(TAG, "callbackLoginPrePush  " + PushController.getInstance().isPushInProgress());
 
 

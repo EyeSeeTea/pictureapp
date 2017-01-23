@@ -36,11 +36,9 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.remote.SdkLoginController;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.ShowException;
-import org.hisp.dhis.client.sdk.core.common.network.UserCredentials;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -191,9 +189,9 @@ public class ServerAPIController {
     /**
      * Returns hardcoded credentials for its use in sdk
      */
-    public static UserCredentials getSDKCredentials() {
+ /*   public static UserCredentials getSDKCredentials() {
         return SdkLoginController.getCredentials(getUserPush(), getPassPush());
-    }
+    }*/
 
     /**
      * Returns the version of the default server

@@ -17,13 +17,9 @@
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.data.database.iomodules.dhis.importer;
+package org.eyeseetea.malariacare.data.sync.importer;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.DataValueExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.EventExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.OrganisationUnitExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.UserAccountExtended;
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
@@ -32,6 +28,10 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
+import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
+import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
+import org.eyeseetea.malariacare.data.sync.importer.models.UserAccountExtended;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ConvertFromSDKVisitor implements
-        org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.IConvertFromSDKVisitor {
+        org.eyeseetea.malariacare.data.sync.importer.IConvertFromSDKVisitor {
 
     private final static String TAG = ".ConvertFromSDKVisitor";
 

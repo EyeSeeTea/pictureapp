@@ -17,17 +17,16 @@
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models;
+package org.eyeseetea.malariacare.data.sync.importer.models;
 
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.IConvertFromSDKVisitor;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.VisitableFromSDK;
 import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.sync.importer.IConvertFromSDKVisitor;
+import org.eyeseetea.malariacare.data.sync.importer.VisitableFromSDK;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataValueFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 

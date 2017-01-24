@@ -17,7 +17,7 @@
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models;
+package org.eyeseetea.malariacare.data.sync.importer.models;
 
 import static org.eyeseetea.malariacare.data.database.AppDatabase.attributeFlowAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.attributeFlowName;

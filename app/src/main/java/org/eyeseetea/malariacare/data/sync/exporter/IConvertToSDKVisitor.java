@@ -17,8 +17,10 @@
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.data.database.iomodules.dhis.exporter;
+package org.eyeseetea.malariacare.data.sync.exporter;
 
-public interface VisitableToSDK {
-    void accept(IConvertToSDKVisitor IConvertToSDKVisitor) throws Exception;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+
+public interface IConvertToSDKVisitor {
+    void visit(Survey survey) throws Exception;
 }

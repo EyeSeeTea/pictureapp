@@ -30,17 +30,20 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.PullController;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
+import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.data.sync.importer.SyncProgressStatus;
+import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.PullUseCase;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
 
 public class ProgressActivity extends Activity {
 
     private static final String TAG = ".ProgressActivity";
+
     /**
      * Num of expected steps while pulling
      */
@@ -53,37 +56,62 @@ public class ProgressActivity extends Activity {
      * Used for control autopull from login
      */
     public static Boolean PULL_CANCEL = false;
-    private static Activity progressActivity;
-    public ProgressActivityStrategy progressVariantAdapter = new ProgressActivityStrategy(this);
-    static ProgressBar progressBar;
-    static TextView textView;
 
-    UserAccountRepository mUserAccountRepository;
-    LogoutUseCase mLogoutUseCase;
+
+    public ProgressActivityStrategy progressVariantAdapter = new ProgressActivityStrategy(this);
+    private ProgressBar progressBar;
+    private TextView textView;
+
+    private LogoutUseCase mLogoutUseCase;
+    private PullUseCase mPullUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mUserAccountRepository = new UserAccountRepository(this);
-        mLogoutUseCase = new LogoutUseCase(mUserAccountRepository);
+        initializeDependencies();
 
         setContentView(R.layout.activity_progress);
+
+        prepareUI();
+    }
+
+    private void initializeDependencies() {
+        UserAccountRepository mUserAccountRepository = new UserAccountRepository(this);
+
+        IPullController pullController = new PullController(this);
+
+        mLogoutUseCase = new LogoutUseCase(mUserAccountRepository);
+        mPullUseCase = new PullUseCase(pullController);
+    }
+
+    private void prepareUI() {
         PULL_CANCEL = false;
         PULL_IS_ACTIVE = true;
-        progressActivity=this;
-        prepareUI();
+
+        progressBar = (ProgressBar) findViewById(R.id.pull_progress);
+        progressBar.setMax(MAX_PULL_STEPS);
+        textView = (TextView) findViewById(R.id.pull_text);
+        final Button button = (Button) findViewById(R.id.cancelPullButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                cancellPull();
+            }
+        });
     }
 
     private void cancellPull() {
         if (PULL_IS_ACTIVE) {
             PULL_CANCEL = true;
             PULL_IS_ACTIVE = false;
-            step(PreferencesState.getInstance().getContext().getResources().getString(R.string.cancellingPull));
-            if (PullController.getInstance().finishPullJob()) {
+            step(PreferencesState.getInstance().getContext().getResources().getString(
+                    R.string.cancellingPull));
+
+            //TODO jsanchez
+/*            if (PullController.getInstance().finishPullJob()) {
                 Log.d(TAG, "Logging out from sdk...");
                 executeLogout();
-            }
+            }*/
         }
     }
 
@@ -111,31 +139,10 @@ public class ProgressActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        unregisterBus();
         //TODO this is not expected in pictureapp
         if (PULL_CANCEL == true) {
             finishAndGo(LoginActivity.class);
         }
-    }
-
-    private void unregisterBus() {
-        try {
-            SdkController.unregister(this);
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
-    }
-
-    private void prepareUI() {
-        progressBar = (ProgressBar) findViewById(R.id.pull_progress);
-        progressBar.setMax(MAX_PULL_STEPS);
-        textView = (TextView) findViewById(R.id.pull_text);
-        final Button button = (Button) findViewById(R.id.cancelPullButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                cancellPull();
-            }
-        });
     }
 
     //// FIXME: 28/12/16 
@@ -191,28 +198,19 @@ public class ProgressActivity extends Activity {
     /**
      * Prints the step in the progress bar
      */
-    private static void step(final String msg) {
+    private void step(final String msg) {
         final int currentProgress = progressBar.getProgress();
         progressBar.setProgress(currentProgress + 1);
         textView.setText(msg);
     }
 
-    /**
-     * Shows a dialog to tell that pull is done and then moves into the dashboard.
-     */
     private void showAndMoveOn() {
         //If is not active, we need restart the process
         if (!PULL_IS_ACTIVE) {
-            try {
-                SdkController.unregister(this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             finishAndGo(LoginActivity.class);
             return;
         }
 
-        //Show final step -> done
         step(getString(R.string.progress_pull_done));
 
         String title = getDialogTitle();
@@ -237,7 +235,18 @@ public class ProgressActivity extends Activity {
     private void launchPull() {
         progressBar.setProgress(0);
         progressBar.setMax(MAX_PULL_STEPS);
-        PullController.getInstance().pull(this);
+
+        mPullUseCase.execute(new PullUseCase.Callback() {
+            @Override
+            public void onComplete() {
+                showAndMoveOn();
+            }
+
+            @Override
+            public void onError(String message) {
+                executeLogout();
+            }
+        });
     }
 
     @Override
@@ -245,11 +254,6 @@ public class ProgressActivity extends Activity {
         cancellPull();
     }
 
-    /**
-     * Finish current activity and launches an activity with the given class
-     *
-     * @param targetActivityClass Given target activity class
-     */
     public void finishAndGo(Class targetActivityClass) {
         Intent targetActivityIntent = new Intent(this, targetActivityClass);
         finish();

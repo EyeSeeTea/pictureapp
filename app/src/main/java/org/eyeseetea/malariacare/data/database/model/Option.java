@@ -57,7 +57,7 @@ public class Option extends BaseModel {
     /**
      * Reference to parent answer (loaded lazily)
      */
-    org.eyeseetea.malariacare.data.database.model.Answer answer;
+    Answer answer;
 
     @Column
     long id_option_attribute;

@@ -63,6 +63,8 @@ public class PullController implements IPullController {
             populateMetadataFromCsvs();
 
             callback.onComplete();
+
+            //TODO jsanchez
 /*            //clear flags
             SdkPullController.clearPullFlags(PreferencesState.getInstance().getContext());
             //Enabling resources to pull

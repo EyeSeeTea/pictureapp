@@ -11,13 +11,10 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.hisp.dhis.client.sdk.ui.views.FontButton;
-
-import java.io.IOException;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
@@ -41,11 +38,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onCreate() {
-        try {
-            PopulateDB.initDataIfRequired(loginActivity.getAssets());
-        } catch (IOException exception) {
-            Log.e("LoginActivity", "ERROR: DB not loaded");
-        }
         if (existsLoggedUser()) {
             LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
                     new LoadUserAndCredentialsUseCase(loginActivity);
@@ -54,11 +46,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
             finishAndGo(DashboardActivity.class);
         } else {
-            loginActivity.runOnUiThread(new Runnable() {
-                public void run() {
-                    addDemoButton();
-                }
-            });
+            addDemoButton();
         }
     }
 

@@ -77,10 +77,11 @@ public class PullController implements IPullController {
 
                 @Override
                 public void onError(Throwable throwable) {
-
+                    callback.onError(throwable);
                 }
             });
 
+            //TODO jsanchez
 /*            //clear flags
             SdkPullController.clearPullFlags(PreferencesState.getInstance().getContext());
             //Enabling resources to pull

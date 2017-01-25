@@ -24,6 +24,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
@@ -31,6 +32,7 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.remote.SdkPullController;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
@@ -39,6 +41,7 @@ import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.ProgramExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.models.program.ProgramType;
 
 import java.io.IOException;
@@ -50,19 +53,34 @@ public class PullController implements IPullController {
     private static String TAG = "PullController";
     //public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
 
+    PullDhisSDKDataSource mPullDhisSDKDataSource = new PullDhisSDKDataSource();
     private Context mContext;
 
     public PullController(Context context) {
         mContext = context;
     }
 
-    public void pull(Callback callback) {
+    public void pull(final Callback callback) {
         Log.d(TAG, "Starting PULL process...");
         try {
 
+            callback.onStep(PullStep.METADATA);
+
             populateMetadataFromCsvs();
 
-            callback.onComplete();
+
+            mPullDhisSDKDataSource.pullMetadata(new IDataSourceCallback<Void>() {
+                @Override
+                public void onSuccess(Void result) {
+                    callback.onComplete();
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+
+                }
+            });
+
 /*            //clear flags
             SdkPullController.clearPullFlags(PreferencesState.getInstance().getContext());
             //Enabling resources to pull
@@ -363,9 +381,9 @@ public class PullController implements IPullController {
         wipeDatabase();
         convertFromSDK();
         //Fixme it should be moved after login
-        convertOUinOptions();
+/*        convertOUinOptions();
         if (ProgressActivity.PULL_IS_ACTIVE) {
             Log.d(TAG, "PULL process...OK");
-        }
+        }*/
     }
 }

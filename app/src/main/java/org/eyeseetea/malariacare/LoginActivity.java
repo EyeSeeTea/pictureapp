@@ -190,18 +190,18 @@ public class LoginActivity extends AbsLoginActivity {
 
             @Override
             public void onServerURLNotValid() {
-                serverText.setError("Server url not valid");
-                showError("Server url not valid");
+                serverText.setError(getString(R.string.login_invalid_server_url));
+                showError(getString(R.string.login_invalid_server_url));
             }
 
             @Override
             public void onInvalidCredentials() {
-                showError("Invalid credentials");
+                showError(getString(R.string.login_invalid_credentials));
             }
 
             @Override
             public void onNetworkError() {
-                showError("There is a problem with the network, try again later.");
+                showError(getString(R.string.network_error));
             }
         });
     }

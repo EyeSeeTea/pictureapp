@@ -1,13 +1,18 @@
-package org.eyeseetea.malariacare.domain.usecase;
+package org.eyeseetea.malariacare.domain.usecase.pull;
 
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
 public class PullUseCase {
 
     public interface Callback {
         void onComplete();
 
+        void onStep(PullStep step);
+
         void onError(String message);
+
+        void onNetworkError();
     }
 
     IPullController mPullController;
@@ -24,8 +29,17 @@ public class PullUseCase {
             }
 
             @Override
+            public void onStep(PullStep step) {
+                callback.onStep(step);
+            }
+
+            @Override
             public void onError(Throwable throwable) {
-                callback.onError(throwable.getMessage());
+                if (throwable instanceof NetworkException) {
+                    callback.onNetworkError();
+                } else {
+                    callback.onError(throwable.getMessage());
+                }
             }
         });
     }

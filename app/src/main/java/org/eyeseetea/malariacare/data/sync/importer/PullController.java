@@ -60,27 +60,31 @@ public class PullController implements IPullController {
         mContext = context;
     }
 
-    public void pull(final Callback callback) {
+    public void pull(boolean isDemo, final Callback callback) {
         Log.d(TAG, "Starting PULL process...");
         try {
 
             callback.onStep(PullStep.METADATA);
 
-            populateMetadataFromCsvs();
+            if (isDemo) {
+                populateMetadataFromCsvs(true);
+                callback.onComplete();
+            } else {
 
+                populateMetadataFromCsvs(false);
 
-            mPullDhisSDKDataSource.pullMetadata(new IDataSourceCallback<Void>() {
-                @Override
-                public void onSuccess(Void result) {
-                    callback.onComplete();
-                }
+                mPullDhisSDKDataSource.pullMetadata(new IDataSourceCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void result) {
+                        callback.onComplete();
+                    }
 
-                @Override
-                public void onError(Throwable throwable) {
-                    callback.onError(throwable);
-                }
-            });
-
+                    @Override
+                    public void onError(Throwable throwable) {
+                        callback.onError(throwable);
+                    }
+                });
+            }
             //TODO jsanchez
 /*            //clear flags
             SdkPullController.clearPullFlags(PreferencesState.getInstance().getContext());
@@ -119,8 +123,25 @@ public class PullController implements IPullController {
         }
     }
 
-    private void populateMetadataFromCsvs() throws IOException {
+    private void populateMetadataFromCsvs(boolean isDemo) throws IOException {
         PopulateDB.initDataIfRequired(mContext.getAssets());
+
+        if (isDemo) {
+            createDummyOrgUnitsDataInDB();
+        }
+    }
+
+    private void createDummyOrgUnitsDataInDB() {
+        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
+
+        if (orgUnits.size() == 0) {
+            try {
+                PopulateDB.populateDummyData(mContext.getAssets());
+                convertOUinOptions();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void convertOUinOptions() {
@@ -387,4 +408,6 @@ public class PullController implements IPullController {
             Log.d(TAG, "PULL process...OK");
         }*/
     }
+
+
 }

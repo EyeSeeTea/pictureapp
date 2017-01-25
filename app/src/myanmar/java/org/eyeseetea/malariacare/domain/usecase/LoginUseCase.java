@@ -23,7 +23,6 @@ public class LoginUseCase extends ALoginUseCase {
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
-                        createDummyDataInDB();
                         callback.onLoginSuccess();
                     }
 
@@ -39,20 +38,6 @@ public class LoginUseCase extends ALoginUseCase {
                         }
                     }
                 });
-    }
-
-    //TODO: jsanchez - Fix with new architecture
-    private void createDummyDataInDB() {
-/*        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-
-        if (orgUnits.size() == 0) {
-            try {
-                PopulateDB.populateDummyData(context.getAssets());
-                IPullController.convertOUinOptions();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
     }
 
     @Override

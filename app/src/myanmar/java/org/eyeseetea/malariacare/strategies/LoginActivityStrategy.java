@@ -11,9 +11,12 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.hisp.dhis.client.sdk.ui.views.FontButton;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
@@ -69,27 +72,55 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
                 Credentials demoCrededentials = Credentials.createDemoCredentials();
 
-                loginActivity.mLoginUseCase.execute(demoCrededentials, new ALoginUseCase.Callback() {
-                    @Override
-                    public void onLoginSuccess() {
-                        finishAndGo(DashboardActivity.class);
-                    }
+                loginActivity.mLoginUseCase.execute(demoCrededentials,
+                        new ALoginUseCase.Callback() {
+                            @Override
+                            public void onLoginSuccess() {
+                                executePullDemo();
+                            }
 
-                    @Override
-                    public void onServerURLNotValid() {
-                        Log.e(this.getClass().getSimpleName(), "Server url not valid");
-                    }
+                            @Override
+                            public void onServerURLNotValid() {
+                                Log.e(this.getClass().getSimpleName(), "Server url not valid");
+                            }
 
-                    @Override
-                    public void onInvalidCredentials() {
-                        Log.e(this.getClass().getSimpleName(), "Invalid credentials");
-                    }
+                            @Override
+                            public void onInvalidCredentials() {
+                                Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                            }
 
-                    @Override
-                    public void onNetworkError() {
-                        Log.e(this.getClass().getSimpleName(), "Network Error");
-                    }
-                });
+                            @Override
+                            public void onNetworkError() {
+                                Log.e(this.getClass().getSimpleName(), "Network Error");
+                            }
+                        });
+            }
+        });
+    }
+
+    private void executePullDemo() {
+        PullController pullController = new PullController(loginActivity);
+        PullUseCase pullUseCase = new PullUseCase(pullController);
+
+        pullUseCase.execute(true, new PullUseCase.Callback() {
+            @Override
+            public void onComplete() {
+                finishAndGo(DashboardActivity.class);
+            }
+
+            @Override
+            public void onStep(PullStep step) {
+                Log.d(this.getClass().getSimpleName(), step.toString());
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e(this.getClass().getSimpleName(), message);
+            }
+
+            @Override
+            public void onNetworkError() {
+                Log.e(this.getClass().getSimpleName(), "Network Error");
             }
         });
     }

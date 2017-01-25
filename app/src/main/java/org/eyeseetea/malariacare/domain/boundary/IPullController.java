@@ -10,5 +10,5 @@ public interface IPullController {
         void onError(Throwable throwable);
     }
 
-    void pull(Callback callback);
+    void pull(boolean isDemo, Callback callback);
 }

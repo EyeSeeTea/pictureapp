@@ -149,7 +149,7 @@ public class ProgressActivity extends Activity {
     private void launchPull() {
 
 
-        mPullUseCase.execute(new PullUseCase.Callback() {
+        mPullUseCase.execute(false, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
                 showAndMoveOn();

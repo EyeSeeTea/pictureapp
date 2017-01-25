@@ -21,8 +21,8 @@ public class PullUseCase {
         mPullController = pullController;
     }
 
-    public void execute(final Callback callback) {
-        mPullController.pull(new IPullController.Callback() {
+    public void execute(boolean isDemo, final Callback callback) {
+        mPullController.pull(isDemo, new IPullController.Callback() {
             @Override
             public void onComplete() {
                 callback.onComplete();

@@ -9,8 +9,8 @@ import android.view.MenuItem;
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
-import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
@@ -20,7 +20,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private static final int MENU_ITEM_LOGOUT_ORDER = 106;
 
     LogoutUseCase mLogoutUseCase;
-    IUserAccountRepository mUserAccountRepository;
+    IAuthenticationManager mAuthenticationManager;
 
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
@@ -28,8 +28,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onCreate() {
-        mUserAccountRepository = new UserAccountRepository(mBaseActivity);
-        mLogoutUseCase = new LogoutUseCase(mUserAccountRepository);
+        mAuthenticationManager = new AuthenticationManager(mBaseActivity);
+        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
     }
 
     @Override

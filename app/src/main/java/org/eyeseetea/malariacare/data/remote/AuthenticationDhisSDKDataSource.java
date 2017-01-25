@@ -4,8 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.IUserAccountDataSource;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
@@ -22,10 +22,10 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class UserAccountDhisSDKDataSource implements IUserAccountDataSource {
+public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSource {
     private Context mContext;
 
-    public UserAccountDhisSDKDataSource(Context context) {
+    public AuthenticationDhisSDKDataSource(Context context) {
         mContext = context;
     }
 

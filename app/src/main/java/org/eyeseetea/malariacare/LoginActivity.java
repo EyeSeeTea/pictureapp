@@ -42,9 +42,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
-import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
@@ -66,8 +66,8 @@ public class LoginActivity extends AbsLoginActivity {
     public static final String DEFAULT_USER = "";
     public static final String DEFAULT_PASSWORD = "";
     private static final String TAG = ".LoginActivity";
-    public IUserAccountRepository mUserAccountRepository = new UserAccountRepository(this);
-    public LoginUseCase mLoginUseCase = new LoginUseCase(mUserAccountRepository);
+    public IAuthenticationManager mAuthenticationManager = new AuthenticationManager(this);
+    public LoginUseCase mLoginUseCase = new LoginUseCase(mAuthenticationManager);
     public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
     EditText serverText;
     EditText usernameEditText;

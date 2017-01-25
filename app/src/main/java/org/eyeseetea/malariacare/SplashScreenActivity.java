@@ -10,14 +10,14 @@ import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
-import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
-import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
@@ -62,8 +62,8 @@ public class SplashScreenActivity extends Activity {
 
         if (!BuildConfig.multiuser) {
             Log.i(TAG, "Creating demo login from dashboard ...");
-            IUserAccountRepository userAccountRepository = new UserAccountRepository(this);
-            LoginUseCase loginUseCase = new LoginUseCase(userAccountRepository);
+            IAuthenticationManager authenticationManager = new AuthenticationManager(this);
+            LoginUseCase loginUseCase = new LoginUseCase(authenticationManager);
 
             Credentials demoCrededentials = Credentials.createDemoCredentials();
 

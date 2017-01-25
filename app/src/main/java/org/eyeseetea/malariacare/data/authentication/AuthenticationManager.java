@@ -1,30 +1,29 @@
-package org.eyeseetea.malariacare.data.repositories;
+package org.eyeseetea.malariacare.data.authentication;
 
 import android.content.Context;
 
+import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.IUserAccountDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.UserAccountLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.AuthenticationLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.remote.UserAccountDhisSDKDataSource;
-import org.eyeseetea.malariacare.domain.boundary.IRepositoryCallback;
-import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
+import org.eyeseetea.malariacare.data.remote.AuthenticationDhisSDKDataSource;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 
-public class UserAccountRepository implements IUserAccountRepository {
-    IUserAccountDataSource userAccountLocalDataSource;
-    IUserAccountDataSource userAccountRemoteDataSource;
+public class AuthenticationManager implements IAuthenticationManager {
+    IAuthenticationDataSource userAccountLocalDataSource;
+    IAuthenticationDataSource userAccountRemoteDataSource;
 
-    public UserAccountRepository(Context context) {
+    public AuthenticationManager(Context context) {
 
-        userAccountLocalDataSource = new UserAccountLocalDataSource(context);
-        userAccountRemoteDataSource = new UserAccountDhisSDKDataSource(context);
+        userAccountLocalDataSource = new AuthenticationLocalDataSource(context);
+        userAccountRemoteDataSource = new AuthenticationDhisSDKDataSource(context);
     }
 
     @Override
     public void login(final Credentials credentials,
-            final IRepositoryCallback<UserAccount> callback) {
+            final IAuthenticationManager.Callback<UserAccount> callback) {
         if (credentials.isDemoCredentials()) {
             localLogin(credentials, callback);
         } else {
@@ -33,7 +32,7 @@ public class UserAccountRepository implements IUserAccountRepository {
     }
 
     @Override
-    public void logout(final IRepositoryCallback<Void> callback) {
+    public void logout(final IAuthenticationManager.Callback<Void> callback) {
 
         //TODO: jsanchez fix find out IsDemo from current UserAccount getting from DataSource
         Credentials credentials = Session.getCredentials();
@@ -45,7 +44,7 @@ public class UserAccountRepository implements IUserAccountRepository {
         }
     }
 
-    private void remoteLogout(final IRepositoryCallback<Void> callback) {
+    private void remoteLogout(final IAuthenticationManager.Callback<Void> callback) {
         userAccountRemoteDataSource.logout(new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
@@ -60,7 +59,7 @@ public class UserAccountRepository implements IUserAccountRepository {
     }
 
     private void remoteLogin(final Credentials credentials,
-            final IRepositoryCallback<UserAccount> callback) {
+            final IAuthenticationManager.Callback<UserAccount> callback) {
         userAccountRemoteDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount result) {
@@ -74,7 +73,7 @@ public class UserAccountRepository implements IUserAccountRepository {
         });
     }
 
-    private void localLogout(final IRepositoryCallback<Void> callback) {
+    private void localLogout(final IAuthenticationManager.Callback<Void> callback) {
         userAccountLocalDataSource.logout(new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
@@ -89,7 +88,7 @@ public class UserAccountRepository implements IUserAccountRepository {
     }
 
     private void localLogin(Credentials credentials,
-            final IRepositoryCallback<UserAccount> callback) {
+            final IAuthenticationManager.Callback<UserAccount> callback) {
         userAccountLocalDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount userAccount) {

@@ -1,12 +1,10 @@
 package org.eyeseetea.malariacare.data.database.datasources;
 
-import static org.eyeseetea.malariacare.data.database.utils.Session.getCredentials;
-
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.IUserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -14,11 +12,11 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 
-public class UserAccountLocalDataSource implements IUserAccountDataSource {
+public class AuthenticationLocalDataSource implements IAuthenticationDataSource {
 
     Context mContext;
 
-    public UserAccountLocalDataSource (Context context){
+    public AuthenticationLocalDataSource(Context context) {
         mContext = context;
     }
 

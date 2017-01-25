@@ -30,9 +30,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkController;
-import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
@@ -77,11 +77,11 @@ public class ProgressActivity extends Activity {
     }
 
     private void initializeDependencies() {
-        UserAccountRepository mUserAccountRepository = new UserAccountRepository(this);
+        AuthenticationManager authenticationManager = new AuthenticationManager(this);
 
         IPullController pullController = new PullController(this);
 
-        mLogoutUseCase = new LogoutUseCase(mUserAccountRepository);
+        mLogoutUseCase = new LogoutUseCase(authenticationManager);
         mPullUseCase = new PullUseCase(pullController);
     }
 

@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models;
+package org.eyeseetea.malariacare.data.sync.importer.models;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 

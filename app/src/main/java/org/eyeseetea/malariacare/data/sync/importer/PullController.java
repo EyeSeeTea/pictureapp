@@ -17,18 +17,13 @@
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.data.database.iomodules.dhis.importer;
+package org.eyeseetea.malariacare.data.sync.importer;
 
 import android.content.Context;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.DataValueExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.EventExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.OrganisationUnitExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.ProgramExtended;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
@@ -39,40 +34,76 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.remote.SdkPullController;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
+import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
+import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
+import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
+import org.eyeseetea.malariacare.data.sync.importer.models.ProgramExtended;
+import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.hisp.dhis.client.sdk.models.program.ProgramType;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * A static controller that orchestrate the pull process
- * Created by arrizabalaga on 4/11/15.
- */
-public class PullController  {
-    public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
-    public static final int NUMBER_OF_MONTHS = 0;
-    private static PullController instance;
-    private final String TAG = ".PullController";
-    /**
-     * Context required to i18n error messages while pulling
-     */
-    private Context context;
+public class PullController implements IPullController {
+    private static String TAG = "PullController";
+    //public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
 
-    /**
-     * Constructs and register this pull controller to the event bus
-     */
-    PullController() {
+    private Context mContext;
+
+    public PullController(Context context) {
+        mContext = context;
     }
 
-    /**
-     * Singleton constructor
-     */
-    public static PullController getInstance() {
-        if (instance == null) {
-            instance = new PullController();
+    public void pull(Callback callback) {
+        Log.d(TAG, "Starting PULL process...");
+        try {
+
+            populateMetadataFromCsvs();
+
+            callback.onComplete();
+
+            //TODO jsanchez
+/*            //clear flags
+            SdkPullController.clearPullFlags(PreferencesState.getInstance().getContext());
+            //Enabling resources to pull
+            SdkPullController.enableMetaDataFlags(PreferencesState.getInstance().getContext());
+            //Delete previous metadata
+
+            Log.d(TAG, "Delete sdk db");
+            PopulateDB.wipeSDKData();
+            //Pull new metadata
+            postProgress(mContext.getString(R.string.progress_pull_downloading));
+            PreferencesState.getInstance().reloadPreferences();
+
+            SdkPullController.clearMetaDataLoadedFlags();
+            SdkPullController.wipe();
+
+            SdkPullController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
+            String selectedDateLimit = PreferencesState.getInstance().getDataLimitedByDate();
+
+            //Limit of data by date is selected
+            if (BuildConfig.loginDataDownloadPeriod) {
+                SdkPullController.setStartDate(
+                        EventExtended.format(getDateFromString(selectedDateLimit),
+                                EventExtended.AMERICAN_DATE_FORMAT));
+            }
+
+            if (selectedDateLimit.equals(
+                    PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
+                pullMetaData();
+            } else {
+                pullMetaDataAndData();
+            }*/
+        } catch (Exception ex) {
+            Log.e(TAG, "pull: " + ex.getLocalizedMessage());
+            callback.onError(ex);
         }
-        return instance;
+    }
+
+    private void populateMetadataFromCsvs() throws IOException {
+        PopulateDB.initDataIfRequired(mContext.getAssets());
     }
 
     public static void convertOUinOptions() {
@@ -109,68 +140,6 @@ public class PullController  {
             if (QuestionOption.findByQuestionAndOption(question, option).size() == 0) {
                 option.delete();
             }
-        }
-    }
-
-    private void register() {
-        SdkController.register(this);
-    }
-
-    /**
-     * Unregister pull controller from bus events
-     */
-    public void unregister() {
-        SdkController.unregister(this);
-    }
-
-    /**
-     * Launches the pull process:
-     * - Loads metadata from dhis2 server
-     * - Wipes app database
-     * - Turns SDK into APP data
-     */
-    public void pull(Context ctx) {
-        Log.d(TAG, "Starting PULL process...");
-        context = ctx;
-        try {
-
-            //Register for event bus
-            register();
-            //clear flags
-            SdkPullController.clearPullFlags(PreferencesState.getInstance().getContext());
-            //Enabling resources to pull
-            SdkPullController.enableMetaDataFlags(PreferencesState.getInstance().getContext());
-            //Delete previous metadata
-
-            Log.d(TAG, "Delete sdk db");
-            PopulateDB.wipeSDKData();
-            //Pull new metadata
-            postProgress(context.getString(R.string.progress_pull_downloading));
-            PreferencesState.getInstance().reloadPreferences();
-
-            SdkPullController.clearMetaDataLoadedFlags();
-            SdkPullController.wipe();
-
-            SdkPullController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
-            String selectedDateLimit = PreferencesState.getInstance().getDataLimitedByDate();
-
-            //Limit of data by date is selected
-            if (BuildConfig.loginDataDownloadPeriod) {
-                SdkPullController.setStartDate(
-                        EventExtended.format(getDateFromString(selectedDateLimit),
-                                EventExtended.AMERICAN_DATE_FORMAT));
-            }
-
-            if (selectedDateLimit.equals(
-                    PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
-                pullMetaData();
-            } else {
-                pullMetaDataAndData();
-            }
-        } catch (Exception ex) {
-            Log.e(TAG, "pull: " + ex.getLocalizedMessage());
-            unregister();
-            postException(ex);
         }
     }
 
@@ -225,7 +194,7 @@ public class PullController  {
      * //Error while pulling
      * if (result.getResponseHolder() != null
      * && result.getResponseHolder().getApiException() != null) {
-     * postException(new Exception(context.getString(R.string.dialog_pull_error)));
+     * postException(new Exception(mContext.getString(R.string.dialog_pull_error)));
      * return;
      * }
      *
@@ -249,11 +218,10 @@ public class PullController  {
 
     private void onPullFinish() {
         postFinish();
-        unregister();
     }
 
     private void onPullError(String message) {
-        postException(new Exception(context.getString(R.string.dialog_pull_error)));
+        postException(new Exception(mContext.getString(R.string.dialog_pull_error)));
     }
 
     /**
@@ -286,7 +254,7 @@ public class PullController  {
     private void convertMetaData(ConvertFromSDKVisitor converter) {
         //OrganisationUnits
         if (!ProgressActivity.PULL_IS_ACTIVE) return;
-        postProgress(context.getString(R.string.progress_pull_preparing_orgs));
+        postProgress(mContext.getString(R.string.progress_pull_preparing_orgs));
         Log.i(TAG, "Converting organisationUnits...");
         List<OrganisationUnitExtended> assignedOrganisationsUnits =
                 OrganisationUnitExtended.getExtendedList(
@@ -306,7 +274,7 @@ public class PullController  {
         Program appProgram = Program.getFirstProgram();
         String orgUnitName = PreferencesState.getInstance().getOrgUnit();
 
-        postProgress(context.getString(R.string.progress_pull_surveys));
+        postProgress(mContext.getString(R.string.progress_pull_surveys));
         //XXX This is the right place to apply additional filters to data conversion (only
         // predefined orgunit for instance)
         //For each unit
@@ -339,7 +307,7 @@ public class PullController  {
                 // Visit all the events and save them in block
                 int i = 0;
                 for (EventExtended event : events) {
-                    postProgress(context.getString(R.string.progress_pull_building_survey)
+                    postProgress(mContext.getString(R.string.progress_pull_building_survey)
                             + String.format(" %s/%s", i++, events.size()));
                     if (!ProgressActivity.PULL_IS_ACTIVE) return;
 
@@ -355,7 +323,7 @@ public class PullController  {
                     //Visit its values
                     for (DataValueExtended dataValueExtended : event.getDataValues()) {
                         if (++i % 50 == 0) {
-                            postProgress(context.getString(R.string.progress_pull_building_value)
+                            postProgress(mContext.getString(R.string.progress_pull_building_value)
                                     + String.format(" %s", i));
                         }
                         dataValueExtended.accept(converter);

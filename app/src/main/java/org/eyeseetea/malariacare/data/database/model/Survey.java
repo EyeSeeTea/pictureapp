@@ -43,12 +43,12 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.exporter.IConvertToSDKVisitor;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
+import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
+import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;

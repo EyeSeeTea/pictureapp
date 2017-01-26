@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.data.database.datasources;
 
-import static org.eyeseetea.malariacare.data.database.utils.Session.getCredentials;
-
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
@@ -63,13 +61,6 @@ public class UserAccountLocalDataSource implements IUserAccountDataSource {
         PreferencesState.getInstance().reloadPreferences();
     }
 
-/*    @Override
-    public void getCurrentUserAccount(IDataSourceCallback<UserAccount> callback) {
-        Credentials credentials = Session.getCredentials();
-        UserAccount userAccount = new UserAccount(credentials.getUsername(), credentials.isDemoCredentials());
-
-        callback.onSuccess(userAccount);
-    }*/
 
     private void clearCredentials() {
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,

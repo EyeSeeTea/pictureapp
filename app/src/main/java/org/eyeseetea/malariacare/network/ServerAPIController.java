@@ -186,6 +186,7 @@ public class ServerAPIController {
         return programUID;
     }
 
+    //TODO jsanchez necessary for lao and cambodia
     /**
      * Returns hardcoded credentials for its use in sdk
      */

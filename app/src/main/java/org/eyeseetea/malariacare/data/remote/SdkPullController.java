@@ -5,7 +5,6 @@ import static org.hisp.dhis.client.sdk.models.program.ProgramType.WITHOUT_REGIST
 import android.content.Context;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.PullController;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
 import org.hisp.dhis.client.sdk.core.common.preferences.ResourceType;
@@ -92,7 +91,6 @@ public class SdkPullController extends SdkController {
         }
     }
 
-
     public static void loadMetaDataAndData() {
         pullData = true;
         loadMetaData();
@@ -131,14 +129,15 @@ public class SdkPullController extends SdkController {
 
 
     private static void convertData() {
-        if (asyncDownloads == 0) {
+        //TODO jsanchez
+        /*if (asyncDownloads == 0) {
             if (!errorOnPull) {
                 PullController.getInstance().startConversion();
                 postFinish();
             } else {
                 pullFail();
             }
-        }
+        }*/
     }
 
     /**

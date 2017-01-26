@@ -17,17 +17,17 @@
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models;
+package org.eyeseetea.malariacare.data.sync.importer.models;
 
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.IConvertFromSDKVisitor;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.VisitableFromSDK;
 import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataValueFlow;
+import org.eyeseetea.malariacare.data.sync.importer.IConvertFromSDKVisitor;
+import org.eyeseetea.malariacare.data.sync.importer.VisitableFromSDK;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
+import org.hisp.dhis.client.sdk.models.trackedentity.TrackedEntityDataValue;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,13 +39,13 @@ public class DataValueExtended implements VisitableFromSDK {
     private final static String TAG = ".DataValueExtended";
     private final static String REGEXP_FACTOR = ".*\\[([0-9]*)\\]";
 
-    DataValueFlow dataValue;
+    TrackedEntityDataValueFlow dataValue;
 
     public DataValueExtended() {
-        dataValue = new DataValueFlow();
+        dataValue = new TrackedEntityDataValueFlow();
     }
 
-    public DataValueExtended(DataValueFlow dataValue) {
+    public DataValueExtended(TrackedEntityDataValueFlow dataValue) {
         this.dataValue = dataValue;
     }
 
@@ -54,7 +54,7 @@ public class DataValueExtended implements VisitableFromSDK {
         visitor.visit(this);
     }
 
-    public DataValueFlow getDataValue() {
+    public TrackedEntityDataValueFlow getDataValue() {
         return dataValue;
     }
 
@@ -96,22 +96,21 @@ public class DataValueExtended implements VisitableFromSDK {
     }
 
     public String getEvent() {
-        return dataValue.getEvent();
+        return dataValue.getEvent().getUId();
     }
 
     public void setDataElement(String uid) {
         dataValue.setDataElement(uid);
     }
     public void setLocalEventId(Long id) {
-        dataValue.setLocalId(id);
+        dataValue.setId(id);
     }
 
     public void setEvent(EventFlow event) {
-        dataValue.setEvent(event.getUId());
+        dataValue.setEvent(event);
     }
 
     public void setProvidedElsewhere(boolean b) {
-        dataValue.setProvidedElsewhere(b);
     }
 
     public void setStoredBy(String name) {

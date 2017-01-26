@@ -43,7 +43,6 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
@@ -697,9 +696,9 @@ public class DashboardActivity extends BaseActivity {
                             dashboardActivity);
                     LoginUseCase loginUseCase = new LoginUseCase(userAccountRepository);
 
-                    Credentials demoCrededentials = Credentials.createDemoCredentials();
+                    Credentials demoCredentials = Credentials.createDemoCredentials();
 
-                    loginUseCase.execute(demoCrededentials, new ALoginUseCase.Callback() {
+                    loginUseCase.execute(demoCredentials, new ALoginUseCase.Callback() {
                         @Override
                         public void onLoginSuccess() {
                             Log.d(TAG, "Login Success");
@@ -721,8 +720,6 @@ public class DashboardActivity extends BaseActivity {
                         }
                     });
                 }
-
-                PopulateDB.initDataIfRequired(getAssets());
             } catch (Exception ex) {
                 Log.e(TAG, "Error initializing DB: ", ex);
                 return ex;

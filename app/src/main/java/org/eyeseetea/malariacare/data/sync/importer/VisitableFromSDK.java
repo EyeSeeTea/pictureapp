@@ -17,19 +17,8 @@
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.data.database.iomodules.dhis.importer;
+package org.eyeseetea.malariacare.data.sync.importer;
 
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.DataValueExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.EventExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.OrganisationUnitExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.UserAccountExtended;
-
-public interface IConvertFromSDKVisitor {
-    void visit(OrganisationUnitExtended organisationUnit);
-
-    void visit(UserAccountExtended userAccount);
-
-    void visit(EventExtended sdkEventExtended);
-
-    void visit(DataValueExtended sdkDataValueExtended);
+public interface VisitableFromSDK {
+    void accept(IConvertFromSDKVisitor IConvertFromSDKVisitor);
 }

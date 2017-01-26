@@ -17,7 +17,7 @@
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.data.database.iomodules.dhis.exporter;
+package org.eyeseetea.malariacare.data.sync.exporter;
 
 import android.content.Context;
 import android.location.Location;
@@ -26,15 +26,15 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.DataValueExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.EventExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.FailedItemExtended;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
+import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
+import org.eyeseetea.malariacare.data.sync.importer.models.FailedItemExtended;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -53,8 +53,7 @@ import java.util.Map;
 /**
  * Turns a given survey into its corresponding events+datavalues.
  */
-public class ConvertToSDKVisitor implements
-        org.eyeseetea.malariacare.data.database.iomodules.dhis.exporter.IConvertToSDKVisitor {
+public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
     private final static String TAG = ".ConvertToSDKVisitor";
 

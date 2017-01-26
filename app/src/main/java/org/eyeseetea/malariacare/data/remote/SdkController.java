@@ -21,7 +21,7 @@ package org.eyeseetea.malariacare.data.remote;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.EventExtended;
+import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.hisp.dhis.client.sdk.android.api.persistence.DbDhis;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.AttributeFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataElementFlow;
@@ -104,13 +104,13 @@ public abstract class SdkController {
 
     public static boolean finishPullJob() {
         /*
-        if (JobExecutor.isJobRunning(PullController.job.getJobId())) {
-            Log.d(TAG, "Job " + PullController.job.getJobId() + " is running");
-            PullController.job.cancel(true);
+        if (JobExecutor.isJobRunning(IPullController.job.getJobId())) {
+            Log.d(TAG, "Job " + IPullController.job.getJobId() + " is running");
+            IPullController.job.cancel(true);
             try {
-                try {JobExecutor.getInstance().dequeueRunningJob(PullController.job);} catch
+                try {JobExecutor.getInstance().dequeueRunningJob(IPullController.job);} catch
                 (Exception e) {e.printStackTrace();}
-                PullController.job.cancel(true);
+                IPullController.job.cancel(true);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

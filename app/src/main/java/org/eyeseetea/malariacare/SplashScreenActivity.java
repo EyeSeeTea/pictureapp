@@ -14,25 +14,18 @@ import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
-import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
 import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
-import org.eyeseetea.malariacare.domain.usecase.InitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
 import org.eyeseetea.malariacare.views.TypefaceCache;
 import org.hisp.dhis.client.sdk.android.api.D2;
 
-import java.io.IOException;
-
 import io.fabric.sdk.android.Fabric;
-
-/**
- * Created by idelcano on 12/12/2016.
- */
 
 public class SplashScreenActivity extends Activity {
 
@@ -67,41 +60,38 @@ public class SplashScreenActivity extends Activity {
             Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
         }
 
-        try {
-            if (!BuildConfig.multiuser) {
-                Log.i(TAG, "Creating demo login from dashboard ...");
-                IUserAccountRepository userAccountRepository = new UserAccountRepository(this);
-                LoginUseCase loginUseCase = new LoginUseCase(userAccountRepository);
+        if (!BuildConfig.multiuser) {
+            Log.i(TAG, "Creating demo login from dashboard ...");
+            IUserAccountRepository userAccountRepository = new UserAccountRepository(this);
+            LoginUseCase loginUseCase = new LoginUseCase(userAccountRepository);
 
-                Credentials demoCrededentials = Credentials.createDemoCredentials();
+            Credentials demoCrededentials = Credentials.createDemoCredentials();
 
-                loginUseCase.execute(demoCrededentials, new ALoginUseCase.Callback() {
-                    @Override
-                    public void onLoginSuccess() {
-                        Log.d(TAG, "Login Success");
-                    }
+            loginUseCase.execute(demoCrededentials, new ALoginUseCase.Callback() {
+                @Override
+                public void onLoginSuccess() {
+                    Log.d(TAG, "Login Success");
 
-                    @Override
-                    public void onServerURLNotValid() {
-                        Log.e(this.getClass().getSimpleName(), "Server url not valid");
-                    }
+                    //TODO: execute PullUseCase for laos and cambodia here
+                }
 
-                    @Override
-                    public void onInvalidCredentials() {
-                        Log.e(this.getClass().getSimpleName(), "Invalid credentials");
-                    }
+                @Override
+                public void onServerURLNotValid() {
+                    Log.e(this.getClass().getSimpleName(), "Server url not valid");
+                }
 
-                    @Override
-                    public void onNetworkError() {
-                        Log.e(this.getClass().getSimpleName(), "Network Error");
-                    }
-                });
-            }
+                @Override
+                public void onInvalidCredentials() {
+                    Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                }
 
-            PopulateDB.initDataIfRequired(getAssets());
-        } catch (IOException exception) {
-            Log.e("LoginActivity", "ERROR: DB not loaded");
+                @Override
+                public void onNetworkError() {
+                    Log.e(this.getClass().getSimpleName(), "Network Error");
+                }
+            });
         }
+
     }
 
     public class AsyncInitApplication extends AsyncTask<Void, Void, Exception> {
@@ -126,8 +116,8 @@ public class SplashScreenActivity extends Activity {
         @Override
         protected void onPostExecute(final Exception exception) {
             //Error
-            InitUseCase initUseCase = new InitUseCase(activity);
-            initUseCase.finishAndGo();
+            SplashActivityStrategy splashActivityStrategy = new SplashActivityStrategy(activity);
+            splashActivityStrategy.finishAndGo();
         }
     }
 }

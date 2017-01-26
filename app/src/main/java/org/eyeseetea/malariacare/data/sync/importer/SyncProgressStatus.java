@@ -17,7 +17,7 @@
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.data.database.iomodules.dhis.importer;
+package org.eyeseetea.malariacare.data.sync.importer;
 
 /**
  * A simple VO that contains the progress of the pull sync

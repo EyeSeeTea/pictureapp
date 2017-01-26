@@ -49,7 +49,7 @@ public class LoginUseCase extends ALoginUseCase {
         if (orgUnits.size() == 0) {
             try {
                 PopulateDB.populateDummyData(context.getAssets());
-                PullController.convertOUinOptions();
+                IPullController.convertOUinOptions();
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -57,7 +57,7 @@ public class Option extends BaseModel {
     /**
      * Reference to parent answer (loaded lazily)
      */
-    org.eyeseetea.malariacare.data.database.model.Answer answer;
+    Answer answer;
 
     @Column
     long id_option_attribute;
@@ -65,7 +65,7 @@ public class Option extends BaseModel {
     /**
      * Reference to extended option attributes (loaded lazily)
      */
-    org.eyeseetea.malariacare.data.database.model.OptionAttribute optionAttribute;
+    OptionAttribute optionAttribute;
 
     /**
      * List of values that has choosen this option
@@ -75,13 +75,13 @@ public class Option extends BaseModel {
     public Option() {
     }
 
-    public Option(String name, Float factor, org.eyeseetea.malariacare.data.database.model.Answer answer) {
+    public Option(String name, Float factor, Answer answer) {
         this.name = name;
         this.factor = factor;
         this.setAnswer(answer);
     }
 
-    public Option(String code, String name, Float factor, org.eyeseetea.malariacare.data.database.model.Answer answer) {
+    public Option(String code, String name, Float factor, Answer answer) {
         this.name = name;
         this.factor = factor;
         this.code = code;
@@ -143,26 +143,26 @@ public class Option extends BaseModel {
         this.factor = factor;
     }
 
-    public org.eyeseetea.malariacare.data.database.model.Answer getAnswer() {
+    public Answer getAnswer() {
         if (answer == null) {
             if (id_answer == null) return null;
             answer = new Select()
-                    .from(org.eyeseetea.malariacare.data.database.model.Answer.class)
+                    .from(Answer.class)
                     .where(Answer_Table.id_answer
                             .is(id_answer)).querySingle();
         }
         return answer;
     }
 
-    public void setAnswer(org.eyeseetea.malariacare.data.database.model.Answer answer) {
+    public void setAnswer(Answer answer) {
         this.answer = answer;
         this.id_answer = (answer != null) ? answer.getId_answer() : null;
     }
 
-    public org.eyeseetea.malariacare.data.database.model.OptionAttribute getOptionAttribute() {
+    public OptionAttribute getOptionAttribute() {
         if (optionAttribute == null) {
             optionAttribute = new Select().from(
-                    org.eyeseetea.malariacare.data.database.model.OptionAttribute.class)
+                    OptionAttribute.class)
                     .where(OptionAttribute_Table.id_option_attribute.eq(
                             id_option_attribute)).querySingle();
         }
@@ -170,7 +170,7 @@ public class Option extends BaseModel {
     }
 
     public void setOptionAttribute(
-            org.eyeseetea.malariacare.data.database.model.OptionAttribute optionAttribute) {
+            OptionAttribute optionAttribute) {
         this.optionAttribute = optionAttribute;
         this.id_option_attribute =
                 (optionAttribute != null) ? optionAttribute.getId_option_attribute() : null;
@@ -180,7 +180,7 @@ public class Option extends BaseModel {
      * Getter for extended option attribute 'path'
      */
     public String getPath() {
-        org.eyeseetea.malariacare.data.database.model.OptionAttribute optionAttribute = this.getOptionAttribute();
+        OptionAttribute optionAttribute = this.getOptionAttribute();
         if (optionAttribute == null) {
             return null;
         }
@@ -192,7 +192,7 @@ public class Option extends BaseModel {
      * Getter for extended option attribute 'path' translation in paths.xml
      */
     public String getInternationalizedPath() {
-        org.eyeseetea.malariacare.data.database.model.OptionAttribute optionAttribute = this.getOptionAttribute();
+        OptionAttribute optionAttribute = this.getOptionAttribute();
         if (optionAttribute == null) {
             return null;
         }
@@ -204,7 +204,7 @@ public class Option extends BaseModel {
      * Getter for extended option attribute 'backgroundColor'
      */
     public String getBackground_colour() {
-        org.eyeseetea.malariacare.data.database.model.OptionAttribute optionAttribute = this.getOptionAttribute();
+        OptionAttribute optionAttribute = this.getOptionAttribute();
         if (optionAttribute == null) {
             return null;
         }
@@ -281,15 +281,15 @@ public class Option extends BaseModel {
     /**
      * Gets the Question of this Option in session
      */
-    public org.eyeseetea.malariacare.data.database.model.Question getQuestionBySession() {
+    public Question getQuestionBySession() {
         return getQuestionBySurvey(Session.getSurvey());
     }
 
     /**
      * Gets the Question of this Option in the given Survey
      */
-    public org.eyeseetea.malariacare.data.database.model.Question getQuestionBySurvey(
-            org.eyeseetea.malariacare.data.database.model.Survey survey) {
+    public Question getQuestionBySurvey(
+            Survey survey) {
         if (survey == null) {
             return null;
         }

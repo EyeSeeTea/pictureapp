@@ -53,8 +53,7 @@ import java.util.Map;
 /**
  * Turns a given survey into its corresponding events+datavalues.
  */
-public class ConvertToSDKVisitor implements
-        org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor {
+public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
     private final static String TAG = ".ConvertToSDKVisitor";
 

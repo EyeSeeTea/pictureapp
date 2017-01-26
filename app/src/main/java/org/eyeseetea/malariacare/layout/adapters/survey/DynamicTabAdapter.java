@@ -82,6 +82,8 @@ import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.NumberRadioButtonMultiquestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion
+        .DynamicStockImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .ConfirmCounterSingleCustomViewStrategy;
@@ -449,8 +451,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     screenQuestions = treatment.getQuestions();
                     doseByQuestion = treatment.getDoseByQuestion();
                 }
-            } else {
+            } else if (isMultipleQuestionTab(tabType)) {
                 screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
+            } else {
+                screenQuestions.add(questionItem);
             }
             swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
                     R.id.scrolled_table)).findViewById(R.id.table_scroll));
@@ -494,7 +498,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         int visibility = View.GONE;
 
         Survey survey = null;
-        if (screenQuestion.isStockQuestion()) {
+        if (screenQuestion.isStockQuestion() || isDynamicStockQuestion(screenQuestion)) {
             survey = Session.getStockSurvey();
         } else {
             survey = Session.getMalariaSurvey();
@@ -532,11 +536,38 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 ((IImageQuestionView) questionView).setImage(
                         screenQuestion.getInternationalizedPath());
             }
+            if (isDynamicStockQuestion(screenQuestion)) {
+                Treatment treatment = new Treatment(Session.getMalariaSurvey(),
+                        Session.getStockSurvey());
+                treatment.getACTQuestionAnsweredNo();
+                screenQuestion.setAnswer(treatment.getACTOptions());
+                ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptionDose(
+                        treatment.getOptionDose());
+                ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setQuestion(
+                        screenQuestion);
+                ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptions(
+                        screenQuestion.getAnswer().getOptions());
+
+                ArrayList<Question> questions = new ArrayList<>();
+                for (Option option : screenQuestion.getAnswer().getOptions()) {
+                    Question question = Treatment.getQuestionFromOptionId(option.getId_option());
+                    if (question != null) {
+                        questions.add(question);
+                    }
+                }
+                survey.getValuesFromDB();
+                for (Question question : questions) {
+                    Value valueStock = question.getValueBySession();
+                    questionView.setValue(valueStock);
+                }
+            }
+
 
             if (questionView instanceof AOptionQuestionView) {
                 ((AOptionQuestionView) questionView).setQuestion(screenQuestion);
+                List<Option> options = screenQuestion.getAnswer().getOptions();
                 ((AOptionQuestionView) questionView).setOptions(
-                        screenQuestion.getAnswer().getOptions());
+                        options);
             }
 
             if (questionView instanceof NumberRadioButtonMultiquestionView) {
@@ -599,7 +630,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private boolean isTabScrollable(Question questionItem, int tabType) {
         return isMultipleQuestionTab(tabType) || isDynamicTreatmentTab(tabType)
                 || questionItem.getOutput() == Constants.IMAGE_RADIO_GROUP
-                || questionItem.getOutput() == Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT;
+                || questionItem.getOutput() == Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT
+                || questionItem.getOutput() == Constants.DYNAMIC_STOCK_IMAGE_RADIO_BUTTON;
     }
 
     private void configureAnswerChangedListener(IQuestionView questionView) {
@@ -616,6 +648,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             ((NumberRadioButtonMultiquestionView) questionView).setOnAnswerChangedListener(
                     new QuestionAnswerChangedListener(tableLayout, this,
                             !GradleVariantConfig.isButtonNavigationActive()));
+        } else if (questionView instanceof DynamicStockImageRadioButtonSingleQuestionView) {
+            ((DynamicStockImageRadioButtonSingleQuestionView) questionView)
+                    .setOnAnswerChangedListener(
+                            new QuestionAnswerChangedListener(tableLayout, this,
+                                    !GradleVariantConfig.isButtonNavigationActive()));
         }
     }
 
@@ -770,6 +807,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return tabType == Constants.TAB_DYNAMIC_TREATMENT;
     }
 
+    private boolean isDynamicStockQuestion(Question question) {
+        if (question != null && question.getUid() != null) {
+            return question.getUid().equals("9cV1JoHmO95");
+        }
+        return false;
+    }
+
     /**
      * Adds question as tag in a view to identify the answers
      */
@@ -922,6 +966,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             isClicked = false;
             return;
         }
+
+
         if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
 
             UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();
@@ -994,18 +1040,33 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Changes the current question moving forward
      */
     private void next() {
+        Treatment treatment = new Treatment(Session.getMalariaSurvey(), Session.getStockSurvey());
+        Question actQuestion = treatment.getACTQuestionAnsweredNo();
         Question question = navigationController.getCurrentQuestion();
-        Value value = question.getValueBySession();
-        if (isDone(value)) {
-            navigationController.isMovingToForward = false;
-            return;
+        Value value = null;
+        if (actQuestion != null && isDynamicTreatmentTab(question.getHeader().getTab().getType())) {
+            Question question1 = Question.findByUID("9cV1JoHmO95");
+            navigationController.setCurrentquestion(question1);
+//           value= new Value(Option.findByCode("dynamic_treatment_no"),question,getMalariaSurvey
+//            question = actQuestion;
+
+        } else {
+            question = navigationController.getCurrentQuestion();
+
+            value = question.getValueBySession();
+
+            if (isDone(value)) {
+                navigationController.isMovingToForward = false;
+                return;
+            }
+            navigationController.next(value != null ? value.getOption() : null);
         }
-        navigationController.next(value != null ? value.getOption() : null);
         notifyDataSetChanged();
         hideKeyboard(PreferencesState.getInstance().getContext());
 
         question = navigationController.getCurrentQuestion();
         value = question.getValueBySession();
+
         //set new page number if the value is null
         if (value == null && !readOnly) {
             navigationController.setTotalPages(

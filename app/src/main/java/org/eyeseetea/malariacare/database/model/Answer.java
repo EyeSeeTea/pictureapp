@@ -98,6 +98,10 @@ public class Answer extends BaseModel {
         return options;
     }
 
+    public void setOptions(List<Option> options) {
+        this.options = options;
+    }
+
     public List<Question> getQuestions() {
         if (questions == null) {
             questions = new Select()

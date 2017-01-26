@@ -1376,7 +1376,7 @@ public class Question extends BaseModel {
     }
 
     public boolean isStockQuestion() {
-        if (header != null && header.getName().equals("Stock")) {
+        if (getHeader() != null && getHeader().getName().equals("Stock")) {
             return true;
         }
         return false;

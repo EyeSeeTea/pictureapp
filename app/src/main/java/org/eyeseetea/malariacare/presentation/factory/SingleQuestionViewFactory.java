@@ -6,6 +6,8 @@ import android.content.Context;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PositiveOrZeroNumberMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion
+        .DynamicStockImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageOptionSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PhoneSingleQuestionView;
@@ -26,6 +28,8 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
                 return new ImageRadioButtonSingleQuestionView(context);
             case Constants.IMAGE_RADIO_GROUP:
                 return new ImageRadioButtonSingleQuestionView(context);
+            case Constants.DYNAMIC_STOCK_IMAGE_RADIO_BUTTON:
+                return new DynamicStockImageRadioButtonSingleQuestionView(context);
             case Constants.REMINDER:
             case Constants.WARNING:
                 return new ReminderSingleQuestionView(context);

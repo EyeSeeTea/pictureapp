@@ -33,7 +33,8 @@ public class Constants {
             IMAGE_RADIO_GROUP_NO_DATAELEMENT = 24,
             IMAGE_RADIO_GROUP = 25,
             POSITIVE_OR_ZERO_INT = 26,
-            DYNAMIC_TREATMENT_SWITCH_NUMBER = 27;
+            DYNAMIC_TREATMENT_SWITCH_NUMBER = 27,
+            DYNAMIC_STOCK_IMAGE_RADIO_BUTTON = 28;
 
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(

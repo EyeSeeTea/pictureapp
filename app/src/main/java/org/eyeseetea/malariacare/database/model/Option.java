@@ -105,6 +105,12 @@ public class Option extends BaseModel {
                 .where(Condition.column(Option$Table.ID_OPTION).eq(id)).querySingle();
     }
 
+    public static Option findByCode(String code) {
+        return new Select()
+                .from(Option.class)
+                .where(Condition.column(Option$Table.CODE).eq(code)).querySingle();
+    }
+
     public Long getId_option() {
         return id_option;
     }

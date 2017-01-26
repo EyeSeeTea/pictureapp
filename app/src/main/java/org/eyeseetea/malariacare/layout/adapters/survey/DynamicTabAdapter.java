@@ -539,10 +539,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (isDynamicStockQuestion(screenQuestion)) {
                 Treatment treatment = new Treatment(Session.getMalariaSurvey(),
                         Session.getStockSurvey());
-                treatment.getACTQuestionAnsweredNo();
-                screenQuestion.setAnswer(treatment.getACTOptions());
+                Question actAnsweredNo = treatment.getACTQuestionAnsweredNo();
+                screenQuestion.setAnswer(treatment.getACTOptions(actAnsweredNo));
                 ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptionDose(
-                        treatment.getOptionDose());
+                        treatment.getOptionDose(actAnsweredNo));
                 ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setQuestion(
                         screenQuestion);
                 ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptions(
@@ -654,6 +654,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } else if (questionView instanceof DynamicStockImageRadioButtonSingleQuestionView) {
             ((DynamicStockImageRadioButtonSingleQuestionView) questionView)
                     .setOnAnswerChangedListener(
+                            new QuestionAnswerChangedListener(tableLayout, this,
+                                    !GradleVariantConfig.isButtonNavigationActive()));
+            ((DynamicStockImageRadioButtonSingleQuestionView) questionView)
+                    .setOnAnswerOptionChangedListener(
                             new QuestionAnswerChangedListener(tableLayout, this,
                                     !GradleVariantConfig.isButtonNavigationActive()));
         }

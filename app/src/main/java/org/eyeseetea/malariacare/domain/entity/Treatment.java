@@ -16,7 +16,6 @@ import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class Treatment {
@@ -30,7 +29,6 @@ public class Treatment {
     public static final Long ID_OP_ACT6 = 101L, ID_OP_ACT12 = 102L, ID_OP_ACT18 = 103L,
             ID_OP_ACT24 = 104L, ID_OP_OUT_STOCK = 105L;
     private HashMap<Long, Float> optionDose;
-    private boolean isACT24Question, isACT18Question, isACT12Question, isACT6Question;
 
     public Treatment(Survey malariaSurvey, Survey stockSurvey) {
         mMalariaSurvey = malariaSurvey;
@@ -42,33 +40,11 @@ public class Treatment {
         mTreatment = getTreatmentFromSurvey();
         if (mTreatment != null) {
             mQuestions = getQuestionsForTreatment(mTreatment);
-            removeOldQuestionsFromSurvey();
         }
-
         return mTreatment != null;
     }
 
-    public static Question getQuestionFromOptionId(Long optionId) {
-        String uid = "";
-        boolean notOutStock = true;
-        if (optionId == ID_OP_ACT24) {
-            uid = "RUqD8Kckt3B";
-        } else if (optionId == ID_OP_ACT18) {
-            uid = "GqHQPu6yCfu";
-        } else if (optionId == ID_OP_ACT12) {
-            uid = "nN4jwsyjmE9";
-        } else if (optionId == ID_OP_ACT6) {
-            uid = "ihlfWLBg7Nr";
-        } else {
-            notOutStock = false;
-        }
-        if (!notOutStock) {
-            return null;
-        }
-        Question question = Question.findByUID(uid);
-        question.getHeader();
-        return Question.findByUID(uid);
-    }
+
 
     public List<Question> getQuestions() {
         return mQuestions;
@@ -78,24 +54,24 @@ public class Treatment {
         return doseByQuestion;
     }
 
-    public HashMap<Long, Float> getOptionDose() {
+    public HashMap<Long, Float> getOptionDose(Question question) {
         optionDose = new HashMap<>();
-        if (isACT6Question) {
+        if (isACT6Question(question)) {
             optionDose.put(ID_OP_ACT12, 0.5f);
             optionDose.put(ID_OP_ACT18, 0.3f);
             optionDose.put(ID_OP_ACT24, 0.25f);
         }
-        if (isACT12Question) {
+        if (isACT12Question(question)) {
             optionDose.put(ID_OP_ACT6, 2f);
             optionDose.put(ID_OP_ACT18, 0.6f);
             optionDose.put(ID_OP_ACT24, 0.5f);
         }
-        if (isACT18Question) {
+        if (isACT18Question(question)) {
             optionDose.put(ID_OP_ACT6, 3f);
             optionDose.put(ID_OP_ACT12, 1.5f);
             optionDose.put(ID_OP_ACT24, 0.75f);
         }
-        if (isACT24Question) {
+        if (isACT24Question(question)) {
             optionDose.put(ID_OP_ACT6, 4f);
             optionDose.put(ID_OP_ACT12, 2f);
             optionDose.put(ID_OP_ACT18, 1.3f);
@@ -111,54 +87,63 @@ public class Treatment {
     public Question getACTQuestionAnsweredNo() {
         List<Question> questions = mStockSurvey.getQuestionsFromValues();
         Question actQuestion = null;
-        isACT24Question = false;
-        isACT12Question = false;
-        isACT18Question = false;
-        isACT6Question = false;
         for (Question question : questions) {
             if (isACT24Question(question) || isACT18Question(question) || isACT12Question(question)
                     || isACT6Question(question)) {
                 actQuestion = question;
-                break;
-            }
-        }
-        if (actQuestion != null) {
-            List<Value> values = mStockSurvey.getValuesFromDB();
-            for (Value value : values) {
-                if (value.getQuestion().getId_question().equals(actQuestion.getId_question())) {
-                    if (Integer.parseInt(value.getValue()) == 0) {
-                        return actQuestion;
+                List<Value> values = mStockSurvey.getValuesFromDB();
+                for (Value value : values) {
+                    if (value.getQuestion().getId_question().equals(actQuestion.getId_question())) {
+                        if (Float.parseFloat(value.getValue()) == 0) {
+                            return actQuestion;
+                        }
                     }
                 }
             }
         }
+
         return null;
     }
 
+    private boolean isACT6Question(Question question) {
+        if (question != null && question.getUid().equals("ihlfWLBg7Nr")) {
+            return true;
+        }
+        return false;
+    }
     private boolean isACT24Question(Question question) {
-        if (question.getUid().equals("RUqD8Kckt3B")) {
-            isACT24Question = true;
+        if (question != null && question.getUid().equals("RUqD8Kckt3B")) {
             return true;
         }
         return false;
     }
 
     private boolean isACT18Question(Question question) {
-        if (question.getUid().equals("GqHQPu6yCfu")) {
-            isACT18Question = true;
+        if (question != null && question.getUid().equals("GqHQPu6yCfu")) {
             return true;
         }
         return false;
     }
 
     private boolean isACT12Question(Question question) {
-        if (question.getUid().equals("nN4jwsyjmE9")) {
-            isACT12Question = true;
+        if (question != null && question.getUid().equals("nN4jwsyjmE9")) {
             return true;
         }
         return false;
     }
 
+    public static boolean isACTQuestion(Question question) {
+        if (question.getUid().equals("nN4jwsyjmE9") || question.getUid().equals("GqHQPu6yCfu")
+                || question.getUid().equals("RUqD8Kckt3B") || question.getUid().equals(
+                "ihlfWLBg7Nr")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static Question getTreatmentQuestion() {
+        return Question.findByUID("9cV1JoHmO94");
+    }
 
     private org.eyeseetea.malariacare.database.model.Treatment getTreatmentFromSurvey() {
 
@@ -174,17 +159,21 @@ public class Treatment {
                 ageMatches =
                         QuestionThreshold.getMatchesWithQuestionValue(
                                 question.getId_question(), Integer.parseInt(value.getValue()));
+                Log.d(TAG, "age size: "+ageMatches.size());
             } else if (question.getUid().equals("6VV1JoHmO94")) {
                 pregnantMatches = QuestionOption.getMatchesWithQuestionOption(
                         question.getId_question(),
                         value.getId_option());
+                Log.d(TAG, "pregnant size: "+pregnantMatches.size());
             } else if (question.getUid().equals("11V1JoHmO94")) {
                 severeMatches = QuestionOption.getMatchesWithQuestionOption(
                         question.getId_question(),
                         value.getId_option());
+                Log.d(TAG, "severe size: "+severeMatches.size());
             } else if (question.getUid().equals("12V1JoHmO94")) {
                 rdtMatches = QuestionOption.getMatchesWithQuestionOption(question.getId_question(),
                         value.getId_option());
+                Log.d(TAG, "rdt size: "+rdtMatches.size());
             }
         }
         Log.d(TAG, "matches obtained");
@@ -286,36 +275,28 @@ public class Treatment {
         return "drugs_referral_Cq_review_title";
     }
 
-    private boolean isACT6Question(Question question) {
-        if (question.getUid().equals("ihlfWLBg7Nr")) {
-            isACT6Question = true;
-            return true;
+    public static Question getQuestionFromOptionId(Long optionId) {
+        String uid = "";
+        if (optionId == ID_OP_ACT24) {
+            uid = "RUqD8Kckt3B";
+        } else if (optionId == ID_OP_ACT18) {
+            uid = "GqHQPu6yCfu";
+        } else if (optionId == ID_OP_ACT12) {
+            uid = "nN4jwsyjmE9";
+        } else if (optionId == ID_OP_ACT6) {
+            uid = "ihlfWLBg7Nr";
+        } else {
+            uid = "ZEopAP6tQN4";
         }
-        return false;
+        Question question = Question.findByUID(uid);
+        question.getHeader();
+        return Question.findByUID(uid);
     }
 
-    private void removeOldQuestionsFromSurvey() {
-        List<Value> values = mStockSurvey.getValues();
-        Iterator<Value> iterator = values.iterator();
-        while (iterator.hasNext()) {
-            Value value = iterator.next();
-            boolean isInQuestions = false;
-            for (Question question : mQuestions) {
-                if (value.getQuestion().getId_question() == question.getId_question()) {
-                    isInQuestions = true;
-                }
-            }
-            if (!isInQuestions) {
-                iterator.remove();
-                value.delete();
-            }
-        }
 
-    }
-
-    public Answer getACTOptions() {
+    public Answer getACTOptions(Question question) {
         List<Option> options = new ArrayList<>();
-        Answer answer = new Answer("test");
+        Answer answer = new Answer("stock");
         answer.setId_answer((long) 204);
 
         Option optionACT24 = new Option("ACT_x_24", "ACT_x_24", (float) 0, answer);
@@ -336,20 +317,19 @@ public class Treatment {
                 new OptionAttribute("c8b8c7", "question_images/p5_actx18.png"));
         Option optionOutStock = new Option("out_stock_option", "out_stock_option", (float) 0,
                 answer);
-
         optionOutStock.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p6_out_stock.png"));
         optionOutStock.setId_option(ID_OP_OUT_STOCK);
-        if (!isACT12Question) {
+        if (!isACT12Question(question)) {
             options.add(optionACT12);
         }
-        if (!isACT6Question) {
+        if (!isACT6Question(question)) {
             options.add(optionACT6);
         }
-        if (!isACT18Question) {
+        if (!isACT18Question(question)) {
             options.add(optionACT18);
         }
-        if (!isACT24Question) {
+        if (!isACT24Question(question)) {
             options.add(optionACT24);
         }
         options.add(optionOutStock);
@@ -358,6 +338,5 @@ public class Treatment {
 
         return answer;
     }
-
 
 }

@@ -76,6 +76,10 @@ public class ReadWriteDB {
         if (option == null) {
             return;
         }
+        if (question.isTreatmentQuestion() && value != null
+                && !option.getId_option().equals(value.getId_option())) {
+            deleteStockSurveyValues();
+        }
 
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
             if (value == null) {
@@ -103,6 +107,8 @@ public class ReadWriteDB {
         } else {
             if (value != null) value.delete();
         }
+
+
     }
 
     public static void saveValuesText(Question question, String answer) {
@@ -114,14 +120,23 @@ public class ReadWriteDB {
         } else {
             survey = Session.getMalariaSurvey();
         }
-        // If the value is not found we create one
-        if (value == null) {
-            value = new Value(answer, question, survey);
-        } else {
-            value.setOption((Long) null);
-            value.setValue(answer);
+
+        if (question.isTreatmentQuestion() && value != null && !value.getValue().equals(answer)) {
+            deleteStockSurveyValues();
         }
-        value.save();
+        if (question.isStockQuestion() && value != null && answer.equals("-1")) {
+            value.delete();
+        } else {
+            // If the value is not found we create one
+            if (value == null) {
+                value = new Value(answer, question, survey);
+            } else {
+                value.setOption((Long) null);
+                value.setValue(answer);
+            }
+            value.save();
+        }
+
     }
 
     public static void deleteValue(Question question) {
@@ -130,6 +145,22 @@ public class ReadWriteDB {
 
         if (value != null) {
             value.delete();
+        }
+    }
+
+
+    public static void deleteStockSurveyValues() {
+        Survey survey = Session.getStockSurvey();
+        List<Value> stockValues = survey.getValues();
+        for (Value value : stockValues) {
+            value.delete();
+        }
+        Survey malariaSurvey = Session.getMalariaSurvey();
+        List<Value> malariaValues = malariaSurvey.getValues();
+        for (Value value : malariaValues) {
+            if (value.getQuestion().isOutStockQuestion()) {
+                value.delete();
+            }
         }
     }
 

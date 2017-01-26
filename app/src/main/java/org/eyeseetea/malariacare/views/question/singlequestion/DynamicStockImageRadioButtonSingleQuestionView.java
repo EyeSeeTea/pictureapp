@@ -15,6 +15,7 @@ import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
+import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         IQuestionView, ImageRadioButtonOption.OnCheckedChangeListener {
 
     protected AKeyboardQuestionView.onAnswerChangedListener mOnAnswerChangedListener;
+    protected AOptionQuestionView.onAnswerChangedListener mOnAnswerOptionChangedListener;
     Question mQuestion;
     LinearLayout answersContainer;
     HashMap<Long, Float> optionDose;
@@ -121,14 +123,31 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
 
             if (imageRadioButton != optionView && optionView.isChecked()) {
                 optionView.setChecked(false);
-                if (optionView.getTag() != null) {
-                    notifyAnswerChanged(optionView, String.valueOf(0));
+                Question question = (Question) optionView.getTag();
+                if (!question.isOutStockQuestion()) {
+                    notifyAnswerChanged(optionView, String.valueOf(-1));
+                } else {
+                    List<Option> options = question.getAnswer().getOptions();
+                    for (Option option : options) {
+                        if (option.getName().equals("No")) {
+                            notifyAnsweOptionChange(optionView, option);
+                        }
+                    }
                 }
+
             }
         }
-        if (imageRadioButton.getTag() != null) {
+        Question question = (Question) imageRadioButton.getTag();
+        if (!question.isOutStockQuestion()) {
             notifyAnswerChanged(imageRadioButton,
                     String.valueOf(optionDose.get(imageRadioButton.getOption().getId_option())));
+        } else {
+            List<Option> options = question.getAnswer().getOptions();
+            for (Option option : options) {
+                if (option.getName().equals("Yes")) {
+                    notifyAnsweOptionChange(imageRadioButton, option);
+                }
+            }
         }
 
     }
@@ -154,12 +173,19 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             ImageRadioButtonOption imageRadioButtonOption =
                     (ImageRadioButtonOption) answersContainer.getChildAt(i);
             Question question = (Question) imageRadioButtonOption.getTag();
-
-            if (question != null
+            if (!question.isOutStockQuestion()
                     && question.getId_question().equals(value.getQuestion().getId_question())
                     && Float.parseFloat(
                     value.getValue()) > 0) {
                 imageRadioButtonOption.setChecked(true);
+            } else if (question.getId_question().equals(value.getQuestion().getId_question())) {
+                List<Option> options = question.getAnswer().getOptions();
+                for (Option option : options) {
+                    if (option.getName().equals("Yes") && option.getId_option().equals(
+                            value.getId_option())) {
+                        imageRadioButtonOption.setChecked(true);
+                    }
+                }
             }
         }
     }
@@ -171,8 +197,19 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         }
     }
 
+    protected void notifyAnsweOptionChange(View view, Option option) {
+        if (mOnAnswerOptionChangedListener != null) {
+            mOnAnswerOptionChangedListener.onAnswerChanged(view, option);
+        }
+    }
+
     public void setOnAnswerChangedListener(
             AKeyboardQuestionView.onAnswerChangedListener onAnswerChangedListener) {
         mOnAnswerChangedListener = onAnswerChangedListener;
+    }
+
+    public void setOnAnswerOptionChangedListener(
+            AOptionQuestionView.onAnswerChangedListener onAnswerOptionChangedListener) {
+        mOnAnswerOptionChangedListener = onAnswerOptionChangedListener;
     }
 }

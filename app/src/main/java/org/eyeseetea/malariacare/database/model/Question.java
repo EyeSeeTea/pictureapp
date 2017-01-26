@@ -1382,6 +1382,14 @@ public class Question extends BaseModel {
         return false;
     }
 
+    public boolean isDynamicStockQuestion() {
+        if (getUid() != null) {
+            return getUid().equals("9cV1JoHmO95");
+        }
+        return false;
+    }
+
+
     /**
      * Returns if the question is a counter or not
      */
@@ -1394,13 +1402,41 @@ public class Question extends BaseModel {
         return questionRelation != null;
     }
 
+    public boolean isTreatmentQuestion() {
+        if (uid.equals("2XX1JoHmO94") || uid.equals("6VV1JoHmO94") || uid.equals("11V1JoHmO94")
+                || uid.equals("12V1JoHmO94")) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isOutStockQuestion() {
+        if (uid.equals("ZEopAP6tQN4")) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean hasCompulsoryNotAnswered() {
         List<Question> questions = new ArrayList<>();
         //get all the questions in the same screen page
         if (getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
             questions = getQuestionsByTab(getHeader().getTab());
+        } else if (isDynamicStockQuestion()) {
+            List<Option> options = getAnswer().getOptions();
+            for (Option option : options) {
+                Question question =
+                        org.eyeseetea.malariacare.domain.entity.Treatment.getQuestionFromOptionId(
+                                option.getId_option());
+                if (!isNotAnswered(question)) {
+                    questions.add(question);
+                }
+            }
         } else {
             questions.add(this);
+        }
+        if (questions.size() == 0) {
+            return true;
         }
         for (Question question : questions) {
             Survey survey = null;

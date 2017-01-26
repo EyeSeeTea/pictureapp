@@ -22,10 +22,13 @@ package org.eyeseetea.malariacare.data.database.iomodules.dhis.importer;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.EventExtended;
-import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.OrganisationUnitExtended;
+import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models
+        .OrganisationUnitExtended;
 import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.UserAccountExtended;
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
+import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitLevel;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -40,8 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ConvertFromSDKVisitor implements
-        org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.IConvertFromSDKVisitor {
+public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     private final static String TAG = ".ConvertFromSDKVisitor";
 
@@ -89,8 +91,7 @@ public class ConvertFromSDKVisitor implements
     @Override
     public void visit(OrganisationUnitExtended sdkOrganisationUnitExtended) {
         //Create and save OrgUnitLevel
-        org.eyeseetea.malariacare.data.database.model.OrgUnitLevel orgUnitLevel =
-                new org.eyeseetea.malariacare.data.database.model.OrgUnitLevel();
+        OrgUnitLevel orgUnitLevel = new OrgUnitLevel();
         if (!appMapObjects.containsKey(String.valueOf(sdkOrganisationUnitExtended.getLevel()))) {
             orgUnitLevel.setName(
                     PreferencesState.getInstance().getContext().getResources().getString(
@@ -99,15 +100,14 @@ public class ConvertFromSDKVisitor implements
             appMapObjects.put(String.valueOf(sdkOrganisationUnitExtended.getLevel()), orgUnitLevel);
         }
         //create the orgUnit
-        org.eyeseetea.malariacare.data.database.model.OrgUnit appOrgUnit =
-                new org.eyeseetea.malariacare.data.database.model.OrgUnit();
+        OrgUnit appOrgUnit = new OrgUnit();
         //Set name
         appOrgUnit.setName(sdkOrganisationUnitExtended.getLabel());
         //Set uid
         appOrgUnit.setUid(sdkOrganisationUnitExtended.getId());
         //Set orgUnitLevel
         appOrgUnit.setOrgUnitLevel(
-                (org.eyeseetea.malariacare.data.database.model.OrgUnitLevel) appMapObjects.get(
+                (OrgUnitLevel) appMapObjects.get(
                         String.valueOf(sdkOrganisationUnitExtended.getLevel())));
         //Set the parent
         //At this moment, the parent is a UID of a not pulled Org_unit , without the full
@@ -115,9 +115,7 @@ public class ConvertFromSDKVisitor implements
         String parent_id = null;
         parent_id = sdkOrganisationUnitExtended.getParent();
         if (parent_id != null && !parent_id.equals("")) {
-            appOrgUnit.setOrgUnit(
-                    (org.eyeseetea.malariacare.data.database.model.OrgUnit) appMapObjects.get(
-                            String.valueOf(parent_id)));
+            appOrgUnit.setOrgUnit((OrgUnit) appMapObjects.get(String.valueOf(parent_id)));
         } else {
             appOrgUnit.setOrgUnit((OrgUnit) null);
         }
@@ -183,7 +181,7 @@ public class ConvertFromSDKVisitor implements
         value.setQuestion(question);
         value.setSurvey(survey);
 
-        org.eyeseetea.malariacare.data.database.model.Option option =
+        Option option =
                 sdkDataValueExtended.findOptionByQuestion(question);
         value.setOption(option);
         //No option -> text question (straight value)

@@ -648,6 +648,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             ((NumberRadioButtonMultiquestionView) questionView).setOnAnswerChangedListener(
                     new QuestionAnswerChangedListener(tableLayout, this,
                             !GradleVariantConfig.isButtonNavigationActive()));
+            ((NumberRadioButtonMultiquestionView) questionView).setOnAnswerOptionChangedListener(
+                    new QuestionAnswerChangedListener(tableLayout, this,
+                            !GradleVariantConfig.isButtonNavigationActive()));
         } else if (questionView instanceof DynamicStockImageRadioButtonSingleQuestionView) {
             ((DynamicStockImageRadioButtonSingleQuestionView) questionView)
                     .setOnAnswerChangedListener(
@@ -1040,27 +1043,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Changes the current question moving forward
      */
     private void next() {
-        Treatment treatment = new Treatment(Session.getMalariaSurvey(), Session.getStockSurvey());
-        Question actQuestion = treatment.getACTQuestionAnsweredNo();
         Question question = navigationController.getCurrentQuestion();
-        Value value = null;
-        if (actQuestion != null && isDynamicTreatmentTab(question.getHeader().getTab().getType())) {
-            Question question1 = Question.findByUID("9cV1JoHmO95");
-            navigationController.setCurrentquestion(question1);
-//           value= new Value(Option.findByCode("dynamic_treatment_no"),question,getMalariaSurvey
-//            question = actQuestion;
 
-        } else {
-            question = navigationController.getCurrentQuestion();
-
-            value = question.getValueBySession();
+        Value value = question.getValueBySession();
 
             if (isDone(value)) {
                 navigationController.isMovingToForward = false;
                 return;
             }
             navigationController.next(value != null ? value.getOption() : null);
-        }
+
         notifyDataSetChanged();
         hideKeyboard(PreferencesState.getInstance().getContext());
 

@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.layout;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 
 /**
  * Created by idelcano on 01/09/2016.

@@ -40,13 +40,16 @@ import android.widget.TabWidget;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.PopulateDB;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
+import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
@@ -690,11 +693,33 @@ public class DashboardActivity extends BaseActivity {
             try {
                 if (!BuildConfig.multiuser) {
                     Log.i(TAG, "Creating demo login from dashboard ...");
-                    LoginUseCase loginUseCase = new LoginUseCase(dashboardActivity);
+                    IUserAccountRepository userAccountRepository = new UserAccountRepository(
+                            dashboardActivity);
+                    LoginUseCase loginUseCase = new LoginUseCase(userAccountRepository);
 
                     Credentials demoCrededentials = Credentials.createDemoCredentials();
 
-                    loginUseCase.execute(demoCrededentials);
+                    loginUseCase.execute(demoCrededentials, new ALoginUseCase.Callback() {
+                        @Override
+                        public void onLoginSuccess() {
+                            Log.d(TAG, "Login Success");
+                        }
+
+                        @Override
+                        public void onServerURLNotValid() {
+                            Log.e(this.getClass().getSimpleName(), "Server url not valid");
+                        }
+
+                        @Override
+                        public void onInvalidCredentials() {
+                            Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                        }
+
+                        @Override
+                        public void onNetworkError() {
+                            Log.e(this.getClass().getSimpleName(), "Network Error");
+                        }
+                    });
                 }
 
                 PopulateDB.initDataIfRequired(getAssets());

@@ -30,11 +30,12 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.sdk.SdkController;
-import org.eyeseetea.malariacare.sdk.SdkLoginController;
+import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.PullController;
+import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.SyncProgressStatus;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.remote.SdkController;
+import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
 
 public class ProgressActivity extends Activity {
@@ -57,9 +58,16 @@ public class ProgressActivity extends Activity {
     static ProgressBar progressBar;
     static TextView textView;
 
+    UserAccountRepository mUserAccountRepository;
+    LogoutUseCase mLogoutUseCase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mUserAccountRepository = new UserAccountRepository(this);
+        mLogoutUseCase = new LogoutUseCase(mUserAccountRepository);
+
         setContentView(R.layout.activity_progress);
         PULL_CANCEL = false;
         PULL_IS_ACTIVE = true;
@@ -67,16 +75,30 @@ public class ProgressActivity extends Activity {
         prepareUI();
     }
 
-    private static void cancellPull() {
+    private void cancellPull() {
         if (PULL_IS_ACTIVE) {
             PULL_CANCEL = true;
             PULL_IS_ACTIVE = false;
             step(PreferencesState.getInstance().getContext().getResources().getString(R.string.cancellingPull));
             if (PullController.getInstance().finishPullJob()) {
                 Log.d(TAG, "Logging out from sdk...");
-                SdkLoginController.logOutUser(progressActivity);
+                executeLogout();
             }
         }
+    }
+
+    private void executeLogout() {
+        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                finishAndGo(LoginActivity.class);
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.e(TAG, message);
+            }
+        });
     }
 
     @Override
@@ -159,7 +181,7 @@ public class ProgressActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         //A crash during a pull requires to start from scratch -> logout
                         Log.d(TAG, "Logging out from sdk...");
-                        SdkLoginController.logOutUser(ProgressActivity.this);
+                        executeLogout();
                     }
                 })
                 .create()
@@ -216,16 +238,6 @@ public class ProgressActivity extends Activity {
         progressBar.setProgress(0);
         progressBar.setMax(MAX_PULL_STEPS);
         PullController.getInstance().pull(this);
-    }
-
-    //// FIXME: 28/12/16
-    //@Subscribe
-    public void onLogoutFinished() {
-        Log.d(TAG, "Logging out from sdk...OK");
-
-        SdkLoginController.logOutAndMove(this);
-        //Go to login
-        finishAndGo(LoginActivity.class);
     }
 
     @Override

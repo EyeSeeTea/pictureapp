@@ -5,7 +5,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.eyeseetea.malariacare.views.EditCard;

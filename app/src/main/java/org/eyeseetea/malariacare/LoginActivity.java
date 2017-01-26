@@ -40,11 +40,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
+import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.sdk.SdkLoginController;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.client.sdk.ui.activities.AbsLoginActivity;
@@ -62,14 +66,13 @@ public class LoginActivity extends AbsLoginActivity {
     public static final String DEFAULT_USER = "";
     public static final String DEFAULT_PASSWORD = "";
     private static final String TAG = ".LoginActivity";
-    public LoginUseCase mLoginUseCase = new LoginUseCase(this);
+    public IUserAccountRepository mUserAccountRepository = new UserAccountRepository(this);
+    public LoginUseCase mLoginUseCase = new LoginUseCase(mUserAccountRepository);
     public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
     EditText serverText;
     EditText usernameEditText;
     EditText passwordEditText;
-    private String serverUrl;
-    private String username;
-    private String password;
+
 
     private ProgressBar bar;
 
@@ -79,11 +82,6 @@ public class LoginActivity extends AbsLoginActivity {
         Log.d(TAG, "onCreate");
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
-    }
-
-    @Override
-    protected void onLoginButtonClicked(Editable serverUrl, Editable username, Editable password) {
-
     }
 
     private void initDataDownloadPeriodDropdown() {
@@ -129,19 +127,13 @@ public class LoginActivity extends AbsLoginActivity {
         }
     }
 
-    //@Override
-    public void login(String serverUrl, String username, String password) {
-        //This method is overriden to capture credentials data
-        this.serverUrl = serverUrl;
-        this.username = username;
-        this.password = password;
-
-
+    @Override
+    protected void onLoginButtonClicked(Editable server, Editable username, Editable password) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
             askEula(R.string.app_EULA, R.raw.eula, LoginActivity.this);
         } else {
-            loginToDhis(serverUrl, username, password);
+            login(server.toString(), username.toString(), password.toString());
         }
     }
 
@@ -164,7 +156,8 @@ public class LoginActivity extends AbsLoginActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         rememberEulaAccepted(context);
-                        loginToDhis(serverUrl, username, password);
+                        login(serverText.toString(), usernameEditText.toString(),
+                                passwordEditText.toString());
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).create();
@@ -186,30 +179,42 @@ public class LoginActivity extends AbsLoginActivity {
         editor.commit();
     }
 
-    /**
-     * User SDK function to login
-     */
-    public void loginToDhis(String serverUrl, String username, String password) {
-        //Delegate real login attempt to parent in sdk
-        //// FIXME: 28/12/16
-        //super.login(serverUrl, username, password);
+    public void login(String serverUrl, String username, String password) {
+        Credentials credentials = new Credentials(serverUrl, username, password);
+
+        mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
+            @Override
+            public void onLoginSuccess() {
+                mLoginActivityStrategy.finishAndGo();
+            }
+
+            @Override
+            public void onServerURLNotValid() {
+                serverText.setError("Server url not valid");
+                showError("Server url not valid");
+            }
+
+            @Override
+            public void onInvalidCredentials() {
+                showError("Invalid credentials");
+            }
+
+            @Override
+            public void onNetworkError() {
+                showError("There is a problem with the network, try again later.");
+            }
+        });
     }
 
-    /**
-     * This logout is called from the success user autentication, and try to login in the server
-     * with the correct userdata.
-     */
-    //// FIXME: 28/12/16
-    //@Subscribe
-    public void onLogoutFinished() {
-        SdkLoginController.logInUser(serverUrl, ServerAPIController.getSDKCredentials());
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
+
 
     //// FIXME: 28/12/16
     //@Subscribe
     public void onLoginFinished() {
-        /*
-        if (result != null && result.getResourceType().equals(ResourceType.USERS)) {
+/*        if (result != null && result.getResourceType().equals(ResourceType.USERS)) {
             if (result.getResponseHolder().getApiException() == null) {
 
                 Credentials credentials = new Credentials(serverUrl, username, password);
@@ -227,8 +232,7 @@ public class LoginActivity extends AbsLoginActivity {
             } else {
                 onLoginFail(result.getResponseHolder().getApiException());
             }
-        }
-    */
+        }*/
     }
 
 

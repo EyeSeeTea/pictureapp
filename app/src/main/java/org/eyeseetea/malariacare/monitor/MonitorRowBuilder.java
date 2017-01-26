@@ -22,7 +22,7 @@ package org.eyeseetea.malariacare.monitor;
 import android.content.Context;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.monitor.utils.SurveyMonitor;
 import org.eyeseetea.malariacare.monitor.utils.TimePeriodCalculator;
 import org.eyeseetea.malariacare.utils.Constants;

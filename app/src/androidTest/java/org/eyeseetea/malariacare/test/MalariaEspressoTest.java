@@ -32,19 +32,19 @@
 //import android.support.test.runner.lifecycle.Stage;
 //import android.util.Log;
 //
-//import org.eyeseetea.malariacare.database.model.Answer;
-//import org.eyeseetea.malariacare.database.model.CompositeScore;
-//import org.eyeseetea.malariacare.database.model.Header;
-//import org.eyeseetea.malariacare.database.model.Option;
-//import org.eyeseetea.malariacare.database.model.OrgUnit;
-//import org.eyeseetea.malariacare.database.model.Program;
-//import org.eyeseetea.malariacare.database.model.Question;
-//import org.eyeseetea.malariacare.database.model.Survey;
-//import org.eyeseetea.malariacare.database.model.Tab;
-//import org.eyeseetea.malariacare.database.model.User;
-//import org.eyeseetea.malariacare.database.model.Value;
-//import org.eyeseetea.malariacare.database.utils.PopulateDB;
-//import org.eyeseetea.malariacare.database.utils.Session;
+//import org.eyeseetea.malariacare.data.database.model.Answer;
+//import org.eyeseetea.malariacare.data.database.model.CompositeScore;
+//import org.eyeseetea.malariacare.data.database.model.Header;
+//import org.eyeseetea.malariacare.data.database.model.Option;
+//import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+//import org.eyeseetea.malariacare.data.database.model.Program;
+//import org.eyeseetea.malariacare.data.database.model.Question;
+//import org.eyeseetea.malariacare.data.database.model.Survey;
+//import org.eyeseetea.malariacare.data.database.model.Tab;
+//import org.eyeseetea.malariacare.data.database.model.User;
+//import org.eyeseetea.malariacare.data.database.model.Value;
+//import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
+//import org.eyeseetea.malariacare.data.database.utils.Session;
 //import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentUnsentAdapter;
 //import org.eyeseetea.malariacare.test.utils.IntentServiceIdlingResource;
 //

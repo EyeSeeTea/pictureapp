@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.domain.usecase.ReviewUseCase;
 
 import java.util.List;

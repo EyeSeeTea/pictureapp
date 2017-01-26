@@ -6,16 +6,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.Response;
 
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.DataValueExtended;
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
-import org.eyeseetea.malariacare.database.model.OrgUnit;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.sdk.SdkController;
+import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.DataValueExtended;
+import org.eyeseetea.malariacare.data.database.iomodules.dhis.importer.models.EventExtended;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataValueFlow;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.json.JSONObject;
 
 import java.io.IOException;

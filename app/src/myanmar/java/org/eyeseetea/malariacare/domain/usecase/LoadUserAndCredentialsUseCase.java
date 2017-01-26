@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.User;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 
 public class LoadUserAndCredentialsUseCase {

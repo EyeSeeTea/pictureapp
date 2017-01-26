@@ -3,8 +3,8 @@ package org.eyeseetea.malariacare.layout.utils;
 import android.view.View;
 
 import org.eyeseetea.malariacare.DashboardActivity;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 
 /**

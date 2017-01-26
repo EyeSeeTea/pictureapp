@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 /**
  * Created by idelcano on 14/12/2016.

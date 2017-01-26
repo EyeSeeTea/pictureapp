@@ -4,9 +4,7 @@ package org.eyeseetea.malariacare.layout.listeners;
 import android.preference.Preference;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.sdk.SdkLoginController;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 public class PullRequiredOnPreferenceChangeListener implements
         Preference.OnPreferenceChangeListener {
@@ -41,7 +39,8 @@ public class PullRequiredOnPreferenceChangeListener implements
     }
 
     private void hardcodedLoginInSDK() {
-        SdkLoginController.logInUser(PreferencesState.getInstance().getDhisURL(),
-                ServerAPIController.getSDKCredentials());
+        //TODO: jsanchez
+        /*SdkLoginController.logInUser(PreferencesState.getInstance().getDhisURL(),
+                ServerAPIController.getSDKCredentials());*/
     }
 }

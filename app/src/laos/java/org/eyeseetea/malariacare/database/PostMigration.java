@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.database;
+package org.eyeseetea.malariacare.data.database;
 
 
 /**

@@ -17,7 +17,7 @@
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.eyeseetea.malariacare.database.utils;
+package org.eyeseetea.malariacare.data.database.utils;
 
 import android.support.v4.content.FileProvider;
 

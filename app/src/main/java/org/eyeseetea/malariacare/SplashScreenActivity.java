@@ -10,16 +10,19 @@ import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
-import org.eyeseetea.malariacare.database.PostMigration;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.utils.LocationMemory;
-import org.eyeseetea.malariacare.database.utils.PopulateDB;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.PostMigration;
+import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.remote.SdkQueries;
+import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
+import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.InitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
-import org.eyeseetea.malariacare.sdk.SdkQueries;
 import org.eyeseetea.malariacare.views.TypefaceCache;
 import org.hisp.dhis.client.sdk.android.api.D2;
 
@@ -67,11 +70,32 @@ public class SplashScreenActivity extends Activity {
         try {
             if (!BuildConfig.multiuser) {
                 Log.i(TAG, "Creating demo login from dashboard ...");
-                LoginUseCase loginUseCase = new LoginUseCase(this);
+                IUserAccountRepository userAccountRepository = new UserAccountRepository(this);
+                LoginUseCase loginUseCase = new LoginUseCase(userAccountRepository);
 
                 Credentials demoCrededentials = Credentials.createDemoCredentials();
 
-                loginUseCase.execute(demoCrededentials);
+                loginUseCase.execute(demoCrededentials, new ALoginUseCase.Callback() {
+                    @Override
+                    public void onLoginSuccess() {
+                        Log.d(TAG, "Login Success");
+                    }
+
+                    @Override
+                    public void onServerURLNotValid() {
+                        Log.e(this.getClass().getSimpleName(), "Server url not valid");
+                    }
+
+                    @Override
+                    public void onInvalidCredentials() {
+                        Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                    }
+
+                    @Override
+                    public void onNetworkError() {
+                        Log.e(this.getClass().getSimpleName(), "Network Error");
+                    }
+                });
             }
 
             PopulateDB.initDataIfRequired(getAssets());

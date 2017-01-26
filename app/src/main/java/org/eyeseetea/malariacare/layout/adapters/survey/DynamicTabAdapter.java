@@ -20,9 +20,9 @@
 package org.eyeseetea.malariacare.layout.adapters.survey;
 
 import static org.eyeseetea.malariacare.R.id.question;
-import static org.eyeseetea.malariacare.database.model.Option.DOESNT_MATCH_POSITION;
-import static org.eyeseetea.malariacare.database.model.Option.MATCH_POSITION;
-import static org.eyeseetea.malariacare.database.utils.Session.getSurvey;
+import static org.eyeseetea.malariacare.data.database.model.Option.DOESNT_MATCH_POSITION;
+import static org.eyeseetea.malariacare.data.database.model.Option.MATCH_POSITION;
+import static org.eyeseetea.malariacare.data.database.utils.Session.getSurvey;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -57,15 +57,15 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionOption;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.ToastUseCase;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;

@@ -17,7 +17,6 @@ import org.hisp.dhis.client.sdk.models.program.ProgramStageDataElement;
 import org.hisp.dhis.client.sdk.models.program.ProgramStageSection;
 import org.hisp.dhis.client.sdk.models.program.ProgramType;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -65,24 +64,6 @@ public class SdkPullController extends SdkController {
 
     public static void setFullOrganisationUnitHierarchy(boolean fullHierarchy) {
         //MetaDataController.setFullOrganisationUnitHierarchy(fullHierarchy);
-    }
-
-    public static void clearMetaDataLoadedFlags() {
-        //MetaDataController.clearMetaDataLoadedFlags();
-    }
-
-    public static void wipe() {
-        //MetaDataController.wipe();
-    }
-
-    public static void enableMetaDataFlags(Context context) {
-        List<ResourceType> resourceTypes = new ArrayList<>();
-        resourceTypes.add(ResourceType.PROGRAMS);
-        resourceTypes.add(ResourceType.OPTION_SETS);
-        resourceTypes.add(ResourceType.EVENTS);
-        //mising from old sdk
-        //LoadingController.enableLoading(context, ResourceType.ASSIGNEDPROGRAMSWITHOUTEXTRAS);
-        enableMetaDataFlags(resourceTypes, context);
     }
 
     public static void enableMetaDataFlags(List<ResourceType> resources, Context context) {

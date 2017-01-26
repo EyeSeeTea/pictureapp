@@ -25,6 +25,9 @@ public class PullUseCase {
         mPullController.pull(isDemo, new IPullController.Callback() {
             @Override
             public void onComplete() {
+                //TODO jsanchez create OrgUnitRepository and when pull finish
+                //invoke remove current OrgUnit from here (only laos and cambodia)
+
                 callback.onComplete();
             }
 

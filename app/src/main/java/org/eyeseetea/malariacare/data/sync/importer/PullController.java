@@ -53,7 +53,7 @@ public class PullController implements IPullController {
     private static String TAG = "PullController";
     //public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
 
-    PullDhisSDKDataSource mPullDhisSDKDataSource = new PullDhisSDKDataSource();
+    PullDhisSDKDataSource mPullRemoteDataSource = new PullDhisSDKDataSource();
     private Context mContext;
 
     public PullController(Context context) {
@@ -70,10 +70,9 @@ public class PullController implements IPullController {
                 populateMetadataFromCsvs(true);
                 callback.onComplete();
             } else {
+                SdkController.wipeData();
 
-                populateMetadataFromCsvs(false);
-
-                mPullDhisSDKDataSource.pullMetadata(new IDataSourceCallback<Void>() {
+                mPullRemoteDataSource.pullMetadata(new IDataSourceCallback<Void>() {
                     @Override
                     public void onSuccess(Void result) {
                         callback.onComplete();
@@ -86,20 +85,8 @@ public class PullController implements IPullController {
                 });
             }
             //TODO jsanchez
-/*            //clear flags
-            SdkPullController.clearPullFlags(PreferencesState.getInstance().getContext());
-            //Enabling resources to pull
-            SdkPullController.enableMetaDataFlags(PreferencesState.getInstance().getContext());
-            //Delete previous metadata
+/*
 
-            Log.d(TAG, "Delete sdk db");
-            PopulateDB.wipeSDKData();
-            //Pull new metadata
-            postProgress(mContext.getString(R.string.progress_pull_downloading));
-            PreferencesState.getInstance().reloadPreferences();
-
-            SdkPullController.clearMetaDataLoadedFlags();
-            SdkPullController.wipe();
 
             SdkPullController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
             String selectedDateLimit = PreferencesState.getInstance().getDataLimitedByDate();
@@ -216,50 +203,6 @@ public class PullController implements IPullController {
             day.add(Calendar.MONTH, -6);
         }
         return day.getTime();
-    }
-
-    /**
-     * @Subscribe public void onLoadMetadataFinished(final NetworkJob.NetworkJobResult<ResourceType>
-     * result) {
-     * new Thread() {
-     * @Override public void run() {
-     * try {
-     * if (result == null) {
-     * Log.e(TAG, "onLoadMetadataFinished with null");
-     * return;
-     * }
-     *
-     * //Error while pulling
-     * if (result.getResponseHolder() != null
-     * && result.getResponseHolder().getApiException() != null) {
-     * postException(new Exception(mContext.getString(R.string.dialog_pull_error)));
-     * return;
-     * }
-     *
-     * startConversion();
-     * } catch (Exception ex) {
-     * onPullException(ex);
-     * } finally {
-     * onPullFinish();
-     * }
-     * }
-     * }.start();
-     * }
-     */
-
-
-    private void onPullException(Exception ex) {
-        Log.e(TAG, "onLoadMetadataFinished: " + ex.getLocalizedMessage());
-        ex.printStackTrace();
-        postException(ex);
-    }
-
-    private void onPullFinish() {
-        postFinish();
-    }
-
-    private void onPullError(String message) {
-        postException(new Exception(mContext.getString(R.string.dialog_pull_error)));
     }
 
     /**
@@ -385,17 +328,6 @@ public class PullController implements IPullController {
      */
     private void postException(Exception ex) {
         SdkPullController.postException(ex);
-    }
-
-    /**
-     * Notifies that the pull is over
-     */
-    private void postFinish() {
-    }
-
-    //Returns true if the pull thead is finish
-    public boolean finishPullJob() {
-        return SdkController.finishPullJob();
     }
 
     public void startConversion() {

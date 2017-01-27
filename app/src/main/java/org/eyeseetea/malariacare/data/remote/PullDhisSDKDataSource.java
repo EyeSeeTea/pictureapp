@@ -9,17 +9,19 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
+import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.util.List;
 
+import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class PullDhisSDKDataSource {
 
-    public void pullMetadata(final IDataSourceCallback<Void> callback) {
+    public void pullMetadata(final IDataSourceCallback<List<OrganisationUnit>> callback) {
 
         boolean isNetworkAvailable = isNetworkAvailable();
 
@@ -33,7 +35,7 @@ public class PullDhisSDKDataSource {
                     .subscribe(new Action1<List<OrganisationUnit>>() {
                         @Override
                         public void call(List<OrganisationUnit> organisationUnits) {
-                            callback.onSuccess(null);
+                            callback.onSuccess(organisationUnits);
                         }
                     }, new Action1<Throwable>() {
                         @Override
@@ -43,6 +45,29 @@ public class PullDhisSDKDataSource {
                     });
         }
     }
+
+    public void pullData(IDataSourceCallback<List<Event>> callback) {
+        boolean isNetworkAvailable = isNetworkAvailable();
+
+        if (!isNetworkAvailable) {
+            callback.onError(new NetworkException());
+        } else {
+            try {
+
+                String orgUnitId = "rV8AX9l6RUs";
+
+                Scheduler pullEventsThread = Schedulers.newThread();
+                List<Event> events = D2.events().pull(
+                        orgUnitId, "").subscribeOn(pullEventsThread)
+                        .observeOn(pullEventsThread).toBlocking().single();
+
+                callback.onSuccess(events);
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }
+    }
+
 
     private boolean isNetworkAvailable() {
         ConnectivityManager cm =

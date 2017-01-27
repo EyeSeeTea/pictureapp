@@ -30,14 +30,14 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkController;
-import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
-import org.eyeseetea.malariacare.data.sync.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
-import org.eyeseetea.malariacare.domain.usecase.PullUseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
 
 public class ProgressActivity extends Activity {
@@ -77,11 +77,11 @@ public class ProgressActivity extends Activity {
     }
 
     private void initializeDependencies() {
-        UserAccountRepository mUserAccountRepository = new UserAccountRepository(this);
+        AuthenticationManager authenticationManager = new AuthenticationManager(this);
 
         IPullController pullController = new PullController(this);
 
-        mLogoutUseCase = new LogoutUseCase(mUserAccountRepository);
+        mLogoutUseCase = new LogoutUseCase(authenticationManager);
         mPullUseCase = new PullUseCase(pullController);
     }
 
@@ -91,6 +91,7 @@ public class ProgressActivity extends Activity {
 
         progressBar = (ProgressBar) findViewById(R.id.pull_progress);
         progressBar.setMax(MAX_PULL_STEPS);
+        progressBar.setProgress(0);
         textView = (TextView) findViewById(R.id.pull_text);
         final Button button = (Button) findViewById(R.id.cancelPullButton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +105,7 @@ public class ProgressActivity extends Activity {
         if (PULL_IS_ACTIVE) {
             PULL_CANCEL = true;
             PULL_IS_ACTIVE = false;
-            step(PreferencesState.getInstance().getContext().getResources().getString(
+            showProgressText(PreferencesState.getInstance().getContext().getResources().getString(
                     R.string.cancellingPull));
 
             //TODO jsanchez
@@ -145,37 +146,41 @@ public class ProgressActivity extends Activity {
         }
     }
 
-    //// FIXME: 28/12/16 
-    //@Subscribe
-    public void onProgressChange(final SyncProgressStatus syncProgressStatus) {
-        if (syncProgressStatus == null) {
-            return;
-        }
-        runOnUiThread(new Runnable() {
+    private void launchPull() {
+
+
+        mPullUseCase.execute(false, new PullUseCase.Callback() {
             @Override
-            public void run() {
-                if (syncProgressStatus.hasError()) {
-                    showException(syncProgressStatus.getException().getMessage());
-                    return;
+            public void onComplete() {
+                showAndMoveOn();
+            }
+
+            @Override
+            public void onStep(PullStep pullStep) {
+                switch (pullStep) {
+                    case METADATA:
+                        showProgressText(PreferencesState.getInstance().getContext().getString(
+                                R.string.progress_pull_downloading));
+                        break;
                 }
 
-                //Step
-                if (syncProgressStatus.hasProgress()) {
-                    step(syncProgressStatus.getMessage());
-                    return;
-                }
+            }
 
-                //Finish
-                if (syncProgressStatus.isFinish()) {
-                    showAndMoveOn();
-                }
+            @Override
+            public void onError(String message) {
+                showException(PreferencesState.getInstance().getContext().getString(R.string
+                        .dialog_pull_error));
+            }
+
+            @Override
+            public void onNetworkError() {
+                showException(PreferencesState.getInstance().getContext().getString(
+                        R.string.network_error));
             }
         });
+
     }
 
-    /**
-     * Shows a dialog with the given message y move to login after showing error
-     */
     private void showException(String msg) {
         String title = getDialogTitle();
 
@@ -195,10 +200,7 @@ public class ProgressActivity extends Activity {
                 .show();
     }
 
-    /**
-     * Prints the step in the progress bar
-     */
-    private void step(final String msg) {
+    private void showProgressText(final String msg) {
         final int currentProgress = progressBar.getProgress();
         progressBar.setProgress(currentProgress + 1);
         textView.setText(msg);
@@ -211,7 +213,7 @@ public class ProgressActivity extends Activity {
             return;
         }
 
-        step(getString(R.string.progress_pull_done));
+        showProgressText(getString(R.string.progress_pull_done));
 
         String title = getDialogTitle();
 
@@ -228,25 +230,7 @@ public class ProgressActivity extends Activity {
     }
 
     private String getDialogTitle() {
-        int stringId = R.string.dialog_title_pull_response;
-        return getString(stringId);
-    }
-
-    private void launchPull() {
-        progressBar.setProgress(0);
-        progressBar.setMax(MAX_PULL_STEPS);
-
-        mPullUseCase.execute(new PullUseCase.Callback() {
-            @Override
-            public void onComplete() {
-                showAndMoveOn();
-            }
-
-            @Override
-            public void onError(String message) {
-                executeLogout();
-            }
-        });
+        return getString(R.string.dialog_title_pull_response);
     }
 
     @Override

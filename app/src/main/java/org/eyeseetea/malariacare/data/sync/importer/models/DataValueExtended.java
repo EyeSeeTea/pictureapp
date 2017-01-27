@@ -24,9 +24,8 @@ import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.sync.importer.IConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.VisitableFromSDK;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
-import org.hisp.dhis.client.sdk.models.trackedentity.TrackedEntityDataValue;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +110,8 @@ public class DataValueExtended implements VisitableFromSDK {
     }
 
     public void setProvidedElsewhere(boolean b) {
+        //// FIXME: 11/01/17 this method not exist
+        //dataValue.setProvidedElsewhere(b);
     }
 
     public void setStoredBy(String name) {

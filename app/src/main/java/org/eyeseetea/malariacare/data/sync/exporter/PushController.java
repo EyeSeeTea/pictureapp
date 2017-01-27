@@ -27,7 +27,6 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.remote.SdkPushController;
@@ -135,7 +134,7 @@ public class PushController {
             Log.d(TAG, "Preparing survey for pushing...");
 
             //delete all possible saved events before to conversion of surveys in events
-            PopulateDB.wipeSDKData();
+            SdkController.wipeData();
 
             convertToSDK(surveys);
 
@@ -161,7 +160,7 @@ public class PushController {
     //@Subscribe
     public void onSendDataFinished(
             //final NetworkJob.NetworkJobResult<Map<Long, ImportSummary>> result) {
-            final List <Map<Long, ImportSummary>> result) {
+            final List<Map<Long, ImportSummary>> result) {
         new Thread() {
             @Override
             public void run() {
@@ -180,8 +179,9 @@ public class PushController {
                     }
                     */
                     //Error while pulling
-                    //if (result.getResponseHolder() != null && result.getResponseHolder().getApiException() != null) {
-                    if(result == null){
+                    //if (result.getResponseHolder() != null && result.getResponseHolder()
+                    // .getApiException() != null) {
+                    if (result == null) {
                         //Log.e(TAG, result.getResponseHolder().getApiException().getMessage());
                         postException(new Exception(context.getString(R.string.dialog_pull_error)));
                         PushController.getInstance().setPushInProgress(false);

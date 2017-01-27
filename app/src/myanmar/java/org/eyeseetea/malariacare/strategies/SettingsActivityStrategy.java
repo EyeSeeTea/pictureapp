@@ -13,7 +13,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
-import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
@@ -94,10 +94,10 @@ class LogoutAndLoginRequiredOnPreferenceClickListener implements
         return true;
     }
 
-    private void logout(){
+    private void logout() {
         Log.d(TAG, "Logging out...");
-        UserAccountRepository userAccountRepository = new UserAccountRepository(activity);
-        LogoutUseCase logoutUseCase = new LogoutUseCase(userAccountRepository);
+        AuthenticationManager authenticationManager = new AuthenticationManager(activity);
+        LogoutUseCase logoutUseCase = new LogoutUseCase(authenticationManager);
 
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override

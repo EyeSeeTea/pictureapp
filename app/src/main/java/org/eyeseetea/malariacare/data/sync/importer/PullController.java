@@ -24,6 +24,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
@@ -31,6 +32,7 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.remote.SdkPullController;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
@@ -39,6 +41,7 @@ import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.ProgramExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.models.program.ProgramType;
 
 import java.io.IOException;
@@ -50,35 +53,40 @@ public class PullController implements IPullController {
     private static String TAG = "PullController";
     //public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
 
+    PullDhisSDKDataSource mPullRemoteDataSource = new PullDhisSDKDataSource();
     private Context mContext;
 
     public PullController(Context context) {
         mContext = context;
     }
 
-    public void pull(Callback callback) {
+    public void pull(boolean isDemo, final Callback callback) {
         Log.d(TAG, "Starting PULL process...");
         try {
 
-            populateMetadataFromCsvs();
+            callback.onStep(PullStep.METADATA);
 
-            callback.onComplete();
+            if (isDemo) {
+                populateMetadataFromCsvs(true);
+                callback.onComplete();
+            } else {
+                SdkController.wipeData();
 
+                mPullRemoteDataSource.pullMetadata(new IDataSourceCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void result) {
+                        callback.onComplete();
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        callback.onError(throwable);
+                    }
+                });
+            }
             //TODO jsanchez
-/*            //clear flags
-            SdkPullController.clearPullFlags(PreferencesState.getInstance().getContext());
-            //Enabling resources to pull
-            SdkPullController.enableMetaDataFlags(PreferencesState.getInstance().getContext());
-            //Delete previous metadata
+/*
 
-            Log.d(TAG, "Delete sdk db");
-            PopulateDB.wipeSDKData();
-            //Pull new metadata
-            postProgress(mContext.getString(R.string.progress_pull_downloading));
-            PreferencesState.getInstance().reloadPreferences();
-
-            SdkPullController.clearMetaDataLoadedFlags();
-            SdkPullController.wipe();
 
             SdkPullController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
             String selectedDateLimit = PreferencesState.getInstance().getDataLimitedByDate();
@@ -102,8 +110,25 @@ public class PullController implements IPullController {
         }
     }
 
-    private void populateMetadataFromCsvs() throws IOException {
+    private void populateMetadataFromCsvs(boolean isDemo) throws IOException {
         PopulateDB.initDataIfRequired(mContext.getAssets());
+
+        if (isDemo) {
+            createDummyOrgUnitsDataInDB();
+        }
+    }
+
+    private void createDummyOrgUnitsDataInDB() {
+        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
+
+        if (orgUnits.size() == 0) {
+            try {
+                PopulateDB.populateDummyData(mContext.getAssets());
+                convertOUinOptions();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void convertOUinOptions() {
@@ -178,50 +203,6 @@ public class PullController implements IPullController {
             day.add(Calendar.MONTH, -6);
         }
         return day.getTime();
-    }
-
-    /**
-     * @Subscribe public void onLoadMetadataFinished(final NetworkJob.NetworkJobResult<ResourceType>
-     * result) {
-     * new Thread() {
-     * @Override public void run() {
-     * try {
-     * if (result == null) {
-     * Log.e(TAG, "onLoadMetadataFinished with null");
-     * return;
-     * }
-     *
-     * //Error while pulling
-     * if (result.getResponseHolder() != null
-     * && result.getResponseHolder().getApiException() != null) {
-     * postException(new Exception(mContext.getString(R.string.dialog_pull_error)));
-     * return;
-     * }
-     *
-     * startConversion();
-     * } catch (Exception ex) {
-     * onPullException(ex);
-     * } finally {
-     * onPullFinish();
-     * }
-     * }
-     * }.start();
-     * }
-     */
-
-
-    private void onPullException(Exception ex) {
-        Log.e(TAG, "onLoadMetadataFinished: " + ex.getLocalizedMessage());
-        ex.printStackTrace();
-        postException(ex);
-    }
-
-    private void onPullFinish() {
-        postFinish();
-    }
-
-    private void onPullError(String message) {
-        postException(new Exception(mContext.getString(R.string.dialog_pull_error)));
     }
 
     /**
@@ -349,25 +330,16 @@ public class PullController implements IPullController {
         SdkPullController.postException(ex);
     }
 
-    /**
-     * Notifies that the pull is over
-     */
-    private void postFinish() {
-    }
-
-    //Returns true if the pull thead is finish
-    public boolean finishPullJob() {
-        return SdkController.finishPullJob();
-    }
-
     public void startConversion() {
         //Ok
         wipeDatabase();
         convertFromSDK();
         //Fixme it should be moved after login
-        convertOUinOptions();
+/*        convertOUinOptions();
         if (ProgressActivity.PULL_IS_ACTIVE) {
             Log.d(TAG, "PULL process...OK");
-        }
+        }*/
     }
+
+
 }

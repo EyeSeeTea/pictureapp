@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import org.eyeseetea.malariacare.domain.boundary.IRepositoryCallback;
-import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 
 public class LogoutUseCase {
     public interface Callback {
@@ -10,15 +9,15 @@ public class LogoutUseCase {
         void onLogoutError(String message);
     }
 
-    private IUserAccountRepository mUserAccountRepository;
+    private IAuthenticationManager mIAuthenticationManager;
 
-    public LogoutUseCase(IUserAccountRepository userAccountRepository) {
-        mUserAccountRepository = userAccountRepository;
+    public LogoutUseCase(IAuthenticationManager authenticationManager) {
+        mIAuthenticationManager = authenticationManager;
     }
 
     public void execute(final Callback callback) {
-        mUserAccountRepository.logout(
-                new IRepositoryCallback<Void>() {
+        mIAuthenticationManager.logout(
+                new IAuthenticationManager.Callback<Void>() {
                     @Override
                     public void onSuccess(Void result) {
                         callback.onLogoutSuccess();

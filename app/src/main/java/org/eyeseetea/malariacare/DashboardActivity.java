@@ -40,13 +40,13 @@ import android.widget.TabWidget;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.repositories.UserAccountRepository;
-import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
@@ -692,9 +692,9 @@ public class DashboardActivity extends BaseActivity {
             try {
                 if (!BuildConfig.multiuser) {
                     Log.i(TAG, "Creating demo login from dashboard ...");
-                    IUserAccountRepository userAccountRepository = new UserAccountRepository(
+                    IAuthenticationManager authenticationManager = new AuthenticationManager(
                             dashboardActivity);
-                    LoginUseCase loginUseCase = new LoginUseCase(userAccountRepository);
+                    LoginUseCase loginUseCase = new LoginUseCase(authenticationManager);
 
                     Credentials demoCredentials = Credentials.createDemoCredentials();
 

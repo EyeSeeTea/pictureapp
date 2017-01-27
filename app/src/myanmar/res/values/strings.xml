@@ -159,6 +159,10 @@
     <string name="Cq">Cq</string>
     <string name="Pq">Pq</string>
 
+    <string name="network_error">There is a problem with the network, please try again later.</string>
+    <string name="login_invalid_credentials">Invalid credentials</string>
+    <string name="login_invalid_server_url">Invalid Server URL</string>
+
     <string name="monitoring_title_dropdown">Please, select a time period</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>

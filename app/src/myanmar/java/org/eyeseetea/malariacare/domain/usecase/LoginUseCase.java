@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import org.eyeseetea.malariacare.domain.boundary.IRepositoryCallback;
-import org.eyeseetea.malariacare.domain.boundary.IUserAccountRepository;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
@@ -11,20 +10,19 @@ import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 
 public class LoginUseCase extends ALoginUseCase {
-    private IUserAccountRepository mUserAccountRepository;
+    private IAuthenticationManager mAuthenticationManager;
 
-    public LoginUseCase(IUserAccountRepository userAccountRepository) {
-        mUserAccountRepository = userAccountRepository;
+    public LoginUseCase(IAuthenticationManager authenticationManager) {
+        mAuthenticationManager = authenticationManager;
     }
 
     @Override
     public void execute(Credentials credentials, final Callback callback) {
 
-        mUserAccountRepository.login(credentials,
-                new IRepositoryCallback<UserAccount>() {
+        mAuthenticationManager.login(credentials,
+                new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
-                        createDummyDataInDB();
                         callback.onLoginSuccess();
                     }
 
@@ -40,20 +38,6 @@ public class LoginUseCase extends ALoginUseCase {
                         }
                     }
                 });
-    }
-
-    //TODO: jsanchez - Fix with new architecture
-    private void createDummyDataInDB() {
-/*        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-
-        if (orgUnits.size() == 0) {
-            try {
-                PopulateDB.populateDummyData(context.getAssets());
-                IPullController.convertOUinOptions();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
     }
 
     @Override

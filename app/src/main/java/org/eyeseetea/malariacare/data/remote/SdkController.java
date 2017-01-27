@@ -20,17 +20,22 @@
 package org.eyeseetea.malariacare.data.remote;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.hisp.dhis.client.sdk.android.api.persistence.DbDhis;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.AttributeFlow;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.AttributeValueFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataElementFlow;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.FailedItemFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.OptionFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.OptionSetFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramStageDataElementFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramStageFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramStageSectionFlow;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.UserAccountFlow;
 
 import java.util.List;
@@ -134,14 +139,13 @@ public abstract class SdkController {
     }
 
 
-    public static void wipeSDKData() {
-        /*Delete.tables(
+    public static void wipeData() {
+        Delete.tables(
                 EventFlow.class,
-                DataValueFlow.class,
-                FailedItemFlow.class
+                TrackedEntityDataValueFlow.class,
+                FailedItemFlow.class,
+                AttributeValueFlow.class
         );
-        */
-        //DateTimeManager.getInstance().delete();
     }
 
     public static String getDhisDatabaseName() {

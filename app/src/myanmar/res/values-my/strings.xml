@@ -161,6 +161,10 @@
     <string name="Cq">ကလိုရိုကွင်း Cq</string>
     <string name="Pq">ပရိုင်မာကွင်း Pq</string>
 
+    <string name="network_error">ကွန်ယက်နှင့်အတူပြဿနာရှိပါတယ်, နောက်တခါထပ်ကြိုးစားကြည့်ပါ။</string>
+    <string name="login_invalid_credentials">မှားနေသောအထောက်အထားများ</string>
+    <string name="login_invalid_server_url">မှားနေသော Server ကို URL ကို</string>
+
     <string name="monitoring_title_dropdown">တစ်ဦးအချိန်ကာလကို select လုပ်ပါ, ကျေးဇူးပြုပြီး</string>
     <string name="ok">အိုကေ</string>
     <string name="cancel">Cancel</string>

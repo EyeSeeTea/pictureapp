@@ -12,7 +12,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -86,7 +85,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         imageRadioButtonOption.setOnCheckedChangeListener(this);
         imageRadioButtonOption.setOption(option, mQuestion);
         imageRadioButtonOption.setEnabled(super.isEnabled());
-        imageRadioButtonOption.setTag(Treatment.getQuestionFromOptionId(option.getId_option()));
+        imageRadioButtonOption.setTag(Question.findByID(option.getId_option()));
         return imageRadioButtonOption;
     }
 

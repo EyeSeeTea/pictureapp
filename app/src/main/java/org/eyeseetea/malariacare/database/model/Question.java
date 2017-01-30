@@ -1417,6 +1417,26 @@ public class Question extends BaseModel {
         return false;
     }
 
+    public static Question getACT6Question() {
+        return findByUID("ihlfWLBg7Nr");
+    }
+
+    public static Question getACT12Questions() {
+        return findByUID("nN4jwsyjmE9");
+    }
+
+    public static Question getACT18Questions() {
+        return findByUID("GqHQPu6yCfu");
+    }
+
+    public static Question getACT24Questions() {
+        return findByUID("RUqD8Kckt3B");
+    }
+
+    public static Question getOutStcokQuestion() {
+        return findByUID("ZEopAP6tQN4");
+    }
+
     public boolean hasCompulsoryNotAnswered() {
         List<Question> questions = new ArrayList<>();
         //get all the questions in the same screen page
@@ -1425,9 +1445,7 @@ public class Question extends BaseModel {
         } else if (isDynamicStockQuestion()) {
             List<Option> options = getAnswer().getOptions();
             for (Option option : options) {
-                Question question =
-                        org.eyeseetea.malariacare.domain.entity.Treatment.getQuestionFromOptionId(
-                                option.getId_option());
+                Question question = findByID(option.getId_option());
                 if (!isNotAnswered(question)) {
                     questions.add(question);
                 }

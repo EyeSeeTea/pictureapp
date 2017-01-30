@@ -26,9 +26,6 @@ public class Treatment {
     private List<Question> mQuestions;
     private org.eyeseetea.malariacare.database.model.Treatment mTreatment;
     private HashMap<Long, Integer> doseByQuestion;
-    public static final Long ID_OP_ACT6 = 101L, ID_OP_ACT12 = 102L, ID_OP_ACT18 = 103L,
-            ID_OP_ACT24 = 104L, ID_OP_OUT_STOCK = 105L;
-    private HashMap<Long, Float> optionDose;
 
     public Treatment(Survey malariaSurvey, Survey stockSurvey) {
         mMalariaSurvey = malariaSurvey;
@@ -54,31 +51,6 @@ public class Treatment {
         return doseByQuestion;
     }
 
-    public HashMap<Long, Float> getOptionDose(Question question) {
-        optionDose = new HashMap<>();
-        if (isACT6Question(question)) {
-            optionDose.put(ID_OP_ACT12, 0.5f);
-            optionDose.put(ID_OP_ACT18, 0.3f);
-            optionDose.put(ID_OP_ACT24, 0.25f);
-        }
-        if (isACT12Question(question)) {
-            optionDose.put(ID_OP_ACT6, 2f);
-            optionDose.put(ID_OP_ACT18, 0.6f);
-            optionDose.put(ID_OP_ACT24, 0.5f);
-        }
-        if (isACT18Question(question)) {
-            optionDose.put(ID_OP_ACT6, 3f);
-            optionDose.put(ID_OP_ACT12, 1.5f);
-            optionDose.put(ID_OP_ACT24, 0.75f);
-        }
-        if (isACT24Question(question)) {
-            optionDose.put(ID_OP_ACT6, 4f);
-            optionDose.put(ID_OP_ACT12, 2f);
-            optionDose.put(ID_OP_ACT18, 1.3f);
-        }
-
-        return optionDose;
-    }
 
     public org.eyeseetea.malariacare.database.model.Treatment getTreatment() {
         return mTreatment;
@@ -105,41 +77,6 @@ public class Treatment {
         return null;
     }
 
-    private boolean isACT6Question(Question question) {
-        if (question != null && question.getUid().equals("ihlfWLBg7Nr")) {
-            return true;
-        }
-        return false;
-    }
-    private boolean isACT24Question(Question question) {
-        if (question != null && question.getUid().equals("RUqD8Kckt3B")) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isACT18Question(Question question) {
-        if (question != null && question.getUid().equals("GqHQPu6yCfu")) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isACT12Question(Question question) {
-        if (question != null && question.getUid().equals("nN4jwsyjmE9")) {
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isACTQuestion(Question question) {
-        if (question.getUid().equals("nN4jwsyjmE9") || question.getUid().equals("GqHQPu6yCfu")
-                || question.getUid().equals("RUqD8Kckt3B") || question.getUid().equals(
-                "ihlfWLBg7Nr")) {
-            return true;
-        }
-        return false;
-    }
 
     public static Question getTreatmentQuestion() {
         return Question.findByUID("9cV1JoHmO94");
@@ -155,6 +92,7 @@ public class Treatment {
         List<Match> rdtMatches = new ArrayList<>();
         for (Value value : values) {
             Question question = value.getQuestion();
+            //Getting matches for questions of age, pregnant, severe and rdt.
             if (question.getUid().equals("2XX1JoHmO94")) {
                 ageMatches =
                         QuestionThreshold.getMatchesWithQuestionValue(
@@ -228,6 +166,42 @@ public class Treatment {
         return questions;
     }
 
+    private boolean isACT6Question(Question question) {
+        if (question != null && question.getUid().equals("ihlfWLBg7Nr")) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isACT24Question(Question question) {
+        if (question != null && question.getUid().equals("RUqD8Kckt3B")) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isACT18Question(Question question) {
+        if (question != null && question.getUid().equals("GqHQPu6yCfu")) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isACT12Question(Question question) {
+        if (question != null && question.getUid().equals("nN4jwsyjmE9")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isACTQuestion(Question question) {
+        if (question.getUid().equals("nN4jwsyjmE9") || question.getUid().equals("GqHQPu6yCfu")
+                || question.getUid().equals("RUqD8Kckt3B") || question.getUid().equals(
+                "ihlfWLBg7Nr")) {
+            return true;
+        }
+        return false;
+    }
 
     private boolean isPq(Question question) {
         if (question.getUid().equals("Sttahtf0iHZ")) {
@@ -241,6 +215,79 @@ public class Treatment {
             return true;
         }
         return false;
+    }
+
+
+    public HashMap<Long, Float> getOptionDose(Question question) {
+        HashMap<Long, Float> optionDose = new HashMap<>();
+        if (isACT6Question(question)) {
+            optionDose.put(Question.getACT12Questions().getId_question(), 0.5f);
+            optionDose.put(Question.getACT18Questions().getId_question(), 0.3f);
+            optionDose.put(Question.getACT24Questions().getId_question(), 0.25f);
+        }
+        if (isACT12Question(question)) {
+            optionDose.put(Question.getACT6Question().getId_question(), 2f);
+            optionDose.put(Question.getACT18Questions().getId_question(), 0.6f);
+            optionDose.put(Question.getACT24Questions().getId_question(), 0.5f);
+        }
+        if (isACT18Question(question)) {
+            optionDose.put(Question.getACT6Question().getId_question(), 3f);
+            optionDose.put(Question.getACT12Questions().getId_question(), 1.5f);
+            optionDose.put(Question.getACT24Questions().getId_question(), 0.75f);
+        }
+        if (isACT24Question(question)) {
+            optionDose.put(Question.getACT6Question().getId_question(), 4f);
+            optionDose.put(Question.getACT12Questions().getId_question(), 2f);
+            optionDose.put(Question.getACT18Questions().getId_question(), 1.3f);
+        }
+
+        return optionDose;
+    }
+
+
+    public Answer getACTOptions(Question question) {
+        List<Option> options = new ArrayList<>();
+        Answer answer = new Answer("stock");
+        answer.setId_answer((long) 204);
+
+        Option optionACT24 = new Option("ACT_x_24", "ACT_x_24", (float) 0, answer);
+        optionACT24.setId_option(Question.getACT24Questions().getId_question());
+        optionACT24.setOptionAttribute(
+                new OptionAttribute("c8b8c7", "question_images/p5_actx24.png"));
+        Option optionACT12 = new Option("ACT_x_12", "ACT_x_12", (float) 0, answer);
+        optionACT12.setId_option(Question.getACT12Questions().getId_question());
+        optionACT12.setOptionAttribute(
+                new OptionAttribute("c8b8c7", "question_images/p5_actx12.png"));
+        Option optionACT6 = new Option("ACT_x_6", "ACT_x_6", (float) 0, answer);
+        optionACT6.setId_option(Question.getACT6Question().getId_question());
+        optionACT6.setOptionAttribute(
+                new OptionAttribute("c8b8c7", "question_images/p5_actx6.png"));
+        Option optionACT18 = new Option("ACT_x_18", "ACT_x_18", (float) 0, answer);
+        optionACT18.setId_option(Question.getACT18Questions().getId_question());
+        optionACT18.setOptionAttribute(
+                new OptionAttribute("c8b8c7", "question_images/p5_actx18.png"));
+        Option optionOutStock = new Option("out_stock_option", "out_stock_option", (float) 0,
+                answer);
+        optionOutStock.setOptionAttribute(
+                new OptionAttribute("c8b8c7", "question_images/p6_out_stock.png"));
+        optionOutStock.setId_option(Question.getOutStcokQuestion().getId_question());
+        if (!isACT12Question(question)) {
+            options.add(optionACT12);
+        }
+        if (!isACT6Question(question)) {
+            options.add(optionACT6);
+        }
+        if (!isACT18Question(question)) {
+            options.add(optionACT18);
+        }
+        if (!isACT24Question(question)) {
+            options.add(optionACT24);
+        }
+        options.add(optionOutStock);
+
+        answer.setOptions(options);
+
+        return answer;
     }
 
     private String getPqTitleDose(int dose) {
@@ -273,70 +320,6 @@ public class Treatment {
                 return "drugs_10_of_Cq_review_title";
         }
         return "drugs_referral_Cq_review_title";
-    }
-
-    public static Question getQuestionFromOptionId(Long optionId) {
-        String uid = "";
-        if (optionId == ID_OP_ACT24) {
-            uid = "RUqD8Kckt3B";
-        } else if (optionId == ID_OP_ACT18) {
-            uid = "GqHQPu6yCfu";
-        } else if (optionId == ID_OP_ACT12) {
-            uid = "nN4jwsyjmE9";
-        } else if (optionId == ID_OP_ACT6) {
-            uid = "ihlfWLBg7Nr";
-        } else {
-            uid = "ZEopAP6tQN4";
-        }
-        Question question = Question.findByUID(uid);
-        question.getHeader();
-        return Question.findByUID(uid);
-    }
-
-
-    public Answer getACTOptions(Question question) {
-        List<Option> options = new ArrayList<>();
-        Answer answer = new Answer("stock");
-        answer.setId_answer((long) 204);
-
-        Option optionACT24 = new Option("ACT_x_24", "ACT_x_24", (float) 0, answer);
-        optionACT24.setId_option(ID_OP_ACT24);
-        optionACT24.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p5_actx24.png"));
-        Option optionACT12 = new Option("ACT_x_12", "ACT_x_12", (float) 0, answer);
-        optionACT12.setId_option(ID_OP_ACT12);
-        optionACT12.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p5_actx12.png"));
-        Option optionACT6 = new Option("ACT_x_6", "ACT_x_6", (float) 0, answer);
-        optionACT6.setId_option(ID_OP_ACT6);
-        optionACT6.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p5_actx6.png"));
-        Option optionACT18 = new Option("ACT_x_18", "ACT_x_18", (float) 0, answer);
-        optionACT18.setId_option(ID_OP_ACT18);
-        optionACT18.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p5_actx18.png"));
-        Option optionOutStock = new Option("out_stock_option", "out_stock_option", (float) 0,
-                answer);
-        optionOutStock.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p6_out_stock.png"));
-        optionOutStock.setId_option(ID_OP_OUT_STOCK);
-        if (!isACT12Question(question)) {
-            options.add(optionACT12);
-        }
-        if (!isACT6Question(question)) {
-            options.add(optionACT6);
-        }
-        if (!isACT18Question(question)) {
-            options.add(optionACT18);
-        }
-        if (!isACT24Question(question)) {
-            options.add(optionACT24);
-        }
-        options.add(optionOutStock);
-
-        answer.setOptions(options);
-
-        return answer;
     }
 
 }

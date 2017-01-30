@@ -547,10 +547,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         screenQuestion);
                 ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptions(
                         screenQuestion.getAnswer().getOptions());
-
+                //Getting the question to put the correct values on it
                 ArrayList<Question> questions = new ArrayList<>();
                 for (Option option : screenQuestion.getAnswer().getOptions()) {
-                    Question question = Treatment.getQuestionFromOptionId(option.getId_option());
+                    Question question = Question.findByID(option.getId_option());
                     if (question != null) {
                         questions.add(question);
                     }

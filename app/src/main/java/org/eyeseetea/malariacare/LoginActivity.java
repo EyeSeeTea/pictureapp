@@ -129,6 +129,7 @@ public class LoginActivity extends AbsLoginActivity {
 
     @Override
     protected void onLoginButtonClicked(Editable server, Editable username, Editable password) {
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
             askEula(R.string.app_EULA, R.raw.eula, LoginActivity.this);
@@ -156,8 +157,9 @@ public class LoginActivity extends AbsLoginActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         rememberEulaAccepted(context);
-                        login(serverText.toString(), usernameEditText.toString(),
-                                passwordEditText.toString());
+                        login(serverText.getText().toString(),
+                                usernameEditText.getText().toString(),
+                                passwordEditText.getText().toString());
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).create();
@@ -272,6 +274,8 @@ public class LoginActivity extends AbsLoginActivity {
 
         @Override
         protected Exception doInBackground(Void... params) {
+            //TODO jsanchez, Why is called from AsyncTask?, It's not very correct and force
+            //run explicitly in main thread accions over views in LoginActivityStrategy
             mLoginActivityStrategy.onCreate();
             return null;
         }

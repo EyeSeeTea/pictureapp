@@ -49,7 +49,13 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
             finishAndGo(DashboardActivity.class);
         } else {
-            addDemoButton();
+            //TODO jsanchez, this is necessary because oncreate is called from
+            //AsyncTask review Why is invoked from AsyncTask, It's not very correct
+            loginActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    addDemoButton();
+                }
+            });
         }
     }
 

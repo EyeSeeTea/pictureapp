@@ -118,6 +118,10 @@ public class Program extends BaseModel {
         return maxTotalQuestions;
     }
 
+    public boolean isStockProgram() {
+        return uid.equals("GnAx3VLVfUi") ? true : false;
+    }
+
     public Long getId_program() {
         return id_program;
     }

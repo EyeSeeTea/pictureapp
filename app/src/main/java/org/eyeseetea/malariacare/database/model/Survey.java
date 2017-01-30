@@ -571,6 +571,16 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return !isSent() && !isCompleted() && !isHide();
     }
 
+    public boolean isStockSurvey() {
+        if (program == null) {
+            program = Program.findById(id_program);
+        }
+        if (program != null) {
+            return program.isStockProgram();
+        }
+        return false;
+    }
+
     public Float getMainScore() {
         //The main score is only return from a query 1 time
         if (this.mainScore == null) {
@@ -579,6 +589,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         }
         return mainScore;
     }
+
 
     public void setMainScore(Float mainScore) {
         this.mainScore = mainScore;

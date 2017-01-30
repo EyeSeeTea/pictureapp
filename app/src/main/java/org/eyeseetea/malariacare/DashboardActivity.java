@@ -527,16 +527,23 @@ public class DashboardActivity extends BaseActivity {
 
 
     public void beforeExit() {
-        Survey survey = Session.getMalariaSurvey();
+        Survey malariaSurvey = Session.getMalariaSurvey();
         Survey stockSurvey=Session.getStockSurvey();
-        if (survey != null) {
-            boolean isInProgress = survey.isInProgress();
-            survey.getValuesFromDB();
+        if (malariaSurvey != null) {
+            boolean isMalariaInProgress = malariaSurvey.isInProgress();
+            boolean isStockSurveyInProgress = stockSurvey.isInProgress();
+            malariaSurvey.getValuesFromDB();
+            stockSurvey.getValuesFromDB();
             //Exit + InProgress -> delete
-            if (isBackPressed && isInProgress) {
-                Session.setMalariaSurvey(null);
-                Session.setStockSurvey(null);
-                survey.delete();
+            if (isBackPressed && (isMalariaInProgress || isStockSurveyInProgress)) {
+                if (isMalariaInProgress) {
+                    Session.setMalariaSurvey(null);
+                    malariaSurvey.delete();
+                }
+                if (isStockSurveyInProgress) {
+                    Session.setStockSurvey(null);
+                    stockSurvey.delete();
+                }
                 isBackPressed = false;
             }
         }

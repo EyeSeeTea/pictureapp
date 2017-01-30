@@ -61,7 +61,7 @@ public class PushSurveysUseCase {
 
         PushController.getInstance().setPushInProgress(true);
 
-        //Fixme the method getAllUnsentSurveys returns all the surveys not sent(completed,
+        //Fixme the method getAllUnsentMalariaSurveys returns all the surveys not sent(completed,
         // inprogres, and hide)
         //Select surveys from sql
         List<Survey> surveys = Survey.getAllSurveysToBeSent();

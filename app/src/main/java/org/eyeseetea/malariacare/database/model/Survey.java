@@ -145,12 +145,20 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     /**
-     * Returns all the surveys with status yet not put to "Sent"
+     * Returns all the malaria surveys with status yet not put to "Sent"
      */
-    public static List<Survey> getAllUnsentSurveys() {
-        return new Select().from(Survey.class)
-                .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
-                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_CONFLICT))
+    public static List<Survey> getAllUnsentMalariaSurveys() {
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("s", Survey$Table.STATUS)).isNot(
+                        Constants.SURVEY_SENT))
+                .and(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.STATUS)).isNot(
+                        Constants.SURVEY_CONFLICT))
+                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).is(
+                        "RjBwXyc5I66"))
                 .orderBy(Survey$Table.EVENTDATE)
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }
@@ -167,11 +175,17 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     /**
-     * Returns all the surveys with status put to "Sent"
+     * Returns all the malaria surveys with status put to "Sent"
      */
-    public static List<Survey> getAllSentSurveys() {
-        return new Select().from(Survey.class)
-                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
+    public static List<Survey> getAllSentMalariaSurveys() {
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.STATUS)).eq(
+                        Constants.SURVEY_SENT))
+                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).is(
+                        "RjBwXyc5I66"))
                 .orderBy(false, Survey$Table.EVENTDATE).queryList();
     }
 

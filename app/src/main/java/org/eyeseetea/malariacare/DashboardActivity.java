@@ -57,6 +57,7 @@ import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 import java.util.List;
@@ -596,6 +597,9 @@ public class DashboardActivity extends BaseActivity {
 
         Survey survey = Session.getMalariaSurvey();
         survey.updateSurveyStatus();
+        Survey stockSurvey = Session.getStockSurvey();
+        stockSurvey.setStatus(Constants.SURVEY_COMPLETED);
+        stockSurvey.save();
         closeSurveyFragment();
     }
 

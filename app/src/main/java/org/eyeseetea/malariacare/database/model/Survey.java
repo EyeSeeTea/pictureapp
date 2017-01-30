@@ -746,10 +746,13 @@ public class Survey extends BaseModel implements VisitableToSDK {
         Question rootQuestion = Question.findRootQuestion(tab);
         Question localQuestion = rootQuestion;
         while (localQuestion.getSibling() != null) {
-            if (localQuestion.isCompulsory()) {
+            if (localQuestion.isCompulsory() && !localQuestion.isStockQuestion()) {
                 numRequired++;
             }
             localQuestion = localQuestion.getSibling();
+        }
+        if (localQuestion.isStockQuestion() || !localQuestion.isCompulsory()) {
+            numRequired--;
         }
 
         //Add children required by each parent (value+question)

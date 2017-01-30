@@ -1376,6 +1376,10 @@ public class Question extends BaseModel {
     }
 
     public boolean isStockQuestion() {
+        if (getHeader() == null) {
+            Header header = Header.findById(id_header);
+            setHeader(header);
+        }
         if (getHeader() != null && getHeader().getName().equals("Stock")) {
             return true;
         }

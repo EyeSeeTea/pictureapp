@@ -89,6 +89,7 @@ import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
+import org.hisp.dhis.android.sdk.persistence.models.Constant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1019,7 +1020,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     public void onClick(DialogInterface dialog, int arg1) {
                         hideKeyboard(PreferencesState.getInstance().getContext());
                         Session.getMalariaSurvey().updateSurveyStatus();
-                        Session.getStockSurvey().updateSurveyStatus();
+                        Session.getStockSurvey().setStatus(Constants.SURVEY_COMPLETED);
                         DashboardActivity.dashboardActivity.closeSurveyFragment();
                         isClicked = false;
                     }

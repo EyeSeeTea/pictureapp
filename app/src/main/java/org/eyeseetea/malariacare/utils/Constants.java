@@ -84,7 +84,10 @@ public class Constants {
             SURVEY_CONFLICT = 4,
             SURVEY_QUARANTINE = 5,
             SURVEY_SENDING = 6;
-
+    // ############# SURVEY TYPE ###############
+    public static final int SURVEY_BALANCE = 0,
+            SURVEY_EXPENSE = 1,
+            SURVEU_RECEIP = 2;
     public static final String FONTS_XSMALL = "xsmall",
             FONTS_SMALL = "small",
             FONTS_MEDIUM = "medium",

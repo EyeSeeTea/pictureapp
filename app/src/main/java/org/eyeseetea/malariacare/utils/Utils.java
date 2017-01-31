@@ -258,6 +258,15 @@ public class Utils {
         return dateFormatted;
     }
 
+    /**
+     * Method to get the date of today with hour at 0
+     */
+    public static Date getTodayDate() {
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        return today.getTime();
+    }
+
     public static Calendar DateToCalendar(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

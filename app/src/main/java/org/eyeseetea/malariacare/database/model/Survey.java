@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -362,6 +363,30 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
                 .and(Condition.column(Survey$Table.EVENTDATE).greaterThanOrEq(
                         minDateForMonitor)).queryList();
+    }
+
+    /**
+     * Find the surveys for a program, with a type o no type ans with the event date grater than
+     * passed.
+     *
+     * @param program    The program of the survey
+     * @param surveyType The type of the survey
+     * @param date       The min eventDate of the survey
+     * @return A list of surveys
+     */
+    public static List<Survey> findSurveysWithProgramTypeWithGreaterDate(Program program,
+            @Nullable int surveyType, Date date) {
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM))
+                        .eq(program.getId_program()))
+                .and(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.TYPE)).eq(
+                        surveyType))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("s", Survey$Table.EVENTDATE)).greaterThanOrEq(
+                        date)).queryList();
     }
 
     /**
@@ -894,6 +919,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return getRDTName().equals(
                 PreferencesState.getInstance().getContext().getResources().getString(
                         R.string.rdtPositive));
+    }
+    public boolean isExpenseSurvey() {
+        return type == Constants.SURVEY_EXPENSE;
     }
 
     /**

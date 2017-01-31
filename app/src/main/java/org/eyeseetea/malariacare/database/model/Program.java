@@ -89,6 +89,12 @@ public class Program extends BaseModel {
     public static Program getFirstProgram() {
         return new Select().from(Program.class).querySingle();
     }
+    public static Program getStockProgram(){
+        return new Select()
+                .from(Program.class)
+                .where(Condition.column(Program$Table.UID)
+                        .is("GnAx3VLVfUi")).querySingle();
+    }
 
     public static int getMaxTotalQuestions() {
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MockedPushSurveysUseCase {
     public void execute(Callback callback) {
-        List<Survey> surveys = Survey.getAllSurveysToBeSent();
+        List<Survey> surveys = Survey.getAllMalariaSurveysToBeSent();
 
         //Check surveys not in progress
         for (Survey survey : surveys) {

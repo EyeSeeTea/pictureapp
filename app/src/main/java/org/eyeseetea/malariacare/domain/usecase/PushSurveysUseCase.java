@@ -64,7 +64,7 @@ public class PushSurveysUseCase {
         //Fixme the method getAllUnsentMalariaSurveys returns all the surveys not sent(completed,
         // inprogres, and hide)
         //Select surveys from sql
-        List<Survey> surveys = Survey.getAllSurveysToBeSent();
+        List<Survey> surveys = Survey.getAllMalariaSurveysToBeSent();
 
         //No surveys to send -> done
         if (surveys == null || surveys.isEmpty()) {
@@ -124,7 +124,7 @@ public class PushSurveysUseCase {
     private void callPushBySDK() {
 
         List<Survey> filteredSurveys = new ArrayList<>();
-        List<Survey> surveys = Survey.getAllSurveysToBeSent();
+        List<Survey> surveys = Survey.getAllMalariaSurveysToBeSent();
 
         //Check surveys not in progress
         for (Survey survey : surveys) {

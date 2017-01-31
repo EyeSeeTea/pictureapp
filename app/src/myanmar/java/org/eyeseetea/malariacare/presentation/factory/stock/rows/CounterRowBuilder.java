@@ -14,7 +14,7 @@ import java.util.List;
  * Created by manuel on 27/12/16.
  */
 
-public class CounterRowBuilder extends StockRowBuilder {
+public abstract class CounterRowBuilder extends StockRowBuilder {
     public CounterRowBuilder(String rowTitle, Context context) {
         super(rowTitle, context);
     }
@@ -35,9 +35,13 @@ public class CounterRowBuilder extends StockRowBuilder {
     }
 
     @Override
-    protected Object updateColumn(Object currentValue, SurveyStock surveyStock) {
-        Integer currentCount = (Integer) currentValue;
-        //TODO  increment value depending on survey value
-        return Integer.valueOf(currentCount + 0);
+    protected Object updateColumn(Object currentValue, float newValue, SurveyStock surveyStock) {
+        Float currentCount = (Float) currentValue;
+        return Float.valueOf(currentCount + incrementCount(surveyStock, newValue));
     }
+
+    /**
+     * Each counterRow fills this function to evaluate if the survey increments the counter or not
+     */
+    protected abstract float incrementCount(SurveyStock survey, float newValue);
 }

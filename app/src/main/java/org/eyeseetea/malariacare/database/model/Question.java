@@ -1421,6 +1421,34 @@ public class Question extends BaseModel {
         return false;
     }
 
+    public boolean isRDT() {
+        return uid.equals("Sttahtf0iH0");
+    }
+
+    public boolean isACT6() {
+        return uid.equals("ihlfWLBg7Nr");
+    }
+
+    public boolean isACT12() {
+        return uid.equals("nN4jwsyjmE9");
+    }
+
+    public boolean isACT18() {
+        return uid.equals("GqHQPu6yCfu");
+    }
+
+    public boolean isACT24() {
+        return uid.equals("RUqD8Kckt3B");
+    }
+
+    public boolean isCq() {
+        return uid.equals("jZvZ4Q39J6s");
+    }
+
+    public boolean isPq() {
+        return uid.equals("Sttahtf0iHZ");
+    }
+
     public static Question getACT6Question() {
         return findByUID("ihlfWLBg7Nr");
     }

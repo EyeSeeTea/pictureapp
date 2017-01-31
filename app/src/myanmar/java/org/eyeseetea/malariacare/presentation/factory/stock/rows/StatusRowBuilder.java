@@ -37,8 +37,8 @@ public class StatusRowBuilder extends StockRowBuilder {
     }
 
     @Override
-    protected Object updateColumn(Object currentValue, SurveyStock surveyStock) {
-        return null;
+    protected Object updateColumn(Object currentValue, float newValue, SurveyStock surveyStock) {
+        return "";
     }
 
     @Override

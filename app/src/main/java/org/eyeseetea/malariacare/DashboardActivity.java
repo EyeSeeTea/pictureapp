@@ -568,7 +568,8 @@ public class DashboardActivity extends BaseActivity {
         Survey survey = new Survey(null, myanmarProgram, Session.getUser());
         survey.save();
         Session.setMalariaSurvey(survey);
-        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser());
+        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser(),
+                Constants.SURVEY_EXPENSE);
         stockSurvey.save();
         Session.setStockSurvey(stockSurvey);
         //Look for coordinates

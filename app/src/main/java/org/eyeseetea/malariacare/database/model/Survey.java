@@ -135,6 +135,20 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.setUser(user);
     }
 
+    public Survey(OrgUnit orgUnit, Program program, User user, int type) {
+        this();
+
+        // Possibilities [ In progress | Completed | Sent ]
+        this.status = Constants.SURVEY_IN_PROGRESS;
+
+        //Set context of the survey
+        this.setOrgUnit(orgUnit);
+        this.setProgram(program);
+        this.setUser(user);
+        this.type = type;
+    }
+
+
     /**
      * Returns a concrete survey, if it exists
      */

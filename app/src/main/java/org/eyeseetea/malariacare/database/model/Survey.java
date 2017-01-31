@@ -92,6 +92,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
     @Column
     Integer status;
 
+    @Column
+    Integer type;
+
     /**
      * List of values for this survey
      */
@@ -508,6 +511,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     /**
@@ -1089,9 +1096,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 : survey.id_org_unit != null) {
             return false;
         }
-        if (id_user != null ? !id_user.equals(survey.id_user) : survey.id_user != null) {
+        if (id_user != null ? !id_user.equals(survey.id_user) : survey.id_user != null)
             return false;
-        }
         if (creationDate != null ? !creationDate.equals(survey.creationDate)
                 : survey.creationDate != null) {
             return false;
@@ -1107,7 +1113,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 : survey.scheduledDate != null) {
             return false;
         }
-        return !(status != null ? !status.equals(survey.status) : survey.status != null);
+        if (status != null ? !status.equals(survey.status) : survey.status != null) return false;
+        return type != null ? type.equals(survey.type) : survey.type == null;
 
     }
 
@@ -1122,6 +1129,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         result = 31 * result + (eventDate != null ? eventDate.hashCode() : 0);
         result = 31 * result + (scheduledDate != null ? scheduledDate.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
 
@@ -1137,9 +1145,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 ", eventDate=" + eventDate +
                 ", scheduledDate=" + scheduledDate +
                 ", status=" + status +
+                ", type=" + type +
                 '}';
     }
-
 
     public Float getCounterValue(Question question, Option selectedOption) {
         Question optionCounter = question.findCounterByOption(selectedOption);

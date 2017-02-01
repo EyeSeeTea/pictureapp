@@ -40,6 +40,7 @@
                     app:font_name="@string/specific_language_font" />
 
                 <org.eyeseetea.sdk.presentation.views.CustomEditText
+                    android:id="@+id/new_receipt_balance_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/purple_gray__rounded_background"

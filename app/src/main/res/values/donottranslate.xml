@@ -68,6 +68,7 @@
     <string name="tab_tag_improve" translatable="false">tab_improve</string>
     <string name="tab_tag_stock" translatable="false">tab_stock</string>
     <string name="tab_tag_monitor" translatable="false">tab_monitor</string>
+    <string name="fragment_new_receipt" translatable="false">fragment_new_receipt</string>
 
     <item name="developer_option" translatable="false" type="string">show_dev_options</item>
     <item name="export_data_option" translatable="false" type="string">export_data_option</item>

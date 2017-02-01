@@ -333,6 +333,14 @@ public class DashboardActivity extends BaseActivity {
     }
 
 
+    public void initNewReceiptFragment() {
+        tabHost.getTabWidget().setVisibility(View.GONE);
+    }
+    public void closeNewReceiptFragment(){
+        tabHost.getTabWidget().setVisibility(View.VISIBLE);
+    }
+
+
     // Add the fragment to the activity, pushing this transaction
     // on to the back stack.
     private void replaceFragment(int layout, Fragment fragment) {
@@ -749,5 +757,6 @@ public class DashboardActivity extends BaseActivity {
             getSurveysFromService();
         }
     }
+
 
 }

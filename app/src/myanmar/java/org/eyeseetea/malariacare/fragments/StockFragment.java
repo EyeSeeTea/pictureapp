@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -64,7 +67,16 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
 
     private void initViews(View view) {
         table = (WebView) view.findViewById(R.id.fragment_stock_table);
+        Button newReceipt = (Button) view.findViewById(R.id.fragment_stock_new_receipt);
+
+        newReceipt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNewReceiptFragment();
+            }
+        });
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -199,6 +211,28 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
                 }
                 reloadWebView(stockBuilder);
             }
+        }
+    }
+
+
+    private void showNewReceiptFragment() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            replaceFragment(R.id.dashboard_stock_container, new NewReceiptFragment());
+            DashboardHeaderStrategy.getInstance().init(activity, R.string.fragment_new_receipt);
+            if (activity instanceof DashboardActivity) {
+                ((DashboardActivity) activity).initNewReceiptFragment();
+            }
+        }
+    }
+
+
+    private void replaceFragment(int layout, Fragment fragment) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
+            ft.replace(layout, fragment);
+            ft.commit();
         }
     }
 

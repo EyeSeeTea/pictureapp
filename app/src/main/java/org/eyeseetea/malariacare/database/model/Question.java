@@ -1449,6 +1449,16 @@ public class Question extends BaseModel {
         return uid.equals("Sttahtf0iHZ");
     }
 
+    public static Question getRDTQuestion(){
+        return findByUID("Sttahtf0iH0");
+    }
+    public static Question getPqQuestion(){
+        return findByUID("Sttahtf0iHZ");
+    }
+    public static Question getCqQuestion(){
+        return findByUID("jZvZ4Q39J6s");
+    }
+
     public static Question getACT6Question() {
         return findByUID("ihlfWLBg7Nr");
     }

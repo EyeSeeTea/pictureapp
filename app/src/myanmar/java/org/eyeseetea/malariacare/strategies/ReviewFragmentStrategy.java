@@ -12,7 +12,7 @@ import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
-    final String TITLE_SEPARATOR=": ";
+    final String TITLE_SEPARATOR = ": ";
 
     public TableRow createViewRow(TableRow rowView, Value value) {
         //Sets the value text in the row and add the question as tag.
@@ -25,9 +25,10 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
                         : value.getValue());
         if ((value.getQuestion() != null)) {
             valueTextView.setTag(value.getQuestion());
-            questionTextView.setText(value.getQuestion().getInternationalizedCodeDe_Name()+TITLE_SEPARATOR);
+            questionTextView.setText(
+                    value.getQuestion().getInternationalizedCodeDe_Name() + TITLE_SEPARATOR);
             //Adds click listener to hide the fragment and go to the clicked question.
-            valueTextView.setOnClickListener(new View.OnClickListener() {
+            rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Question question = (Question) v.getTag();
@@ -36,8 +37,9 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
             });
 
             if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
-                valueTextView.setBackgroundColor(
-                        Color.parseColor("#" + value.getOption().getBackground_colour()));
+                rowView.setBackgroundColor(
+                        Color.parseColor(
+                                "#" + value.getOption().getBackground_colour()));
             }
 
         }

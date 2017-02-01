@@ -75,10 +75,6 @@ public class StockService extends IntentService {
         List<Survey> sentSurveysForStock = Survey.findSurveysWithProgramAndGreaterDate(
                 Program.getStockProgram(), queryDate);
 
-        Date date = Survey.getLastDateForSurveyType(Constants.SURVEY_EXPENSE);
-
-        Log.d(TAG, "Last survey date" + date.toString());
-
         Log.i(TAG, String.format("Found %d surveys to build monitor info, aggregating data...",
                 sentSurveysForStock.size()));
 

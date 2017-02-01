@@ -272,4 +272,14 @@ public class Utils {
         cal.setTime(date);
         return cal;
     }
+
+    /**
+     * Method to get if the endDate is grater or equal to the endDate
+     * @param starDate The start date to compare with.
+     * @param endDate The date tha has to be greater or equals to the start date.
+     * @return True if is greater or equals false if not.
+     */
+    public static boolean dateGreaterOrEqualsThanDate(Date starDate, Date endDate) {
+        return starDate.equals(endDate) || starDate.before(endDate);
+    }
 }

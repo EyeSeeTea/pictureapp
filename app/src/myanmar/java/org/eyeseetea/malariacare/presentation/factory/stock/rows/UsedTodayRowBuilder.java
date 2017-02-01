@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.presentation.factory.stock.utils.SurveyStock;
+import org.eyeseetea.malariacare.utils.Utils;
 
 /**
  * Created by manuel on 29/12/16.
@@ -17,6 +18,13 @@ public class UsedTodayRowBuilder extends CounterRowBuilder {
 
     @Override
     protected float incrementCount(SurveyStock survey, float newValue) {
-        return survey.isExpenseSurvey() ? newValue : 0;
+        return survey.isExpenseSurvey() && isTodaySurvey(survey) ? newValue : 0;
     }
+
+    private boolean isTodaySurvey(SurveyStock survey) {
+        return Utils.dateGreaterOrEqualsThanDate(Utils.getTodayDate(),
+                survey.getSurvey().getEventDate());
+    }
+
+
 }

@@ -9,9 +9,9 @@ import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockBuilder;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,9 +63,8 @@ public class StockService extends IntentService {
 
     private void prepareStockData() {
         Log.i(TAG, "Preparing stock data...");
-        List<Survey> sentSurveysForStock = Survey.findSurveysWithProgramTypeWithGreaterDate(
-                Program.getStockProgram(),
-                Constants.SURVEY_EXPENSE, Utils.getTodayDate());
+        List<Survey> sentSurveysForStock = Survey.findSurveysWithProgramAndGreaterDate(
+                Program.getStockProgram(), new Date(0));
 
         Log.i(TAG, String.format("Found %d surveys to build monitor info, aggregating data...",
                 sentSurveysForStock.size()));

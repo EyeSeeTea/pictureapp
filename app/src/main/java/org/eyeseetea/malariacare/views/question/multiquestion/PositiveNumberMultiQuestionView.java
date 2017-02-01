@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
@@ -60,15 +61,17 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
         header = (CustomTextView) findViewById(R.id.row_header_text);
         numberPicker = (CustomEditText) findViewById(R.id.answer);
 
+        Validation.getInstance().addInput(numberPicker);
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
                     positiveNumber = PositiveNumber.parse(numberPicker.getText().toString());
                     notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+                    Validation.getInstance().removeInputError(numberPicker);
 
                 } catch (InvalidPositiveNumberException e) {
-                    numberPicker.setError(
+                    Validation.getInstance().addinvalidInput(numberPicker,
                             context.getString(R.string.dynamic_error_age));
                 }
             }

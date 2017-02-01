@@ -603,6 +603,8 @@ public class PopulateDB {
                     question.setDe_name(line[2]);
                     question.setHelp_text(line[3]);
                     question.setForm_name(line[4]);
+                    //Update necessary from migration22 in myanmar
+                    question.setOutput(Integer.valueOf(line[12]));
                     //Update necessary from migration3
                     question.setTotalQuestions(Integer.valueOf(line[13]));
                     //Update necessary from migration4

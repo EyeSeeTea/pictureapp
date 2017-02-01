@@ -21,7 +21,6 @@
 package org.eyeseetea.malariacare.database.utils.populatedb;
 
 import android.content.res.AssetManager;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.opencsv.CSVReader;
@@ -53,9 +52,7 @@ import org.hisp.dhis.android.sdk.persistence.preferences.DateTimeManager;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

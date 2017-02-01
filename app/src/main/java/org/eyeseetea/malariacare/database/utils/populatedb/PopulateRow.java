@@ -10,12 +10,7 @@ import org.eyeseetea.malariacare.database.model.Tab;
 
 import java.util.HashMap;
 
-/**
- * Created by manuel on 11/01/17.
- */
-
 public class PopulateRow {
-
     static Question populateQuestion(String[] line, HashMap<Long, Header> headerFK,
             HashMap<Long, Answer> answerFK, @Nullable Question question) {
         if (question == null) {
@@ -86,5 +81,4 @@ public class PopulateRow {
         tab.setType(Integer.valueOf(line[4]));
         return tab;
     }
-
 }

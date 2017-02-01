@@ -15,9 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by manuel on 11/01/17.
- */
 
 public class CreateRelationsIdCsvDB {
     static HashMap<Long, Header> getHeaderFKRelationCsvDB(AssetManager assetManager)
@@ -25,7 +22,8 @@ public class CreateRelationsIdCsvDB {
         HashMap<Long, Header> headerFK = new HashMap<>();
         List<Header> headers = Header.getAllHeaders();
         List<Long> csvIds = new ArrayList<>();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.HEADERS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(assetManager.open(PopulateDB.HEADERS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -42,7 +40,8 @@ public class CreateRelationsIdCsvDB {
         HashMap<Long, Answer> answerFK = new HashMap<>();
         List<Answer> answers = Answer.getAllAnswers();
         List<Long> csvIds = new ArrayList<>();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.ANSWERS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(assetManager.open(PopulateDB.ANSWERS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -53,12 +52,14 @@ public class CreateRelationsIdCsvDB {
         }
         return answerFK;
     }
-    static HashMap<Long,Tab> getTabsIdRelationsCsvDB(AssetManager assetManager)
+
+    static HashMap<Long, Tab> getTabsIdRelationsCsvDB(AssetManager assetManager)
             throws IOException {
         HashMap<Long, Tab> tabFK = new HashMap<>();
         List<Tab> headers = Tab.getAllTabs();
         List<Long> csvIds = new ArrayList<>();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.TABS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(assetManager.open(PopulateDB.TABS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -70,12 +71,13 @@ public class CreateRelationsIdCsvDB {
         return tabFK;
     }
 
-    static HashMap<Long,Program> getProgramIdRelationCsvDB(AssetManager assetManager)
+    static HashMap<Long, Program> getProgramIdRelationCsvDB(AssetManager assetManager)
             throws IOException {
         HashMap<Long, Program> programFK = new HashMap<>();
         List<Program> headers = Program.getAllPrograms();
         List<Long> csvIds = new ArrayList<>();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.PROGRAMS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(assetManager.open(PopulateDB.PROGRAMS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {

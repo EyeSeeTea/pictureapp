@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockBuilder;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.Date;
@@ -63,8 +64,20 @@ public class StockService extends IntentService {
 
     private void prepareStockData() {
         Log.i(TAG, "Preparing stock data...");
+
+        Date lastEvenSurveyDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
+        Date queryDate = lastEvenSurveyDate;
+        if (lastEvenSurveyDate == null || Utils.dateGreaterOrEqualsThanDate(Utils.getTodayDate(),
+                lastEvenSurveyDate)) {
+            queryDate = Utils.getTodayDate();
+        }
+
         List<Survey> sentSurveysForStock = Survey.findSurveysWithProgramAndGreaterDate(
-                Program.getStockProgram(), new Date(0));
+                Program.getStockProgram(), queryDate);
+
+        Date date = Survey.getLastDateForSurveyType(Constants.SURVEY_EXPENSE);
+
+        Log.d(TAG, "Last survey date" + date.toString());
 
         Log.i(TAG, String.format("Found %d surveys to build monitor info, aggregating data...",
                 sentSurveysForStock.size()));

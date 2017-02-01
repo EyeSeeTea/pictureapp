@@ -384,6 +384,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
                         date)).queryList();
     }
 
+    public static Date getLastDateForSurveyType(int type) {
+        Survey survey = new Select(Survey$Table.EVENTDATE)
+                .method("MAX", Survey$Table.EVENTDATE)
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.TYPE).eq(type))
+                .and(Condition.column(Survey$Table.EVENTDATE)).querySingle();
+        if (survey == null) {
+            return new Date(0);
+        }
+        return survey.getEventDate();
+    }
+
     /**
      * Finds a survey by its ID
      */
@@ -549,6 +561,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getSurveyType() {
+        return type;
     }
 
     /**

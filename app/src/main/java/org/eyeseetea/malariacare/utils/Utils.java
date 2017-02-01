@@ -274,7 +274,7 @@ public class Utils {
     }
 
     /**
-     * Method to get if the endDate is grater or equal to the endDate
+     * Method to get if the endDate is grater or equal than the startDate
      * @param starDate The start date to compare with.
      * @param endDate The date tha has to be greater or equals to the start date.
      * @return True if is greater or equals false if not.

@@ -18,7 +18,7 @@
  */
 
 
-package org.eyeseetea.malariacare.database.utils;
+package org.eyeseetea.malariacare.database.utils.populatedb;
 
 import android.content.res.AssetManager;
 import android.util.Log;
@@ -43,6 +43,8 @@ import org.eyeseetea.malariacare.database.model.Score;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.Event;
 import org.hisp.dhis.android.sdk.persistence.models.FailedItem;
@@ -623,6 +625,7 @@ public class PopulateDB {
         }
         reader.close();
     }
+
 
     public static void addNotTestedRemminder(AssetManager assetManager) throws IOException {
         //Reset inner references

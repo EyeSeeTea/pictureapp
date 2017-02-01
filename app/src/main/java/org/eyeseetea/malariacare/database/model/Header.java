@@ -65,11 +65,16 @@ public class Header extends BaseModel {
         setTab(tab);
     }
 
+    public static List<Header> getAllHeaders() {
+        return new Select().all().from(Header.class).queryList();
+    }
+
     public static Header findById(Long id) {
         return new Select()
                 .from(Header.class)
                 .where(Condition.column(Header$Table.ID_HEADER).eq(id)).querySingle();
     }
+
 
     public Long getId_header() {
         return id_header;

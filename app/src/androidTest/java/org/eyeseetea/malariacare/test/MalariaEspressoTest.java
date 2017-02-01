@@ -43,7 +43,7 @@
 //import org.eyeseetea.malariacare.database.model.Tab;
 //import org.eyeseetea.malariacare.database.model.User;
 //import org.eyeseetea.malariacare.database.model.Value;
-//import org.eyeseetea.malariacare.database.utils.PopulateDB;
+//import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 //import org.eyeseetea.malariacare.database.utils.Session;
 //import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentUnsentAdapter;
 //import org.eyeseetea.malariacare.test.utils.IntentServiceIdlingResource;

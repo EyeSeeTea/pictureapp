@@ -246,9 +246,33 @@
     <string name="follow_up_LLIN_ITN_ownership_review_title">LLIN_INT所有權</string>
     <string name="drugs_referral_instructions_review_title">推薦</string>
     <string name="drugs_referral_ACT12_review_title">ACT12</string>
+    <string name="drugs_referral_ACT6_review_title">ACT6</string>
+    <string name="drugs_referral_ACT18_review_title">ACT18</string>
+    <string name="drugs_referral_ACT24_review_title">ACT24</string>
+    <string name="drugs_referral_Cq_review_title">Cq</string>
+    <string name="drugs_referral_Pq_review_title">Pq</string>
+    <string name="stock_rdt_review_title">RDT</string>
+
+    <string name="drugs_referral_ACT12_review_help_text"></string>
+    <string name="drugs_referral_ACT18_review_help_text"></string>
+    <string name="drugs_referral_ACT24_review_help_text"></string>
+    <string name="drugs_referral_ACT6_review_help_text"></string>
+    <string name="drugs_referral_Cq_review_help_text"></string>
+    <string name="drugs_referral_Pq_review_help_text"></string>
+    <string name="stock_rdt_review_help_text"></string>
+
     <string name="drugs_referral_PQx2_review_title">PQx2</string>
     <string name="drugs_referral_referred_review_title">推薦</string>
     <string name="follow_up_occupation_review_title">佔用</string>
     <string name="work_in_progress">工作正在进行中</string>
     <string name="dynamic_error_number">无效号码</string>
+    <string name="stock_balance">库存数</string>
+    <string name="receipts">入库数</string>
+    <string name="used_today">今日用量</string>
+    <string name="available">可用数</string>
+    <string name="status">状态</string>
+    <string name="see_receipt">查看之前入库信息</string>
+    <string name="new_receipt">新入库物资登记</string>
+    <string name="see_balance">查看之前校正库存登记</string>
+    <string name="new_balance">校正实际库存登记</string>
 </resources>

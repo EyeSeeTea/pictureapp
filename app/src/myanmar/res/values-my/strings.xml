@@ -248,9 +248,34 @@
     <string name="follow_up_LLIN_ITN_ownership_review_title">LLIN_INT ပိုင်ဆိုင်မှု</string>
     <string name="drugs_referral_instructions_review_title">ရည်ညွန်း</string>
     <string name="drugs_referral_ACT12_review_title">ACT12</string>
+    <string name="drugs_referral_ACT6_review_title">ACT6</string>
+    <string name="drugs_referral_ACT18_review_title">ACT18</string>
+    <string name="drugs_referral_ACT24_review_title">ACT24</string>
+    <string name="drugs_referral_Cq_review_title">Cq</string>
+    <string name="drugs_referral_Pq_review_title">Pq</string>
+    <string name="stock_rdt_review_title">RDT</string>
+
+    <string name="drugs_referral_ACT12_review_help_text"></string>
+    <string name="drugs_referral_ACT18_review_help_text"></string>
+    <string name="drugs_referral_ACT24_review_help_text"></string>
+    <string name="drugs_referral_ACT6_review_help_text"></string>
+    <string name="drugs_referral_Cq_review_help_text"></string>
+    <string name="drugs_referral_Pq_review_help_text"></string>
+    <string name="stock_rdt_review_help_text"></string>
+
     <string name="drugs_referral_PQx2_review_title">PQx2</string>
     <string name="drugs_referral_referred_review_title">ရည်ညွှန်း</string>
     <string name="follow_up_occupation_review_title">အလုပ်အကိုင်</string>
     <string name="work_in_progress">တိုးတက်မှုအတွက်အလုပ်</string>
     <string name="dynamic_error_number">မမှန်ကန်တဲ့အရေအတွက်</string>
+    <string name="stock_balance">မနေ.ကလက်ကျန်</string>
+    <string name="receipts">ရရှိ </string>
+    <string name="used_today">ယနေ.သုံး</string>
+    <string name="available">ယနေ.လက်ရှိ</string>
+    <string name="status">လက်ရှိအခြေအနေ</string>
+    <string name="see_receipt">ယခင်ရရှိမှုများကြည့်ရန်</string>
+    <string name="new_receipt">ရရှိစာရင်းအသစ်သွင်းရန်</string>
+    <string name="see_balance">ယခင်စာရင်းပြင်ဆင်ထားမှုများ ကြည့်ရန်</string>
+    <string name="new_balance">ဆေးဝါးကိရိယာစာရင်း ပြင်ဆင်ရန်</string>
+
 </resources>

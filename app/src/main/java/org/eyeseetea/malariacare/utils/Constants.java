@@ -31,7 +31,8 @@ public class Constants {
             SWITCH_BUTTON = 22,
             QUESTION_LABEL = 23,
             IMAGE_RADIO_GROUP_NO_DATAELEMENT = 24,
-            IMAGE_RADIO_GROUP = 25;
+            IMAGE_RADIO_GROUP = 25,
+            POSITIVE_OR_ZERO_INT = 26;
 
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
@@ -112,6 +113,10 @@ public class Constants {
      * Max columns for the monitor activity (6 months by default)
      */
     public static final int MONITOR_HISTORY_SIZE = 6;
+    /**
+     * Max columns for the stock tab (the different type of drugs)
+     */
+    public static final int STOCK_HISTORY_SIZE = 7;
 
     /**
      * Intent extra param that states that the login is being done due to an attempt to change the

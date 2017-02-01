@@ -340,5 +340,8 @@
 
     <string name="out_stock_option">Out of stock</string>
 
+    <string name="date">Date:</string>
+    <string name="date_format_forward_slash">yyyy/mm/dd</string>
+
 
 </resources>

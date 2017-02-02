@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:layout_width="94dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:paddingBottom="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
+            android:text="@string/received"
+            android:textColor="@color/dark_purple"
+            android:textSize="?attr/font_small"
+            app:font_name="@string/specific_language_font" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/light_purple_rounded_background"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="@string/RDT"
+            android:textColor="@color/dark_purple"
+            android:textSize="?attr/font_small"
+            app:font_name="@string/specific_language_font" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/light_purple_rounded_background"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/x6"
+            android:textColor="@color/dark_purple"
+            android:textSize="?attr/font_small"
+            app:font_name="@string/specific_language_font" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/light_purple_rounded_background"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="@string/x12"
+            android:textColor="@color/dark_purple"
+            android:textSize="?attr/font_small"
+            app:font_name="@string/specific_language_font" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/light_purple_rounded_background"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="@string/x18"
+            android:textColor="@color/dark_purple"
+            android:textSize="?attr/font_small"
+            app:font_name="@string/specific_language_font" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/light_purple_rounded_background"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="@string/x24"
+            android:textColor="@color/dark_purple"
+            android:textSize="?attr/font_small"
+            app:font_name="@string/specific_language_font" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/light_purple_rounded_background"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="@string/Cq"
+            android:textColor="@color/dark_purple"
+            android:textSize="?attr/font_small"
+            app:font_name="@string/specific_language_font" />
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/light_purple_rounded_background"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="@string/Pq"
+            android:textColor="@color/dark_purple"
+            android:textSize="?attr/font_small"
+            app:font_name="@string/specific_language_font" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/medium_light_purple" />
+</LinearLayout>

@@ -342,6 +342,11 @@
 
     <string name="date">Date:</string>
     <string name="date_format_forward_slash">yyyy/mm/dd</string>
+    <string name="received">Received on:</string>
+    <string name="x6">x6</string>
+    <string name="x12">x12</string>
+    <string name="x18">x18</string>
+    <string name="x24">x24</string>
 
 
 </resources>

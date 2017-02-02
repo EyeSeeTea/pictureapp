@@ -136,7 +136,7 @@ public class Tab extends BaseModel {
     public static List<Tab> getTabsBySession() {
         return new Select().from(Tab.class)
                 .where(Condition.column(Tab$Table.ID_PROGRAM).eq(
-                        Session.getSurvey().getProgram().getId_program()))
+                        Session.getMalariaSurvey().getProgram().getId_program()))
                 .orderBy(Tab$Table.ORDER_POS).queryList();
     }
     /**

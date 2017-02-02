@@ -13,7 +13,6 @@ public class PostMigration {
 
     public static void launchPostMigration() {
         Migration15AddOptionAttributeColumns.postMigrate();
-        Migration22AddStockCsvs.postMigrate();
         Migration22ModifyValuesLastMigration.postMigrate();
         Migration23AddTreatmentCsvs.postMigrate();
         Migration23AddStockCsvs.postMigrate();

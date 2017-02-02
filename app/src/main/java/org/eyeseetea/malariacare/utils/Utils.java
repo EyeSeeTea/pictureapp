@@ -232,6 +232,17 @@ public class Utils {
         }
         return calendar;
     }
+    public static Calendar parseStringToCalendar(String datestring,String dateFormat) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
+        try {
+            calendar.setTime(format.parse(datestring));// all done
+        } catch (ParseException e) {
+            calendar = null;
+            e.printStackTrace();
+        }
+        return calendar;
+    }
 
     public static String getClosingDateString(String format) {
         Calendar sysDate = Calendar.getInstance();

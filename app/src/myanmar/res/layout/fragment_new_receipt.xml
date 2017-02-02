@@ -27,7 +27,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="65dp"
+                    android:layout_width="94dp"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:paddingBottom="2dp"
@@ -39,11 +39,11 @@
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
 
-                <org.eyeseetea.sdk.presentation.views.CustomEditText
+                <org.eyeseetea.sdk.presentation.views.CustomTextView
                     android:id="@+id/new_receipt_balance_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/purple_gray__rounded_background"
+                    android:background="@drawable/light_purple_rounded_background"
                     android:hint="@string/date_format_forward_slash"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
@@ -87,6 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_bottom_border"
+                    android:inputType="number"
                     android:hint="0"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
@@ -130,6 +131,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_bottom_border"
                     android:hint="0"
+                    android:inputType="number"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
@@ -172,6 +174,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_bottom_border"
                     android:hint="0"
+                    android:inputType="number"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
@@ -214,6 +217,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_bottom_border"
                     android:hint="0"
+                    android:inputType="number"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
@@ -256,6 +260,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_bottom_border"
                     android:hint="0"
+                    android:inputType="number"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
@@ -298,6 +303,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_bottom_border"
                     android:hint="0"
+                    android:inputType="number"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
@@ -340,6 +346,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_bottom_border"
                     android:hint="0"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
@@ -443,7 +451,7 @@
             android:layout_height="55dp"
             android:padding="15dp"
             android:src="@drawable/stockselected"
-            android:background="@color/orange"
+            android:background="@color/myanmar_orange"
             android:layout_weight="1"/>
         <View
             android:layout_width="0dp"

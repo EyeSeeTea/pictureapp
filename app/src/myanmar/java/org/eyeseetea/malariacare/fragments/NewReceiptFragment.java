@@ -1,12 +1,15 @@
 package org.eyeseetea.malariacare.fragments;
 
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -15,19 +18,20 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.hisp.dhis.android.sdk.persistence.models.Constant;
+import org.eyeseetea.malariacare.views.DatePickerFragment;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class NewReceiptFragment extends Fragment {
     public static final String TAG = ".NewReceiptFragment";
 
-    private static EditText date, rdt, act6, act12, act18, act24, pq, cq;
+    private EditText rdt, act6, act12, act18, act24, pq, cq;
+    private TextView date;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,7 +44,7 @@ public class NewReceiptFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        date = (EditText) view.findViewById(R.id.new_receipt_balance_date);
+        date = (TextView) view.findViewById(R.id.new_receipt_balance_date);
         rdt = (EditText) view.findViewById(R.id.new_receipt_balance_rdt);
         act6 = (EditText) view.findViewById(R.id.new_receipt_balance_act6);
         act12 = (EditText) view.findViewById(R.id.new_receipt_balance_act12);
@@ -65,33 +69,63 @@ public class NewReceiptFragment extends Fragment {
                     }
                 });
 
+        final DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                NumberFormat formatter = new DecimalFormat("00");
+                date.setText(year + "/" + formatter.format(monthOfYear) + "/" + formatter.format(
+                        dayOfMonth));
+            }
+        });
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerFragment.show(getFragmentManager(), TAG);
+            }
+        });
+
     }
 
     private void submitPressed() {
         createNewSurvey();
-        DashboardActivityStrategy mDashboardActivityStrategy = new DashboardActivityStrategy();
-        mDashboardActivityStrategy.showStockFragment(getActivity(), false);
-        ((DashboardActivity) getActivity()).closeNewReceiptFragment();
+        closeFragment();
     }
 
     private void backPressed() {
-        DashboardActivityStrategy mDashboardActivityStrategy = new DashboardActivityStrategy();
-        mDashboardActivityStrategy.showStockFragment(getActivity(), false);
-        ((DashboardActivity) getActivity()).closeNewReceiptFragment();
+        closeFragment();
+    }
+
+    private void closeFragment() {
+        ((DashboardActivity) getActivity()).closeNewReceiptBalanceFragment();
     }
 
 
     private void createNewSurvey() {
         Survey survey = new Survey(null, Program.getStockProgram(), Session.getUser(),
                 Constants.SURVEU_RECEIP);
-        survey.setEventDate(Calendar.getInstance().getTime());
+        Calendar surveyDate = null;
+        if (date.getText().toString().isEmpty()) {
+            surveyDate = Calendar.getInstance();
+        } else {
+            surveyDate = Utils.parseStringToCalendar(date.getText().toString(), "yyyy/MM/dd");
+        }
+        survey.setEventDate(surveyDate.getTime());
+        survey.setStatus(Constants.SURVEY_COMPLETED);
         survey.save();
-        new Value(rdt.getText().toString(), Question.getRDTQuestion(), survey).save();
-        new Value(act6.getText().toString(), Question.getACT6Question(), survey).save();
-        new Value(act12.getText().toString(), Question.getACT12Questions(), survey).save();
-        new Value(act18.getText().toString(), Question.getACT18Questions(), survey).save();
-        new Value(act24.getText().toString(), Question.getACT24Questions(), survey).save();
-        new Value(pq.getText().toString(), Question.getPqQuestion(), survey).save();
-        new Value(cq.getText().toString(), Question.getCqQuestion(), survey).save();
+        new Value(rdt.getText().toString().isEmpty() ? rdt.getHint().toString()
+                : rdt.getText().toString(), Question.getRDTQuestion(), survey).save();
+        new Value(act6.getText().toString().isEmpty() ? act6.getHint().toString()
+                : act6.getText().toString(), Question.getACT6Question(), survey).save();
+        new Value(act12.getText().toString().isEmpty() ? act12.getHint().toString()
+                : act12.getText().toString(), Question.getACT12Questions(), survey).save();
+        new Value(act18.getText().toString().isEmpty() ? act18.getHint().toString()
+                : act18.getText().toString(), Question.getACT18Questions(), survey).save();
+        new Value(act24.getText().toString().isEmpty() ? act24.getHint().toString()
+                : act24.getText().toString(), Question.getACT24Questions(), survey).save();
+        new Value(pq.getText().toString().isEmpty() ? pq.getHint().toString()
+                : pq.getText().toString(), Question.getPqQuestion(), survey).save();
+        new Value(cq.getText().toString().isEmpty() ? cq.getHint().toString()
+                : cq.getText().toString(), Question.getCqQuestion(), survey).save();
     }
 }

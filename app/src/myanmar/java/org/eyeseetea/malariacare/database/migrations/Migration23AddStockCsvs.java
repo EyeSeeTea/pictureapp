@@ -10,7 +10,6 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
@@ -18,13 +17,13 @@ import java.io.IOException;
 /**
  * Created by manuel on 3/01/17.
  */
-@Migration(version = 22, databaseName = AppDatabase.NAME)
-public class Migration22AddStockCsvs extends BaseMigration {
+@Migration(version = 23, databaseName = AppDatabase.NAME)
+public class Migration23AddStockCsvs extends BaseMigration {
     private static String TAG = ".Migration22";
-    private static Migration22AddStockCsvs instance;
+    private static Migration23AddStockCsvs instance;
     private boolean postMigrationRequired;
 
-    public Migration22AddStockCsvs() {
+    public Migration23AddStockCsvs() {
         super();
         instance = this;
         postMigrationRequired = false;

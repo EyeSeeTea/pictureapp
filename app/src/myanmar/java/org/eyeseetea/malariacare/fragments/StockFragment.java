@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
@@ -25,6 +24,7 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockBuilder;
 import org.eyeseetea.malariacare.services.StockService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.webview.IWebView;
 import org.eyeseetea.malariacare.webview.IWebViewBuilder;
 
@@ -67,14 +67,21 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
 
     private void initViews(View view) {
         table = (WebView) view.findViewById(R.id.fragment_stock_table);
-        Button newReceipt = (Button) view.findViewById(R.id.fragment_stock_new_receipt);
 
-        newReceipt.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fragment_stock_new_receipt).setOnClickListener(
+                new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNewReceiptFragment();
+                showNewReceiptBalanceFragment(Constants.SURVEU_RECEIP);
             }
         });
+        view.findViewById(R.id.fragment_stock_new_balance).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showNewReceiptBalanceFragment(Constants.SURVEY_BALANCE);
+                    }
+                });
     }
 
 
@@ -215,11 +222,20 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
     }
 
 
-    private void showNewReceiptFragment() {
+    private void showNewReceiptBalanceFragment(int type) {
         Activity activity = getActivity();
         if (activity != null) {
-            replaceFragment(R.id.dashboard_stock_container, new NewReceiptFragment());
-            DashboardHeaderStrategy.getInstance().init(activity, R.string.fragment_new_receipt);
+            NewReceiptBalanceFragment newReceiptBalanceFragment = new NewReceiptBalanceFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(NewReceiptBalanceFragment.TYPE, type);
+            newReceiptBalanceFragment.setArguments(bundle);
+            replaceFragment(R.id.dashboard_stock_container, newReceiptBalanceFragment);
+
+            int headerString=R.string.fragment_new_receipt;
+            if(type==Constants.SURVEY_BALANCE){
+                headerString=R.string.fragment_new_balance;
+            }
+            DashboardHeaderStrategy.getInstance().init(activity, headerString);
             if (activity instanceof DashboardActivity) {
                 ((DashboardActivity) activity).initNewReceiptFragment();
             }

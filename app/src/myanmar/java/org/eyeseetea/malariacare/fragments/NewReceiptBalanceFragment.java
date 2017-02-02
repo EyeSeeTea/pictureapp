@@ -27,21 +27,36 @@ import java.text.NumberFormat;
 import java.util.Calendar;
 
 
-public class NewReceiptFragment extends Fragment {
-    public static final String TAG = ".NewReceiptFragment";
+public class NewReceiptBalanceFragment extends Fragment {
+    public static final String TAG = ".NewReceiptBalance";
+    public static final String TYPE = "newReceiptBalanceType";
 
     private EditText rdt, act6, act12, act18, act24, pq, cq;
     private TextView date;
+
+    private int type;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        View view = inflater.inflate(R.layout.fragment_new_receipt,
+        View view = inflater.inflate(R.layout.fragment_new_receipt_balance,
                 container, false);
+        manageBundle(savedInstanceState);
         initViews(view);
         return view;
     }
+
+    private void manageBundle(Bundle savedInstanceState) {
+        Bundle bundle;
+        if (savedInstanceState == null) {
+            bundle = getArguments();
+        } else {
+            bundle = savedInstanceState;
+        }
+        type = bundle.getInt(TYPE);
+    }
+
 
     private void initViews(View view) {
         date = (TextView) view.findViewById(R.id.new_receipt_balance_date);
@@ -102,9 +117,8 @@ public class NewReceiptFragment extends Fragment {
 
 
     private void createNewSurvey() {
-        Survey survey = new Survey(null, Program.getStockProgram(), Session.getUser(),
-                Constants.SURVEU_RECEIP);
-        Calendar surveyDate = null;
+        Survey survey = new Survey(null, Program.getStockProgram(), Session.getUser(), type);
+        Calendar surveyDate;
         if (date.getText().toString().isEmpty()) {
             surveyDate = Calendar.getInstance();
         } else {

@@ -51,7 +51,7 @@ import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
-import org.eyeseetea.malariacare.fragments.NewReceiptFragment;
+import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
@@ -672,7 +672,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private boolean isNewReceiptBalanceFragmentActive() {
-        return isFragmentActive(NewReceiptFragment.class, R.id.dashboard_stock_container);
+        return isFragmentActive(NewReceiptBalanceFragment.class, R.id.dashboard_stock_container);
     }
 
     private boolean isFragmentActive(Class fragmentClass, int layout) {

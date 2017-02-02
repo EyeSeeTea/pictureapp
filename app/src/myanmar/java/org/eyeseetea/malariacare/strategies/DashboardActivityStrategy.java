@@ -24,6 +24,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         stockFragment = new StockFragment();
         stockFragment.setArguments(activity.getIntent().getExtras());
         stockFragment.reloadData();
+        stockFragment.reloadHeader(activity);
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
         if (isMoveToLeft) {
             isMoveToLeft = false;

@@ -46,8 +46,7 @@ public class BalanceRowBuilder extends StockRowBuilder {
                         survey.getEventDate()))) {
             return newValue;
         }
-        return 0f;
-
+        return currentValue;
 
     }
 }

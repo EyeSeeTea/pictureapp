@@ -12,5 +12,7 @@ public abstract class ADashboardActivityStrategy {
 
     public abstract boolean showStockFragment(Activity activity, boolean isMoveToLeft);
 
+    public abstract boolean isHistoricNewReceiptBalanceFragment(Activity activity);
+
 
 }

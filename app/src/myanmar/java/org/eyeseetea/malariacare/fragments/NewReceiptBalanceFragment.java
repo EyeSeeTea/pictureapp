@@ -112,7 +112,7 @@ public class NewReceiptBalanceFragment extends Fragment {
     }
 
     private void closeFragment() {
-        ((DashboardActivity) getActivity()).closeNewReceiptBalanceFragment();
+        ((DashboardActivity) getActivity()).closeReceiptBalanceFragment();
     }
 
 

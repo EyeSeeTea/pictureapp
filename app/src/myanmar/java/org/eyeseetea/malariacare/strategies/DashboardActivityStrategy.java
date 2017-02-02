@@ -1,9 +1,12 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.fragments.HistoricReceiptBalanceFragment;
+import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.StockFragment;
 
 /**
@@ -37,4 +40,25 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         ft.commit();
         return isMoveToLeft;
     }
+
+    @Override
+    public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
+        if (isFragmentActive(activity, HistoricReceiptBalanceFragment.class,
+                R.id.dashboard_stock_container) || isFragmentActive(activity,
+                NewReceiptBalanceFragment.class,
+                R.id.dashboard_stock_container)) {
+            return true;
+        }
+        return false;
+
+    }
+
+    private boolean isFragmentActive(Activity activity, Class fragmentClass, int layout) {
+        Fragment currentFragment = activity.getFragmentManager().findFragmentById(layout);
+        if (currentFragment.getClass().equals(fragmentClass)) {
+            return true;
+        }
+        return false;
+    }
+
 }

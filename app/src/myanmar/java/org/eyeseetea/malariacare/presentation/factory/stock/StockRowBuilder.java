@@ -5,13 +5,13 @@ import android.util.Log;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.presentation.factory.stock.rows.StatusRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.utils.SurveyStock;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by manuel on 26/12/16.
@@ -68,7 +68,7 @@ public abstract class StockRowBuilder {
     /**
      * List of css classes for each column of the row
      */
-    private List<String> columnClasses;
+    protected List<String> columnClasses;
 
 
     public StockRowBuilder(String rowTitle, Context context) {
@@ -90,6 +90,12 @@ public abstract class StockRowBuilder {
      * @return New value for the same column
      */
     protected abstract Object updateColumn(Object currentValue, float newValue, SurveyStock surveyStock);
+
+    protected Object updateColumn(Object oldValue, float surveyValue,
+            SurveyStock surveyStock,
+            int position) {
+        return null;
+    }
 
     /**
      * Default value for each column
@@ -197,7 +203,13 @@ public abstract class StockRowBuilder {
         float[] surveyValues = surveyStock.getSurveyValues();
         for (int i = 0;i<surveyValues.length;i++ ) {
             //Updates column considering current value + survey
-            this.data[i] = updateColumn(this.data[i],surveyValues[i], surveyStock);
+            if (this instanceof StatusRowBuilder) {
+                this.data[i] = updateColumn(this.data[i], surveyValues[i], surveyStock,i);
+            } else {
+                this.data[i] = updateColumn(this.data[i], surveyValues[i], surveyStock);
+            }
         }
     }
+
+
 }

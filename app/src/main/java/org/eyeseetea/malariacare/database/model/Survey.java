@@ -396,6 +396,19 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return survey.getEventDate();
     }
 
+
+    public static List<Survey> getSurveysWithProgramType(Program program, int type) {
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM))
+                        .eq(program.getId_program()))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("s", Survey$Table.TYPE)).is(
+                        type)).queryList();
+    }
+
     /**
      * Finds a survey by its ID
      */

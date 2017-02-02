@@ -244,6 +244,12 @@ public class Utils {
         return calendar;
     }
 
+    public static String getStringFromCalendarWithFormat(Calendar calendar,String dateFormat){
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
+        return format.format(calendar.getTime());
+    }
+
+
     public static String getClosingDateString(String format) {
         Calendar sysDate = Calendar.getInstance();
         sysDate.setTime(new Date());

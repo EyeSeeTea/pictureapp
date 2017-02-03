@@ -241,6 +241,17 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }
 
+    public static Survey getStockSurveyWithCreationDate(Date creationDate){
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.CREATIONDATE)).eq(
+                        creationDate))
+                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).is(
+                        "GnAx3VLVfUi")).querySingle();
+    }
+
     /**
      * Returns all the surveys
      */

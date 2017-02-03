@@ -47,7 +47,6 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.ACompletionSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
@@ -586,6 +585,7 @@ public class DashboardActivity extends BaseActivity {
         Session.setMalariaSurvey(survey);
         Survey stockSurvey = new Survey(null, stockProgram, Session.getUser(),
                 Constants.SURVEY_EXPENSE);
+        stockSurvey.setCreationDate(survey.getCreationDate());
         stockSurvey.save();
         Session.setStockSurvey(stockSurvey);
         //Look for coordinates

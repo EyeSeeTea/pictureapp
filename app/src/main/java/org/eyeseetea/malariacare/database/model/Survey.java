@@ -36,8 +36,8 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKV
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
-import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
+import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -394,6 +394,15 @@ public class Survey extends BaseModel implements VisitableToSDK {
             return new Date(0);
         }
         return survey.getEventDate();
+    }
+
+    public static Survey getLastSurveyWithType(int type){
+       Survey survey = new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.TYPE).eq(type))
+               .orderBy(false, Survey$Table.EVENTDATE)
+               .querySingle();
+        return survey;
     }
 
 
@@ -821,7 +830,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
      *
      * @return SurveyAnsweredRatio that hold the total & answered questions.
      */
-    private SurveyAnsweredRatio reloadSurveyAnsweredRatio() {
+    public SurveyAnsweredRatio reloadSurveyAnsweredRatio() {
 
         SurveyAnsweredRatio surveyAnsweredRatio;
         //First parent is always required and not calculated.

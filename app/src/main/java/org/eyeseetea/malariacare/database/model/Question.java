@@ -1449,6 +1449,10 @@ public class Question extends BaseModel {
         return uid.equals("Sttahtf0iHZ");
     }
 
+    public boolean isInvalidRDTQuestion(){
+        return uid.equals("15V1JoHmO94");
+    }
+
     public static Question getRDTQuestion(){
         return findByUID("Sttahtf0iH0");
     }

@@ -142,9 +142,9 @@ public class Tab extends BaseModel {
     /**
      * Method to delete tabs in cascade.
      *
-     * @param names The array of names to delete.
+     * @param names The list of names to delete.
      */
-    public static void deleteTab(String[] names) {
+    public static void deleteTab(List<String> names) {
         List<Tab> tabs = getAllTabs();
         for (Tab tab : tabs) {
             for (String name : names) {

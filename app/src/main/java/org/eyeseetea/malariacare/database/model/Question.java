@@ -411,34 +411,6 @@ public class Question extends BaseModel {
         }
     }
 
-    /**
-     * Method to get all questionOptions related by id
-     */
-    public List<QuestionOption> getQuestionsOptions() {
-        return new Select().from(QuestionOption.class)
-                .where(Condition.column(QuestionOption$Table.ID_QUESTION).eq(
-                        getId_question())).queryList();
-    }
-
-    /**
-     * Method to get all questionThresholds related by id
-     */
-    public List<QuestionThreshold> getQuestionsThresholds() {
-        return new Select().from(QuestionThreshold.class)
-                .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(
-                        getId_question())).queryList();
-    }
-
-
-    /**
-     * Creates a false question that lets cache siblings better
-     */
-    private Question buildNullQuestion() {
-        Question noSiblingQuestion = new Question();
-        noSiblingQuestion.setId_question(NULL_SIBLING_ID);
-        return noSiblingQuestion;
-    }
-
     public static List<Option> getOptions(String UID) {
         return new Select().from(Option.class).as("o")
                 .join(Answer.class, Join.JoinType.LEFT).as("a")
@@ -460,6 +432,33 @@ public class Question extends BaseModel {
                 .where(Condition.column(
                         ColumnAlias.columnWithTable("q", Question$Table.UID))
                         .eq(UID)).querySingle();
+    }
+
+    /**
+     * Method to get all questionOptions related by id
+     */
+    public List<QuestionOption> getQuestionsOptions() {
+        return new Select().from(QuestionOption.class)
+                .where(Condition.column(QuestionOption$Table.ID_QUESTION).eq(
+                        getId_question())).queryList();
+    }
+
+    /**
+     * Method to get all questionThresholds related by id
+     */
+    public List<QuestionThreshold> getQuestionsThresholds() {
+        return new Select().from(QuestionThreshold.class)
+                .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(
+                        getId_question())).queryList();
+    }
+
+    /**
+     * Creates a false question that lets cache siblings better
+     */
+    private Question buildNullQuestion() {
+        Question noSiblingQuestion = new Question();
+        noSiblingQuestion.setId_question(NULL_SIBLING_ID);
+        return noSiblingQuestion;
     }
 
     /**
@@ -786,7 +785,9 @@ public class Question extends BaseModel {
      * Gets the value of this question in the current survey in session
      */
     public Value getValueBySession() {
-        return this.getValueBySurvey(Session.getSurvey());
+        Survey survey =
+                (!isStockQuestion()) ? Session.getMalariaSurvey() : Session.getStockSurvey();
+        return this.getValueBySurvey(survey);
     }
 
     /**
@@ -812,7 +813,11 @@ public class Question extends BaseModel {
      * Gets the option of this question in the current survey in session
      */
     public Option getOptionBySession() {
-        return this.getOptionBySurvey(Session.getSurvey());
+        if (!isStockQuestion()) {
+            return this.getOptionBySurvey(Session.getMalariaSurvey());
+        } else {
+            return this.getOptionBySurvey(Session.getStockSurvey());
+        }
     }
 
     /**
@@ -1367,6 +1372,12 @@ public class Question extends BaseModel {
         return false;
     }
 
+    public boolean isStockQuestion() {
+        if (header != null && header.getName().equals("Stock")) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Returns if the question is a counter or not
@@ -1389,8 +1400,10 @@ public class Question extends BaseModel {
             questions.add(this);
         }
         for (Question question : questions) {
+            Survey survey =
+                    (isStockQuestion()) ? Session.getStockSurvey() : Session.getMalariaSurvey();
             if (question.isCompulsory() && !question.isHiddenBySurveyAndHeader(
-                    Session.getSurvey()) && isNotAnswered(question)) {
+                    survey) && isNotAnswered(question)) {
                 return true;
             }
         }

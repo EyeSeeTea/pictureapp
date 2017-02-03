@@ -27,9 +27,6 @@ import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
-/**
- * Created by Jose on 26/04/2015.
- */
 public class ReadWriteDB {
 
     public static String readValueQuestion(Question question) {
@@ -71,18 +68,18 @@ public class ReadWriteDB {
     }
 
     public static void saveValuesDDL(Question question, Option option, Value value) {
-
         //No option, nothing to save
         if (option == null) {
             return;
         }
 
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
+            Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
+                    : Session.getMalariaSurvey());
             if (value == null) {
-                value = new Value(option, question, Session.getSurvey());
+                value = new Value(option, question, survey);
             } else {
                 if (!value.getOption().equals(option) && question.hasChildren()) {
-                    Survey survey = Session.getSurvey();
                     survey.removeChildrenValuesFromQuestionRecursively(question, false);
                 }
                 value.setOption(option);
@@ -95,12 +92,12 @@ public class ReadWriteDB {
     }
 
     public static void saveValuesText(Question question, String answer) {
-
         Value value = question.getValueBySession();
-
+        Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
+                : Session.getMalariaSurvey());
         // If the value is not found we create one
         if (value == null) {
-            value = new Value(answer, question, Session.getSurvey());
+            value = new Value(answer, question, survey);
         } else {
             value.setOption((Long) null);
             value.setValue(answer);
@@ -109,12 +106,10 @@ public class ReadWriteDB {
     }
 
     public static void deleteValue(Question question) {
-
         Value value = question.getValueBySession();
 
         if (value != null) {
             value.delete();
         }
     }
-
 }

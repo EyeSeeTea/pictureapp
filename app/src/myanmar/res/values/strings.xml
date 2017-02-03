@@ -250,7 +250,17 @@
     <string name="drugs_referral_ACT18_review_title">ACT18</string>
     <string name="drugs_referral_ACT24_review_title">ACT24</string>
     <string name="drugs_referral_Cq_review_title">Cq</string>
+    <string name="drugs_4_of_Cq_review_title">4 of Cq</string>
+    <string name="drugs_5_of_Cq_review_title">5 of Cq</string>
+    <string name="drugs_7_of_Cq_review_title">7 of Cq</string>
+    <string name="drugs_10_of_Cq_review_title">10 of Cq</string>
     <string name="drugs_referral_Pq_review_title">Pq</string>
+    <string name="drugs_2_of_Pq_review_title">2 of Pq</string>
+    <string name="drugs_4_of_Pq_review_title">4 of Pq</string>
+    <string name="drugs_6_of_Pq_review_title">6 of Pq</string>
+    <string name="drugs_16_of_Pq_review_title">16 of Pq</string>
+    <string name="drugs_32_of_Pq_review_title">32 of Pq</string>
+    <string name="drugs_48_of_Pq_review_title">48 of Pq</string>
     <string name="stock_rdt_review_title">RDT</string>
 
     <string name="drugs_referral_ACT12_review_help_text"></string>
@@ -267,16 +277,6 @@
     <string name="follow_up_occupation_review_title">Occupation</string>
     <string name="work_in_progress">Work in progress</string>
     <string name="dynamic_error_number">Invalid number</string>
-    <string name="stock_balance">Balance</string>
-    <string name="receipts">Receipts</string>
-    <string name="used_today">Used Today</string>
-    <string name="available">Available</string>
-    <string name="status">Status</string>
-    <string name="see_receipt">See Receipt</string>
-    <string name="new_receipt">New Receipt</string>
-    <string name="see_balance">See Balance</string>
-    <string name="new_balance">New Balance</string>
-
     <string name="drug_act">ACT</string>
 
     <string name="tr_1_no_confirmed">No confirmed infection</string>
@@ -325,4 +325,13 @@
     <string name="dynamic_treatment_yes">Yes</string>
     <string name="dynamic_treatment_no">No</string>
 
+    <string name="stock_balance">Balance</string>
+    <string name="receipts">Receipts</string>
+    <string name="used_today">Used Today</string>
+    <string name="available">Available</string>
+    <string name="status">Status</string>
+    <string name="see_receipt">See Receipt</string>
+    <string name="new_receipt">New Receipt</string>
+    <string name="see_balance">See Balance</string>
+    <string name="new_balance">New Balance</string>
 </resources>

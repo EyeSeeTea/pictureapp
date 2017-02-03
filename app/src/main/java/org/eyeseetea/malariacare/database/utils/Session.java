@@ -49,9 +49,13 @@ public class Session {
     final public static ReentrantReadWriteLock valuesLock = new ReentrantReadWriteLock();
     private final static String TAG = ".Session";
     /**
-     * The current selected survey
+     * The current selected malariaSurvey
      */
-    private static Survey survey;
+    private static Survey malariaSurvey;
+    /**
+     * The current stock malariaSurvey
+     */
+    private static Survey stockSurvey;
     /**
      * The current user
      */
@@ -78,12 +82,20 @@ public class Session {
      */
     private static Map<String, Object> serviceValues = new HashMap<>();
 
-    public static Survey getSurvey() {
-        return survey;
+    public static Survey getMalariaSurvey() {
+        return malariaSurvey;
     }
 
-    public static synchronized void setSurvey(Survey survey) {
-        Session.survey = survey;
+    public static synchronized void setMalariaSurvey(Survey malariaSurvey) {
+        Session.malariaSurvey = malariaSurvey;
+    }
+
+    public static Survey getStockSurvey() {
+        return stockSurvey;
+    }
+
+    public static synchronized void setStockSurvey(Survey stockSurvey) {
+        Session.stockSurvey = stockSurvey;
     }
 
     public static Credentials getCredentials() {
@@ -133,7 +145,7 @@ public class Session {
      */
     public static void logout() {
         Session.setUser(null);
-        Session.setSurvey(null);
+        Session.setMalariaSurvey(null);
         Session.serviceValues.clear();
     }
 
@@ -158,7 +170,6 @@ public class Session {
      */
     public static Object popServiceValue(String key) {
         return serviceValues.get(key);
-//        return serviceValues.remove(key);
     }
 
     /**

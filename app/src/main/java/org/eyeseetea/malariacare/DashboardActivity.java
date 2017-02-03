@@ -38,14 +38,11 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
-
-import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
@@ -453,7 +450,7 @@ public class DashboardActivity extends BaseActivity {
      */
     private void onSurveyBackPressed() {
         Log.d(TAG, "onBackPressed");
-        Survey survey = Session.getSurvey();
+        Survey survey = Session.getMalariaSurvey();
         if (!survey.isSent()) {
             int infoMessage = survey.isInProgress() ? R.string.survey_info_exit_delete
                     : R.string.survey_info_exit;
@@ -495,8 +492,8 @@ public class DashboardActivity extends BaseActivity {
         LayoutUtils.setDashboardActionBar(actionBar);
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         ScoreRegister.clear();
-        if (Session.getSurvey() != null) {
-            isSent = Session.getSurvey().isSent();
+        if (Session.getMalariaSurvey() != null) {
+            isSent = Session.getMalariaSurvey().isSent();
         }
         if (isBackPressed) {
             beforeExit();
@@ -525,13 +522,14 @@ public class DashboardActivity extends BaseActivity {
 
 
     public void beforeExit() {
-        Survey survey = Session.getSurvey();
+        Survey survey = Session.getMalariaSurvey();
         if (survey != null) {
             boolean isInProgress = survey.isInProgress();
             survey.getValuesFromDB();
             //Exit + InProgress -> delete
             if (isBackPressed && isInProgress) {
-                Session.setSurvey(null);
+                Session.setMalariaSurvey(null);
+                Session.setStockSurvey(null);
                 survey.delete();
                 isBackPressed = false;
             }
@@ -542,14 +540,7 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the New Survey button
      */
     public void newSurvey(View view) {
-        Program program = new Select().from(Program.class).querySingle();
-        // Put new survey in session
-        Survey survey = new Survey(null, program, Session.getUser());
-        survey.save();
-        Session.setSurvey(survey);
-        //Look for coordinates
-        prepareLocationListener(survey);
-
+        mDashboardActivityStrategy.newSurvey(this);
         initSurvey();
     }
 
@@ -571,13 +562,13 @@ public class DashboardActivity extends BaseActivity {
 
     private void sendSurvey() {
 
-        Survey survey = Session.getSurvey();
+        Survey survey = Session.getMalariaSurvey();
         survey.updateSurveyStatus();
         closeSurveyFragment();
     }
 
     private void reviewSurvey() {
-        DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
+        DashboardActivity.moveToQuestion = (Session.getMalariaSurvey().getValues().get(
                 0).getQuestion());
         hideReview();
     }

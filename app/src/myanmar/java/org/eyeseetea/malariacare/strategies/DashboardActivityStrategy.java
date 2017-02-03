@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.model.Program;
+import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.StockFragment;
 
-/**
- * Created by manuel on 28/12/16.
- */
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private StockFragment stockFragment;
@@ -35,5 +35,19 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         ft.replace(R.id.dashboard_stock_container, stockFragment);
         ft.commit();
         return isMoveToLeft;
+    }
+
+    @Override
+    public void newSurvey(Activity activity) {
+        Program myanmarProgram = Program.findByUID(activity.getString(R.string.malariaProgramUID));
+        Program stockProgram = Program.findByUID(activity.getString(R.string.stockProgramUID));
+        // Put new survey in session
+        Survey survey = new Survey(null, myanmarProgram, Session.getUser());
+        survey.save();
+        Session.setMalariaSurvey(survey);
+        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser());
+        stockSurvey.save();
+        Session.setStockSurvey(stockSurvey);
+        prepareLocationListener(activity, survey);
     }
 }

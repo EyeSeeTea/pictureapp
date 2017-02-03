@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.LabelMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.NumberMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.NumberRadioButtonMultiquestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PhoneMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PositiveNumberMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PositiveOrZeroNumberMultiQuestionView;
@@ -46,6 +47,8 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
                 return new DropdownMultiQuestionView(context);
             case Constants.SWITCH_BUTTON:
                 return new SwitchMultiQuestionView(context);
+            case Constants.DYNAMIC_TREATMENT_SWITCH_NUMBER:
+                return new NumberRadioButtonMultiquestionView(context);
         }
 
         return null;

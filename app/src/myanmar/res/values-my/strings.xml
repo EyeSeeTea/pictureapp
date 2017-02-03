@@ -268,16 +268,6 @@
     <string name="follow_up_occupation_review_title">အလုပ်အကိုင်</string>
     <string name="work_in_progress">တိုးတက်မှုအတွက်အလုပ်</string>
     <string name="dynamic_error_number">မမှန်ကန်တဲ့အရေအတွက်</string>
-    <string name="stock_balance">မနေ.ကလက်ကျန်</string>
-    <string name="receipts">ရရှိ </string>
-    <string name="used_today">ယနေ.သုံး</string>
-    <string name="available">ယနေ.လက်ရှိ</string>
-    <string name="status">လက်ရှိအခြေအနေ</string>
-    <string name="see_receipt">ယခင်ရရှိမှုများကြည့်ရန်</string>
-    <string name="new_receipt">ရရှိစာရင်းအသစ်သွင်းရန်</string>
-    <string name="see_balance">ယခင်စာရင်းပြင်ဆင်ထားမှုများ ကြည့်ရန်</string>
-    <string name="new_balance">ဆေးဝါးကိရိယာစာရင်း ပြင်ဆင်ရန်</string>
-
     <string name="drug_act">ACT</string>
     <string name="tr_1_no_confirmed">No confirmed infection</string>
     <string name="tr_2_severe_symptoms">Severe symptoms</string>
@@ -324,4 +314,14 @@
     <string name="tab_dynamic_treatment">Dynamic treatment</string>
     <string name="dynamic_treatment_yes">ရှိသည်</string>
     <string name="dynamic_treatment_no">မရှိပါ</string>
+    <string name="stock_balance">မနေ.ကလက်ကျန်</string>
+    <string name="receipts">ရရှိ </string>
+    <string name="used_today">ယနေ.သုံး</string>
+    <string name="available">ယနေ.လက်ရှိ</string>
+    <string name="status">လက်ရှိအခြေအနေ</string>
+    <string name="see_receipt">ယခင်ရရှိမှုများကြည့်ရန်</string>
+    <string name="new_receipt">ရရှိစာရင်းအသစ်သွင်းရန်</string>
+    <string name="see_balance">ယခင်စာရင်းပြင်ဆင်ထားမှုများ ကြည့်ရန်</string>
+    <string name="new_balance">ဆေးဝါးကိရိယာစာရင်း ပြင်ဆင်ရန်</string>
+
 </resources>

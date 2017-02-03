@@ -25,6 +25,8 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
+import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -95,6 +97,29 @@ public class QuestionThreshold extends BaseModel {
 
     public static List<QuestionThreshold> getAllQuestionThresholds() {
         return new Select().all().from(QuestionThreshold.class).queryList();
+    }
+
+    /**
+     * Method to get the matches with a question id and a value between or equal min max
+     * @param id_question The id of the question.
+     * @param value The value to check.
+     * @return The list of matches.
+     */
+    public static List<Match> getMatchesWithQuestionValue(Long id_question,
+            int value) {
+        return new Select().from(Match.class).as("m").join(QuestionThreshold.class,
+                Join.JoinType.LEFT).as("qt")
+                .on(Condition.column(
+                        ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH))
+                        .eq(ColumnAlias.columnWithTable("qt",
+                                QuestionThreshold$Table.ID_MATCH))).where(
+                        Condition.column(ColumnAlias.columnWithTable("qt",
+                                QuestionThreshold$Table.ID_QUESTION))
+                                .is(id_question)).and(Condition.column(
+                        ColumnAlias.columnWithTable("qt", QuestionThreshold$Table.MINVALUE))
+                        .lessThanOrEq(value)).and(Condition.column(
+                        ColumnAlias.columnWithTable("qt", QuestionThreshold$Table.MAXVALUE))
+                        .greaterThanOrEq(value)).queryList();
     }
 
     /**

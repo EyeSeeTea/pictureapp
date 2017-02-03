@@ -49,7 +49,6 @@ import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
-import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,8 +119,11 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     public void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
-        if (Session.getSurvey() != null) {
-            Session.getSurvey().getValuesFromDB();
+        if (Session.getMalariaSurvey() != null) {
+            Session.getMalariaSurvey().getValuesFromDB();
+        }
+        if (Session.getStockSurvey() != null) {
+            Session.getStockSurvey().getValuesFromDB();
         }
 
     }
@@ -193,7 +195,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
             //Initialize scores x question not loaded yet
             List<Tab> notLoadedTabs = tabAdaptersCache.getNotLoadedTabs();
             ScoreRegister.initScoresForQuestions(Question.listAllByTabs(notLoadedTabs),
-                    Session.getSurvey());
+                    Session.getMalariaSurvey());
         }
         ITabAdapter tabAdapter = tabAdaptersCache.findAdapter(selectedTab);
 

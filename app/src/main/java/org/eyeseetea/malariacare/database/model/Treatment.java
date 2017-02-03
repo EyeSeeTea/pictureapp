@@ -4,6 +4,8 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
+import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -11,9 +13,6 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 
 import java.util.List;
 
-/**
- * Created by manuel on 2/01/17.
- */
 @Table(databaseName = AppDatabase.NAME)
 public class Treatment extends BaseModel {
     @Column
@@ -55,6 +54,17 @@ public class Treatment extends BaseModel {
         return new Select().all().from(Treatment.class).queryList();
     }
 
+    public List<Drug> getDrugsForTreatment() {
+        return new Select().from(Drug.class).as("d")
+                .join(DrugCombination.class, Join.JoinType.LEFT).as("dc")
+                .on(Condition.column(ColumnAlias.columnWithTable("d", Drug$Table.ID_DRUG))
+                        .eq(ColumnAlias.columnWithTable("dc", DrugCombination$Table.ID_DRUG)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("dc", DrugCombination$Table.ID_TREATMENT))
+                        .is(id_treatment)).queryList();
+    }
+
+
     public long getId_treatment() {
         return id_treatment;
     }
@@ -77,14 +87,14 @@ public class Treatment extends BaseModel {
         return organisation;
     }
 
-    public void setOrganisation(Organisation organisation) {
-        this.organisation = organisation;
-        this.id_organisation = (organisation != null) ? organisation.getId_organisation() : null;
-    }
-
     public void setOrganisation(Long id_organisation) {
         this.id_organisation = id_organisation;
         organisation = null;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
+        this.id_organisation = (organisation != null) ? organisation.getId_organisation() : null;
     }
 
     public String getDiagnosis() {

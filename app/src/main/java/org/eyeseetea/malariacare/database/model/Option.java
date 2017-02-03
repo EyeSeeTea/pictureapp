@@ -229,7 +229,7 @@ public class Option extends BaseModel {
      * Gets the Question of this Option in session
      */
     public Question getQuestionBySession() {
-        return getQuestionBySurvey(Session.getSurvey());
+        return getQuestionBySurvey(Session.getMalariaSurvey());
     }
 
     /**

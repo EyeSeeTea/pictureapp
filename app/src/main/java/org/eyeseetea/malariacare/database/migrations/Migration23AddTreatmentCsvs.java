@@ -14,6 +14,8 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by manuel on 10/01/17.
@@ -42,7 +44,9 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
         Log.d(TAG, "Post Migrate");
         if (instance.hasData()) {
             try {
-                Tab.deleteTab(new String[]{"drugs_referral"});
+                List<String> tabsToDelete = new ArrayList<>();
+                tabsToDelete.add("drugs_referral");
+                Tab.deleteTab(tabsToDelete);
                 AssetManager assetManager = PreferencesState.getInstance().getContext().getAssets();
                 UpdateDB.updateTabs(assetManager);
                 UpdateDB.updateHeaders(assetManager);
@@ -56,6 +60,8 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
                 UpdateDB.updateTreatments(assetManager);
                 UpdateDB.updateDrugCombination(assetManager);
                 UpdateDB.updateTreatmentMatches(assetManager);
+                UpdateDB.updateQuestionOption(assetManager);
+                UpdateDB.updateAnswers(assetManager);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e(TAG, "Error updating database" + e.getMessage());

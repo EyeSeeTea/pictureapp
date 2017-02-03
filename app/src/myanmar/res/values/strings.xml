@@ -267,6 +267,16 @@
     <string name="follow_up_occupation_review_title">Occupation</string>
     <string name="work_in_progress">Work in progress</string>
     <string name="dynamic_error_number">Invalid number</string>
+    <string name="stock_balance">Balance</string>
+    <string name="receipts">Receipts</string>
+    <string name="used_today">Used Today</string>
+    <string name="available">Available</string>
+    <string name="status">Status</string>
+    <string name="see_receipt">See Receipt</string>
+    <string name="new_receipt">New Receipt</string>
+    <string name="see_balance">See Balance</string>
+    <string name="new_balance">New Balance</string>
+
     <string name="drug_act">ACT</string>
 
     <string name="tr_1_no_confirmed">No confirmed infection</string>
@@ -312,6 +322,7 @@
     <string name="tr_22_act_18_pq32">Give ACT18\' strip and 32 primaquine tablets</string>
     <string name="tr_23_act_24_pq48">Give ACT24\' strip and 48 primaquine tablets</string>
     <string name="tab_dynamic_treatment">Dynamic treatment</string>
-
+    <string name="dynamic_treatment_yes">Yes</string>
+    <string name="dynamic_treatment_no">No</string>
 
 </resources>

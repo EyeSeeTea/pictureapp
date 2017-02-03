@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.database;
 
 
 import org.eyeseetea.malariacare.database.migrations.Migration21LaoNewRelation;
+import org.eyeseetea.malariacare.database.migrations.Migration22ModifyValuesLastMigration;
 import org.eyeseetea.malariacare.database.migrations.Migration23ModifyValuesLastMigration;
 import org.eyeseetea.malariacare.database.migrations.Migration2Database;
 
@@ -13,6 +14,7 @@ public class PostMigration {
 
     public static void launchPostMigration() {
         Migration2Database.postMigrate();
+        Migration22ModifyValuesLastMigration.postMigrate();
         Migration23ModifyValuesLastMigration.postMigrate();
         Migration21LaoNewRelation.postMigrate();
     }

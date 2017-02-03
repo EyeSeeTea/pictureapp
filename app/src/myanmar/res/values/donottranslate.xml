@@ -12,4 +12,16 @@
     <string name="monitor_row_title_space" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
     <string name="monitor_table_title_suspected_header" translatable="false">" "</string>
     <string name="monitor_table_title_stock_header" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
+
+
+    <string-array name="stock_table_drugs_strings">
+        <item>@string/RDT</item>
+        <item>@string/ACT_x_6</item>
+        <item>@string/ACT_x_12</item>
+        <item>@string/ACT_x_18</item>
+        <item>@string/ACT_x_24</item>
+        <item>@string/Cq</item>
+        <item>@string/Pq</item>
+    </string-array>
+
 </resources>

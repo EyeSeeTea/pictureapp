@@ -6,7 +6,7 @@ import utils.PhoneMask;
 
 public class Phone {
 
-    private static String value;
+    private String value;
 
     public Phone(String value) throws InvalidPhoneException {
         if (!isValid(value)) {

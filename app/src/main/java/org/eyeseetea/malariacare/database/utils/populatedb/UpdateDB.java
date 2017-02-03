@@ -31,13 +31,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by manuel on 11/01/17.
- */
-
 public class UpdateDB {
-
-
     public static void updateAndAddQuestions(AssetManager assetManager) throws IOException {
         List<Question> questionsDB = Question.getAllQuestions();
         HashMap<Long, Header> headerHashMap = RelationsIdCsvDB.getHeaderFKRelationCsvDB(

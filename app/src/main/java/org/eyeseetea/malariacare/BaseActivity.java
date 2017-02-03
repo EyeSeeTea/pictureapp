@@ -23,12 +23,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
 import android.text.Html;
@@ -49,10 +45,8 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.ExportData;
-import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -329,52 +323,6 @@ public abstract class BaseActivity extends ActionBarActivity {
         Intent intentSettings = new Intent(this, SettingsActivity.class);
         intentSettings.putExtra(SETTINGS_CALLER_ACTIVITY, this.getClass());
         startActivity(new Intent(this, SettingsActivity.class));
-    }
-
-
-    public void prepareLocationListener(Survey survey) {
-
-        SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
-        LocationManager locationManager =
-                (LocationManager) LocationMemory.getContext().getSystemService(
-                        Context.LOCATION_SERVICE);
-
-
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            Log.d(TAG, "requestLocationUpdates via NETWORK");
-            if (ActivityCompat.checkSelfPermission(this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
-                    locationListener);
-        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Log.d(TAG, "requestLocationUpdates via GPS");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-                    locationListener);
-        } else {
-            Location lastLocation = locationManager.getLastKnownLocation(
-                    LocationManager.NETWORK_PROVIDER);
-
-            if (lastLocation != null) {
-                Log.d(TAG, "location not available via GPS|NETWORK, last know: " + lastLocation);
-                locationListener.saveLocation(lastLocation);
-            } else {
-                String defaultLatitude = getApplicationContext().getString(
-                        R.string.GPS_LATITUDE_DEFAULT);
-                String defaultLongitude = getApplicationContext().getString(
-                        R.string.GPS_LONGITUDE_DEFAULT);
-                Location defaultLocation = new Location(
-                        getApplicationContext().getString(R.string.GPS_PROVIDER_DEFAULT));
-                defaultLocation.setLatitude(Double.parseDouble(defaultLatitude));
-                defaultLocation.setLongitude(Double.parseDouble(defaultLongitude));
-                Log.d(TAG, "location not available via GPS|NETWORK, default: " + defaultLocation);
-                locationListener.saveLocation(defaultLocation);
-            }
-        }
     }
 
     /**

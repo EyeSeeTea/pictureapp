@@ -24,4 +24,7 @@
         <item>@string/Pq</item>
     </string-array>
 
+    <string name="malariaProgramUID">RjBwXyc5I66</string>
+    <string name="stockProgramUID">GnAx3VLVfUi</string>
+
 </resources>

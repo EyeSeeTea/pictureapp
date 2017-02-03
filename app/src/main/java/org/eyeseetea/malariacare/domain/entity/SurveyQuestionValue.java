@@ -11,7 +11,9 @@ public class SurveyQuestionValue {
             ACT18 = 4,
             ACT24 = 5,
             PQ = 6,
-            CQ = 7;
+            CQ = 7,
+            OUT_STOCK = 8;
+
 
     public SurveyQuestionValue(Survey survey) {
         mSurvey = survey;
@@ -46,6 +48,10 @@ public class SurveyQuestionValue {
         return getValueQuestion(CQ);
     }
 
+    public String getOutStockValue() {
+        return getValueQuestion(OUT_STOCK);
+    }
+
 
     public String getValueQuestion(int question) {
         for (Value value : mSurvey.getValues()) {
@@ -54,30 +60,42 @@ public class SurveyQuestionValue {
                     if (value.getQuestion().isRDT()) {
                         return value.getValue();
                     }
+                    break;
                 case ACT6:
                     if (value.getQuestion().isACT6()) {
                         return value.getValue();
                     }
+                    break;
                 case ACT12:
                     if (value.getQuestion().isACT12()) {
                         return value.getValue();
                     }
+                    break;
                 case ACT18:
                     if (value.getQuestion().isACT18()) {
                         return value.getValue();
                     }
+                    break;
                 case ACT24:
                     if (value.getQuestion().isACT24()) {
                         return value.getValue();
                     }
+                    break;
                 case PQ:
                     if (value.getQuestion().isPq()) {
                         return value.getValue();
                     }
+                    break;
                 case CQ:
                     if (value.getQuestion().isCq()) {
                         return value.getValue();
                     }
+                    break;
+                case OUT_STOCK:
+                    if (value.getQuestion().isOutStockQuestion()) {
+                        return value.getValue();
+                    }
+                    break;
             }
         }
         return "0";

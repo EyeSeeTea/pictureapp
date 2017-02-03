@@ -11,9 +11,6 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 
 import java.util.List;
 
-/**
- * Created by manuel on 2/01/17.
- */
 @Table(databaseName = AppDatabase.NAME)
 public class Organisation extends BaseModel {
     @Column
@@ -90,6 +87,4 @@ public class Organisation extends BaseModel {
                 ", name='" + name + '\'' +
                 '}';
     }
-
-
 }

@@ -68,31 +68,12 @@ public class Tab extends BaseModel {
         setProgram(program);
     }
 
-    public static Tab findById(Long id) {
-        return new Select()
-                .from(Tab.class)
-                .where(Condition.column(Tab$Table.ID_TAB).eq(id)).querySingle();
-    }
-
-    /*
-     * Return tabs filter by program and order by orderpos field
-     */
-    public static List<Tab> getTabsBySession() {
-        return new Select().from(Tab.class)
-                .where(Condition.column(Tab$Table.ID_PROGRAM).eq(
-                        Session.getMalariaSurvey().getProgram().getId_program()))
-                .orderBy(Tab$Table.ORDER_POS).queryList();
-    }
-    public static List<Tab> getAllTabs() {
-        return new Select().all().from(Tab.class).queryList();
-    }
-
     /**
      * Method to delete tabs in cascade.
      *
      * @param names The array of names to delete.
      */
-    public static void deleteTab(String[] names) {
+    public static void deleteTab(List<String> names) {
         List<Tab> tabs = getAllTabs();
         for (Tab tab : tabs) {
             for (String name : names) {
@@ -103,14 +84,6 @@ public class Tab extends BaseModel {
                 }
             }
         }
-    }
-
-
-    /**
-     * Checks if TAB table is empty or has no data
-     */
-    public static boolean isEmpty() {
-        return new Select().count().from(Tab.class).count() == 0;
     }
 
     public Long getId_tab() {
@@ -171,6 +144,20 @@ public class Tab extends BaseModel {
         this.id_program = (program != null) ? program.getId_program() : null;
     }
 
+    public static List<Tab> getAllTabs() {
+        return new Select().all().from(Tab.class).queryList();
+    }
+
+    /*
+     * Return tabs filter by program and order by orderpos field
+     */
+    public static List<Tab> getTabsBySession() {
+        return new Select().from(Tab.class)
+                .where(Condition.column(Tab$Table.ID_PROGRAM).eq(
+                        Session.getMalariaSurvey().getProgram().getId_program()))
+                .orderBy(Tab$Table.ORDER_POS).queryList();
+    }
+
     public List<Header> getHeaders() {
         if (headers == null) {
             headers = new Select().from(Header.class)
@@ -178,6 +165,13 @@ public class Tab extends BaseModel {
                     .orderBy(Header$Table.ORDER_POS).queryList();
         }
         return headers;
+    }
+
+    /**
+     * Checks if TAB table is empty or has no data
+     */
+    public static boolean isEmpty() {
+        return new Select().count().from(Tab.class).count() == 0;
     }
 
     /**
@@ -231,6 +225,12 @@ public class Tab extends BaseModel {
         return getType() == Constants.TAB_MULTI_QUESTION;
     }
 
+    public static Tab findById(Long id) {
+        return new Select()
+                .from(Tab.class)
+                .where(Condition.column(Tab$Table.ID_TAB).eq(id)).querySingle();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -258,7 +258,6 @@ public class Tab extends BaseModel {
         result = 31 * result + (id_program != null ? id_program.hashCode() : 0);
         return result;
     }
-
 
     @Override
     public String toString() {

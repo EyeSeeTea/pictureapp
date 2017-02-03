@@ -163,7 +163,6 @@ public class UpdateDB {
         }
     }
 
-
     public static void updateMatches(AssetManager assetManager) throws IOException {
         List<Match> matches = Match.listAll();
         HashMap<Long, QuestionRelation> questionsrelationIds =

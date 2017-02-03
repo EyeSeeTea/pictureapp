@@ -1,8 +1,10 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.database.model.Answer;
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Drug;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
@@ -12,6 +14,7 @@ import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -92,26 +95,22 @@ public class Treatment {
         List<Match> rdtMatches = new ArrayList<>();
         for (Value value : values) {
             Question question = value.getQuestion();
-            //Getting matches for questions of age, pregnant, severe and rdt.
-            if (question.getUid().equals("2XX1JoHmO94")) {
+            Context context = PreferencesState.getInstance().getContext();
+            if (question.getUid().equals(context.getString(R.string.ageQuestionUID))) {
                 ageMatches =
                         QuestionThreshold.getMatchesWithQuestionValue(
                                 question.getId_question(), Integer.parseInt(value.getValue()));
-                Log.d(TAG, "age size: "+ageMatches.size());
-            } else if (question.getUid().equals("6VV1JoHmO94")) {
+            } else if (question.getUid().equals(context.getString(R.string.sexPregnantQuestionUID))) {
                 pregnantMatches = QuestionOption.getMatchesWithQuestionOption(
                         question.getId_question(),
                         value.getId_option());
-                Log.d(TAG, "pregnant size: "+pregnantMatches.size());
-            } else if (question.getUid().equals("11V1JoHmO94")) {
+            } else if (question.getUid().equals(context.getString(R.string.severeSymtomsQuestionUID))) {
                 severeMatches = QuestionOption.getMatchesWithQuestionOption(
                         question.getId_question(),
                         value.getId_option());
-                Log.d(TAG, "severe size: "+severeMatches.size());
-            } else if (question.getUid().equals("12V1JoHmO94")) {
+            } else if (question.getUid().equals(context.getString(R.string.rdtQuestionUID))) {
                 rdtMatches = QuestionOption.getMatchesWithQuestionOption(question.getId_question(),
                         value.getId_option());
-                Log.d(TAG, "rdt size: "+rdtMatches.size());
             }
         }
         Log.d(TAG, "matches obtained");
@@ -135,6 +134,7 @@ public class Treatment {
 
     private List<Question> getQuestionsForTreatment(
             org.eyeseetea.malariacare.database.model.Treatment treatment) {
+        Context context = PreferencesState.getInstance().getContext();
         List<Question> questions = new ArrayList<>();
         List<Drug> drugs = treatment.getDrugsForTreatment();
 
@@ -161,7 +161,7 @@ public class Treatment {
                 Log.d(TAG, "Question: " + questions.get(questions.size() - 1) + "\n");
             }
         }
-        questions.add(Question.findByUID("9fV1JoHmO94"));
+        questions.add(Question.findByUID(context.getString(R.string.referralQuestionUID)));
 
         return questions;
     }
@@ -204,14 +204,16 @@ public class Treatment {
     }
 
     private boolean isPq(Question question) {
-        if (question.getUid().equals("Sttahtf0iHZ")) {
+        Context context = PreferencesState.getInstance().getContext();
+        if (question.getUid().equals(context.getString(R.string.pqQuestionUID))) {
             return true;
         }
         return false;
     }
 
     private boolean isCq(Question question) {
-        if (question.getUid().equals("jZvZ4Q39J6s")) {
+        Context context = PreferencesState.getInstance().getContext();
+        if (question.getUid().equals(context.getString(R.string.cqQuestionUID))) {
             return true;
         }
         return false;
@@ -291,35 +293,15 @@ public class Treatment {
     }
 
     private String getPqTitleDose(int dose) {
-        switch (dose) {
-            case 2:
-                return "drugs_2_of_Pq_review_title";
-            case 4:
-                return "drugs_4_of_Pq_review_title";
-            case 6:
-                return "drugs_6_of_Pq_review_title";
-            case 16:
-                return "drugs_16_of_Pq_review_title";
-            case 32:
-                return "drugs_32_of_Pq_review_title";
-            case 48:
-                return "drugs_48_of_Pq_review_title";
-        }
-        return "drugs_referral_Pq_review_title";
+        return getTitleDose(dose, "Pq");
     }
 
     private String getCqTitleDose(int dose) {
-        switch (dose) {
-            case 4:
-                return "drugs_4_of_Cq_review_title";
-            case 5:
-                return "drugs_5_of_Cq_review_title";
-            case 7:
-                return "drugs_7_of_Cq_review_title";
-            case 10:
-                return "drugs_10_of_Cq_review_title";
-        }
-        return "drugs_referral_Cq_review_title";
+        return getTitleDose(dose, "Cq");
+    }
+
+    private String getTitleDose(int dose, String drug) {
+        return String.format("drugs_%d_of_%s_review_title", dose, drug);
     }
 
 }

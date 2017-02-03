@@ -80,10 +80,16 @@ public class Program extends BaseModel {
                         .is(id_program)).querySingle();
     }
 
+    public static Program findByUID(String UID) {
+        return new Select()
+                .from(Program.class)
+                .where(Condition.column(Program$Table.UID)
+                        .is(UID)).querySingle();
+    }
+
     public static List<Program> getAllPrograms() {
         return new Select().all().from(Program.class).queryList();
     }
-
 
 
     public static Program getFirstProgram() {

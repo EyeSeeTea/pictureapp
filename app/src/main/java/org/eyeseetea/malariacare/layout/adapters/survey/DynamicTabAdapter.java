@@ -498,12 +498,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         // Se get the value from Session
         int visibility = View.GONE;
 
-        Survey survey = null;
-        if (screenQuestion.isStockQuestion() || isDynamicStockQuestion(screenQuestion)) {
-            survey = Session.getStockSurvey();
-        } else {
-            survey = Session.getMalariaSurvey();
-        }
+        Survey survey = (screenQuestion.isStockQuestion() || isDynamicStockQuestion(screenQuestion))
+                ? Session.getStockSurvey()
+                : Session.getMalariaSurvey();
 
         if (!screenQuestion.isHiddenBySurveyAndHeader(survey)
                 || !isMultipleQuestionTab(tabType)) {
@@ -769,12 +766,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private boolean isCounterValueEqualToMax(Question question, Option selectedOption) {
 
-        Survey survey = null;
-        if (question.isStockQuestion()) {
-            survey = Session.getStockSurvey();
-        } else {
-            survey = Session.getMalariaSurvey();
-        }
+        Survey survey = (question.isStockQuestion()) ? Session.getStockSurvey()
+                : Session.getMalariaSurvey();
 
         Float counterValue = survey.getCounterValue(question, selectedOption);
 
@@ -877,12 +870,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean toggleChild(TableRow row, Question rowQuestion, Question childQuestion) {
         if (childQuestion.getId_question().equals(rowQuestion.getId_question())) {
-            Survey survey = null;
-            if (rowQuestion.isStockQuestion()) {
-                survey = Session.getStockSurvey();
-            } else {
-                survey = Session.getMalariaSurvey();
-            }
+            Survey survey = (rowQuestion.isStockQuestion()) ? Session.getStockSurvey()
+                    : Session.getMalariaSurvey();
+
             if (rowQuestion.isHiddenBySurveyAndHeader(survey)) {
                 row.setVisibility(View.GONE);
                 hideDefaultValue(rowQuestion);

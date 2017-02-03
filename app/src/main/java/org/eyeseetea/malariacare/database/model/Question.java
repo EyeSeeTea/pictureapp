@@ -411,34 +411,6 @@ public class Question extends BaseModel {
         }
     }
 
-    /**
-     * Method to get all questionOptions related by id
-     */
-    public List<QuestionOption> getQuestionsOptions() {
-        return new Select().from(QuestionOption.class)
-                .where(Condition.column(QuestionOption$Table.ID_QUESTION).eq(
-                        getId_question())).queryList();
-    }
-
-    /**
-     * Method to get all questionThresholds related by id
-     */
-    public List<QuestionThreshold> getQuestionsThresholds() {
-        return new Select().from(QuestionThreshold.class)
-                .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(
-                        getId_question())).queryList();
-    }
-
-
-    /**
-     * Creates a false question that lets cache siblings better
-     */
-    private Question buildNullQuestion() {
-        Question noSiblingQuestion = new Question();
-        noSiblingQuestion.setId_question(NULL_SIBLING_ID);
-        return noSiblingQuestion;
-    }
-
     public static List<Option> getOptions(String UID) {
         return new Select().from(Option.class).as("o")
                 .join(Answer.class, Join.JoinType.LEFT).as("a")
@@ -460,6 +432,33 @@ public class Question extends BaseModel {
                 .where(Condition.column(
                         ColumnAlias.columnWithTable("q", Question$Table.UID))
                         .eq(UID)).querySingle();
+    }
+
+    /**
+     * Method to get all questionOptions related by id
+     */
+    public List<QuestionOption> getQuestionsOptions() {
+        return new Select().from(QuestionOption.class)
+                .where(Condition.column(QuestionOption$Table.ID_QUESTION).eq(
+                        getId_question())).queryList();
+    }
+
+    /**
+     * Method to get all questionThresholds related by id
+     */
+    public List<QuestionThreshold> getQuestionsThresholds() {
+        return new Select().from(QuestionThreshold.class)
+                .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(
+                        getId_question())).queryList();
+    }
+
+    /**
+     * Creates a false question that lets cache siblings better
+     */
+    private Question buildNullQuestion() {
+        Question noSiblingQuestion = new Question();
+        noSiblingQuestion.setId_question(NULL_SIBLING_ID);
+        return noSiblingQuestion;
     }
 
     /**
@@ -786,11 +785,9 @@ public class Question extends BaseModel {
      * Gets the value of this question in the current survey in session
      */
     public Value getValueBySession() {
-        if (!isStockQuestion()) {
-            return this.getValueBySurvey(Session.getMalariaSurvey());
-        } else {
-            return this.getValueBySurvey(Session.getStockSurvey());
-        }
+        Survey survey =
+                (!isStockQuestion()) ? Session.getMalariaSurvey() : Session.getStockSurvey();
+        return this.getValueBySurvey(survey);
     }
 
     /**
@@ -1503,12 +1500,8 @@ public class Question extends BaseModel {
             return true;
         }
         for (Question question : questions) {
-            Survey survey = null;
-            if (isStockQuestion()) {
-                survey = Session.getStockSurvey();
-            } else {
-                survey = Session.getMalariaSurvey();
-            }
+            Survey survey =
+                    (isStockQuestion()) ? Session.getStockSurvey() : Session.getMalariaSurvey();
             if (question.isCompulsory() && !question.isHiddenBySurveyAndHeader(
                     survey) && isNotAnswered(question)) {
                 return true;

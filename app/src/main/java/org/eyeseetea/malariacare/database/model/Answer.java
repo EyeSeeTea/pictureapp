@@ -61,7 +61,7 @@ public class Answer extends BaseModel {
         this.name = name;
     }
 
-    public static List<Answer> getAllAnswers(){
+    public static List<Answer> getAllAnswers() {
         return new Select().all().from(Answer.class).queryList();
     }
 

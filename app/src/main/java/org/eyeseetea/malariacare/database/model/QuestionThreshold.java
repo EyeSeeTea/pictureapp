@@ -93,6 +93,19 @@ public class QuestionThreshold extends BaseModel {
         return null;
     }
 
+    public static List<QuestionThreshold> getAllQuestionThresholds() {
+        return new Select().all().from(QuestionThreshold.class).queryList();
+    }
+
+    /**
+     * Method to delete the questionThresholds passed
+     */
+    public static void deleteQuestionThresholds(List<QuestionThreshold> questionThresholds) {
+        for (QuestionThreshold questionThreshold : questionThresholds) {
+            questionThreshold.delete();
+        }
+    }
+
     public long getId_question_threshold() {
         return id_question_threshold;
     }
@@ -218,4 +231,6 @@ public class QuestionThreshold extends BaseModel {
                 ", maxValue=" + maxValue +
                 '}';
     }
+
+
 }

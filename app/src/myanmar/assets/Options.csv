@@ -38,3 +38,5 @@
 38;'follow_up_occupation_option_forest';'Forest';0;27;38
 39;'follow_up_occupation_option_plantation';'Plantation';0;27;39
 40;'follow_up_occupation_option_village';'Village';0;27;40
+41;'dynamic_treatment_yes';'Yes';0;28;13
+42;'dynamic_treatment_no';'No';0;28;14

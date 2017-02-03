@@ -102,6 +102,17 @@ public class QuestionOption extends BaseModel {
                         questionRelation.getId_question_relation())).queryList();
     }
 
+    /**
+     * Method to delete in cascade the questionOptions passed.
+     *
+     * @param questionsOptions The question option to delete.
+     */
+    public static void deleteQuestionOptions(List<QuestionOption> questionsOptions) {
+        for (QuestionOption questionOption : questionsOptions) {
+            questionOption.delete();
+        }
+    }
+
     public static List<QuestionOption> listAll() {
         return new Select().all().from(QuestionOption.class).queryList();
     }
@@ -228,4 +239,6 @@ public class QuestionOption extends BaseModel {
                 ", id_match=" + id_match +
                 '}';
     }
+
+
 }

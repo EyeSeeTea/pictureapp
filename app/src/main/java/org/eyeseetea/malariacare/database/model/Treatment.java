@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 
+import java.util.List;
+
 /**
  * Created by manuel on 2/01/17.
  */
@@ -39,6 +41,18 @@ public class Treatment extends BaseModel {
         this.id_organisation = id_organisation;
         this.diagnosis = diagnosis;
         this.message = message;
+    }
+
+    public static Treatment findById(long id) {
+        return new Select()
+                .from(Treatment.class)
+                .where(Condition.column(Treatment$Table.ID_TREATMENT).is(id))
+                .querySingle();
+
+    }
+
+    public static List<Treatment> getAllTreatments() {
+        return new Select().all().from(Treatment.class).queryList();
     }
 
     public long getId_treatment() {
@@ -124,4 +138,6 @@ public class Treatment extends BaseModel {
                 ", message='" + message + '\'' +
                 '}';
     }
+
+
 }

@@ -68,6 +68,24 @@ public class Tab extends BaseModel {
         setProgram(program);
     }
 
+    /**
+     * Method to delete tabs in cascade.
+     *
+     * @param names The array of names to delete.
+     */
+    public static void deleteTab(List<String> names) {
+        List<Tab> tabs = getAllTabs();
+        for (Tab tab : tabs) {
+            for (String name : names) {
+                if (tab.getName().equals(name)) {
+                    Header.deleteHeaders(tab.getHeaders());
+                    tab.delete();
+                    break;
+                }
+            }
+        }
+    }
+
     public Long getId_tab() {
         return id_tab;
     }

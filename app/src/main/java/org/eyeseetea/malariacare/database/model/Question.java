@@ -277,6 +277,7 @@ public class Question extends BaseModel {
                 .querySingle();
     }
 
+
     /**
      * Find the first root question in the given tab
      *
@@ -397,12 +398,68 @@ public class Question extends BaseModel {
     }
 
     /**
+     * Method to delete questions in cascade.
+     *
+     * @param questions The questions to delete.
+     */
+    public static void deleteQuestions(List<Question> questions) {
+        for (Question question : questions) {
+            QuestionOption.deleteQuestionOptions(question.getQuestionsOptions());
+            QuestionThreshold.deleteQuestionThresholds(question.getQuestionsThresholds());
+            QuestionRelation.deleteQuestionRelations(question.getQuestionRelations());
+            question.delete();
+        }
+    }
+
+    /**
+     * Method to get all questionOptions related by id
+     */
+    public List<QuestionOption> getQuestionsOptions() {
+        return new Select().from(QuestionOption.class)
+                .where(Condition.column(QuestionOption$Table.ID_QUESTION).eq(
+                        getId_question())).queryList();
+    }
+
+    /**
+     * Method to get all questionThresholds related by id
+     */
+    public List<QuestionThreshold> getQuestionsThresholds() {
+        return new Select().from(QuestionThreshold.class)
+                .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(
+                        getId_question())).queryList();
+    }
+
+
+    /**
      * Creates a false question that lets cache siblings better
      */
     private Question buildNullQuestion() {
         Question noSiblingQuestion = new Question();
         noSiblingQuestion.setId_question(NULL_SIBLING_ID);
         return noSiblingQuestion;
+    }
+
+    public static List<Option> getOptions(String UID) {
+        return new Select().from(Option.class).as("o")
+                .join(Answer.class, Join.JoinType.LEFT).as("a")
+                .on(Condition.column(ColumnAlias.columnWithTable("o", Option$Table.ID_ANSWER))
+                        .eq(ColumnAlias.columnWithTable("a", Answer$Table.ID_ANSWER)))
+                .join(Question.class, Join.JoinType.LEFT).as("q")
+                .on(Condition.column(ColumnAlias.columnWithTable("a", Answer$Table.ID_ANSWER))
+                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_ANSWER)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.UID))
+                        .eq(UID)).queryList();
+    }
+
+    public static Answer getAnswer(String UID) {
+        return new Select().from(Answer.class).as("a")
+                .join(Question.class, Join.JoinType.LEFT).as("q")
+                .on(Condition.column(ColumnAlias.columnWithTable("a", Answer$Table.ID_ANSWER))
+                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_ANSWER)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("q", Question$Table.UID))
+                        .eq(UID)).querySingle();
     }
 
     /**

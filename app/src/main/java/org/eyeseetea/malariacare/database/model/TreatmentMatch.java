@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 
+import java.util.List;
+
 /**
  * Created by manuel on 2/01/17.
  */
@@ -40,6 +42,21 @@ public class TreatmentMatch extends BaseModel {
         this.id_match = id_match;
     }
 
+    public static List<TreatmentMatch> getAllTreatmentMatches() {
+        return new Select().all().from(TreatmentMatch.class).queryList();
+    }
+
+    /**
+     * Method to delete a list of treatmentMatches.
+     *
+     * @param treatmentMatches The list to delete.
+     */
+    public static void deleteTreatmentMatches(List<TreatmentMatch> treatmentMatches) {
+        for (TreatmentMatch treatmentMatch : treatmentMatches) {
+            treatmentMatch.delete();
+        }
+    }
+
 
     public long getId_treatment_match() {
         return id_treatment_match;
@@ -68,7 +85,7 @@ public class TreatmentMatch extends BaseModel {
         id_treatment = (treatment != null) ? treatment.id_treatment : null;
     }
 
-    public void setId_treatment(long id_treatment) {
+    public void setTreatment(long id_treatment) {
         this.id_treatment = id_treatment;
         treatment = null;
     }
@@ -126,4 +143,6 @@ public class TreatmentMatch extends BaseModel {
                 ", id_match=" + id_match +
                 '}';
     }
+
+
 }

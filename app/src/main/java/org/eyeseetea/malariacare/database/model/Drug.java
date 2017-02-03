@@ -3,9 +3,13 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.builder.Condition;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+
+import java.util.List;
 
 /**
  * Created by manuel on 2/01/17.
@@ -30,6 +34,17 @@ public class Drug extends BaseModel {
         this.name = name;
         this.dose = dose;
         this.question_code = question_code;
+    }
+
+    public static Drug findById(long id) {
+        return new Select()
+                .from(Drug.class)
+                .where(Condition.column(Drug$Table.ID_DRUG).is(id))
+                .querySingle();
+    }
+
+    public static List<Drug> getAllDrugs() {
+        return new Select().all().from(Drug.class).queryList();
     }
 
     public long getId_drug() {
@@ -97,4 +112,6 @@ public class Drug extends BaseModel {
                 ", question_code='" + question_code + '\'' +
                 '}';
     }
+
+
 }

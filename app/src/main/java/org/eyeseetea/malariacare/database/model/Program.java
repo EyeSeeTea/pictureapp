@@ -73,15 +73,18 @@ public class Program extends BaseModel {
         this.name = name;
     }
 
+    public static Program findById(Long id_program) {
+        return new Select()
+                .from(Program.class)
+                .where(Condition.column(Program$Table.ID_PROGRAM)
+                        .is(id_program)).querySingle();
+    }
+
     public static List<Program> getAllPrograms() {
         return new Select().all().from(Program.class).queryList();
     }
 
-    public static Program findById(Long id) {
-        return new Select()
-                .from(Program.class)
-                .where(Condition.column(Program$Table.ID_PROGRAM).eq(id)).querySingle();
-    }
+
 
     public static Program getFirstProgram() {
         return new Select().from(Program.class).querySingle();

@@ -28,12 +28,14 @@ import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Answer;
+import org.eyeseetea.malariacare.database.model.Drug;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.OrgUnitLevel;
+import org.eyeseetea.malariacare.database.model.Organisation;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
@@ -42,6 +44,7 @@ import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Score;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.database.model.Treatment;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -53,6 +56,7 @@ import org.hisp.dhis.android.sdk.persistence.preferences.DateTimeManager;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +74,11 @@ public class PopulateDB {
     public static final String MATCHES = "Matches.csv";
     public static final String QUESTION_RELATIONS_CSV = "QuestionRelations.csv";
     public static final String QUESTION_THRESHOLDS_CSV = "QuestionThresholds.csv";
+    public static final String DRUG_COMBINATIONS_CSV = "DrugCombinations.csv";
+    public static final String DRUGS_CSV = "Drugs.csv";
+    public static final String ORGANISATIONS_CSV = "Organisations.csv";
+    public static final String TREATMENT_MATCHES_CSV = "TreatmentMatches.csv";
+    public static final String TREATMENT_CSV = "Treatments.csv";
 
     public static final String ORG_UNIT_LEVEL_CSV = "OrgUnitLevel.csv";
     public static final String ORG_UNIT_CSV = "OrgUnit.csv";
@@ -86,7 +95,12 @@ public class PopulateDB {
             QUESTION_RELATIONS_CSV,
             MATCHES,
             QUESTION_OPTIONS_CSV,
-            QUESTION_THRESHOLDS_CSV);
+            QUESTION_THRESHOLDS_CSV,
+            DRUGS_CSV,
+            ORGANISATIONS_CSV,
+            TREATMENT_CSV,
+            DRUG_COMBINATIONS_CSV,
+            TREATMENT_MATCHES_CSV);
     private static final List<String> tables2updateQuestions = Arrays.asList(
             OPTION_ATTRIBUTES_CSV,
             OPTIONS_CSV,
@@ -108,10 +122,13 @@ public class PopulateDB {
     static Map<Integer, Option> optionList = new LinkedHashMap<Integer, Option>();
     static Map<Integer, Answer> answerList = new LinkedHashMap<Integer, Answer>();
     static Map<Integer, QuestionRelation> questionRelationList = new LinkedHashMap();
-    static Map<Integer, Match> matchList = new LinkedHashMap();
+    static HashMap<Long, Match> matchList = new HashMap();
 
     static Map<Integer, OrgUnitLevel> orgUnitLevelList = new LinkedHashMap();
     static Map<Integer, OrgUnit> orgUnitList = new LinkedHashMap();
+    static HashMap<Long, Drug> drugList = new HashMap<>();
+    static HashMap<Long, Organisation> organisationList = new HashMap<>();
+    static HashMap<Long, Treatment> treatmentList = new HashMap<>();
 
     public static void initDataIfRequired(AssetManager assetManager) throws IOException {
         if (!Tab.isEmpty()) {
@@ -261,20 +278,20 @@ public class PopulateDB {
                         match.setQuestionRelation(
                                 questionRelationList.get(Integer.valueOf(line[1])));
                         match.save();
-                        matchList.put(Integer.valueOf(line[0]), match);
+                        matchList.put(Long.valueOf(line[0]), match);
                         break;
                     case QUESTION_OPTIONS_CSV:
                         QuestionOption questionOption = new QuestionOption();
                         questionOption.setQuestion(questionList.get(Integer.valueOf(line[1])));
                         questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
                         if (!line[3].equals("")) {
-                            questionOption.setMatch(matchList.get(Integer.valueOf(line[3])));
+                            questionOption.setMatch(matchList.get(Long.valueOf(line[3])));
                         }
                         questionOption.save();
                         break;
                     case QUESTION_THRESHOLDS_CSV:
                         QuestionThreshold questionThreshold = new QuestionThreshold();
-                        questionThreshold.setMatch(matchList.get(Integer.valueOf(line[1])));
+                        questionThreshold.setMatch(matchList.get(Long.valueOf(line[1])));
                         questionThreshold.setQuestion(questionList.get(Integer.valueOf(line[2])));
                         if (!line[3].equals("")) {
                             questionThreshold.setMinValue(Integer.valueOf(line[3]));
@@ -283,6 +300,31 @@ public class PopulateDB {
                             questionThreshold.setMaxValue(Integer.valueOf(line[4]));
                         }
                         questionThreshold.save();
+                        break;
+                    case DRUGS_CSV:
+                        Drug drug = PopulateRow.populateDrugs(line, null);
+                        drug.insert();
+                        drugList.put(Long.parseLong(line[0]), drug);
+                        break;
+                    case ORGANISATIONS_CSV:
+                        Organisation organisation = PopulateRow.populateOrganisations(line, null);
+                        organisation.insert();
+                        organisationList.put(Long.parseLong(line[0]), organisation);
+                        break;
+                    case TREATMENT_CSV:
+                        Treatment treatment = PopulateRow.populateTreatments(line, organisationList,
+                                null);
+                        treatment.insert();
+                        treatmentList.put(Long.parseLong(line[0]), treatment);
+                        break;
+                    case DRUG_COMBINATIONS_CSV:
+                        PopulateRow.populateDrugCombinations(line, drugList, treatmentList,
+                                null).insert();
+                        break;
+                    case TREATMENT_MATCHES_CSV:
+                        PopulateRow.populateTreatmentMatches(line, treatmentList, matchList,
+                                null).insert();
+                        break;
                 }
             }
             reader.close();
@@ -337,6 +379,9 @@ public class PopulateDB {
         answerList.clear();
         questionRelationList.clear();
         matchList.clear();
+        treatmentList.clear();
+        organisationList.clear();
+        drugList.clear();
     }
 
     private static void cleanDummyLists() {
@@ -779,7 +824,7 @@ public class PopulateDB {
                         match.setQuestionRelation(
                                 questionRelationList.get(Integer.valueOf(line[1])));
                         match.save();
-                        matchList.put(Integer.valueOf(line[0]), match);
+                        matchList.put(Long.valueOf(line[0]), match);
                         break;
                     case QUESTION_OPTIONS_CSV:
                         //Ignore if the question option already exists.

@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.database;
 
 import org.eyeseetea.malariacare.database.migrations.Migration15AddOptionAttributeColumns;
+import org.eyeseetea.malariacare.database.migrations.Migration23AddTreatmentCsvs;
 import org.eyeseetea.malariacare.database.migrations.Migration22ModifyValuesLastMigration;
 import org.eyeseetea.malariacare.database.migrations.Migration23AddStockCsvs;
 
@@ -14,5 +15,6 @@ public class PostMigration {
         Migration15AddOptionAttributeColumns.postMigrate();
         Migration22ModifyValuesLastMigration.postMigrate();
         Migration23AddStockCsvs.postMigrate();
+        Migration23AddTreatmentCsvs.postMigrate();
     }
 }

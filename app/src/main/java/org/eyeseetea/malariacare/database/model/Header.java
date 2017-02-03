@@ -75,6 +75,16 @@ public class Header extends BaseModel {
                 .where(Condition.column(Header$Table.ID_HEADER).eq(id)).querySingle();
     }
 
+    /**
+     * Method to delete headers in cascade
+     */
+    public static void deleteHeaders(List<Header> headers) {
+        for (Header header : headers) {
+            Question.deleteQuestions(header.getQuestions());
+            header.delete();
+        }
+    }
+
 
     public Long getId_header() {
         return id_header;
@@ -187,4 +197,6 @@ public class Header extends BaseModel {
                 ", id_tab=" + id_tab +
                 '}';
     }
+
+
 }

@@ -59,6 +59,13 @@ public class Match extends BaseModel {
         setQuestionRelation(questionRelation);
     }
 
+    public static Match findById(long id) {
+        return new Select()
+                .from(Match.class)
+                .where(Condition.column(Match$Table.ID_MATCH).is(id))
+                .querySingle();
+    }
+
     public static List<Match> listAll() {
         return new Select().all().from(Match.class).queryList();
     }
@@ -72,6 +79,47 @@ public class Match extends BaseModel {
         }
         return this.questionOptions;
     }
+
+    /**
+     * Get all questionThresholds matches with the match passed.
+     */
+    private static List<QuestionThreshold> getQuestionThreshold(Match match) {
+        return new Select().from(QuestionThreshold.class)
+                .where(Condition.column(QuestionThreshold$Table.ID_MATCH).eq(
+                        match.getId_match())).queryList();
+    }
+
+    /**
+     * Get all questionOptions matches with the match passed.
+     */
+    private static List<QuestionOption> getQuestionOptions(Match match) {
+        return new Select().from(QuestionOption.class)
+                .where(Condition.column(QuestionOption$Table.ID_MATCH).eq(
+                        match.getId_match())).queryList();
+    }
+
+    /**
+     * Get all treatment matches with the match passed.
+     */
+    private static List<TreatmentMatch> getTreatmentMatches(Match match) {
+        return new Select().from(TreatmentMatch.class)
+                .where(Condition.column(TreatmentMatch$Table.ID_MATCH).eq(
+                        match.getId_match())).queryList();
+    }
+
+
+    /**
+     * Method to delete the matches in cascade
+     */
+    public static void deleteMatches(List<Match> matches) {
+        for (Match match : matches) {
+            TreatmentMatch.deleteTreatmentMatches(getTreatmentMatches(match));
+            QuestionOption.deleteQuestionOptions(getQuestionOptions(match));
+            QuestionThreshold.deleteQuestionThresholds(getQuestionThreshold(match));
+            match.delete();
+        }
+    }
+
 
     public long getId_match() {
         return id_match;
@@ -152,4 +200,6 @@ public class Match extends BaseModel {
                 ", id_question_relation=" + id_question_relation +
                 '}';
     }
+
+
 }

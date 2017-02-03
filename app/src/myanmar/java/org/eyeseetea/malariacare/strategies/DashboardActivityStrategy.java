@@ -9,8 +9,6 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.StockFragment;
 
-import java.util.List;
-
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private StockFragment stockFragment;
@@ -41,16 +39,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void newSurvey(Activity activity){
-        List<Program> programs = Program.getAllPrograms();
-        Program myanmarProgram = null;
-        Program stockProgram = null;
-        for (Program program : programs) {
-            if (program.getUid().equals(activity.getString(R.string.malariaProgramUID))) {
-                myanmarProgram = program;
-            } else if (program.getUid().equals(activity.getString(R.string.stockProgramUID))) {
-                stockProgram = program;
-            }
-        }
+        Program myanmarProgram = Program.findByUID(activity.getString(R.string.malariaProgramUID));
+        Program stockProgram = Program.findByUID(activity.getString(R.string.stockProgramUID));
         // Put new survey in session
         Survey survey = new Survey(null, myanmarProgram, Session.getUser());
         survey.save();

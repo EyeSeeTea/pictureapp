@@ -38,7 +38,8 @@ public abstract class ADashboardActivityStrategy {
             Log.d(TAG, "requestLocationUpdates via NETWORK");
             if (ActivityCompat.checkSelfPermission(activity,
                     android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity,
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    activity,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 return;

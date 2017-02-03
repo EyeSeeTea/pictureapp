@@ -92,7 +92,6 @@ public class Program extends BaseModel {
     }
 
 
-
     public static Program getFirstProgram() {
         return new Select().from(Program.class).querySingle();
     }

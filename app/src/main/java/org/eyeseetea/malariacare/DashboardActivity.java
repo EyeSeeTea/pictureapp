@@ -523,7 +523,6 @@ public class DashboardActivity extends BaseActivity {
 
     public void beforeExit() {
         Survey survey = Session.getMalariaSurvey();
-        Survey stockSurvey=Session.getStockSurvey();
         if (survey != null) {
             boolean isInProgress = survey.isInProgress();
             survey.getValuesFromDB();

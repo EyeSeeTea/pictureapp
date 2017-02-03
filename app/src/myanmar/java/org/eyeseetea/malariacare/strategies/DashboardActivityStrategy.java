@@ -38,7 +38,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @Override
-    public void newSurvey(Activity activity){
+    public void newSurvey(Activity activity) {
         Program myanmarProgram = Program.findByUID(activity.getString(R.string.malariaProgramUID));
         Program stockProgram = Program.findByUID(activity.getString(R.string.stockProgramUID));
         // Put new survey in session

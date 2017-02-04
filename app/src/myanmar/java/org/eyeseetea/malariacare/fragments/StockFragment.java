@@ -82,6 +82,21 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
                         showNewReceiptBalanceFragment(Constants.SURVEY_BALANCE);
                     }
                 });
+
+        view.findViewById(R.id.fragment_stock_see_balance).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showHistoricReceiptBalanceFragment(Constants.SURVEY_BALANCE);
+                    }
+                });
+        view.findViewById(R.id.fragment_stock_see_receipt).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showHistoricReceiptBalanceFragment(Constants.SURVEY_RECEIPT);
+                    }
+                });
     }
 
 
@@ -236,6 +251,24 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
                 headerString=R.string.fragment_new_balance;
             }
             DashboardHeaderStrategy.getInstance().init(activity, headerString);
+            if (activity instanceof DashboardActivity) {
+                ((DashboardActivity) activity).initNewReceiptFragment();
+            }
+        }
+    }
+
+    private void showHistoricReceiptBalanceFragment(int type) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            HistoricReceiptBalanceFragment historicReceiptBalanceFragment =
+                    new HistoricReceiptBalanceFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(HistoricReceiptBalanceFragment.TYPE, type);
+            historicReceiptBalanceFragment.setArguments(bundle);
+            replaceFragment(R.id.dashboard_stock_container, historicReceiptBalanceFragment);
+
+            DashboardHeaderStrategy.getInstance().init(activity,
+                    R.string.fragment_historic_receipt_balance);
             if (activity instanceof DashboardActivity) {
                 ((DashboardActivity) activity).initNewReceiptFragment();
             }

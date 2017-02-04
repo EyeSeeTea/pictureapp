@@ -48,7 +48,6 @@ import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
-import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
@@ -428,8 +427,8 @@ public class DashboardActivity extends BaseActivity {
             onSurveyBackPressed();
         } else if (isReviewFragmentActive()) {
             onSurveyBackPressed();
-        } else if (isNewReceiptBalanceFragmentActive()) {
-            closeNewReceiptBalanceFragment();
+        } else if (isNewHistoricReceiptBalanceFragmentActive()) {
+            closeReceiptBalanceFragment();
         } else {
             confirmExitApp();
         }
@@ -516,7 +515,7 @@ public class DashboardActivity extends BaseActivity {
         }
     }
 
-    public void closeNewReceiptBalanceFragment() {
+    public void closeReceiptBalanceFragment() {
         DashboardActivityStrategy mDashboardActivityStrategy = new DashboardActivityStrategy();
         mDashboardActivityStrategy.showStockFragment(this, false);
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
@@ -641,9 +640,10 @@ public class DashboardActivity extends BaseActivity {
         return isFragmentActive(surveyFragment, R.id.dashboard_details_container);
     }
 
-    private boolean isNewReceiptBalanceFragmentActive() {
-        return isFragmentActive(NewReceiptBalanceFragment.class, R.id.dashboard_stock_container);
+    private boolean isNewHistoricReceiptBalanceFragmentActive() {
+      return   mDashboardActivityStrategy.isHistoricNewReceiptBalanceFragment(this);
     }
+
 
     private boolean isFragmentActive(Class fragmentClass, int layout) {
         Fragment currentFragment = this.getFragmentManager().findFragmentById(layout);

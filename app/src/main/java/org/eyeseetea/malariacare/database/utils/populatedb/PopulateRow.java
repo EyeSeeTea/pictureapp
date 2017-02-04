@@ -48,7 +48,7 @@ public class PopulateRow {
         if (line.length > 16 && !line[16].equals("")) {
             question.setCompulsory(Integer.valueOf(line[16]));
         } else {
-            question.setCompulsory(Question.QUESTION_NO_COMPULSORY);
+            question.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
         }
         return question;
     }
@@ -238,7 +238,4 @@ public class PopulateRow {
         }
         return option;
     }
-
-
-
 }

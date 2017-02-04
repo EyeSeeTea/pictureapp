@@ -279,7 +279,7 @@ public class Treatment {
         Option optionOutStock = new Option("out_stock_option", "out_stock_option", 0f,
                 answer);
         optionOutStock.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p6_out_stock.png"));
+                new OptionAttribute("c8b8c7", "question_images/p6_stockout.png"));
         optionOutStock.setId_option(Question.getOutOfStockQuestion().getId_question());
         if (!isACT12Question(question)) {
             options.add(optionACT12);

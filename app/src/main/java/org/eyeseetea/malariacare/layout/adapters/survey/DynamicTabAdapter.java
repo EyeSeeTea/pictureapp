@@ -1020,11 +1020,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         Value value = question.getValueBySession();
 
-            if (isDone(value)) {
-                navigationController.isMovingToForward = false;
-                return;
-            }
-            navigationController.next(value != null ? value.getOption() : null);
+        if (isDone(value)) {
+            navigationController.isMovingToForward = false;
+            return;
+        }
+        navigationController.next(value != null ? value.getOption() : null);
 
         notifyDataSetChanged();
         hideKeyboard(PreferencesState.getInstance().getContext());

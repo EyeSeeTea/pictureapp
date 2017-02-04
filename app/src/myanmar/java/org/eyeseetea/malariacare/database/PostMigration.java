@@ -16,6 +16,5 @@ public class PostMigration {
         Migration23ModifyValuesLastMigration.postMigrate();
         Migration23AddStockCsvs.postMigrate();
         Migration23AddTreatmentCsvs.postMigrate();
-        Migration23ModifyValuesLastMigration.postMigrate();
     }
 }

@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -32,7 +33,9 @@ import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -63,7 +66,7 @@ public class Question extends BaseModel {
     /**
      * Constant that reflects a not visible question in information
      */
-    public static final int QUESTION_NO_COMPULSORY = 0;
+    public static final int QUESTION_NOT_COMPULSORY = 0;
     private static final String TAG = "Question";
     /**
      * Required to create a null Question value to enable caching when you're the last question.
@@ -1372,12 +1375,24 @@ public class Question extends BaseModel {
         return false;
     }
 
+    private Context getContext(){
+        return PreferencesState.getInstance().getContext();
+    }
+
     public boolean isStockQuestion() {
-        if (header != null && header.getName().equals("Stock")) {
+        if (getHeader() != null && getHeader().getName().equals("Stock")) {
             return true;
         }
         return false;
     }
+
+    public boolean isDynamicStockQuestion() {
+        if (getUid() != null) {
+            return getUid().equals(getContext().getString(R.string.dynamicStockQuestionUID));
+        }
+        return false;
+    }
+
 
     /**
      * Returns if the question is a counter or not
@@ -1391,13 +1406,65 @@ public class Question extends BaseModel {
         return questionRelation != null;
     }
 
+    public boolean isTreatmentQuestion() {
+        if (uid.equals(getContext().getString(R.string.ageQuestionUID)) || uid.equals(
+                getContext().getString(R.string.ageQuestionUID)) || uid.equals(
+                getContext().getString(R.string.severeSymtomsQuestionUID))
+                || uid.equals(getContext().getString(R.string.rdtQuestionUID))) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isOutStockQuestion() {
+        if (uid.equals(getContext().getString(R.string.outOfStockQuestionUID))) {
+            return true;
+        }
+        return false;
+    }
+
+    public static Question getACT6Question() {
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.act6QuestionUID));
+    }
+
+    public static Question getACT12Question() {
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.act12QuestionUID));
+    }
+
+    public static Question getACT18Question() {
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.act18QuestionUID));
+    }
+
+    public static Question getACT24Question() {
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.act24QuestionUID));
+    }
+
+    public static Question getOutOfStockQuestion() {
+        return findByUID("ZEopAP6tQN4");
+    }
+
     public boolean hasCompulsoryNotAnswered() {
         List<Question> questions = new ArrayList<>();
         //get all the questions in the same screen page
         if (getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
             questions = getQuestionsByTab(getHeader().getTab());
+        } else if (isDynamicStockQuestion()) {
+            List<Option> options = getAnswer().getOptions();
+            for (Option option : options) {
+                Question question = findByID(option.getId_option());
+                if (!isNotAnswered(question)) {
+                    questions.add(question);
+                }
+            }
         } else {
             questions.add(this);
+        }
+        if (questions.size() == 0) {
+            return true;
         }
         for (Question question : questions) {
             Survey survey =

@@ -321,4 +321,8 @@
     <string name="new_receipt">新入库物资登记</string>
     <string name="see_balance">查看之前校正库存登记</string>
     <string name="new_balance">校正实际库存登记</string>
+    <string name="treatment_stock_review_title">Treatment out stock</string>
+    <string name="act_out_stock">ACT type needed is out of stock, provide combination and explain</string>
+    <string name="out_stock_option">Out of stock</string>
+
 </resources>

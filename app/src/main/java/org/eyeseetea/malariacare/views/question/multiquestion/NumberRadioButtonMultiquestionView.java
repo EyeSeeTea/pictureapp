@@ -13,8 +13,10 @@ import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
+import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -32,6 +34,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
     Question question;
 
     protected AKeyboardQuestionView.onAnswerChangedListener mOnAnswerChangedListener;
+    protected AOptionQuestionView.onAnswerChangedListener mOnAnswerOptionChangedListener;
     int dose = 0;
 
     public NumberRadioButtonMultiquestionView(Context context) {
@@ -69,10 +72,12 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         }
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
-            if (customRadioButton.getTag().equals("No") && Float.parseFloat(value.getValue())
+            if (((Option) customRadioButton.getTag()).getName().equals("No") && Float.parseFloat(
+                    value.getValue())
                     == 0) {
                 customRadioButton.setChecked(true);
-            } else if (customRadioButton.getTag().equals("Yes") && Float.parseFloat(
+            } else if (((Option) customRadioButton.getTag()).getName().equals("Yes")
+                    && Float.parseFloat(
                     value.getValue()) > 0) {
                 customRadioButton.setChecked(true);
             }
@@ -98,7 +103,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
             CustomRadioButton radioButton =
                     (CustomRadioButton) lInflater.inflate(
                             R.layout.uncheckeable_radiobutton, null);
-            radioButton.setTag(option.getName());
+            radioButton.setTag(option);
             radioButton.setText(option.getInternationalizedCode());
             fixRadioButtonWidth(radioButton);
 
@@ -142,15 +147,35 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         int value = 0;
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
-            if (customRadioButton.getTag().equals("No") && checkedId == customRadioButton.getId()) {
+            if (((Option) customRadioButton.getTag()).getName().equals("No")
+                    && checkedId == customRadioButton.getId()) {
                 value = 0;
-            } else if (customRadioButton.getTag().equals("Yes")
+            } else if (((Option) customRadioButton.getTag()).getName().equals("Yes")
                     && checkedId == customRadioButton.getId()) {
                 value = (int) dose;
             }
+            if (Treatment.isACTQuestion((Question) this.getTag())
+                    && checkedId == customRadioButton.getId()) {
+                notifyAnswerOptionChange(((Option) customRadioButton.getTag()));
+            }
         }
 
+
         notifyAnswerChanged(String.valueOf(value));
+    }
+
+    protected void notifyAnswerOptionChange(Option option) {
+        if (mOnAnswerOptionChangedListener != null) {
+            View view = new View(context);
+            view.setTag(Treatment.getTreatmentQuestion());
+            mOnAnswerOptionChangedListener.onAnswerChanged(view, option);
+        }
+    }
+
+    //TODO call
+    public void setOnAnswerOptionChangedListener(
+            AOptionQuestionView.onAnswerChangedListener onAnswerOptionChangedListener) {
+        mOnAnswerOptionChangedListener = onAnswerOptionChangedListener;
     }
 
     protected void notifyAnswerChanged(String newValue) {

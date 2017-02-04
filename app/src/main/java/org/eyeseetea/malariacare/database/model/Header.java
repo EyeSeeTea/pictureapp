@@ -33,6 +33,11 @@ import java.util.List;
 @Table(databaseName = AppDatabase.NAME)
 public class Header extends BaseModel {
 
+    /**
+     * Required for creating the dynamic treatment question in SCMM
+     */
+    public final static Long DYNAMIC_TREATMENT_HEADER_ID = 7l;
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_header;

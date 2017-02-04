@@ -21,12 +21,7 @@ import org.eyeseetea.malariacare.database.model.TreatmentMatch;
 
 import java.util.HashMap;
 
-/**
- * Created by manuel on 11/01/17.
- */
-
 public class PopulateRow {
-
     static Question populateQuestion(String[] line, HashMap<Long, Header> headerFK,
             HashMap<Long, Answer> answerFK, @Nullable Question question) {
         if (question == null) {
@@ -53,7 +48,7 @@ public class PopulateRow {
         if (line.length > 16 && !line[16].equals("")) {
             question.setCompulsory(Integer.valueOf(line[16]));
         } else {
-            question.setCompulsory(Question.QUESTION_NO_COMPULSORY);
+            question.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
         }
         return question;
     }
@@ -243,7 +238,4 @@ public class PopulateRow {
         }
         return option;
     }
-
-
-
 }

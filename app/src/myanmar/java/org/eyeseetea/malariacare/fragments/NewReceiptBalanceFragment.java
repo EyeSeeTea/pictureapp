@@ -48,12 +48,7 @@ public class NewReceiptBalanceFragment extends Fragment {
     }
 
     private void manageBundle(Bundle savedInstanceState) {
-        Bundle bundle;
-        if (savedInstanceState == null) {
-            bundle = getArguments();
-        } else {
-            bundle = savedInstanceState;
-        }
+        Bundle bundle = (savedInstanceState == null) ? getArguments() : savedInstanceState;
         type = bundle.getInt(TYPE);
     }
 
@@ -99,7 +94,6 @@ public class NewReceiptBalanceFragment extends Fragment {
                 datePickerFragment.show(getFragmentManager(), TAG);
             }
         });
-
     }
 
     private void submitPressed() {

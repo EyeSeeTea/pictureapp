@@ -50,6 +50,7 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
                 AssetManager assetManager = PreferencesState.getInstance().getContext().getAssets();
                 UpdateDB.updateTabs(assetManager);
                 UpdateDB.updateHeaders(assetManager);
+                UpdateDB.updateAnswers(assetManager);
                 UpdateDB.updateAndAddQuestions(assetManager);
                 UpdateDB.updateQuestionRelation(assetManager);
                 UpdateDB.updateMatches(assetManager);
@@ -61,7 +62,6 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
                 UpdateDB.updateDrugCombination(assetManager);
                 UpdateDB.updateTreatmentMatches(assetManager);
                 UpdateDB.updateQuestionOption(assetManager);
-                UpdateDB.updateAnswers(assetManager);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e(TAG, "Error updating database" + e.getMessage());

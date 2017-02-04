@@ -34,5 +34,12 @@
     <string name="referralQuestionUID">9fV1JoHmO94</string>
     <string name="pqQuestionUID">"Sttahtf0iHZ"</string>
     <string name="cqQuestionUID">jZvZ4Q39J6s</string>
+    <string name="act6QuestionUID">ihlfWLBg7Nr</string>
+    <string name="act12QuestionUID">nN4jwsyjmE9</string>
+    <string name="act18QuestionUID">GqHQPu6yCfu</string>
+    <string name="act24QuestionUID">RUqD8Kckt3B</string>
+    <string name="dynamicStockQuestionUID">9cV1JoHmO95</string>
+    <string name="outOfStockQuestionUID">ZEopAP6tQN4</string>
+    <string name="dynamicTreatmentQuestionUID">9cV1JoHmO94</string>
 
 </resources>

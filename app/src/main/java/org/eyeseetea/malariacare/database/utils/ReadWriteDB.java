@@ -93,15 +93,12 @@ public class ReadWriteDB {
         } else {
             if (value != null) value.delete();
         }
-
-
     }
 
     public static void saveValuesText(Question question, String answer) {
         Value value = question.getValueBySession();
         Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
                 : Session.getMalariaSurvey());
-
         if (question.isTreatmentQuestion() && value != null && !value.getValue().equals(answer)) {
             deleteStockSurveyValues();
         }
@@ -117,17 +114,16 @@ public class ReadWriteDB {
             }
             value.save();
         }
-
     }
 
     public static void deleteValue(Question question) {
+
         Value value = question.getValueBySession();
 
         if (value != null) {
             value.delete();
         }
     }
-
 
     public static void deleteStockSurveyValues() {
         Survey survey = Session.getStockSurvey();
@@ -143,5 +139,4 @@ public class ReadWriteDB {
             }
         }
     }
-
 }

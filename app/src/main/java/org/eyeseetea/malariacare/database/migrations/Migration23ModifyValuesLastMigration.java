@@ -8,8 +8,9 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
 
@@ -43,9 +44,11 @@ public class Migration23ModifyValuesLastMigration extends BaseMigration {
             try {
                 PopulateDB.addOptionAttributes(
                         PreferencesState.getInstance().getContext().getAssets());
-                PopulateDB.updateOptionNames(
+                UpdateDB.updateAnswers(PreferencesState.getInstance().getContext().getAssets());
+                UpdateDB.updateOptions(
                         PreferencesState.getInstance().getContext().getAssets());
-                PopulateDB.updateQuestions(PreferencesState.getInstance().getContext().getAssets());
+                UpdateDB.updateAndAddQuestions(
+                        PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {
                 e.printStackTrace();
             }

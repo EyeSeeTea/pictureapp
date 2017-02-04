@@ -3,9 +3,10 @@ package org.eyeseetea.malariacare.domain.entity;
 import android.content.Context;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.Drug;
+import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.OptionAttribute;
@@ -36,6 +37,25 @@ public class Treatment {
         doseByQuestion = new HashMap<>();
     }
 
+    public static Question getTreatmentQuestion() {
+        Context context = PreferencesState.getInstance().getContext();
+        return Question.findByUID(context.getString(R.string.dynamicTreatmentQuestionUID));
+    }
+
+    public static boolean isACTQuestion(Question question) {
+        Context context = PreferencesState.getInstance().getContext();
+        if (question.getUid().equals(context.getString(R.string.act6QuestionUID))
+                || question != null && question.getUid().equals(
+                context.getString(R.string.act12QuestionUID))
+                || question != null && question.getUid().equals(
+                context.getString(R.string.act18QuestionUID))
+                || question != null && question.getUid().equals(
+                context.getString(R.string.act24QuestionUID))) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean hasTreatment() {
         mTreatment = getTreatmentFromSurvey();
         if (mTreatment != null) {
@@ -44,8 +64,6 @@ public class Treatment {
         return mTreatment != null;
     }
 
-
-
     public List<Question> getQuestions() {
         return mQuestions;
     }
@@ -53,7 +71,6 @@ public class Treatment {
     public HashMap<Long, Integer> getDoseByQuestion() {
         return doseByQuestion;
     }
-
 
     public org.eyeseetea.malariacare.database.model.Treatment getTreatment() {
         return mTreatment;
@@ -78,11 +95,6 @@ public class Treatment {
         }
 
         return null;
-    }
-
-
-    public static Question getTreatmentQuestion() {
-        return Question.findByUID("9cV1JoHmO94");
     }
 
     private org.eyeseetea.malariacare.database.model.Treatment getTreatmentFromSurvey() {
@@ -134,7 +146,6 @@ public class Treatment {
 
     private List<Question> getQuestionsForTreatment(
             org.eyeseetea.malariacare.database.model.Treatment treatment) {
-        Context context = PreferencesState.getInstance().getContext();
         List<Question> questions = new ArrayList<>();
         List<Drug> drugs = treatment.getDrugsForTreatment();
 
@@ -142,8 +153,8 @@ public class Treatment {
         treatmentQuestion.setOutput(Constants.QUESTION_LABEL);
         treatmentQuestion.setForm_name(treatment.getDiagnosis());
         treatmentQuestion.setHelp_text(treatment.getMessage());
-        treatmentQuestion.setCompulsory(0);
-        treatmentQuestion.setHeader((long) 7);
+        treatmentQuestion.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
+        treatmentQuestion.setHeader(Header.DYNAMIC_TREATMENT_HEADER_ID);
         questions.add(treatmentQuestion);
 
         for (Drug drug : drugs) {
@@ -161,118 +172,109 @@ public class Treatment {
                 Log.d(TAG, "Question: " + questions.get(questions.size() - 1) + "\n");
             }
         }
-        questions.add(Question.findByUID(context.getString(R.string.referralQuestionUID)));
+        questions.add(Question.findByUID(getContext().getString(R.string.referralQuestionUID)));
 
         return questions;
     }
 
-    private boolean isACT6Question(Question question) {
-        if (question != null && question.getUid().equals("ihlfWLBg7Nr")) {
+    public boolean isACT6Question(Question question) {
+        if (question != null && question.getUid().equals(
+                getContext().getString(R.string.act6QuestionUID))) {
             return true;
         }
         return false;
     }
 
-    private boolean isACT24Question(Question question) {
-        if (question != null && question.getUid().equals("RUqD8Kckt3B")) {
+    public boolean isACT12Question(Question question) {
+        if (question != null && question.getUid().equals(
+                getContext().getString(R.string.act12QuestionUID))) {
             return true;
         }
         return false;
     }
 
-    private boolean isACT18Question(Question question) {
-        if (question != null && question.getUid().equals("GqHQPu6yCfu")) {
+    public boolean isACT18Question(Question question) {
+        if (question != null && question.getUid().equals(
+                getContext().getString(R.string.act18QuestionUID))) {
             return true;
         }
         return false;
     }
 
-    private boolean isACT12Question(Question question) {
-        if (question != null && question.getUid().equals("nN4jwsyjmE9")) {
+    public boolean isACT24Question(Question question) {
+        if (question != null && question.getUid().equals(
+                getContext().getString(R.string.act24QuestionUID))) {
             return true;
         }
         return false;
     }
 
-    public static boolean isACTQuestion(Question question) {
-        if (question.getUid().equals("nN4jwsyjmE9") || question.getUid().equals("GqHQPu6yCfu")
-                || question.getUid().equals("RUqD8Kckt3B") || question.getUid().equals(
-                "ihlfWLBg7Nr")) {
+    public boolean isPq(Question question) {
+        if (question.getUid().equals(getContext().getString(R.string.pqQuestionUID))) {
             return true;
         }
         return false;
     }
 
-    private boolean isPq(Question question) {
-        Context context = PreferencesState.getInstance().getContext();
-        if (question.getUid().equals(context.getString(R.string.pqQuestionUID))) {
+    public boolean isCq(Question question) {
+        if (question.getUid().equals(getContext().getString(R.string.cqQuestionUID))) {
             return true;
         }
         return false;
     }
-
-    private boolean isCq(Question question) {
-        Context context = PreferencesState.getInstance().getContext();
-        if (question.getUid().equals(context.getString(R.string.cqQuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
 
     public HashMap<Long, Float> getOptionDose(Question question) {
         HashMap<Long, Float> optionDose = new HashMap<>();
         if (isACT6Question(question)) {
-            optionDose.put(Question.getACT12Questions().getId_question(), 0.5f);
-            optionDose.put(Question.getACT18Questions().getId_question(), 0.3f);
-            optionDose.put(Question.getACT24Questions().getId_question(), 0.25f);
+            optionDose.put(Question.getACT12Question().getId_question(), 0.5f);
+            optionDose.put(Question.getACT18Question().getId_question(), 0.3f);
+            optionDose.put(Question.getACT24Question().getId_question(), 0.25f);
         }
         if (isACT12Question(question)) {
             optionDose.put(Question.getACT6Question().getId_question(), 2f);
-            optionDose.put(Question.getACT18Questions().getId_question(), 0.6f);
-            optionDose.put(Question.getACT24Questions().getId_question(), 0.5f);
+            optionDose.put(Question.getACT18Question().getId_question(), 0.6f);
+            optionDose.put(Question.getACT24Question().getId_question(), 0.5f);
         }
         if (isACT18Question(question)) {
             optionDose.put(Question.getACT6Question().getId_question(), 3f);
-            optionDose.put(Question.getACT12Questions().getId_question(), 1.5f);
-            optionDose.put(Question.getACT24Questions().getId_question(), 0.75f);
+            optionDose.put(Question.getACT12Question().getId_question(), 1.5f);
+            optionDose.put(Question.getACT24Question().getId_question(), 0.75f);
         }
         if (isACT24Question(question)) {
             optionDose.put(Question.getACT6Question().getId_question(), 4f);
-            optionDose.put(Question.getACT12Questions().getId_question(), 2f);
-            optionDose.put(Question.getACT18Questions().getId_question(), 1.3f);
+            optionDose.put(Question.getACT12Question().getId_question(), 2f);
+            optionDose.put(Question.getACT18Question().getId_question(), 1.3f);
         }
 
         return optionDose;
     }
 
-
     public Answer getACTOptions(Question question) {
         List<Option> options = new ArrayList<>();
         Answer answer = new Answer("stock");
-        answer.setId_answer((long) 204);
+        answer.setId_answer(Answer.DYNAMIC_STOCK_ANSWER_ID);
 
-        Option optionACT24 = new Option("ACT_x_24", "ACT_x_24", (float) 0, answer);
-        optionACT24.setId_option(Question.getACT24Questions().getId_question());
+        Option optionACT24 = new Option("ACT_x_24", "ACT_x_24", 0f, answer);
+        optionACT24.setId_option(Question.getACT24Question().getId_question());
         optionACT24.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx24.png"));
-        Option optionACT12 = new Option("ACT_x_12", "ACT_x_12", (float) 0, answer);
-        optionACT12.setId_option(Question.getACT12Questions().getId_question());
+        Option optionACT12 = new Option("ACT_x_12", "ACT_x_12", 0f, answer);
+        optionACT12.setId_option(Question.getACT12Question().getId_question());
         optionACT12.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx12.png"));
-        Option optionACT6 = new Option("ACT_x_6", "ACT_x_6", (float) 0, answer);
+        Option optionACT6 = new Option("ACT_x_6", "ACT_x_6", 0f, answer);
         optionACT6.setId_option(Question.getACT6Question().getId_question());
         optionACT6.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx6.png"));
-        Option optionACT18 = new Option("ACT_x_18", "ACT_x_18", (float) 0, answer);
-        optionACT18.setId_option(Question.getACT18Questions().getId_question());
+        Option optionACT18 = new Option("ACT_x_18", "ACT_x_18", 0f, answer);
+        optionACT18.setId_option(Question.getACT18Question().getId_question());
         optionACT18.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx18.png"));
-        Option optionOutStock = new Option("out_stock_option", "out_stock_option", (float) 0,
+        Option optionOutStock = new Option("out_stock_option", "out_stock_option", 0f,
                 answer);
         optionOutStock.setOptionAttribute(
-                new OptionAttribute("c8b8c7", "question_images/p6_out_stock.png"));
-        optionOutStock.setId_option(Question.getOutStcokQuestion().getId_question());
+                new OptionAttribute("c8b8c7", "question_images/p6_stockout.png"));
+        optionOutStock.setId_option(Question.getOutOfStockQuestion().getId_question());
         if (!isACT12Question(question)) {
             options.add(optionACT12);
         }
@@ -292,6 +294,10 @@ public class Treatment {
         return answer;
     }
 
+    public Context getContext() {
+        return PreferencesState.getInstance().getContext();
+    }
+
     private String getPqTitleDose(int dose) {
         return getTitleDose(dose, "Pq");
     }
@@ -303,5 +309,4 @@ public class Treatment {
     private String getTitleDose(int dose, String drug) {
         return String.format("drugs_%d_of_%s_review_title", dose, drug);
     }
-
 }

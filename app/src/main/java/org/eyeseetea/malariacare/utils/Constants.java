@@ -87,7 +87,7 @@ public class Constants {
     // ############# SURVEY TYPE ###############
     public static final int SURVEY_BALANCE = 0,
             SURVEY_EXPENSE = 1,
-            SURVEU_RECEIP = 2;
+            SURVEU_RECEIPT = 2;
     public static final String FONTS_XSMALL = "xsmall",
             FONTS_SMALL = "small",
             FONTS_MEDIUM = "medium",

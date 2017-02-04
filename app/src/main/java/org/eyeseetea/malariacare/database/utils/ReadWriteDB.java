@@ -27,9 +27,6 @@ import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
-/**
- * Created by Jose on 26/04/2015.
- */
 public class ReadWriteDB {
 
     public static String readValueQuestion(Question question) {
@@ -71,7 +68,6 @@ public class ReadWriteDB {
     }
 
     public static void saveValuesDDL(Question question, Option option, Value value) {
-
         //No option, nothing to save
         if (option == null) {
             return;
@@ -82,22 +78,12 @@ public class ReadWriteDB {
         }
 
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
+            Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
+                    : Session.getMalariaSurvey());
             if (value == null) {
-                Survey survey = null;
-                if (question.isStockQuestion()) {
-                    survey = Session.getStockSurvey();
-                } else {
-                    survey = Session.getMalariaSurvey();
-                }
                 value = new Value(option, question, survey);
             } else {
                 if (!value.getOption().equals(option) && question.hasChildren()) {
-                    Survey survey = null;
-                    if (question.isStockQuestion()) {
-                        survey = Session.getStockSurvey();
-                    } else {
-                        survey = Session.getMalariaSurvey();
-                    }
                     survey.removeChildrenValuesFromQuestionRecursively(question, false);
                 }
                 value.setOption(option);
@@ -107,20 +93,12 @@ public class ReadWriteDB {
         } else {
             if (value != null) value.delete();
         }
-
-
     }
 
     public static void saveValuesText(Question question, String answer) {
-
         Value value = question.getValueBySession();
-        Survey survey = null;
-        if (question.isStockQuestion()) {
-            survey = Session.getStockSurvey();
-        } else {
-            survey = Session.getMalariaSurvey();
-        }
-
+        Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
+                : Session.getMalariaSurvey());
         if (question.isTreatmentQuestion() && value != null && !value.getValue().equals(answer)) {
             deleteStockSurveyValues();
         }
@@ -136,7 +114,6 @@ public class ReadWriteDB {
             }
             value.save();
         }
-
     }
 
     public static void deleteValue(Question question) {
@@ -147,7 +124,6 @@ public class ReadWriteDB {
             value.delete();
         }
     }
-
 
     public static void deleteStockSurveyValues() {
         Survey survey = Session.getStockSurvey();
@@ -163,5 +139,4 @@ public class ReadWriteDB {
             }
         }
     }
-
 }

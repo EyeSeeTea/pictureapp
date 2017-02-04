@@ -38,9 +38,6 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
-
-import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -57,10 +54,7 @@ import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
-
-import java.util.List;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -529,7 +523,7 @@ public class DashboardActivity extends BaseActivity {
 
     public void beforeExit() {
         Survey malariaSurvey = Session.getMalariaSurvey();
-        Survey stockSurvey=Session.getStockSurvey();
+        Survey stockSurvey = Session.getStockSurvey();
         if (malariaSurvey != null) {
             boolean isMalariaInProgress = malariaSurvey.isInProgress();
             boolean isStockSurveyInProgress = stockSurvey.isInProgress();
@@ -554,27 +548,7 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the New Survey button
      */
     public void newSurvey(View view) {
-        List<Program> programs = new Select().from(Program.class).queryList();
-        Program myanmarProgram = null;
-        Program stockProgram = null;
-        for (Program program : programs) {
-            if (program.getUid().equals("RjBwXyc5I66")) {
-                myanmarProgram = program;
-            } else if (program.getUid().equals("GnAx3VLVfUi")) {
-                stockProgram = program;
-            }
-        }
-        // Put new survey in session
-        Survey survey = new Survey(null, myanmarProgram, Session.getUser());
-        survey.save();
-        Session.setMalariaSurvey(survey);
-        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser(),
-                Constants.SURVEY_EXPENSE);
-        stockSurvey.save();
-        Session.setStockSurvey(stockSurvey);
-        //Look for coordinates
-        prepareLocationListener(survey);
-
+        mDashboardActivityStrategy.newSurvey(this);
         initSurvey();
     }
 
@@ -595,12 +569,8 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void sendSurvey() {
-
-        Survey survey = Session.getMalariaSurvey();
-        survey.updateSurveyStatus();
-        Survey stockSurvey = Session.getStockSurvey();
-        stockSurvey.setStatus(Constants.SURVEY_COMPLETED);
-        stockSurvey.save();
+        Session.getMalariaSurvey().updateSurveyStatus();
+        Session.getStockSurvey().complete();
         closeSurveyFragment();
     }
 

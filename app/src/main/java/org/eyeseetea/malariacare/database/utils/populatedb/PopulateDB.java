@@ -261,7 +261,7 @@ public class PopulateDB {
                         if (line.length > 16 && !line[16].equals("")) {
                             question.setCompulsory(Integer.valueOf(line[16]));
                         } else {
-                            question.setCompulsory(Question.QUESTION_NO_COMPULSORY);
+                            question.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
                         }
                         question.save();
                         questionList.put(Integer.valueOf(line[0]), question);
@@ -661,7 +661,7 @@ public class PopulateDB {
                     if (line.length > 16 && !line[16].equals("")) {
                         question.setCompulsory(Integer.valueOf(line[16]));
                     } else {
-                        question.setCompulsory(Question.QUESTION_NO_COMPULSORY);
+                        question.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
                     }
                     question.save();
                     break;
@@ -793,7 +793,7 @@ public class PopulateDB {
                             if (line.length > 16 && !line[16].equals("")) {
                                 question.setCompulsory(Integer.valueOf(line[16]));
                             } else {
-                                question.setCompulsory(Question.QUESTION_NO_COMPULSORY);
+                                question.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
                             }
                             question.save();
                         } else {

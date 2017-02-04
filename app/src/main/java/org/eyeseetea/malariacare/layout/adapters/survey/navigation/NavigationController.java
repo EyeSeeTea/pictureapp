@@ -5,6 +5,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.database.utils.Session;
@@ -73,6 +74,11 @@ public class NavigationController {
             return null;
         }
         return currentNode.getQuestion();
+    }
+
+    public Tab getCurrentTab() {
+        if (getCurrentQuestion() == null) return null;
+        return getCurrentQuestion().getHeader().getTab();
     }
 
     /**

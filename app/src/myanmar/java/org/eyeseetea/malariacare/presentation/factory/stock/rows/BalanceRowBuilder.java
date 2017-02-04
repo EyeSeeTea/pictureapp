@@ -41,7 +41,7 @@ public class BalanceRowBuilder extends StockRowBuilder {
     protected Object updateColumn(Object currentValue, float newValue, SurveyStock surveyStock) {
         Survey survey = surveyStock.getSurvey();
         Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
-        if (survey.getSurveyType().equals(Constants.SURVEY_BALANCE) &&
+        if (survey.getType().equals(Constants.SURVEY_BALANCE) &&
                 (maxBalanceDate == null || maxBalanceDate.equals(
                         survey.getEventDate()))) {
             return newValue;

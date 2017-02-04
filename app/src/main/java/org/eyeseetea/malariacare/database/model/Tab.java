@@ -144,7 +144,7 @@ public class Tab extends BaseModel {
      *
      * @param names The array of names to delete.
      */
-    public static void deleteTab(String[] names) {
+    public static void deleteTab(List<String> names) {
         List<Tab> tabs = getAllTabs();
         for (Tab tab : tabs) {
             for (String name : names) {
@@ -221,7 +221,19 @@ public class Tab extends BaseModel {
      * Checks if this tab is a dynamic tab (sort of a wizard)
      */
     public boolean isMultiQuestionTab() {
-        return getType() == Constants.TAB_MULTI_QUESTION;
+        return isMultiQuestionTab(getType());
+    }
+
+    public static boolean isMultiQuestionTab(int tabType) {
+        return tabType == Constants.TAB_MULTI_QUESTION;
+    }
+
+    public boolean isDynamicTreatmentTab() {
+        return isDynamicTreatmentTab(getType());
+    }
+
+    public static boolean isDynamicTreatmentTab(int tabType) {
+        return tabType == Constants.TAB_DYNAMIC_TREATMENT;
     }
 
     public static Tab findById(Long id) {

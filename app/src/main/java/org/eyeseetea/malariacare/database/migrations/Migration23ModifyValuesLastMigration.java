@@ -10,22 +10,21 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
 
 /**
  * Created by idelcano on 03/08/2016.
  */
-@Migration(version = 22, databaseName = AppDatabase.NAME)
-public class Migration22ModifyValuesLastMigration extends BaseMigration {
+@Migration(version = 23, databaseName = AppDatabase.NAME)
+public class Migration23ModifyValuesLastMigration extends BaseMigration {
 
     private static String TAG = ".Migration21";
 
-    private static Migration22ModifyValuesLastMigration instance;
+    private static Migration23ModifyValuesLastMigration instance;
     private boolean postMigrationRequired;
 
-    public Migration22ModifyValuesLastMigration() {
+    public Migration23ModifyValuesLastMigration() {
         super();
         instance = this;
         postMigrationRequired = false;
@@ -44,7 +43,7 @@ public class Migration22ModifyValuesLastMigration extends BaseMigration {
             try {
                 PopulateDB.addOptionAttributes(
                         PreferencesState.getInstance().getContext().getAssets());
-                UpdateDB.updateOptions(
+                PopulateDB.updateOptionNames(
                         PreferencesState.getInstance().getContext().getAssets());
                 PopulateDB.updateQuestions(PreferencesState.getInstance().getContext().getAssets());
             } catch (IOException e) {

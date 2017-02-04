@@ -950,6 +950,10 @@ public class Question extends BaseModel {
         return this.questionThresholds;
     }
 
+    private Context getContext(){
+        return PreferencesState.getInstance().getContext();
+    }
+
     /**
      * Add register to ScoreRegister if this is an scored question
      *
@@ -1362,7 +1366,6 @@ public class Question extends BaseModel {
         return parents.get(0);
     }
 
-
     public boolean isAnswered() {
         return (this.getValueBySession() != null);
     }
@@ -1375,11 +1378,11 @@ public class Question extends BaseModel {
         return false;
     }
 
-    private Context getContext(){
-        return PreferencesState.getInstance().getContext();
-    }
-
     public boolean isStockQuestion() {
+        if (getHeader() == null) {
+            Header header = Header.findById(id_header);
+            setHeader(header);
+        }
         if (getHeader() != null && getHeader().getName().equals("Stock")) {
             return true;
         }
@@ -1392,7 +1395,6 @@ public class Question extends BaseModel {
         }
         return false;
     }
-
 
     /**
      * Returns if the question is a counter or not

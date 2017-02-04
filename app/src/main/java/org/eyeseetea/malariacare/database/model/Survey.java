@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -145,12 +146,21 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     /**
-     * Returns all the surveys with status yet not put to "Sent"
+     * Returns all the malaria surveys with status yet not put to "Sent"
      */
-    public static List<Survey> getAllUnsentSurveys() {
-        return new Select().from(Survey.class)
-                .where(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_SENT))
-                .and(Condition.column(Survey$Table.STATUS).isNot(Constants.SURVEY_CONFLICT))
+    public static List<Survey> getAllUnsentMalariaSurveys() {
+        Context context = PreferencesState.getInstance().getContext();
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("s", Survey$Table.STATUS)).isNot(
+                        Constants.SURVEY_SENT))
+                .and(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.STATUS)).isNot(
+                        Constants.SURVEY_CONFLICT))
+                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).isNot(
+                        context.getString(R.string.stockProgramUID)))
                 .orderBy(Survey$Table.EVENTDATE)
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }
@@ -167,11 +177,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     /**
-     * Returns all the surveys with status put to "Sent"
+     * Returns all the malaria surveys with status put to "Sent"
      */
-    public static List<Survey> getAllSentSurveys() {
-        return new Select().from(Survey.class)
-                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
+    public static List<Survey> getAllSentMalariaSurveys() {
+        Context context = PreferencesState.getInstance().getContext();
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.STATUS)).eq(
+                        Constants.SURVEY_SENT))
+                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).isNot(
+                        context.getString(R.string.stockProgramUID)))
                 .orderBy(false, Survey$Table.EVENTDATE).queryList();
     }
 
@@ -197,9 +214,16 @@ public class Survey extends BaseModel implements VisitableToSDK {
     /**
      * Returns all the surveys with status put to "Sent"
      */
-    public static List<Survey> getAllSurveysToBeSent() {
-        return new Select().from(Survey.class)
-                .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_COMPLETED))
+    public static List<Survey> getAllMalariaSurveysToBeSent() {
+        Context context = PreferencesState.getInstance().getContext();
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.STATUS)).eq(
+                        Constants.SURVEY_COMPLETED))
+                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).isNot(
+                        context.getString(R.string.stockProgramUID)))
                 .orderBy(Survey$Table.EVENTDATE)
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }
@@ -490,6 +514,36 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.status = status;
     }
 
+    public Float getCounterValue(Question question, Option selectedOption) {
+        Question optionCounter = question.findCounterByOption(selectedOption);
+
+        if (optionCounter == null) {
+            return 0f;
+        }
+
+        String counterValue = ReadWriteDB.readValueQuestion(optionCounter);
+        if (counterValue == null || counterValue.isEmpty()) {
+            return 0f;
+        }
+
+        return Float.parseFloat(counterValue);
+    }
+
+    public HashMap<Tab, Integer> getAnsweredTabs() {
+        HashMap<Tab, Integer> tabs = new HashMap<Tab, Integer>();
+
+        List<Value> values = getValuesFromDB();
+        int tabSize = 0;
+        for (Value value : values) {
+            Tab tab = value.getQuestion().getHeader().getTab();
+            if (!tabs.containsKey(tab)) {
+                tabs.put(tab, tabSize);
+                tabSize++;
+            }
+        }
+        return tabs;
+    }
+
     /**
      * Checks if the survey has been sent or not
      *
@@ -557,6 +611,16 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return !isSent() && !isCompleted() && !isHide();
     }
 
+    public boolean isStockSurvey() {
+        if (program == null) {
+            program = Program.findById(id_program);
+        }
+        if (program != null) {
+            return program.isStockProgram();
+        }
+        return false;
+    }
+
     public Float getMainScore() {
         //The main score is only return from a query 1 time
         if (this.mainScore == null) {
@@ -565,6 +629,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         }
         return mainScore;
     }
+
 
     public void setMainScore(Float mainScore) {
         this.mainScore = mainScore;
@@ -732,10 +797,13 @@ public class Survey extends BaseModel implements VisitableToSDK {
         Question rootQuestion = Question.findRootQuestion(tab);
         Question localQuestion = rootQuestion;
         while (localQuestion.getSibling() != null) {
-            if (localQuestion.isCompulsory()) {
+            if (localQuestion.isCompulsory() && !localQuestion.isStockQuestion()) {
                 numRequired++;
             }
             localQuestion = localQuestion.getSibling();
+        }
+        if (localQuestion.isStockQuestion() || !localQuestion.isCompulsory()) {
+            numRequired--;
         }
 
         //Add children required by each parent (value+question)
@@ -818,14 +886,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
         //Update status & completionDate
         if (answeredRatio.isCompleted()) {
-            this.setStatus(Constants.SURVEY_COMPLETED);
-            this.setCompletionDate(new Date());
+            complete();
         } else {
-            this.setStatus(Constants.SURVEY_IN_PROGRESS);
-            this.setCompletionDate(this.eventDate);
+            setStatus(Constants.SURVEY_IN_PROGRESS);
+            setCompletionDate(this.eventDate);
+            save();
         }
-        //Saves new status & completionDate
-        this.save();
+    }
+
+    public void complete(){
+        setStatus(Constants.SURVEY_COMPLETED);
+        setCompletionDate(new Date());
+        save();
     }
 
     /**
@@ -1104,36 +1176,5 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 ", scheduledDate=" + scheduledDate +
                 ", status=" + status +
                 '}';
-    }
-
-
-    public Float getCounterValue(Question question, Option selectedOption) {
-        Question optionCounter = question.findCounterByOption(selectedOption);
-
-        if (optionCounter == null) {
-            return 0f;
-        }
-
-        String counterValue = ReadWriteDB.readValueQuestion(optionCounter);
-        if (counterValue == null || counterValue.isEmpty()) {
-            return 0f;
-        }
-
-        return Float.parseFloat(counterValue);
-    }
-
-    public HashMap<Tab, Integer> getAnsweredTabs() {
-        HashMap<Tab, Integer> tabs = new HashMap<Tab, Integer>();
-
-        List<Value> values = getValuesFromDB();
-        int tabSize = 0;
-        for (Value value : values) {
-            Tab tab = value.getQuestion().getHeader().getTab();
-            if (!tabs.containsKey(tab)) {
-                tabs.put(tab, tabSize);
-                tabSize++;
-            }
-        }
-        return tabs;
     }
 }

@@ -38,9 +38,6 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
-
-import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -58,8 +55,6 @@ import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
-
-import java.util.List;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -574,9 +569,8 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void sendSurvey() {
-
-        Survey survey = Session.getMalariaSurvey();
-        survey.updateSurveyStatus();
+        Session.getMalariaSurvey().updateSurveyStatus();
+        Session.getStockSurvey().complete();
         closeSurveyFragment();
     }
 

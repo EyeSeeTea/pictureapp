@@ -41,7 +41,7 @@ public class Answer extends BaseModel {
     /**
      * Required for creating the dynamic stock question in SCMM
      */
-    public final static Long STOCK_ANSWER_ID = 204l;
+    public final static Long DYNAMIC_STOCK_ANSWER_ID = 204l;
 
     @Column
     @PrimaryKey(autoincrement = true)

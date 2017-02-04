@@ -38,5 +38,8 @@
     <string name="act12QuestionUID">nN4jwsyjmE9</string>
     <string name="act18QuestionUID">GqHQPu6yCfu</string>
     <string name="act24QuestionUID">RUqD8Kckt3B</string>
+    <string name="dynamicStockQuestionUID">9cV1JoHmO95</string>
+    <string name="outOfStockQuestionUID">ZEopAP6tQN4</string>
+    <string name="dynamicTreatmentQuestionUID">9cV1JoHmO94</string>
 
 </resources>

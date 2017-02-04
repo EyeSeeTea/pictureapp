@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.content.Context;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -28,7 +30,9 @@ import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,61 +75,6 @@ public class Program extends BaseModel {
     public Program(String uid, String name) {
         this.uid = uid;
         this.name = name;
-    }
-
-    public static Program findById(Long id_program) {
-        return new Select()
-                .from(Program.class)
-                .where(Condition.column(Program$Table.ID_PROGRAM)
-                        .is(id_program)).querySingle();
-    }
-
-    public static List<Program> getAllPrograms() {
-        return new Select().all().from(Program.class).queryList();
-    }
-
-
-
-    public static Program getFirstProgram() {
-        return new Select().from(Program.class).querySingle();
-    }
-    public static Program getStockProgram(){
-        return new Select()
-                .from(Program.class)
-                .where(Condition.column(Program$Table.UID)
-                        .is("GnAx3VLVfUi")).querySingle();
-    }
-
-    public static int getMaxTotalQuestions() {
-
-        int maxTotalQuestions = 0;
-        Program p = Program.getFirstProgram();
-
-        Question qMax = new Select(Question$Table.TOTAL_QUESTIONS).method("MAX",
-                Question$Table.TOTAL_QUESTIONS)
-                .from(Question.class).as("q")
-                .join(Header.class, Join.JoinType.INNER).as("h")
-                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
-                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
-                .join(Tab.class, Join.JoinType.INNER).as("t")
-                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
-                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
-                .join(Program.class, Join.JoinType.INNER).as("p")
-                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_PROGRAM))
-                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
-                .where(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).eq(
-                        p.getUid()))
-                .querySingle();
-
-        if (qMax != null && qMax.getTotalQuestions() != null) {
-            maxTotalQuestions = qMax.getTotalQuestions();
-        }
-
-        return maxTotalQuestions;
-    }
-
-    public boolean isStockProgram() {
-        return uid.equals("GnAx3VLVfUi") ? true : false;
     }
 
     public Long getId_program() {
@@ -184,6 +133,63 @@ public class Program extends BaseModel {
         return orgUnits;
     }
 
+    public static List<Program> getAllPrograms() {
+        return new Select().all().from(Program.class).queryList();
+    }
+
+    public static Program getFirstProgram() {
+        return new Select().from(Program.class).querySingle();
+    }
+
+    public static Program getStockProgram(){
+        Context context = PreferencesState.getInstance().getContext();
+        return new Select()
+                .from(Program.class)
+                .where(Condition.column(Program$Table.UID)
+                        .is(context.getString(R.string.stockProgramUID))).querySingle();
+    }
+
+    public static int getMaxTotalQuestions() {
+
+        int maxTotalQuestions = 0;
+        Program p = Program.getFirstProgram();
+
+        Question qMax = new Select(Question$Table.TOTAL_QUESTIONS).method("MAX",
+                Question$Table.TOTAL_QUESTIONS)
+                .from(Question.class).as("q")
+                .join(Header.class, Join.JoinType.INNER).as("h")
+                .on(Condition.column(ColumnAlias.columnWithTable("q", Question$Table.ID_HEADER))
+                        .eq(ColumnAlias.columnWithTable("h", Header$Table.ID_HEADER)))
+                .join(Tab.class, Join.JoinType.INNER).as("t")
+                .on(Condition.column(ColumnAlias.columnWithTable("h", Header$Table.ID_TAB))
+                        .eq(ColumnAlias.columnWithTable("t", Tab$Table.ID_TAB)))
+                .join(Program.class, Join.JoinType.INNER).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Tab$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).eq(
+                        p.getUid()))
+                .querySingle();
+
+        if (qMax != null && qMax.getTotalQuestions() != null) {
+            maxTotalQuestions = qMax.getTotalQuestions();
+        }
+
+        return maxTotalQuestions;
+    }
+
+    public List<Tab> getTabs() {
+        if (tabs == null) {
+            tabs = new Select().from(Tab.class)
+                    .where(Condition.column(Tab$Table.ID_PROGRAM).eq(this.getId_program()))
+                    .orderBy(Tab$Table.ORDER_POS).queryList();
+        }
+        return tabs;
+    }
+
+    private Context getContext(){
+        return PreferencesState.getInstance().getContext();
+    }
+
     public void addOrgUnit(OrgUnit orgUnit) {
         //Null -> nothing
         if (orgUnit == null) {
@@ -198,13 +204,22 @@ public class Program extends BaseModel {
         orgUnits = null;
     }
 
-    public List<Tab> getTabs() {
-        if (tabs == null) {
-            tabs = new Select().from(Tab.class)
-                    .where(Condition.column(Tab$Table.ID_PROGRAM).eq(this.getId_program()))
-                    .orderBy(Tab$Table.ORDER_POS).queryList();
-        }
-        return tabs;
+    public boolean isStockProgram() {
+        return uid.equals(getContext().getString(R.string.stockProgramUID));
+    }
+
+    public static Program findById(Long id_program) {
+        return new Select()
+                .from(Program.class)
+                .where(Condition.column(Program$Table.ID_PROGRAM)
+                        .is(id_program)).querySingle();
+    }
+
+    public static Program findByUID(String UID) {
+        return new Select()
+                .from(Program.class)
+                .where(Condition.column(Program$Table.UID)
+                        .is(UID)).querySingle();
     }
 
     @Override

@@ -94,7 +94,7 @@ public class Session {
         return stockSurvey;
     }
 
-    public static void setStockSurvey(Survey stockSurvey) {
+    public static synchronized void setStockSurvey(Survey stockSurvey) {
         Session.stockSurvey = stockSurvey;
     }
 
@@ -170,7 +170,6 @@ public class Session {
      */
     public static Object popServiceValue(String key) {
         return serviceValues.get(key);
-//        return serviceValues.remove(key);
     }
 
     /**
@@ -205,6 +204,4 @@ public class Session {
     public static synchronized void setMaxTotalQuestions(int maxTotalQuestions) {
         Session.maxTotalQuestions = maxTotalQuestions;
     }
-
-
 }

@@ -93,6 +93,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
     @Column
     Integer status;
 
+    @Column
+    Integer type;
+
     /**
      * List of values for this survey
      */
@@ -131,6 +134,145 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.setOrgUnit(orgUnit);
         this.setProgram(program);
         this.setUser(user);
+    }
+
+    public Survey(OrgUnit orgUnit, Program program, User user, int type) {
+        this();
+
+        // Possibilities [ In progress | Completed | Sent ]
+        this.status = Constants.SURVEY_IN_PROGRESS;
+
+        //Set context of the survey
+        this.setOrgUnit(orgUnit);
+        this.setProgram(program);
+        this.setUser(user);
+        this.type = type;
+    }
+
+
+
+
+    public Long getId_survey() {
+        return id_survey;
+    }
+
+    public void setId_survey(Long id_survey) {
+        this.id_survey = id_survey;
+    }
+
+    public OrgUnit getOrgUnit() {
+        if (orgUnit == null) {
+            if (id_org_unit == null) return null;
+            orgUnit = new Select()
+                    .from(OrgUnit.class)
+                    .where(Condition.column(OrgUnit$Table.ID_ORG_UNIT)
+                            .is(id_org_unit)).querySingle();
+        }
+        return orgUnit;
+    }
+
+    public void setOrgUnit(Long id_org_unit) {
+        this.id_org_unit = id_org_unit;
+        this.orgUnit = null;
+    }
+
+    public void setOrgUnit(OrgUnit orgUnit) {
+        this.orgUnit = orgUnit;
+        this.id_org_unit = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
+    }
+
+    public Program getProgram() {
+        if (program == null) {
+            if (id_program == null) return null;
+            program = new Select()
+                    .from(Program.class)
+                    .where(Condition.column(Program$Table.ID_PROGRAM)
+                            .is(id_program)).querySingle();
+        }
+        return program;
+    }
+
+    public void setProgram(Long id_program) {
+        this.id_program = id_program;
+        this.program = null;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+        this.id_program = (program != null) ? program.getId_program() : null;
+    }
+
+    public User getUser() {
+        if (user == null) {
+            if (id_user == null) return null;
+            user = new Select()
+                    .from(User.class)
+                    .where(Condition.column(User$Table.ID_USER)
+                            .is(id_user)).querySingle();
+        }
+        return user;
+    }
+
+    public void setUser(Long id_user) {
+        this.id_user = id_user;
+        this.user = null;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        this.id_user = (user != null) ? user.getId_user() : null;
+    }
+
+    @Deprecated
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    @Deprecated
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getCompletionDate() {
+        return completionDate;
+    }
+
+    public void setCompletionDate(Date completionDate) {
+        this.completionDate = completionDate;
+    }
+
+    @Deprecated
+    public Date getEventDate() {
+        return eventDate;
+    }
+
+    @Deprecated
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public Date getScheduledDate() {
+        return scheduledDate;
+    }
+
+    public void setScheduledDate(Date scheduledDate) {
+        this.scheduledDate = scheduledDate;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     /**
@@ -399,121 +541,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .queryList();
     }
 
-    public Long getId_survey() {
-        return id_survey;
-    }
-
-    public void setId_survey(Long id_survey) {
-        this.id_survey = id_survey;
-    }
-
-    public OrgUnit getOrgUnit() {
-        if (orgUnit == null) {
-            if (id_org_unit == null) return null;
-            orgUnit = new Select()
-                    .from(OrgUnit.class)
-                    .where(Condition.column(OrgUnit$Table.ID_ORG_UNIT)
-                            .is(id_org_unit)).querySingle();
-        }
-        return orgUnit;
-    }
-
-    public void setOrgUnit(Long id_org_unit) {
-        this.id_org_unit = id_org_unit;
-        this.orgUnit = null;
-    }
-
-    public void setOrgUnit(OrgUnit orgUnit) {
-        this.orgUnit = orgUnit;
-        this.id_org_unit = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
-    }
-
-    public Program getProgram() {
-        if (program == null) {
-            if (id_program == null) return null;
-            program = new Select()
-                    .from(Program.class)
-                    .where(Condition.column(Program$Table.ID_PROGRAM)
-                            .is(id_program)).querySingle();
-        }
-        return program;
-    }
-
-    public void setProgram(Long id_program) {
-        this.id_program = id_program;
-        this.program = null;
-    }
-
-    public void setProgram(Program program) {
-        this.program = program;
-        this.id_program = (program != null) ? program.getId_program() : null;
-    }
-
-    public User getUser() {
-        if (user == null) {
-            if (id_user == null) return null;
-            user = new Select()
-                    .from(User.class)
-                    .where(Condition.column(User$Table.ID_USER)
-                            .is(id_user)).querySingle();
-        }
-        return user;
-    }
-
-    public void setUser(Long id_user) {
-        this.id_user = id_user;
-        this.user = null;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-        this.id_user = (user != null) ? user.getId_user() : null;
-    }
-
-    @Deprecated
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    @Deprecated
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public Date getCompletionDate() {
-        return completionDate;
-    }
-
-    public void setCompletionDate(Date completionDate) {
-        this.completionDate = completionDate;
-    }
-
-    @Deprecated
-    public Date getEventDate() {
-        return eventDate;
-    }
-
-    @Deprecated
-    public void setEventDate(Date eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public Date getScheduledDate() {
-        return scheduledDate;
-    }
-
-    public void setScheduledDate(Date scheduledDate) {
-        this.scheduledDate = scheduledDate;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public Float getCounterValue(Question question, Option selectedOption) {
         Question optionCounter = question.findCounterByOption(selectedOption);
 
@@ -661,16 +688,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
             value.delete();
         }
         super.delete();
-    }
-
-    public String getType() {
-        String type = "";
-        if (isTypeA()) {
-            type = "A";
-        } else if (isTypeB()) {
-            type = "B";
-        } else if (isTypeC()) type = "C";
-        return type;
     }
 
     /**
@@ -1127,9 +1144,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 : survey.id_org_unit != null) {
             return false;
         }
-        if (id_user != null ? !id_user.equals(survey.id_user) : survey.id_user != null) {
+        if (id_user != null ? !id_user.equals(survey.id_user) : survey.id_user != null)
             return false;
-        }
         if (creationDate != null ? !creationDate.equals(survey.creationDate)
                 : survey.creationDate != null) {
             return false;
@@ -1145,7 +1161,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 : survey.scheduledDate != null) {
             return false;
         }
-        return !(status != null ? !status.equals(survey.status) : survey.status != null);
+        if (status != null ? !status.equals(survey.status) : survey.status != null) return false;
+        return type != null ? type.equals(survey.type) : survey.type == null;
 
     }
 
@@ -1160,6 +1177,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         result = 31 * result + (eventDate != null ? eventDate.hashCode() : 0);
         result = 31 * result + (scheduledDate != null ? scheduledDate.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
 
@@ -1175,6 +1193,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 ", eventDate=" + eventDate +
                 ", scheduledDate=" + scheduledDate +
                 ", status=" + status +
+                ", type=" + type +
                 '}';
     }
 }

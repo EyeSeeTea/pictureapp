@@ -38,6 +38,9 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
+import com.raizlabs.android.dbflow.sql.language.Select;
+
+import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -55,6 +58,8 @@ import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
+
+import java.util.List;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -522,15 +527,23 @@ public class DashboardActivity extends BaseActivity {
 
 
     public void beforeExit() {
-        Survey survey = Session.getMalariaSurvey();
-        if (survey != null) {
-            boolean isInProgress = survey.isInProgress();
-            survey.getValuesFromDB();
+        Survey malariaSurvey = Session.getMalariaSurvey();
+        Survey stockSurvey = Session.getStockSurvey();
+        if (malariaSurvey != null) {
+            boolean isMalariaInProgress = malariaSurvey.isInProgress();
+            boolean isStockSurveyInProgress = stockSurvey.isInProgress();
+            malariaSurvey.getValuesFromDB();
+            stockSurvey.getValuesFromDB();
             //Exit + InProgress -> delete
-            if (isBackPressed && isInProgress) {
-                Session.setMalariaSurvey(null);
-                Session.setStockSurvey(null);
-                survey.delete();
+            if (isBackPressed && (isMalariaInProgress || isStockSurveyInProgress)) {
+                if (isMalariaInProgress) {
+                    Session.setMalariaSurvey(null);
+                    malariaSurvey.delete();
+                }
+                if (isStockSurveyInProgress) {
+                    Session.setStockSurvey(null);
+                    stockSurvey.delete();
+                }
                 isBackPressed = false;
             }
         }

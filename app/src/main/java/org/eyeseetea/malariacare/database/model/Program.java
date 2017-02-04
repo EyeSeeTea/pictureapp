@@ -141,6 +141,14 @@ public class Program extends BaseModel {
         return new Select().from(Program.class).querySingle();
     }
 
+    public static Program getStockProgram(){
+        Context context = PreferencesState.getInstance().getContext();
+        return new Select()
+                .from(Program.class)
+                .where(Condition.column(Program$Table.UID)
+                        .is(context.getString(R.string.stockProgramUID))).querySingle();
+    }
+
     public static int getMaxTotalQuestions() {
 
         int maxTotalQuestions = 0;

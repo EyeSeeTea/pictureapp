@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by manuel on 26/12/16.
@@ -88,13 +89,13 @@ public abstract class StockRowBuilder {
      *
      * @return New value for the same column
      */
-    protected abstract Object updateColumn(Object currentValue, SurveyStock surveyStock);
+    protected abstract Object updateColumn(Object currentValue, float newValue, SurveyStock surveyStock);
 
     /**
      * Default value for each column
      */
     protected Object defaultValueColumn() {
-        return 0;
+        return 0f;
     }
 
     /**
@@ -193,8 +194,10 @@ public abstract class StockRowBuilder {
      * Updates months data according to given survey
      */
     private void addSurveyToData(SurveyStock surveyStock) {
-        int columnIndex = 0;
-        //Updates column considering current value + survey
-        this.data[columnIndex] = updateColumn(this.data[columnIndex], surveyStock);
+        float[] surveyValues = surveyStock.getSurveyValues();
+        for (int i = 0;i<surveyValues.length;i++ ) {
+            //Updates column considering current value + survey
+            this.data[i] = updateColumn(this.data[i],surveyValues[i], surveyStock);
+        }
     }
 }

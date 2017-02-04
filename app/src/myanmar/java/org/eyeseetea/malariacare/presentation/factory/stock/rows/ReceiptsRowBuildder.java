@@ -14,25 +14,19 @@ import java.util.Date;
  * Created by manuel on 29/12/16.
  */
 
-public class AvailableRowBuilder extends CounterRowBuilder {
-    public AvailableRowBuilder(Context context) {
-        super(context.getResources().getString(R.string.available), context);
+public class ReceiptsRowBuildder extends CounterRowBuilder {
+    public ReceiptsRowBuildder(Context context) {
+        super(context.getResources().getString(R.string.receipts), context);
     }
 
     @Override
     protected float incrementCount(SurveyStock surveyStock, float newValue) {
         Survey survey = surveyStock.getSurvey();
         Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
-        if (maxBalanceDate == null || Utils.dateGreaterOrEqualsThanDate(maxBalanceDate,
-                survey.getEventDate())) {
-            if (survey.getType().equals(Constants.SURVEY_BALANCE)
-                    || survey.getType().equals(
-                    Constants.SURVEY_RECEIPT)) {
-                return newValue;
-            } else if (survey.getType().equals(Constants.SURVEY_EXPENSE)) {
-                return (-newValue);
-            }
+        if ((maxBalanceDate == null || Utils.dateGreaterOrEqualsThanDate(maxBalanceDate,
+                survey.getEventDate())) && survey.getType().equals(Constants.SURVEY_RECEIPT)) {
+            return newValue;
         }
-        return 0;
+        return 0f;
     }
 }

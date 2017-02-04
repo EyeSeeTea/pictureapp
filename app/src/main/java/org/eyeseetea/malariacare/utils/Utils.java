@@ -258,9 +258,28 @@ public class Utils {
         return dateFormatted;
     }
 
+    /**
+     * Method to get the date of today with hour at 0
+     */
+    public static Date getTodayDate() {
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        return today.getTime();
+    }
+
     public static Calendar DateToCalendar(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal;
+    }
+
+    /**
+     * Method to get if the endDate is grater or equal than the startDate
+     * @param starDate The start date to compare with.
+     * @param endDate The date tha has to be greater or equals to the start date.
+     * @return True if is greater or equals false if not.
+     */
+    public static boolean dateGreaterOrEqualsThanDate(Date starDate, Date endDate) {
+        return starDate.equals(endDate) || starDate.before(endDate);
     }
 }

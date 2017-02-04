@@ -1454,13 +1454,16 @@ public class Question extends BaseModel {
     }
 
     public static Question getRDTQuestion(){
-        return findByUID("Sttahtf0iH0");
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.stockRDTQuestionUID));
     }
     public static Question getPqQuestion(){
-        return findByUID("Sttahtf0iHZ");
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.pqQuestionUID));
     }
     public static Question getCqQuestion(){
-        return findByUID("jZvZ4Q39J6s");
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.cqQuestionUID));
     }
 
     public static Question getACT6Question() {

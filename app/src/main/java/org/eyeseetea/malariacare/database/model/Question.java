@@ -1454,17 +1454,19 @@ public class Question extends BaseModel {
     }
 
     public boolean isInvalidRDTQuestion(){
-        return uid.equals("15V1JoHmO94");
+        return uid.equals(getContext().getString(R.string.confirmInvalidQuestionUID));
     }
 
     public static Question getRDTQuestion(){
         Context context = PreferencesState.getInstance().getContext();
         return findByUID(context.getString(R.string.stockRDTQuestionUID));
     }
+
     public static Question getPqQuestion(){
         Context context = PreferencesState.getInstance().getContext();
         return findByUID(context.getString(R.string.pqQuestionUID));
     }
+
     public static Question getCqQuestion(){
         Context context = PreferencesState.getInstance().getContext();
         return findByUID(context.getString(R.string.cqQuestionUID));

@@ -122,6 +122,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.completionDate = this.creationDate;
         this.eventDate = new Date();
         this.scheduledDate = null;
+        this.type = Constants.SURVEY_NO_TYPE; //to avoid NullPointerExceptions
     }
 
     public Survey(OrgUnit orgUnit, Program program, User user) {
@@ -134,6 +135,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.setOrgUnit(orgUnit);
         this.setProgram(program);
         this.setUser(user);
+        this.setType(Constants.SURVEY_NO_TYPE);
     }
 
     public Survey(OrgUnit orgUnit, Program program, User user, int type) {
@@ -601,10 +603,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
             }
         }
         return tabs;
-    }
-
-    public Integer getSurveyType() {
-        return type;
     }
 
     /**

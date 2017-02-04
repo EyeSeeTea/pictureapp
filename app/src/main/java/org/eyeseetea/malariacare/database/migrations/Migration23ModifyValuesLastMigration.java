@@ -44,6 +44,7 @@ public class Migration23ModifyValuesLastMigration extends BaseMigration {
             try {
                 PopulateDB.addOptionAttributes(
                         PreferencesState.getInstance().getContext().getAssets());
+                UpdateDB.updateAnswers(PreferencesState.getInstance().getContext().getAssets());
                 UpdateDB.updateOptions(
                         PreferencesState.getInstance().getContext().getAssets());
                 UpdateDB.updateAndAddQuestions(

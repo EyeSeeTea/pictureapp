@@ -48,6 +48,7 @@ import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
+import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
@@ -327,6 +328,11 @@ public class DashboardActivity extends BaseActivity {
     }
 
 
+    public void initNewReceiptFragment() {
+        tabHost.getTabWidget().setVisibility(View.GONE);
+    }
+
+
     // Add the fragment to the activity, pushing this transaction
     // on to the back stack.
     private void replaceFragment(int layout, Fragment fragment) {
@@ -422,6 +428,8 @@ public class DashboardActivity extends BaseActivity {
             onSurveyBackPressed();
         } else if (isReviewFragmentActive()) {
             onSurveyBackPressed();
+        } else if (isNewReceiptBalanceFragmentActive()) {
+            closeNewReceiptBalanceFragment();
         } else {
             confirmExitApp();
         }
@@ -507,6 +515,13 @@ public class DashboardActivity extends BaseActivity {
             unsentFragment.reloadData();
         }
     }
+
+    public void closeNewReceiptBalanceFragment() {
+        DashboardActivityStrategy mDashboardActivityStrategy = new DashboardActivityStrategy();
+        mDashboardActivityStrategy.showStockFragment(this, false);
+        tabHost.getTabWidget().setVisibility(View.VISIBLE);
+    }
+
 
     /**
      * This method closes the Feedback Fragment and loads the Improve fragment
@@ -626,6 +641,18 @@ public class DashboardActivity extends BaseActivity {
         return isFragmentActive(surveyFragment, R.id.dashboard_details_container);
     }
 
+    private boolean isNewReceiptBalanceFragmentActive() {
+        return isFragmentActive(NewReceiptBalanceFragment.class, R.id.dashboard_stock_container);
+    }
+
+    private boolean isFragmentActive(Class fragmentClass, int layout) {
+        Fragment currentFragment = this.getFragmentManager().findFragmentById(layout);
+        if (currentFragment.getClass().equals(fragmentClass)) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Checks if a dashboardUnsentFragment is active
      */
@@ -719,5 +746,4 @@ public class DashboardActivity extends BaseActivity {
             getSurveysFromService();
         }
     }
-
 }

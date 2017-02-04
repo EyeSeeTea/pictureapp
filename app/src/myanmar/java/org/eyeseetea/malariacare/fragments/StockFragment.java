@@ -94,7 +94,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showHistoricReceiptBalanceFragment(Constants.SURVEU_RECEIP);
+                        showHistoricReceiptBalanceFragment(Constants.SURVEY_RECEIPT);
                     }
                 });
     }

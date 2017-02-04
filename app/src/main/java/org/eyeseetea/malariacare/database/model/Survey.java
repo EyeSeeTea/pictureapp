@@ -852,14 +852,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
         //Update status & completionDate
         if (answeredRatio.isCompleted()) {
-            this.setStatus(Constants.SURVEY_COMPLETED);
-            this.setCompletionDate(new Date());
+            complete();
         } else {
-            this.setStatus(Constants.SURVEY_IN_PROGRESS);
-            this.setCompletionDate(this.eventDate);
+            setStatus(Constants.SURVEY_IN_PROGRESS);
+            setCompletionDate(this.eventDate);
+            save();
         }
-        //Saves new status & completionDate
-        this.save();
+    }
+
+    public void complete(){
+        setStatus(Constants.SURVEY_COMPLETED);
+        setCompletionDate(new Date());
+        save();
     }
 
     /**

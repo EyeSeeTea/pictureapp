@@ -587,7 +587,7 @@ public class DashboardActivity extends BaseActivity {
         Session.getMalariaSurvey().updateSurveyStatus();
         Session.getStockSurvey().complete();
         CompletionSurveyUseCase completionSurveyUseCase=new CompletionSurveyUseCase();
-        completionSurveyUseCase.execute(survey.getId_survey());
+        completionSurveyUseCase.execute(Session.getMalariaSurvey().getId_survey());
         closeSurveyFragment();
     }
 

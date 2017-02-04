@@ -495,7 +495,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         // Se get the value from Session
         int visibility = View.GONE;
 
-        Survey survey = (screenQuestion.isStockQuestion() || isDynamicStockQuestion(screenQuestion))
+        Survey survey =
+                (screenQuestion.isStockQuestion() || screenQuestion.isDynamicStockQuestion())
                 ? Session.getStockSurvey()
                 : Session.getMalariaSurvey();
 

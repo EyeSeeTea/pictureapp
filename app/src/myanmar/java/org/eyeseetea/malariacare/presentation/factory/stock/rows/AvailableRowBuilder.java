@@ -27,7 +27,7 @@ public class AvailableRowBuilder extends CounterRowBuilder {
                 survey.getEventDate())) {
             if (survey.getSurveyType().equals(Constants.SURVEY_BALANCE)
                     || survey.getSurveyType().equals(
-                    Constants.SURVEU_RECEIP)) {
+                    Constants.SURVEU_RECEIPT)) {
                 return newValue;
             } else if (survey.getSurveyType().equals(Constants.SURVEY_EXPENSE)) {
                 return (-newValue);

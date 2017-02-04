@@ -117,7 +117,9 @@ public class NewReceiptBalanceFragment extends Fragment {
 
 
     private void createNewSurvey() {
-        Survey survey = new Survey(null, Program.getStockProgram(), Session.getUser(), type);
+        Survey survey = new Survey(null,
+                Program.findByUID(getActivity().getString(R.string.stockProgramUID)),
+                Session.getUser(), type);
         Calendar surveyDate;
         if (date.getText().toString().isEmpty()) {
             surveyDate = Calendar.getInstance();
@@ -132,11 +134,11 @@ public class NewReceiptBalanceFragment extends Fragment {
         new Value(act6.getText().toString().isEmpty() ? act6.getHint().toString()
                 : act6.getText().toString(), Question.getACT6Question(), survey).save();
         new Value(act12.getText().toString().isEmpty() ? act12.getHint().toString()
-                : act12.getText().toString(), Question.getACT12Questions(), survey).save();
+                : act12.getText().toString(), Question.getACT12Question(), survey).save();
         new Value(act18.getText().toString().isEmpty() ? act18.getHint().toString()
-                : act18.getText().toString(), Question.getACT18Questions(), survey).save();
+                : act18.getText().toString(), Question.getACT18Question(), survey).save();
         new Value(act24.getText().toString().isEmpty() ? act24.getHint().toString()
-                : act24.getText().toString(), Question.getACT24Questions(), survey).save();
+                : act24.getText().toString(), Question.getACT24Question(), survey).save();
         new Value(pq.getText().toString().isEmpty() ? pq.getHint().toString()
                 : pq.getText().toString(), Question.getPqQuestion(), survey).save();
         new Value(cq.getText().toString().isEmpty() ? cq.getHint().toString()

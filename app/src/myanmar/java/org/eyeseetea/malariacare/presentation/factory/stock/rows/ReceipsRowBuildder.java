@@ -24,7 +24,8 @@ public class ReceipsRowBuildder extends CounterRowBuilder {
         Survey survey = surveyStock.getSurvey();
         Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
         if ((maxBalanceDate == null || Utils.dateGreaterOrEqualsThanDate(maxBalanceDate,
-                survey.getEventDate())) && survey.getSurveyType().equals(Constants.SURVEU_RECEIP)) {
+                survey.getEventDate())) && survey.getSurveyType().equals(
+                Constants.SURVEU_RECEIPT)) {
             return newValue;
         }
         return 0f;

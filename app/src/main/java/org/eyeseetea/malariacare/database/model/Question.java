@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.database.model;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -32,7 +33,9 @@ import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -63,7 +66,7 @@ public class Question extends BaseModel {
     /**
      * Constant that reflects a not visible question in information
      */
-    public static final int QUESTION_NO_COMPULSORY = 0;
+    public static final int QUESTION_NOT_COMPULSORY = 0;
     private static final String TAG = "Question";
     /**
      * Required to create a null Question value to enable caching when you're the last question.
@@ -411,34 +414,6 @@ public class Question extends BaseModel {
         }
     }
 
-    /**
-     * Method to get all questionOptions related by id
-     */
-    public List<QuestionOption> getQuestionsOptions() {
-        return new Select().from(QuestionOption.class)
-                .where(Condition.column(QuestionOption$Table.ID_QUESTION).eq(
-                        getId_question())).queryList();
-    }
-
-    /**
-     * Method to get all questionThresholds related by id
-     */
-    public List<QuestionThreshold> getQuestionsThresholds() {
-        return new Select().from(QuestionThreshold.class)
-                .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(
-                        getId_question())).queryList();
-    }
-
-
-    /**
-     * Creates a false question that lets cache siblings better
-     */
-    private Question buildNullQuestion() {
-        Question noSiblingQuestion = new Question();
-        noSiblingQuestion.setId_question(NULL_SIBLING_ID);
-        return noSiblingQuestion;
-    }
-
     public static List<Option> getOptions(String UID) {
         return new Select().from(Option.class).as("o")
                 .join(Answer.class, Join.JoinType.LEFT).as("a")
@@ -460,6 +435,33 @@ public class Question extends BaseModel {
                 .where(Condition.column(
                         ColumnAlias.columnWithTable("q", Question$Table.UID))
                         .eq(UID)).querySingle();
+    }
+
+    /**
+     * Method to get all questionOptions related by id
+     */
+    public List<QuestionOption> getQuestionsOptions() {
+        return new Select().from(QuestionOption.class)
+                .where(Condition.column(QuestionOption$Table.ID_QUESTION).eq(
+                        getId_question())).queryList();
+    }
+
+    /**
+     * Method to get all questionThresholds related by id
+     */
+    public List<QuestionThreshold> getQuestionsThresholds() {
+        return new Select().from(QuestionThreshold.class)
+                .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(
+                        getId_question())).queryList();
+    }
+
+    /**
+     * Creates a false question that lets cache siblings better
+     */
+    private Question buildNullQuestion() {
+        Question noSiblingQuestion = new Question();
+        noSiblingQuestion.setId_question(NULL_SIBLING_ID);
+        return noSiblingQuestion;
     }
 
     /**
@@ -786,11 +788,9 @@ public class Question extends BaseModel {
      * Gets the value of this question in the current survey in session
      */
     public Value getValueBySession() {
-        if (!isStockQuestion()) {
-            return this.getValueBySurvey(Session.getMalariaSurvey());
-        } else {
-            return this.getValueBySurvey(Session.getStockSurvey());
-        }
+        Survey survey =
+                (!isStockQuestion()) ? Session.getMalariaSurvey() : Session.getStockSurvey();
+        return this.getValueBySurvey(survey);
     }
 
     /**
@@ -948,6 +948,10 @@ public class Question extends BaseModel {
                     .queryList();
         }
         return this.questionThresholds;
+    }
+
+    private Context getContext(){
+        return PreferencesState.getInstance().getContext();
     }
 
     /**
@@ -1362,7 +1366,6 @@ public class Question extends BaseModel {
         return parents.get(0);
     }
 
-
     public boolean isAnswered() {
         return (this.getValueBySession() != null);
     }
@@ -1388,11 +1391,10 @@ public class Question extends BaseModel {
 
     public boolean isDynamicStockQuestion() {
         if (getUid() != null) {
-            return getUid().equals("9cV1JoHmO95");
+            return getUid().equals(getContext().getString(R.string.dynamicStockQuestionUID));
         }
         return false;
     }
-
 
     /**
      * Returns if the question is a counter or not
@@ -1407,37 +1409,43 @@ public class Question extends BaseModel {
     }
 
     public boolean isTreatmentQuestion() {
-        if (uid.equals("2XX1JoHmO94") || uid.equals("6VV1JoHmO94") || uid.equals("11V1JoHmO94")
-                || uid.equals("12V1JoHmO94")) {
+        if (uid.equals(getContext().getString(R.string.ageQuestionUID)) || uid.equals(
+                getContext().getString(R.string.ageQuestionUID)) || uid.equals(
+                getContext().getString(R.string.severeSymtomsQuestionUID))
+                || uid.equals(getContext().getString(R.string.rdtQuestionUID))) {
             return true;
         }
         return false;
     }
 
     public boolean isOutStockQuestion() {
-        if (uid.equals("ZEopAP6tQN4")) {
+        if (uid.equals(getContext().getString(R.string.outOfStockQuestionUID))) {
             return true;
         }
         return false;
     }
 
     public static Question getACT6Question() {
-        return findByUID("ihlfWLBg7Nr");
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.act6QuestionUID));
     }
 
-    public static Question getACT12Questions() {
-        return findByUID("nN4jwsyjmE9");
+    public static Question getACT12Question() {
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.act12QuestionUID));
     }
 
-    public static Question getACT18Questions() {
-        return findByUID("GqHQPu6yCfu");
+    public static Question getACT18Question() {
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.act18QuestionUID));
     }
 
-    public static Question getACT24Questions() {
-        return findByUID("RUqD8Kckt3B");
+    public static Question getACT24Question() {
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.act24QuestionUID));
     }
 
-    public static Question getOutStcokQuestion() {
+    public static Question getOutOfStockQuestion() {
         return findByUID("ZEopAP6tQN4");
     }
 
@@ -1461,12 +1469,8 @@ public class Question extends BaseModel {
             return true;
         }
         for (Question question : questions) {
-            Survey survey = null;
-            if (isStockQuestion()) {
-                survey = Session.getStockSurvey();
-            } else {
-                survey = Session.getMalariaSurvey();
-            }
+            Survey survey =
+                    (isStockQuestion()) ? Session.getStockSurvey() : Session.getMalariaSurvey();
             if (question.isCompulsory() && !question.isHiddenBySurveyAndHeader(
                     survey) && isNotAnswered(question)) {
                 return true;

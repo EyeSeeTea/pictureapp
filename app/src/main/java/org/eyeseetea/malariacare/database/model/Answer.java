@@ -38,6 +38,11 @@ public class Answer extends BaseModel {
      */
     public static final Integer DEFAULT_ANSWER_OUTPUT = -1;
 
+    /**
+     * Required for creating the dynamic stock question in SCMM
+     */
+    public final static Long DYNAMIC_STOCK_ANSWER_ID = 204l;
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_answer;
@@ -61,7 +66,7 @@ public class Answer extends BaseModel {
         this.name = name;
     }
 
-    public static List<Answer> getAllAnswers(){
+    public static List<Answer> getAllAnswers() {
         return new Select().all().from(Answer.class).queryList();
     }
 

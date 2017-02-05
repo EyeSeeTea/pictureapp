@@ -55,7 +55,6 @@ import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 public class DashboardActivity extends BaseActivity {
@@ -539,7 +538,7 @@ public class DashboardActivity extends BaseActivity {
 
     public void beforeExit() {
         Survey malariaSurvey = Session.getMalariaSurvey();
-        Survey stockSurvey=Session.getStockSurvey();
+        Survey stockSurvey = Session.getStockSurvey();
         if (malariaSurvey != null) {
             boolean isMalariaInProgress = malariaSurvey.isInProgress();
             boolean isStockSurveyInProgress = stockSurvey.isInProgress();
@@ -585,15 +584,9 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void sendSurvey() {
-
-        Survey survey = Session.getMalariaSurvey();
-        survey.updateSurveyStatus();
-        Survey stockSurvey = Session.getStockSurvey();
-        stockSurvey.setStatus(Constants.SURVEY_COMPLETED);
-        stockSurvey.save();
-        CompletionSurveyUseCase completionSurveyUseCase=new CompletionSurveyUseCase();
-        completionSurveyUseCase.execute(survey.getId_survey());
-
+        Session.getMalariaSurvey().updateSurveyStatus();
+        Session.getStockSurvey().complete();
+        new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
         closeSurveyFragment();
     }
 
@@ -755,6 +748,4 @@ public class DashboardActivity extends BaseActivity {
             getSurveysFromService();
         }
     }
-
-
 }

@@ -13,10 +13,6 @@ import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 
-/**
- * Created by manuel on 28/12/16.
- */
-
 public abstract class ADashboardActivityStrategy {
     private final static String TAG = ".DashActivityStrategy";
 
@@ -25,8 +21,8 @@ public abstract class ADashboardActivityStrategy {
     public abstract boolean showStockFragment(Activity activity, boolean isMoveToLeft);
 
     public abstract void newSurvey(Activity activity);
-    public abstract boolean isHistoricNewReceiptBalanceFragment(Activity activity);
 
+    public abstract boolean isHistoricNewReceiptBalanceFragment(Activity activity);
 
     public void prepareLocationListener(Activity activity, Survey survey) {
 

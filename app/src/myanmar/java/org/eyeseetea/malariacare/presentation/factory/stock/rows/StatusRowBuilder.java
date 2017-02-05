@@ -59,11 +59,11 @@ public class StatusRowBuilder extends StockRowBuilder {
         Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
         if (maxBalanceDate == null || Utils.dateGreaterOrEqualsThanDate(maxBalanceDate,
                 survey.getEventDate())) {
-            if (survey.getSurveyType() == Constants.SURVEY_BALANCE) {
+            if (survey.getType() == Constants.SURVEY_BALANCE) {
                 balanceSurvey[position] = surveyValue;
-            } else if (survey.getSurveyType() == Constants.SURVEU_RECEIP) {
+            } else if (survey.getType() == Constants.SURVEY_RECEIPT) {
                 summationReceiptsUsed[position] += surveyValue;
-            } else if (survey.getSurveyType() == Constants.SURVEY_EXPENSE) {
+            } else if (survey.getType() == Constants.SURVEY_EXPENSE) {
                 summationReceiptsUsed[position] -= surveyValue;
             }
             columnClasses.set(position + 1, getCSSForValues(position));

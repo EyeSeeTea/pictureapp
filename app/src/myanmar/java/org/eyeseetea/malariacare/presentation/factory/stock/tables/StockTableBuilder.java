@@ -9,7 +9,7 @@ import org.eyeseetea.malariacare.presentation.factory.stock.StockRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.rows.AvailableRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.rows.BalanceRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.rows.DrugsRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.stock.rows.ReceipsRowBuildder;
+import org.eyeseetea.malariacare.presentation.factory.stock.rows.ReceiptsRowBuildder;
 import org.eyeseetea.malariacare.presentation.factory.stock.rows.StatusRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.rows.UsedTodayRowBuilder;
 
@@ -57,7 +57,7 @@ public class StockTableBuilder {
         List<StockRowBuilder> rowBuilders = new ArrayList<>();
         rowBuilders.add(new DrugsRowBuilder("", context));
         rowBuilders.add(new BalanceRowBuilder(context));
-        rowBuilders.add(new ReceipsRowBuildder(context));
+        rowBuilders.add(new ReceiptsRowBuildder(context));
         rowBuilders.add(new UsedTodayRowBuilder(context));
         rowBuilders.add(new AvailableRowBuilder(context));
         rowBuilders.add(new StatusRowBuilder(context));

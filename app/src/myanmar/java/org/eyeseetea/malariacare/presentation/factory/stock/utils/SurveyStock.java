@@ -39,7 +39,7 @@ public class SurveyStock {
     private void createSurveyValues() {
         List<Value> values = mSurvey.getValuesFromDB();
         for (Value value : values) {
-            if (value.getQuestion().isRDT()) {
+            if (value.getQuestion().isStockRDT()) {
                 surveyValues[RDT_VALUE] = Float.parseFloat(value.getValue());
             } else if (value.getQuestion().isACT6()) {
                 surveyValues[ACT6_VALUE] = Float.parseFloat(value.getValue());

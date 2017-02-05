@@ -1,13 +1,26 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
+import android.support.annotation.Nullable;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Maps;
+
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
+import java.util.Map;
 
 public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
+    Function<Value, Question> valuesToQuestions = new Function<Value, Question>() {
+        @Nullable
+        @Override
+        public Question apply(Value value) {
+            return value.getQuestion();
+        }
+    };
     private Survey mSurvey;
 
     @Override
@@ -29,32 +42,32 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
     private void updateRDTStockQuestion(Survey survey) {
         if (survey.getStatus() == Constants.SURVEY_COMPLETED
                 || survey.getStatus() == Constants.SURVEY_SENT) {
-            org.eyeseetea.malariacare.database.model.Survey surveyDBMalaria = org.eyeseetea.malariacare
-                    .database.model.Survey.findById(survey.getId());
+            org.eyeseetea.malariacare.database.model.Survey surveyDBMalaria =
+                    org.eyeseetea.malariacare
+                            .database.model.Survey.findById(survey.getId());
             List<Value> surveyValues = surveyDBMalaria.getValuesFromDB();
 
-            org.eyeseetea.malariacare.database.model.Survey surveyDBStock=org.eyeseetea.malariacare
-                    .database.model.Survey.getLastSurveyWithType(Constants.SURVEY_EXPENSE);
+            org.eyeseetea.malariacare.database.model.Survey surveyDBStock =
+                    org.eyeseetea.malariacare
+                            .database.model.Survey.getLastSurveyWithType(Constants.SURVEY_EXPENSE);
 
-            Value rdtValue = new Value("1", Question.getRDTQuestion(), surveyDBStock);
+            Value rdtStockValue = new Value("1", Question.getStockRDTQuestion(), surveyDBStock);
 
-
-            if (isInvalidRDTInValues(surveyValues)) {
-                rdtValue.setValue("2");
-            } else {
-                rdtValue.setValue("1");
-            }
-            rdtValue.save();
+            rdtStockValue.setValue(Integer.toString(rdtUsed(surveyValues)));
+            rdtStockValue.save();
         }
     }
 
-    private boolean isInvalidRDTInValues(List<Value> surveyValues) {
-        for (Value value : surveyValues) {
-            if (value.getQuestion().isInvalidRDTQuestion()) {
-                return true;
-            }
+    private int rdtUsed(List<Value> surveyValues) {
+        int rdtUsed = 1;
+        Map<Question, Value> answersMap = Maps.uniqueIndex(surveyValues, valuesToQuestions);
+        Question rdtQuestion = Question.getRDTQuestion();
+        Question confirmInvalid = Question.getInvalidCounterQuestion();
+        if (answersMap.keySet().contains(confirmInvalid)) {
+            rdtUsed = 2;
+            if (answersMap.get(rdtQuestion).getValue().equals("Invalid"))
+                rdtUsed = 3;
         }
-        return false;
+        return rdtUsed;
     }
-
 }

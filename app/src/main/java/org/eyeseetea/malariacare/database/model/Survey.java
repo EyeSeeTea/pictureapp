@@ -373,6 +373,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     public static Survey getStockSurveyWithCreationDate(Date creationDate){
+        Context context = PreferencesState.getInstance().getContext();
         return new Select().from(Survey.class).as("s")
                 .join(Program.class, Join.JoinType.LEFT).as("p")
                 .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
@@ -380,7 +381,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.CREATIONDATE)).eq(
                         creationDate))
                 .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).is(
-                        "GnAx3VLVfUi")).querySingle();
+                        context.getString(R.string.stockProgramUID))).querySingle();
     }
 
     /**

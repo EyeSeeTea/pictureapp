@@ -59,13 +59,11 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
     }
 
     private int rdtUsed(List<Value> surveyValues) {
-        int rdtUsed;
+        int rdtUsed = 1;
         Map<Question, Value> answersMap = Maps.uniqueIndex(surveyValues, valuesToQuestions);
         Question rdtQuestion = Question.getRDTQuestion();
         Question confirmInvalid = Question.getInvalidCounterQuestion();
-        if (!answersMap.keySet().contains(confirmInvalid)) {
-            rdtUsed = 1;
-        } else {
+        if (answersMap.keySet().contains(confirmInvalid)) {
             rdtUsed = 2;
             if (answersMap.get(rdtQuestion).getValue().equals("Invalid"))
                 rdtUsed = 3;

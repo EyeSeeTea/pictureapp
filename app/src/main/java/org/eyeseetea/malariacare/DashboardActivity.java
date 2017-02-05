@@ -586,8 +586,7 @@ public class DashboardActivity extends BaseActivity {
     private void sendSurvey() {
         Session.getMalariaSurvey().updateSurveyStatus();
         Session.getStockSurvey().complete();
-        CompletionSurveyUseCase completionSurveyUseCase=new CompletionSurveyUseCase();
-        completionSurveyUseCase.execute(Session.getMalariaSurvey().getId_survey());
+        new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
         closeSurveyFragment();
     }
 
@@ -749,6 +748,4 @@ public class DashboardActivity extends BaseActivity {
             getSurveysFromService();
         }
     }
-
-
 }

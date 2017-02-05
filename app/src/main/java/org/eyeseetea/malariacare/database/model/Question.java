@@ -1425,46 +1425,69 @@ public class Question extends BaseModel {
         return false;
     }
 
-    public boolean isRDT() {
-        return uid.equals("Sttahtf0iH0");
+    public boolean isRDT(){
+        return uid.equals(getContext().getString(R.string.rdtQuestionUID));
+    }
+
+    public boolean isStockRDT() {
+        return uid.equals(getContext().getString(R.string.stockRDTQuestionUID));
+    }
+
+    public boolean isInvalidCounter() {
+        return uid.equals(getContext().getString(R.string.confirmInvalidQuestionUID));
     }
 
     public boolean isACT6() {
-        return uid.equals("ihlfWLBg7Nr");
+        return uid.equals(getContext().getString(R.string.act6QuestionUID));
     }
 
     public boolean isACT12() {
-        return uid.equals("nN4jwsyjmE9");
+        return uid.equals(getContext().getString(R.string.act12QuestionUID));
     }
 
     public boolean isACT18() {
-        return uid.equals("GqHQPu6yCfu");
+        return uid.equals(getContext().getString(R.string.act18QuestionUID));
     }
 
     public boolean isACT24() {
-        return uid.equals("RUqD8Kckt3B");
+        return uid.equals(getContext().getString(R.string.act24QuestionUID));
     }
 
     public boolean isCq() {
-        return uid.equals("jZvZ4Q39J6s");
+        return uid.equals(getContext().getString(R.string.cqQuestionUID));
     }
 
     public boolean isPq() {
-        return uid.equals("Sttahtf0iHZ");
+        return uid.equals(getContext().getString(R.string.pqQuestionUID));
     }
 
     public boolean isInvalidRDTQuestion(){
-        return uid.equals("15V1JoHmO94");
+        return uid.equals(getContext().getString(R.string.confirmInvalidQuestionUID));
     }
 
     public static Question getRDTQuestion(){
-        return findByUID("Sttahtf0iH0");
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.rdtQuestionUID));
     }
+
+    public static Question getStockRDTQuestion(){
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.stockRDTQuestionUID));
+    }
+
+    public static Question getInvalidCounterQuestion(){
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.confirmInvalidQuestionUID));
+    }
+
     public static Question getPqQuestion(){
-        return findByUID("Sttahtf0iHZ");
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.pqQuestionUID));
     }
+
     public static Question getCqQuestion(){
-        return findByUID("jZvZ4Q39J6s");
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.cqQuestionUID));
     }
 
     public static Question getACT6Question() {

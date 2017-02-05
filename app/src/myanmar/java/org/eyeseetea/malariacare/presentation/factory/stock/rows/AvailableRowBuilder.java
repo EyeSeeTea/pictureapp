@@ -25,11 +25,11 @@ public class AvailableRowBuilder extends CounterRowBuilder {
         Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
         if (maxBalanceDate == null || Utils.dateGreaterOrEqualsThanDate(maxBalanceDate,
                 survey.getEventDate())) {
-            if (survey.getSurveyType().equals(Constants.SURVEY_BALANCE)
-                    || survey.getSurveyType().equals(
-                    Constants.SURVEU_RECEIPT)) {
+            if (survey.getType().equals(Constants.SURVEY_BALANCE)
+                    || survey.getType().equals(
+                    Constants.SURVEY_RECEIPT)) {
                 return newValue;
-            } else if (survey.getSurveyType().equals(Constants.SURVEY_EXPENSE)) {
+            } else if (survey.getType().equals(Constants.SURVEY_EXPENSE)) {
                 return (-newValue);
             }
         }

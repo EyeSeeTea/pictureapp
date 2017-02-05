@@ -48,12 +48,7 @@ public class NewReceiptBalanceFragment extends Fragment {
     }
 
     private void manageBundle(Bundle savedInstanceState) {
-        Bundle bundle;
-        if (savedInstanceState == null) {
-            bundle = getArguments();
-        } else {
-            bundle = savedInstanceState;
-        }
+        Bundle bundle = (savedInstanceState == null) ? getArguments() : savedInstanceState;
         type = bundle.getInt(TYPE);
     }
 
@@ -99,7 +94,6 @@ public class NewReceiptBalanceFragment extends Fragment {
                 datePickerFragment.show(getFragmentManager(), TAG);
             }
         });
-
     }
 
     private void submitPressed() {
@@ -130,7 +124,7 @@ public class NewReceiptBalanceFragment extends Fragment {
         survey.setStatus(Constants.SURVEY_COMPLETED);
         survey.save();
         new Value(rdt.getText().toString().isEmpty() ? rdt.getHint().toString()
-                : rdt.getText().toString(), Question.getRDTQuestion(), survey).save();
+                : rdt.getText().toString(), Question.getStockRDTQuestion(), survey).save();
         new Value(act6.getText().toString().isEmpty() ? act6.getHint().toString()
                 : act6.getText().toString(), Question.getACT6Question(), survey).save();
         new Value(act12.getText().toString().isEmpty() ? act12.getHint().toString()

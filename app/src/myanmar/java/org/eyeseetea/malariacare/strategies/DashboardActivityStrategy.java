@@ -5,11 +5,11 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.fragments.HistoricReceiptBalanceFragment;
-import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.fragments.HistoricReceiptBalanceFragment;
+import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.StockFragment;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -61,7 +61,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         }
         return false;
     }
-
 
     @Override
     public void newSurvey(Activity activity) {

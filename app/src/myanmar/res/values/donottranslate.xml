@@ -41,5 +41,7 @@
     <string name="dynamicStockQuestionUID">9cV1JoHmO95</string>
     <string name="outOfStockQuestionUID">ZEopAP6tQN4</string>
     <string name="dynamicTreatmentQuestionUID">9cV1JoHmO94</string>
+    <string name="stockRDTQuestionUID">Sttahtf0iH0</string>
+    <string name="confirmInvalidQuestionUID">15V1JoHmO94</string>
 
 </resources>

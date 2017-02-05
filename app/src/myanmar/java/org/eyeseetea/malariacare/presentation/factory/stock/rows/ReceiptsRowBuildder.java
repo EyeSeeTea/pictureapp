@@ -14,8 +14,8 @@ import java.util.Date;
  * Created by manuel on 29/12/16.
  */
 
-public class ReceipsRowBuildder extends CounterRowBuilder {
-    public ReceipsRowBuildder(Context context) {
+public class ReceiptsRowBuildder extends CounterRowBuilder {
+    public ReceiptsRowBuildder(Context context) {
         super(context.getResources().getString(R.string.receipts), context);
     }
 
@@ -24,8 +24,7 @@ public class ReceipsRowBuildder extends CounterRowBuilder {
         Survey survey = surveyStock.getSurvey();
         Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
         if ((maxBalanceDate == null || Utils.dateGreaterOrEqualsThanDate(maxBalanceDate,
-                survey.getEventDate())) && survey.getSurveyType().equals(
-                Constants.SURVEU_RECEIPT)) {
+                survey.getEventDate())) && survey.getType().equals(Constants.SURVEY_RECEIPT)) {
             return newValue;
         }
         return 0f;

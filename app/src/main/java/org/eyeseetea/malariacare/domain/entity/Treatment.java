@@ -42,20 +42,6 @@ public class Treatment {
         return Question.findByUID(context.getString(R.string.dynamicTreatmentQuestionUID));
     }
 
-    public static boolean isACTQuestion(Question question) {
-        Context context = PreferencesState.getInstance().getContext();
-        if (question.getUid().equals(context.getString(R.string.act6QuestionUID))
-                || question != null && question.getUid().equals(
-                context.getString(R.string.act12QuestionUID))
-                || question != null && question.getUid().equals(
-                context.getString(R.string.act18QuestionUID))
-                || question != null && question.getUid().equals(
-                context.getString(R.string.act24QuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
     public boolean hasTreatment() {
         mTreatment = getTreatmentFromSurvey();
         if (mTreatment != null) {
@@ -107,22 +93,28 @@ public class Treatment {
         List<Match> rdtMatches = new ArrayList<>();
         for (Value value : values) {
             Question question = value.getQuestion();
-            Context context = PreferencesState.getInstance().getContext();
-            if (question.getUid().equals(context.getString(R.string.ageQuestionUID))) {
+            //Getting matches for questions of age, pregnant, severe and rdt.
+            if (question.getUid().equals(getContext().getString(R.string.ageQuestionUID))) {
                 ageMatches =
                         QuestionThreshold.getMatchesWithQuestionValue(
                                 question.getId_question(), Integer.parseInt(value.getValue()));
-            } else if (question.getUid().equals(context.getString(R.string.sexPregnantQuestionUID))) {
+                Log.d(TAG, "age size: " + ageMatches.size());
+            } else if (question.getUid().equals(
+                    getContext().getString(R.string.sexPregnantQuestionUID))) {
                 pregnantMatches = QuestionOption.getMatchesWithQuestionOption(
                         question.getId_question(),
                         value.getId_option());
-            } else if (question.getUid().equals(context.getString(R.string.severeSymtomsQuestionUID))) {
+                Log.d(TAG, "pregnant size: " + pregnantMatches.size());
+            } else if (question.getUid().equals(
+                    getContext().getString(R.string.severeSymtomsQuestionUID))) {
                 severeMatches = QuestionOption.getMatchesWithQuestionOption(
                         question.getId_question(),
                         value.getId_option());
-            } else if (question.getUid().equals(context.getString(R.string.rdtQuestionUID))) {
+                Log.d(TAG, "severe size: " + severeMatches.size());
+            } else if (question.getUid().equals(getContext().getString(R.string.rdtQuestionUID))) {
                 rdtMatches = QuestionOption.getMatchesWithQuestionOption(question.getId_question(),
                         value.getId_option());
+                Log.d(TAG, "rdt size: " + rdtMatches.size());
             }
         }
         Log.d(TAG, "matches obtained");
@@ -204,6 +196,20 @@ public class Treatment {
     public boolean isACT24Question(Question question) {
         if (question != null && question.getUid().equals(
                 getContext().getString(R.string.act24QuestionUID))) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isACTQuestion(Question question) {
+        Context context = PreferencesState.getInstance().getContext();
+        if (question.getUid().equals(context.getString(R.string.act6QuestionUID))
+                || question != null && question.getUid().equals(
+                context.getString(R.string.act12QuestionUID))
+                || question != null && question.getUid().equals(
+                context.getString(R.string.act18QuestionUID))
+                || question != null && question.getUid().equals(
+                context.getString(R.string.act24QuestionUID))) {
             return true;
         }
         return false;

@@ -72,7 +72,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
                 new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNewReceiptBalanceFragment(Constants.SURVEU_RECEIPT);
+                showNewReceiptBalanceFragment(Constants.SURVEY_RECEIPT);
             }
         });
         view.findViewById(R.id.fragment_stock_new_balance).setOnClickListener(
@@ -94,7 +94,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showHistoricReceiptBalanceFragment(Constants.SURVEU_RECEIPT);
+                        showHistoricReceiptBalanceFragment(Constants.SURVEY_RECEIPT);
                     }
                 });
     }

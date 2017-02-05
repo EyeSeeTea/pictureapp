@@ -1425,8 +1425,16 @@ public class Question extends BaseModel {
         return false;
     }
 
-    public boolean isRDT() {
+    public boolean isRDT(){
+        return uid.equals(getContext().getString(R.string.rdtQuestionUID));
+    }
+
+    public boolean isStockRDT() {
         return uid.equals(getContext().getString(R.string.stockRDTQuestionUID));
+    }
+
+    public boolean isInvalidCounter() {
+        return uid.equals(getContext().getString(R.string.confirmInvalidQuestionUID));
     }
 
     public boolean isACT6() {
@@ -1453,14 +1461,30 @@ public class Question extends BaseModel {
         return uid.equals(getContext().getString(R.string.pqQuestionUID));
     }
 
+    public boolean isInvalidRDTQuestion(){
+        return uid.equals(getContext().getString(R.string.confirmInvalidQuestionUID));
+    }
+
     public static Question getRDTQuestion(){
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.rdtQuestionUID));
+    }
+
+    public static Question getStockRDTQuestion(){
         Context context = PreferencesState.getInstance().getContext();
         return findByUID(context.getString(R.string.stockRDTQuestionUID));
     }
+
+    public static Question getInvalidCounterQuestion(){
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.confirmInvalidQuestionUID));
+    }
+
     public static Question getPqQuestion(){
         Context context = PreferencesState.getInstance().getContext();
         return findByUID(context.getString(R.string.pqQuestionUID));
     }
+
     public static Question getCqQuestion(){
         Context context = PreferencesState.getInstance().getContext();
         return findByUID(context.getString(R.string.cqQuestionUID));

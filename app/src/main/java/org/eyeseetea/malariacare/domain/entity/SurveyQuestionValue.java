@@ -51,7 +51,7 @@ public class SurveyQuestionValue {
         for (Value value : mSurvey.getValues()) {
             switch (question) {
                 case RDT:
-                    if (value.getQuestion().isRDT()) {
+                    if (value.getQuestion().isStockRDT()) {
                         return value.getValue();
                     }
                 case ACT6:

@@ -44,6 +44,7 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
@@ -585,6 +586,7 @@ public class DashboardActivity extends BaseActivity {
     private void sendSurvey() {
         Session.getMalariaSurvey().updateSurveyStatus();
         Session.getStockSurvey().complete();
+        new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
         closeSurveyFragment();
     }
 

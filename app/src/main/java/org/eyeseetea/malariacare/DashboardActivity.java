@@ -102,12 +102,12 @@ public class DashboardActivity extends BaseActivity {
         setContentView(R.layout.tab_dashboard);
         Survey.removeInProgress();
         if (savedInstanceState == null) {
-            initAssess();
             initImprove();
             initMonitor();
             if (GradleVariantConfig.isStockFragmentActive()) {
                 initStock();
             }
+            initAssess();
         }
         initTabHost(savedInstanceState);
         /* set tabs in order */

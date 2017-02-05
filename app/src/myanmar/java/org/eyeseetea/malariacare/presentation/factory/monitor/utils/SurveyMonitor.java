@@ -42,7 +42,7 @@ public class SurveyMonitor {
     /**
      * Id of treatment question
      */
-    protected final static Long ID_QUESTION_REFERRAL = 26l;
+    protected final static Long ID_QUESTION_REFERRAL = 23l;
     /**
      * Id of counter question
      */

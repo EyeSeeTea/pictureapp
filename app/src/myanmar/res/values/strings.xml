@@ -277,6 +277,7 @@
     <string name="follow_up_occupation_review_title">Occupation</string>
     <string name="work_in_progress">Work in progress</string>
     <string name="dynamic_error_number">Invalid number</string>
+
     <string name="drug_act">ACT</string>
 
     <string name="tr_1_no_confirmed">No confirmed infection</string>

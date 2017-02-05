@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.HistoricReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.StockFragment;
+import org.eyeseetea.malariacare.utils.Constants;
 
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
@@ -42,20 +43,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @Override
-    public void newSurvey(Activity activity) {
-        Program myanmarProgram = Program.findByUID(activity.getString(R.string.malariaProgramUID));
-        Program stockProgram = Program.findByUID(activity.getString(R.string.stockProgramUID));
-        // Put new survey in session
-        Survey survey = new Survey(null, myanmarProgram, Session.getUser());
-        survey.save();
-        Session.setMalariaSurvey(survey);
-        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser());
-        stockSurvey.save();
-        Session.setStockSurvey(stockSurvey);
-        prepareLocationListener(activity, survey);
-    }
-
-    @Override
     public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
         if (isFragmentActive(activity, HistoricReceiptBalanceFragment.class,
                 R.id.dashboard_stock_container) || isFragmentActive(activity,
@@ -75,4 +62,18 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         return false;
     }
 
+    @Override
+    public void newSurvey(Activity activity) {
+        Program myanmarProgram = Program.findByUID(activity.getString(R.string.malariaProgramUID));
+        Program stockProgram = Program.findByUID(activity.getString(R.string.stockProgramUID));
+        // Put new survey in session
+        Survey survey = new Survey(null, myanmarProgram, Session.getUser());
+        survey.save();
+        Session.setMalariaSurvey(survey);
+        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser(), Constants.SURVEY_EXPENSE);
+        stockSurvey.setCreationDate(survey.getCreationDate());
+        stockSurvey.save();
+        Session.setStockSurvey(stockSurvey);
+        prepareLocationListener(activity, survey);
+    }
 }

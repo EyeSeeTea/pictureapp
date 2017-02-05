@@ -117,7 +117,6 @@ public class ReadWriteDB {
     }
 
     public static void deleteValue(Question question) {
-
         Value value = question.getValueBySession();
 
         if (value != null) {

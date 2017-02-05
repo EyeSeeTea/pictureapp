@@ -15,6 +15,11 @@ public class MockedPushSurveysUseCase {
         for (Survey survey : surveys) {
             survey.setStatus(SURVEY_SENT);
             survey.save();
+            Survey stockSurvey = Survey.getStockSurveyWithCreationDate(survey.getCreationDate());
+            if (stockSurvey != null) {
+                stockSurvey.setStatus(SURVEY_SENT);
+                stockSurvey.save();
+            }
         }
 
         callback.onPushFinished();

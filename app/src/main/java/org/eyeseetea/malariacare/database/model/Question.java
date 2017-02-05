@@ -1425,6 +1425,71 @@ public class Question extends BaseModel {
         return false;
     }
 
+    public boolean isRDT(){
+        return uid.equals(getContext().getString(R.string.rdtQuestionUID));
+    }
+
+    public boolean isStockRDT() {
+        return uid.equals(getContext().getString(R.string.stockRDTQuestionUID));
+    }
+
+    public boolean isInvalidCounter() {
+        return uid.equals(getContext().getString(R.string.confirmInvalidQuestionUID));
+    }
+
+    public boolean isACT6() {
+        return uid.equals(getContext().getString(R.string.act6QuestionUID));
+    }
+
+    public boolean isACT12() {
+        return uid.equals(getContext().getString(R.string.act12QuestionUID));
+    }
+
+    public boolean isACT18() {
+        return uid.equals(getContext().getString(R.string.act18QuestionUID));
+    }
+
+    public boolean isACT24() {
+        return uid.equals(getContext().getString(R.string.act24QuestionUID));
+    }
+
+    public boolean isCq() {
+        return uid.equals(getContext().getString(R.string.cqQuestionUID));
+    }
+
+    public boolean isPq() {
+        return uid.equals(getContext().getString(R.string.pqQuestionUID));
+    }
+
+    public boolean isInvalidRDTQuestion(){
+        return uid.equals(getContext().getString(R.string.confirmInvalidQuestionUID));
+    }
+
+    public static Question getRDTQuestion(){
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.rdtQuestionUID));
+    }
+
+    public static Question getStockRDTQuestion(){
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.stockRDTQuestionUID));
+    }
+
+    public static Question getInvalidCounterQuestion(){
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.confirmInvalidQuestionUID));
+    }
+
+    public static Question getPqQuestion(){
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.pqQuestionUID));
+    }
+
+    public static Question getCqQuestion(){
+        Context context = PreferencesState.getInstance().getContext();
+        return findByUID(context.getString(R.string.cqQuestionUID));
+    }
+
     public static Question getACT6Question() {
         Context context = PreferencesState.getInstance().getContext();
         return findByUID(context.getString(R.string.act6QuestionUID));

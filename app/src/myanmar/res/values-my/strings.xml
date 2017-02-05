@@ -326,6 +326,14 @@
     <string name="treatment_stock_review_title">Treatment out stock</string>
     <string name="act_out_stock">ACT type needed is out of stock, provide combination and explain</string>
     <string name="out_stock_option">Out of stock</string>
+    <string name="date">Date:</string>
+    <string name="date_format_forward_slash">yyyy/mm/dd</string>
+    <string name="received">Received on:</string>
+    <string name="x6">x6</string>
+    <string name="x12">x12</string>
+    <string name="x18">x18</string>
+    <string name="x24">x24</string>
+    <string name="previous_distributions">Previous Distributions</string>
 
 
 </resources>

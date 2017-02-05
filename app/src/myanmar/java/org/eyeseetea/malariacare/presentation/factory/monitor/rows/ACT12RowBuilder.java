@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.presentation.factory.monitor.rows;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.domain.entity.SurveyQuestionValue;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonitor;
 
 /**
@@ -16,6 +17,6 @@ public class ACT12RowBuilder extends CounterRowBuilder {
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isACT12()) ? 1 : 0;
+        return Math.round(Float.parseFloat(new SurveyQuestionValue(surveyMonitor.getSurvey()).getACT12Value()));
     }
 }

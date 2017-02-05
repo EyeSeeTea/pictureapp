@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.presentation.factory.stock.rows.StatusRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.utils.SurveyStock;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -67,7 +68,7 @@ public abstract class StockRowBuilder {
     /**
      * List of css classes for each column of the row
      */
-    private List<String> columnClasses;
+    protected List<String> columnClasses;
 
 
     public StockRowBuilder(String rowTitle, Context context) {
@@ -88,13 +89,19 @@ public abstract class StockRowBuilder {
      *
      * @return New value for the same column
      */
-    protected abstract Object updateColumn(Object currentValue, SurveyStock surveyStock);
+    protected abstract Object updateColumn(Object currentValue, float newValue, SurveyStock surveyStock);
+
+    protected Object updateColumn(Object oldValue, float surveyValue,
+            SurveyStock surveyStock,
+            int position) {
+        return null;
+    }
 
     /**
      * Default value for each column
      */
     protected Object defaultValueColumn() {
-        return 0;
+        return 0f;
     }
 
     /**
@@ -193,8 +200,16 @@ public abstract class StockRowBuilder {
      * Updates months data according to given survey
      */
     private void addSurveyToData(SurveyStock surveyStock) {
-        int columnIndex = 0;
-        //Updates column considering current value + survey
-        this.data[columnIndex] = updateColumn(this.data[columnIndex], surveyStock);
+        float[] surveyValues = surveyStock.getSurveyValues();
+        for (int i = 0;i<surveyValues.length;i++ ) {
+            //Updates column considering current value + survey
+            if (this instanceof StatusRowBuilder) {
+                this.data[i] = updateColumn(this.data[i], surveyValues[i], surveyStock,i);
+            } else {
+                this.data[i] = updateColumn(this.data[i], surveyValues[i], surveyStock);
+            }
+        }
     }
+
+
 }

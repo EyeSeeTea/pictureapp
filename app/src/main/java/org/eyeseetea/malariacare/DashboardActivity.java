@@ -44,6 +44,7 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
@@ -327,6 +328,11 @@ public class DashboardActivity extends BaseActivity {
     }
 
 
+    public void initNewReceiptFragment() {
+        tabHost.getTabWidget().setVisibility(View.GONE);
+    }
+
+
     // Add the fragment to the activity, pushing this transaction
     // on to the back stack.
     private void replaceFragment(int layout, Fragment fragment) {
@@ -422,6 +428,8 @@ public class DashboardActivity extends BaseActivity {
             onSurveyBackPressed();
         } else if (isReviewFragmentActive()) {
             onSurveyBackPressed();
+        } else if (isNewHistoricReceiptBalanceFragmentActive()) {
+            closeReceiptBalanceFragment();
         } else {
             confirmExitApp();
         }
@@ -508,6 +516,13 @@ public class DashboardActivity extends BaseActivity {
         }
     }
 
+    public void closeReceiptBalanceFragment() {
+        DashboardActivityStrategy mDashboardActivityStrategy = new DashboardActivityStrategy();
+        mDashboardActivityStrategy.showStockFragment(this, false);
+        tabHost.getTabWidget().setVisibility(View.VISIBLE);
+    }
+
+
     /**
      * This method closes the Feedback Fragment and loads the Improve fragment
      * (DashboardSentFragment)
@@ -571,6 +586,7 @@ public class DashboardActivity extends BaseActivity {
     private void sendSurvey() {
         Session.getMalariaSurvey().updateSurveyStatus();
         Session.getStockSurvey().complete();
+        new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
         closeSurveyFragment();
     }
 
@@ -624,6 +640,19 @@ public class DashboardActivity extends BaseActivity {
      */
     private boolean isSurveyFragmentActive() {
         return isFragmentActive(surveyFragment, R.id.dashboard_details_container);
+    }
+
+    private boolean isNewHistoricReceiptBalanceFragmentActive() {
+      return   mDashboardActivityStrategy.isHistoricNewReceiptBalanceFragment(this);
+    }
+
+
+    private boolean isFragmentActive(Class fragmentClass, int layout) {
+        Fragment currentFragment = this.getFragmentManager().findFragmentById(layout);
+        if (currentFragment.getClass().equals(fragmentClass)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -719,5 +748,4 @@ public class DashboardActivity extends BaseActivity {
             getSurveysFromService();
         }
     }
-
 }

@@ -42,20 +42,6 @@ public class Treatment {
         return Question.findByUID(context.getString(R.string.dynamicTreatmentQuestionUID));
     }
 
-    public static boolean isACTQuestion(Question question) {
-        Context context = PreferencesState.getInstance().getContext();
-        if (question.getUid().equals(context.getString(R.string.act6QuestionUID))
-                || question != null && question.getUid().equals(
-                context.getString(R.string.act12QuestionUID))
-                || question != null && question.getUid().equals(
-                context.getString(R.string.act18QuestionUID))
-                || question != null && question.getUid().equals(
-                context.getString(R.string.act24QuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
     public boolean hasTreatment() {
         mTreatment = getTreatmentFromSurvey();
         if (mTreatment != null) {
@@ -210,6 +196,20 @@ public class Treatment {
     public boolean isACT24Question(Question question) {
         if (question != null && question.getUid().equals(
                 getContext().getString(R.string.act24QuestionUID))) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isACTQuestion(Question question) {
+        Context context = PreferencesState.getInstance().getContext();
+        if (question.getUid().equals(context.getString(R.string.act6QuestionUID))
+                || question != null && question.getUid().equals(
+                context.getString(R.string.act12QuestionUID))
+                || question != null && question.getUid().equals(
+                context.getString(R.string.act18QuestionUID))
+                || question != null && question.getUid().equals(
+                context.getString(R.string.act24QuestionUID))) {
             return true;
         }
         return false;

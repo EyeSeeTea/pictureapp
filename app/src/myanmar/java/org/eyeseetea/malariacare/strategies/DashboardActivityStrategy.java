@@ -1,13 +1,17 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.fragments.HistoricReceiptBalanceFragment;
+import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.StockFragment;
+import org.eyeseetea.malariacare.utils.Constants;
 
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
@@ -24,6 +28,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         stockFragment = new StockFragment();
         stockFragment.setArguments(activity.getIntent().getExtras());
         stockFragment.reloadData();
+        stockFragment.reloadHeader(activity);
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
         if (isMoveToLeft) {
             isMoveToLeft = false;
@@ -38,6 +43,26 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @Override
+    public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
+        if (isFragmentActive(activity, HistoricReceiptBalanceFragment.class,
+                R.id.dashboard_stock_container) || isFragmentActive(activity,
+                NewReceiptBalanceFragment.class,
+                R.id.dashboard_stock_container)) {
+            return true;
+        }
+        return false;
+
+    }
+
+    private boolean isFragmentActive(Activity activity, Class fragmentClass, int layout) {
+        Fragment currentFragment = activity.getFragmentManager().findFragmentById(layout);
+        if (currentFragment.getClass().equals(fragmentClass)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void newSurvey(Activity activity) {
         Program myanmarProgram = Program.findByUID(activity.getString(R.string.malariaProgramUID));
         Program stockProgram = Program.findByUID(activity.getString(R.string.stockProgramUID));
@@ -45,7 +70,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         Survey survey = new Survey(null, myanmarProgram, Session.getUser());
         survey.save();
         Session.setMalariaSurvey(survey);
-        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser());
+        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser(), Constants.SURVEY_EXPENSE);
+        stockSurvey.setCreationDate(survey.getCreationDate());
         stockSurvey.save();
         Session.setStockSurvey(stockSurvey);
         prepareLocationListener(activity, survey);

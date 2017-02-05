@@ -37,8 +37,8 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.IConvertToSDKV
 import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
-import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.database.utils.SurveyAnsweredRatioCache;
+import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -122,6 +122,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.completionDate = this.creationDate;
         this.eventDate = new Date();
         this.scheduledDate = null;
+        this.type = Constants.SURVEY_NO_TYPE; //to avoid NullPointerExceptions
     }
 
     public Survey(OrgUnit orgUnit, Program program, User user) {
@@ -134,6 +135,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.setOrgUnit(orgUnit);
         this.setProgram(program);
         this.setUser(user);
+        this.setType(Constants.SURVEY_NO_TYPE);
     }
 
     public Survey(OrgUnit orgUnit, Program program, User user, int type) {
@@ -370,6 +372,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .orderBy(Survey$Table.ID_ORG_UNIT).queryList();
     }
 
+    public static Survey getStockSurveyWithCreationDate(Date creationDate){
+        Context context = PreferencesState.getInstance().getContext();
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.CREATIONDATE)).eq(
+                        creationDate))
+                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).is(
+                        context.getString(R.string.stockProgramUID))).querySingle();
+    }
+
     /**
      * Returns all the surveys
      */
@@ -491,6 +505,60 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Condition.column(Survey$Table.STATUS).eq(Constants.SURVEY_SENT))
                 .and(Condition.column(Survey$Table.EVENTDATE).greaterThanOrEq(
                         minDateForMonitor)).queryList();
+    }
+
+    /**
+     * Find the surveys for a program, with a type o no type ans with the event date grater than
+     * passed.
+     *
+     * @param program    The program of the survey
+     * @param date       The min eventDate of the survey
+     * @return A list of surveys
+     */
+    public static List<Survey> findSurveysWithProgramAndGreaterDate(Program program, Date date) {
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM))
+                        .eq(program.getId_program()))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("s", Survey$Table.EVENTDATE)).greaterThanOrEq(
+                        date)).queryList();
+    }
+
+    public static Date getLastDateForSurveyType(int type) {
+        Survey survey = new Select(Survey$Table.EVENTDATE)
+                .method("MAX", Survey$Table.EVENTDATE)
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.TYPE).eq(type))
+                .and(Condition.column(Survey$Table.EVENTDATE)).querySingle();
+        if (survey == null) {
+            return new Date(0);
+        }
+        return survey.getEventDate();
+    }
+
+    public static Survey getLastSurveyWithType(int type){
+       Survey survey = new Select()
+                .from(Survey.class)
+                .where(Condition.column(Survey$Table.TYPE).eq(type))
+               .orderBy(false, Survey$Table.EVENTDATE)
+               .querySingle();
+        return survey;
+    }
+
+
+    public static List<Survey> getSurveysWithProgramType(Program program, int type) {
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM))
+                        .eq(program.getId_program()))
+                .and(Condition.column(
+                        ColumnAlias.columnWithTable("s", Survey$Table.TYPE)).is(
+                        type)).queryList();
     }
 
     /**
@@ -802,7 +870,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
      *
      * @return SurveyAnsweredRatio that hold the total & answered questions.
      */
-    private SurveyAnsweredRatio reloadSurveyAnsweredRatio() {
+    public SurveyAnsweredRatio reloadSurveyAnsweredRatio() {
 
         SurveyAnsweredRatio surveyAnsweredRatio;
         //First parent is always required and not calculated.
@@ -928,6 +996,12 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return getRDTName().equals(
                 PreferencesState.getInstance().getContext().getResources().getString(
                         R.string.rdtPositive));
+    }
+    public boolean isExpenseSurvey() {
+        if (type == null) {
+            return false;
+        }
+        return type == Constants.SURVEY_EXPENSE;
     }
 
     /**

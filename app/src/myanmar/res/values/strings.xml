@@ -277,6 +277,7 @@
     <string name="follow_up_occupation_review_title">Occupation</string>
     <string name="work_in_progress">Work in progress</string>
     <string name="dynamic_error_number">Invalid number</string>
+
     <string name="drug_act">ACT</string>
 
     <string name="tr_1_no_confirmed">No confirmed infection</string>
@@ -336,6 +337,14 @@
     <string name="new_balance">New Balance</string>
     <string name="treatment_stock_review_title">Treatment out stock</string>
     <string name="act_out_stock">ACT type needed is out of stock, provide combination and explain</string>
-
     <string name="out_stock_option">Out of stock</string>
+
+    <string name="date">Date:</string>
+    <string name="date_format_forward_slash">yyyy/mm/dd</string>
+    <string name="received">Received on:</string>
+    <string name="x6">x6</string>
+    <string name="x12">x12</string>
+    <string name="x18">x18</string>
+    <string name="x24">x24</string>
+    <string name="previous_distributions">Previous Distributions</string>
 </resources>

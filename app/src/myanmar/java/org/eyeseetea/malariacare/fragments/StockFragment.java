@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,12 +17,14 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockBuilder;
 import org.eyeseetea.malariacare.services.StockService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.webview.IWebView;
 import org.eyeseetea.malariacare.webview.IWebViewBuilder;
 
@@ -64,7 +67,38 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
 
     private void initViews(View view) {
         table = (WebView) view.findViewById(R.id.fragment_stock_table);
+
+        view.findViewById(R.id.fragment_stock_new_receipt).setOnClickListener(
+                new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNewReceiptBalanceFragment(Constants.SURVEY_RECEIPT);
+            }
+        });
+        view.findViewById(R.id.fragment_stock_new_balance).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showNewReceiptBalanceFragment(Constants.SURVEY_BALANCE);
+                    }
+                });
+
+        view.findViewById(R.id.fragment_stock_see_balance).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showHistoricReceiptBalanceFragment(Constants.SURVEY_BALANCE);
+                    }
+                });
+        view.findViewById(R.id.fragment_stock_see_receipt).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showHistoricReceiptBalanceFragment(Constants.SURVEY_RECEIPT);
+                    }
+                });
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -199,6 +233,55 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
                 }
                 reloadWebView(stockBuilder);
             }
+        }
+    }
+
+
+    private void showNewReceiptBalanceFragment(int type) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            NewReceiptBalanceFragment newReceiptBalanceFragment = new NewReceiptBalanceFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(NewReceiptBalanceFragment.TYPE, type);
+            newReceiptBalanceFragment.setArguments(bundle);
+            replaceFragment(R.id.dashboard_stock_container, newReceiptBalanceFragment);
+
+            int headerString=R.string.fragment_new_receipt;
+            if(type==Constants.SURVEY_BALANCE){
+                headerString=R.string.fragment_new_balance;
+            }
+            DashboardHeaderStrategy.getInstance().init(activity, headerString);
+            if (activity instanceof DashboardActivity) {
+                ((DashboardActivity) activity).initNewReceiptFragment();
+            }
+        }
+    }
+
+    private void showHistoricReceiptBalanceFragment(int type) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            HistoricReceiptBalanceFragment historicReceiptBalanceFragment =
+                    new HistoricReceiptBalanceFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(HistoricReceiptBalanceFragment.TYPE, type);
+            historicReceiptBalanceFragment.setArguments(bundle);
+            replaceFragment(R.id.dashboard_stock_container, historicReceiptBalanceFragment);
+
+            DashboardHeaderStrategy.getInstance().init(activity,
+                    R.string.fragment_historic_receipt_balance);
+            if (activity instanceof DashboardActivity) {
+                ((DashboardActivity) activity).initNewReceiptFragment();
+            }
+        }
+    }
+
+
+    private void replaceFragment(int layout, Fragment fragment) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
+            ft.replace(layout, fragment);
+            ft.commit();
         }
     }
 

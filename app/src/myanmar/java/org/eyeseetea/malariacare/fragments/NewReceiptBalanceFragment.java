@@ -111,7 +111,9 @@ public class NewReceiptBalanceFragment extends Fragment {
 
 
     private void createNewSurvey() {
-        Survey survey = new Survey(null, Program.getStockProgram(), Session.getUser(), type);
+        Survey survey = new Survey(null,
+                Program.findByUID(getActivity().getString(R.string.stockProgramUID)),
+                Session.getUser(), type);
         Calendar surveyDate;
         if (date.getText().toString().isEmpty()) {
             surveyDate = Calendar.getInstance();

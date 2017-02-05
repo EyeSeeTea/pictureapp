@@ -64,9 +64,16 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
         Question rdtQuestion = Question.getRDTQuestion();
         Question confirmInvalid = Question.getInvalidCounterQuestion();
         if (answersMap.keySet().contains(confirmInvalid)) {
-            rdtUsed = 2;
+            int invalids;
+            try {
+                invalids = Integer.parseInt(answersMap.get(confirmInvalid).getValue());
+            } catch (NumberFormatException exception){
+                invalids = 1;
+            }
             if (answersMap.get(rdtQuestion).getValue().equals("Invalid"))
-                rdtUsed = 3;
+                rdtUsed = invalids;
+            else
+                rdtUsed += invalids;
         }
         return rdtUsed;
     }

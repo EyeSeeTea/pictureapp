@@ -23,6 +23,6 @@
         android:singleLine="true"
         android:textColor="@color/intColor"
         android:textColorHint="@color/hint"
-        android:textSize="?attr/font_medium"
+        android:textSize="?attr/font_small"
         app:font_name="@string/light_font" />
 </LinearLayout>

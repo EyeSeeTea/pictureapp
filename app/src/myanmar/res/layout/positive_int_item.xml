@@ -22,6 +22,6 @@
         android:paddingLeft="@dimen/input_edit_text_left_padding"
         android:textColor="@color/intColor"
         android:textColorHint="@color/hint"
-        android:textSize="?attr/font_medium"
+        android:textSize="?attr/font_small"
         app:font_name="@string/light_font" />
 </LinearLayout>

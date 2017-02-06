@@ -54,27 +54,27 @@ public class SurveyMonitor {
     /**
      * Id of negative  of rdt tst result
      */
-    final static Long ID_OPTION_TEST_NEGATIVE = 16l;
+    final static Long ID_OPTION_TEST_NEGATIVE = 15l;
     /**
      * Id of pv specie option  of rdt tst result
      */
-    final static Long ID_OPTION_SPECIE_PF = 17l;
+    final static Long ID_OPTION_SPECIE_PF = 16l;
     /**
      * Id of pv specie option  of rdt tst result
      */
-    final static Long ID_OPTION_SPECIE_PV = 18l;
+    final static Long ID_OPTION_SPECIE_PV = 17l;
     /**
      * Id of pf/pv (mixed) specie option  of rdt tst result
      */
-    final static Long ID_OPTION_SPECIE_PFPV = 19l;
+    final static Long ID_OPTION_SPECIE_PFPV = 18l;
     /**
      * Id of negative  of rdt tst result
      */
-    final static Long ID_OPTION_INVALID = 20l;
+    final static Long ID_OPTION_INVALID = 19l;
     /**
      * Id of referral yes option  of referral treatment
      */
-    final static Long ID_OPTION_REFERRAL_YES = 36l;
+    final static Long ID_OPTION_REFERRAL_YES = 35l;
     /**
      * Id of pq yes option  of pq treatment
      */

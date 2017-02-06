@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.views.question.multiquestion;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 
 import org.eyeseetea.malariacare.R;
@@ -75,6 +76,6 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     }
 
     public void setInputType(int value) {
-        mCustomEditText.setInputType(value);
+        mCustomEditText.setInputType(value | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
     }
 }

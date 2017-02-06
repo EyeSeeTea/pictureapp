@@ -415,7 +415,7 @@ public class Question extends BaseModel {
     }
 
     public static List<Option> getOptions(String UID) {
-        return new Select().from(Option.class).as("o")
+        List<Option> options = new Select().from(Option.class).as("o")
                 .join(Answer.class, Join.JoinType.LEFT).as("a")
                 .on(Condition.column(ColumnAlias.columnWithTable("o", Option$Table.ID_ANSWER))
                         .eq(ColumnAlias.columnWithTable("a", Answer$Table.ID_ANSWER)))
@@ -425,6 +425,12 @@ public class Question extends BaseModel {
                 .where(Condition.column(
                         ColumnAlias.columnWithTable("q", Question$Table.UID))
                         .eq(UID)).queryList();
+        for (int i = 0; options != null && i < options.size(); i++) {
+            Option currentOption = options.get(i);
+            currentOption = Option.findById(Float.valueOf(currentOption.getId_option()));
+            options.set(i, currentOption);
+        }
+        return options;
     }
 
     public static Answer getAnswer(String UID) {

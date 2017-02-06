@@ -8,6 +8,7 @@ import android.content.res.AssetManager;
 
 import com.opencsv.CSVReader;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.Drug;
 import org.eyeseetea.malariacare.database.model.DrugCombination;
@@ -25,6 +26,7 @@ import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Treatment;
 import org.eyeseetea.malariacare.database.model.TreatmentMatch;
+import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -379,9 +381,14 @@ public class UpdateDB {
     }
 
     public static void updateOptions(AssetManager assetManager) throws IOException {
-        List<Option> optionToDelete = Question.getOptions("4YY1JoHmO94");
+        List<Option> optionToDelete = Question.getOptions(
+                PreferencesState.getInstance().getContext().getString(
+                        R.string.residenceVillageUID));
         for (Option option : optionToDelete) {
-            option.delete();
+            if (!option.getCode().equals(PreferencesState.getInstance().getContext().getString(
+                    R.string.patientResidenceVillageOtherCode))) {
+                option.delete();
+            }
         }
         List<Option> options = Option.getAllOptions();
         HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(assetManager);
@@ -410,7 +417,9 @@ public class UpdateDB {
             option.setName(orgUnit.getUid());
             option.setFactor((float) 0);
             option.setId_option((long) 0);
-            option.setAnswer(Question.getAnswer("4YY1JoHmO94"));
+            option.setAnswer(Question.getAnswer(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.residenceVillageUID)));
             option.save();
         }
 

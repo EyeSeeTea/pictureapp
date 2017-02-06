@@ -33,7 +33,6 @@ import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
-import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.remote.SdkPullController;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
@@ -70,8 +69,6 @@ public class PullController implements IPullController {
                 populateMetadataFromCsvs(true);
                 callback.onComplete();
             } else {
-                SdkController.wipeData();
-
                 mPullRemoteDataSource.pullMetadata(new IDataSourceCallback<Void>() {
                     @Override
                     public void onSuccess(Void result) {
@@ -85,9 +82,7 @@ public class PullController implements IPullController {
                 });
             }
             //TODO jsanchez
-/*
-
-
+            /*
             SdkPullController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
             String selectedDateLimit = PreferencesState.getInstance().getDataLimitedByDate();
 

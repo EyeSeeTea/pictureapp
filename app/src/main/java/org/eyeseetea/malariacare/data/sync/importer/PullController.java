@@ -65,8 +65,9 @@ public class PullController implements IPullController {
 
             callback.onStep(PullStep.METADATA);
 
+            populateMetadataFromCsvs(true);
+
             if (isDemo) {
-                populateMetadataFromCsvs(true);
                 callback.onComplete();
             } else {
                 mPullRemoteDataSource.pullMetadata(new IDataSourceCallback<Void>() {
@@ -106,10 +107,12 @@ public class PullController implements IPullController {
     }
 
     private void populateMetadataFromCsvs(boolean isDemo) throws IOException {
-        PopulateDB.initDataIfRequired(mContext.getAssets());
+        if(PopulateDB.isLocalPopulateRequired()) {
+            PopulateDB.initDataIfRequired(mContext.getAssets());
+            if (isDemo) {
+                createDummyOrgUnitsDataInDB();
+            }
 
-        if (isDemo) {
-            createDummyOrgUnitsDataInDB();
         }
     }
 

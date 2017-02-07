@@ -107,12 +107,15 @@ public class PopulateDB {
     static Map<Integer, OrgUnitLevel> orgUnitLevelList = new LinkedHashMap();
     static Map<Integer, OrgUnit> orgUnitList = new LinkedHashMap();
 
-    public static void initDataIfRequired(AssetManager assetManager) throws IOException {
+    public static boolean isLocalPopulateRequired(){
         if (!Tab.isEmpty()) {
             Log.i(TAG, "DB Already loaded, showing surveys...");
-            return;
+            return false;
         }
+        return true;
+    }
 
+    public static void initDataIfRequired(AssetManager assetManager) throws IOException {
         Log.i(TAG, "DB empty, loading data ...");
         try {
             PopulateDB.populateDB(assetManager);

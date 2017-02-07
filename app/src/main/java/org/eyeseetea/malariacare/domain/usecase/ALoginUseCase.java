@@ -17,6 +17,4 @@ public abstract class ALoginUseCase {
     }
 
     public abstract void execute(Credentials credentials,Callback callback);
-
-    public abstract boolean isLogoutNeeded(Credentials credentials);
 }

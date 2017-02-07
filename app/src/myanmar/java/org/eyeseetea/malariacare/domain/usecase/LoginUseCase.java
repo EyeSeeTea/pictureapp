@@ -39,9 +39,4 @@ public class LoginUseCase extends ALoginUseCase {
                     }
                 });
     }
-
-    @Override
-    public boolean isLogoutNeeded(Credentials credentials) {
-        return false;
-    }
 }

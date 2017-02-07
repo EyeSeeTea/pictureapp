@@ -17,10 +17,13 @@ import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
+import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
 import org.eyeseetea.malariacare.views.TypefaceCache;
 import org.hisp.dhis.client.sdk.android.api.D2;
@@ -55,34 +58,25 @@ public class SplashScreenActivity extends Activity {
         SdkQueries.createDBIndexes();
         PostMigration.launchPostMigration();
 
-        //Get maximum total of questions
-        if (!Tab.isEmpty()) {
-            Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
-        }
-
         if (!BuildConfig.multiuser) {
-            Log.i(TAG, "Creating demo login from dashboard ...");
-            IAuthenticationManager authenticationManager = new AuthenticationManager(this);
-            LoginUseCase loginUseCase = new LoginUseCase(authenticationManager);
+            Log.i(TAG, "Pull on SplashScreen ...");
 
-            Credentials demoCrededentials = Credentials.createDemoCredentials();
-
-            loginUseCase.execute(demoCrededentials, new ALoginUseCase.Callback() {
+            PullController pullController = new PullController(getApplication().getApplicationContext());
+            PullUseCase pullUseCase = new PullUseCase(pullController);
+            pullUseCase.execute(false, new PullUseCase.Callback() {
                 @Override
-                public void onLoginSuccess() {
-                    Log.d(TAG, "Login Success");
+                public void onComplete() {
 
-                    //TODO: execute PullUseCase for laos and cambodia here
                 }
 
                 @Override
-                public void onServerURLNotValid() {
-                    Log.e(this.getClass().getSimpleName(), "Server url not valid");
+                public void onStep(PullStep step) {
+                    Log.d(this.getClass().getSimpleName(), step.toString());
                 }
 
                 @Override
-                public void onInvalidCredentials() {
-                    Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                public void onError(String message) {
+                    Log.e(this.getClass().getSimpleName(), message);
                 }
 
                 @Override

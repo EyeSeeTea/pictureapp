@@ -46,10 +46,13 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
@@ -99,9 +102,6 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-
-        AsyncPopulateDB asyncPopulateDB = new AsyncPopulateDB(this);
-        asyncPopulateDB.execute((Void) null);
         dashboardActivity = this;
         setContentView(R.layout.tab_dashboard);
         Survey.removeInProgress();
@@ -167,6 +167,8 @@ public class DashboardActivity extends BaseActivity {
             tabHost.getTabWidget().getChildAt(i).setFocusable(false);
         }
 
+
+        getSurveysFromService();
     }
 
     public void setTabHostsWithText() {
@@ -673,79 +675,4 @@ public class DashboardActivity extends BaseActivity {
     public boolean isLoadingReview() {
         return isLoadingReview;
     }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class AsyncPopulateDB extends AsyncTask<Void, Void, Exception> {
-
-        //User user;
-        DashboardActivity dashboardActivity;
-
-        AsyncPopulateDB(DashboardActivity dashboardActivity) {
-            this.dashboardActivity = dashboardActivity;
-        }
-
-        @Override
-        protected Exception doInBackground(Void... params) {
-            try {
-                if (!BuildConfig.multiuser) {
-                    Log.i(TAG, "Creating demo login from dashboard ...");
-                    IAuthenticationManager authenticationManager = new AuthenticationManager(
-                            dashboardActivity);
-                    LoginUseCase loginUseCase = new LoginUseCase(authenticationManager);
-
-                    Credentials demoCredentials = Credentials.createDemoCredentials();
-
-                    loginUseCase.execute(demoCredentials, new ALoginUseCase.Callback() {
-                        @Override
-                        public void onLoginSuccess() {
-                            Log.d(TAG, "Login Success");
-                        }
-
-                        @Override
-                        public void onServerURLNotValid() {
-                            Log.e(this.getClass().getSimpleName(), "Server url not valid");
-                        }
-
-                        @Override
-                        public void onInvalidCredentials() {
-                            Log.e(this.getClass().getSimpleName(), "Invalid credentials");
-                        }
-
-                        @Override
-                        public void onNetworkError() {
-                            Log.e(this.getClass().getSimpleName(), "Network Error");
-                        }
-                    });
-                }
-            } catch (Exception ex) {
-                Log.e(TAG, "Error initializing DB: ", ex);
-                return ex;
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(final Exception exception) {
-            //Error
-            if (exception != null) {
-                new AlertDialog.Builder(DashboardActivity.this)
-                        .setTitle(R.string.dialog_title_error)
-                        .setMessage(exception.getMessage())
-                        .setNeutralButton(android.R.string.yes,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface arg0, int arg1) {
-                                        finish();
-                                    }
-                                }).create().show();
-                return;
-            }
-
-            getSurveysFromService();
-        }
-    }
-
 }

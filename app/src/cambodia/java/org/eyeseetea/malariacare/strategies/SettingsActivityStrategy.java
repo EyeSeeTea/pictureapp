@@ -2,80 +2,53 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.content.Intent;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
-import com.squareup.otto.Subscribe;
-
-import org.eyeseetea.malariacare.ProgressActivity;
+import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
-import org.eyeseetea.malariacare.data.sync.exporter.PushController;
-import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
-import org.hisp.dhis.android.sdk.job.NetworkJob;
-import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
-import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
-    private static final String TAG = ".SettingsActivityStrategy";
     private PullRequiredOnPreferenceChangeListener pullRequiredOnPreferenceChangeListener;
-    private LoginRequiredOnPreferenceClickListener loginRequiredOnPreferenceClickListener;
+
+
+    private static final String TAG = ".SettingsStrategy";
+    LogoutAndLoginRequiredOnPreferenceClickListener loginRequiredOnPreferenceClickListener;
 
     public SettingsActivityStrategy(SettingsActivity settingsActivity) {
         super(settingsActivity);
 
-        loginRequiredOnPreferenceClickListener = new LoginRequiredOnPreferenceClickListener(
-                settingsActivity);
+        loginRequiredOnPreferenceClickListener =
+                new LogoutAndLoginRequiredOnPreferenceClickListener(
+                        settingsActivity);
 
         pullRequiredOnPreferenceChangeListener = new PullRequiredOnPreferenceChangeListener();
-
     }
 
     @Override
     public void onCreate() {
-        Dhis2Application.bus.register(this);
-    }
-
-    @Override
-    public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
-
     }
 
     @Override
     public void onStop() {
-        try {
-            //Unregister from bus before leaving
-            Dhis2Application.bus.unregister(this);
-        } catch (Exception e) {
-        }
+
     }
 
-    @Subscribe
-    public void callbackLoginPrePull(NetworkJob.NetworkJobResult<ResourceType> result) {
-        if (PushController.getInstance().isPushInProgress()) {
-            return;
+    @Override
+    public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
+        PreferenceCategory preferenceCategory =
+                (PreferenceCategory) preferenceScreen.findPreference(
+                        settingsActivity.getResources().getString(R.string.pref_cat_server));
+        if (preferenceCategory != null) {
+            preferenceCategory.removePreference(preferenceScreen.findPreference(
+                    settingsActivity.getResources().getString(R.string.org_unit)));
         }
-        //Nothing to check
-        if (result == null || result.getResourceType() == null || !result.getResourceType().equals(
-                ResourceType.USERS)) {
-            return;
-        }
-
-        //Login failed
-        if (result.getResponseHolder().getApiException() != null) {
-            new AlertDialog.Builder(settingsActivity)
-                    .setTitle(R.string.dhis_url_error)
-                    .setMessage(R.string.dhis_url_error_bad_credentials)
-                    .setNeutralButton(android.R.string.yes, null)
-                    .create()
-                    .show();
-        }
-
-        //Login successful start reload
-        settingsActivity.finish();
-        settingsActivity.startActivity(new Intent(settingsActivity, ProgressActivity.class));
     }
 
     @Override
@@ -85,7 +58,59 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public Preference.OnPreferenceChangeListener getOnPreferenceChangeListener() {
+
         return pullRequiredOnPreferenceChangeListener;
     }
+}
 
+/**
+ * Listener that moves to the LoginActivity before changing DHIS config
+ */
+class LogoutAndLoginRequiredOnPreferenceClickListener implements
+        Preference.OnPreferenceClickListener {
+
+    private static final String TAG = "LoginPreferenceListener";
+
+    /**
+     * Reference to the activity so you can use this from the activity or the fragment
+     */
+    SettingsActivity activity;
+
+    LogoutAndLoginRequiredOnPreferenceClickListener(SettingsActivity activity) {
+        this.activity = activity;
+    }
+
+    @Override
+    public boolean onPreferenceClick(final Preference preference) {
+        if (!activity.getIntent().getBooleanExtra(SettingsActivity.IS_LOGIN_DONE, false)) {
+
+            String orgUnitValue = activity.autoCompleteEditTextPreference.getText();
+
+            Intent loginIntent = new Intent(activity, LoginActivity.class);
+            loginIntent.putExtra(LoginActivity.PULL_REQUIRED, orgUnitValue.isEmpty());
+
+            activity.startActivity(loginIntent);
+        }
+        return true;
+    }
+
+    protected void logout() {
+        Log.d(TAG, "Logging out...");
+        AuthenticationManager authenticationManager = new AuthenticationManager(activity);
+        LogoutUseCase logoutUseCase = new LogoutUseCase(authenticationManager);
+
+        logoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                Intent loginIntent = new Intent(activity, LoginActivity.class);
+                activity.finish();
+                activity.startActivity(loginIntent);
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.e(TAG, message);
+            }
+        });
+    }
 }

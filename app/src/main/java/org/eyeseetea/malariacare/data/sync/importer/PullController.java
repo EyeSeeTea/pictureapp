@@ -171,7 +171,7 @@ public class PullController implements IPullController {
     }
 
     private void pullData(List<OrganisationUnit> organisationUnits, final Callback callback) {
-        mPullRemoteDataSource.pullData(new IDataSourceCallback<List<Event>>() {
+        mPullRemoteDataSource.pullData(organisationUnits, new IDataSourceCallback<List<Event>>() {
             @Override
             public void onSuccess(List<Event> result) {
                 callback.onComplete();

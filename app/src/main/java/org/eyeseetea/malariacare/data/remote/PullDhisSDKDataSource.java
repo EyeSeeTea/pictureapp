@@ -9,9 +9,12 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
+import org.hisp.dhis.client.sdk.models.attribute.Attribute;
+import org.hisp.dhis.client.sdk.models.attribute.AttributeValue;
 import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Scheduler;
@@ -46,7 +49,8 @@ public class PullDhisSDKDataSource {
         }
     }
 
-    public void pullData(IDataSourceCallback<List<Event>> callback) {
+    public void pullData(List<OrganisationUnit> organisationUnits,
+            IDataSourceCallback<List<Event>> callback) {
         boolean isNetworkAvailable = isNetworkAvailable();
 
         if (!isNetworkAvailable) {
@@ -54,12 +58,24 @@ public class PullDhisSDKDataSource {
         } else {
             try {
 
-                String orgUnitId = "rV8AX9l6RUs";
+                //GwFkNOXaQcq;nTrd5CQKjxd
+                //https://data.scpr-mm-mal.org/api/events
+                // .json?orgUnit=rV8AX9l6RUs&attributeCc=GwFkNOXaQcq&attributeCos=nTrd5CQKjxd
 
-                Scheduler pullEventsThread = Schedulers.newThread();
-                List<Event> events = D2.events().pull(
-                        orgUnitId, "").subscribeOn(pullEventsThread)
-                        .observeOn(pullEventsThread).toBlocking().single();
+                List<Attribute> attributes = D2.attributes().list().toBlocking().single();
+                List<AttributeValue> userAttributeValues =
+                        D2.me().account().get().toBlocking().single().getAttributeValues();
+
+                List<Event> events = new ArrayList<>();
+
+                for (OrganisationUnit organisationUnit : organisationUnits) {
+                    Scheduler pullEventsThread = Schedulers.newThread();
+                    List<Event> eventsByOrgUnit = D2.events().pull(
+                            organisationUnit.getUId(), "").subscribeOn(pullEventsThread)
+                            .observeOn(pullEventsThread).toBlocking().single();
+
+                    events.addAll(eventsByOrgUnit);
+                }
 
                 callback.onSuccess(events);
             } catch (Exception e) {

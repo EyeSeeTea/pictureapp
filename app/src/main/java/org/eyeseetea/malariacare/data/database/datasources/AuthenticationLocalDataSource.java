@@ -61,13 +61,6 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         PreferencesState.getInstance().reloadPreferences();
     }
 
-/*    @Override
-    public void getCurrentUserAccount(IDataSourceCallback<UserAccount> callback) {
-        Credentials credentials = Session.getCredentials();
-        UserAccount userAccount = new UserAccount(credentials.getUsername(), credentials.isDemoCredentials());
-
-        callback.onSuccess(userAccount);
-    }*/
 
     private void clearCredentials() {
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,

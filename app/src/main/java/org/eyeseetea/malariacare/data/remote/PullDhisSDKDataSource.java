@@ -18,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Scheduler;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class PullDhisSDKDataSource {
@@ -32,7 +34,15 @@ public class PullDhisSDKDataSource {
             callback.onError(new NetworkException());
         } else {
 
-            D2.me().organisationUnits().pull(SyncStrategy.NO_DELETE)
+            Observable.zip(D2.me().organisationUnits().pull(SyncStrategy.NO_DELETE),
+                    D2.attributes().pull(),
+                    new Func2<List<OrganisationUnit>, List<Attribute>, List<OrganisationUnit>>() {
+                        @Override
+                        public List<OrganisationUnit> call(List<OrganisationUnit> organisationUnits,
+                                List<Attribute> attributes) {
+                            return organisationUnits;
+                        }
+                    })
                     .subscribeOn(Schedulers.io()).
                     observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<List<OrganisationUnit>>() {
@@ -46,6 +56,7 @@ public class PullDhisSDKDataSource {
                             callback.onError(throwable);
                         }
                     });
+
         }
     }
 

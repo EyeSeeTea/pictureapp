@@ -34,7 +34,6 @@ import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
-import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.remote.SdkPullController;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;

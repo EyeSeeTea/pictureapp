@@ -145,24 +145,9 @@ public class SurveyService extends IntentService {
 
     private void reloadDashboard() {
         Log.i(TAG, "reloadDashboard");
-        List<Survey> surveys = Survey.getAllSurveys();
 
-        List<Survey> unsentSurveys = new ArrayList<Survey>();
-        List<Survey> sentSurveys = new ArrayList<Survey>();
-        for (Survey survey : surveys) {
-            //fixme this is to ALL_UNSENT_SURVEYS_ACTION but in the service exclusive fot
-            // ALL_UNSENT_SURVEY_ACTION we sent other list(!isSent but hide too)
-            if (!survey.isSent() && !survey.isHide() && !survey.isConflict()) {
-                Log.d(TAG, "SurveyStatusUnSent:" + survey.getStatus() + "");
-                unsentSurveys.add(survey);
-                survey.getAnsweredQuestionRatio();
-            } else if ((survey.isSent() || survey.isConflict()) && !survey.isHide()) {
-                Log.d(TAG, "SurveyStatusSentNotHide:" + survey.getStatus() + "");
-                sentSurveys.add(survey);
-            } else {
-                Log.d(TAG, "SurveyStatusSentHide:" + survey.getStatus() + "");
-            }
-        }
+        List<Survey> unsentSurveys = Survey.getAllUnsentMalariaSurveys();
+        List<Survey> sentSurveys =  Survey.getAllSentMalariaSurveys();
 
         //Since intents does NOT admit NON serializable as values we use Session instead
         Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveys);

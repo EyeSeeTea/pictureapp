@@ -164,12 +164,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         }
 
-        int totalPages = navigationController.getCurrentQuestion().getTotalQuestions();
-        if (readOnly) {
+        int totalPages = 0;
             if (Session.getMalariaSurvey() != null) {
                 totalPages = Session.getMalariaSurvey().getMaxTotalPages();
             }
+        if (totalPages == 0) {
+            totalPages = navigationController.getCurrentQuestion().getTotalQuestions();
         }
+
         navigationController.setTotalPages(totalPages);
         isClicked = false;
 
@@ -275,9 +277,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     public void saveOptionValue(View view, Option selectedOption, Question question,
             boolean moveToNextQuestion) {
+        Option answeredOption = ReadWriteDB.getOptionAnsweredFromDB(question);
         Value value = question.getValueBySession();
 
-        if (value != null && !readOnly) {
+        if (value != null && !readOnly && (answeredOption == null
+                || !answeredOption.getId_option().equals(value.getId_option()))) {
             navigationController.setTotalPages(question.getTotalQuestions());
         }
 

@@ -259,8 +259,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Question counterQuestion = question.findCounterByOption(selectedOption);
         if (counterQuestion == null) {
             saveOptionValue(view, selectedOption, question, moveToNextQuestion);
-        } else {
-            showConfirmCounter(view, selectedOption, question, counterQuestion);
         }
     }
 
@@ -279,6 +277,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public void saveOptionValue(View view, Option selectedOption, Question question,
             boolean moveToNextQuestion) {
         Value value = question.getValueBySession();
+
+        if (value != null && !readOnly) {
+            navigationController.setTotalPages(question.getTotalQuestions());
+        }
 
         ReadWriteDB.saveValuesDDL(question, selectedOption, value);
 
@@ -723,15 +725,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                             Question counterQuestion = question.findCounterByOption(
                                     selectedOption);
-                            if (counterQuestion == null || (mReviewMode
+                            if ((mReviewMode
                                     && isCounterValueEqualToMax(question, selectedOption))) {
                                 saveOptionValue(selectedOptionView,
                                         selectedOptionView.getOption(),
                                         question, true);
-                            } else {
+                            } else if (counterQuestion != null) {
                                 showConfirmCounter(selectedOptionView,
                                         selectedOptionView.getOption(),
                                         question, counterQuestion);
+                            } else {
+                                finishOrNext();
                             }
                         } else {
                             isClicked = false;
@@ -1028,14 +1032,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         hideKeyboard(PreferencesState.getInstance().getContext());
 
         question = navigationController.getCurrentQuestion();
+        value = question.getValueBySession();
 
-        if (!readOnly
+        if (value != null && !readOnly
                 && navigationController.getCurrentTotalPages() < question.getTotalQuestions()) {
             navigationController.setTotalPages(question.getTotalQuestions());
-        } else if (backwarded) {
-            backwarded = false;
-            navigationController.setTotalPages(question.getTotalQuestions());
         }
+//        else
+//        if (backwarded) {
+//            backwarded = false;
+//            navigationController.setTotalPages(question.getTotalQuestions());
+//        }
         navigationController.isMovingToForward = false;
         isClicked = false;
     }

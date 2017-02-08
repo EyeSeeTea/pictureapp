@@ -11,4 +11,4 @@
 11;'Treatment';'LA MAL SRV - Treatment';;'Question_Title_Treatment';'TzL693oH3D9';9;0;0;1;7;0;12;6;1;'';1
 12;'ReminderHospital';'Reminder hospital';' ';'Question_Title_Hospital_Reminder';'xxx005';10;0;0;1;10;0;18;6;0;'Question_Reminder';0
 13;'Phone';'LA MAL SRV - Client telephone';' ';'Question_Title_Phone';'fnT1JoHmO94';11;0;0;1;8;0;13;6;0;'Question_Phone';0
-14;'ReminderNotTested';'Reminder Not Tested';'';'Question_Title_Not_Tested_Reminder';'xxx006';10;0;0;1;11;0;18;6;0;'';0
+14;'ReminderNotTested';'Reminder Not Tested';'';'Question_Title_Not_Tested_Reminder';'xxx006';10;0;0;1;11;0;18;2;0;'';0

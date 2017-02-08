@@ -988,9 +988,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         hideKeyboard(PreferencesState.getInstance().getContext());
-                        Session.getMalariaSurvey().updateSurveyStatus();
-                        Session.getStockSurvey().complete();
-                        DashboardActivity.dashboardActivity.closeSurveyFragment();
+                        DashboardActivity.dashboardActivity.completeSurvey();
                         isClicked = false;
                     }
                 });

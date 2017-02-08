@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
+import org.hisp.dhis.client.sdk.core.event.EventFilters;
 import org.hisp.dhis.client.sdk.models.attribute.Attribute;
 import org.hisp.dhis.client.sdk.models.attribute.AttributeValue;
 import org.hisp.dhis.client.sdk.models.event.Event;
@@ -71,19 +72,28 @@ public class PullDhisSDKDataSource {
         } else {
             try {
 
-                //GwFkNOXaQcq;nTrd5CQKjxd
-                //https://data.scpr-mm-mal.org/api/events
-                // .json?orgUnit=rV8AX9l6RUs&attributeCc=GwFkNOXaQcq&attributeCos=nTrd5CQKjxd
-
                 AttributeValue compositeUserAttributeValue = getCompositeUserAttributeValue();
 
                 List<Event> events = new ArrayList<>();
 
                 for (OrganisationUnit organisationUnit : organisationUnits) {
                     Scheduler pullEventsThread = Schedulers.newThread();
-                    List<Event> eventsByOrgUnit = D2.events().pull(
-                            organisationUnit.getUId(), "").subscribeOn(pullEventsThread)
-                            .observeOn(pullEventsThread).toBlocking().single();
+
+                    EventFilters eventFilters = new EventFilters();
+                    eventFilters.setOrganisationUnitUId(organisationUnit.getUId());
+
+                    if (compositeUserAttributeValue != null){
+                        String[] userAttributes = compositeUserAttributeValue.getValue().split(";");
+
+                        eventFilters.setCategoryCombinationAttribute(userAttributes[0]);
+                        eventFilters.setCategoryOptionAttribute(userAttributes[1]);
+                    }
+
+                    List<Event> eventsByOrgUnit = D2.events().pull(eventFilters)
+                            .subscribeOn(pullEventsThread)
+                            .observeOn(pullEventsThread)
+                            .toBlocking()
+                            .single();
 
                     events.addAll(eventsByOrgUnit);
                 }

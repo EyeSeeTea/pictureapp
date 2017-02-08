@@ -24,6 +24,7 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
     Question mQuestion;
 
     LinearLayout answersContainer;
+    private boolean optionSetBySavedValue = false;
 
     public ImageRadioButtonSingleQuestionView(Context context) {
         super(context);
@@ -82,9 +83,11 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
                     (ImageRadioButtonOption) answersContainer.getChildAt(i);
 
             if (imageRadioButtonOption.getOption().equals(value.getOption())) {
+                optionSetBySavedValue = true;
                 imageRadioButtonOption.setChecked(true);
             }
         }
+
     }
 
     @NonNull
@@ -138,7 +141,11 @@ public class ImageRadioButtonSingleQuestionView extends AOptionQuestionView impl
                 optionView.setChecked(false);
             }
         }
-        notifyAnswerChanged(imageRadioButton.getOption());
+        if (!optionSetBySavedValue) {
+            notifyAnswerChanged(imageRadioButton.getOption());
+        } else {
+            optionSetBySavedValue = false;
+        }
 
         //TODO: Review architecture listeners
         //This question type not save in database from listeners when is answered because for

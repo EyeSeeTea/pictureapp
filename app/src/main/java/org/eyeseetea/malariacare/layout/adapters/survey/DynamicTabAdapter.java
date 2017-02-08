@@ -140,7 +140,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private SwipeTouchListener swipeTouchListener;
     private boolean mReviewMode = false;
-    private boolean backwarded = false;
 
     public DynamicTabAdapter(Tab tab, Context context, boolean reviewMode) {
         mReviewMode = reviewMode;
@@ -1032,17 +1031,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         hideKeyboard(PreferencesState.getInstance().getContext());
 
         question = navigationController.getCurrentQuestion();
-        value = question.getValueBySession();
 
         if (value != null && !readOnly
                 && navigationController.getCurrentTotalPages() < question.getTotalQuestions()) {
             navigationController.setTotalPages(question.getTotalQuestions());
         }
-//        else
-//        if (backwarded) {
-//            backwarded = false;
-//            navigationController.setTotalPages(question.getTotalQuestions());
-//        }
         navigationController.isMovingToForward = false;
         isClicked = false;
     }
@@ -1057,7 +1050,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         navigationController.previous();
         notifyDataSetChanged();
         isClicked = false;
-        backwarded = true;
     }
 
     /**

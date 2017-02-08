@@ -72,8 +72,6 @@ public class PullController implements IPullController {
                 populateMetadataFromCsvs(true);
                 callback.onComplete();
             } else {
-                SdkController.wipeData();
-
                 mPullRemoteDataSource.pullMetadata(
                         new IDataSourceCallback<List<OrganisationUnit>>() {
                     @Override

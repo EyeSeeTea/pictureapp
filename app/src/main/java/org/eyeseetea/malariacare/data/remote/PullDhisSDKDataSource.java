@@ -17,14 +17,16 @@ import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Scheduler;
 import rx.Observable;
+import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class PullDhisSDKDataSource {
+
+    public static final String USER_CC_CO_VOL = "USER_CC_CO_VOL";
 
     public void pullMetadata(final IDataSourceCallback<List<OrganisationUnit>> callback) {
 
@@ -73,9 +75,7 @@ public class PullDhisSDKDataSource {
                 //https://data.scpr-mm-mal.org/api/events
                 // .json?orgUnit=rV8AX9l6RUs&attributeCc=GwFkNOXaQcq&attributeCos=nTrd5CQKjxd
 
-                List<Attribute> attributes = D2.attributes().list().toBlocking().single();
-                List<AttributeValue> userAttributeValues =
-                        D2.me().account().get().toBlocking().single().getAttributeValues();
+                AttributeValue compositeUserAttributeValue = getCompositeUserAttributeValue();
 
                 List<Event> events = new ArrayList<>();
 
@@ -93,6 +93,42 @@ public class PullDhisSDKDataSource {
                 callback.onError(e);
             }
         }
+    }
+
+    private AttributeValue getCompositeUserAttributeValue() {
+        Attribute compositeUserAttribute = null;
+        AttributeValue compositeUserAttributeValue = null;
+
+        List<Attribute> attributes = D2.attributes().list().toBlocking().single();
+
+        if (attributes == null || attributes.size() == 0) {
+            return null;
+        }
+
+        for (Attribute attribute : attributes) {
+            if (attribute.getCode().equals(USER_CC_CO_VOL)) {
+                compositeUserAttribute = attribute;
+            }
+        }
+
+        if (compositeUserAttribute == null) {
+            return null;
+        }
+
+        List<AttributeValue> userAttributeValues =
+                D2.me().account().get().toBlocking().single().getAttributeValues();
+
+        if (userAttributeValues == null || userAttributeValues.size() == 0) {
+            return null;
+        }
+
+        for (AttributeValue attributeValue : userAttributeValues) {
+            if (attributeValue.getAttributeUId().equals(compositeUserAttribute.getUId())) {
+                compositeUserAttributeValue = attributeValue;
+            }
+        }
+
+        return compositeUserAttributeValue;
     }
 
 

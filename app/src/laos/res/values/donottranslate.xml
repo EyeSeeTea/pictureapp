@@ -12,25 +12,26 @@
     <string name="rdtNotTested" translatable="false">Not Tested</string>
     <string name="DHIS_DEFAULT_SERVER" translatable="false">https://dev.psi-mis.org</string>
     <string name="work_in_progress" translatable="false">Work in progress</string>
-    <string name="malariaProgramUID" translatable="false">RjBwXyc5I66</string>
-    <string name="stockProgramUID" translatable="false">GnAx3VLVfUi</string>
 
-    <string name="ageQuestionUID" translatable="false">2XX1JoHmO94</string>
-    <string name="sexPregnantQuestionUID" translatable="false">6VV1JoHmO94</string>
-    <string name="severeSymtomsQuestionUID" translatable="false">11V1JoHmO94</string>
-    <string name="rdtQuestionUID" translatable="false">12V1JoHmO94</string>
-    <string name="referralQuestionUID" translatable="false">9fV1JoHmO94</string>
-    <string name="pqQuestionUID" translatable="false">"Sttahtf0iHZ"</string>
-    <string name="cqQuestionUID" translatable="false">jZvZ4Q39J6s</string>
-    <string name="act6QuestionUID" translatable="false">ihlfWLBg7Nr</string>
-    <string name="act12QuestionUID" translatable="false">nN4jwsyjmE9</string>
-    <string name="act18QuestionUID" translatable="false">GqHQPu6yCfu</string>
-    <string name="act24QuestionUID" translatable="false">RUqD8Kckt3B</string>
-    <string name="dynamicStockQuestionUID" translatable="false">9cV1JoHmO95</string>
-    <string name="outOfStockQuestionUID" translatable="false">ZEopAP6tQN4</string>
-    <string name="dynamicTreatmentQuestionUID" translatable="false">9cV1JoHmO94</string>
-    <string name="stockRDTQuestionUID" translatable="false">Sttahtf0iH0</string>
-    <string name="confirmInvalidQuestionUID" translatable="false">15V1JoHmO94</string>
-    <string name="residenceVillageUID" translatable="false">4YY1JoHmO94</string>
-    <string name="patientResidenceVillageOtherCode" translatable="false">patient_residence_village_other_option</string>
+
+    <string name="malariaProgramUID" translatable="false"></string>
+    <string name="stockProgramUID" translatable="false"></string>
+    <string name="ageQuestionUID" translatable="false"></string>
+    <string name="sexPregnantQuestionUID" translatable="false"></string>
+    <string name="severeSymtomsQuestionUID" translatable="false"></string>
+    <string name="rdtQuestionUID" translatable="false"></string>
+    <string name="referralQuestionUID" translatable="false"></string>
+    <string name="pqQuestionUID" translatable="false"></string>
+    <string name="cqQuestionUID" translatable="false"></string>
+    <string name="act6QuestionUID" translatable="false"></string>
+    <string name="act12QuestionUID" translatable="false"></string>
+    <string name="act18QuestionUID" translatable="false"></string>
+    <string name="act24QuestionUID" translatable="false"></string>
+    <string name="dynamicStockQuestionUID" translatable="false"></string>
+    <string name="outOfStockQuestionUID" translatable="false"></string>
+    <string name="dynamicTreatmentQuestionUID" translatable="false"></string>
+    <string name="stockRDTQuestionUID" translatable="false"></string>
+    <string name="confirmInvalidQuestionUID" translatable="false"></string>
+    <string name="residenceVillageUID" translatable="false"></string>
+    <string name="patientResidenceVillageOtherCode" translatable="false"></string>
 </resources>

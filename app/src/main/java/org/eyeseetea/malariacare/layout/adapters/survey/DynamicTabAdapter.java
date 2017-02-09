@@ -261,6 +261,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Question counterQuestion = question.findCounterByOption(selectedOption);
         if (counterQuestion == null) {
             saveOptionValue(view, selectedOption, question, moveToNextQuestion);
+        } else if (!(view instanceof ImageRadioButtonSingleQuestionView)) {
+            showConfirmCounter(view, selectedOption, question, counterQuestion);
         }
     }
 

@@ -2,12 +2,10 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.content.Intent;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.LoginActivity;
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;

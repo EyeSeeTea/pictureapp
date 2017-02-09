@@ -107,7 +107,7 @@ public class PullController implements IPullController {
     }
 
     private void populateMetadataFromCsvs(boolean isDemo) throws IOException {
-        if(PopulateDB.isLocalPopulateRequired()) {
+        if (PopulateDB.isLocalPopulateRequired()) {
             PopulateDB.initDataIfRequired(mContext.getAssets());
             if (isDemo) {
                 createDummyOrgUnitsDataInDB();

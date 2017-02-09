@@ -19,19 +19,9 @@
 
 package org.eyeseetea.malariacare.data.sync.importer.models;
 
-import static org.eyeseetea.malariacare.data.database.AppDatabase.attributeFlowAlias;
-import static org.eyeseetea.malariacare.data.database.AppDatabase.attributeFlowName;
-import static org.eyeseetea.malariacare.data.database.AppDatabase.programAttributeFlowAlias;
-import static org.eyeseetea.malariacare.data.database.AppDatabase.programAttributeFlowName;
-
-import android.util.Log;
-
-import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.data.database.model.Program;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.AttributeFlow;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.AttributeFlow_Table;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramFlow_Table;
 
@@ -46,7 +36,8 @@ public class ProgramExtended {
     private static final String TAG = ".PRExtended";
 
     /**
-     * Hardcoded 'code' of the attribute that holds the idx of productiviy in the orgunit array attribute
+     * Hardcoded 'code' of the attribute that holds the idx of productiviy in the orgunit array
+     * attribute
      */
     public static final String PROGRAM_PRODUCTIVITY_POSITION_ATTRIBUTE_CODE = "PPP";
 
@@ -60,13 +51,14 @@ public class ProgramExtended {
      */
     Program appProgram;
 
-    public ProgramExtended(){}
-
-    public ProgramExtended(ProgramFlow program){
-        this.program=program;
+    public ProgramExtended() {
     }
 
-    public ProgramFlow getProgram(){
+    public ProgramExtended(ProgramFlow program) {
+        this.program = program;
+    }
+
+    public ProgramFlow getProgram() {
         return this.program;
     }
 
@@ -74,11 +66,11 @@ public class ProgramExtended {
         this.appProgram = appProgram;
     }
 
-    public Program getAppProgram(){
+    public Program getAppProgram() {
         return this.appProgram;
     }
 
-    public static ProgramFlow getProgram(String id){
+    public static ProgramFlow getProgram(String id) {
         return new Select()
                 .from(ProgramFlow.class).where(ProgramFlow_Table.uId.eq(id)).querySingle();
     }
@@ -95,9 +87,10 @@ public class ProgramExtended {
     public String getName() {
         return program.getName();
     }
-    public static List<ProgramExtended> getExtendedList(List<ProgramFlow> flowList){
-        List <ProgramExtended> extendedsList = new ArrayList<>();
-        for(ProgramFlow flowPojo:flowList){
+
+    public static List<ProgramExtended> getExtendedList(List<ProgramFlow> flowList) {
+        List<ProgramExtended> extendedsList = new ArrayList<>();
+        for (ProgramFlow flowPojo : flowList) {
             extendedsList.add(new ProgramExtended(flowPojo));
         }
         return extendedsList;

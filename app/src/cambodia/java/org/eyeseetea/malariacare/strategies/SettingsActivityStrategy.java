@@ -2,11 +2,9 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.content.Intent;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 
 import org.eyeseetea.malariacare.LoginActivity;
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
@@ -54,7 +52,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     }
 
 
-    public boolean onPreferenceClick(final Preference preference){
+    public boolean onPreferenceClick(final Preference preference) {
         if (!settingsActivity.getIntent().getBooleanExtra(SettingsActivity.IS_LOGIN_DONE, false)) {
 
             String orgUnitValue = settingsActivity.autoCompleteEditTextPreference.getText();

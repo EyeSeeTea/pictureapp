@@ -107,7 +107,7 @@ public class PopulateDB {
     static Map<Integer, OrgUnitLevel> orgUnitLevelList = new LinkedHashMap();
     static Map<Integer, OrgUnit> orgUnitList = new LinkedHashMap();
 
-    public static boolean isLocalPopulateRequired(){
+    public static boolean isLocalPopulateRequired() {
         if (!Tab.isEmpty()) {
             Log.i(TAG, "DB Already loaded, showing surveys...");
             return false;

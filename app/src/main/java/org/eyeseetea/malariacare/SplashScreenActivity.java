@@ -10,18 +10,10 @@ import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.PostMigration;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
-import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
-import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
@@ -61,7 +53,8 @@ public class SplashScreenActivity extends Activity {
         if (!BuildConfig.multiuser) {
             Log.i(TAG, "Pull on SplashScreen ...");
 
-            PullController pullController = new PullController(getApplication().getApplicationContext());
+            PullController pullController = new PullController(
+                    getApplication().getApplicationContext());
             PullUseCase pullUseCase = new PullUseCase(pullController);
             pullUseCase.execute(true, new PullUseCase.Callback() {
                 @Override

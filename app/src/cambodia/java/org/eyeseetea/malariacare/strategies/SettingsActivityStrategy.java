@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
@@ -42,13 +40,6 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
-        PreferenceCategory preferenceCategory =
-                (PreferenceCategory) preferenceScreen.findPreference(
-                        settingsActivity.getResources().getString(R.string.pref_cat_server));
-        if (preferenceCategory != null) {
-            preferenceCategory.removePreference(preferenceScreen.findPreference(
-                    settingsActivity.getResources().getString(R.string.org_unit)));
-        }
     }
 
     @Override
@@ -61,56 +52,19 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
         return pullRequiredOnPreferenceChangeListener;
     }
-}
 
-/**
- * Listener that moves to the LoginActivity before changing DHIS config
- */
-class LogoutAndLoginRequiredOnPreferenceClickListener implements
-        Preference.OnPreferenceClickListener {
 
-    private static final String TAG = "LoginPreferenceListener";
+    public boolean onPreferenceClick(final Preference preference){
+        if (!settingsActivity.getIntent().getBooleanExtra(SettingsActivity.IS_LOGIN_DONE, false)) {
 
-    /**
-     * Reference to the activity so you can use this from the activity or the fragment
-     */
-    SettingsActivity activity;
+            String orgUnitValue = settingsActivity.autoCompleteEditTextPreference.getText();
 
-    LogoutAndLoginRequiredOnPreferenceClickListener(SettingsActivity activity) {
-        this.activity = activity;
-    }
-
-    @Override
-    public boolean onPreferenceClick(final Preference preference) {
-        if (!activity.getIntent().getBooleanExtra(SettingsActivity.IS_LOGIN_DONE, false)) {
-
-            String orgUnitValue = activity.autoCompleteEditTextPreference.getText();
-
-            Intent loginIntent = new Intent(activity, LoginActivity.class);
+            Intent loginIntent = new Intent(settingsActivity, LoginActivity.class);
             loginIntent.putExtra(LoginActivity.PULL_REQUIRED, orgUnitValue.isEmpty());
 
-            activity.startActivity(loginIntent);
+            settingsActivity.startActivity(loginIntent);
         }
         return true;
     }
-
-    protected void logout() {
-        Log.d(TAG, "Logging out...");
-        AuthenticationManager authenticationManager = new AuthenticationManager(activity);
-        LogoutUseCase logoutUseCase = new LogoutUseCase(authenticationManager);
-
-        logoutUseCase.execute(new LogoutUseCase.Callback() {
-            @Override
-            public void onLogoutSuccess() {
-                Intent loginIntent = new Intent(activity, LoginActivity.class);
-                activity.finish();
-                activity.startActivity(loginIntent);
-            }
-
-            @Override
-            public void onLogoutError(String message) {
-                Log.e(TAG, message);
-            }
-        });
-    }
 }
+

@@ -32,9 +32,11 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -56,7 +58,6 @@ public class ProgressActivity extends Activity {
      * Used for control autopull from login
      */
     public static Boolean PULL_CANCEL = false;
-
 
     public ProgressActivityStrategy progressVariantAdapter = new ProgressActivityStrategy(this);
     private ProgressBar progressBar;
@@ -133,8 +134,8 @@ public class ProgressActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        SdkController.register(this);
-        launchPull();
+
+        launchPull(Session.getCredentials().isDemoCredentials());
     }
 
     @Override
@@ -146,10 +147,10 @@ public class ProgressActivity extends Activity {
         }
     }
 
-    private void launchPull() {
+    private void launchPull(boolean isDemo) {
 
 
-        mPullUseCase.execute(false, new PullUseCase.Callback() {
+        mPullUseCase.execute(isDemo, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
                 showAndMoveOn();

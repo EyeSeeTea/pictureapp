@@ -63,7 +63,7 @@ public class SplashScreenActivity extends Activity {
 
             PullController pullController = new PullController(getApplication().getApplicationContext());
             PullUseCase pullUseCase = new PullUseCase(pullController);
-            pullUseCase.execute(false, new PullUseCase.Callback() {
+            pullUseCase.execute(true, new PullUseCase.Callback() {
                 @Override
                 public void onComplete() {
 

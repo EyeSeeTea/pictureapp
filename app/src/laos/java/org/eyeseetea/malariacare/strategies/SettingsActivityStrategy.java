@@ -42,13 +42,6 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public void setupPreferencesScreen(PreferenceScreen preferenceScreen) {
-        PreferenceCategory preferenceCategory =
-                (PreferenceCategory) preferenceScreen.findPreference(
-                        settingsActivity.getResources().getString(R.string.pref_cat_server));
-        if (preferenceCategory != null) {
-            preferenceCategory.removePreference(preferenceScreen.findPreference(
-                    settingsActivity.getResources().getString(R.string.org_unit)));
-        }
     }
 
     @Override

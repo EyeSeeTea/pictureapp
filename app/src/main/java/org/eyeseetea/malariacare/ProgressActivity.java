@@ -31,7 +31,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
@@ -105,8 +104,7 @@ public class ProgressActivity extends Activity {
         if (PULL_IS_ACTIVE) {
             PULL_CANCEL = true;
             PULL_IS_ACTIVE = false;
-            showProgressText(PreferencesState.getInstance().getContext().getResources().getString(
-                    R.string.cancellingPull));
+            showProgressText(R.string.cancellingPull);
 
             //TODO jsanchez
 /*            if (PullController.getInstance().finishPullJob()) {
@@ -159,35 +157,38 @@ public class ProgressActivity extends Activity {
             public void onStep(PullStep pullStep) {
                 switch (pullStep) {
                     case METADATA:
-                        showProgressText(PreferencesState.getInstance().getContext().getString(
-                                R.string.progress_pull_downloading));
+                        showProgressText(R.string.progress_pull_downloading);
                         break;
+                    case CONVERT_METADATA:
+                        showProgressText(R.string.progress_pull_preparing_orgs);
                 }
-
             }
 
             @Override
             public void onError(String message) {
-                showException(PreferencesState.getInstance().getContext().getString(R.string
-                        .dialog_pull_error));
+                showException(R.string.dialog_pull_error);
             }
 
             @Override
             public void onNetworkError() {
-                showException(PreferencesState.getInstance().getContext().getString(
-                        R.string.network_error));
+                showException(R.string.network_error);
+            }
+
+            @Override
+            public void onPullConversionError() {
+                showException(R.string.dialog_pull_error);
             }
         });
 
     }
 
-    private void showException(String msg) {
+    private void showException(int stringId) {
         String title = getDialogTitle();
 
         new AlertDialog.Builder(this)
                 .setCancelable(false)
                 .setTitle(title)
-                .setMessage(msg)
+                .setMessage(getString(stringId))
                 .setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -200,10 +201,10 @@ public class ProgressActivity extends Activity {
                 .show();
     }
 
-    private void showProgressText(final String msg) {
+    private void showProgressText(int stringId) {
         final int currentProgress = progressBar.getProgress();
         progressBar.setProgress(currentProgress + 1);
-        textView.setText(msg);
+        textView.setText(getString(stringId));
     }
 
     private void showAndMoveOn() {
@@ -213,7 +214,7 @@ public class ProgressActivity extends Activity {
             return;
         }
 
-        showProgressText(getString(R.string.progress_pull_done));
+        showProgressText(R.string.progress_pull_done);
 
         String title = getDialogTitle();
 

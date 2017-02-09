@@ -19,17 +19,14 @@
 
 package org.eyeseetea.malariacare.data.sync.importer;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.OrgUnitLevel;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
@@ -89,37 +86,13 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
      */
     @Override
     public void visit(OrganisationUnitExtended sdkOrganisationUnitExtended) {
-        //Create and save OrgUnitLevel
-        OrgUnitLevel orgUnitLevel = new OrgUnitLevel();
-        if (!appMapObjects.containsKey(String.valueOf(sdkOrganisationUnitExtended.getLevel()))) {
-            orgUnitLevel.setName(
-                    PreferencesState.getInstance().getContext().getResources().getString(
-                            R.string.create_info_zone));
-            orgUnitLevel.save();
-            appMapObjects.put(String.valueOf(sdkOrganisationUnitExtended.getLevel()), orgUnitLevel);
-        }
-        //create the orgUnit
         OrgUnit appOrgUnit = new OrgUnit();
-        //Set name
+
         appOrgUnit.setName(sdkOrganisationUnitExtended.getLabel());
-        //Set uid
         appOrgUnit.setUid(sdkOrganisationUnitExtended.getId());
-        //Set orgUnitLevel
-        appOrgUnit.setOrgUnitLevel(
-                (OrgUnitLevel) appMapObjects.get(
-                        String.valueOf(sdkOrganisationUnitExtended.getLevel())));
-        //Set the parent
-        //At this moment, the parent is a UID of a not pulled Org_unit , without the full
-        // org_unit the OrgUnit.orgUnit(parent) is null.
-        String parent_id = null;
-        parent_id = sdkOrganisationUnitExtended.getParent();
-        if (parent_id != null && !parent_id.equals("")) {
-            appOrgUnit.setOrgUnit((OrgUnit) appMapObjects.get(String.valueOf(parent_id)));
-        } else {
-            appOrgUnit.setOrgUnit((OrgUnit) null);
-        }
+
         appOrgUnit.save();
-        //Annotate built orgunit
+
         appMapObjects.put(sdkOrganisationUnitExtended.getId(), appOrgUnit);
     }
 

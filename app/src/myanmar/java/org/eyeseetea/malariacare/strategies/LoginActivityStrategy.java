@@ -125,6 +125,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             }
 
             @Override
+            public void onPullConversionError() {
+                Log.e(this.getClass().getSimpleName(), "Pull conversion error");
+            }
+
+            @Override
             public void onNetworkError() {
                 Log.e(this.getClass().getSimpleName(), "Network Error");
             }

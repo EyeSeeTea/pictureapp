@@ -54,6 +54,7 @@ import org.eyeseetea.malariacare.strategies.BaseActivityStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Permissions;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.malariacare.views.FontUtils;
 
 import java.io.InputStream;
 import java.util.List;
@@ -104,32 +105,9 @@ public abstract class BaseActivity extends ActionBarActivity {
         alarmPush = new AlarmPushReceiver();
         alarmPush.setPushAlarm(this);
 
-
-        applyFontStyleByPreference();
+        FontUtils.applyFontStyleByPreference(getResources(), getTheme());
 
         mBaseActivityStrategy.onCreate();
-    }
-
-    public void applyFontStyleByPreference() {
-        String scale = PreferencesState.getInstance().getScale();
-
-        if (scale.equals(getResources().getString(R.string.font_size_level0))) {
-            applyStyle(R.style.FontStyle_XSmall, true);
-        } else if (scale.equals(getResources().getString(R.string.font_size_level1))) {
-            applyStyle(R.style.FontStyle_Small, true);
-        } else if (scale.equals(getResources().getString(R.string.font_size_level2))) {
-            applyStyle(R.style.FontStyle_Medium, true);
-        } else if (scale.equals(getResources().getString(R.string.font_size_level3))) {
-            applyStyle(R.style.FontStyle_Large, true);
-        } else if (scale.equals(getResources().getString(R.string.font_size_level4))) {
-            applyStyle(R.style.FontStyle_XLarge, true);
-        } else {
-            applyStyle(R.style.FontStyle_Default, true);
-        }
-    }
-
-    private void applyStyle(int resId, boolean force) {
-        getTheme().applyStyle(resId, force);
     }
 
     /**

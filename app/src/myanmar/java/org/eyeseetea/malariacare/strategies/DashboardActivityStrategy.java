@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.fragments.HistoricReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.StockFragment;
@@ -75,5 +76,43 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         stockSurvey.save();
         Session.setStockSurvey(stockSurvey);
         prepareLocationListener(activity, survey);
+    }
+
+    @Override
+    public void sendSurvey() {
+        Session.getMalariaSurvey().updateSurveyStatus();
+        Session.getStockSurvey().complete();
+        new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
+    }
+
+    @Override
+    public void completeSurvey() {
+        Session.getMalariaSurvey().updateSurveyStatus();
+        Session.getStockSurvey().complete();
+    }
+
+    @Override
+    public boolean beforeExit(boolean isBackPressed) {
+        Survey malariaSurvey = Session.getMalariaSurvey();
+        Survey stockSurvey = Session.getStockSurvey();
+        if (malariaSurvey != null) {
+            boolean isMalariaInProgress = malariaSurvey.isInProgress();
+            boolean isStockSurveyInProgress = stockSurvey.isInProgress();
+            malariaSurvey.getValuesFromDB();
+            stockSurvey.getValuesFromDB();
+            //Exit + InProgress -> delete
+            if (isBackPressed && (isMalariaInProgress || isStockSurveyInProgress)) {
+                if (isMalariaInProgress) {
+                    Session.setMalariaSurvey(null);
+                    malariaSurvey.delete();
+                }
+                if (isStockSurveyInProgress) {
+                    Session.setStockSurvey(null);
+                    stockSurvey.delete();
+                }
+                isBackPressed = false;
+            }
+        }
+        return isBackPressed;
     }
 }

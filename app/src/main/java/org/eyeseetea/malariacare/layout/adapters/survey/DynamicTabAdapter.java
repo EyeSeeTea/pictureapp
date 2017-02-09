@@ -140,6 +140,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private SwipeTouchListener swipeTouchListener;
     private boolean mReviewMode = false;
+    private boolean isBackward = true;
 
     public DynamicTabAdapter(Tab tab, Context context, boolean reviewMode) {
         mReviewMode = reviewMode;
@@ -280,9 +281,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Option answeredOption = ReadWriteDB.getOptionAnsweredFromDB(question);
         Value value = question.getValueBySession();
 
-        if (value != null && !readOnly && (answeredOption == null
-                || !answeredOption.getId_option().equals(value.getId_option()))) {
+        if (isBackward && value != null && !readOnly && (answeredOption == null
+                || !answeredOption.getId_option().equals(selectedOption.getId_option()))) {
             navigationController.setTotalPages(question.getTotalQuestions());
+            isBackward = false;
         }
 
         ReadWriteDB.saveValuesDDL(question, selectedOption, value);
@@ -1052,6 +1054,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             return;
         }
         navigationController.previous();
+        isBackward = navigationController.getCurrentTotalPages()
+                > navigationController.getCurrentQuestion().getTotalQuestions();
         notifyDataSetChanged();
         isClicked = false;
     }

@@ -131,6 +131,8 @@ public class PopulateDB {
     static HashMap<Long, Treatment> treatmentList = new HashMap<>();
 
     public static void initDataIfRequired(AssetManager assetManager) throws IOException {
+        FileCsvs fileCsvs=new FileCsvs();
+        fileCsvs.saveCsvsInFileIfNeeded();
         if (!Tab.isEmpty()) {
             Log.i(TAG, "DB Already loaded, showing surveys...");
             return;

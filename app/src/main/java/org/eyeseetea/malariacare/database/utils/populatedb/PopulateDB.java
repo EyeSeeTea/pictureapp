@@ -490,6 +490,9 @@ public class PopulateDB {
     }
 
     public static void addOptionAttributes(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.OPTION_ATTRIBUTES_CSV);
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.OPTIONS_CSV);
         List<Option> options = Option.getAllOptions();
         //Reset inner references
         cleanInnerLists();

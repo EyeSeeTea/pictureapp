@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.database.migrations;
 
-import android.content.res.AssetManager;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -40,12 +40,12 @@ public class Migration23AddStockCsvs extends BaseMigration {
         //Data? Add new default data
         if (instance.hasData()) {
             try {
-                AssetManager assetManager = PreferencesState.getInstance().getContext().getAssets();
-                UpdateDB.updateAnswers(assetManager);
-                UpdateDB.updatePrograms(assetManager);
-                UpdateDB.updateTabs(assetManager);
-                UpdateDB.updateHeaders(assetManager);
-                UpdateDB.updateAndAddQuestions(assetManager);
+                Context context = PreferencesState.getInstance().getContext();
+                UpdateDB.updateAnswers(context);
+                UpdateDB.updatePrograms(context);
+                UpdateDB.updateTabs(context);
+                UpdateDB.updateHeaders(context);
+                UpdateDB.updateAndAddQuestions(context);
 
             } catch (IOException e) {
                 e.printStackTrace();

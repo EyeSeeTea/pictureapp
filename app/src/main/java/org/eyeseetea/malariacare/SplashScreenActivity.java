@@ -23,8 +23,8 @@ import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Value;
 import org.eyeseetea.malariacare.database.model.Value$Table;
 import org.eyeseetea.malariacare.database.utils.LocationMemory;
-import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.InitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
@@ -75,7 +75,7 @@ public class SplashScreenActivity extends Activity {
                 loginUseCase.execute(demoCrededentials);
             }
 
-            PopulateDB.initDataIfRequired(getAssets());
+            PopulateDB.initDataIfRequired(this);
         } catch (IOException exception) {
             Log.e("LoginActivity", "ERROR: DB not loaded");
         }

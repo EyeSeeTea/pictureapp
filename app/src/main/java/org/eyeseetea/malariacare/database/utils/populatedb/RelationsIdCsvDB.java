@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.database.utils.populatedb;
 
-import android.content.res.AssetManager;
+
+import android.content.Context;
 
 import com.opencsv.CSVReader;
 
@@ -28,12 +29,13 @@ import java.util.List;
  */
 
 public class RelationsIdCsvDB {
-    static HashMap<Long, Header> getHeaderFKRelationCsvDB(AssetManager assetManager)
+    static HashMap<Long, Header> getHeaderFKRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, Header> headerFK = new HashMap<>();
         List<Header> headers = Header.getAllHeaders();
         List<Long> csvIds = new ArrayList<>();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.HEADERS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(PopulateDB.HEADERS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -45,12 +47,13 @@ public class RelationsIdCsvDB {
         return headerFK;
     }
 
-    static HashMap<Long, Answer> getAnswerFKRelationCsvDB(AssetManager assetManager)
+    static HashMap<Long, Answer> getAnswerFKRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, Answer> answerFK = new HashMap<>();
         List<Answer> answers = Answer.getAllAnswers();
         List<Long> csvIds = new ArrayList<>();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.ANSWERS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(PopulateDB.ANSWERS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -61,12 +64,14 @@ public class RelationsIdCsvDB {
         }
         return answerFK;
     }
-    static HashMap<Long,Tab> getTabsIdRelationsCsvDB(AssetManager assetManager)
+
+    static HashMap<Long, Tab> getTabsIdRelationsCsvDB(Context context)
             throws IOException {
         HashMap<Long, Tab> tabFK = new HashMap<>();
         List<Tab> tabs = Tab.getAllTabs();
         List<Long> csvIds = new ArrayList<>();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.TABS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(PopulateDB.TABS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -78,12 +83,13 @@ public class RelationsIdCsvDB {
         return tabFK;
     }
 
-    static HashMap<Long,Program> getProgramIdRelationCsvDB(AssetManager assetManager)
+    static HashMap<Long, Program> getProgramIdRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, Program> programFK = new HashMap<>();
         List<Program> programs = Program.getAllPrograms();
         List<Long> csvIds = new ArrayList<>();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(PopulateDB.PROGRAMS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(PopulateDB.PROGRAMS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -96,13 +102,13 @@ public class RelationsIdCsvDB {
     }
 
     static HashMap<Long, QuestionRelation> getQuestionRelationIdRelationCsvDB(
-            AssetManager assetManager)
+            Context context)
             throws IOException {
         HashMap<Long, QuestionRelation> questionRelationsFK = new HashMap<>();
         List<QuestionRelation> questionRelations = QuestionRelation.listAll();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.QUESTION_RELATIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_RELATIONS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -114,13 +120,13 @@ public class RelationsIdCsvDB {
         return questionRelationsFK;
     }
 
-    static HashMap<Long, Question> getQuestionIdRelationCsvDB(AssetManager assetManager)
+    static HashMap<Long, Question> getQuestionIdRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, Question> questionFK = new HashMap<>();
         List<Question> questions = Question.getAllQuestions();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.QUESTIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.QUESTIONS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -132,13 +138,13 @@ public class RelationsIdCsvDB {
         return questionFK;
     }
 
-    static HashMap<Long, Option> getOptionIdRelationCsvDB(AssetManager assetManager)
+    static HashMap<Long, Option> getOptionIdRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, Option> optionFK = new HashMap<>();
         List<Option> options = Option.getAllOptions();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.OPTIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.OPTIONS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -150,13 +156,13 @@ public class RelationsIdCsvDB {
         return optionFK;
     }
 
-    static HashMap<Long, Match> getMatchIdRelationCsvDB(AssetManager assetManager)
+    static HashMap<Long, Match> getMatchIdRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, Match> matchesFK = new HashMap<>();
         List<Match> matches = Match.listAll();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.MATCHES)),
+                new InputStreamReader(context.openFileInput(PopulateDB.MATCHES)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -168,13 +174,13 @@ public class RelationsIdCsvDB {
         return matchesFK;
     }
 
-    static HashMap<Long, Organisation> getOrganisationIdRelationCsvDB(AssetManager assetManager)
+    static HashMap<Long, Organisation> getOrganisationIdRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, Organisation> organisationFK = new HashMap<>();
         List<Organisation> organisations = Organisation.getAllOrganisations();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.ORGANISATIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.ORGANISATIONS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -186,13 +192,13 @@ public class RelationsIdCsvDB {
         return organisationFK;
     }
 
-    static HashMap<Long, Drug> getDrugIdRelationCsvDB(AssetManager assetManager)
+    static HashMap<Long, Drug> getDrugIdRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, Drug> drugFK = new HashMap<>();
         List<Drug> drugs = Drug.getAllDrugs();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.DRUGS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.DRUGS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -204,13 +210,13 @@ public class RelationsIdCsvDB {
         return drugFK;
     }
 
-    static HashMap<Long, Treatment> getTreatmentIdRelationCsvDB(AssetManager assetManager)
+    static HashMap<Long, Treatment> getTreatmentIdRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, Treatment> treatmentFK = new HashMap<>();
         List<Treatment> treatments = Treatment.getAllTreatments();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.TREATMENT_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.TREATMENT_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
@@ -221,13 +227,14 @@ public class RelationsIdCsvDB {
         }
         return treatmentFK;
     }
-    static HashMap<Long, OptionAttribute> getOptionAttributeIdRelationCsvDB(AssetManager assetManager)
+
+    static HashMap<Long, OptionAttribute> getOptionAttributeIdRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, OptionAttribute> optionAttributeFK = new HashMap<>();
         List<OptionAttribute> optionAttributes = OptionAttribute.getAllOptionAttributes();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.OPTION_ATTRIBUTES_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.OPTION_ATTRIBUTES_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {

@@ -4,6 +4,8 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 
 public interface IAuthenticationManager {
+
+
     interface Callback<T> {
         void onSuccess(T result);
 
@@ -11,6 +13,8 @@ public interface IAuthenticationManager {
     }
 
     void login(Credentials credentials, Callback<UserAccount> callback);
+
+    void login(String url, Callback<UserAccount> callback);
 
     void logout(Callback<Void> callback);
 }

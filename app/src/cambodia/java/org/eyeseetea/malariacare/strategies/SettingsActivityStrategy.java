@@ -52,6 +52,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     }
 
 
+    @Override
     public boolean onPreferenceClick(final Preference preference) {
         if (!settingsActivity.getIntent().getBooleanExtra(SettingsActivity.IS_LOGIN_DONE, false)) {
 

@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.layout.listeners;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.preference.Preference;
 import android.util.Log;
@@ -32,7 +31,7 @@ public class LogoutAndLoginRequiredOnPreferenceClickListener implements
         return activity.onPreferenceClick(preference);
     }
 
-    public static void logout(final Activity activity) {
+    public void logout() {
         Log.d(TAG, "Logging out...");
         AuthenticationManager authenticationManager = new AuthenticationManager(activity);
         LogoutUseCase logoutUseCase = new LogoutUseCase(authenticationManager);

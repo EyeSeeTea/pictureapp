@@ -23,4 +23,6 @@ public abstract class ASettingsActivityStrategy {
     public abstract Preference.OnPreferenceClickListener getOnPreferenceClickListener();
 
     public abstract Preference.OnPreferenceChangeListener getOnPreferenceChangeListener();
+
+    public abstract boolean onPreferenceClick(final Preference preferenceScreen);
 }

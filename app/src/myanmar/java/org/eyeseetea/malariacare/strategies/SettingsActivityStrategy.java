@@ -52,14 +52,14 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         return null;
     }
 
+    @Override
     public boolean onPreferenceClick(final Preference preference) {
-
         new AlertDialog.Builder(settingsActivity)
                 .setTitle(settingsActivity.getString(R.string.app_logout))
                 .setMessage(settingsActivity.getString(R.string.settings_menu_logout_message))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
-                        LogoutAndLoginRequiredOnPreferenceClickListener.logout(settingsActivity);
+                        loginRequiredOnPreferenceClickListener.logout();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

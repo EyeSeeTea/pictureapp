@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 
+
 public class LoginUseCase extends ALoginUseCase {
     private IAuthenticationManager mAuthenticationManager;
 
@@ -16,42 +17,50 @@ public class LoginUseCase extends ALoginUseCase {
         mAuthenticationManager = authenticationManager;
     }
 
-
     @Override
-    public void execute(final Credentials credentials, final Callback callback) {
+    public void execute(final Credentials credentials, final Callback loginCallback) {
         mAuthenticationManager.login(credentials,
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
-                        mAuthenticationManager.logout(new IAuthenticationManager.Callback<Void>() {
-                            @Override
-                            public void onSuccess(Void result) {
-
-                                mAuthenticationManager.login(credentials.getServerURL(),
-                                        new IAuthenticationManager.Callback<UserAccount>() {
-
-                                            @Override
-                                            public void onSuccess(UserAccount userAccount) {
-                                                callback.onLoginSuccess();
-                                            }
-
-                                            @Override
-                                            public void onError(Throwable throwable) {
-                                                onErrorCallback(callback, throwable);
-                                            }
-                                        });
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-                                onErrorCallback(callback, throwable);
-                            }
-                        });
+                        logoutAndHardcodedLogin(credentials, loginCallback);
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
-                        onErrorCallback(callback, throwable);
+                        onErrorCallback(loginCallback, throwable);
+                    }
+                });
+    }
+
+    private void logoutAndHardcodedLogin(final Credentials credentials,
+            final Callback loginCallback) {
+        mAuthenticationManager.logout(new IAuthenticationManager.Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+
+                harcodedLogin(credentials, loginCallback);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                onErrorCallback(loginCallback, throwable);
+            }
+        });
+    }
+
+    private void harcodedLogin(Credentials credentials, final Callback loginCallback) {
+        mAuthenticationManager.login(credentials.getServerURL(),
+                new IAuthenticationManager.Callback<UserAccount>() {
+
+                    @Override
+                    public void onSuccess(UserAccount userAccount) {
+                        loginCallback.onLoginSuccess();
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        onErrorCallback(loginCallback, throwable);
                     }
                 });
     }

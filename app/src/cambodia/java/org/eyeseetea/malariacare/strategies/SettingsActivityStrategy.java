@@ -4,7 +4,7 @@ import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
 import org.eyeseetea.malariacare.SettingsActivity;
-import org.eyeseetea.malariacare.layout.listeners.LogoutAndLoginRequiredOnPreferenceClickListener;
+import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
@@ -13,13 +13,13 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
 
     private static final String TAG = ".SettingsStrategy";
-    LogoutAndLoginRequiredOnPreferenceClickListener loginRequiredOnPreferenceClickListener;
+    LoginRequiredOnPreferenceClickListener loginRequiredOnPreferenceClickListener;
 
     public SettingsActivityStrategy(SettingsActivity settingsActivity) {
         super(settingsActivity);
 
         loginRequiredOnPreferenceClickListener =
-                new LogoutAndLoginRequiredOnPreferenceClickListener(
+                new LoginRequiredOnPreferenceClickListener(
                         settingsActivity);
 
         pullRequiredOnPreferenceChangeListener = new PullRequiredOnPreferenceChangeListener();

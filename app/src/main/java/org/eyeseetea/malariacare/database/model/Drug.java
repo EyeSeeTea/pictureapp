@@ -27,7 +27,7 @@ public class Drug extends BaseModel {
     public Drug() {
     }
 
-    public Drug(long id_drug, String name, int dose, String question_code) {
+    public Drug(long id_drug, String name, String question_code) {
         this.id_drug = id_drug;
         this.name = name;
         this.question_code = question_code;

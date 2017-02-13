@@ -8,21 +8,21 @@ import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.model.DrugCombination;
 import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
 
-@Migration(version = 25, databaseName = AppDatabase.NAME)
-public class Migration25PutDoseDrugCombination extends BaseMigration {
+@Migration(version = 26, databaseName = AppDatabase.NAME)
+public class Migration26PutDoseDrugCombination extends BaseMigration {
     private static String TAG = ".Migration25";
 
-    private static Migration25PutDoseDrugCombination instance;
+    private static Migration26PutDoseDrugCombination instance;
     private boolean postMigrationRequired;
 
-    public Migration25PutDoseDrugCombination() {
+    public Migration26PutDoseDrugCombination() {
         instance = this;
     }
 
@@ -44,12 +44,13 @@ public class Migration25PutDoseDrugCombination extends BaseMigration {
         }
 
         //This operation wont be done again
-        instance.postMigrationRequired = true;
+        instance.postMigrationRequired = false;
     }
 
     @Override
     public void migrate(SQLiteDatabase database) {
-        MigrationTools.addColumn(database, Survey.class, "dose", "Real");
+        MigrationTools.addColumn(database, DrugCombination.class, "dose", "Real");
+        postMigrationRequired = true;
     }
 
     /**

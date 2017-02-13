@@ -4,7 +4,7 @@ import org.eyeseetea.malariacare.database.migrations.Migration15AddOptionAttribu
 import org.eyeseetea.malariacare.database.migrations.Migration23AddStockCsvs;
 import org.eyeseetea.malariacare.database.migrations.Migration23AddTreatmentCsvs;
 import org.eyeseetea.malariacare.database.migrations.Migration23ModifyValuesLastMigration;
-import org.eyeseetea.malariacare.database.migrations.Migration25PutDoseDrugCombination;
+import org.eyeseetea.malariacare.database.migrations.Migration26PutDoseDrugCombination;
 
 public class PostMigration {
 
@@ -13,6 +13,6 @@ public class PostMigration {
         Migration23ModifyValuesLastMigration.postMigrate();
         Migration23AddStockCsvs.postMigrate();
         Migration23AddTreatmentCsvs.postMigrate();
-        Migration25PutDoseDrugCombination.postMigrate();
+        Migration26PutDoseDrugCombination.postMigrate();
     }
 }

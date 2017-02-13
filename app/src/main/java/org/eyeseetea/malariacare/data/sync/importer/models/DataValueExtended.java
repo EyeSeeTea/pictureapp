@@ -125,4 +125,13 @@ public class DataValueExtended implements VisitableFromSDK {
     public void save() {
         dataValue.save();
     }
+
+    public static List<DataValueExtended> getExtendedList(
+            List<TrackedEntityDataValueFlow> dataValues) {
+        List<DataValueExtended> dataValueExtendeds = new ArrayList<>();
+        for (TrackedEntityDataValueFlow trackedEntityDataValueFlow : dataValues) {
+            dataValueExtendeds.add(new DataValueExtended(trackedEntityDataValueFlow));
+        }
+        return dataValueExtendeds;
+    }
 }

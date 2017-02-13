@@ -48,6 +48,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     Map<String, Object> appMapObjects;
     List<Survey> surveys;
     List<Value> values;
+    List<OrgUnit> orgUnits;
 
 
     public ConvertFromSDKVisitor() {
@@ -55,6 +56,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         appMapObjects = new HashMap();
         surveys = new ArrayList<>();
         values = new ArrayList<>();
+        orgUnits = new ArrayList<>();
     }
 
     public Map<String, Object> getAppMapObjects() {
@@ -67,6 +69,10 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     public List<Survey> getSurveys() {
         return surveys;
+    }
+
+    public List<OrgUnit> getOrgUnits() {
+        return orgUnits;
     }
 
     public void setSurveys(List<Survey> surveys) {
@@ -92,6 +98,8 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         appOrgUnit.setUid(sdkOrganisationUnitExtended.getId());
 
         appOrgUnit.save();
+
+        orgUnits.add(appOrgUnit);
 
         appMapObjects.put(sdkOrganisationUnitExtended.getId(), appOrgUnit);
     }

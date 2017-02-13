@@ -19,8 +19,8 @@
 
 package org.eyeseetea.malariacare.data.sync.importer;
 
-import static org.eyeseetea.malariacare.ProgressActivity.PULL_IS_ACTIVE;
-import static org.eyeseetea.malariacare.data.remote.SdkController.postProgress;
+import static org.eyeseetea.malariacare.domain.usecase.pull.PullStep.BUILDING_SURVEYS;
+import static org.eyeseetea.malariacare.domain.usecase.pull.PullStep.BUILDING_VALUES;
 
 import android.content.Context;
 import android.util.Log;
@@ -32,6 +32,8 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
@@ -39,13 +41,11 @@ import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
-import org.eyeseetea.malariacare.data.sync.importer.models.ProgramExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
-import org.hisp.dhis.client.sdk.models.program.ProgramType;
 
 import java.io.IOException;
 import java.util.List;
@@ -70,22 +70,23 @@ public class PullController implements IPullController {
 
             callback.onStep(PullStep.METADATA);
 
+            populateMetadataFromCsvs(isDemo);
+
             if (isDemo) {
-                populateMetadataFromCsvs(true);
                 callback.onComplete();
             } else {
                 mPullRemoteDataSource.pullMetadata(
                         new IDataSourceCallback<List<OrganisationUnit>>() {
-                    @Override
-                    public void onSuccess(List<OrganisationUnit> organisationUnits) {
-                        pullData(organisationUnits, callback);
-                    }
+                            @Override
+                            public void onSuccess(List<OrganisationUnit> organisationUnits) {
+                                pullData(organisationUnits, callback);
+                            }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                });
+                            @Override
+                            public void onError(Throwable throwable) {
+                                callback.onError(throwable);
+                            }
+                        });
             }
         } catch (Exception ex) {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());
@@ -114,7 +115,7 @@ public class PullController implements IPullController {
         }
     }
 
-    public static void convertOUinOptions() {
+    private void convertOUinOptions() {
         List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
         //remove older values, but not the especial "other" option
         for (Question question : questions) {
@@ -158,11 +159,6 @@ public class PullController implements IPullController {
                 PopulateDB.wipeDatabase();
 
                 convertFromSDK(callback);
-
-                //TODO jsanchez is neccesary?
-                //convertOUinOptions();
-
-                callback.onComplete();
             }
 
             @Override
@@ -176,18 +172,18 @@ public class PullController implements IPullController {
     private void convertFromSDK(final Callback callback) {
         Log.d(TAG, "Converting SDK into APP data");
 
-        callback.onStep(PullStep.CONVERT_METADATA);
-
         try {
-            convertMetaData();
+            convertMetaData(callback);
+            convertData(callback);
         } catch (Exception ex) {
             callback.onError(new PullConversionException());
         }
 
-        //convertDataValues(mConverter);
+
     }
 
-    private void convertMetaData() {
+    private void convertMetaData(final Callback callback) {
+        callback.onStep(PullStep.CONVERT_METADATA);
         Log.d(TAG, "Converting organisationUnits...");
 
         List<OrganisationUnitExtended> assignedOrganisationsUnits =
@@ -197,74 +193,108 @@ public class PullController implements IPullController {
         for (OrganisationUnitExtended assignedOrganisationsUnit : assignedOrganisationsUnits) {
             assignedOrganisationsUnit.accept(mConverter);
         }
+
+        //TODO jsanchez is neccesary?
+        //convertOUinOptions();
     }
 
-    /**
-     * Turns events and datavalues into
-     */
-    private void convertDataValues(ConvertFromSDKVisitor converter) {
+    private void convertData(final Callback callback) {
+        callback.onStep(PullStep.CONVERT_DATA);
+
         Program appProgram = Program.getFirstProgram();
         String orgUnitName = PreferencesState.getInstance().getOrgUnit();
 
-        postProgress(mContext.getString(R.string.progress_pull_surveys));
-        //XXX This is the right place to apply additional filters to data conversion (only
-        // predefined orgunit for instance)
+        List<OrganisationUnitExtended> assignedOrganisationsUnits =
+                OrganisationUnitExtended.getExtendedList(
+                        (SdkQueries.getAssignedOrganisationUnits()));
+
+        List<OrgUnit> orgUnits = mConverter.getOrgUnits();
+
         //For each unit
-        for (OrganisationUnitExtended organisationUnit : OrganisationUnitExtended.getExtendedList(
-                SdkQueries.getAssignedOrganisationUnits
-                        ())) {
+        for (OrgUnit orgUnit : orgUnits) {
 
             //Only events for the right ORGUNIT are loaded
-            if (organisationUnit.getLabel() == null || !organisationUnit.getLabel().equals(
+            if (!orgUnitName.isEmpty() &&
+                    orgUnit.getName() != null && !orgUnit.getName().equals(
                     orgUnitName)) {
                 continue;
             }
 
+            List<Program> programs = Program.getAllPrograms();
+
             //Each assigned program
-            for (ProgramExtended program :
-                    ProgramExtended.getExtendedList(SdkQueries.getProgramsForOrganisationUnit(
-                            organisationUnit.getId(), ProgramType.WITHOUT_REGISTRATION))) {
-
-                //Only events for the right PROGRAM are loaded
-                if (!appProgram.getUid().equals(program.getUid())) {
-                    continue;
-                }
-
+            for (Program program : programs) {
                 List<EventExtended> events = EventExtended.getExtendedList(
-                        SdkQueries.getEvents(organisationUnit.getId(),
-                                program.getUid()));
-                Log.i(TAG,
+                        SdkQueries.getEvents(orgUnit.getUid(), program.getUid()));
+                Log.d(TAG,
                         String.format("Converting surveys and values for orgUnit: %s | program: %s",
-                                organisationUnit.getLabel(), program.getDisplayName()));
-                // Visit all the events and save them in block
+                                orgUnit.getChildren(), program.getName()));
+
+                callback.onStep(BUILDING_SURVEYS);
+
                 int i = 0;
                 for (EventExtended event : events) {
-                    postProgress(mContext.getString(R.string.progress_pull_building_survey)
+                    Log.d(TAG, mContext.getString(R.string.progress_pull_building_survey)
                             + String.format(" %s/%s", i++, events.size()));
-                    if (!PULL_IS_ACTIVE) return;
 
-                    //Only last X months
                     if (event.isTooOld()) continue;
-                    event.accept(converter);
+                    event.accept(mConverter);
                 }
-                SdkQueries.saveBatch(converter.getSurveys());
 
-                // Visit all the Values and save them in block
+                callback.onStep(BUILDING_VALUES);
+
                 i = 0;
                 for (EventExtended event : events) {
-                    //Visit its values
-                    for (DataValueExtended dataValueExtended : event.getDataValues()) {
+
+                    List<DataValueExtended> dataValues = DataValueExtended.getExtendedList(
+                            SdkQueries.getDataValues(event.getUid()));
+
+                    for (DataValueExtended dataValueExtended : dataValues) {
                         if (++i % 50 == 0) {
-                            postProgress(mContext.getString(R.string.progress_pull_building_value)
+                            Log.d(TAG, mContext.getString(R.string.progress_pull_building_value)
                                     + String.format(" %s", i));
                         }
-                        dataValueExtended.accept(converter);
+                        dataValueExtended.accept(mConverter);
                     }
                 }
-                SdkQueries.saveBatch(converter.getValues());
             }
+
         }
 
+        List<Survey> surveys = mConverter.getSurveys();
+
+        saveConvertedSurveys(callback, surveys);
+
+    }
+
+    private void saveConvertedSurveys(final Callback callback, List<Survey> surveys) {
+        Survey.saveAll(surveys, new IDataSourceCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                List<Value> values = mConverter.getValues();
+
+                saveConvertedValues(callback, values);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(new PullConversionException(throwable));
+            }
+        });
+    }
+
+    private void saveConvertedValues(final Callback callback, List<Value> values) {
+        Value.saveAll(values, new IDataSourceCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                callback.onComplete();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(new PullConversionException(throwable));
+            }
+        });
     }
 
     //TODO jsanchez

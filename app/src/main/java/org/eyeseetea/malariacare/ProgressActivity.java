@@ -46,7 +46,7 @@ public class ProgressActivity extends Activity {
     /**
      * Num of expected steps while pulling
      */
-    private static final int MAX_PULL_STEPS = 7;
+    private static final int MAX_PULL_STEPS = 5;
     /**
      * Used for control new steps
      */
@@ -161,6 +161,12 @@ public class ProgressActivity extends Activity {
                         break;
                     case CONVERT_METADATA:
                         showProgressText(R.string.progress_pull_preparing_orgs);
+                    case CONVERT_DATA:
+                        showProgressText(R.string.progress_pull_surveys);
+                    case BUILDING_SURVEYS:
+                        showProgressText(R.string.progress_pull_building_survey);
+                    case BUILDING_VALUES:
+                        showProgressText(R.string.progress_pull_building_value);
                 }
             }
 

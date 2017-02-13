@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.domain.boundary;
 
+import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 
 public interface IPullController {
@@ -10,5 +11,5 @@ public interface IPullController {
         void onError(Throwable throwable);
     }
 
-    void pull(boolean isDemo, Callback callback);
+    void pull(PullFilters pullFilters, Callback callback);
 }

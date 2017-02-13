@@ -24,8 +24,8 @@ public class PullUseCase {
         mPullController = pullController;
     }
 
-    public void execute(boolean isDemo, final Callback callback) {
-        mPullController.pull(isDemo, new IPullController.Callback() {
+    public void execute(PullFilters pullFilters, final Callback callback) {
+        mPullController.pull(pullFilters, new IPullController.Callback() {
             @Override
             public void onComplete() {
                 //TODO jsanchez create OrgUnitRepository and when pull finish

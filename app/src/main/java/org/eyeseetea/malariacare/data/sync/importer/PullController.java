@@ -43,6 +43,7 @@ import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
@@ -64,22 +65,22 @@ public class PullController implements IPullController {
         mConverter = new ConvertFromSDKVisitor();
     }
 
-    public void pull(boolean isDemo, final Callback callback) {
+    public void pull(final PullFilters pullFilters, final Callback callback) {
         Log.d(TAG, "Starting PULL process...");
         try {
 
             callback.onStep(PullStep.METADATA);
 
-            populateMetadataFromCsvs(isDemo);
+            populateMetadataFromCsvs(pullFilters.isDemo());
 
-            if (isDemo) {
+            if (pullFilters.isDemo()) {
                 callback.onComplete();
             } else {
                 mPullRemoteDataSource.pullMetadata(
                         new IDataSourceCallback<List<OrganisationUnit>>() {
                             @Override
                             public void onSuccess(List<OrganisationUnit> organisationUnits) {
-                                pullData(organisationUnits, callback);
+                                pullData(pullFilters, organisationUnits, callback);
                             }
 
                             @Override
@@ -152,8 +153,10 @@ public class PullController implements IPullController {
         }
     }
 
-    private void pullData(List<OrganisationUnit> organisationUnits, final Callback callback) {
-        mPullRemoteDataSource.pullData(organisationUnits, new IDataSourceCallback<List<Event>>() {
+    private void pullData(PullFilters pullFilters, List<OrganisationUnit> organisationUnits,
+            final Callback callback) {
+        mPullRemoteDataSource.pullData(pullFilters, organisationUnits,
+                new IDataSourceCallback<List<Event>>() {
             @Override
             public void onSuccess(List<Event> result) {
                 PopulateDB.wipeDatabase();

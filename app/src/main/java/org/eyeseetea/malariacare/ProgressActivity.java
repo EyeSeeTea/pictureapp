@@ -35,6 +35,7 @@ import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
@@ -146,8 +147,10 @@ public class ProgressActivity extends Activity {
 
     private void launchPull() {
 
+        PullFilters pullFilters = new PullFilters();
+        pullFilters.setDemo(false);
 
-        mPullUseCase.execute(false, new PullUseCase.Callback() {
+        mPullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
                 showAndMoveOn();

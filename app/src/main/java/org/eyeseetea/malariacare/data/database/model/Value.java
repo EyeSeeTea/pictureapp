@@ -309,7 +309,7 @@ public class Value extends BaseModel {
         for (Value value : values) {
             value.setSurvey(value.getSurvey());
         }
-        
+
         FlowManager.getDatabase(AppDatabase.class)
                 .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
                         new ProcessModelTransaction.ProcessModel<Value>() {

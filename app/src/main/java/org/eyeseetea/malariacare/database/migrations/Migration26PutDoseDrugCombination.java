@@ -8,12 +8,14 @@ import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.database.model.Drug;
 import org.eyeseetea.malariacare.database.model.DrugCombination;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
+import java.util.List;
 
 @Migration(version = 26, databaseName = AppDatabase.NAME)
 public class Migration26PutDoseDrugCombination extends BaseMigration {
@@ -35,6 +37,14 @@ public class Migration26PutDoseDrugCombination extends BaseMigration {
         //Data? Add new default data
         if (instance.hasData()) {
             try {
+                List<Drug> drugs = Drug.getAllDrugs();
+                for (Drug drug : drugs) {
+                    drug.delete();
+                }
+                List<DrugCombination> drugCombinations=DrugCombination.getAllDrugCombination();
+                for(DrugCombination drugCombination:drugCombinations){
+                    drugCombination.delete();
+                }
                 Context context = PreferencesState.getInstance().getContext();
                 UpdateDB.updateDrugs(context);
                 UpdateDB.updateDrugCombination(context);

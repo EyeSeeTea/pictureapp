@@ -126,7 +126,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     /**
      * Added to save the dose by a quetion id when questions are dynamic treatment questions
      */
-    HashMap<Long, Integer> doseByQuestion;
+    HashMap<Long, Float> doseByQuestion;
     /**
      * Flag that indicates if the current survey in session is already sent or not (it affects
      * readonly settings)

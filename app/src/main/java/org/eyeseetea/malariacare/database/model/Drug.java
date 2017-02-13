@@ -22,8 +22,6 @@ public class Drug extends BaseModel {
     @Column
     String name;
     @Column
-    int dose;
-    @Column
     String question_code;
 
     public Drug() {
@@ -32,7 +30,6 @@ public class Drug extends BaseModel {
     public Drug(long id_drug, String name, int dose, String question_code) {
         this.id_drug = id_drug;
         this.name = name;
-        this.dose = dose;
         this.question_code = question_code;
     }
 
@@ -63,14 +60,6 @@ public class Drug extends BaseModel {
         this.name = name;
     }
 
-    public int getDose() {
-        return dose;
-    }
-
-    public void setDose(int dose) {
-        this.dose = dose;
-    }
-
     public String getQuestion_code() {
         return question_code;
     }
@@ -87,7 +76,6 @@ public class Drug extends BaseModel {
         Drug drug = (Drug) o;
 
         if (id_drug != drug.id_drug) return false;
-        if (dose != drug.dose) return false;
         if (name != null ? !name.equals(drug.name) : drug.name != null) return false;
         return question_code != null ? question_code.equals(drug.question_code)
                 : drug.question_code == null;
@@ -98,7 +86,6 @@ public class Drug extends BaseModel {
     public int hashCode() {
         int result = (int) (id_drug ^ (id_drug >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + dose;
         result = 31 * result + (question_code != null ? question_code.hashCode() : 0);
         return result;
     }
@@ -108,10 +95,7 @@ public class Drug extends BaseModel {
         return "Drug{" +
                 "id_drug=" + id_drug +
                 ", name='" + name + '\'' +
-                ", dose=" + dose +
                 ", question_code='" + question_code + '\'' +
                 '}';
     }
-
-
 }

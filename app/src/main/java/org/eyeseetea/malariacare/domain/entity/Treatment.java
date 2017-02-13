@@ -6,6 +6,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Answer;
 import org.eyeseetea.malariacare.database.model.Drug;
+import org.eyeseetea.malariacare.database.model.DrugCombination;
 import org.eyeseetea.malariacare.database.model.Header;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.Option;
@@ -29,7 +30,7 @@ public class Treatment {
     private Survey mStockSurvey;
     private List<Question> mQuestions;
     private org.eyeseetea.malariacare.database.model.Treatment mTreatment;
-    private HashMap<Long, Integer> doseByQuestion;
+    private HashMap<Long, Float> doseByQuestion;
 
     public Treatment(Survey malariaSurvey, Survey stockSurvey) {
         mMalariaSurvey = malariaSurvey;
@@ -54,7 +55,7 @@ public class Treatment {
         return mQuestions;
     }
 
-    public HashMap<Long, Integer> getDoseByQuestion() {
+    public HashMap<Long, Float> getDoseByQuestion() {
         return doseByQuestion;
     }
 
@@ -153,11 +154,12 @@ public class Treatment {
             Question question = Question.findByUID(drug.getQuestion_code());
             if (question != null) {
                 if (isPq(question)) {
-                    question.setForm_name(getPqTitleDose(drug.getDose()));
+                    question.setForm_name(getPqTitleDose(DrugCombination.getDose(treatment, drug)));
                 } else if (isCq(question)) {
-                    question.setForm_name(getCqTitleDose(drug.getDose()));
+                    question.setForm_name(getCqTitleDose(DrugCombination.getDose(treatment, drug)));
                 }
-                doseByQuestion.put(question.getId_question(), drug.getDose());
+                doseByQuestion.put(question.getId_question(),
+                        DrugCombination.getDose(treatment, drug));
                 questions.add(question);
             }
             if (!questions.isEmpty()) {
@@ -304,15 +306,17 @@ public class Treatment {
         return PreferencesState.getInstance().getContext();
     }
 
-    private String getPqTitleDose(int dose) {
+    private String getPqTitleDose(float dose) {
         return getTitleDose(dose, "Pq");
     }
 
-    private String getCqTitleDose(int dose) {
+    private String getCqTitleDose(float dose) {
         return getTitleDose(dose, "Cq");
     }
 
-    private String getTitleDose(int dose, String drug) {
-        return String.format("drugs_%d_of_%s_review_title", dose, drug);
+    private String getTitleDose(float dose, String drug) {
+//        return String.format("drugs_%d_of_%s_review_title", dose, drug);
+//        TODO return internationaliced String
+        return dose + " of " + drug;
     }
 }

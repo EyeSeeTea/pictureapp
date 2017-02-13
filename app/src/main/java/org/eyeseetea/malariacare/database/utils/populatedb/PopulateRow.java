@@ -175,6 +175,7 @@ public class PopulateRow {
         }
         drugCombination.setDrug(drugsFK.get(Long.parseLong(line[1])));
         drugCombination.setTreatment(treatmentFK.get(Long.parseLong(line[2])));
+        drugCombination.setDose(Float.parseFloat(line[3]));
         return drugCombination;
     }
 
@@ -218,8 +219,7 @@ public class PopulateRow {
             drug = new Drug();
         }
         drug.setName(line[1]);
-        drug.setDose(Integer.parseInt(line[2]));
-        drug.setQuestion_code(line[3]);
+        drug.setQuestion_code(line[2]);
         return drug;
     }
 

@@ -353,10 +353,6 @@ public class SettingsActivity extends PreferenceActivity implements
         return callerActivity;
     }
 
-    public boolean onPreferenceClick(Preference preference) {
-        return mSettingsActivityStrategy.onPreferenceClick(preference);
-    }
-
     /**
      * This fragment shows general preferences only. It is used when the
      * activity is showing a two-pane settings UI.

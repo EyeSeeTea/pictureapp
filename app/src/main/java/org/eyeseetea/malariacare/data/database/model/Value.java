@@ -304,6 +304,12 @@ public class Value extends BaseModel {
     }
 
     public static void saveAll(List<Value> values, final IDataSourceCallback<Void> callback) {
+
+        //Refresh survey for assign SurveyId
+        for (Value value : values) {
+            value.setSurvey(value.getSurvey());
+        }
+        
         FlowManager.getDatabase(AppDatabase.class)
                 .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
                         new ProcessModelTransaction.ProcessModel<Value>() {

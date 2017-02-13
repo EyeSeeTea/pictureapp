@@ -194,23 +194,16 @@ public class PullController implements IPullController {
             assignedOrganisationsUnit.accept(mConverter);
         }
 
-        //TODO jsanchez is neccesary?
-        //convertOUinOptions();
+        convertOUinOptions();
     }
 
     private void convertData(final Callback callback) {
         callback.onStep(PullStep.CONVERT_DATA);
 
-        Program appProgram = Program.getFirstProgram();
         String orgUnitName = PreferencesState.getInstance().getOrgUnit();
-
-        List<OrganisationUnitExtended> assignedOrganisationsUnits =
-                OrganisationUnitExtended.getExtendedList(
-                        (SdkQueries.getAssignedOrganisationUnits()));
 
         List<OrgUnit> orgUnits = mConverter.getOrgUnits();
 
-        //For each unit
         for (OrgUnit orgUnit : orgUnits) {
 
             //Only events for the right ORGUNIT are loaded
@@ -222,9 +215,9 @@ public class PullController implements IPullController {
 
             List<Program> programs = Program.getAllPrograms();
 
-            //Each assigned program
             for (Program program : programs) {
                 List<EventExtended> events = EventExtended.getExtendedList(
+
                         SdkQueries.getEvents(orgUnit.getUid(), program.getUid()));
                 Log.d(TAG,
                         String.format("Converting surveys and values for orgUnit: %s | program: %s",
@@ -237,7 +230,6 @@ public class PullController implements IPullController {
                     Log.d(TAG, mContext.getString(R.string.progress_pull_building_survey)
                             + String.format(" %s/%s", i++, events.size()));
 
-                    if (event.isTooOld()) continue;
                     event.accept(mConverter);
                 }
 
@@ -261,19 +253,17 @@ public class PullController implements IPullController {
 
         }
 
-        List<Survey> surveys = mConverter.getSurveys();
-
-        saveConvertedSurveys(callback, surveys);
+        saveConvertedSurveys(callback);
 
     }
 
-    private void saveConvertedSurveys(final Callback callback, List<Survey> surveys) {
+    private void saveConvertedSurveys(final Callback callback) {
+        List<Survey> surveys = mConverter.getSurveys();
+
         Survey.saveAll(surveys, new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
-                List<Value> values = mConverter.getValues();
-
-                saveConvertedValues(callback, values);
+                saveConvertedValues(callback);
             }
 
             @Override
@@ -283,7 +273,10 @@ public class PullController implements IPullController {
         });
     }
 
-    private void saveConvertedValues(final Callback callback, List<Value> values) {
+    private void saveConvertedValues(final Callback callback) {
+
+        List<Value> values = mConverter.getValues();
+
         Value.saveAll(values, new IDataSourceCallback<Void>() {
             @Override
             public void onSuccess(Void result) {

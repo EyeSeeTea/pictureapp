@@ -30,7 +30,6 @@ import org.joda.time.DateTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +40,6 @@ public class EventExtended implements VisitableFromSDK {
 
     public final static String COMPLETION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     public final static String AMERICAN_DATE_FORMAT = "yyyy-MM-dd";
-    public static final int MAX_MONTHS_LOADED = -6;
     private final static String TAG = ".EventExtended";
 
 
@@ -147,15 +145,6 @@ public class EventExtended implements VisitableFromSDK {
                     e.getLocalizedMessage()));
             return null;
         }
-    }
-
-    public boolean isTooOld() {
-        Date eventDate = getEventDate();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, MAX_MONTHS_LOADED);
-        return eventDate.compareTo(calendar.getTime()) < 0;
-
     }
 
     public List<DataValueExtended> getDataValues() {

@@ -22,6 +22,12 @@ public abstract class ADashboardActivityStrategy {
 
     public abstract void newSurvey(Activity activity);
 
+    public abstract void sendSurvey();
+
+    public abstract boolean beforeExit(boolean isBackPressed);
+
+    public abstract void completeSurvey();
+
     public abstract boolean isHistoricNewReceiptBalanceFragment(Activity activity);
 
     public void prepareLocationListener(Activity activity, Survey survey) {

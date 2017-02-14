@@ -17,7 +17,7 @@ public class UsedTodayRowBuilder extends CounterRowBuilder {
 
 
     @Override
-    protected float incrementCount(SurveyStock survey, float newValue) {
+    protected int incrementCount(SurveyStock survey, int newValue) {
         return survey.isExpenseSurvey() && isTodaySurvey(survey) ? newValue : 0;
     }
 

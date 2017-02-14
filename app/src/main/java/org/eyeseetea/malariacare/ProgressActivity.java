@@ -36,6 +36,7 @@ import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
+import org.eyeseetea.malariacare.views.FontUtils;
 import org.hisp.dhis.android.sdk.controllers.DhisService;
 import org.hisp.dhis.android.sdk.events.UiEvent;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
@@ -62,6 +63,7 @@ public class ProgressActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FontUtils.applyFontStyleByPreference(getResources(), getTheme());
         setContentView(R.layout.activity_progress);
         PULL_CANCEL = false;
         PULL_IS_ACTIVE = true;

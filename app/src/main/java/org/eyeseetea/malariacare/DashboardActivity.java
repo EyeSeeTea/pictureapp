@@ -44,7 +44,6 @@ import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
 import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
@@ -537,26 +536,7 @@ public class DashboardActivity extends BaseActivity {
 
 
     public void beforeExit() {
-        Survey malariaSurvey = Session.getMalariaSurvey();
-        Survey stockSurvey = Session.getStockSurvey();
-        if (malariaSurvey != null) {
-            boolean isMalariaInProgress = malariaSurvey.isInProgress();
-            boolean isStockSurveyInProgress = stockSurvey.isInProgress();
-            malariaSurvey.getValuesFromDB();
-            stockSurvey.getValuesFromDB();
-            //Exit + InProgress -> delete
-            if (isBackPressed && (isMalariaInProgress || isStockSurveyInProgress)) {
-                if (isMalariaInProgress) {
-                    Session.setMalariaSurvey(null);
-                    malariaSurvey.delete();
-                }
-                if (isStockSurveyInProgress) {
-                    Session.setStockSurvey(null);
-                    stockSurvey.delete();
-                }
-                isBackPressed = false;
-            }
-        }
+        isBackPressed = mDashboardActivityStrategy.beforeExit(isBackPressed);
     }
 
     /**
@@ -584,9 +564,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void sendSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
-        Session.getStockSurvey().complete();
-        new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
+        mDashboardActivityStrategy.sendSurvey();
         closeSurveyFragment();
     }
 
@@ -693,6 +671,11 @@ public class DashboardActivity extends BaseActivity {
 
     public boolean isLoadingReview() {
         return isLoadingReview;
+    }
+
+    public void completeSurvey() {
+        mDashboardActivityStrategy.completeSurvey();
+        closeSurveyFragment();
     }
 
     /**

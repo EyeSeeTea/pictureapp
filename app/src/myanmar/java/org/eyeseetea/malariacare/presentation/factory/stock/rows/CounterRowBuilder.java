@@ -35,13 +35,13 @@ public abstract class CounterRowBuilder extends StockRowBuilder {
     }
 
     @Override
-    protected Object updateColumn(Object currentValue, float newValue, SurveyStock surveyStock) {
-        Float currentCount = (Float) currentValue;
-        return Float.valueOf(currentCount + incrementCount(surveyStock, newValue));
+    protected Object updateColumn(Object currentValue, int newValue, SurveyStock surveyStock) {
+        int currentCount = (int) currentValue;
+        return currentCount + incrementCount(surveyStock, newValue);
     }
 
     /**
      * Each counterRow fills this function to evaluate if the survey increments the counter or not
      */
-    protected abstract float incrementCount(SurveyStock survey, float newValue);
+    protected abstract int incrementCount(SurveyStock survey, int newValue);
 }

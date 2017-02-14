@@ -20,13 +20,13 @@ public class ReceiptsRowBuildder extends CounterRowBuilder {
     }
 
     @Override
-    protected float incrementCount(SurveyStock surveyStock, float newValue) {
+    protected int incrementCount(SurveyStock surveyStock, int newValue) {
         Survey survey = surveyStock.getSurvey();
         Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
         if ((maxBalanceDate == null || Utils.dateGreaterOrEqualsThanDate(maxBalanceDate,
                 survey.getEventDate())) && survey.getType().equals(Constants.SURVEY_RECEIPT)) {
             return newValue;
         }
-        return 0f;
+        return 0;
     }
 }

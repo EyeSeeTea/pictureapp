@@ -38,7 +38,7 @@ public class DrugsRowBuilder extends StockRowBuilder {
 
 
     @Override
-    protected Object updateColumn(Object currentValue, float newValue, SurveyStock surveyStock) {
+    protected Object updateColumn(Object currentValue, int newValue, SurveyStock surveyStock) {
         return null;
     }
 

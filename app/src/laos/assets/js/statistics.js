@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
  */
-function Monitor() {
+function Statistics() {
     //Map of i18n messages
     this.messages = {};
 
@@ -28,7 +28,7 @@ function Monitor() {
 }
 
 //Update timeUnit dinamically
-Monitor.prototype.updateTimeUnit = function(sel){
+Statistics.prototype.updateTimeUnit = function(sel){
     //Update current timeUnit
     this.timeUnit = sel.value;
     //Reload tables
@@ -36,7 +36,7 @@ Monitor.prototype.updateTimeUnit = function(sel){
 };
 
 //Updates messages map
-Monitor.prototype.updateMessages = function(msg) {
+Statistics.prototype.updateMessages = function(msg) {
     this.messages = msg;
 
     //Replace dom element values with the right ones
@@ -51,7 +51,7 @@ Monitor.prototype.updateMessages = function(msg) {
 };
 
 //Add new table
-Monitor.prototype.addTable = function(title) {
+Statistics.prototype.addTable = function(title) {
     //Table has already been added
     if (this.tables[title]) {
         return;
@@ -65,7 +65,7 @@ Monitor.prototype.addTable = function(title) {
 };
 
 //Add new table
-Monitor.prototype.addRow = function(title,row) {
+Statistics.prototype.addRow = function(title,row) {
     var table=this.tables[title];
     //Table has already been added
     if (!table) {
@@ -76,7 +76,7 @@ Monitor.prototype.addRow = function(title,row) {
 };
 
 //Reloads tables from data according to current timeUnit
-Monitor.prototype.drawTables = function(){
+Statistics.prototype.drawTables = function(){
     document.getElementById("statsContainer").innerHTML="";
 
     //Loop over tables and repaint
@@ -88,7 +88,7 @@ Monitor.prototype.drawTables = function(){
 };
 
 //Draws table into page
-Monitor.prototype.drawTable = function(title){
+Statistics.prototype.drawTable = function(title){
     var table=this.tables[title];
     //Table has already been added
     if (!table) {
@@ -108,7 +108,7 @@ Monitor.prototype.drawTable = function(title){
 };
 
 //Adds the table template to the DOM
-Monitor.prototype.drawTableContainer = function (table) {
+Statistics.prototype.drawTableContainer = function (table) {
     //tableHashCode will generate a unique suffix for dom ids
     var tableHashCode = table.title.hashCode();
 
@@ -124,7 +124,7 @@ Monitor.prototype.drawTableContainer = function (table) {
 };
 
 //Builds tr markup for each table row
-Monitor.prototype.buildRow = function (tableHashCode, row){
+Statistics.prototype.buildRow = function (tableHashCode, row){
     var rowHtml="<tr>"
     for(var i=0;i<row.columnClasses.length;i++){
         rowHtml=rowHtml+this.buildColumn(row,i);
@@ -134,7 +134,7 @@ Monitor.prototype.buildRow = function (tableHashCode, row){
 };
 
 //Builds td markup for each table row
-Monitor.prototype.buildColumn = function (row, i){
+Statistics.prototype.buildColumn = function (row, i){
     var columnHtml = "<td class='"+row.columnClasses[i]+"'>"
     columnHtml = columnHtml + row.columnData[this.timeUnit][i];
     columnHtml = columnHtml+"</td>";
@@ -153,4 +153,4 @@ String.prototype.hashCode = function() {
   return hash;
 };
 
-var monitor = new Monitor();
+var statistics = new Statistics();

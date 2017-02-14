@@ -140,6 +140,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private SwipeTouchListener swipeTouchListener;
     private boolean mReviewMode = false;
+    private boolean isBackward = true;
 
     public DynamicTabAdapter(Tab tab, Context context, boolean reviewMode) {
         mReviewMode = reviewMode;
@@ -164,12 +165,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             }
         }
 
-        int totalPages = navigationController.getCurrentQuestion().getTotalQuestions();
-        if (readOnly) {
+        int totalPages = 0;
             if (Session.getMalariaSurvey() != null) {
                 totalPages = Session.getMalariaSurvey().getMaxTotalPages();
             }
+        if (totalPages == 0) {
+            totalPages = navigationController.getCurrentQuestion().getTotalQuestions();
         }
+
         navigationController.setTotalPages(totalPages);
         isClicked = false;
 
@@ -259,7 +262,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Question counterQuestion = question.findCounterByOption(selectedOption);
         if (counterQuestion == null) {
             saveOptionValue(view, selectedOption, question, moveToNextQuestion);
-        } else {
+        } else if (!(view instanceof ImageRadioButtonSingleQuestionView)) {
             showConfirmCounter(view, selectedOption, question, counterQuestion);
         }
     }
@@ -278,10 +281,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     public void saveOptionValue(View view, Option selectedOption, Question question,
             boolean moveToNextQuestion) {
+        Option answeredOption = ReadWriteDB.getOptionAnsweredFromDB(question);
         Value value = question.getValueBySession();
 
-        if (value != null && !readOnly) {
+        if (goingBackwardAndModifiedValues(value, answeredOption, selectedOption)) {
             navigationController.setTotalPages(question.getTotalQuestions());
+            isBackward = false;
         }
 
         ReadWriteDB.saveValuesDDL(question, selectedOption, value);
@@ -297,6 +302,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } else {
             showOrHideChildren(question);
         }
+    }
+
+    private boolean goingBackwardAndModifiedValues(Value value, Option answeredOption,
+            Option selectedOption) {
+        return isBackward && value != null && !readOnly && (answeredOption == null
+                || !answeredOption.getId_option().equals(selectedOption.getId_option()));
     }
 
     private void showConfirmCounter(final View view, final Option selectedOption,
@@ -489,18 +500,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         TableRow tableRow;
         IQuestionViewFactory questionViewFactory;
 
-        if (Tab.isMultiQuestionTab(tabType) || Tab.isDynamicTreatmentTab(tabType)) {
-            questionViewFactory = new MultiQuestionViewFactory();
-        } else {
-            questionViewFactory = new SingleQuestionViewFactory();
-        }
+        questionViewFactory = (Tab.isMultiQuestionTab(tabType) || Tab.isDynamicTreatmentTab(
+                tabType)) ? new MultiQuestionViewFactory() : new SingleQuestionViewFactory();
 
         // Se get the value from Session
         int visibility = View.GONE;
 
-        Survey survey = (screenQuestion.isStockQuestion() || screenQuestion.isDynamicStockQuestion())
-                ? Session.getStockSurvey()
-                : Session.getMalariaSurvey();
+        Survey survey =
+                (screenQuestion.isStockQuestion() || screenQuestion.isDynamicStockQuestion())
+                        ? Session.getStockSurvey()
+                        : Session.getMalariaSurvey();
 
         if (!screenQuestion.isHiddenBySurveyAndHeader(survey)
                 || !Tab.isMultiQuestionTab(tabType)) {
@@ -727,15 +736,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
                             Question counterQuestion = question.findCounterByOption(
                                     selectedOption);
-                            if (counterQuestion == null || (mReviewMode
+                            if ((mReviewMode
                                     && isCounterValueEqualToMax(question, selectedOption))) {
                                 saveOptionValue(selectedOptionView,
                                         selectedOptionView.getOption(),
                                         question, true);
-                            } else {
+                            } else if (counterQuestion != null) {
                                 showConfirmCounter(selectedOptionView,
                                         selectedOptionView.getOption(),
                                         question, counterQuestion);
+                            } else {
+                                finishOrNext();
                             }
                         } else {
                             isClicked = false;
@@ -989,9 +1000,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         hideKeyboard(PreferencesState.getInstance().getContext());
-                        Session.getMalariaSurvey().updateSurveyStatus();
-                        Session.getStockSurvey().complete();
-                        DashboardActivity.dashboardActivity.closeSurveyFragment();
+                        DashboardActivity.dashboardActivity.completeSurvey();
                         isClicked = false;
                     }
                 });
@@ -1032,12 +1041,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         hideKeyboard(PreferencesState.getInstance().getContext());
 
         question = navigationController.getCurrentQuestion();
-        value = question.getValueBySession();
 
-        //set new page number if the value is null
-        if (value == null && !readOnly) {
-            navigationController.setTotalPages(
-                    navigationController.getCurrentQuestion().getTotalQuestions());
+        if (value != null && !readOnly
+                && navigationController.getCurrentTotalPages() < question.getTotalQuestions()) {
+            navigationController.setTotalPages(question.getTotalQuestions());
         }
         navigationController.isMovingToForward = false;
         isClicked = false;
@@ -1051,6 +1058,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             return;
         }
         navigationController.previous();
+        isBackward = navigationController.getCurrentTotalPages()
+                > navigationController.getCurrentQuestion().getTotalQuestions();
         notifyDataSetChanged();
         isClicked = false;
     }

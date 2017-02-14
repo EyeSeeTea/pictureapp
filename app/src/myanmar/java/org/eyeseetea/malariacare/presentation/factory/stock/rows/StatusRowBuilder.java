@@ -48,12 +48,12 @@ public class StatusRowBuilder extends StockRowBuilder {
     }
 
     @Override
-    protected Object updateColumn(Object currentValue, float newValue, SurveyStock surveyStock) {
+    protected Object updateColumn(Object currentValue, int newValue, SurveyStock surveyStock) {
         return "";
     }
 
     @Override
-    protected Object updateColumn(Object oldValue, float surveyValue, SurveyStock surveyStock,
+    protected Object updateColumn(Object oldValue, int surveyValue, SurveyStock surveyStock,
             int position) {
         Survey survey = surveyStock.getSurvey();
         Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);

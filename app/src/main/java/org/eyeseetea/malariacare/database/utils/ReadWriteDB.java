@@ -67,6 +67,19 @@ public class ReadWriteDB {
         return option;
     }
 
+    public static Option getOptionAnsweredFromDB(Question question) {
+        if (question != null) {
+            Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
+                    : Session.getMalariaSurvey());
+
+            Value value = Value.findValue(question.getId_question(), survey);
+            if (value != null) {
+                return Option.findById(Float.valueOf(value.getId_option()));
+            }
+        }
+        return null;
+    }
+
     public static void saveValuesDDL(Question question, Option option, Value value) {
         //No option, nothing to save
         if (option == null) {

@@ -20,7 +20,7 @@ public class AvailableRowBuilder extends CounterRowBuilder {
     }
 
     @Override
-    protected float incrementCount(SurveyStock surveyStock, float newValue) {
+    protected int incrementCount(SurveyStock surveyStock, int newValue) {
         Survey survey = surveyStock.getSurvey();
         Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
         if (maxBalanceDate == null || Utils.dateGreaterOrEqualsThanDate(maxBalanceDate,

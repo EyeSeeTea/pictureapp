@@ -17,4 +17,9 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
         return output != Constants.SWITCH_BUTTON && output != Constants.QUESTION_LABEL
                 && output != Constants.RADIO_GROUP_HORIZONTAL;
     }
+
+    @Override
+    public void initSurveys(boolean readOnly) {
+
+    }
 }

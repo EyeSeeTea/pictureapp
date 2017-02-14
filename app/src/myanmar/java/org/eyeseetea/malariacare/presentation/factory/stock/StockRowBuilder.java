@@ -89,9 +89,10 @@ public abstract class StockRowBuilder {
      *
      * @return New value for the same column
      */
-    protected abstract Object updateColumn(Object currentValue, float newValue, SurveyStock surveyStock);
+    protected abstract Object updateColumn(Object currentValue, int newValue,
+            SurveyStock surveyStock);
 
-    protected Object updateColumn(Object oldValue, float surveyValue,
+    protected Object updateColumn(Object oldValue, int surveyValue,
             SurveyStock surveyStock,
             int position) {
         return null;
@@ -101,7 +102,7 @@ public abstract class StockRowBuilder {
      * Default value for each column
      */
     protected Object defaultValueColumn() {
-        return 0f;
+        return (int) 0;
     }
 
     /**
@@ -200,11 +201,11 @@ public abstract class StockRowBuilder {
      * Updates months data according to given survey
      */
     private void addSurveyToData(SurveyStock surveyStock) {
-        float[] surveyValues = surveyStock.getSurveyValues();
+        int[] surveyValues = surveyStock.getSurveyValues();
         for (int i = 0;i<surveyValues.length;i++ ) {
             //Updates column considering current value + survey
             if (this instanceof StatusRowBuilder) {
-                this.data[i] = updateColumn(this.data[i], surveyValues[i], surveyStock,i);
+                this.data[i] = updateColumn(this.data[i], surveyValues[i], surveyStock, i);
             } else {
                 this.data[i] = updateColumn(this.data[i], surveyValues[i], surveyStock);
             }

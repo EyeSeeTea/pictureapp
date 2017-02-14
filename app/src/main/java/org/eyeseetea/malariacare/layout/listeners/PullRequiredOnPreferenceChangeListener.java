@@ -23,8 +23,6 @@ public class PullRequiredOnPreferenceChangeListener implements
         //Reload preference in memory
         PreferencesState.getInstance().reloadPreferences();
 
-        hardcodedLoginInSDK();
-
         if (preferenceIsDhisUrl(preference)) {
             PreferencesState.getInstance().saveStringPreference(R.string.org_unit, "");
         }
@@ -36,11 +34,5 @@ public class PullRequiredOnPreferenceChangeListener implements
     private boolean preferenceIsDhisUrl(Preference preference) {
         return preference.getKey() == preference.getContext().getResources().getString(
                 R.string.dhis_url);
-    }
-
-    private void hardcodedLoginInSDK() {
-        //TODO: jsanchez
-        /*SdkLoginController.logInUser(PreferencesState.getInstance().getDhisURL(),
-                ServerAPIController.getSDKCredentials());*/
     }
 }

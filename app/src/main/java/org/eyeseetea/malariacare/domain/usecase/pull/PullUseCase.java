@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.domain.usecase.pull;
 
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 
 public class PullUseCase {
 
@@ -13,6 +14,10 @@ public class PullUseCase {
         void onError(String message);
 
         void onNetworkError();
+
+        void onPullConversionError();
+
+        void onCancel();
     }
 
     IPullController mPullController;
@@ -21,8 +26,8 @@ public class PullUseCase {
         mPullController = pullController;
     }
 
-    public void execute(boolean isDemo, final Callback callback) {
-        mPullController.pull(isDemo, new IPullController.Callback() {
+    public void execute(PullFilters pullFilters, final Callback callback) {
+        mPullController.pull(pullFilters, new IPullController.Callback() {
             @Override
             public void onComplete() {
                 //TODO jsanchez create OrgUnitRepository and when pull finish
@@ -40,10 +45,21 @@ public class PullUseCase {
             public void onError(Throwable throwable) {
                 if (throwable instanceof NetworkException) {
                     callback.onNetworkError();
+                } else if (throwable instanceof PullConversionException) {
+                    callback.onPullConversionError();
                 } else {
                     callback.onError(throwable.getMessage());
                 }
             }
+
+            @Override
+            public void onCancel() {
+                callback.onCancel();
+            }
         });
+    }
+
+    public void cancel() {
+        mPullController.cancel();
     }
 }

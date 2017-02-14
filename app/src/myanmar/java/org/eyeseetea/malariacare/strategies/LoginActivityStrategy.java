@@ -15,6 +15,7 @@ import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.hisp.dhis.client.sdk.ui.views.FontButton;
@@ -60,7 +61,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private boolean existsLoggedUser() {
-        return User.getLoggedUser() != null && !ProgressActivity.PULL_CANCEL;
+        return User.getLoggedUser() != null;
     }
 
     private void addDemoButton() {
@@ -108,7 +109,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         PullController pullController = new PullController(loginActivity);
         PullUseCase pullUseCase = new PullUseCase(pullController);
 
-        pullUseCase.execute(true, new PullUseCase.Callback() {
+        PullFilters pullFilters = new PullFilters();
+        pullFilters.setDemo(true);
+
+        pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
                 finishAndGo(DashboardActivity.class);
@@ -122,6 +126,16 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             @Override
             public void onError(String message) {
                 Log.e(this.getClass().getSimpleName(), message);
+            }
+
+            @Override
+            public void onPullConversionError() {
+                Log.e(this.getClass().getSimpleName(), "Pull conversion error");
+            }
+
+            @Override
+            public void onCancel() {
+                Log.e(this.getClass().getSimpleName(), "Pull cancel");
             }
 
             @Override

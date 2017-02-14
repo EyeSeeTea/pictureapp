@@ -36,6 +36,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
@@ -44,18 +45,9 @@ public class ProgressActivity extends Activity {
 
     private static final String TAG = ".ProgressActivity";
 
-    /**
-     * Num of expected steps while pulling
-     */
-    private static final int MAX_PULL_STEPS = 7;
-    /**
-     * Used for control new steps
-     */
+    private static final int MAX_PULL_STEPS = 5;
+
     public static Boolean PULL_IS_ACTIVE = false;
-    /**
-     * Used for control autopull from login
-     */
-    public static Boolean PULL_CANCEL = false;
 
     public ProgressActivityStrategy progressVariantAdapter = new ProgressActivityStrategy(this);
     private ProgressBar progressBar;
@@ -85,7 +77,6 @@ public class ProgressActivity extends Activity {
     }
 
     private void prepareUI() {
-        PULL_CANCEL = false;
         PULL_IS_ACTIVE = true;
 
         progressBar = (ProgressBar) findViewById(R.id.pull_progress);
@@ -102,16 +93,9 @@ public class ProgressActivity extends Activity {
 
     private void cancellPull() {
         if (PULL_IS_ACTIVE) {
-            PULL_CANCEL = true;
             PULL_IS_ACTIVE = false;
-            showProgressText(PreferencesState.getInstance().getContext().getResources().getString(
-                    R.string.cancellingPull));
-
-            //TODO jsanchez
-/*            if (PullController.getInstance().finishPullJob()) {
-                Log.d(TAG, "Logging out from sdk...");
-                executeLogout();
-            }*/
+            showProgressText(R.string.cancellingPull);
+            mPullUseCase.cancel();
         }
     }
 
@@ -132,23 +116,14 @@ public class ProgressActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-
         launchPull(Session.getCredentials().isDemoCredentials());
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        //TODO this is not expected in pictureapp
-        if (PULL_CANCEL == true) {
-            finishAndGo(LoginActivity.class);
-        }
-    }
-
     private void launchPull(boolean isDemo) {
+        PullFilters pullFilters = new PullFilters();
+        pullFilters.setDemo(isDemo);
 
-
-        mPullUseCase.execute(isDemo, new PullUseCase.Callback() {
+        mPullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
                 showAndMoveOn();
@@ -158,39 +133,52 @@ public class ProgressActivity extends Activity {
             public void onStep(PullStep pullStep) {
                 switch (pullStep) {
                     case METADATA:
-                        showProgressText(PreferencesState.getInstance().getContext().getString(
-                                R.string.progress_pull_downloading));
+                        showProgressText(R.string.progress_pull_downloading);
                         break;
+                    case CONVERT_METADATA:
+                        showProgressText(R.string.progress_pull_preparing_orgs);
+                    case CONVERT_DATA:
+                        showProgressText(R.string.progress_pull_surveys);
+                    case BUILDING_SURVEYS:
+                        showProgressText(R.string.progress_pull_building_survey);
+                    case BUILDING_VALUES:
+                        showProgressText(R.string.progress_pull_building_value);
                 }
-
             }
 
             @Override
             public void onError(String message) {
-                showException(PreferencesState.getInstance().getContext().getString(R.string
-                        .dialog_pull_error));
+                showException(R.string.dialog_pull_error);
             }
 
             @Override
             public void onNetworkError() {
-                showException(PreferencesState.getInstance().getContext().getString(
-                        R.string.network_error));
+                showException(R.string.network_error);
+            }
+
+            @Override
+            public void onPullConversionError() {
+                showException(R.string.dialog_pull_error);
+            }
+
+            @Override
+            public void onCancel() {
+                executeLogout();
             }
         });
 
     }
 
-    private void showException(String msg) {
+    private void showException(int stringId) {
         String title = getDialogTitle();
 
         new AlertDialog.Builder(this)
                 .setCancelable(false)
                 .setTitle(title)
-                .setMessage(msg)
+                .setMessage(getString(stringId))
                 .setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //A crash during a pull requires to start from scratch -> logout
                         Log.d(TAG, "Logging out from sdk...");
                         executeLogout();
                     }
@@ -199,20 +187,14 @@ public class ProgressActivity extends Activity {
                 .show();
     }
 
-    private void showProgressText(final String msg) {
+    private void showProgressText(int stringId) {
         final int currentProgress = progressBar.getProgress();
         progressBar.setProgress(currentProgress + 1);
-        textView.setText(msg);
+        textView.setText(getString(stringId));
     }
 
     private void showAndMoveOn() {
-        //If is not active, we need restart the process
-        if (!PULL_IS_ACTIVE) {
-            finishAndGo(LoginActivity.class);
-            return;
-        }
-
-        showProgressText(getString(R.string.progress_pull_done));
+        showProgressText(R.string.progress_pull_done);
 
         String title = getDialogTitle();
 

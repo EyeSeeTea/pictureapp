@@ -14,6 +14,7 @@ import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
@@ -55,11 +56,16 @@ public class SplashScreenActivity extends Activity {
 
             PullController pullController = new PullController(
                     getApplication().getApplicationContext());
+
             PullUseCase pullUseCase = new PullUseCase(pullController);
-            pullUseCase.execute(true, new PullUseCase.Callback() {
+
+            PullFilters pullFilters = new PullFilters();
+            pullFilters.setDemo(true);
+
+            pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
                 @Override
                 public void onComplete() {
-
+                    Log.d(this.getClass().getSimpleName(), "pull complete");
                 }
 
                 @Override
@@ -75,6 +81,16 @@ public class SplashScreenActivity extends Activity {
                 @Override
                 public void onNetworkError() {
                     Log.e(this.getClass().getSimpleName(), "Network Error");
+                }
+
+                @Override
+                public void onPullConversionError() {
+                    Log.e(this.getClass().getSimpleName(), "Pull Conversion Error");
+                }
+
+                @Override
+                public void onCancel() {
+                    Log.e(this.getClass().getSimpleName(), "Pull oncancel");
                 }
             });
         }

@@ -354,17 +354,6 @@ public class PopulateDB {
         );
     }
 
-    /**
-     * Delete all surveys from database (and its related info)
-     */
-    public static void wipeSurveys() {
-        Delete.tables(
-                Value.class,
-                Score.class,
-                Survey.class
-        );
-    }
-
     public static void addTotalQuestions(AssetManager assetManager, List<Question> questions)
             throws IOException {
         //Reset inner references

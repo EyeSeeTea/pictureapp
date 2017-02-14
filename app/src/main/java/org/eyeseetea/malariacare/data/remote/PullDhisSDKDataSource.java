@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
 import org.hisp.dhis.client.sdk.core.event.EventFilters;
@@ -66,7 +67,7 @@ public class PullDhisSDKDataSource {
         }
     }
 
-    public void pullData(List<OrganisationUnit> organisationUnits,
+    public void pullData(PullFilters pullFilters, List<OrganisationUnit> organisationUnits,
             IDataSourceCallback<List<Event>> callback) {
         boolean isNetworkAvailable = isNetworkAvailable();
 
@@ -82,7 +83,13 @@ public class PullDhisSDKDataSource {
                 for (OrganisationUnit organisationUnit : organisationUnits) {
                     Scheduler pullEventsThread = Schedulers.newThread();
 
+
                     EventFilters eventFilters = new EventFilters();
+
+                    eventFilters.setStartDate(pullFilters.getStartDate());
+                    eventFilters.setEndDate(pullFilters.getEndDate());
+                    eventFilters.setMaxEvents(pullFilters.getMaxEvents());
+
                     eventFilters.setOrganisationUnitUId(organisationUnit.getUId());
 
                     if (compositeUserAttributeValue != null){

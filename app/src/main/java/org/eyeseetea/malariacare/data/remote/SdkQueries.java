@@ -3,15 +3,13 @@ package org.eyeseetea.malariacare.data.remote;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataElementFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataElementFlow_Table;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow_Table;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.OptionSetFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitFlow;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitFlow_Table;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitLevelFlow;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitLevelFlow_Table;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.OrganisationUnitToProgramRelationFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow
         .OrganisationUnitToProgramRelationFlow_Table;
@@ -19,15 +17,14 @@ import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramFlow_Table;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramStageFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramStageFlow_Table;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow_Table;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.UserAccountFlow;
+import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.program.ProgramType;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by idelcano on 15/11/2016.
- */
 
 public class SdkQueries {
 
@@ -39,13 +36,6 @@ public class SdkQueries {
             uids.add(programFlow.getUId());
         }
         return uids;
-    }
-
-
-    private static OrganisationUnitFlow getOrganisationUnit(String organisationUnitUId) {
-        return new Select().from(OrganisationUnitFlow.class).where(
-                OrganisationUnitFlow_Table.uId.eq(organisationUnitUId)).querySingle();
-
     }
 
     public static ProgramFlow getProgram(String assignedProgramID) {
@@ -75,16 +65,10 @@ public class SdkQueries {
                 is(UId)).querySingle();
     }
 
-    public static List<OrganisationUnitLevelFlow> getOrganisationUnitLevels() {
-        return new Select().from(OrganisationUnitLevelFlow.class)
-                .orderBy(OrganisationUnitLevelFlow_Table.level, true)
-                .queryList();
-    }
 
     public static List<OrganisationUnitFlow> getAssignedOrganisationUnits() {
         return new Select().from(OrganisationUnitFlow.class)
                 .queryList();
-        //return MetaDataController.getAssignedOrganisationUnits();
     }
 
     public static List<ProgramFlow> getProgramsForOrganisationUnit(String UId,
@@ -111,35 +95,20 @@ public class SdkQueries {
     }
 
     public static List<EventFlow> getEvents(String organisationUnitUId, String programUId) {
-        //Observer form server
-        /*
-        ProgramFlow programFlow=getProgram(programUId);
-        OrganisationUnitFlow organisationUnitFlow = getOrganisationUnit(organisationUnitUId);
-        OrganisationUnit organisationUnit = OrganisationUnitFlow.MAPPER.mapToModel
-        (organisationUnitFlow);
-
-        Program program = ProgramFlow.MAPPER.mapToModel(programFlow);
-        Observable<List<Event>> eventListObservable = D2.events().list(
-                organisationUnit,
-                program);
-        eventListObservable.
-                subscribeOn(Schedulers.io()).
-                observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Event>>() {
-                    @Override
-                    public void call(List<Event> events) {
-                        //// FIXME: 22/11/2016 return event
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                    }
-                });
-        */
         return new Select().from(EventFlow.class).where(
                 EventFlow_Table.orgUnit.eq(organisationUnitUId))
                 .and(EventFlow_Table.program.eq(programUId)).queryList();
     }
+
+    public static Event getEvent(String uId) {
+        return D2.events().get(uId).toBlocking().first();
+    }
+
+    public static List<TrackedEntityDataValueFlow> getDataValues(String eventUId) {
+        return new Select().from(TrackedEntityDataValueFlow.class).where(
+                TrackedEntityDataValueFlow_Table.event.eq(eventUId)).queryList();
+    }
+
     public static List<EventFlow> getEvents() {
         return new Select().from(EventFlow.class).queryList();
     }
@@ -156,22 +125,6 @@ public class SdkQueries {
                 .orderBy(OrderBy.fromProperty(ProgramStageFlow_Table.sortOrder)).queryList();
     }
 
-    //ConvertFromSDKVisitor
-    public static void saveBatch() {
-        /*
-        //Save questions in batch
-        new SaveModelTransaction<>(ProcessModelInfo.withModels(ConvertFromSDKVisitor.questions))
-        .onExecute();
-
-        //Refresh media references
-        List<Media> medias = ConvertFromSDKVisitor.questionBuilder.getListMedia();
-        for(Media media: medias){
-            media.updateQuestion();
-        }
-        //Save media in batch
-        new SaveModelTransaction<>(ProcessModelInfo.withModels(medias)).onExecute();
-        */
-    }
 
     public static void createDBIndexes() {
 
@@ -194,10 +147,5 @@ public class SdkQueries {
 
         new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
         */
-    }
-
-    public static void saveBatch(List<?> surveys) {
-        //new SaveModelTransaction<>(
-        //        ProcessModelInfo.withModels(surveys)).onExecute();
     }
 }

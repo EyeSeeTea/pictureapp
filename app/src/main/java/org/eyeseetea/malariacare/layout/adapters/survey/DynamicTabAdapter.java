@@ -177,6 +177,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         isClicked = false;
 
         mDynamicTabAdapterStrategy = new DynamicTabAdapterStrategy(this);
+        mDynamicTabAdapterStrategy.initSurveys(readOnly);
     }
 
     /**

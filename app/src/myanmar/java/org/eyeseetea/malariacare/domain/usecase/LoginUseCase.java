@@ -18,7 +18,6 @@ public class LoginUseCase extends ALoginUseCase {
 
     @Override
     public void execute(Credentials credentials, final Callback callback) {
-
         mAuthenticationManager.login(credentials,
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
@@ -38,10 +37,6 @@ public class LoginUseCase extends ALoginUseCase {
                         }
                     }
                 });
-    }
 
-    @Override
-    public boolean isLogoutNeeded(Credentials credentials) {
-        return false;
     }
 }

@@ -19,10 +19,11 @@
 
 package org.eyeseetea.malariacare.data.sync.importer;
 
+import static org.eyeseetea.malariacare.ProgressActivity.PULL_IS_ACTIVE;
+
 import android.content.Context;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Option;
@@ -41,6 +42,8 @@ import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExten
 import org.eyeseetea.malariacare.data.sync.importer.models.ProgramExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.hisp.dhis.client.sdk.models.event.Event;
+import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 import org.hisp.dhis.client.sdk.models.program.ProgramType;
 
 import java.io.IOException;
@@ -65,14 +68,16 @@ public class PullController implements IPullController {
 
             callback.onStep(PullStep.METADATA);
 
+            populateMetadataFromCsvs(true);
+
             if (isDemo) {
-                populateMetadataFromCsvs(true);
                 callback.onComplete();
             } else {
-                mPullRemoteDataSource.pullMetadata(new IDataSourceCallback<Void>() {
+                mPullRemoteDataSource.pullMetadata(
+                        new IDataSourceCallback<List<OrganisationUnit>>() {
                     @Override
-                    public void onSuccess(Void result) {
-                        callback.onComplete();
+                    public void onSuccess(List<OrganisationUnit> organisationUnits) {
+                        pullData(organisationUnits, callback);
                     }
 
                     @Override
@@ -82,7 +87,7 @@ public class PullController implements IPullController {
                 });
             }
             //TODO jsanchez
-            /*
+/*
             SdkPullController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
             String selectedDateLimit = PreferencesState.getInstance().getDataLimitedByDate();
 
@@ -106,10 +111,12 @@ public class PullController implements IPullController {
     }
 
     private void populateMetadataFromCsvs(boolean isDemo) throws IOException {
-        PopulateDB.initDataIfRequired(mContext.getAssets());
+        if (PopulateDB.isLocalPopulateRequired()) {
+            PopulateDB.initDataIfRequired(mContext.getAssets());
+            if (isDemo) {
+                createDummyOrgUnitsDataInDB();
+            }
 
-        if (isDemo) {
-            createDummyOrgUnitsDataInDB();
         }
     }
 
@@ -163,6 +170,20 @@ public class PullController implements IPullController {
         }
     }
 
+    private void pullData(List<OrganisationUnit> organisationUnits, final Callback callback) {
+        mPullRemoteDataSource.pullData(organisationUnits, new IDataSourceCallback<List<Event>>() {
+            @Override
+            public void onSuccess(List<Event> result) {
+                callback.onComplete();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                callback.onError(throwable);
+            }
+        });
+    }
+
     private void pullMetaData() {
         try {
             SdkPullController.loadMetaData();
@@ -201,26 +222,17 @@ public class PullController implements IPullController {
     }
 
     /**
-     * Erase data from app database
-     */
-    public void wipeDatabase() {
-        if (!ProgressActivity.PULL_IS_ACTIVE) return;
-        Log.d(TAG, "Deleting app database...");
-        PopulateDB.wipeDatabase();
-    }
-
-    /**
      * Launches visitor that turns SDK data into APP data
      */
     private void convertFromSDK() {
-        if (!ProgressActivity.PULL_IS_ACTIVE) return;
+        if (!PULL_IS_ACTIVE) return;
         Log.d(TAG, "Converting SDK into APP data");
 
         //One shared converter to match parents within the hierarchy
 
         ConvertFromSDKVisitor converter = new ConvertFromSDKVisitor();
         convertMetaData(converter);
-        if (!ProgressActivity.PULL_IS_ACTIVE) return;
+        if (!PULL_IS_ACTIVE) return;
         convertDataValues(converter);
     }
 
@@ -229,14 +241,14 @@ public class PullController implements IPullController {
      */
     private void convertMetaData(ConvertFromSDKVisitor converter) {
         //OrganisationUnits
-        if (!ProgressActivity.PULL_IS_ACTIVE) return;
+        if (!PULL_IS_ACTIVE) return;
         postProgress(mContext.getString(R.string.progress_pull_preparing_orgs));
         Log.i(TAG, "Converting organisationUnits...");
         List<OrganisationUnitExtended> assignedOrganisationsUnits =
                 OrganisationUnitExtended.getExtendedList(
                         (SdkQueries.getAssignedOrganisationUnits()));
         for (OrganisationUnitExtended assignedOrganisationsUnit : assignedOrganisationsUnits) {
-            if (!ProgressActivity.PULL_IS_ACTIVE) return;
+            if (!PULL_IS_ACTIVE) return;
             assignedOrganisationsUnit.accept(converter);
         }
 
@@ -246,7 +258,7 @@ public class PullController implements IPullController {
      * Turns events and datavalues into
      */
     private void convertDataValues(ConvertFromSDKVisitor converter) {
-        if (!ProgressActivity.PULL_IS_ACTIVE) return;
+        if (!PULL_IS_ACTIVE) return;
         Program appProgram = Program.getFirstProgram();
         String orgUnitName = PreferencesState.getInstance().getOrgUnit();
 
@@ -285,7 +297,7 @@ public class PullController implements IPullController {
                 for (EventExtended event : events) {
                     postProgress(mContext.getString(R.string.progress_pull_building_survey)
                             + String.format(" %s/%s", i++, events.size()));
-                    if (!ProgressActivity.PULL_IS_ACTIVE) return;
+                    if (!PULL_IS_ACTIVE) return;
 
                     //Only last X months
                     if (event.isTooOld()) continue;
@@ -327,7 +339,7 @@ public class PullController implements IPullController {
 
     public void startConversion() {
         //Ok
-        wipeDatabase();
+        PopulateDB.wipeDatabase();
         convertFromSDK();
         //Fixme it should be moved after login
 /*        convertOUinOptions();

@@ -199,4 +199,10 @@
     <string name="developer_option_summary">ຄຸນນະສົມບັດນີ້ເປີດໃຊ້ວຽກທາງເລືອກການພັດທະນາ</string>
     <string name="developer_option_title">ທາງເລືອກໃນການສະແດງໃຫ້ເຫັນການພັດທະນາ</string>
     <string name="export_data_option_title">ຖານຂໍ້ມູນການສົ່ງອອກ</string>
+
+    <string name="settings_menu_logout_message">ການປ່ຽນແປງເຄື່ອງແມ່ຂ່າຍຫຼື orgunit ຕ້ອງການທີ່ຈະ Re: ເຂົ້າສູ່ລະບົບ. ທຸກການສໍາຫຼວດບໍ່ສົ່ງຈະໄດ້ຮັບການລຶບ. ທ່ານແນ່ໃຈວ່າທ່ານຕ້ອງການທີ່ຈະສືບຕໍ່?</string>
+    <string name="app_logout">ອກ​ຈາກ​ລະ​ບົບ</string>
+    <string name="network_error">ມີບັນຫາກັບເຄືອຂ່າຍໄດ້, ກະລຸນາພະຍາຍາມອີກເທື່ອຫນຶ່ງຕໍ່ມາ.</string>
+    <string name="login_invalid_credentials">ຂໍ້ມູນທີ່ບໍ່ຖືກຕ້ອງ</string>
+    <string name="login_invalid_server_url">URL Server ບໍ່ຖືກຕ້ອງ</string>
 </resources>

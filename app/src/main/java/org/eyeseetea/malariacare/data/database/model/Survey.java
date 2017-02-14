@@ -754,12 +754,12 @@ public class Survey extends BaseModel implements VisitableToSDK {
         //Add children required by each parent (value+question)
         Survey survey = Survey.findById(id_survey);
         for (Value value : survey.getValuesFromDB()) {
-            if (value.getQuestion().isCompulsory()) {
+            if (value.getQuestion().isCompulsory() && value.getId_option()!=null) {
                 numRequired += Question.countChildrenByOptionValue(value.getId_option());
             }
         }
         numAnswered += countCompulsoryBySurvey(this);
-        Log.d("survey anserewed", "num required: " + numRequired + " num answered: " + numAnswered);
+        Log.d("survey answered", "num required: " + numRequired + " num answered: " + numAnswered);
         surveyAnsweredRatio = new SurveyAnsweredRatio(numRequired, numAnswered);
 
         SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);

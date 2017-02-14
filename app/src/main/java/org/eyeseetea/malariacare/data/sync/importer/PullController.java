@@ -57,6 +57,7 @@ public class PullController implements IPullController {
     PullDhisSDKDataSource mPullRemoteDataSource = new PullDhisSDKDataSource();
     ConvertFromSDKVisitor mConverter = new ConvertFromSDKVisitor();
     private Context mContext;
+    private boolean cancellPull;
 
     public PullController(Context context) {
         mContext = context;
@@ -76,6 +77,12 @@ public class PullController implements IPullController {
             if (pullFilters.isDemo()) {
                 callback.onComplete();
             } else {
+
+                if (cancellPull) {
+                    callback.onCancel();
+                    return;
+                }
+
                 mPullRemoteDataSource.pullMetadata(
                         new IDataSourceCallback<List<OrganisationUnit>>() {
                             @Override
@@ -93,6 +100,11 @@ public class PullController implements IPullController {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());
             callback.onError(ex);
         }
+    }
+
+    @Override
+    public void cancel() {
+        cancellPull = true;
     }
 
     private void populateMetadataFromCsvs(boolean isDemo) throws IOException {
@@ -155,6 +167,12 @@ public class PullController implements IPullController {
 
     private void pullData(PullFilters pullFilters, List<OrganisationUnit> organisationUnits,
             final Callback callback) {
+
+        if (cancellPull) {
+            callback.onCancel();
+            return;
+        }
+
         mPullRemoteDataSource.pullData(pullFilters, organisationUnits,
                 new IDataSourceCallback<List<Event>>() {
             @Override
@@ -186,6 +204,12 @@ public class PullController implements IPullController {
     }
 
     private void convertMetaData(final Callback callback) {
+
+        if (cancellPull) {
+            callback.onCancel();
+            return;
+        }
+
         callback.onStep(PullStep.CONVERT_METADATA);
         Log.d(TAG, "Converting organisationUnits...");
 
@@ -201,6 +225,12 @@ public class PullController implements IPullController {
     }
 
     private void convertData(final Callback callback) {
+
+        if (cancellPull) {
+            callback.onCancel();
+            return;
+        }
+
         callback.onStep(PullStep.CONVERT_DATA);
 
         String orgUnitName = PreferencesState.getInstance().getOrgUnit();
@@ -261,6 +291,12 @@ public class PullController implements IPullController {
     }
 
     private void saveConvertedSurveys(final Callback callback) {
+
+        if (cancellPull) {
+            callback.onCancel();
+            return;
+        }
+
         List<Survey> surveys = mConverter.getSurveys();
 
         Survey.saveAll(surveys, new IDataSourceCallback<Void>() {
@@ -277,6 +313,11 @@ public class PullController implements IPullController {
     }
 
     private void saveConvertedValues(final Callback callback) {
+
+        if (cancellPull) {
+            callback.onCancel();
+            return;
+        }
 
         List<Value> values = mConverter.getValues();
 

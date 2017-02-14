@@ -31,7 +31,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
@@ -44,19 +43,9 @@ public class ProgressActivity extends Activity {
 
     private static final String TAG = ".ProgressActivity";
 
-    /**
-     * Num of expected steps while pulling
-     */
     private static final int MAX_PULL_STEPS = 5;
-    /**
-     * Used for control new steps
-     */
-    public static Boolean PULL_IS_ACTIVE = false;
-    /**
-     * Used for control autopull from login
-     */
-    public static Boolean PULL_CANCEL = false;
 
+    public static Boolean PULL_IS_ACTIVE = false;
 
     public ProgressActivityStrategy progressVariantAdapter = new ProgressActivityStrategy(this);
     private ProgressBar progressBar;
@@ -86,7 +75,6 @@ public class ProgressActivity extends Activity {
     }
 
     private void prepareUI() {
-        PULL_CANCEL = false;
         PULL_IS_ACTIVE = true;
 
         progressBar = (ProgressBar) findViewById(R.id.pull_progress);
@@ -103,15 +91,9 @@ public class ProgressActivity extends Activity {
 
     private void cancellPull() {
         if (PULL_IS_ACTIVE) {
-            PULL_CANCEL = true;
             PULL_IS_ACTIVE = false;
             showProgressText(R.string.cancellingPull);
-
-            //TODO jsanchez
-/*            if (PullController.getInstance().finishPullJob()) {
-                Log.d(TAG, "Logging out from sdk...");
-                executeLogout();
-            }*/
+            mPullUseCase.cancel();
         }
     }
 
@@ -132,21 +114,10 @@ public class ProgressActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        SdkController.register(this);
         launchPull();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        //TODO this is not expected in pictureapp
-        if (PULL_CANCEL == true) {
-            finishAndGo(LoginActivity.class);
-        }
-    }
-
     private void launchPull() {
-
         PullFilters pullFilters = new PullFilters();
         pullFilters.setDemo(false);
 
@@ -187,6 +158,11 @@ public class ProgressActivity extends Activity {
             public void onPullConversionError() {
                 showException(R.string.dialog_pull_error);
             }
+
+            @Override
+            public void onCancel() {
+                executeLogout();
+            }
         });
 
     }
@@ -201,7 +177,6 @@ public class ProgressActivity extends Activity {
                 .setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //A crash during a pull requires to start from scratch -> logout
                         Log.d(TAG, "Logging out from sdk...");
                         executeLogout();
                     }
@@ -217,12 +192,6 @@ public class ProgressActivity extends Activity {
     }
 
     private void showAndMoveOn() {
-        //If is not active, we need restart the process
-        if (!PULL_IS_ACTIVE) {
-            finishAndGo(LoginActivity.class);
-            return;
-        }
-
         showProgressText(R.string.progress_pull_done);
 
         String title = getDialogTitle();

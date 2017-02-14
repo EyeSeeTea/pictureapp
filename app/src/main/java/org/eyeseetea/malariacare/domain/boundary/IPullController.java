@@ -7,9 +7,12 @@ public interface IPullController {
     interface Callback {
         void onComplete();
 
+        void onCancel();
         void onStep(PullStep step);
         void onError(Throwable throwable);
     }
 
     void pull(PullFilters pullFilters, Callback callback);
+
+    void cancel();
 }

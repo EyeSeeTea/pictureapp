@@ -61,7 +61,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private boolean existsLoggedUser() {
-        return User.getLoggedUser() != null && !ProgressActivity.PULL_CANCEL;
+        return User.getLoggedUser() != null;
     }
 
     private void addDemoButton() {
@@ -131,6 +131,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             @Override
             public void onPullConversionError() {
                 Log.e(this.getClass().getSimpleName(), "Pull conversion error");
+            }
+
+            @Override
+            public void onCancel() {
+                Log.e(this.getClass().getSimpleName(), "Pull cancel");
             }
 
             @Override

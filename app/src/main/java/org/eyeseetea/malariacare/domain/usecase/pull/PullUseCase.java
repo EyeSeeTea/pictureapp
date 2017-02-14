@@ -16,6 +16,8 @@ public class PullUseCase {
         void onNetworkError();
 
         void onPullConversionError();
+
+        void onCancel();
     }
 
     IPullController mPullController;
@@ -49,6 +51,15 @@ public class PullUseCase {
                     callback.onError(throwable.getMessage());
                 }
             }
+
+            @Override
+            public void onCancel() {
+                callback.onCancel();
+            }
         });
+    }
+
+    public void cancel() {
+        mPullController.cancel();
     }
 }

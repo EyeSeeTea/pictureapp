@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.model.Option;
 import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -30,9 +31,11 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
     Question mQuestion;
     LinearLayout answersContainer;
     HashMap<Long, Float> optionDose;
+    private Context context;
 
     public DynamicStockImageRadioButtonSingleQuestionView(Context context) {
         super(context);
+        this.context = context;
         init(context);
     }
 
@@ -148,7 +151,11 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
                 }
             }
         }
-
+        //Setting a value for the stock question to get max total question correct
+        View stockHideView = new View(context);
+        stockHideView.setTag(Treatment.getDynamicStockQuestion());
+        Option falseOption = Option.findById(41f);
+        notifyAnsweOptionChange(stockHideView, falseOption);
     }
 
     @Override

@@ -283,8 +283,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         Option answeredOption = ReadWriteDB.getOptionAnsweredFromDB(question);
         Value value = question.getValueBySession();
 
-        if (isBackward && value != null && !readOnly && (answeredOption == null
-                || !answeredOption.getId_option().equals(selectedOption.getId_option()))) {
+        if (goingBackwardAndModifiedValues(value, answeredOption, selectedOption)) {
             navigationController.setTotalPages(question.getTotalQuestions());
             isBackward = false;
         }
@@ -302,6 +301,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         } else {
             showOrHideChildren(question);
         }
+    }
+
+    private boolean goingBackwardAndModifiedValues(Value value, Option answeredOption,
+            Option selectedOption) {
+        return isBackward && value != null && !readOnly && (answeredOption == null
+                || !answeredOption.getId_option().equals(selectedOption.getId_option()));
     }
 
     private void showConfirmCounter(final View view, final Option selectedOption,
@@ -494,18 +499,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         TableRow tableRow;
         IQuestionViewFactory questionViewFactory;
 
-        if (Tab.isMultiQuestionTab(tabType) || Tab.isDynamicTreatmentTab(tabType)) {
-            questionViewFactory = new MultiQuestionViewFactory();
-        } else {
-            questionViewFactory = new SingleQuestionViewFactory();
-        }
+        questionViewFactory = (Tab.isMultiQuestionTab(tabType) || Tab.isDynamicTreatmentTab(
+                tabType)) ? new MultiQuestionViewFactory() : new SingleQuestionViewFactory();
 
         // Se get the value from Session
         int visibility = View.GONE;
 
-        Survey survey = (screenQuestion.isStockQuestion() || screenQuestion.isDynamicStockQuestion())
-                ? Session.getStockSurvey()
-                : Session.getMalariaSurvey();
+        Survey survey =
+                (screenQuestion.isStockQuestion() || screenQuestion.isDynamicStockQuestion())
+                        ? Session.getStockSurvey()
+                        : Session.getMalariaSurvey();
 
         if (!screenQuestion.isHiddenBySurveyAndHeader(survey)
                 || !Tab.isMultiQuestionTab(tabType)) {

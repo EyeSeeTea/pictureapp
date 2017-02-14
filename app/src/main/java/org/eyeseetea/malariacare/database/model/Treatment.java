@@ -15,6 +15,10 @@ import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
 public class Treatment extends BaseModel {
+
+    public static int TYPE_MAIN = 0;
+    public static int TYPE_NOT_MAIN = 1;
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_treatment;
@@ -24,7 +28,8 @@ public class Treatment extends BaseModel {
     String diagnosis;
     @Column
     String message;
-
+    @Column
+    int type;
     /**
      * Reference to organisation (loaded lazily)
      */
@@ -34,8 +39,8 @@ public class Treatment extends BaseModel {
     public Treatment() {
     }
 
-    public Treatment(long id_treatment, long id_drug_combination, long id_organisation,
-            String diagnosis, String message) {
+    public Treatment(long id_treatment, long id_organisation, String diagnosis, String message,
+            int type) {
         this.id_treatment = id_treatment;
         this.id_organisation = id_organisation;
         this.diagnosis = diagnosis;
@@ -113,6 +118,14 @@ public class Treatment extends BaseModel {
         this.message = message;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -121,7 +134,11 @@ public class Treatment extends BaseModel {
         Treatment treatment = (Treatment) o;
 
         if (id_treatment != treatment.id_treatment) return false;
-        if (id_organisation != treatment.id_organisation) return false;
+        if (type != treatment.type) return false;
+        if (id_organisation != null ? !id_organisation.equals(treatment.id_organisation)
+                : treatment.id_organisation != null) {
+            return false;
+        }
         if (diagnosis != null ? !diagnosis.equals(treatment.diagnosis)
                 : treatment.diagnosis != null) {
             return false;
@@ -133,11 +150,13 @@ public class Treatment extends BaseModel {
     @Override
     public int hashCode() {
         int result = (int) (id_treatment ^ (id_treatment >>> 32));
-        result = 31 * result + (int) (id_organisation ^ (id_organisation >>> 32));
+        result = 31 * result + (id_organisation != null ? id_organisation.hashCode() : 0);
         result = 31 * result + (diagnosis != null ? diagnosis.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + type;
         return result;
     }
+
 
     @Override
     public String toString() {
@@ -146,8 +165,8 @@ public class Treatment extends BaseModel {
                 ", id_organisation=" + id_organisation +
                 ", diagnosis='" + diagnosis + '\'' +
                 ", message='" + message + '\'' +
+                ", type=" + type +
+                ", organisation=" + organisation +
                 '}';
     }
-
-
 }

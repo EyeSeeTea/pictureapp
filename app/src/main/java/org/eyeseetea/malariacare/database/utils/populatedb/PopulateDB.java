@@ -79,6 +79,7 @@ public class PopulateDB {
     public static final String ORGANISATIONS_CSV = "Organisations.csv";
     public static final String TREATMENT_MATCHES_CSV = "TreatmentMatches.csv";
     public static final String TREATMENT_CSV = "Treatments.csv";
+    public static final String TREATMENT_TABLE_CSV = "TreatmentTable.csv";
 
     public static final String ORG_UNIT_LEVEL_CSV = "OrgUnitLevel.csv";
     public static final String ORG_UNIT_CSV = "OrgUnit.csv";

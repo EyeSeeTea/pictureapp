@@ -192,6 +192,7 @@ public class PopulateRow {
         treatment.setOrganisation(organisationFK.get(Long.parseLong(line[1])));
         treatment.setDiagnosis(line[2]);
         treatment.setMessage(line[3]);
+        treatment.setType(Integer.parseInt(line[4]));
         return treatment;
     }
 

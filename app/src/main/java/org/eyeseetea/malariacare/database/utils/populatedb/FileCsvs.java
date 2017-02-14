@@ -88,6 +88,37 @@ public class FileCsvs {
         return created ? file : null;
     }
 
+    public void insertCsvLine(String csvFileName, String[] line) throws IOException {
+        if (!fileExists(csvFileName) || line == null) {
+            return;
+        } else {
+
+            BufferedReader input = new BufferedReader(
+                    new FileReader(mContext.getFilesDir() + "/" + csvFileName));
+            StringBuilder contents = new StringBuilder();
+            String lineR = null;
+            while ((lineR = input.readLine()) != null) {
+                contents.append(lineR + "\n");
+            }
+
+            File file = new File(mContext.getFilesDir() + "/" + csvFileName);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            String textLine = "";
+            boolean first = true;
+            for (String row : line) {
+                if (!first) {
+                    textLine += ";" + row;
+                } else {
+                    first = false;
+                    textLine += row;
+                }
+            }
+            writer.write(contents.toString());
+            writer.write(textLine);
+            writer.close();
+        }
+    }
+
 
     public void deleteCsvLineWithId(String csvFilename, Long id) throws IOException {
         if (!fileExists(csvFilename)) {

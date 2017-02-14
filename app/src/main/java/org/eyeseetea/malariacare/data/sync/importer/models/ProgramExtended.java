@@ -70,35 +70,6 @@ public class ProgramExtended {
         return this.appProgram;
     }
 
-    public Integer getProductivityPosition() {
-        //// FIXME: 11/11/2016
-    /*    ProgramAttributeValueFlow
-                programAttributeValue = new Select().from(ProgramAttributeValueFlow.class).as(
-                programAttributeFlowName)
-                .join(AttributeFlow.class, Join.JoinType.LEFT_OUTER).as(attributeFlowName)
-                .on(ProgramAttributeValueFlow_Table.attributeId.withTable(programAttributeFlowAlias)
-                        .eq(AttributeFlow_Table.id.withTable(attributeFlowAlias)))
-                .where(AttributeFlow_Table.code
-                        .eq(PROGRAM_PRODUCTIVITY_POSITION_ATTRIBUTE_CODE))
-                .and(ProgramAttributeValueFlow_Table.program.withTable(
-                        programAttributeFlowAlias).is(getUid()))
-                .querySingle();
-
-        if (programAttributeValue == null) {
-            return null;
-        }
-
-        try {
-            return Integer.parseInt(programAttributeValue.getValue());
-        } catch (Exception ex) {
-            Log.e(TAG,
-                    String.format("getProductivityPosition(%s) -> %s", this.getProgram().getUId(),
-                            ex.getMessage()));
-            return null;
-        }*/
-        return null;
-    }
-
     public static ProgramFlow getProgram(String id) {
         return new Select()
                 .from(ProgramFlow.class).where(ProgramFlow_Table.uId.eq(id)).querySingle();

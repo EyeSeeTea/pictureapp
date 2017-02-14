@@ -8,6 +8,8 @@ import org.eyeseetea.malariacare.SettingsActivity;
 
 public abstract class ASettingsActivityStrategy {
 
+    protected static final String TAG = ".SettingsActivity";
+
     protected SettingsActivity settingsActivity;
 
     public ASettingsActivityStrategy(SettingsActivity settingsActivity) {

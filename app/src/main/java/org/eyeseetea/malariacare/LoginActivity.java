@@ -34,6 +34,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -88,6 +89,13 @@ public class LoginActivity extends AbsLoginActivity {
         if (!BuildConfig.loginDataDownloadPeriod) {
             return;
         }
+
+        ViewGroup loginViewsContainer = (ViewGroup) findViewById(
+                R.id.layout_login_views);
+
+        getLayoutInflater().inflate(R.layout.login_spinner, loginViewsContainer,
+                true);
+
         //Add left text for the spinner "title"
         findViewById(R.id.date_spinner_container).setVisibility(View.VISIBLE);
         TextView textView = (TextView) findViewById(R.id.data_text_view);

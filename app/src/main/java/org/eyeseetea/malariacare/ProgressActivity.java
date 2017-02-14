@@ -31,6 +31,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
@@ -114,12 +116,12 @@ public class ProgressActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        launchPull();
+        launchPull(Session.getCredentials().isDemoCredentials());
     }
 
-    private void launchPull() {
+    private void launchPull(boolean isDemo) {
         PullFilters pullFilters = new PullFilters();
-        pullFilters.setDemo(false);
+        pullFilters.setDemo(isDemo);
 
         mPullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override

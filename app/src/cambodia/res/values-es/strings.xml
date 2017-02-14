@@ -132,4 +132,9 @@
     <string name="developer_option_summary">Esta opción activa las opciones de desarrollador</string>
     <string name="developer_option_title">Mostrar opciones de desarrollador</string>
     <string name="export_data_option_title">Exportar base de datos</string>
+    <string name="settings_menu_logout_message">Para cambiar el servidor o la orgunit es necesario volver a conectarse. Cada encuesta no enviada se eliminará. ¿Estás seguro de que quieres continuar?</string>
+    <string name="app_logout">Salir</string>
+    <string name="network_error">Hay un problema con la red. Vuelve a intentarlo más tarde.</string>
+    <string name="login_invalid_credentials">Credenciales no válidas</string>
+    <string name="login_invalid_server_url">Url del servidor no válida</string>
 </resources>

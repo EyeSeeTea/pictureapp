@@ -303,6 +303,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void goSettings() {
         Intent intentSettings = new Intent(this, SettingsActivity.class);
         intentSettings.putExtra(SETTINGS_CALLER_ACTIVITY, this.getClass());
+        intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
         startActivity(new Intent(this, SettingsActivity.class));
     }
 

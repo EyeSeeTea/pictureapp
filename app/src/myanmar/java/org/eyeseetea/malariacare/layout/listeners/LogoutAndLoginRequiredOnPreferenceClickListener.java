@@ -49,7 +49,7 @@ public class LogoutAndLoginRequiredOnPreferenceClickListener implements
         return true;
     }
 
-    public void logout() {
+    private void logout() {
         Log.d(TAG, "Logging out...");
         AuthenticationManager authenticationManager = new AuthenticationManager(settingsActivity);
         LogoutUseCase logoutUseCase = new LogoutUseCase(authenticationManager);

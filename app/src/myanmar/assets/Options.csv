@@ -4,8 +4,8 @@
 4;'patient_sex_female_pregnant';'No dataelementFP';0;6;4
 5;'Hidden';'F';0;7;5
 6;'Hidden';'M';0;7;6
-7;'Hidden';'No pregnant';0;8;7
-8;'Hidden';'Pregnant';0;8;8
+7;'Hidden';'false';0;8;7
+8;'Hidden';'true';0;8;8
 9;'symptoms_fever_yes';'true';0;9;9
 10;'symptoms_fever_no';'False';0;9;10
 11;'symptoms_care_sought_within_24h';'Within 24h';0;10;11

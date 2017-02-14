@@ -169,9 +169,11 @@ public class UpdateDB {
         }
     }
 
-    public static void updateMatches(Context context) throws IOException {
-        FileCsvs fileCsvs = new FileCsvs();
-        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.MATCHES);
+    public static void updateMatches(Context context, boolean updateCSV) throws IOException {
+        if (updateCSV) {
+            FileCsvs fileCsvs = new FileCsvs();
+            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.MATCHES);
+        }
         List<Match> matches = Match.listAll();
         HashMap<Long, QuestionRelation> questionsrelationIds =
                 RelationsIdCsvDB.getQuestionRelationIdRelationCsvDB(context);
@@ -217,9 +219,11 @@ public class UpdateDB {
 
     }
 
-    public static void updateQuestionOption(Context context) throws IOException {
-        FileCsvs fileCsvs = new FileCsvs();
-        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTION_OPTIONS_CSV);
+    public static void updateQuestionOption(Context context, boolean updateCSV) throws IOException {
+        if (updateCSV) {
+            FileCsvs fileCsvs = new FileCsvs();
+            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTION_OPTIONS_CSV);
+        }
         List<QuestionOption> questionOptions = QuestionOption.listAll();
         HashMap<Long, Match> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
                 context);
@@ -246,9 +250,12 @@ public class UpdateDB {
 
     }
 
-    public static void updateQuestionThresholds(Context context) throws IOException {
-        FileCsvs fileCsvs = new FileCsvs();
-        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTION_THRESHOLDS_CSV);
+    public static void updateQuestionThresholds(Context context, boolean updateCSV)
+            throws IOException {
+        if (updateCSV) {
+            FileCsvs fileCsvs = new FileCsvs();
+            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTION_THRESHOLDS_CSV);
+        }
         List<QuestionThreshold> questionThresholds = QuestionThreshold.getAllQuestionThresholds();
         HashMap<Long, Match> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
                 context);
@@ -329,9 +336,11 @@ public class UpdateDB {
      * @param context Needed to open the csvs.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateTreatments(Context context) throws IOException {
-        FileCsvs fileCsvs = new FileCsvs();
-        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TREATMENT_CSV);
+    public static void updateTreatments(Context context, boolean updateCSV) throws IOException {
+        if (updateCSV) {
+            FileCsvs fileCsvs = new FileCsvs();
+            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TREATMENT_CSV);
+        }
         List<Treatment> treatments = Treatment.getAllTreatments();
         HashMap<Long, Organisation> organisationIds =
                 RelationsIdCsvDB.getOrganisationIdRelationCsvDB(context);
@@ -356,9 +365,12 @@ public class UpdateDB {
      * @param context Needed to open the csvs.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateDrugCombination(Context context) throws IOException {
-        FileCsvs fileCsvs = new FileCsvs();
-        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.DRUG_COMBINATIONS_CSV);
+    public static void updateDrugCombination(Context context, boolean updateCSV)
+            throws IOException {
+        if (updateCSV) {
+            FileCsvs fileCsvs = new FileCsvs();
+            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.DRUG_COMBINATIONS_CSV);
+        }
         List<DrugCombination> drugCombinations = DrugCombination.getAllDrugCombination();
         HashMap<Long, Drug> drugIds = RelationsIdCsvDB.getDrugIdRelationCsvDB(context);
         HashMap<Long, Treatment> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
@@ -384,9 +396,12 @@ public class UpdateDB {
      * @param context Needed to open the csvs.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateTreatmentMatches(Context context) throws IOException {
-        FileCsvs fileCsvs = new FileCsvs();
-        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TREATMENT_MATCHES_CSV);
+    public static void updateTreatmentMatches(Context context, boolean updateCSV)
+            throws IOException {
+        if (updateCSV) {
+            FileCsvs fileCsvs = new FileCsvs();
+            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TREATMENT_MATCHES_CSV);
+        }
         List<TreatmentMatch> treatmentMatches = TreatmentMatch.getAllTreatmentMatches();
         HashMap<Long, Treatment> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
                 context);

@@ -47,7 +47,7 @@ public class Migration26PutDoseDrugCombination extends BaseMigration {
                 }
                 Context context = PreferencesState.getInstance().getContext();
                 UpdateDB.updateDrugs(context);
-                UpdateDB.updateDrugCombination(context);
+                UpdateDB.updateDrugCombination(context, true);
             } catch (IOException e) {
                 e.printStackTrace();
             }

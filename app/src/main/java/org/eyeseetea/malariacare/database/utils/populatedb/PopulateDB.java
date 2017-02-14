@@ -134,6 +134,8 @@ public class PopulateDB {
     public static void initDataIfRequired(Context context) throws IOException {
         FileCsvs fileCsvs=new FileCsvs();
         fileCsvs.saveCsvsInFileIfNeeded();
+        TreatmentTable treatmentTable = new TreatmentTable();
+        treatmentTable.generateTreatmentMatrixIFNeeded();
         if (!Tab.isEmpty()) {
             Log.i(TAG, "DB Already loaded, showing surveys...");
             return;

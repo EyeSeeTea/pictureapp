@@ -53,15 +53,15 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
                 UpdateDB.updateAnswers(context);
                 UpdateDB.updateAndAddQuestions(context);
                 UpdateDB.updateQuestionRelation(context);
-                UpdateDB.updateMatches(context);
-                UpdateDB.updateQuestionOption(context);
-                UpdateDB.updateQuestionThresholds(context);
+                UpdateDB.updateMatches(context, true);
+                UpdateDB.updateQuestionOption(context, true);
+                UpdateDB.updateQuestionThresholds(context, true);
                 UpdateDB.updateDrugs(context);
                 UpdateDB.updateOrganisations(context);
-                UpdateDB.updateTreatments(context);
-                UpdateDB.updateDrugCombination(context);
-                UpdateDB.updateTreatmentMatches(context);
-                UpdateDB.updateQuestionOption(context);
+                UpdateDB.updateTreatments(context, true);
+                UpdateDB.updateDrugCombination(context, true);
+                UpdateDB.updateTreatmentMatches(context, true);
+                UpdateDB.updateQuestionOption(context, true);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e(TAG, "Error updating database" + e.getMessage());

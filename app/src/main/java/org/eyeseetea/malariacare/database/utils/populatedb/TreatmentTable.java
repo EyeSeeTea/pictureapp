@@ -5,7 +5,6 @@ import android.content.Context;
 import com.opencsv.CSVReader;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Drug;
 import org.eyeseetea.malariacare.database.model.DrugCombination;
 import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
@@ -15,6 +14,7 @@ import org.eyeseetea.malariacare.database.model.Treatment;
 import org.eyeseetea.malariacare.database.model.TreatmentMatch;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -26,7 +26,6 @@ public class TreatmentTable {
             PopulateDB.MATCHES,
             PopulateDB.QUESTION_OPTIONS_CSV,
             PopulateDB.QUESTION_THRESHOLDS_CSV,
-            PopulateDB.DRUGS_CSV,
             PopulateDB.TREATMENT_CSV,
             PopulateDB.DRUG_COMBINATIONS_CSV,
             PopulateDB.TREATMENT_MATCHES_CSV,
@@ -50,16 +49,29 @@ public class TreatmentTable {
     private String optionRDTPvId;
 
 
-    public TreatmentTable() throws IOException {
+    public TreatmentTable() {
         mContext = PreferencesState.getInstance().getContext();
         mFileCsvs = new FileCsvs();
-        initTreatmentTable();
     }
 
-    private void initTreatmentTable() throws IOException {
+    public void generateTreatmentMatrixIFNeeded() throws IOException {
+        File file = new File(mContext.getFilesDir(), PopulateDB.TREATMENT_CSV);
+        if (file.length() == 0) {
+            initTreatmentTable(false);
+        }
+    }
+
+    public void generateTreatmentMatrix() throws IOException {
+        initTreatmentTable(true);
+    }
+
+    private void initTreatmentTable(boolean needUpdate) throws IOException {
         deleteTreatmentTableFromCSV();
         deleteOldTreatmentTable();
         splitTreatmentTableToCsvs();
+        if (needUpdate) {
+            updateDB();
+        }
     }
 
 
@@ -83,10 +95,6 @@ public class TreatmentTable {
         List<DrugCombination> drugCombinations = DrugCombination.getAllDrugCombination();
         for (DrugCombination drugCombination : drugCombinations) {
             drugCombination.delete();
-        }
-        List<Drug> drugs = Drug.getAllDrugs();
-        for (Drug drug : drugs) {
-            drug.delete();
         }
     }
 
@@ -140,6 +148,15 @@ public class TreatmentTable {
             }
 
         }
+    }
+
+    private void updateDB() throws IOException {
+        UpdateDB.updateTreatments(mContext, false);
+        UpdateDB.updateDrugCombination(mContext, false);
+        UpdateDB.updateMatches(mContext, false);
+        UpdateDB.updateTreatmentMatches(mContext, false);
+        UpdateDB.updateQuestionOption(mContext, false);
+        UpdateDB.updateQuestionThresholds(mContext, false);
     }
 
 

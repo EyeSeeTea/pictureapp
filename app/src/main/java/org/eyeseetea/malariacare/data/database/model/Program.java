@@ -186,7 +186,7 @@ public class Program extends BaseModel {
         if (tabs == null) {
             tabs = new Select().from(Tab.class)
                     .where(Tab_Table.id_program.eq(this.getId_program()))
-                    .orderBy(OrderBy.fromProperty(Tab_Table.order_pos).descending())
+                    .orderBy(Tab_Table.order_pos,true)
                     .queryList();
         }
         return tabs;

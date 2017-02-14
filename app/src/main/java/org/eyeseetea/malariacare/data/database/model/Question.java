@@ -318,14 +318,12 @@ public class Question extends BaseModel {
                             .eq(tab.getId_tab()))
                     .and(Tab_Table.type.withTable(tabAlias)
                             .eq(Constants.TAB_MULTI_QUESTION))
-                    .orderBy(
-                            OrderBy.fromProperty(
-                                    Question_Table.order_pos.withTable(questionAlias)).ascending())
+                    .orderBy(Question_Table.order_pos.withTable(questionAlias), true)
                     .querySingle();
         }
         //Build a not in condition
         Iterator<QuestionRelation> questionRelationsIterator = questionRelations.iterator();
-        Condition.In in = Question_Table.id_question.notIn(
+        Condition.In in = Question_Table.id_question.withTable(questionAlias).notIn(
                 questionRelationsIterator.next().getQuestion().getId_question());
         while (questionRelationsIterator.hasNext()) {
             in.and(Long.toString(questionRelationsIterator.next().getQuestion().getId_question()));
@@ -340,7 +338,7 @@ public class Question extends BaseModel {
                 .where(Header_Table.id_tab.withTable(headerAlias)
                         .eq(tab.getId_tab()))
                 .and(in)
-                .orderBy(OrderBy.fromProperty(Question_Table.order_pos).descending())
+                .orderBy(Question_Table.order_pos, true)
                 .querySingle();
     }
 
@@ -357,7 +355,7 @@ public class Question extends BaseModel {
 
                 .join(Match.class, Join.JoinType.INNER).as(matchName)
                 .on(Match_Table.id_question_relation.withTable(matchAlias)
-                        .eq(QuestionRelation_Table.id_question_relation))
+                        .eq(QuestionRelation_Table.id_question_relation.withTable(questionRelationAlias)))
                 .join(QuestionOption.class, Join.JoinType.INNER).as(questionOptionName)
                 .on(QuestionOption_Table.id_match.withTable(questionOptionAlias)
                         .eq(Match_Table.id_match.withTable(matchAlias)))
@@ -375,9 +373,9 @@ public class Question extends BaseModel {
                         Constants.REMINDER))
                 .and(Question_Table.output.withTable(questionAlias).isNot(
                         Constants.WARNING))
-                .and(Question_Table.output.withTable(questionAlias).isNot(
+                .and(Question_Table.output.withTable(questionAlias).is(
                         QuestionRelation.PARENT_CHILD))
-                .and(Question_Table.output.withTable(questionAlias).isNot(
+                .and(Question_Table.output.withTable(questionAlias).is(
                         QUESTION_COMPULSORY))
                 .and(QuestionOption_Table.id_option.withTable(questionOptionAlias).eq(
                         id_option))
@@ -672,7 +670,7 @@ public class Question extends BaseModel {
             }
 
             Iterator<Match> matchesIterator = matches.iterator();
-            Condition.In in = Match_Table.id_match.as(matchName)
+            Condition.In in = Match_Table.id_match.withTable(matchAlias)
                     .in(matchesIterator.next().getId_match());
             while (matchesIterator.hasNext()) {
                 in.and(Long.toString(matchesIterator.next().getId_match()));
@@ -688,7 +686,7 @@ public class Question extends BaseModel {
                     //+Match
                     .join(Match.class, Join.JoinType.LEFT_OUTER).as(matchName)
                     .on(QuestionRelation_Table.id_question_relation.withTable(questionRelationAlias)
-                            .eq(Match_Table.id_question_relation))
+                            .eq(Match_Table.id_question_relation.withTable(matchAlias)))
                     //Parent child relationship
                     .where(in)
                     //In clause

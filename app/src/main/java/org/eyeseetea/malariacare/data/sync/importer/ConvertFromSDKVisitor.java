@@ -43,8 +43,6 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     private final static String TAG = ".ConvertFromSDKVisitor";
 
-
-    Program program;
     Map<String, Object> appMapObjects;
     List<Survey> surveys;
     List<Value> values;
@@ -52,7 +50,6 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
 
     public ConvertFromSDKVisitor() {
-        program = Program.getFirstProgram();
         appMapObjects = new HashMap();
         surveys = new ArrayList<>();
         values = new ArrayList<>();
@@ -121,6 +118,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     @Override
     public void visit(EventExtended sdkEventExtended) {
         OrgUnit orgUnit = (OrgUnit) appMapObjects.get(sdkEventExtended.getOrganisationUnitId());
+        Program program = Program.getProgram(sdkEventExtended.getProgramUnitId());
 
         Survey survey = new Survey();
         //Any survey that comes from the pull has been sent

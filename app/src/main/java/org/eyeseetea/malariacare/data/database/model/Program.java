@@ -221,4 +221,9 @@ public class Program extends BaseModel {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+    public static Program getProgram(String uid) {
+        return new Select().from(Program.class)
+                .where(Program_Table.uid.eq(uid)).querySingle();
+    }
 }

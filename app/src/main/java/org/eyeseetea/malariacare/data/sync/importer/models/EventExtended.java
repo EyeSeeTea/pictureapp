@@ -156,6 +156,10 @@ public class EventExtended implements VisitableFromSDK {
         return event.getOrgUnit();
     }
 
+    public String getProgramUnitId() {
+        return event.getProgram();
+    }
+
     public String getUid() {
         return event.getUId();
     }

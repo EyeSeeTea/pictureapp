@@ -19,23 +19,14 @@
 
 package org.eyeseetea.malariacare.data.sync.importer;
 
-import static org.eyeseetea.malariacare.domain.usecase.pull.PullStep.BUILDING_SURVEYS;
-import static org.eyeseetea.malariacare.domain.usecase.pull.PullStep.BUILDING_VALUES;
-
 import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
-import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
-import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
@@ -139,18 +130,18 @@ public class PullController implements IPullController {
 
         mPullRemoteDataSource.pullData(pullFilters, organisationUnits,
                 new IDataSourceCallback<List<Event>>() {
-            @Override
-            public void onSuccess(List<Event> result) {
-                PopulateDB.wipeDatabase();
+                    @Override
+                    public void onSuccess(List<Event> result) {
+                        PopulateDB.wipeDatabase();
 
-                convertFromSDK(callback);
-            }
+                        convertFromSDK(callback);
+                    }
 
-            @Override
-            public void onError(Throwable throwable) {
-                callback.onError(throwable);
-            }
-        });
+                    @Override
+                    public void onError(Throwable throwable) {
+                        callback.onError(throwable);
+                    }
+                });
     }
 
 
@@ -163,8 +154,6 @@ public class PullController implements IPullController {
         } catch (Exception ex) {
             callback.onError(new PullConversionException());
         }
-
-
     }
 
     private void convertMetaData(final Callback callback) {
@@ -197,92 +186,7 @@ public class PullController implements IPullController {
 
         callback.onStep(PullStep.CONVERT_DATA);
 
-        String orgUnitName = PreferencesState.getInstance().getOrgUnit();
-
-        List<OrgUnit> orgUnits = mConverter.getOrgUnits();
-
-        for (OrgUnit orgUnit : orgUnits) {
-
-            //Only events for the right ORGUNIT are loaded
-            if (!orgUnitName.isEmpty() &&
-                    orgUnit.getName() != null && !orgUnit.getName().equals(
-                    orgUnitName)) {
-                continue;
-            }
-
-            List<Program> programs = Program.getAllPrograms();
-
-            for (Program program : programs) {
-                List<EventExtended> events = EventExtended.getExtendedList(
-                        SdkQueries.getEvents(orgUnit.getUid(), program.getUid()));
-
-                callback.onStep(BUILDING_SURVEYS);
-
-                for (EventExtended event : events) {
-                    event.accept(mConverter);
-                }
-
-                callback.onStep(BUILDING_VALUES);
-
-                for (EventExtended event : events) {
-
-                    List<DataValueExtended> dataValues = DataValueExtended.getExtendedList(
-                            SdkQueries.getDataValues(event.getUid()));
-
-                    for (DataValueExtended dataValueExtended : dataValues) {
-                        dataValueExtended.accept(mConverter);
-                    }
-                }
-            }
-
-        }
-
-        saveConvertedSurveys(callback);
-
-    }
-
-    private void saveConvertedSurveys(final Callback callback) {
-
-        if (cancelPull) {
-            callback.onCancel();
-            return;
-        }
-
-        List<Survey> surveys = mConverter.getSurveys();
-
-        Survey.saveAll(surveys, new IDataSourceCallback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                saveConvertedValues(callback);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                callback.onError(new PullConversionException(throwable));
-            }
-        });
-    }
-
-    private void saveConvertedValues(final Callback callback) {
-
-        if (cancelPull) {
-            callback.onCancel();
-            return;
-        }
-
-        List<Value> values = mConverter.getValues();
-
-        Value.saveAll(values, new IDataSourceCallback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                callback.onComplete();
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                callback.onError(new PullConversionException(throwable));
-            }
-        });
+        DataConverter.convert(callback, mConverter);
     }
 
     //TODO jsanchez

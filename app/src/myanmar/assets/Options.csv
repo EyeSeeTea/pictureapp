@@ -1,7 +1,7 @@
 1;'patient_residence_village_other_option';'Dropdown parent';0;4;1
-2;'patient_sex_male';'No dataelementM';0;6;2
-3;'patient_sex_female';'No dataelementF';0;6;3
-4;'patient_sex_female_pregnant';'No dataelementFP';0;6;4
+2;'patient_sex_male';'NoDataElementM';0;6;2
+3;'patient_sex_female';'NoDataElementF';0;6;3
+4;'patient_sex_female_pregnant';'NoDataElementFP';0;6;4
 5;'Hidden';'F';0;7;5
 6;'Hidden';'M';0;7;6
 7;'Hidden';'false';0;8;7

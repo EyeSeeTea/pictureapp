@@ -118,7 +118,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     @Override
     public void visit(EventExtended sdkEventExtended) {
         OrgUnit orgUnit = (OrgUnit) appMapObjects.get(sdkEventExtended.getOrganisationUnitId());
-        Program program = Program.getProgram(sdkEventExtended.getProgramUnitId());
+        Program program = Program.getProgram(sdkEventExtended.getProgramUId());
 
         Survey survey = new Survey();
         //Any survey that comes from the pull has been sent

@@ -14,7 +14,9 @@ import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.Organisation;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Question;
+import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Treatment;
 
@@ -172,6 +174,60 @@ public class RelationsIdCsvDB {
             matchesFK.put(csvIds.get(i), matches.get(i));
         }
         return matchesFK;
+    }
+
+    static HashMap<Long, Long> getMatchIdRelationDBCsv(Context context)
+            throws IOException {
+        HashMap<Long, Long> matchesFK = new HashMap<>();
+        List<Match> matches = Match.listAll();
+        List<Long> csvIds = new ArrayList<>();
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(PopulateDB.MATCHES)),
+                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+        String[] idToAdd;
+        while ((idToAdd = reader.readNext()) != null) {
+            csvIds.add(Long.parseLong(idToAdd[0]));
+        }
+        for (int i = 0; i < matches.size() && i < csvIds.size(); i++) {
+            matchesFK.put(matches.get(i).getId_match(), csvIds.get(i));
+        }
+        return matchesFK;
+    }
+
+    static HashMap<Long, Long> getQuestionOptionIdRelationDBCsv(Context context)
+            throws IOException {
+        HashMap<Long, Long> questionOptionFK = new HashMap<>();
+        List<QuestionOption> questionOptions = QuestionOption.listAll();
+        List<Long> csvIds = new ArrayList<>();
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_OPTIONS_CSV)),
+                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+        String[] idToAdd;
+        while ((idToAdd = reader.readNext()) != null) {
+            csvIds.add(Long.parseLong(idToAdd[0]));
+        }
+        for (int i = 0; i < questionOptions.size() && i < csvIds.size(); i++) {
+            questionOptionFK.put(questionOptions.get(i).getId_question_option(), csvIds.get(i));
+        }
+        return questionOptionFK;
+    }
+
+    static HashMap<Long, Long> getQuestionThresholdIdRelationDBCsv(Context context)
+            throws IOException {
+        HashMap<Long, Long> questionThresholdFK = new HashMap<>();
+        List<QuestionThreshold> matches = QuestionThreshold.getAllQuestionThresholds();
+        List<Long> csvIds = new ArrayList<>();
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_THRESHOLDS_CSV)),
+                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+        String[] idToAdd;
+        while ((idToAdd = reader.readNext()) != null) {
+            csvIds.add(Long.parseLong(idToAdd[0]));
+        }
+        for (int i = 0; i < matches.size() && i < csvIds.size(); i++) {
+            questionThresholdFK.put(matches.get(i).getId_question_threshold(), csvIds.get(i));
+        }
+        return questionThresholdFK;
     }
 
     static HashMap<Long, Organisation> getOrganisationIdRelationCsvDB(Context context)

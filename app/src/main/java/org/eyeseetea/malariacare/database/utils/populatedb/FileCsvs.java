@@ -6,8 +6,11 @@ import android.util.Log;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -72,7 +75,7 @@ public class FileCsvs {
         return file.exists();
     }
 
-    private boolean createFile(String fileName) throws IOException {
+    private File createFile(String fileName) throws IOException {
         boolean created;
         File file = new File(mContext.getFilesDir(), fileName);
         try {
@@ -82,7 +85,31 @@ public class FileCsvs {
             e.printStackTrace();
             throw e;
         }
-        return created;
+        return created ? file : null;
+    }
+
+
+    public void deleteCsvLineWithId(String csvFilename, Long id) throws IOException {
+        if (!fileExists(csvFilename)) {
+            return;
+        } else {
+            File file = new File(mContext.getFilesDir() + "/" + csvFilename);
+            File tempFile = createFile("Temp" + csvFilename);
+
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] splitedLine = line.split(";");
+                if (Long.parseLong(splitedLine[0]) != id) {
+                    writer.write(line + "\n");
+                }
+            }
+            writer.close();
+            reader.close();
+            tempFile.renameTo(file);
+            mContext.deleteFile("Temp" + csvFilename);
+        }
     }
 
 }

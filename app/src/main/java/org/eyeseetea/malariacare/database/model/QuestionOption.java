@@ -222,6 +222,13 @@ public class QuestionOption extends BaseModel {
         return match.getQuestionThreshold();
     }
 
+    public static List<QuestionOption> getQuestionOptionsWithMatchId(Long id_match) {
+        return new Select()
+                .from(QuestionOption.class)
+                .where(Condition.column(QuestionOption$Table.ID_MATCH)
+                        .is(id_match)).queryList();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

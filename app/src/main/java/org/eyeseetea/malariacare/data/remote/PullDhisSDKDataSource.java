@@ -28,7 +28,10 @@ import rx.schedulers.Schedulers;
 
 public class PullDhisSDKDataSource {
 
-    public static final String USER_CC_CO_VOL = "USER_CC_CO_VOL";
+    public static final String USER_CATEGORY_COMBINATION_CATEGORY_OPTION_ATT_CODE =
+            "USER_CC_CO_VOL";
+
+
 
     public void pullMetadata(final IDataSourceCallback<List<OrganisationUnit>> callback) {
 
@@ -123,7 +126,7 @@ public class PullDhisSDKDataSource {
         }
 
         for (Attribute attribute : attributes) {
-            if (attribute.getCode().equals(USER_CC_CO_VOL)) {
+            if (attribute.getCode().equals(USER_CATEGORY_COMBINATION_CATEGORY_OPTION_ATT_CODE)) {
                 compositeUserAttribute = attribute;
             }
         }

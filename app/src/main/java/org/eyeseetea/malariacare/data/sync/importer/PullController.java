@@ -25,13 +25,9 @@ import static org.eyeseetea.malariacare.domain.usecase.pull.PullStep.BUILDING_VA
 import android.content.Context;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDB;
@@ -57,7 +53,7 @@ public class PullController implements IPullController {
     PullDhisSDKDataSource mPullRemoteDataSource = new PullDhisSDKDataSource();
     ConvertFromSDKVisitor mConverter = new ConvertFromSDKVisitor();
     private Context mContext;
-    private boolean cancellPull;
+    private boolean cancelPull;
 
     public PullController(Context context) {
         mContext = context;
@@ -66,6 +62,7 @@ public class PullController implements IPullController {
         mConverter = new ConvertFromSDKVisitor();
     }
 
+    @Override
     public void pull(final PullFilters pullFilters, final Callback callback) {
         Log.d(TAG, "Starting PULL process...");
         try {
@@ -78,23 +75,7 @@ public class PullController implements IPullController {
                 callback.onComplete();
             } else {
 
-                if (cancellPull) {
-                    callback.onCancel();
-                    return;
-                }
-
-                mPullRemoteDataSource.pullMetadata(
-                        new IDataSourceCallback<List<OrganisationUnit>>() {
-                            @Override
-                            public void onSuccess(List<OrganisationUnit> organisationUnits) {
-                                pullData(pullFilters, organisationUnits, callback);
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-                                callback.onError(throwable);
-                            }
-                        });
+                pullMetada(pullFilters, callback);
             }
         } catch (Exception ex) {
             Log.e(TAG, "pull: " + ex.getLocalizedMessage());
@@ -104,7 +85,27 @@ public class PullController implements IPullController {
 
     @Override
     public void cancel() {
-        cancellPull = true;
+        cancelPull = true;
+    }
+
+    private void pullMetada(final PullFilters pullFilters, final Callback callback) {
+        if (cancelPull) {
+            callback.onCancel();
+            return;
+        }
+
+        mPullRemoteDataSource.pullMetadata(
+                new IDataSourceCallback<List<OrganisationUnit>>() {
+                    @Override
+                    public void onSuccess(List<OrganisationUnit> organisationUnits) {
+                        pullData(pullFilters, organisationUnits, callback);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        callback.onError(throwable);
+                    }
+                });
     }
 
     private void populateMetadataFromCsvs(boolean isDemo) throws IOException {
@@ -121,46 +122,9 @@ public class PullController implements IPullController {
         if (orgUnits.size() == 0) {
             try {
                 PopulateDB.populateDummyData(mContext.getAssets());
-                convertOUinOptions();
+                OrgUnitToOptionConverter.convert();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-        }
-    }
-
-    private void convertOUinOptions() {
-        List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
-        //remove older values, but not the especial "other" option
-        for (Question question : questions) {
-            List<Option> options = question.getAnswer().getOptions();
-            removeOldValues(question, options);
-        }
-
-        if (questions.size() == 0) {
-            return;
-        }
-
-        //Generate the orgUnits options for each question with orgunit dropdown list
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-        for (OrgUnit orgUnit : orgUnits) {
-            addOUOptionToQuestions(questions, orgUnit);
-        }
-    }
-
-    public static void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
-        for (Question question : questions) {
-            Option option = new Option();
-            option.setAnswer(question.getAnswer());
-            option.setName(orgUnit.getUid());
-            option.setCode(orgUnit.getName());
-            option.save();
-        }
-    }
-
-    public static void removeOldValues(Question question, List<Option> options) {
-        for (Option option : options) {
-            if (QuestionOption.findByQuestionAndOption(question, option).size() == 0) {
-                option.delete();
             }
         }
     }
@@ -168,7 +132,7 @@ public class PullController implements IPullController {
     private void pullData(PullFilters pullFilters, List<OrganisationUnit> organisationUnits,
             final Callback callback) {
 
-        if (cancellPull) {
+        if (cancelPull) {
             callback.onCancel();
             return;
         }
@@ -205,7 +169,7 @@ public class PullController implements IPullController {
 
     private void convertMetaData(final Callback callback) {
 
-        if (cancellPull) {
+        if (cancelPull) {
             callback.onCancel();
             return;
         }
@@ -221,12 +185,12 @@ public class PullController implements IPullController {
             assignedOrganisationsUnit.accept(mConverter);
         }
 
-        convertOUinOptions();
+        OrgUnitToOptionConverter.convert();
     }
 
     private void convertData(final Callback callback) {
 
-        if (cancellPull) {
+        if (cancelPull) {
             callback.onCancel();
             return;
         }
@@ -250,35 +214,22 @@ public class PullController implements IPullController {
 
             for (Program program : programs) {
                 List<EventExtended> events = EventExtended.getExtendedList(
-
                         SdkQueries.getEvents(orgUnit.getUid(), program.getUid()));
-                Log.d(TAG,
-                        String.format("Converting surveys and values for orgUnit: %s | program: %s",
-                                orgUnit.getChildren(), program.getName()));
 
                 callback.onStep(BUILDING_SURVEYS);
 
-                int i = 0;
                 for (EventExtended event : events) {
-                    Log.d(TAG, mContext.getString(R.string.progress_pull_building_survey)
-                            + String.format(" %s/%s", i++, events.size()));
-
                     event.accept(mConverter);
                 }
 
                 callback.onStep(BUILDING_VALUES);
 
-                i = 0;
                 for (EventExtended event : events) {
 
                     List<DataValueExtended> dataValues = DataValueExtended.getExtendedList(
                             SdkQueries.getDataValues(event.getUid()));
 
                     for (DataValueExtended dataValueExtended : dataValues) {
-                        if (++i % 50 == 0) {
-                            Log.d(TAG, mContext.getString(R.string.progress_pull_building_value)
-                                    + String.format(" %s", i));
-                        }
                         dataValueExtended.accept(mConverter);
                     }
                 }
@@ -292,7 +243,7 @@ public class PullController implements IPullController {
 
     private void saveConvertedSurveys(final Callback callback) {
 
-        if (cancellPull) {
+        if (cancelPull) {
             callback.onCancel();
             return;
         }
@@ -314,7 +265,7 @@ public class PullController implements IPullController {
 
     private void saveConvertedValues(final Callback callback) {
 
-        if (cancellPull) {
+        if (cancelPull) {
             callback.onCancel();
             return;
         }

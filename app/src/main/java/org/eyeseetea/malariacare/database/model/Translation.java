@@ -78,7 +78,7 @@ public class Translation extends BaseModel {
         this.language = language;
     }
 
-    public String getLocalizedString(Long id_string, String language) {
+    public static String getLocalizedString(Long id_string, String language) {
         Translation translation = new Select()
                 .from(Translation.class)
                 .where(Condition.column(Translation$Table.ID_STRING_KEY).is(id_string))
@@ -103,7 +103,7 @@ public class Translation extends BaseModel {
         }
 
         return translation != null && translation.getTranslation() != null
-                ? translation.getTranslation() : "";
+                ? translation.getTranslation() : id_string + "";
     }
 
     @Override

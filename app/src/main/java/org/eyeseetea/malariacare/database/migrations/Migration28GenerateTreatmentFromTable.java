@@ -11,14 +11,14 @@ import org.eyeseetea.malariacare.database.utils.populatedb.TreatmentTable;
 
 import java.io.IOException;
 
-@Migration(version = 27, databaseName = AppDatabase.NAME)
-public class Migration27GenerateTreatmentFromTable extends BaseMigration {
-    private static String TAG = ".Migration25";
+@Migration(version = 28, databaseName = AppDatabase.NAME)
+public class Migration28GenerateTreatmentFromTable extends BaseMigration {
+    private static String TAG = ".Migration28";
 
-    private static Migration27GenerateTreatmentFromTable instance;
+    private static Migration28GenerateTreatmentFromTable instance;
     private boolean postMigrationRequired;
 
-    public Migration27GenerateTreatmentFromTable() {
+    public Migration28GenerateTreatmentFromTable() {
         instance = this;
     }
 

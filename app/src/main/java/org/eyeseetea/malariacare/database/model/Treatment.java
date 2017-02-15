@@ -25,9 +25,9 @@ public class Treatment extends BaseModel {
     @Column
     Long id_organisation;
     @Column
-    String diagnosis;
+    Long diagnosis;
     @Column
-    String message;
+    Long message;
     @Column
     int type;
     /**
@@ -39,7 +39,7 @@ public class Treatment extends BaseModel {
     public Treatment() {
     }
 
-    public Treatment(long id_treatment, long id_organisation, String diagnosis, String message,
+    public Treatment(long id_treatment, long id_organisation, Long diagnosis, Long message,
             int type) {
         this.id_treatment = id_treatment;
         this.id_organisation = id_organisation;
@@ -102,19 +102,19 @@ public class Treatment extends BaseModel {
         this.id_organisation = (organisation != null) ? organisation.getId_organisation() : null;
     }
 
-    public String getDiagnosis() {
+    public Long getDiagnosis() {
         return diagnosis;
     }
 
-    public void setDiagnosis(String diagnosis) {
+    public void setDiagnosis(Long diagnosis) {
         this.diagnosis = diagnosis;
     }
 
-    public String getMessage() {
+    public Long getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Long message) {
         this.message = message;
     }
 

@@ -17,6 +17,7 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.database.model.StringKey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Treatment;
 
@@ -247,6 +248,43 @@ public class RelationsIdCsvDB {
         }
         return organisationFK;
     }
+
+    static HashMap<Long, StringKey> getStringKeyIdRelationCsvDB(Context context)
+            throws IOException {
+        HashMap<Long, StringKey> stringKeyFK = new HashMap<>();
+        List<StringKey> stringKeys = StringKey.getAllStringKeys();
+        List<Long> csvIds = new ArrayList<>();
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(PopulateDB.STRING_KEY_CSV)),
+                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+        String[] idToAdd;
+        while ((idToAdd = reader.readNext()) != null) {
+            csvIds.add(Long.parseLong(idToAdd[0]));
+        }
+        for (int i = 0; i < stringKeys.size() && i < csvIds.size(); i++) {
+            stringKeyFK.put(csvIds.get(i), stringKeys.get(i));
+        }
+        return stringKeyFK;
+    }
+
+    static HashMap<Long, Object> getIdRelationCsvDB(Context context, String CsvName,
+            List<Object> allDBObjects)
+            throws IOException {
+        HashMap<Long, Object> objectFK = new HashMap<>();
+        List<Long> csvIds = new ArrayList<>();
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(CsvName)),
+                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+        String[] idToAdd;
+        while ((idToAdd = reader.readNext()) != null) {
+            csvIds.add(Long.parseLong(idToAdd[0]));
+        }
+        for (int i = 0; i < allDBObjects.size() && i < csvIds.size(); i++) {
+            objectFK.put(csvIds.get(i), allDBObjects.get(i));
+        }
+        return objectFK;
+    }
+
 
     static HashMap<Long, Drug> getDrugIdRelationCsvDB(Context context)
             throws IOException {

@@ -20,6 +20,8 @@ public class FileCsvs {
     private Context mContext;
     private final static String TAG = ".FileCsvs";
     private static final List<String> csvsToCreate = Arrays.asList(
+            PopulateDB.STRING_KEY_CSV,
+            PopulateDB.TRANSLATION_CSV,
             PopulateDB.PROGRAMS_CSV,
             PopulateDB.TABS_CSV,
             PopulateDB.HEADERS_CSV,
@@ -50,7 +52,6 @@ public class FileCsvs {
         }
     }
 
-
     public void saveCsvFromAssetsToFile(String csvName) throws IOException {
         if (!fileExists(csvName)) {
             createFile(csvName);
@@ -58,21 +59,26 @@ public class FileCsvs {
             mContext.deleteFile(csvName);
             createFile(csvName);
         }
-        FileOutputStream outputStream = mContext.openFileOutput(csvName, Context.MODE_PRIVATE);
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(mContext.getAssets().open(csvName)));
-        String line = "";
-        while ((line = reader.readLine()) != null) {
-            outputStream.write((line + "\n").getBytes());
+        if (assetFileExits(csvName)) {
+            FileOutputStream outputStream = mContext.openFileOutput(csvName, Context.MODE_PRIVATE);
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(mContext.getAssets().open(csvName)));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                outputStream.write((line + "\n").getBytes());
+            }
+            outputStream.close();
+            reader.close();
         }
-        outputStream.close();
-        reader.close();
     }
-
 
     private boolean fileExists(String fname) {
         File file = mContext.getFileStreamPath(fname);
         return file.exists();
+    }
+
+    private boolean assetFileExits(String csvName) throws IOException {
+        return Arrays.asList(mContext.getAssets().list("")).contains(csvName);
     }
 
     private File createFile(String fileName) throws IOException {

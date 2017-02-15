@@ -28,7 +28,7 @@ import com.raizlabs.android.dbflow.annotation.Database;
         holderClassSuffix = AppDatabase.HOLDERCLASSSUFFIX)
 public class AppDatabase {
     public static final String NAME = "EyeSeeTeaDB";
-    public static final int VERSION = 27;
+    public static final int VERSION = 28;
     public static final String HOLDERCLASSSUFFIX = "_EyeSeeTeaDB";
 }
 

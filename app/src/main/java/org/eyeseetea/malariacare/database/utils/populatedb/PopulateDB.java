@@ -42,6 +42,7 @@ import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.database.model.Score;
+import org.eyeseetea.malariacare.database.model.StringKey;
 import org.eyeseetea.malariacare.database.model.Survey;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Treatment;
@@ -80,12 +81,16 @@ public class PopulateDB {
     public static final String TREATMENT_MATCHES_CSV = "TreatmentMatches.csv";
     public static final String TREATMENT_CSV = "Treatments.csv";
     public static final String TREATMENT_TABLE_CSV = "TreatmentTable.csv";
+    public static final String STRING_KEY_CSV = "StringKeys.csv";
+    public static final String TRANSLATION_CSV = "Translations.csv";
 
     public static final String ORG_UNIT_LEVEL_CSV = "OrgUnitLevel.csv";
     public static final String ORG_UNIT_CSV = "OrgUnit.csv";
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
     private static final List<String> tables2populate = Arrays.asList(
+            STRING_KEY_CSV,
+            TRANSLATION_CSV,
             PROGRAMS_CSV,
             TABS_CSV,
             HEADERS_CSV,
@@ -130,7 +135,7 @@ public class PopulateDB {
     static HashMap<Long, Drug> drugList = new HashMap<>();
     static HashMap<Long, Organisation> organisationList = new HashMap<>();
     static HashMap<Long, Treatment> treatmentList = new HashMap<>();
-
+    static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
     public static void initDataIfRequired(Context context) throws IOException {
         FileCsvs fileCsvs=new FileCsvs();
         fileCsvs.saveCsvsInFileIfNeeded();
@@ -318,7 +323,7 @@ public class PopulateDB {
                         break;
                     case TREATMENT_CSV:
                         Treatment treatment = PopulateRow.populateTreatments(line, organisationList,
-                                null);
+                                stringKeyList, null);
                         treatment.insert();
                         treatmentList.put(Long.parseLong(line[0]), treatment);
                         break;
@@ -329,6 +334,14 @@ public class PopulateDB {
                     case TREATMENT_MATCHES_CSV:
                         PopulateRow.populateTreatmentMatches(line, treatmentList, matchList,
                                 null).insert();
+                        break;
+                    case STRING_KEY_CSV:
+                        StringKey stringKey = PopulateRow.populateStringKey(line, null);
+                        stringKey.insert();
+                        stringKeyList.put(Long.valueOf(line[0]), stringKey);
+                        break;
+                    case TRANSLATION_CSV:
+                        PopulateRow.populateTranslation(line, stringKeyList, null).insert();
                         break;
                 }
             }

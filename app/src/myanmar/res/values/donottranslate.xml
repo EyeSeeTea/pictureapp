@@ -45,5 +45,9 @@
     <string name="confirmInvalidQuestionUID">15V1JoHmO94</string>
     <string name="residenceVillageUID">4YY1JoHmO94</string>
     <string name="patientResidenceVillageOtherCode">patient_residence_village_other_option</string>
+    <string name="myanmar_locale" translatable="false">my_MM</string>
+    <string name="chinese_locale" translatable="false">zh</string>
+    <string name="treatment_diagnosis" translatable="false">treatment_diagnosis_%d</string>
+    <string name="treatment_message" translatable="false">treatment_message_%d</string>
 
 </resources>

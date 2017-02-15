@@ -15,7 +15,9 @@ import org.eyeseetea.malariacare.database.model.Question;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.database.model.StringKey;
 import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.database.model.Translation;
 import org.eyeseetea.malariacare.database.model.Treatment;
 import org.eyeseetea.malariacare.database.model.TreatmentMatch;
 
@@ -183,15 +185,16 @@ public class PopulateRow {
      * Method to populate each row of Treatment.csv, execute after populateOrganisations.
      *
      * @param line The row of the csv to populate.
+     * @param stringKeyList
      */
     static Treatment populateTreatments(String[] line, HashMap<Long, Organisation> organisationFK,
-            @Nullable Treatment treatment) {
+            HashMap<Long, StringKey> stringKeyList, @Nullable Treatment treatment) {
         if (treatment == null) {
             treatment = new Treatment();
         }
         treatment.setOrganisation(organisationFK.get(Long.parseLong(line[1])));
-        treatment.setDiagnosis(line[2]);
-        treatment.setMessage(line[3]);
+        treatment.setDiagnosis(stringKeyList.get(Long.valueOf(line[2])).getId_string_key());
+        treatment.setMessage(stringKeyList.get(Long.valueOf(line[3])).getId_string_key());
         treatment.setType(Integer.parseInt(line[4]));
         return treatment;
     }
@@ -238,5 +241,25 @@ public class PopulateRow {
                     optionAttributeFK.get(Long.valueOf(line[5])));
         }
         return option;
+    }
+
+    static StringKey populateStringKey(String[] line, @Nullable StringKey stringKey) {
+        if (stringKey == null) {
+            stringKey = new StringKey();
+        }
+        stringKey.setKey(line[1]);
+        return stringKey;
+    }
+
+    public static Translation populateTranslation(String[] line,
+            HashMap<Long, StringKey> stringKeyFK,
+            Translation translation) {
+        if (translation == null) {
+            translation = new Translation();
+        }
+        translation.setId_string_key(stringKeyFK.get(Long.valueOf(line[1])).getId_string_key());
+        translation.setTranslation(line[2]);
+        translation.setLanguage(line[3]);
+        return translation;
     }
 }

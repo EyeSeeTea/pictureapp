@@ -144,8 +144,9 @@ public class Treatment {
 
         Question treatmentQuestion = new Question();
         treatmentQuestion.setOutput(Constants.QUESTION_LABEL);
-        treatmentQuestion.setForm_name(treatment.getDiagnosis());
-        treatmentQuestion.setHelp_text(treatment.getMessage());
+        //TODO put the correct message no the fk
+        treatmentQuestion.setForm_name(treatment.getDiagnosis() + "");
+        treatmentQuestion.setHelp_text(treatment.getMessage() + "");
         treatmentQuestion.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
         treatmentQuestion.setHeader(Header.DYNAMIC_TREATMENT_HEADER_ID);
         questions.add(treatmentQuestion);

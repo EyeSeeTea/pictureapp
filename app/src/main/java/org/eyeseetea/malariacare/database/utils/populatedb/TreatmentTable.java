@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.database.utils.populatedb;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import com.opencsv.CSVReader;
 
@@ -10,6 +11,8 @@ import org.eyeseetea.malariacare.database.model.Match;
 import org.eyeseetea.malariacare.database.model.QuestionOption;
 import org.eyeseetea.malariacare.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.database.model.StringKey;
+import org.eyeseetea.malariacare.database.model.Translation;
 import org.eyeseetea.malariacare.database.model.Treatment;
 import org.eyeseetea.malariacare.database.model.TreatmentMatch;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -96,6 +99,14 @@ public class TreatmentTable {
         for (DrugCombination drugCombination : drugCombinations) {
             drugCombination.delete();
         }
+        List<StringKey> stringKeys = StringKey.getAllStringKeys();
+        for (StringKey stringKey : stringKeys) {
+            stringKey.delete();
+        }
+        List<Translation> translations = Translation.getAllTranslations();
+        for (Translation translation : translations) {
+            translation.delete();
+        }
     }
 
     /**
@@ -128,6 +139,10 @@ public class TreatmentTable {
         List<String[]> treatmentLines = new ArrayList<>();
         List<String[]> treatmentMatchLines = new ArrayList<>();
         List<String[]> drugsCombinationLines = new ArrayList<>();
+        List<String[]> stringKeyLines = new ArrayList<>();
+        List<String[]> translationLines = new ArrayList<>();
+        List<String[]> messageLines = new ArrayList<>();
+        List<String[]> diagnosisLines = new ArrayList<>();
         List<String[]> matchLines = getNotTreatmentLines(PopulateDB.MATCHES);
         List<String[]> questionThresholdLines = getNotTreatmentLines(
                 PopulateDB.QUESTION_THRESHOLDS_CSV);
@@ -135,7 +150,9 @@ public class TreatmentTable {
         String[] line;
         while ((line = reader.readNext()) != null) {
 
-            addTreatment(line, treatmentLines, treatmentMatchLines);
+            addDiagnosisAndMessageLine(line, stringKeyLines, messageLines, diagnosisLines,
+                    translationLines);
+            addTreatment(line, treatmentLines, treatmentMatchLines, messageLines, diagnosisLines);
             addDrugCombinations(line, drugsCombinationLines, treatmentLines);
 
             if (line[5].equals("Y")) {
@@ -150,7 +167,10 @@ public class TreatmentTable {
         }
     }
 
+
     private void updateDB() throws IOException {
+        UpdateDB.updateStringKeys(mContext, false);
+        UpdateDB.updateTranslations(mContext, false);
         UpdateDB.updateTreatments(mContext, false);
         UpdateDB.updateDrugCombination(mContext, false);
         UpdateDB.updateMatches(mContext, false);
@@ -194,12 +214,38 @@ public class TreatmentTable {
                 1, PopulateDB.OPTIONS_CSV);
     }
 
+    private void addDiagnosisAndMessageLine(String[] line, List<String[]> stringKeyLines,
+            List<String[]> messageLines, List<String[]> diagnosisLines,
+            List<String[]> translationLines) throws IOException {
+        int treatmentPosition = (Integer.parseInt(getNextIdToInsert(stringKeyLines))) / 2;
+
+        Resources res = mContext.getResources();
+
+        addStringKeyLine(stringKeyLines, R.string.treatment_diagnosis, treatmentPosition,
+                diagnosisLines);
+        addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[6],
+                Translation.DEFAULT_LANGUAGE);
+        addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[7],
+                res.getString(R.string.myanmar_locale));
+        addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[8],
+                res.getString(R.string.chinese_locale));
+
+        addStringKeyLine(stringKeyLines, R.string.treatment_message, treatmentPosition,
+                messageLines);
+        addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[9],
+                Translation.DEFAULT_LANGUAGE);
+        addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[10],
+                res.getString(R.string.myanmar_locale));
+        addTranslationLine(translationLines, getLastIdInserted(stringKeyLines), line[11],
+                res.getString(R.string.chinese_locale));
+    }
 
     private void addTreatment(String line[], List<String[]> treatmentLines,
-            List<String[]> treatmentMatchLines) throws IOException {
-        String[] treatmentLine = {getNextIdToInsert(treatmentLines), "1", line[6], line[9],
-                (line[5].equals("Y")
-                        ? Treatment.TYPE_MAIN : Treatment.TYPE_NOT_MAIN) + ""};
+            List<String[]> treatmentMatchLines, List<String[]> messageLines,
+            List<String[]> diagnosisLines) throws IOException {
+        String[] treatmentLine = {getNextIdToInsert(treatmentLines), "1", getLastIdInserted(
+                diagnosisLines), getLastIdInserted(messageLines), (line[5].equals("Y")
+                ? Treatment.TYPE_MAIN : Treatment.TYPE_NOT_MAIN) + ""};
         mFileCsvs.insertCsvLine(PopulateDB.TREATMENT_CSV, treatmentLine);
         treatmentLines.add(treatmentLine);
         if (line[5].equals("N")) {
@@ -313,6 +359,26 @@ public class TreatmentTable {
         mFileCsvs.insertCsvLine(PopulateDB.QUESTION_OPTIONS_CSV, questionOptionRdt);
     }
 
+    private void addStringKeyLine(List<String[]> stringKeyLines,
+            int stringId, int treatmentPosition, List<String[]> diagnosisMessagesLines)
+            throws IOException {
+        Resources res = mContext.getResources();
+        String[] stringKeyLine = {getNextIdToInsert(stringKeyLines), String.format(
+                res.getString(stringId), treatmentPosition)};
+        mFileCsvs.insertCsvLine(PopulateDB.STRING_KEY_CSV, stringKeyLine);
+        stringKeyLines.add(stringKeyLine);
+        diagnosisMessagesLines.add(stringKeyLine);
+    }
+
+
+    private void addTranslationLine(List<String[]> translationLines, String idStringKey,
+            String translation, String language)
+            throws IOException {
+        String[] translationLine = {getNextIdToInsert(translationLines),
+                idStringKey, translation, language};
+        mFileCsvs.insertCsvLine(PopulateDB.TRANSLATION_CSV, translationLine);
+        translationLines.add(translationLine);
+    }
 
     private void addDrugTreatment(List<String[]> drugCombinations, List<String[]> treatments,
             String uid, String dose)
@@ -386,5 +452,4 @@ public class TreatmentTable {
     private String getLastIdInserted(List<String[]> lines) {
         return (lines == null || lines.isEmpty()) ? "1" : lines.get(lines.size() - 1)[0];
     }
-
 }

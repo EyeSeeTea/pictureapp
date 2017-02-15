@@ -1,3 +1,4 @@
+1;'0-99';'Y';'Y';'Pf';'Y';'Severe - pregnancy';;;'Pf in pregnancy is dangerous. Go to the nearest hospital immediately for medical assistance';;;;;;;;;;
 1;'0-99';'Y';'Y';'Mixed';'Y';'Severe - pregnancy';;;'Pf in pregnancy is dangerous. Go to the nearest hospital immediately for medical assistance';;;;;;;;;;
 1;'0-0';'N';'Y';'Pf';'Y';'Severe <1';;;'Make sure the patient take 1/2 tablets ACT if he/she can swallow and refer to the nearest hospital immediately for medical assistance. Dont give primaquine to <1 children. ';;;0,5;;;;;;;'ok'
 1;'1-4';'N';'Y';'Pf';'Y';'Severe 1 - 4';;;'Give 1 tablet ACT and refer';;;1;;;;;;;

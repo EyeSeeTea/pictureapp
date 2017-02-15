@@ -196,21 +196,21 @@ public class TreatmentTable {
                 PopulateDB.QUESTIONS_CSV);
         rdtQuestionId = getCsvId(mContext.getResources().getString(R.string.rdtQuestionUID),
                 5, PopulateDB.QUESTIONS_CSV);
-        optionPregnantId = getCsvId("patient_sex_female_pregnant",
+        optionPregnantId = getCsvId(mContext.getResources().getString(R.string.option_sex_pregnant),
                 1, PopulateDB.OPTIONS_CSV);
-        optionMaleId = getCsvId("patient_sex_male",
+        optionMaleId = getCsvId(mContext.getResources().getString(R.string.option_sex_male),
                 1, PopulateDB.OPTIONS_CSV);
-        optionFemaleId = getCsvId("patient_sex_female",
+        optionFemaleId = getCsvId(mContext.getResources().getString(R.string.option_sex_female),
                 1, PopulateDB.OPTIONS_CSV);
-        optionSeverId = getCsvId("symptoms_severity_yes",
+        optionSeverId = getCsvId(mContext.getResources().getString(R.string.option_severe),
                 1, PopulateDB.OPTIONS_CSV);
-        optionNoSeverId = getCsvId("symptoms_severity_no",
+        optionNoSeverId = getCsvId(mContext.getResources().getString(R.string.option_severe_no),
                 1, PopulateDB.OPTIONS_CSV);
-        optionRDTMixedId = getCsvId("rdt_mixed",
+        optionRDTMixedId = getCsvId(mContext.getResources().getString(R.string.option_rdt_mixed),
                 1, PopulateDB.OPTIONS_CSV);
-        optionRDTPfId = getCsvId("rdt_pf",
+        optionRDTPfId = getCsvId(mContext.getResources().getString(R.string.option_rdt_pf),
                 1, PopulateDB.OPTIONS_CSV);
-        optionRDTPvId = getCsvId("rdt_pv",
+        optionRDTPvId = getCsvId(mContext.getResources().getString(R.string.option_rdt_pv),
                 1, PopulateDB.OPTIONS_CSV);
     }
 

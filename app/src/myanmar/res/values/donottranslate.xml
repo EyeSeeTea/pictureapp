@@ -49,5 +49,13 @@
     <string name="chinese_locale" translatable="false">zh</string>
     <string name="treatment_diagnosis" translatable="false">treatment_diagnosis_%d</string>
     <string name="treatment_message" translatable="false">treatment_message_%d</string>
+    <string name="option_sex_pregnant" translatable="false">patient_sex_female_pregnant</string>
+    <string name="option_sex_male" translatable="false">patient_sex_male</string>
+    <string name="option_sex_female" translatable="false">patient_sex_female</string>
+    <string name="option_severe" translatable="false">symptoms_severity_yes</string>
+    <string name="option_severe_no" translatable="false">symptoms_severity_no</string>
+    <string name="option_rdt_mixed" translatable="false">rdt_mixed</string>
+    <string name="option_rdt_pf" translatable="false">rdt_pf</string>
+    <string name="option_rdt_pv" translatable="false">rdt_pv</string>
 
 </resources>

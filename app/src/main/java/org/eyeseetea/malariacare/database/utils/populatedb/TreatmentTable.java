@@ -26,6 +26,8 @@ import java.util.List;
 
 public class TreatmentTable {
     private static final List<String> csvsToDelete = Arrays.asList(
+            PopulateDB.STRING_KEY_CSV,
+            PopulateDB.TRANSLATION_CSV,
             PopulateDB.MATCHES,
             PopulateDB.QUESTION_OPTIONS_CSV,
             PopulateDB.QUESTION_THRESHOLDS_CSV,

@@ -37,7 +37,11 @@ public class FileCsvs {
             PopulateDB.ORGANISATIONS_CSV,
             PopulateDB.TREATMENT_CSV,
             PopulateDB.DRUG_COMBINATIONS_CSV,
-            PopulateDB.TREATMENT_MATCHES_CSV);
+            PopulateDB.TREATMENT_MATCHES_CSV,
+            PopulateDB.ORG_UNIT_CSV,
+            PopulateDB.ORG_UNIT_LEVEL_CSV
+
+    );
 
     public FileCsvs() {
         mContext = PreferencesState.getInstance().getContext();

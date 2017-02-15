@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.data.database.utils;
 
+import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
+
 import java.util.HashMap;
 import java.util.Map;
 

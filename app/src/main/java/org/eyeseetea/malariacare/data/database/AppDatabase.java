@@ -22,9 +22,6 @@ package org.eyeseetea.malariacare.data.database;
 import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 
-/**
- * Created by arrizabalaga on 19/10/15.
- */
 @Database(
         name = AppDatabase.NAME, version = AppDatabase.VERSION
 )
@@ -46,6 +43,9 @@ public class AppDatabase {
     public static final String compositeScoreTwoName = "cs2";
     public static final String programName = "pg";
     public static final String orgUnitProgramRelationName = "oupr";
+    public static final String treatmentName = "tr";
+    public static final String treatmentMatchName = "trm";
+    public static final String questionThresholdName = "qt";
 
     public static final NameAlias questionAlias = NameAlias.builder(questionName).build();
     public static final NameAlias questionRelationAlias = NameAlias.builder(
@@ -63,6 +63,13 @@ public class AppDatabase {
     public static final NameAlias programAlias = NameAlias.builder(programName).build();
     public static final NameAlias orgUnitProgramRelationAlias = NameAlias.builder(
             orgUnitProgramRelationName).build();
+    public static final NameAlias treatmentAlias = NameAlias.builder(
+            treatmentName).build();
+    public static final NameAlias treatmentMatchAlias = NameAlias.builder(
+            treatmentMatchName).build();
+    public static final NameAlias questionThresholdAlias = NameAlias.builder(
+            questionThresholdName).build();
+
 
 
     // Aliases used in DHIS2 DB wrappers

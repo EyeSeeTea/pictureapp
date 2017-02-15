@@ -4,22 +4,22 @@ import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
-import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomButton;
+import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionView implements
         IQuestionView {
-    EditText numberPicker;
-    Button sendButton;
+    CustomEditText numberPicker;
+    CustomButton sendButton;
 
     public PositiveNumberSingleQuestionView(Context context) {
         super(context);
@@ -38,25 +38,26 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
     }
 
     @Override
+    public void setHelpText(String helpText) {
+        numberPicker.setHint(helpText);
+    }
+
+    @Override
     public void setValue(Value value) {
         if (value != null) {
             numberPicker.setText(value.getValue());
         }
     }
 
-    @Override
-    public void setHint(String hintValue) {
-        numberPicker.setHint(hintValue);
-    }
-
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_positiveint_row, this);
 
-        numberPicker = (EditCard) findViewById(R.id.answer);
+        numberPicker = (CustomEditText) findViewById(R.id.answer);
         numberPicker.setFocusable(true);
         numberPicker.setFocusableInTouchMode(true);
 
-        sendButton = (Button) findViewById(R.id.dynamic_positiveInt_btn);
+        Validation.getInstance().addInput(numberPicker);
+        sendButton = (CustomButton) findViewById(R.id.dynamic_positiveInt_btn);
 
         sendButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -76,11 +77,6 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
                 return false;
             }
         });
-
-/*        if (!isMultipleQuestionTab(tabType)) {
-            //Add button to listener
-            swipeTouchListener.addClickableView(button);
-        }*/
     }
 
     private void validateAnswer(Context context) {
@@ -88,8 +84,9 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
             PositiveNumber positiveNumber = PositiveNumber.parse(numberPicker.getText().toString());
             hideKeyboard(numberPicker);
             notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
-
+            Validation.getInstance().removeInputError(numberPicker);
         } catch (InvalidPositiveNumberException e) {
+            Validation.getInstance().addinvalidInput(numberPicker, context.getString(R.string.dynamic_error_age));
             numberPicker.setError(context.getString(R.string.dynamic_error_age));
         }
     }

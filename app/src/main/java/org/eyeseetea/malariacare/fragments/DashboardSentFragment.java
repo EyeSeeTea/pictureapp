@@ -42,6 +42,7 @@ import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +127,7 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
     private void initListView() {
         if (Session.isNotFullOfUnsent(getActivity())) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View header = HeaderUseCase.getInstance().loadHeader(this.adapter.getHeaderLayout(),
+            View header = DashboardHeaderStrategy.getInstance().loadHeader(this.adapter.getHeaderLayout(),
                     inflater);
             View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
 
@@ -182,7 +183,7 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
     }
 
     public void reloadHeader(Activity activity) {
-        HeaderUseCase.getInstance().init(activity, R.string.tab_tag_improve);
+        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_improve);
     }
 
     public void reloadData() {

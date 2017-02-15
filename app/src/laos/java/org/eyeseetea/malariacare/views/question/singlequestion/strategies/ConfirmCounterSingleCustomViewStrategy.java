@@ -5,6 +5,7 @@ import android.view.View;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
+import org.eyeseetea.malariacare.layout.adapters.survey.strategies.ConfirmCounterCommonStrategy;
 
 public class ConfirmCounterSingleCustomViewStrategy implements
         IConfirmCounterSingleCustomViewStrategy {
@@ -17,7 +18,10 @@ public class ConfirmCounterSingleCustomViewStrategy implements
     public void showConfirmCounter(final View view, final Option selectedOption,
             Question question, Question questionCounter) {
 
-        mDynamicTabAdapter.showStandardConfirmCounter(view, selectedOption, question,
+        ConfirmCounterCommonStrategy confirmCounterCommonStrategy =
+                new ConfirmCounterCommonStrategy(mDynamicTabAdapter);
+
+        confirmCounterCommonStrategy.showStandardConfirmCounter(view, selectedOption, question,
                 questionCounter);
     }
 }

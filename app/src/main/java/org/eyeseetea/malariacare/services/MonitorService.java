@@ -26,8 +26,8 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.monitor.MonitorBuilder;
-import org.eyeseetea.malariacare.monitor.utils.TimePeriodCalculator;
+import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.utils.TimePeriodCalculator;
 
 import java.util.List;
 

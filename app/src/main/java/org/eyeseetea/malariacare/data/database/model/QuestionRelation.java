@@ -60,6 +60,8 @@ public class QuestionRelation extends BaseModel {
      */
     public static final int REMINDER = 4;
 
+    public static final int TREATMENT_MATCH = 5;
+
     private static final String TAG = ".QuestionRelation";
     @Column
     @PrimaryKey(autoincrement = true)
@@ -87,6 +89,12 @@ public class QuestionRelation extends BaseModel {
         this.setQuestion(question);
     }
 
+    public static QuestionRelation findById(Long id) {
+        return new Select()
+                .from(QuestionRelation.class)
+                .where(Condition.column(QuestionRelation$Table.ID_QUESTION_RELATION).is(id))
+                .querySingle();
+    }
 
     public static List<QuestionRelation> listAllParentChildRelations() {
         return new Select().from(QuestionRelation.class)
@@ -96,6 +104,25 @@ public class QuestionRelation extends BaseModel {
 
     public static List<QuestionRelation> listAll() {
         return new Select().from(QuestionRelation.class).queryList();
+    }
+
+    /**
+     * Method to delete in cascade the questions passed.
+     */
+    public static void deleteQuestionRelations(List<QuestionRelation> questionRelations) {
+        for (QuestionRelation questionRelation : questionRelations) {
+            Match.deleteMatches(questionRelation.getAllMatches());
+            questionRelation.delete();
+        }
+    }
+
+    /**
+     * Method to get the matches with the id of this question relation
+     */
+    public List<Match> getAllMatches() {
+        return new Select().from(Match.class)
+                .where(Condition.column(Match$Table.ID_QUESTION_RELATION).eq(
+                        getId_question_relation())).queryList();
     }
 
     public long getId_question_relation() {
@@ -231,4 +258,6 @@ public class QuestionRelation extends BaseModel {
                 ", operation=" + operation +
                 '}';
     }
+
+
 }

@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.views.question.multiquestion;
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import org.eyeseetea.malariacare.R;
@@ -10,18 +11,24 @@ import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.layout.adapters.general.OptionArrayAdapter;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
+import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DropdownMultiQuestionView extends AOptionQuestionView implements IQuestionView,
-        IMultiQuestionView {
-    TextCard header;
+        IMultiQuestionView, IImageQuestionView {
+    CustomTextView header;
     Spinner spinnerOptions;
+    ImageView imageView;
     Question question;
+    private boolean optionSetFromSavedValue = false;
 
     public DropdownMultiQuestionView(Context context) {
         super(context);
@@ -31,7 +38,10 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
 
     @Override
     public void setOptions(List<Option> options) {
-        spinnerOptions.setAdapter(new OptionArrayAdapter(getContext(), options));
+        List<Option> optionList = new ArrayList<>(options);
+        optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
+
+        spinnerOptions.setAdapter(new OptionArrayAdapter(getContext(), optionList));
     }
 
     @Override
@@ -45,13 +55,22 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
     }
 
     @Override
-    public boolean hasError() {
-        return false;
+    public void setEnabled(boolean enabled) {
+        spinnerOptions.setEnabled(enabled);
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
-        spinnerOptions.setEnabled(enabled);
+    public void setHelpText(String helpText) {
+
+    }
+
+    @Override
+    public void setImage(String path) {
+        if (path != null && !path.equals("")) {
+            LayoutUtils.makeImageVisible(path, imageView);
+        } else {
+            imageView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -59,6 +78,7 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         if (value == null || value.getValue() == null) {
             return;
         }
+        optionSetFromSavedValue = true;
 
         for (int i = 0; i < spinnerOptions.getAdapter().getCount(); i++) {
             Option option = (Option) spinnerOptions.getItemAtPosition(i);
@@ -69,28 +89,27 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
         }
     }
 
-    private void init(final Context context) {
-        inflate(context, R.layout.multi_question_tab_phone_row, this);
+    @Override
+    public boolean hasError() {
+        return false;
+    }
 
-        header = (TextCard) findViewById(R.id.row_header_text);
+    private void init(final Context context) {
+        inflate(context, R.layout.multi_question_tab_dropdown_row, this);
+
+        header = (CustomTextView) findViewById(R.id.row_header_text);
         spinnerOptions = (Spinner) findViewById(R.id.answer);
+        imageView = ((ImageView) findViewById(R.id.question_image_row));
 
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-
-
-/*                Option option = (Option) parent.getItemAtPosition(position);
-
-                notifyAnswerChanged(option.);
-
-                Question question = (Question) parent.getTag();
-                if (question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT)) {
-                    switchHiddenMatches(question, option);
+                Option option = (Option) parent.getItemAtPosition(position);
+                if (!optionSetFromSavedValue) {
+                    notifyAnswerChanged(option);
                 } else {
-                    ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
+                    optionSetFromSavedValue = false;
                 }
-                showOrHideChildren(question);*/
             }
 
             @Override
@@ -98,6 +117,5 @@ public class DropdownMultiQuestionView extends AOptionQuestionView implements IQ
 
             }
         });
-
     }
 }

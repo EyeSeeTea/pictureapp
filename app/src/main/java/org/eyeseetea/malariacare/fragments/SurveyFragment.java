@@ -44,12 +44,11 @@ import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
-import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,8 +119,11 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     public void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
-        if (Session.getSurvey() != null) {
-            Session.getSurvey().getValuesFromDB();
+        if (Session.getMalariaSurvey() != null) {
+            Session.getMalariaSurvey().getValuesFromDB();
+        }
+        if (Session.getStockSurvey() != null) {
+            Session.getStockSurvey().getValuesFromDB();
         }
 
     }
@@ -193,7 +195,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
             //Initialize scores x question not loaded yet
             List<Tab> notLoadedTabs = tabAdaptersCache.getNotLoadedTabs();
             ScoreRegister.initScoresForQuestions(Question.listAllByTabs(notLoadedTabs),
-                    Session.getSurvey());
+                    Session.getMalariaSurvey());
         }
         ITabAdapter tabAdapter = tabAdaptersCache.findAdapter(selectedTab);
 
@@ -258,7 +260,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     }
 
     public void reloadHeader(Activity activity) {
-        HeaderUseCase.getInstance().hideHeader(activity);
+        DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 
     public class AsyncReloadAdaptersAndChangeTab extends AsyncTask<Void, Integer, View> {
@@ -300,12 +302,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
             content.removeAllViews();
             content.addView(viewContent);
             ITabAdapter tabAdapter = tabAdaptersCache.findAdapter(tab);
-            if (tab.getType() == Constants.TAB_AUTOMATIC ||
-                    tab.getType() == Constants.TAB_ADHERENCE ||
-                    tab.getType() == Constants.TAB_IQATAB ||
-                    tab.getType() == Constants.TAB_SCORE_SUMMARY) {
-                tabAdapter.initializeSubscore();
-            }
+
             ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
             if (tabAdapter instanceof DynamicTabAdapter) {
                 ((DynamicTabAdapter) tabAdapter).addOnSwipeListener(listViewTab);

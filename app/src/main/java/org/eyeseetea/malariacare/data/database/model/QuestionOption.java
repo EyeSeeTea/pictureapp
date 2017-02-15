@@ -98,6 +98,37 @@ public class QuestionOption extends BaseModel {
                         questionRelation.getId_question_relation())).queryList();
     }
 
+    /**
+     * Method to get the matches in questionOption with a question id and a a option
+     * @param id_question the id of the question
+     * @param id_option the id of the option
+     * @return The list of matches
+     */
+    public static List<Match> getMatchesWithQuestionOption(Long id_question, Long id_option) {
+        return new Select().from(Match.class).as("m").join(QuestionOption.class,
+                Join.JoinType.LEFT).as("qo")
+                .on(Condition.column(
+                        ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH))
+                        .eq(ColumnAlias.columnWithTable("qo",
+                                QuestionOption$Table.ID_MATCH))).where(
+                        Condition.column(ColumnAlias.columnWithTable("qo",
+                                QuestionOption$Table.ID_QUESTION))
+                                .is(id_question)).and(Condition.column(
+                        ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_OPTION))
+                        .is(id_option)).queryList();
+    }
+
+    /**
+     * Method to delete in cascade the questionOptions passed.
+     *
+     * @param questionsOptions The question option to delete.
+     */
+    public static void deleteQuestionOptions(List<QuestionOption> questionsOptions) {
+        for (QuestionOption questionOption : questionsOptions) {
+            questionOption.delete();
+        }
+    }
+
     public static List<QuestionOption> listAll() {
         return new Select().from(QuestionOption.class).queryList();
     }
@@ -224,4 +255,6 @@ public class QuestionOption extends BaseModel {
                 ", id_match=" + id_match +
                 '}';
     }
+
+
 }

@@ -37,9 +37,6 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
-
-import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -48,11 +45,11 @@ import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
-import org.eyeseetea.malariacare.fragments.StockFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
+import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 
 public class DashboardActivity extends BaseActivity {
@@ -67,9 +64,9 @@ public class DashboardActivity extends BaseActivity {
     MonitorFragment monitorFragment;
     DashboardUnsentFragment unsentFragment;
     DashboardSentFragment sentFragment;
-    StockFragment stockFragment;
     ReviewFragment reviewFragment;
     SurveyFragment surveyFragment;
+    DashboardActivityStrategy mDashboardActivityStrategy;
     /**
      * Flag that controls the fragment change animations
      */
@@ -93,16 +90,17 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        mDashboardActivityStrategy = new DashboardActivityStrategy();
         dashboardActivity = this;
         setContentView(R.layout.tab_dashboard);
         Survey.removeInProgress();
         if (savedInstanceState == null) {
-            initAssess();
             initImprove();
             initMonitor();
             if (GradleVariantConfig.isStockFragmentActive()) {
                 initStock();
             }
+            initAssess();
         }
         initTabHost(savedInstanceState);
         /* set tabs in order */
@@ -142,8 +140,7 @@ public class DashboardActivity extends BaseActivity {
                     sentFragment.reloadHeader(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_stock))) {
-                    stockFragment.reloadData();
-                    stockFragment.reloadHeader(dashboardActivity);
+                    mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
                     monitorFragment.reloadData();
@@ -157,7 +154,6 @@ public class DashboardActivity extends BaseActivity {
         for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
             tabHost.getTabWidget().getChildAt(i).setFocusable(false);
         }
-
 
         getSurveysFromService();
     }
@@ -192,7 +188,6 @@ public class DashboardActivity extends BaseActivity {
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getDrawable(R.drawable.tab_monitor));
     }
-
 
     /**
      * Sets a divider drawable and background.
@@ -297,10 +292,7 @@ public class DashboardActivity extends BaseActivity {
      * This method initializes the Stock fragment(StockFragment)
      */
     public void initStock() {
-        stockFragment = new StockFragment();
-        stockFragment.setArguments(getIntent().getExtras());
-        stockFragment.reloadData();
-        replaceFragment(R.id.dashboard_stock_container, stockFragment);
+        isMoveToLeft = mDashboardActivityStrategy.showStockFragment(this, isMoveToLeft);
     }
 
     /**
@@ -326,6 +318,11 @@ public class DashboardActivity extends BaseActivity {
             monitorFragment = new MonitorFragment();
         }
         replaceFragment(R.id.dashboard_charts_container, monitorFragment);
+    }
+
+
+    public void initNewReceiptFragment() {
+        tabHost.getTabWidget().setVisibility(View.GONE);
     }
 
 
@@ -424,6 +421,8 @@ public class DashboardActivity extends BaseActivity {
             onSurveyBackPressed();
         } else if (isReviewFragmentActive()) {
             onSurveyBackPressed();
+        } else if (isNewHistoricReceiptBalanceFragmentActive()) {
+            closeReceiptBalanceFragment();
         } else {
             confirmExitApp();
         }
@@ -452,7 +451,7 @@ public class DashboardActivity extends BaseActivity {
      */
     private void onSurveyBackPressed() {
         Log.d(TAG, "onBackPressed");
-        Survey survey = Session.getSurvey();
+        Survey survey = Session.getMalariaSurvey();
         if (!survey.isSent()) {
             int infoMessage = survey.isInProgress() ? R.string.survey_info_exit_delete
                     : R.string.survey_info_exit;
@@ -494,8 +493,8 @@ public class DashboardActivity extends BaseActivity {
         LayoutUtils.setDashboardActionBar(actionBar);
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         ScoreRegister.clear();
-        if (Session.getSurvey() != null) {
-            isSent = Session.getSurvey().isSent();
+        if (Session.getMalariaSurvey() != null) {
+            isSent = Session.getMalariaSurvey().isSent();
         }
         if (isBackPressed) {
             beforeExit();
@@ -509,6 +508,13 @@ public class DashboardActivity extends BaseActivity {
             unsentFragment.reloadData();
         }
     }
+
+    public void closeReceiptBalanceFragment() {
+        DashboardActivityStrategy mDashboardActivityStrategy = new DashboardActivityStrategy();
+        mDashboardActivityStrategy.showStockFragment(this, false);
+        tabHost.getTabWidget().setVisibility(View.VISIBLE);
+    }
+
 
     /**
      * This method closes the Feedback Fragment and loads the Improve fragment
@@ -524,31 +530,14 @@ public class DashboardActivity extends BaseActivity {
 
 
     public void beforeExit() {
-        Survey survey = Session.getSurvey();
-        if (survey != null) {
-            boolean isInProgress = survey.isInProgress();
-            survey.getValuesFromDB();
-            //Exit + InProgress -> delete
-            if (isBackPressed && isInProgress) {
-                Session.setSurvey(null);
-                survey.delete();
-                isBackPressed = false;
-            }
-        }
+        isBackPressed = mDashboardActivityStrategy.beforeExit(isBackPressed);
     }
 
     /**
      * Called when the user clicks the New Survey button
      */
     public void newSurvey(View view) {
-        Program program = new Select().from(Program.class).querySingle();
-        // Put new survey in session
-        Survey survey = new Survey(null, program, Session.getUser());
-        survey.save();
-        Session.setSurvey(survey);
-        //Look for coordinates
-        prepareLocationListener(survey);
-
+        mDashboardActivityStrategy.newSurvey(this);
         initSurvey();
     }
 
@@ -556,7 +545,7 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the exit Review button
      */
     public void exitReview(View view) {
-        showDone();
+        reviewShowDone();
     }
 
     public void sendSurvey(View view) {
@@ -569,14 +558,12 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void sendSurvey() {
-
-        Survey survey = Session.getSurvey();
-        survey.updateSurveyStatus();
+        mDashboardActivityStrategy.sendSurvey();
         closeSurveyFragment();
     }
 
     private void reviewSurvey() {
-        DashboardActivity.moveToQuestion = (Session.getSurvey().getValues().get(
+        DashboardActivity.moveToQuestion = (Session.getMalariaSurvey().getValues().get(
                 0).getQuestion());
         hideReview();
     }
@@ -593,7 +580,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Show a final dialog to announce the survey is over
      */
-    public void showDone() {
+    public void reviewShowDone() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(this)
                 .setTitle(R.string.survey_completed)
                 .setMessage(R.string.survey_completed_text)
@@ -625,6 +612,18 @@ public class DashboardActivity extends BaseActivity {
      */
     private boolean isSurveyFragmentActive() {
         return isFragmentActive(surveyFragment, R.id.dashboard_details_container);
+    }
+
+    private boolean isNewHistoricReceiptBalanceFragmentActive() {
+      return   mDashboardActivityStrategy.isHistoricNewReceiptBalanceFragment(this);
+    }
+
+    private boolean isFragmentActive(Class fragmentClass, int layout) {
+        Fragment currentFragment = this.getFragmentManager().findFragmentById(layout);
+        if (currentFragment.getClass().equals(fragmentClass)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -665,5 +664,10 @@ public class DashboardActivity extends BaseActivity {
 
     public boolean isLoadingReview() {
         return isLoadingReview;
+    }
+
+    public void completeSurvey() {
+        mDashboardActivityStrategy.completeSurvey();
+        closeSurveyFragment();
     }
 }

@@ -4,31 +4,28 @@
     android:id="@+id/review_content_row"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/medium_purple"
     android:layout_gravity="center_horizontal"
+    android:background="@color/medium_purple"
     android:gravity="center_horizontal">
 
 
-    <org.eyeseetea.malariacare.views.TextCard xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <org.eyeseetea.sdk.presentation.views.CustomTextView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/review_title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/empty_string"
         android:textColor="@color/white"
-        android:textSize="@dimen/default_review_fragment_font_size"
-        app:tDimension="@string/font_size_level3"
-        app:tFontName="@string/specific_language_font" />
-    <org.eyeseetea.malariacare.views.TextCard xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:textSize="?attr/font_small"
+        app:font_name="@string/light_font" />
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/review_content_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/empty_string"
         android:textColor="@color/white"
-        android:textSize="@dimen/default_review_fragment_font_size"
-        app:tDimension="@string/font_size_level3"
-        app:tFontName="@string/specific_language_font" />
+        android:textSize="?attr/font_small"
+        app:font_name="@string/light_font" />
 </TableRow>

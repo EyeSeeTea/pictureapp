@@ -220,32 +220,6 @@ public class LoginActivity extends AbsLoginActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-
-    //// FIXME: 28/12/16
-    //@Subscribe
-    public void onLoginFinished() {
-/*        if (result != null && result.getResourceType().equals(ResourceType.USERS)) {
-            if (result.getResponseHolder().getApiException() == null) {
-
-                Credentials credentials = new Credentials(serverUrl, username, password);
-                mLoginUseCase.execute(credentials);
-                //The first login is only to authenticate the user, and is need logout from the
-                // sdk and login with the correct user/password.
-                if (mLoginUseCase.isLogoutNeeded(credentials)) {
-                    username = DEFAULT_USER;
-                    password = DEFAULT_PASSWORD;
-                    //The first login (user authentication) calls this
-                    DhisService.logOutUser(this);
-                } else {
-                    mLoginActivityStrategy.finishAndGo();
-                }
-            } else {
-                onLoginFail(result.getResponseHolder().getApiException());
-            }
-        }*/
-    }
-
-
     @Override
     public void onBackPressed() {
         mLoginActivityStrategy.onBackPressed();

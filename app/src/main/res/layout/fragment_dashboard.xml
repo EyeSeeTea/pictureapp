@@ -22,7 +22,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/titleInProgress"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -30,8 +30,8 @@
         android:text="@string/empty_string"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black"
-        app:tDimension="@string/font_size_level2"
-        app:tFontName="@string/condensed_font_name" />
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/condensed_font_name" />
 
     <FrameLayout
         android:id="@+id/dashboard_details_container"
@@ -56,7 +56,7 @@
         </TableLayout>
     </FrameLayout>
 
-    <org.eyeseetea.malariacare.views.TextCard
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
         android:id="@+id/titleCompleted"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -64,8 +64,8 @@
         android:text="@string/empty_string"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black"
-        app:tDimension="@string/font_size_level2"
-        app:tFontName="@string/condensed_font_name" />
+        android:textSize="?attr/font_medium"
+        app:font_name="@string/condensed_font_name" />
 
     <FrameLayout
         android:id="@+id/dashboard_completed_container"

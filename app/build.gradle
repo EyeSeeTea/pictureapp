@@ -99,7 +99,7 @@ android {
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
-            versionName "1.0.0"
+            versionName "1.0.2"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
             buildConfigField "boolean", "activeButtonNavigator", "true"
@@ -143,6 +143,7 @@ dependencies {
     compile "com.android.support:support-v4:${libs.supportVersion}"
     compile "com.android.support:appcompat-v7:${libs.supportVersion}"
     compile "com.android.support:support-annotations:${libs.supportVersion}"
+    compile 'com.android.support:recyclerview-v7:23.4.0'
     compile "com.android.support:multidex:${libs.multidex}"
     //3rd party dependencies
     compile "com.opencsv:opencsv:${libs.opencsvVersion}"

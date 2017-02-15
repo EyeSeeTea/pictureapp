@@ -19,19 +19,24 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
+import static org.eyeseetea.malariacare.data.database.AppDatabase.treatmentAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.treatmentMatchAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.treatmentMatchName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.treatmentName;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.sql.language.Join;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.database.model.Treatment;
+import org.eyeseetea.malariacare.database.model.TreatmentMatch;
 
 import java.util.List;
 
-/**
- * Created by Jose on 25/05/2015.
- */
 @Table(database = AppDatabase.class)
 public class Match extends BaseModel {
     @Column
@@ -57,6 +62,13 @@ public class Match extends BaseModel {
         setQuestionRelation(questionRelation);
     }
 
+    public static Match findById(long id) {
+        return new Select()
+                .from(Match.class)
+                .where(Match_Table.ID_MATCH).is(id)
+                .querySingle();
+    }
+
     public static List<Match> listAll() {
         return new Select().from(Match.class).queryList();
     }
@@ -68,6 +80,55 @@ public class Match extends BaseModel {
                     .queryList();
         }
         return this.questionOptions;
+    }
+
+    /**
+     * Get all questionThresholds matches with the match passed.
+     */
+    private static List<QuestionThreshold> getQuestionThreshold(Match match) {
+        return new Select().from(QuestionThreshold.class)
+                .where(QuestionThreshold_Table.ID_MATCH).eq(
+                        match.getId_match()).queryList();
+    }
+
+    /**
+     * Get all questionOptions matches with the match passed.
+     */
+    private static List<QuestionOption> getQuestionOptions(Match match) {
+        return new Select().from(QuestionOption.class)
+                .where(QuestionOption_Table.ID_MATCH).eq(
+                        match.getId_match()).queryList();
+    }
+
+    /**
+     * Get all treatment matches with the match passed.
+     */
+    private static List<TreatmentMatch> getTreatmentMatches(Match match) {
+        return new Select().from(TreatmentMatch.class)
+                .where(TreatmentMatch_Table.ID_MATCH).eq(
+                        match.getId_match()).queryList();
+    }
+
+    public Treatment getTreatment() {
+        return new Select().from(Treatment.class).as(treatmentName)
+                .join(TreatmentMatch.class, Join.JoinType.LEFT_OUTER).as(treatmentMatchName)
+                .on(Treatment_Table.id_treatment.withTable(treatmentAlias)
+                        .eq(TreatmentMatch_Table.id_treatment.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatch_Table.id_match.withTable(treatmentMatchAlias)
+                        .eq(id_match))
+                .querySingle();
+    }
+
+    /**
+     * Method to delete the matches in cascade
+     */
+    public static void deleteMatches(List<Match> matches) {
+        for (Match match : matches) {
+            TreatmentMatch.deleteTreatmentMatches(getTreatmentMatches(match));
+            QuestionOption.deleteQuestionOptions(getQuestionOptions(match));
+            QuestionThreshold.deleteQuestionThresholds(getQuestionThreshold(match));
+            match.delete();
+        }
     }
 
     public long getId_match() {

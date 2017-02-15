@@ -15,25 +15,14 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
- *//*
-
+ */
 
 package org.eyeseetea.malariacare.test.utils;
 
-import static com.google.android.apps.common.testing.deps.guava.base.Preconditions.checkNotNull;
-
-import android.view.View;
-
-import org.eyeseetea.malariacare.views.TextCard;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-
-*/
 /**
  * Created by arrizabalaga on 25/05/15.
- *//*
-
+ */
+/*
 public class TextCardScaleMatcher extends TypeSafeMatcher<View> {
     private final String scale;
 

@@ -15,18 +15,18 @@ import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.CustomRadioButton;
-import org.eyeseetea.malariacare.views.TextCard;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomRadioButton;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
 public class RadioButtonMultiQuestionView extends AOptionQuestionView implements IQuestionView,
         IMultiQuestionView, IImageQuestionView {
-    TextCard header;
+    CustomTextView header;
     ImageView image;
     RadioGroup radioGroup;
     Context context;
@@ -53,13 +53,12 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         LayoutInflater lInflater = (LayoutInflater) context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
         for (Option option : options) {
-            CustomRadioButton radioButton = (CustomRadioButton) lInflater.inflate(
-                    R.layout.uncheckeable_radiobutton, null);
-            radioButton.setOption(option);
+            CustomRadioButton radioButton =
+                    (CustomRadioButton) lInflater.inflate(
+                            R.layout.uncheckeable_radiobutton, null);
+            radioButton.setTag(option);
+            radioButton.setText(option.getInternationalizedCode());
             fixRadioButtonWidth(radioButton);
-            radioButton.updateProperties(PreferencesState.getInstance().getScale(),
-                    context.getString(R.string.font_size_level1),
-                    context.getString(R.string.specific_language_font));
 
             radioButton.setEnabled(radioGroup.isEnabled());
 
@@ -69,7 +68,58 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         }
     }
 
-    private void fixRadioButtonWidth(CustomRadioButton radioButton) {
+    @Override
+    public void setHeader(String headerValue) {
+        header.setText(headerValue);
+    }
+
+    @Override
+    public void setImage(String path) {
+        if (path != null && !path.equals("")) {
+            BaseLayoutUtils.makeImageVisible(path, image);
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        radioGroup.setEnabled(enabled);
+    }
+
+    @Override
+    public void setHelpText(String helpText) {
+
+    }
+
+    @Override
+    public void setValue(Value value) {
+        if (value == null || value.getValue() == null) {
+            return;
+        }
+
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
+            customRadioButton.setChecked(
+                    ((Option) customRadioButton.getTag()).equals(value.getOption()));
+        }
+    }
+
+    @Override
+    public boolean hasError() {
+        if (question.isCompulsory() && radioGroup.getCheckedRadioButtonId() == -1) {
+            return true;
+        }
+        return false;
+    }
+
+    private void init(final Context context) {
+        View view = inflate(context, R.layout.multi_question_radio_button_row, this);
+        header = (CustomTextView) view.findViewById(R.id.row_header_text);
+        image = (ImageView) view.findViewById(R.id.question_image_row);
+        radioGroup = (RadioGroup) view.findViewById(R.id.answer);
+    }
+
+    private void fixRadioButtonWidth(
+            CustomRadioButton radioButton) {
         Drawable radioButtonIcon = getResources().getDrawable(R.drawable.radio_on);
         BaseLayoutUtils.setLayoutParamsAs50Percent(radioButton, context,
                 calculateFixedWidth(radioButtonIcon));
@@ -86,47 +136,6 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
         return (newHeightPercent * width) / 100;
     }
 
-    @Override
-    public void setHeader(String headerValue) {
-        header.setText(headerValue);
-    }
-
-    @Override
-    public void setImage(String path) {
-        if (path != null && !path.equals("")) {
-            BaseLayoutUtils.makeImageVisible(path, image);
-        }
-    }
-
-    @Override
-    public boolean hasError() {
-        return false;
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        radioGroup.setEnabled(enabled);
-    }
-
-    @Override
-    public void setValue(Value value) {
-        if (value == null || value.getValue() == null) {
-            return;
-        }
-
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
-            customRadioButton.setChecked(customRadioButton.getOption().equals(value.getOption()));
-        }
-    }
-
-
-    private void init(final Context context) {
-        View view = inflate(context, R.layout.multi_question_radio_button_row, this);
-        header = (TextCard) view.findViewById(R.id.row_header_text);
-        image = (ImageView) view.findViewById(R.id.question_image_row);
-        radioGroup = (RadioGroup) view.findViewById(R.id.answer);
-    }
 
     public class RadioGroupListener implements RadioGroup.OnCheckedChangeListener {
         private View viewHolder;
@@ -146,7 +155,7 @@ public class RadioButtonMultiQuestionView extends AOptionQuestionView implements
             Option selectedOption = new Option(Constants.DEFAULT_SELECT_OPTION);
             if (checkedId != -1) {
                 CustomRadioButton customRadioButton = findRadioButtonById(checkedId);
-                selectedOption = customRadioButton.getOption();
+                selectedOption = (Option) customRadioButton.getTag();
             }
             notifyAnswerChanged(selectedOption);
         }

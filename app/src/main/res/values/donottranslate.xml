@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="eyeseetea" translatable="false">EyeSeeTea LTD</string>
     <string name="empty_string" translatable="false"></string>
+    <string name="details">Details</string>
     <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet</string>
-    <!--<string name="score_title_percentage">%</string>-->
-    <!--<string name="score_info_zero_float">0.0</string>-->
-
 
     <item name="show_num_dems" translatable="false" type="string">show_num_dems</item>
     <item name="customize_fonts" translatable="false" type="string">customize_fonts</item>
@@ -18,20 +15,11 @@
     <string name="pref_cat_server" translatable="false">pref_cat_server</string>
     <item name="language_code" translatable="false" type="string">language_code</item>
 
-
     <string name="PUSH_PERIOD" translatable="false">10</string>
-
 
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
-
-
-    <string name="normal_font" translatable="false">Roboto-Medium.ttf</string>
-    <string name="light_font" translatable="false">Roboto-Light.ttf</string>
-    <string name="bold_font_name" translatable="false">Roboto-Bold.ttf</string>
-    <string name="medium_font_name" translatable="false">Roboto-Medium.ttf</string>
-    <string name="condensed_font_name" translatable="false">Roboto-Condensed.ttf</string>
 
     <string name="font_size_system" translatable="false">system</string>
 
@@ -58,7 +46,6 @@
 
     <item name="eula_accepted" translatable="false" type="string">eula_accepted</item>
 
-
     <string name="lastcommit" translatable="false">Version %s</string>
     <string name="unavailable" translatable="false">Unavailable</string>
     <string name="lastcommit_unavailable" translatable="false"><![CDATA[
@@ -77,11 +64,13 @@
 
     <string name="fullOfUnsent" translatable="false">fullOfUnsent</string>
 
-
     <string name="tab_tag_assess" translatable="false">tab_assess</string>
     <string name="tab_tag_improve" translatable="false">tab_improve</string>
     <string name="tab_tag_stock" translatable="false">tab_stock</string>
     <string name="tab_tag_monitor" translatable="false">tab_monitor</string>
+    <string name="fragment_new_receipt" translatable="false">fragment_new_receipt</string>
+    <string name="fragment_new_balance" translatable="false">fragment_new_balance</string>
+    <string name="fragment_historic_receipt_balance" translatable="false">fragment_historic_receipt_balance</string>
 
     <item name="developer_option" translatable="false" type="string">show_dev_options</item>
     <item name="export_data_option" translatable="false" type="string">export_data_option</item>
@@ -104,7 +93,6 @@
         <item>@string/font_size_level4</item>
     </string-array>
 
-
     <string name="default_option_text_size" translatable="false">24</string>
 
     <string name="is_pushing_key" translatable="false">ispushing</string>
@@ -117,7 +105,4 @@
     <string name="description" translatable="false">ImageView description</string>
     <string name="login" translatable="false">Log in</string>
     <string name="regular_font_name" translatable="false">@string/medium_font_name</string>
-
-
-
 </resources>

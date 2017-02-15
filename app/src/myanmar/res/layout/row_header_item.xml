@@ -2,7 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include layout="@layout/bottom_view"></include>
+    <include layout="@layout/bottom_view" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         android:layout_marginTop="@dimen/input_edit_text_top_bottom"
         android:weightSum="1">
 
-        <org.eyeseetea.malariacare.views.TextCard
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/row_header_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -24,9 +24,8 @@
             android:paddingLeft="@dimen/input_edit_text_left_padding"
             android:paddingRight="@dimen/input_edit_text_right_padding"
             android:textColor="@color/dark_purple"
-            android:textSize="@dimen/input_number_edit_text_phone"
-            app:tDimension="@string/font_size_level2"
-            app:tFontName="@string/condensed_font_name" />
+            android:textSize="?attr/font_small"
+            app:font_name="@string/light_font" />
 
         <ImageView
             android:id="@+id/row_header_compulsory"

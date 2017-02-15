@@ -35,8 +35,8 @@ import org.eyeseetea.malariacare.utils.Permissions;
  */
 public class EyeSeeTeaApplication extends Application {
 
-    public static Permissions permissions;
     private static final String TAG = ".EyeSeeTeaApplication";
+    public static Permissions permissions;
 
     @Override
     public void onCreate() {
@@ -44,7 +44,6 @@ public class EyeSeeTeaApplication extends Application {
         Log.d(TAG, "onCreate");
         PreferencesState.getInstance().init(getApplicationContext());
     }
-
 
     @Override
     public void onTerminate() {
@@ -63,6 +62,4 @@ public class EyeSeeTeaApplication extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
-
 }

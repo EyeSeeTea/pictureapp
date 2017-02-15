@@ -37,6 +37,7 @@ import android.util.DisplayMetrics;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
+import org.eyeseetea.malariacare.views.FontUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -200,7 +201,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        FontUtils.applyFontStyleByPreference(getResources(), getTheme());
         mSettingsActivityStrategy.onCreate();
         PreferencesState.getInstance().loadsLanguageInActivity();
     }

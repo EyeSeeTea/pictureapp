@@ -4,21 +4,21 @@ import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Phone;
+import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPhoneException;
-import org.eyeseetea.malariacare.views.EditCard;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.CustomButton;
+import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView implements IQuestionView {
-    EditCard editCard;
-    Button sendButton;
-
+    CustomEditText mCustomEditText;
+    CustomButton sendButton;
 
     public PhoneSingleQuestionView(Context context) {
         super(context);
@@ -28,35 +28,36 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
 
     @Override
     public void setEnabled(boolean enabled) {
-        editCard.setEnabled(enabled);
+        mCustomEditText.setEnabled(enabled);
         sendButton.setEnabled(enabled);
 
         if (enabled) {
-            showKeyboard(editCard);
+            showKeyboard(mCustomEditText);
         }
+    }
+
+    @Override
+    public void setHelpText(String helpText) {
+        mCustomEditText.setHint(helpText);
     }
 
     @Override
     public void setValue(Value value) {
         if (value != null) {
-            editCard.setText(value.getValue());
+            mCustomEditText.setText(value.getValue());
         }
-    }
-
-    @Override
-    public void setHint(String hintValue) {
-        editCard.setHint(hintValue);
     }
 
     private void init(final Context context) {
         inflate(context, R.layout.dynamic_tab_phone_row, this);
 
-        editCard = (EditCard) findViewById(R.id.answer);
-        editCard.setFocusable(true);
-        editCard.setFocusableInTouchMode(true);
+        mCustomEditText = (CustomEditText) findViewById(R.id.answer);
+        mCustomEditText.setFocusable(true);
+        mCustomEditText.setFocusableInTouchMode(true);
 
-        sendButton = (Button) findViewById(R.id.row_phone_btn);
+        sendButton = (CustomButton) findViewById(R.id.row_phone_btn);
 
+        Validation.getInstance().addInput(mCustomEditText);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +65,7 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
             }
         });
 
-        editCard.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mCustomEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -75,22 +76,16 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
                 return false;
             }
         });
-
-/*        if (!isMultipleQuestionTab(tabType)) {
-            //Add button to listener
-            swipeTouchListener.addClickableView(button);
-        }*/
     }
 
     private void validateAnswer(Context context) {
         try {
-            Phone phone = new Phone(editCard.getText().toString());
-            hideKeyboard(editCard);
+            Phone phone = new Phone(mCustomEditText.getText().toString());
+            hideKeyboard(mCustomEditText);
             notifyAnswerChanged(phone.getValue());
-
+            Validation.getInstance().removeInputError(mCustomEditText);
         } catch (InvalidPhoneException e) {
-            editCard.setError(
-                    context.getString(R.string.dynamic_error_phone_format));
+            Validation.getInstance().addinvalidInput(mCustomEditText, context.getString(R.string.dynamic_error_phone_format));
         }
     }
 

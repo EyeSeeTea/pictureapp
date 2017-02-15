@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
+import android.content.Context;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -29,7 +31,9 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,15 +79,22 @@ public class Program extends BaseModel {
     }
 
     public static List<Program> getAllPrograms() {
-        return new Select().from(Program.class).queryList();
+        return new Select().all().from(Program.class).queryList();
     }
 
     public static Program getFirstProgram() {
         return new Select().from(Program.class).querySingle();
     }
 
-    public static int getMaxTotalQuestions() {
+    public static Program getStockProgram(){
+        Context context = PreferencesState.getInstance().getContext();
+        return new Select()
+                .from(Program.class)
+                .where(Program_Table.UID)
+                        .is(context.getString(R.string.stockProgramUID)).querySingle();
+    }
 
+    public static int getMaxTotalQuestions() {
         int maxTotalQuestions = 0;
         Program p = Program.getFirstProgram();
         Question qMax = SQLite.select(Method.max(Question_Table.total_questions),
@@ -94,7 +105,7 @@ public class Program extends BaseModel {
                         .eq(Header_Table.id_header.withTable(AppDatabase.headerAlias)))
 
                 .join(Tab.class, Join.JoinType.INNER).as(AppDatabase.tabName)
-                .on(Header_Table.id_tab.withTable(AppDatabase.tabAlias)
+                .on(Header_Table.id_tab.withTable(AppDatabase.headerAlias)
                         .eq(Tab_Table.id_tab.withTable(AppDatabase.tabAlias)))
 
                 .join(Program.class, Join.JoinType.INNER).as(AppDatabase.programName)
@@ -158,7 +169,7 @@ public class Program extends BaseModel {
             List<OrgUnitProgramRelation> orgUnitProgramRelations = new Select().from(
                     OrgUnitProgramRelation.class)
                     .where(OrgUnitProgramRelation_Table.id_program.eq(
-                            this.getId_program()))
+                            this.getId_program())
                     .queryList();
             this.orgUnits = new ArrayList<>();
             for (OrgUnitProgramRelation programRelation : orgUnitProgramRelations) {
@@ -166,6 +177,10 @@ public class Program extends BaseModel {
             }
         }
         return orgUnits;
+    }
+
+    private Context getContext(){
+        return PreferencesState.getInstance().getContext();
     }
 
     public void addOrgUnit(OrgUnit orgUnit) {
@@ -186,10 +201,28 @@ public class Program extends BaseModel {
         if (tabs == null) {
             tabs = new Select().from(Tab.class)
                     .where(Tab_Table.id_program.eq(this.getId_program()))
-                    .orderBy(Tab_Table.order_pos,true)
+                    .orderBy(Tab_Table.order_pos, true)
                     .queryList();
         }
         return tabs;
+    }
+
+    public boolean isStockProgram() {
+        return uid.equals(getContext().getString(R.string.stockProgramUID));
+    }
+
+    public static Program findById(Long id_program) {
+        return new Select()
+                .from(Program.class)
+                .where(Program_Table.ID_PROGRAM)
+                        .is(id_program).querySingle();
+    }
+
+    public static Program findByUID(String UID) {
+        return new Select()
+                .from(Program.class)
+                .where(Program_Table.UID)
+                        .is(UID).querySingle();
     }
 
     @Override
@@ -220,10 +253,5 @@ public class Program extends BaseModel {
                 ", uid='" + uid + '\'' +
                 ", name='" + name + '\'' +
                 '}';
-    }
-
-    public static Program getProgram(String uid) {
-        return new Select().from(Program.class)
-                .where(Program_Table.uid.eq(uid)).querySingle();
     }
 }

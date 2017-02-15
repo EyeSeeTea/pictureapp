@@ -27,9 +27,6 @@ import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
 
-/**
- * Created by Jose on 26/04/2015.
- */
 public class ReadWriteDB {
 
     public static String readValueQuestion(Question question) {
@@ -70,20 +67,37 @@ public class ReadWriteDB {
         return option;
     }
 
-    public static void saveValuesDDL(Question question, Option option, Value value) {
+    public static Option getOptionAnsweredFromDB(Question question) {
+        if (question != null) {
+            Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
+                    : Session.getMalariaSurvey());
 
+            Value value = Value.findValue(question.getId_question(), survey);
+            if (value != null) {
+                return Option.findById(Float.valueOf(value.getId_option()));
+            }
+        }
+        return null;
+    }
+
+    public static void saveValuesDDL(Question question, Option option, Value value) {
         //No option, nothing to save
         if (option == null) {
             return;
         }
+        if (question.isTreatmentQuestion() && value != null
+                && !option.getId_option().equals(value.getId_option())) {
+            deleteStockSurveyValues();
+        }
 
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
+            Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
+                    : Session.getMalariaSurvey());
             if (value == null) {
-                value = new Value(option, question, Session.getSurvey());
+                value = new Value(option, question, survey);
             } else {
                 if (!value.getOption().equals(option) && question.hasChildren()) {
-                    Survey survey = Session.getSurvey();
-                    survey.removeChildrenValuesFromQuestionRecursively(question);
+                    survey.removeChildrenValuesFromQuestionRecursively(question, false);
                 }
                 value.setOption(option);
                 value.setValue(option.getName());
@@ -95,21 +109,27 @@ public class ReadWriteDB {
     }
 
     public static void saveValuesText(Question question, String answer) {
-
         Value value = question.getValueBySession();
-
-        // If the value is not found we create one
-        if (value == null) {
-            value = new Value(answer, question, Session.getSurvey());
-        } else {
-            value.setOption((Long) null);
-            value.setValue(answer);
+        Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
+                : Session.getMalariaSurvey());
+        if (question.isTreatmentQuestion() && value != null && !value.getValue().equals(answer)) {
+            deleteStockSurveyValues();
         }
-        value.save();
+        if (question.isStockQuestion() && value != null && answer.equals("-1")) {
+            value.delete();
+        } else {
+            // If the value is not found we create one
+            if (value == null) {
+                value = new Value(answer, question, survey);
+            } else {
+                value.setOption((Long) null);
+                value.setValue(answer);
+            }
+            value.save();
+        }
     }
 
     public static void deleteValue(Question question) {
-
         Value value = question.getValueBySession();
 
         if (value != null) {
@@ -117,4 +137,18 @@ public class ReadWriteDB {
         }
     }
 
+    public static void deleteStockSurveyValues() {
+        Survey survey = Session.getStockSurvey();
+        List<Value> stockValues = survey.getValues();
+        for (Value value : stockValues) {
+            value.delete();
+        }
+        Survey malariaSurvey = Session.getMalariaSurvey();
+        List<Value> malariaValues = malariaSurvey.getValues();
+        for (Value value : malariaValues) {
+            if (value.getQuestion().isOutStockQuestion()) {
+                value.delete();
+            }
+        }
+    }
 }

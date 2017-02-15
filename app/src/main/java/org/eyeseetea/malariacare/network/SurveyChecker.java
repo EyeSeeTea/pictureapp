@@ -13,16 +13,12 @@ import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.services.PushService;
-import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.strategies.SurveyCheckerStrategy;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-
-/**
- * Created by idelcano on 03/10/2016.
- */
 
 public class SurveyChecker {
 
@@ -116,24 +112,8 @@ public class SurveyChecker {
      * sent
      */
     private static void updateQuarantineSurveysStatus(List<EventExtended> events, Survey survey) {
-        boolean isSent = false;
-        for (EventExtended event : events) {
-            isSent = surveyDateExistsInEventTimeCaptureControlDE(survey, event);
-            if (isSent) {
-                break;
-            }
-        }
-        if (isSent) {
-            Log.d(TAG, "Set quarantine survey as sent" + survey.getId_survey());
-            survey.setStatus(Constants.SURVEY_SENT);
-        } else {
-            //When the completion date for a survey is not present in the server, this survey is
-            // not in the server.
-            //This survey is set as "completed" and will be send in the future.
-            Log.d(TAG, "Set quarantine survey as completed" + survey.getId_survey());
-            survey.setStatus(Constants.SURVEY_COMPLETED);
-        }
-        survey.save();
+        SurveyCheckerStrategy surveyCheckerStrategy = new SurveyCheckerStrategy();
+        surveyCheckerStrategy.updateQuarantineSurveysStatus(events, survey);
     }
 
     /**

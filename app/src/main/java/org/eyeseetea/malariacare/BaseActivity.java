@@ -60,6 +60,7 @@ import org.eyeseetea.malariacare.strategies.BaseActivityStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Permissions;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.malariacare.views.FontUtils;
 
 import java.io.InputStream;
 import java.util.List;
@@ -109,6 +110,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
         alarmPush = new AlarmPushReceiver();
         alarmPush.setPushAlarm(this);
+
+        FontUtils.applyFontStyleByPreference(getResources(), getTheme());
 
         mBaseActivityStrategy.onCreate();
     }
@@ -302,55 +305,9 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected void goSettings() {
         Intent intentSettings = new Intent(this, SettingsActivity.class);
-        intentSettings.putExtra(SETTINGS_CALLER_ACTIVITY, this.getClass());
+        intentSettings.putExtra(SettingsActivity.SETTINGS_CALLER_ACTIVITY, this.getClass());
         intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
         startActivity(new Intent(this, SettingsActivity.class));
-    }
-
-
-    public void prepareLocationListener(Survey survey) {
-
-        SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
-        LocationManager locationManager =
-                (LocationManager) LocationMemory.getContext().getSystemService(
-                        Context.LOCATION_SERVICE);
-
-
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            Log.d(TAG, "requestLocationUpdates via NETWORK");
-            if (ActivityCompat.checkSelfPermission(this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
-                    locationListener);
-        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Log.d(TAG, "requestLocationUpdates via GPS");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-                    locationListener);
-        } else {
-            Location lastLocation = locationManager.getLastKnownLocation(
-                    LocationManager.NETWORK_PROVIDER);
-
-            if (lastLocation != null) {
-                Log.d(TAG, "location not available via GPS|NETWORK, last know: " + lastLocation);
-                locationListener.saveLocation(lastLocation);
-            } else {
-                String defaultLatitude = getApplicationContext().getString(
-                        R.string.GPS_LATITUDE_DEFAULT);
-                String defaultLongitude = getApplicationContext().getString(
-                        R.string.GPS_LONGITUDE_DEFAULT);
-                Location defaultLocation = new Location(
-                        getApplicationContext().getString(R.string.GPS_PROVIDER_DEFAULT));
-                defaultLocation.setLatitude(Double.parseDouble(defaultLatitude));
-                defaultLocation.setLongitude(Double.parseDouble(defaultLongitude));
-                Log.d(TAG, "location not available via GPS|NETWORK, default: " + defaultLocation);
-                locationListener.saveLocation(defaultLocation);
-            }
-        }
     }
 
     /**

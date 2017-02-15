@@ -19,6 +19,11 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
+import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionThresholdAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionThresholdName;
+
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -31,9 +36,6 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-/**
- * Created by Jose on 25/05/2015.
- */
 @Table(database = AppDatabase.class)
 public class QuestionThreshold extends BaseModel {
     private static final String TAG = ".QuestionThreshold";
@@ -90,6 +92,40 @@ public class QuestionThreshold extends BaseModel {
             }
         }
         return null;
+    }
+
+    public static List<QuestionThreshold> getAllQuestionThresholds() {
+        return new Select().all().from(QuestionThreshold.class).queryList();
+    }
+
+    /**
+     * Method to get the matches with a question id and a value between or equal min max
+     * @param id_question The id of the question.
+     * @param value The value to check.
+     * @return The list of matches.
+     */
+    public static List<Match> getMatchesWithQuestionValue(Long id_question,
+            int value) {
+        return new Select().from(Match.class).as(matchName)
+                .join(QuestionThreshold.class, Join.JoinType.LEFT_OUTER).as(questionThresholdName)
+                .on(Match_Table.id_match.withTable(matchAlias)
+                        .eq(QuestionThreshold_Table.id_match.withTable(questionThresholdAlias)))
+                .where(QuestionThreshold_Table.id_question.withTable(questionThresholdAlias)
+                        .is(id_question))
+                .and(QuestionThreshold_Table.minValue.withTable(questionThresholdAlias)
+                        .lessThanOrEq(value))
+                .and(QuestionThreshold_Table.maxValue.withTable(questionThresholdAlias)
+                        .greaterThanOrEq(value))
+                .queryList();
+    }
+
+    /**
+     * Method to delete the questionThresholds passed
+     */
+    public static void deleteQuestionThresholds(List<QuestionThreshold> questionThresholds) {
+        for (QuestionThreshold questionThreshold : questionThresholds) {
+            questionThreshold.delete();
+        }
     }
 
     public long getId_question_threshold() {

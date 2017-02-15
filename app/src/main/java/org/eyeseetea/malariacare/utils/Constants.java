@@ -31,7 +31,10 @@ public class Constants {
             SWITCH_BUTTON = 22,
             QUESTION_LABEL = 23,
             IMAGE_RADIO_GROUP_NO_DATAELEMENT = 24,
-            IMAGE_RADIO_GROUP = 25;
+            IMAGE_RADIO_GROUP = 25,
+            POSITIVE_OR_ZERO_INT = 26,
+            DYNAMIC_TREATMENT_SWITCH_NUMBER = 27,
+            DYNAMIC_STOCK_IMAGE_RADIO_BUTTON = 28;
 
 
     public static final List<Integer> QUESTION_TYPES_WITH_OPTIONS = Arrays.asList(
@@ -65,7 +68,8 @@ public class Constants {
             TAB_IQATAB = 7,
             TAB_REPORTING = 8,
             TAB_DYNAMIC_AUTOMATIC_TAB = 9,
-            TAB_MULTI_QUESTION = 10;
+            TAB_MULTI_QUESTION = 10,
+            TAB_DYNAMIC_TREATMENT = 11;
 
     //FIXME So far the special sub type of composite scores is treated by name
     public static final String COMPOSITE_SCORE_TAB_NAME = "Composite Scores";
@@ -80,7 +84,12 @@ public class Constants {
             SURVEY_CONFLICT = 4,
             SURVEY_QUARANTINE = 5,
             SURVEY_SENDING = 6;
-
+    // ############# SURVEY TYPE ###############
+    public static final int SURVEY_NO_TYPE=-1,
+            SURVEY_BALANCE = 0,
+            SURVEY_EXPENSE = 1,
+            SURVEY_RECEIPT = 2,
+            SURVEY_MCS = 3;
     public static final String FONTS_XSMALL = "xsmall",
             FONTS_SMALL = "small",
             FONTS_MEDIUM = "medium",
@@ -112,6 +121,10 @@ public class Constants {
      * Max columns for the monitor activity (6 months by default)
      */
     public static final int MONITOR_HISTORY_SIZE = 6;
+    /**
+     * Max columns for the stock tab (the different type of drugs)
+     */
+    public static final int STOCK_HISTORY_SIZE = 7;
 
     /**
      * Intent extra param that states that the login is being done due to an attempt to change the

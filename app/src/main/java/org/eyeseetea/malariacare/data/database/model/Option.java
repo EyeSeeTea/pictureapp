@@ -103,6 +103,12 @@ public class Option extends BaseModel {
                 .where(Option_Table.id_option.eq(id)).querySingle();
     }
 
+    public static Option findByCode(String code) {
+        return new Select()
+                .from(Option.class)
+                .where(Option_Table.CODE).eq(code).querySingle();
+    }
+
     public Long getId_option() {
         return id_option;
     }
@@ -213,6 +219,52 @@ public class Option extends BaseModel {
     }
 
     /**
+     * Looks for the value with the given question  is the provided option
+     */
+    public static boolean findOption(Long idQuestion, Long idOption, Survey survey) {
+        Value value = Value.findValue(idQuestion, survey);
+        if (value == null) {
+            return false;
+        }
+
+        Long valueIdOption = value.getId_option();
+        return idOption.equals(valueIdOption);
+    }
+
+    /**
+     * Gets the Question of this Option in session
+     */
+    public Question getQuestionBySession() {
+        return getQuestionBySurvey(Session.getMalariaSurvey());
+    }
+
+    /**
+     * Gets the Question of this Option in the given Survey
+     */
+    public Question getQuestionBySurvey(
+            Survey survey) {
+        if (survey == null) {
+            return null;
+        }
+        List<Value> returnValues = new Select().from(Value.class)
+                //// FIXME: 29/12/16  indexed
+                //.indexedBy(Constants.VALUE_IDX)
+                .where(Value_Table.id_option.eq(this.getId_option()))
+                .and(Value_Table.id_survey.eq(survey.getId_survey())).queryList();
+
+        return (returnValues.size() == 0) ? null : returnValues.get(0).getQuestion();
+    }
+
+    public List<Value> getValues() {
+        if (values == null) {
+            values = new Select().from(Value.class)
+                    .where(Value_Table.ID_OPTION).eq(
+                            this.getId_option()).queryList();
+        }
+        return values;
+    }
+
+    /**
      * Checks if this option actives the children questions
      *
      * @return true: Children questions should be shown, false: otherwise.
@@ -276,29 +328,5 @@ public class Option extends BaseModel {
                 ", id_answer=" + id_answer +
                 ", id_option_attribute=" + id_option_attribute +
                 '}';
-    }
-
-    /**
-     * Gets the Question of this Option in session
-     */
-    public Question getQuestionBySession() {
-        return getQuestionBySurvey(Session.getSurvey());
-    }
-
-    /**
-     * Gets the Question of this Option in the given Survey
-     */
-    public Question getQuestionBySurvey(
-            Survey survey) {
-        if (survey == null) {
-            return null;
-        }
-        List<Value> returnValues = new Select().from(Value.class)
-                //// FIXME: 29/12/16  indexed
-                //.indexedBy(Constants.VALUE_IDX)
-                .where(Value_Table.id_option.eq(this.getId_option()))
-                .and(Value_Table.id_survey.eq(survey.getId_survey())).queryList();
-
-        return (returnValues.size() == 0) ? null : returnValues.get(0).getQuestion();
     }
 }

@@ -40,7 +40,6 @@ public class SplashScreenActivity extends Activity {
     private void init() {
         Fabric.with(this, new Crashlytics());
         LocationMemory.getInstance().init(getApplicationContext());
-        TypefaceCache.getInstance().init(getApplicationContext());
 
         D2.init(this);
         FlowConfig flowConfig = new FlowConfig
@@ -111,7 +110,6 @@ public class SplashScreenActivity extends Activity {
 
         @Override
         protected Exception doInBackground(Void... params) {
-
             init();
             return null;
         }

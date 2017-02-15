@@ -21,6 +21,8 @@ package org.eyeseetea.malariacare.data.database.model;
 
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.programAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.programName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOptionAlias;
@@ -30,6 +32,7 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelati
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueName;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -40,6 +43,7 @@ import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.database.transaction.ProcessModelTransaction;
 import com.raizlabs.android.dbflow.structure.database.transaction.Transaction;
@@ -49,7 +53,7 @@ import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
-import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatio;
+import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
@@ -107,6 +111,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
     @Column
     Integer status;
 
+    @Column
+    Integer type;
+
     /**
      * List of values for this survey
      */
@@ -133,6 +140,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.completionDate = this.creationDate;
         this.eventDate = new Date();
         this.scheduledDate = null;
+        this.type = Constants.SURVEY_NO_TYPE; //to avoid NullPointerExceptions
     }
 
     public Survey(OrgUnit orgUnit, Program program, User user) {
@@ -145,6 +153,146 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.setOrgUnit(orgUnit);
         this.setProgram(program);
         this.setUser(user);
+        this.setType(Constants.SURVEY_NO_TYPE);
+    }
+
+    public Survey(OrgUnit orgUnit, Program program, User user, int type) {
+        this();
+
+        // Possibilities [ In progress | Completed | Sent ]
+        this.status = Constants.SURVEY_IN_PROGRESS;
+
+        //Set context of the survey
+        this.setOrgUnit(orgUnit);
+        this.setProgram(program);
+        this.setUser(user);
+        this.type = type;
+    }
+
+
+
+
+    public Long getId_survey() {
+        return id_survey;
+    }
+
+    public void setId_survey(Long id_survey) {
+        this.id_survey = id_survey;
+    }
+
+    public OrgUnit getOrgUnit() {
+        if (orgUnit == null) {
+            if (id_org_unit == null) return null;
+            orgUnit = new Select()
+                    .from(OrgUnit.class)
+                    .where(OrgUnit_Table.id_org_unit
+                            .is(id_org_unit)).querySingle();
+        }
+        return orgUnit;
+    }
+
+    public void setOrgUnit(Long id_org_unit) {
+        this.id_org_unit = id_org_unit;
+        this.orgUnit = null;
+    }
+
+    public void setOrgUnit(OrgUnit orgUnit) {
+        this.orgUnit = orgUnit;
+        this.id_org_unit = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
+    }
+
+    public Program getProgram() {
+        if (program == null) {
+            if (id_program == null) return null;
+            program = new Select()
+                    .from(Program.class)
+                    .where(Program_Table.id_program
+                            .is(id_program)).querySingle();
+        }
+        return program;
+    }
+
+    public void setProgram(Long id_program) {
+        this.id_program = id_program;
+        this.program = null;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+        this.id_program = (program != null) ? program.getId_program() : null;
+    }
+
+    public User getUser() {
+        if (user == null) {
+            if (id_user == null) return null;
+            user = new Select()
+                    .from(User.class)
+                    .where(User_Table.id_user
+                            .is(id_user)).querySingle();
+        }
+        return user;
+    }
+
+    public void setUser(Long id_user) {
+        this.id_user = id_user;
+        this.user = null;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        this.id_user = (user != null) ? user.getId_user() : null;
+    }
+
+    @Deprecated
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    @Deprecated
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getCompletionDate() {
+        return completionDate;
+    }
+
+    public void setCompletionDate(Date completionDate) {
+        this.completionDate = completionDate;
+    }
+
+    @Deprecated
+    public Date getEventDate() {
+        return eventDate;
+    }
+
+    @Deprecated
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public Date getScheduledDate() {
+        return scheduledDate;
+    }
+
+    public void setScheduledDate(Date scheduledDate) {
+        this.scheduledDate = scheduledDate;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     /**
@@ -157,6 +305,44 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .and(Survey_Table.status.isNot(Constants.SURVEY_SENT))
                 .orderBy(OrderBy.fromProperty(Survey_Table.eventDate))
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit)).queryList();
+    }
+
+    /**
+     * Returns all the malaria surveys with status yet not put to "Sent"
+     */
+    public static List<Survey> getAllUnsentMalariaSurveys() {
+        Context context = PreferencesState.getInstance().getContext();
+        new Select().from(Survey.class).as(surveyName)
+                .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(Survey_Table.id_program.withTable(surveyAlias)
+                        .eq(Program_Table.id_program.withTable(programAlias)))
+
+                .where(Survey_Table.status.withTable(surveyAlias)
+                        .isNot(Constants.SURVEY_SENT))
+                .and(Survey_Table.status.withTable(surveyAlias)
+                        .isNot(Constants.SURVEY_CONFLICT))
+                .and(Program_Table.uid.withTable(programAlias)
+                        .isNot( context.getString(R.string.stockProgramUID)))
+                .orderBy(OrderBy.fromProperty(Survey_Table.eventDate.withTable(surveyAlias)))
+                .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit.withTable(surveyAlias))) .queryList();
+    }
+
+    /**
+     * Returns all the malaria surveys with status put to "Sent"
+     */
+    public static List<Survey> getAllSentMalariaSurveys() {
+        Context context = PreferencesState.getInstance().getContext();
+        return new Select().from(Survey.class).as(surveyName)
+
+                .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(Survey_Table.id_program.withTable(surveyAlias)
+                        .eq(Program_Table.id_program.withTable(programAlias)))
+
+                .where(Survey_Table.status.withTable(surveyAlias)
+                        .is( Constants.SURVEY_SENT))
+                .and(Program_Table.uid.withTable(programAlias)
+                        .isNot(context.getString(R.string.stockProgramUID)))
+                .orderBy(Survey_Table.eventDate,false).queryList();
     }
 
     /**
@@ -180,7 +366,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .orderBy(OrderBy.fromProperty(Survey_Table.eventDate))
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit)).queryList();
     }
-
 
     /**
      * Returns all the surveys with status put to "Sent"
@@ -213,11 +398,40 @@ public class Survey extends BaseModel implements VisitableToSDK {
     /**
      * Returns all the surveys with status put to "Sent"
      */
+    public static List<Survey> getAllMalariaSurveysToBeSent() {
+        Context context = PreferencesState.getInstance().getContext();
+        return new Select().from(Survey.class).as(surveyName)
+                        .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
+                        .on(Survey_Table.id_program.withTable(surveyAlias)
+                                .eq(Program_Table.id_program.withTable(programAlias)))
+                        .where(Survey_Table.status.withTable(surveyAlias)
+                                .eq( Constants.SURVEY_COMPLETED))
+                        .and(Program_Table.uid.withTable(programAlias)
+                                .isNot(context.getString(R.string.stockProgramUID)))
+                        .orderBy(Survey_Table.eventDate)
+                        .orderBy(Survey_Table.id_org_unit).queryList();
+    }
+
+    /**
+     * Returns all the surveys with status put to "Sent"
+     */
     public static List<Survey> getAllSurveysToBeSent() {
         return new Select().from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_COMPLETED))
                 .orderBy(OrderBy.fromProperty(Survey_Table.eventDate))
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit)).queryList();
+    }
+
+    public static Survey getStockSurveyWithCreationDate(Date creationDate){
+        Context context = PreferencesState.getInstance().getContext();
+        return new Select().from(Survey.class).as("s")
+                .join(Program.class, Join.JoinType.LEFT).as("p")
+                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
+                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
+                .where(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.CREATIONDATE)).eq(
+                        creationDate))
+                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).is(
+                        context.getString(R.string.stockProgramUID))).querySingle();
     }
 
     /**
@@ -343,6 +557,54 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     /**
+     * Find the surveys for a program, with a type o no type ans with the event date grater than
+     * passed.
+     *
+     * @param program    The program of the survey
+     * @param date       The min eventDate of the survey
+     * @return A list of surveys
+     */
+    public static List<Survey> findSurveysWithProgramAndGreaterDate(Program program, Date date) {
+        return new Select().from(Survey.class).as(surveyName)
+                .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(Survey_Table.id_program.withTable(surveyAlias)
+                        .eq(Program_Table.id_program.withTable(programAlias)))
+                .where(Program_Table.id_program.withTable(programAlias)
+                        .eq(program.getId_program()))
+                .and(Survey_Table.eventDate.withTable(surveyAlias).greaterThanOrEq(date)).queryList();
+    }
+
+    public static Date getLastDateForSurveyType(int type) {
+        Survey survey = SQLite.select(Method.max(Survey_Table.eventDate)).
+                from(Survey.class)
+                .where(Survey_Table.type.eq(type)).querySingle();
+        if (survey == null) {
+            return new Date(0);
+        }
+        return survey.getEventDate();
+    }
+
+    public static Survey getLastSurveyWithType(int type){
+       Survey survey = new Select()
+                .from(Survey.class)
+                .where(Survey_Table.TYPE).eq(type)
+               .orderBy(false, Survey_Table.EVENTDATE)
+               .querySingle();
+        return survey;
+    }
+
+
+    public static List<Survey> getSurveysWithProgramType(Program program, int type) {
+        return new Select().from(Survey.class).as(surveyName)
+                .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(Survey_Table.id_program.withTable(surveyAlias)
+                        .eq(Program_Table.id_program.withTable(programAlias)))
+                .where(Program_Table.id_program.withTable(programAlias)
+                        .eq(program.getId_program()))
+                .and(Survey_Table.type.withTable(surveyAlias).is(type)).queryList();
+    }
+
+    /**
      * Finds a survey by its ID
      */
     public static Survey findById(Long id_survey) {
@@ -389,120 +651,30 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Survey_Table.status.eq(Constants.SURVEY_SENDING))
                 .queryList();
     }
-
-    public Long getId_survey() {
-        return id_survey;
-    }
-
-    public void setId_survey(Long id_survey) {
-        this.id_survey = id_survey;
-    }
-
-    public OrgUnit getOrgUnit() {
-        if (orgUnit == null) {
-            if (id_org_unit == null) return null;
-            orgUnit = new Select()
-                    .from(OrgUnit.class)
-                    .where(OrgUnit_Table.id_org_unit
-                            .is(id_org_unit)).querySingle();
+    public Float getCounterValue(Question question, Option selectedOption) {
+        Question optionCounter = question.findCounterByOption(selectedOption);
+        if (optionCounter == null) {
+            return 0f;
         }
-        return orgUnit;
-    }
-
-    public void setOrgUnit(Long id_org_unit) {
-        this.id_org_unit = id_org_unit;
-        this.orgUnit = null;
-    }
-
-    public void setOrgUnit(OrgUnit orgUnit) {
-        this.orgUnit = orgUnit;
-        this.id_org_unit = (orgUnit != null) ? orgUnit.getId_org_unit() : null;
-    }
-
-    public Program getProgram() {
-        if (program == null) {
-            if (id_program == null) return null;
-            program = new Select()
-                    .from(Program.class)
-                    .where(Program_Table.id_program
-                            .is(id_program)).querySingle();
+        String counterValue = ReadWriteDB.readValueQuestion(optionCounter);
+        if (counterValue == null || counterValue.isEmpty()) {
+            return 0f;
         }
-        return program;
+        return Float.parseFloat(counterValue);
     }
 
-    public void setProgram(Long id_program) {
-        this.id_program = id_program;
-        this.program = null;
-    }
-
-    public void setProgram(Program program) {
-        this.program = program;
-        this.id_program = (program != null) ? program.getId_program() : null;
-    }
-
-    public User getUser() {
-        if (user == null) {
-            if (id_user == null) return null;
-            user = new Select()
-                    .from(User.class)
-                    .where(User_Table.id_user
-                            .is(id_user)).querySingle();
+    public HashMap<Tab, Integer> getAnsweredTabs() {
+        HashMap<Tab, Integer> tabs = new HashMap<Tab, Integer>();
+        List<Value> values = getValuesFromDB();
+        int tabSize = 0;
+        for (Value value : values) {
+            Tab tab = value.getQuestion().getHeader().getTab();
+            if (!tabs.containsKey(tab)) {
+                tabs.put(tab, tabSize);
+                tabSize++;
+            }
         }
-        return user;
-    }
-
-    public void setUser(Long id_user) {
-        this.id_user = id_user;
-        this.user = null;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-        this.id_user = (user != null) ? user.getId_user() : null;
-    }
-
-    @Deprecated
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    @Deprecated
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public Date getCompletionDate() {
-        return completionDate;
-    }
-
-    public void setCompletionDate(Date completionDate) {
-        this.completionDate = completionDate;
-    }
-
-    @Deprecated
-    public Date getEventDate() {
-        return eventDate;
-    }
-
-    @Deprecated
-    public void setEventDate(Date eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public Date getScheduledDate() {
-        return scheduledDate;
-    }
-
-    public void setScheduledDate(Date scheduledDate) {
-        this.scheduledDate = scheduledDate;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
+        return tabs;
     }
 
     /**
@@ -572,6 +744,16 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return !isSent() && !isCompleted() && !isHide();
     }
 
+    public boolean isStockSurvey() {
+        if (program == null) {
+            program = Program.findById(id_program);
+        }
+        if (program != null) {
+            return program.isStockProgram();
+        }
+        return false;
+    }
+
     public Float getMainScore() {
         //The main score is only return from a query 1 time
         if (this.mainScore == null) {
@@ -611,16 +793,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
             value.delete();
         }
         super.delete();
-    }
-
-    public String getType() {
-        String type = "";
-        if (isTypeA()) {
-            type = "A";
-        } else if (isTypeB()) {
-            type = "B";
-        } else if (isTypeC()) type = "C";
-        return type;
     }
 
     /**
@@ -733,7 +905,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
      *
      * @return SurveyAnsweredRatio that hold the total & answered questions.
      */
-    private SurveyAnsweredRatio reloadSurveyAnsweredRatio() {
+    public SurveyAnsweredRatio reloadSurveyAnsweredRatio() {
 
         SurveyAnsweredRatio surveyAnsweredRatio;
         //First parent is always required and not calculated.
@@ -745,10 +917,13 @@ public class Survey extends BaseModel implements VisitableToSDK {
         Question rootQuestion = Question.findRootQuestion(tab);
         Question localQuestion = rootQuestion;
         while (localQuestion.getSibling() != null) {
-            if (localQuestion.isCompulsory()) {
+            if (localQuestion.isCompulsory() && !localQuestion.isStockQuestion()) {
                 numRequired++;
             }
             localQuestion = localQuestion.getSibling();
+        }
+        if (localQuestion.isStockQuestion() || !localQuestion.isCompulsory()) {
+            numRequired--;
         }
 
         //Add children required by each parent (value+question)
@@ -822,14 +997,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
         //Update status & completionDate
         if (answeredRatio.isCompleted()) {
-            this.setStatus(Constants.SURVEY_COMPLETED);
-            this.setCompletionDate(new Date());
+            complete();
         } else {
-            this.setStatus(Constants.SURVEY_IN_PROGRESS);
-            this.setCompletionDate(this.eventDate);
+            setStatus(Constants.SURVEY_IN_PROGRESS);
+            setCompletionDate(this.eventDate);
+            save();
         }
-        //Saves new status & completionDate
-        this.save();
+    }
+
+    public void complete(){
+        setStatus(Constants.SURVEY_COMPLETED);
+        setCompletionDate(new Date());
+        save();
     }
 
     /**
@@ -843,6 +1022,13 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return getRDTName().equals(
                 PreferencesState.getInstance().getContext().getResources().getString(
                         R.string.rdtPositive));
+    }
+
+    public boolean isExpenseSurvey() {
+        if (type == null) {
+            return false;
+        }
+        return type == Constants.SURVEY_EXPENSE;
     }
 
     /**
@@ -999,26 +1185,25 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
     /**
      * This method removes the children question values from when a parent question is removed
+     *
+     * @removeCounters is used to prevent to remove the counter when change the some question in the
+     * same level
+     * This changed was required because the counter need be child of the question+option who tigger
+     * the counter.
      */
-    public void removeChildrenValuesFromQuestionRecursively(Question question) {
+    public void removeChildrenValuesFromQuestionRecursively(Question question,
+            boolean removeCounters) {
         List<Value> values = getValuesFromDB();
         List<Question> questionChildren = question.getChildren();
         for (int i = values.size() - 1; i > 0; i--) {
-            //This loop removes the Counter questions. We should include here the Warning or
-            // Reminder questions if is necessary in the future.
-            for (QuestionRelation questionRelation : question.getQuestionRelations()) {
-                if (questionRelation.isACounter()) {
-                    if (questionRelation.getQuestion().equals(question)) {
-                        removeValue(values.get(i));
-                        break;
-                    }
-                }
-            }
             //This loop removes recursively the values on the children question
             if (questionChildren.contains(values.get(i).getQuestion())) {
-                removeValue(values.get(i));
+                //Remove the children values but if the child value is a counter is not removed in the first level
+                if (!values.get(i).getQuestion().isACounter() || removeCounters) {
+                    removeValue(values.get(i));
+                }
                 for (Question child : questionChildren) {
-                    removeChildrenValuesFromQuestionRecursively(child);
+                    removeChildrenValuesFromQuestionRecursively(child, true);
                 }
             }
         }
@@ -1060,9 +1245,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 : survey.id_org_unit != null) {
             return false;
         }
-        if (id_user != null ? !id_user.equals(survey.id_user) : survey.id_user != null) {
+        if (id_user != null ? !id_user.equals(survey.id_user) : survey.id_user != null)
             return false;
-        }
         if (creationDate != null ? !creationDate.equals(survey.creationDate)
                 : survey.creationDate != null) {
             return false;
@@ -1078,7 +1262,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 : survey.scheduledDate != null) {
             return false;
         }
-        return !(status != null ? !status.equals(survey.status) : survey.status != null);
+        if (status != null ? !status.equals(survey.status) : survey.status != null) return false;
+        return type != null ? type.equals(survey.type) : survey.type == null;
 
     }
 
@@ -1093,6 +1278,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         result = 31 * result + (eventDate != null ? eventDate.hashCode() : 0);
         result = 31 * result + (scheduledDate != null ? scheduledDate.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
 
@@ -1108,61 +1294,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 ", eventDate=" + eventDate +
                 ", scheduledDate=" + scheduledDate +
                 ", status=" + status +
+                ", type=" + type +
                 '}';
-    }
-
-
-    public Float getCounterValue(Question question, Option selectedOption) {
-        Question optionCounter = question.findCounterByOption(selectedOption);
-
-        if (optionCounter == null) {
-            return 0f;
-        }
-
-        String counterValue = ReadWriteDB.readValueQuestion(optionCounter);
-        if (counterValue == null || counterValue.isEmpty()) {
-            return 0f;
-        }
-
-        return Float.parseFloat(counterValue);
-    }
-
-    public HashMap<Tab, Integer> getAnsweredTabs() {
-        HashMap<Tab, Integer> tabs = new HashMap<Tab, Integer>();
-
-        List<Value> values = getValuesFromDB();
-        int tabSize = 0;
-        for (Value value : values) {
-            Tab tab = value.getQuestion().getHeader().getTab();
-            if (!tabs.containsKey(tab)) {
-                tabs.put(tab, tabSize);
-                tabSize++;
-            }
-        }
-        return tabs;
-    }
-
-    public static void saveAll(List<Survey> surveys, final IDataSourceCallback<Void> callback) {
-
-        FlowManager.getDatabase(AppDatabase.class)
-                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
-                        new ProcessModelTransaction.ProcessModel<Survey>() {
-                            @Override
-                            public void processModel(Survey survey) {
-                                survey.save();
-                            }
-                        }).addAll(surveys).build())
-                .error(new Transaction.Error() {
-                    @Override
-                    public void onError(Transaction transaction, Throwable error) {
-                        callback.onError(error);
-                    }
-                })
-                .success(new Transaction.Success() {
-                    @Override
-                    public void onSuccess(Transaction transaction) {
-                        callback.onSuccess(null);
-                    }
-                }).build().execute();
     }
 }

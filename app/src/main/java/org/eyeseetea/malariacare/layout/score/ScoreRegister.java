@@ -151,7 +151,9 @@ public class ScoreRegister {
      * Calculates the numerator of the given question in the current survey
      */
     public static float calcNum(Question question) {
-        return calcNum(question, Session.getSurvey());
+        Survey survey = (question.isStockQuestion()) ? Session.getStockSurvey()
+                : Session.getMalariaSurvey();
+        return calcNum(question, survey);
     }
 
     /**
@@ -173,7 +175,9 @@ public class ScoreRegister {
      * Calculates the numerator of the given question in the current survey
      */
     public static float calcDenum(Question question) {
-        return calcDenum(question, Session.getSurvey());
+        Survey survey = (question.isStockQuestion()) ? Session.getStockSurvey()
+                : Session.getMalariaSurvey();
+        return calcDenum(question, survey);
     }
 
     /**

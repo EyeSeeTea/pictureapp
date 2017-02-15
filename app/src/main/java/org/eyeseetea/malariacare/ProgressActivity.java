@@ -40,6 +40,7 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
+import org.eyeseetea.malariacare.views.FontUtils;
 
 public class ProgressActivity extends Activity {
 
@@ -59,6 +60,7 @@ public class ProgressActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FontUtils.applyFontStyleByPreference(getResources(), getTheme());
 
         initializeDependencies();
 

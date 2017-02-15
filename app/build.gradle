@@ -67,7 +67,6 @@ android {
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
     }
-
     productFlavors {
         cambodia {
             applicationId 'org.eyeseetea.surveillance_kh_bb'
@@ -143,8 +142,8 @@ dependencies {
     compile "com.android.support:support-v4:${libs.supportVersion}"
     compile "com.android.support:appcompat-v7:${libs.supportVersion}"
     compile "com.android.support:support-annotations:${libs.supportVersion}"
-    compile 'com.android.support:recyclerview-v7:23.4.0'
     compile "com.android.support:multidex:${libs.multidex}"
+    compile 'com.android.support:recyclerview-v7:25.1.0'
     //3rd party dependencies
     compile "com.opencsv:opencsv:${libs.opencsvVersion}"
     compile "com.google.android.gms:play-services:${libs.gmsPlayVersion}"

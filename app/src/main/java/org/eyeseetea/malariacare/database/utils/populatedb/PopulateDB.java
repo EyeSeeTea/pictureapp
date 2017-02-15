@@ -20,7 +20,7 @@
 
 package org.eyeseetea.malariacare.database.utils.populatedb;
 
-import android.content.res.AssetManager;
+import android.content.Context;
 import android.util.Log;
 
 import com.opencsv.CSVReader;
@@ -130,7 +130,9 @@ public class PopulateDB {
     static HashMap<Long, Organisation> organisationList = new HashMap<>();
     static HashMap<Long, Treatment> treatmentList = new HashMap<>();
 
-    public static void initDataIfRequired(AssetManager assetManager) throws IOException {
+    public static void initDataIfRequired(Context context) throws IOException {
+        FileCsvs fileCsvs=new FileCsvs();
+        fileCsvs.saveCsvsInFileIfNeeded();
         if (!Tab.isEmpty()) {
             Log.i(TAG, "DB Already loaded, showing surveys...");
             return;
@@ -138,7 +140,7 @@ public class PopulateDB {
 
         Log.i(TAG, "DB empty, loading data ...");
         try {
-            PopulateDB.populateDB(assetManager);
+            PopulateDB.populateDB(context);
             //Get maximum total of questions
             Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
         } catch (IOException e) {
@@ -147,13 +149,13 @@ public class PopulateDB {
         Log.i(TAG, "DB empty, loading data ...DONE");
     }
 
-    public static void populateDB(AssetManager assetManager) throws IOException {
-
+    public static void populateDB(Context context) throws IOException {
         //Reset inner references
         cleanInnerLists();
         for (String table : tables2populate) {
             Log.i(TAG, "Loading csv: " + table);
-            CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(table)),
+            CSVReader reader = new CSVReader(
+                    new InputStreamReader(context.openFileInput(table)),
                     SEPARATOR, QUOTECHAR);
 
             String[] line;
@@ -333,13 +335,13 @@ public class PopulateDB {
         cleanInnerLists();
     }
 
-    public static void populateDummyData(AssetManager assetManager) throws IOException {
+    public static void populateDummyData(Context context) throws IOException {
         //Reset inner references
         cleanDummyLists();
 
         for (String table : tables2populateDummy) {
             Log.i(TAG, "Loading csv: " + table);
-            CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(table)),
+            CSVReader reader = new CSVReader(new InputStreamReader(context.openFileInput(table)),
                     SEPARATOR, QUOTECHAR);
 
             String[] line;
@@ -425,10 +427,11 @@ public class PopulateDB {
         DateTimeManager.getInstance().delete();
     }
 
-    public static void addTotalQuestions(AssetManager assetManager, List<Question> questions)
+    public static void addTotalQuestions(Context context, List<Question> questions)
             throws IOException {
         //Reset inner references
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(QUESTIONS_CSV)),
                 SEPARATOR, QUOTECHAR);
 
         String[] line;
@@ -444,10 +447,11 @@ public class PopulateDB {
         reader.close();
     }
 
-    public static void addImagePathQuestions(AssetManager assetManager) throws IOException {
+    public static void addImagePathQuestions(Context context) throws IOException {
         //Reset inner references,
         List<Question> questions = Question.getAllQuestions();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(QUESTIONS_CSV)),
                 SEPARATOR, QUOTECHAR);
 
         String[] line;
@@ -465,10 +469,11 @@ public class PopulateDB {
         reader.close();
     }
 
-    public static void addVisibleQuestions(AssetManager assetManager, List<Question> questions)
+    public static void addVisibleQuestions(Context context, List<Question> questions)
             throws IOException {
         //Reset inner references
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(QUESTIONS_CSV)),
                 SEPARATOR, QUOTECHAR);
 
         String[] line;
@@ -484,15 +489,18 @@ public class PopulateDB {
         reader.close();
     }
 
-    public static void addOptionAttributes(AssetManager assetManager) throws IOException {
+    public static void addOptionAttributes(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.OPTION_ATTRIBUTES_CSV);
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.OPTIONS_CSV);
         List<Option> options = Option.getAllOptions();
         //Reset inner references
         cleanInnerLists();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(OPTION_ATTRIBUTES_CSV)), SEPARATOR,
+                new InputStreamReader(context.openFileInput(OPTION_ATTRIBUTES_CSV)), SEPARATOR,
                 QUOTECHAR);
         CSVReader readerOptions = new CSVReader(
-                new InputStreamReader(assetManager.open(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
+                new InputStreamReader(context.openFileInput(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
         //Remove bad optionAttributes.
         Delete.tables(OptionAttribute.class);
         String[] line;
@@ -547,15 +555,15 @@ public class PopulateDB {
         reader.close();
     }
 
-    public static void addOptionTextSize(AssetManager assetManager) throws IOException {
+    public static void addOptionTextSize(Context context) throws IOException {
         List<Option> options = Option.getAllOptions();
         //Reset inner references
         cleanInnerLists();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(OPTION_ATTRIBUTES_CSV)), SEPARATOR,
+                new InputStreamReader(context.openFileInput(OPTION_ATTRIBUTES_CSV)), SEPARATOR,
                 QUOTECHAR);
         CSVReader readerOptions = new CSVReader(
-                new InputStreamReader(assetManager.open(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
+                new InputStreamReader(context.openFileInput(OPTIONS_CSV)), SEPARATOR, QUOTECHAR);
         //Remove bad optionAttributes.
         Delete.tables(OptionAttribute.class);
         String[] line;
@@ -610,11 +618,11 @@ public class PopulateDB {
         reader.close();
     }
 
-    public static void updateOptionNames(AssetManager assetManager) throws IOException {
+    public static void updateOptionNames(Context context) throws IOException {
         List<Option> options = Option.getAllOptions();
         //Reset inner references
         cleanInnerLists();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(OPTIONS_CSV)),
+        CSVReader reader = new CSVReader(new InputStreamReader(context.openFileInput(OPTIONS_CSV)),
                 SEPARATOR, QUOTECHAR);
 
         String line[];
@@ -632,11 +640,12 @@ public class PopulateDB {
         reader.close();
     }
 
-    public static void updateQuestions(AssetManager assetManager) throws IOException {
+    public static void updateQuestions(Context context) throws IOException {
         List<Question> questions = Question.getAllQuestions();
         //Reset inner references
         cleanInnerLists();
-        CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(QUESTIONS_CSV)),
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(context.openFileInput(QUESTIONS_CSV)),
                 SEPARATOR, QUOTECHAR);
 
         String line[];
@@ -672,7 +681,7 @@ public class PopulateDB {
     }
 
 
-    public static void addNotTestedRemminder(AssetManager assetManager) throws IOException {
+    public static void addNotTestedRemminder(Context context) throws IOException {
         //Reset inner references
         cleanInnerLists();
         List<Option> actualOptions = Option.getAllOptions();
@@ -691,7 +700,7 @@ public class PopulateDB {
         int QORow = 0;
         for (String table : tables2updateQuestions) {
             Log.i(TAG, "Loading csv: " + table);
-            CSVReader reader = new CSVReader(new InputStreamReader(assetManager.open(table)),
+            CSVReader reader = new CSVReader(new InputStreamReader(context.openFileInput(table)),
                     SEPARATOR, QUOTECHAR);
 
             String[] line;

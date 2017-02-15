@@ -703,7 +703,7 @@ public class DashboardActivity extends BaseActivity {
                     loginUseCase.execute(demoCrededentials);
                 }
 
-                PopulateDB.initDataIfRequired(getAssets());
+                PopulateDB.initDataIfRequired(dashboardActivity);
             } catch (Exception ex) {
                 Log.e(TAG, "Error initializing DB: ", ex);
                 return ex;

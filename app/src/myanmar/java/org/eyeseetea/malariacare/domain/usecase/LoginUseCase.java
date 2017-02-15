@@ -6,9 +6,9 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.database.iomodules.dhis.importer.PullController;
 import org.eyeseetea.malariacare.database.model.OrgUnit;
 import org.eyeseetea.malariacare.database.model.User;
-import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class LoginUseCase extends ALoginUseCase {
 
         if (orgUnits.size() == 0) {
             try {
-                PopulateDB.populateDummyData(context.getAssets());
+                PopulateDB.populateDummyData(context);
                 PullController.convertOUinOptions();
             } catch (IOException e) {
                 e.printStackTrace();

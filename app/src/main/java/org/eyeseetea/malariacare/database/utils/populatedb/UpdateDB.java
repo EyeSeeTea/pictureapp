@@ -4,7 +4,7 @@ import static org.eyeseetea.malariacare.database.utils.populatedb.PopulateRow.po
 import static org.eyeseetea.malariacare.database.utils.populatedb.PopulateRow
         .populateQuestionRelation;
 
-import android.content.res.AssetManager;
+import android.content.Context;
 
 import com.opencsv.CSVReader;
 
@@ -34,14 +34,16 @@ import java.util.HashMap;
 import java.util.List;
 
 public class UpdateDB {
-    public static void updateAndAddQuestions(AssetManager assetManager) throws IOException {
+    public static void updateAndAddQuestions(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTIONS_CSV);
         List<Question> questionsDB = Question.getAllQuestions();
         HashMap<Long, Header> headerHashMap = RelationsIdCsvDB.getHeaderFKRelationCsvDB(
-                assetManager);
+                context);
         HashMap<Long, Answer> answerHashMap = RelationsIdCsvDB.getAnswerFKRelationCsvDB(
-                assetManager);
+                context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.QUESTIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.QUESTIONS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
 
         String line[];
@@ -62,13 +64,15 @@ public class UpdateDB {
     /**
      * Method to update the old answers and add new ones.
      *
-     * @param assetManager Needed to open the csv with the answers.
+     * @param context Needed to open the csv with the answers.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateAnswers(AssetManager assetManager) throws IOException {
+    public static void updateAnswers(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.ANSWERS_CSV);
         List<Answer> answers = Answer.getAllAnswers();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.ANSWERS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.ANSWERS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         //Save new answers
@@ -87,14 +91,16 @@ public class UpdateDB {
      * Method to update the old headers and add new ones from the csv. Use before inserting all
      * tabs.
      *
-     * @param assetManager Needed to open the csv with the headers.
+     * @param context Needed to open the csv with the headers.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateHeaders(AssetManager assetManager) throws IOException {
+    public static void updateHeaders(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.HEADERS_CSV);
         List<Header> headers = Header.getAllHeaders();
-        HashMap<Long, Tab> tabIds = RelationsIdCsvDB.getTabsIdRelationsCsvDB(assetManager);
+        HashMap<Long, Tab> tabIds = RelationsIdCsvDB.getTabsIdRelationsCsvDB(context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.HEADERS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.HEADERS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -111,13 +117,15 @@ public class UpdateDB {
     /**
      * Method to update the old programs and add new ones from the csv.
      *
-     * @param assetManager Needed to open the csv with the programs.
+     * @param context Needed to open the csv with the programs.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updatePrograms(AssetManager assetManager) throws IOException {
+    public static void updatePrograms(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.PROGRAMS_CSV);
         List<Program> programs = Program.getAllPrograms();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.PROGRAMS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.PROGRAMS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -137,15 +145,17 @@ public class UpdateDB {
     /**
      * Method to update the old tabs and add new ones from the csv. Use before insert all programs.
      *
-     * @param assetManager Needed to open the csv with the tabs.
+     * @param context Needed to open the csv with the tabs.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateTabs(AssetManager assetManager) throws IOException {
+    public static void updateTabs(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TABS_CSV);
         List<Tab> tabs = Tab.getAllTabs();
         HashMap<Long, Program> programIds = RelationsIdCsvDB.getProgramIdRelationCsvDB(
-                assetManager);
+                context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.TABS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.TABS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -159,12 +169,14 @@ public class UpdateDB {
         }
     }
 
-    public static void updateMatches(AssetManager assetManager) throws IOException {
+    public static void updateMatches(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.MATCHES);
         List<Match> matches = Match.listAll();
         HashMap<Long, QuestionRelation> questionsrelationIds =
-                RelationsIdCsvDB.getQuestionRelationIdRelationCsvDB(assetManager);
+                RelationsIdCsvDB.getQuestionRelationIdRelationCsvDB(context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.MATCHES)),
+                new InputStreamReader(context.openFileInput(PopulateDB.MATCHES)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -179,12 +191,14 @@ public class UpdateDB {
         }
     }
 
-    public static void updateQuestionRelation(AssetManager assetManager) throws IOException {
+    public static void updateQuestionRelation(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTION_RELATIONS_CSV);
         List<QuestionRelation> questionRelations = QuestionRelation.listAll();
         HashMap<Long, Question> questionIds = RelationsIdCsvDB.getQuestionIdRelationCsvDB(
-                assetManager);
+                context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.QUESTION_RELATIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_RELATIONS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -203,16 +217,18 @@ public class UpdateDB {
 
     }
 
-    public static void updateQuestionOption(AssetManager assetManager) throws IOException {
+    public static void updateQuestionOption(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTION_OPTIONS_CSV);
         List<QuestionOption> questionOptions = QuestionOption.listAll();
         HashMap<Long, Match> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
-                assetManager);
+                context);
         HashMap<Long, Question> questionsIds = RelationsIdCsvDB.getQuestionIdRelationCsvDB(
-                assetManager);
+                context);
         HashMap<Long, Option> optionsIds = RelationsIdCsvDB.getOptionIdRelationCsvDB(
-                assetManager);
+                context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.QUESTION_OPTIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_OPTIONS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -230,14 +246,16 @@ public class UpdateDB {
 
     }
 
-    public static void updateQuestionThresholds(AssetManager assetManager) throws IOException {
+    public static void updateQuestionThresholds(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.QUESTION_THRESHOLDS_CSV);
         List<QuestionThreshold> questionThresholds = QuestionThreshold.getAllQuestionThresholds();
         HashMap<Long, Match> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
-                assetManager);
+                context);
         HashMap<Long, Question> questionsIds = RelationsIdCsvDB.getQuestionIdRelationCsvDB(
-                assetManager);
+                context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.QUESTION_THRESHOLDS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_THRESHOLDS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -258,13 +276,15 @@ public class UpdateDB {
     /**
      * Method to update drugs form csvs.
      *
-     * @param assetManager Needed to open the csvs.
+     * @param context Needed to open the csvs.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateDrugs(AssetManager assetManager) throws IOException {
+    public static void updateDrugs(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.DRUGS_CSV);
         List<Drug> drugs = Drug.getAllDrugs();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.DRUGS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.DRUGS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -281,13 +301,15 @@ public class UpdateDB {
     /**
      * Method to update organisations from csvs.
      *
-     * @param assetManager Needed to open the csvs.
+     * @param context Needed to open the csvs.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateOrganisations(AssetManager assetManager) throws IOException {
+    public static void updateOrganisations(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.ORGANISATIONS_CSV);
         List<Organisation> organisations = Organisation.getAllOrganisations();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.ORGANISATIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.ORGANISATIONS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -304,15 +326,17 @@ public class UpdateDB {
     /**
      * Method to update treatments from csvs.
      *
-     * @param assetManager Needed to open the csvs.
+     * @param context Needed to open the csvs.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateTreatments(AssetManager assetManager) throws IOException {
+    public static void updateTreatments(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TREATMENT_CSV);
         List<Treatment> treatments = Treatment.getAllTreatments();
         HashMap<Long, Organisation> organisationIds =
-                RelationsIdCsvDB.getOrganisationIdRelationCsvDB(assetManager);
+                RelationsIdCsvDB.getOrganisationIdRelationCsvDB(context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.TREATMENT_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.TREATMENT_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -329,16 +353,18 @@ public class UpdateDB {
     /**
      * Method to Update drugCombination from csvs.
      *
-     * @param assetManager Needed to open the csvs.
+     * @param context Needed to open the csvs.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateDrugCombination(AssetManager assetManager) throws IOException {
+    public static void updateDrugCombination(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.DRUG_COMBINATIONS_CSV);
         List<DrugCombination> drugCombinations = DrugCombination.getAllDrugCombination();
-        HashMap<Long, Drug> drugIds = RelationsIdCsvDB.getDrugIdRelationCsvDB(assetManager);
+        HashMap<Long, Drug> drugIds = RelationsIdCsvDB.getDrugIdRelationCsvDB(context);
         HashMap<Long, Treatment> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
-                assetManager);
+                context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.DRUG_COMBINATIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.DRUG_COMBINATIONS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -355,17 +381,19 @@ public class UpdateDB {
     /**
      * Method to update treatmentMatches from csvs.
      *
-     * @param assetManager Needed to open the csvs.
+     * @param context Needed to open the csvs.
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateTreatmentMatches(AssetManager assetManager) throws IOException {
+    public static void updateTreatmentMatches(Context context) throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TREATMENT_MATCHES_CSV);
         List<TreatmentMatch> treatmentMatches = TreatmentMatch.getAllTreatmentMatches();
         HashMap<Long, Treatment> treatmentIds = RelationsIdCsvDB.getTreatmentIdRelationCsvDB(
-                assetManager);
+                context);
         HashMap<Long, Match> matchIds = RelationsIdCsvDB.getMatchIdRelationCsvDB(
-                assetManager);
+                context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.TREATMENT_MATCHES_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.TREATMENT_MATCHES_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -380,7 +408,7 @@ public class UpdateDB {
         }
     }
 
-    public static void updateOptions(AssetManager assetManager) throws IOException {
+    public static void updateOptions(Context context) throws IOException {
         List<Option> optionToDelete = Question.getOptions(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.residenceVillageUID));
@@ -390,12 +418,14 @@ public class UpdateDB {
                 option.delete();
             }
         }
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.OPTIONS_CSV);
         List<Option> options = Option.getAllOptions();
-        HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(assetManager);
+        HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(context);
         HashMap<Long, OptionAttribute> optionAttributeIds =
-                RelationsIdCsvDB.getOptionAttributeIdRelationCsvDB(assetManager);
+                RelationsIdCsvDB.getOptionAttributeIdRelationCsvDB(context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.OPTIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.OPTIONS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
@@ -425,13 +455,13 @@ public class UpdateDB {
 
     }
 
-    public static void insertLastLines(int numeberLines, AssetManager assetManager)
+    public static void insertLastLines(int numeberLines, Context context)
             throws IOException {
-        HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(assetManager);
+        HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(context);
         HashMap<Long, OptionAttribute> optionAttributeIds =
-                RelationsIdCsvDB.getOptionAttributeIdRelationCsvDB(assetManager);
+                RelationsIdCsvDB.getOptionAttributeIdRelationCsvDB(context);
         CSVReader reader = new CSVReader(
-                new InputStreamReader(assetManager.open(PopulateDB.OPTIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.OPTIONS_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         List<String[]> lines = reader.readAll();
 

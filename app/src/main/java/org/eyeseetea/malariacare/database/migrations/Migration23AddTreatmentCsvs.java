@@ -1,6 +1,6 @@
 package org.eyeseetea.malariacare.database.migrations;
 
-import android.content.res.AssetManager;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -47,21 +47,21 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
                 List<String> tabsToDelete = new ArrayList<>();
                 tabsToDelete.add("drugs_referral");
                 Tab.deleteTab(tabsToDelete);
-                AssetManager assetManager = PreferencesState.getInstance().getContext().getAssets();
-                UpdateDB.updateTabs(assetManager);
-                UpdateDB.updateHeaders(assetManager);
-                UpdateDB.updateAnswers(assetManager);
-                UpdateDB.updateAndAddQuestions(assetManager);
-                UpdateDB.updateQuestionRelation(assetManager);
-                UpdateDB.updateMatches(assetManager);
-                UpdateDB.updateQuestionOption(assetManager);
-                UpdateDB.updateQuestionThresholds(assetManager);
-                UpdateDB.updateDrugs(assetManager);
-                UpdateDB.updateOrganisations(assetManager);
-                UpdateDB.updateTreatments(assetManager);
-                UpdateDB.updateDrugCombination(assetManager);
-                UpdateDB.updateTreatmentMatches(assetManager);
-                UpdateDB.updateQuestionOption(assetManager);
+                Context context = PreferencesState.getInstance().getContext();
+                UpdateDB.updateTabs(context);
+                UpdateDB.updateHeaders(context);
+                UpdateDB.updateAnswers(context);
+                UpdateDB.updateAndAddQuestions(context);
+                UpdateDB.updateQuestionRelation(context);
+                UpdateDB.updateMatches(context);
+                UpdateDB.updateQuestionOption(context);
+                UpdateDB.updateQuestionThresholds(context);
+                UpdateDB.updateDrugs(context);
+                UpdateDB.updateOrganisations(context);
+                UpdateDB.updateTreatments(context);
+                UpdateDB.updateDrugCombination(context);
+                UpdateDB.updateTreatmentMatches(context);
+                UpdateDB.updateQuestionOption(context);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e(TAG, "Error updating database" + e.getMessage());

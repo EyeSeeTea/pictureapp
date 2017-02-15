@@ -38,7 +38,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     @Override
     public void onCreate() {
         try {
-            PopulateDB.initDataIfRequired(loginActivity.getAssets());
+            PopulateDB.initDataIfRequired(loginActivity);
         } catch (IOException exception) {
             Log.e("LoginActivity", "ERROR: DB not loaded");
         }

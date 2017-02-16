@@ -546,10 +546,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (screenQuestion.isDynamicStockQuestion()) {
                 Treatment treatment = new Treatment(Session.getMalariaSurvey(),
                         Session.getStockSurvey());
-                Question actAnsweredNo = treatment.getACTQuestionAnsweredNo();
-                screenQuestion.setAnswer(treatment.getACTOptions(actAnsweredNo));
-                ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptionDose(
-                        treatment.getOptionDose(actAnsweredNo));
+                if (treatment.hasTreatment()) {
+                    org.eyeseetea.malariacare.database.model.Treatment dbTreatment =
+                            treatment.getTreatment();
+                    Question actAnsweredNo = treatment.getACTQuestionAnsweredNo();
+                    screenQuestion.setAnswer(treatment.getACTOptions(dbTreatment));
+                    ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptionDose(
+                            treatment.getOptionDose(dbTreatment));
+                }
                 ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setQuestion(
                         screenQuestion);
                 ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptions(

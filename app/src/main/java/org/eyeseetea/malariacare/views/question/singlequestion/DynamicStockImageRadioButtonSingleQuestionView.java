@@ -79,11 +79,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         ImageRadioButtonOption imageRadioButtonOption = new ImageRadioButtonOption(
                 getContext(), true);
 
-        String dose = "";
-        if (optionDose.get(option.getId_option()) != null) {
-            dose = optionDose.get(option.getId_option()) + " x ";
-        }
-        imageRadioButtonOption.setText(dose + option.getInternationalizedCode());
+        imageRadioButtonOption.setText(option.getInternationalizedCode());
         putImageInImageRadioButton(option.getInternationalizedPath(), imageRadioButtonOption);
         imageRadioButtonOption.setOnCheckedChangeListener(this);
         imageRadioButtonOption.setOption(option, mQuestion);

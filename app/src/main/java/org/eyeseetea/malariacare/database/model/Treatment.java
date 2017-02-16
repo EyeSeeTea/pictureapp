@@ -11,6 +11,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(databaseName = AppDatabase.NAME)
@@ -69,6 +70,34 @@ public class Treatment extends BaseModel {
                         .is(id_treatment)).queryList();
     }
 
+    public List<Treatment> getAlternativeTreatments() {
+        List<Treatment> treatments = new Select()
+                .from(Treatment.class).as("t")
+                .join(TreatmentMatch.class, Join.JoinType.LEFT).as("tm")
+                .on(Condition.column(ColumnAlias.columnWithTable("t", Treatment$Table.ID_TREATMENT))
+                        .eq(ColumnAlias.columnWithTable("tm", TreatmentMatch$Table.ID_MATCH)))
+                .where(Condition.column(
+                        ColumnAlias.columnWithTable("tm", TreatmentMatch$Table.ID_TREATMENT))
+                        .is(id_treatment))
+                .and(Condition.column(ColumnAlias.columnWithTable("t", Treatment$Table.TYPE))
+                        .is(TYPE_NOT_MAIN))
+                .queryList();
+
+        //TODO remove this related with DBFlow bug overriding ids
+        List<Treatment> correctIdTreatments = new ArrayList<>();
+        for (Treatment treatment : treatments) {
+            Treatment correctTreatment = new Select()
+                    .from(Treatment.class)
+                    .where(Condition.column(Treatment$Table.DIAGNOSIS).is(treatment.getDiagnosis()))
+                    .and(Condition.column(Treatment$Table.MESSAGE).is(treatment.getMessage()))
+                    .and(Condition.column(Treatment$Table.ID_ORGANISATION).is(
+                            treatment.getOrganisation().getId_organisation()))
+                    .and(Condition.column(Treatment$Table.TYPE).is(treatment.getType()))
+                    .querySingle();
+            correctIdTreatments.add(correctTreatment);
+        }
+        return correctIdTreatments;
+    }
 
     public long getId_treatment() {
         return id_treatment;
@@ -169,4 +198,6 @@ public class Treatment extends BaseModel {
                 ", organisation=" + organisation +
                 '}';
     }
+
+
 }

@@ -235,33 +235,33 @@ public class Treatment {
         return false;
     }
 
-    public HashMap<Long, Float> getOptionDose(Question question) {
+    public HashMap<Long, Float> getOptionDose(
+            org.eyeseetea.malariacare.database.model.Treatment mainTreatment) {
+        List<org.eyeseetea.malariacare.database.model.Treatment> treatments =
+                mainTreatment.getAlternativeTreatments();
         HashMap<Long, Float> optionDose = new HashMap<>();
-        if (isACT6Question(question)) {
-            optionDose.put(Question.getACT12Question().getId_question(), 0.5f);
-            optionDose.put(Question.getACT18Question().getId_question(), 0.3f);
-            optionDose.put(Question.getACT24Question().getId_question(), 0.25f);
+        for (org.eyeseetea.malariacare.database.model.Treatment treatment : treatments) {
+            List<Drug> drugs = treatment.getDrugsForTreatment();
+            for (Drug drug : drugs) {
+                if (drug.isACT24()) {
+                    optionDose.put(Question.getACT24Question().getId_question(),
+                            DrugCombination.getDose(treatment, drug));
+                } else if (drug.isACT18()) {
+                    optionDose.put(Question.getACT18Question().getId_question(),
+                            DrugCombination.getDose(treatment, drug));
+                } else if (drug.isACT12()) {
+                    optionDose.put(Question.getACT12Question().getId_question(),
+                            DrugCombination.getDose(treatment, drug));
+                } else if (drug.isACT6()) {
+                    optionDose.put(Question.getACT6Question().getId_question(),
+                            DrugCombination.getDose(treatment, drug));
+                }
+            }
         }
-        if (isACT12Question(question)) {
-            optionDose.put(Question.getACT6Question().getId_question(), 2f);
-            optionDose.put(Question.getACT18Question().getId_question(), 0.6f);
-            optionDose.put(Question.getACT24Question().getId_question(), 0.5f);
-        }
-        if (isACT18Question(question)) {
-            optionDose.put(Question.getACT6Question().getId_question(), 3f);
-            optionDose.put(Question.getACT12Question().getId_question(), 1.5f);
-            optionDose.put(Question.getACT24Question().getId_question(), 0.75f);
-        }
-        if (isACT24Question(question)) {
-            optionDose.put(Question.getACT6Question().getId_question(), 4f);
-            optionDose.put(Question.getACT12Question().getId_question(), 2f);
-            optionDose.put(Question.getACT18Question().getId_question(), 1.3f);
-        }
-
         return optionDose;
     }
 
-    public Answer getACTOptions(Question question) {
+    public Answer getACTOptions(org.eyeseetea.malariacare.database.model.Treatment mainTreatment) {
         List<Option> options = new ArrayList<>();
         Answer answer = new Answer("stock");
         answer.setId_answer(Answer.DYNAMIC_STOCK_ANSWER_ID);
@@ -287,17 +287,26 @@ public class Treatment {
         optionOutStock.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p6_stockout.png"));
         optionOutStock.setId_option(Question.getOutOfStockQuestion().getId_question());
-        if (!isACT12Question(question)) {
-            options.add(optionACT12);
-        }
-        if (!isACT6Question(question)) {
-            options.add(optionACT6);
-        }
-        if (!isACT18Question(question)) {
-            options.add(optionACT18);
-        }
-        if (!isACT24Question(question)) {
-            options.add(optionACT24);
+
+        List<org.eyeseetea.malariacare.database.model.Treatment> treatments =
+                mainTreatment.getAlternativeTreatments();
+        for (org.eyeseetea.malariacare.database.model.Treatment treatment : treatments) {
+            List<Drug> alternativeDrugs = treatment.getDrugsForTreatment();
+            for (Drug drug : alternativeDrugs) {
+                if (drug.isACT24()) {
+                    optionACT24.setCode(treatment.getMessage().toString());
+                    options.add(optionACT24);
+                } else if (drug.isACT18()) {
+                    optionACT18.setCode(treatment.getMessage().toString());
+                    options.add(optionACT18);
+                } else if (drug.isACT12()) {
+                    optionACT12.setCode(treatment.getMessage().toString());
+                    options.add(optionACT12);
+                } else if (drug.isACT6()) {
+                    optionACT6.setCode(treatment.getMessage().toString());
+                    options.add(optionACT6);
+                }
+            }
         }
         options.add(optionOutStock);
 
@@ -306,16 +315,30 @@ public class Treatment {
         return answer;
     }
 
+    private List<Drug> getAlternativeDrugsForTreatment(
+            org.eyeseetea.malariacare.database.model.Treatment mainTreatment) {
+        List<org.eyeseetea.malariacare.database.model.Treatment> alternativeTreatments =
+                mainTreatment.getAlternativeTreatments();
+        List<Drug> alternativeDrugs = new ArrayList<>();
+        for (org.eyeseetea.malariacare.database.model.Treatment treatment : alternativeTreatments) {
+            alternativeDrugs.addAll(treatment.getDrugsForTreatment());
+        }
+        return alternativeDrugs;
+    }
+
+
     public Context getContext() {
         return PreferencesState.getInstance().getContext();
     }
 
     private String getPqTitleDose(float dose) {
-        return getTitleDose(dose, "Pq");
+        return getTitleDose(dose,
+                getContext().getResources().getString(R.string.drugs_referral_Pq_review_title));
     }
 
     private String getCqTitleDose(float dose) {
-        return getTitleDose(dose, "Cq");
+        return getTitleDose(dose,
+                getContext().getResources().getString(R.string.drugs_referral_Cq_review_title));
     }
 
     private String getTitleDose(float dose, String drug) {

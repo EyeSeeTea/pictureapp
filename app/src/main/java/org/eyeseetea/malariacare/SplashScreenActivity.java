@@ -10,7 +10,6 @@ import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
-import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
@@ -47,7 +46,9 @@ public class SplashScreenActivity extends Activity {
                 .build();
         FlowManager.init(flowConfig);
         SdkQueries.createDBIndexes();
-        PostMigration.launchPostMigration();
+
+        //TODO: after mega merge
+        //PostMigration.launchPostMigration();
 
         if (!BuildConfig.multiuser) {
             Log.i(TAG, "Pull on SplashScreen ...");

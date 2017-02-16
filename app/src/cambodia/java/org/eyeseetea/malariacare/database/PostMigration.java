@@ -1,3 +1,4 @@
+/*
 package org.eyeseetea.malariacare.database;
 
 import org.eyeseetea.malariacare.database.migrations.Migration23ModifyValuesLastMigration;
@@ -10,3 +11,4 @@ public class PostMigration {
         Migration23ModifyValuesLastMigration.postMigrate();
     }
 }
+*/

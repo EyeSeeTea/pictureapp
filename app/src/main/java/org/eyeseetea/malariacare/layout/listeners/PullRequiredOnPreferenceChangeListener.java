@@ -3,12 +3,8 @@ package org.eyeseetea.malariacare.layout.listeners;
 
 import android.preference.Preference;
 
-import com.squareup.okhttp.HttpUrl;
-
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.hisp.dhis.android.sdk.controllers.DhisService;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 public class PullRequiredOnPreferenceChangeListener implements
         Preference.OnPreferenceChangeListener {
@@ -27,8 +23,6 @@ public class PullRequiredOnPreferenceChangeListener implements
         //Reload preference in memory
         PreferencesState.getInstance().reloadPreferences();
 
-        hardcodedLoginInSDK();
-
         if (preferenceIsDhisUrl(preference)) {
             PreferencesState.getInstance().saveStringPreference(R.string.org_unit, "");
         }
@@ -40,10 +34,5 @@ public class PullRequiredOnPreferenceChangeListener implements
     private boolean preferenceIsDhisUrl(Preference preference) {
         return preference.getKey() == preference.getContext().getResources().getString(
                 R.string.dhis_url);
-    }
-
-    private void hardcodedLoginInSDK() {
-        HttpUrl serverUri = HttpUrl.parse(PreferencesState.getInstance().getDhisURL());
-        DhisService.logInUser(serverUri, ServerAPIController.getSDKCredentials());
     }
 }

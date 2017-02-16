@@ -35,4 +35,10 @@
     <color name="tab_unpressed_background">@color/white</color>
     <color name="spinner_color">@color/headerColor</color>
     <color name="monitor_background">@color/light_grey</color>
+    <!-- Old sdk -->
+    <color name="button_login_state_enabled_false">#FF223F5C</color>
+    <color name="button_login_state_unpressed">#FF113151</color>
+    <color name="button_login_state_pressed">#FF0C243C</color>
+    <color name="orange">#FF9900</color>
+    <color name="White">#FFFFFF</color>
 </resources>

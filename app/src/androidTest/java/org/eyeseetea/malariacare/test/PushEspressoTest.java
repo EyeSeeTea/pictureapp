@@ -30,10 +30,10 @@
 //import org.eyeseetea.malariacare.DashboardActivity;
 //import org.eyeseetea.malariacare.R;
 //import org.eyeseetea.malariacare.SurveyActivity;
-//import org.eyeseetea.malariacare.database.model.Option;
-//import org.eyeseetea.malariacare.database.model.Question;
-//import org.eyeseetea.malariacare.database.model.Survey;
-//import org.eyeseetea.malariacare.database.utils.PreferencesState;
+//import org.eyeseetea.malariacare.data.database.model.Option;
+//import org.eyeseetea.malariacare.data.database.model.Question;
+//import org.eyeseetea.malariacare.data.database.model.Survey;
+//import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 //import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 //import org.eyeseetea.malariacare.services.SurveyService;
 //import org.eyeseetea.malariacare.test.utils.IntentServiceIdlingResource;

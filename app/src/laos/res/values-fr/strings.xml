@@ -186,4 +186,10 @@
     <string name="developer_option_title">"Afficher les options développeur"</string>
     <string name="export_data_option_title">"Base de données à l'exportation"</string>
     <string name="dynamic_error_number">Numéro invalide</string>
+
+    <string name="settings_menu_logout_message">"La modification du serveur ou de l'orgunit doit être réinitialisée. Chaque enquête non-envoyée sera supprimée. Es-tu sur de vouloir continuer?"</string>
+    <string name="app_logout">"Connectez - Out"</string>
+    <string name="network_error">"Il y a un problème avec le réseau. Veuillez réessayer plus tard."</string>
+    <string name="login_invalid_credentials">"les informations d'identification invalides"</string>
+    <string name="login_invalid_server_url">"URL du serveur non valide"</string>
 </resources>

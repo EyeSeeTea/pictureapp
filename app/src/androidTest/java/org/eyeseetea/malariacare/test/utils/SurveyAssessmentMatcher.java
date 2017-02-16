@@ -15,7 +15,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
- */
+ *//*
+
 
 package org.eyeseetea.malariacare.test.utils;
 
@@ -30,9 +31,11 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+*/
 /**
  * Created by arrizabalaga on 25/05/15.
- */
+ *//*
+
 public class SurveyAssessmentMatcher extends TypeSafeMatcher<View> {
     private final String facility;
     private final String surveyType;
@@ -61,4 +64,4 @@ public class SurveyAssessmentMatcher extends TypeSafeMatcher<View> {
     public void describeTo(Description description) {
         description.appendText("with error: " + facility + " - " + surveyType);
     }
-}
+}*/

@@ -24,7 +24,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.services.strategies.PushServiceStrategy;
 
 /**

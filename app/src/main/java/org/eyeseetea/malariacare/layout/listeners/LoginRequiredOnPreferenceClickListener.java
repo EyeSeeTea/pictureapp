@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.layout.listeners;
 
-
 import android.content.Intent;
 import android.preference.Preference;
 
@@ -12,27 +11,28 @@ import org.eyeseetea.malariacare.SettingsActivity;
  */
 public class LoginRequiredOnPreferenceClickListener implements
         Preference.OnPreferenceClickListener {
+
     private static final String TAG = "LoginPreferenceListener";
 
     /**
      * Reference to the activity so you can use this from the activity or the fragment
      */
-    SettingsActivity activity;
+    SettingsActivity settingsActivity;
 
     public LoginRequiredOnPreferenceClickListener(SettingsActivity activity) {
-        this.activity = activity;
+        this.settingsActivity = activity;
     }
 
     @Override
-    public boolean onPreferenceClick(Preference preference) {
-        if (!activity.getIntent().getBooleanExtra(SettingsActivity.IS_LOGIN_DONE, false)) {
+    public boolean onPreferenceClick(final Preference preference) {
+        if (!settingsActivity.getIntent().getBooleanExtra(SettingsActivity.IS_LOGIN_DONE, false)) {
 
-            String orgUnitValue = activity.autoCompleteEditTextPreference.getText();
+            String orgUnitValue = settingsActivity.autoCompleteEditTextPreference.getText();
 
-            Intent loginIntent = new Intent(activity, LoginActivity.class);
+            Intent loginIntent = new Intent(settingsActivity, LoginActivity.class);
             loginIntent.putExtra(LoginActivity.PULL_REQUIRED, orgUnitValue.isEmpty());
 
-            activity.startActivity(loginIntent);
+            settingsActivity.startActivity(loginIntent);
         }
         return true;
     }

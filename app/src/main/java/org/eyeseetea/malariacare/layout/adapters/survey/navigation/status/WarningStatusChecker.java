@@ -1,10 +1,10 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation.status;
 
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionOption;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.data.database.model.Value;
 
 /**
  * Checker that helps to decide if a node is visible or not according to the current survey values.

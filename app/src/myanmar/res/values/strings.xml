@@ -169,7 +169,13 @@
 <string name="Cq">"Cq"</string>
 <string name="Pq">"Pq"</string>
 <string name="monitoring_title_dropdown">"Please, select a time period"</string>
-<string name="ok">"Ok"</string>
+
+
+    <string name="network_error">There is a problem with the network, please try again later.</string>
+    <string name="login_invalid_credentials">Invalid credentials</string>
+    <string name="login_invalid_server_url">Invalid Server URL</string>
+
+    <string name="ok">"Ok"</string>
 <string name="cancel">"Cancel"</string>
 <string name="dialog_title_delete_survey">"Delete Survey"</string>
 <string name="dialog_info_delete_survey">"Are you sure you want to completely delete this survey?"</string>
@@ -201,9 +207,7 @@
 <string name="progress_pull_preparing_orgs">"Loading organisations ..."</string>
 <string name="progress_pull_surveys">"Loading surveys ..."</string>
 <string name="progress_pull_connecting">"Connecting to DHIS server ..."</string>
-
-<!-- Done (in English)? -->
-<string name="progress_pull_done">"完成"</string>
+    <string name="progress_pull_done">done</string>
 <string name="progress_push_no_survey">"No survey found for pushing"</string>
 <string name="progress_push_posting_survey">"Pushing survey data to server ..."</string>
 <string name="progress_push_preparing_survey">"Preparing survey for pushing ..."</string>
@@ -356,4 +360,6 @@
 <string name="x24">x24</string>
 <string name="previous_distributions">Previous Distributions</string>
 <string name="drugs_dose_of_drug_review_title">%1$.0f of %2$s</string>
+
+    <string name="submit">submit</string>
 </resources>

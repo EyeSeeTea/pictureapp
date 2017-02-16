@@ -2,8 +2,8 @@ package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
 
 /**
  * POJO that represents a counter question, is never shown but its value is increased

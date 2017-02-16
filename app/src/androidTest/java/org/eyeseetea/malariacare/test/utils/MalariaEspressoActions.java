@@ -15,7 +15,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
- */
+ *//*
+
 
 package org.eyeseetea.malariacare.test.utils;
 
@@ -34,18 +35,22 @@ import org.hamcrest.Matcher;
 
 import java.util.concurrent.TimeoutException;
 
+*/
 /**
  * Created by arrizabalaga on 24/06/15.
- */
+ *//*
+
 public class MalariaEspressoActions {
 
-    /**
+    */
+/**
      * Looks for a view with the given ID for a given millis
      *
      * @param viewId ID of the view you are looking for
      * @param millis Millis trying to find it
      * @return ViewAction so you can use like any other EspressoAction
-     */
+     *//*
+
     public static ViewAction waitId(final int viewId, final long millis) {
         return new ViewAction() {
             @Override
@@ -88,13 +93,15 @@ public class MalariaEspressoActions {
         };
     }
 
-    /**
+    */
+/**
      * Looks for a view with the given ID for a given millis
      *
      * @param snippet ID of the view you are looking for
      * @param millis  Millis trying to find it
      * @return ViewAction so you can use like any other EspressoAction
-     */
+     *//*
+
     public static ViewAction waitSnippet(final EspressoSnippet snippet, final long millis) {
         return new ViewAction() {
             @Override
@@ -142,3 +149,4 @@ public class MalariaEspressoActions {
         public String getDescription();
     }
 }
+*/

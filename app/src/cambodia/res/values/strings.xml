@@ -135,4 +135,9 @@
     <string name="export_data_option_title">Export database</string>
     <string name="dynamic_error_number">Invalid Number</string>
 
+    <string name="settings_menu_logout_message">Changing the server or orgunit needs to re-login. Every not-sent survey will be deleted. Are you sure you want to continue?</string>
+    <string name="app_logout">Logout</string>
+    <string name="network_error">There is a problem with the network, please try again later.</string>
+    <string name="login_invalid_credentials">Invalid credentials</string>
+    <string name="login_invalid_server_url">Invalid Server URL</string>
 </resources>

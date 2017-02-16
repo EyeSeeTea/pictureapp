@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.webkit.WebView;
 
-import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.rows.AvailableRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.rows.BalanceRowBuilder;
@@ -14,10 +14,6 @@ import org.eyeseetea.malariacare.presentation.factory.stock.rows.UsedTodayRowBui
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by manuel on 26/12/16.
- */
 
 public class StockTableBuilder {
 

@@ -2,12 +2,12 @@
 
 buildscript {
     repositories {
-        jcenter()
         maven { url "https://raw.github.com/Raizlabs/maven-releases/master/releases" }
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -16,7 +16,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://raw.github.com/Raizlabs/maven-releases/master/releases" }
+        maven { url "https://www.jitpack.io" }
     }
 
     configurations.all {
@@ -27,18 +27,66 @@ allprojects {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
-    }    
+    }
 
 }
 
 ext {
-    // SDK version.
-    versionCode = 16
-    versionName = "1.2.11"
+    configuration = [
+            package          : "org.hisp.dhis.android.skeleton",
+            buildToolsVersion: "24.0.3",
+            minSdkVersion    : 15,
+            compileSdkVersion: 25,
+            targetSdkVersion : 25,
+            versionCode      : 31,
+            versionName      : "QAApp"
+    ]
+    libraries = [
+            // dhis libs
+            dhisCommonsVersion : "1.1",
 
-    // Compilation configuration.
-    minSdkVersion = 15
-    compileSdkVersion = 23
-    targetSdkVersion = 23
-    buildToolsVersion = "23.0.3"
+            // android libs
+            supportVersion          : "25.1.0",
+            rxAndroidVersion        : "1.1.0",
+            dbFlowVersion           : "3.0.1",
+            progressBarVersion      : "1.2.0",
+            smoothProgressBarVersion: "1.1.0",
+            crashlyticsVersion      : "2.5.5",
+            stethoVersion           : "1.3.1",
+            multidex                : "1.0.1",
+            gmsPlayVersion          : "8.4.0",
+
+            // java libs
+            timberVersion           : "4.1.0",
+            okhttpVersion           : "3.2.0",
+            retrofitVersion         : "2.0.0",
+            jacksonVersion          : "2.7.4",
+            jodaTimeVersion         : "2.9.2",
+            jexlVersion             : "2.1.1",
+            commonsLang3Version     : "3.3.2",
+            commonsMath3Version     : "3.6",
+            dagger                  : "2.2",
+            javapoetVersion         : "1.7.0",
+            guavaVersion            : "18.0",
+            opencsvVersion          : "3.3",
+            libphonenumberVersion   : "7.0.9",
+            easypermissionsVersion  : "0.1.5",
+            googleApiClientAndroidVersion : "1.20.0",
+            googleApiServicesDriveVersion : "v3-rev6-1.20.0",
+            jsr305Version           : "2.0.1",
+
+            // testing libs
+            jUnitVersion            : "4.12",
+            mockitoVersion          : "1.10.19",
+            powerMockVersion        : "1.6.3",
+            runnerVersion           : "0.4.1",
+            espressoVersion         : "2.2.1",
+    ]
+
+    // Old App dependencies versions
+    okhttpVersion = '2.2.0'
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }

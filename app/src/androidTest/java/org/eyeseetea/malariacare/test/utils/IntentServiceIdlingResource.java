@@ -15,7 +15,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
- */
+ *//*
+
 
 package org.eyeseetea.malariacare.test.utils;
 
@@ -23,9 +24,11 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.support.test.espresso.IdlingResource;
 
+*/
 /**
  * Created by arrizabalaga on 24/06/15.
- */
+ *//*
+
 public class IntentServiceIdlingResource implements IdlingResource {
 
     private final Context context;
@@ -69,3 +72,4 @@ public class IntentServiceIdlingResource implements IdlingResource {
         return false;
     }
 }
+*/

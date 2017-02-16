@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.widget.TableRow;
 
-import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.Value;
 
 public abstract class AReviewFragmentStrategy {
 

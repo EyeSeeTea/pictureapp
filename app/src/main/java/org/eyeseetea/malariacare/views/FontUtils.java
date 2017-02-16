@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.views;
 import android.content.res.Resources;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 public class FontUtils {
 

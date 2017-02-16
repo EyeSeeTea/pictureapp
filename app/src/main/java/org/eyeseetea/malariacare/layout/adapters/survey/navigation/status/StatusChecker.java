@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation.status;
 
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.data.database.model.QuestionOption;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 
 import java.util.List;
 

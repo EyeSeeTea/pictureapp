@@ -1,3 +1,4 @@
+/*
 package org.eyeseetea.malariacare.database;
 
 import org.eyeseetea.malariacare.database.migrations.Migration15AddOptionAttributeColumns;
@@ -18,3 +19,4 @@ public class PostMigration {
         Migration28GenerateTreatmentFromTable.postMigrate();
     }
 }
+*/

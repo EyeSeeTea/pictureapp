@@ -29,6 +29,8 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOption
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOptionName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionRelationName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.surveyAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.surveyName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueName;
 
@@ -40,10 +42,10 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Join;
+import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
-import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.database.transaction.ProcessModelTransaction;
 import com.raizlabs.android.dbflow.structure.database.transaction.Transaction;
@@ -53,10 +55,10 @@ import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
-import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
+import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -168,8 +170,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.setUser(user);
         this.type = type;
     }
-
-
 
 
     public Long getId_survey() {
@@ -312,19 +312,19 @@ public class Survey extends BaseModel implements VisitableToSDK {
      */
     public static List<Survey> getAllUnsentMalariaSurveys() {
         Context context = PreferencesState.getInstance().getContext();
-        new Select().from(Survey.class).as(surveyName)
+        return new Select().from(Survey.class).as(surveyName)
                 .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
                 .on(Survey_Table.id_program.withTable(surveyAlias)
                         .eq(Program_Table.id_program.withTable(programAlias)))
-
                 .where(Survey_Table.status.withTable(surveyAlias)
                         .isNot(Constants.SURVEY_SENT))
                 .and(Survey_Table.status.withTable(surveyAlias)
                         .isNot(Constants.SURVEY_CONFLICT))
                 .and(Program_Table.uid.withTable(programAlias)
-                        .isNot( context.getString(R.string.stockProgramUID)))
+                        .isNot(context.getString(R.string.stockProgramUID)))
                 .orderBy(OrderBy.fromProperty(Survey_Table.eventDate.withTable(surveyAlias)))
-                .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit.withTable(surveyAlias))) .queryList();
+                .orderBy(OrderBy.fromProperty(
+                        Survey_Table.id_org_unit.withTable(surveyAlias))).queryList();
     }
 
     /**
@@ -339,10 +339,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
                         .eq(Program_Table.id_program.withTable(programAlias)))
 
                 .where(Survey_Table.status.withTable(surveyAlias)
-                        .is( Constants.SURVEY_SENT))
+                        .is(Constants.SURVEY_SENT))
                 .and(Program_Table.uid.withTable(programAlias)
                         .isNot(context.getString(R.string.stockProgramUID)))
-                .orderBy(Survey_Table.eventDate,false).queryList();
+                .orderBy(Survey_Table.eventDate, false).queryList();
     }
 
     /**
@@ -401,15 +401,15 @@ public class Survey extends BaseModel implements VisitableToSDK {
     public static List<Survey> getAllMalariaSurveysToBeSent() {
         Context context = PreferencesState.getInstance().getContext();
         return new Select().from(Survey.class).as(surveyName)
-                        .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
-                        .on(Survey_Table.id_program.withTable(surveyAlias)
-                                .eq(Program_Table.id_program.withTable(programAlias)))
-                        .where(Survey_Table.status.withTable(surveyAlias)
-                                .eq( Constants.SURVEY_COMPLETED))
-                        .and(Program_Table.uid.withTable(programAlias)
-                                .isNot(context.getString(R.string.stockProgramUID)))
-                        .orderBy(Survey_Table.eventDate)
-                        .orderBy(Survey_Table.id_org_unit).queryList();
+                .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(Survey_Table.id_program.withTable(surveyAlias)
+                        .eq(Program_Table.id_program.withTable(programAlias)))
+                .where(Survey_Table.status.withTable(surveyAlias)
+                        .eq(Constants.SURVEY_COMPLETED))
+                .and(Program_Table.uid.withTable(programAlias)
+                        .isNot(context.getString(R.string.stockProgramUID)))
+                .orderBy(OrderBy.fromProperty(Survey_Table.eventDate))
+                .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit)).queryList();
     }
 
     /**
@@ -422,16 +422,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit)).queryList();
     }
 
-    public static Survey getStockSurveyWithCreationDate(Date creationDate){
+    public static Survey getStockSurveyWithCreationDate(Date creationDate) {
         Context context = PreferencesState.getInstance().getContext();
-        return new Select().from(Survey.class).as("s")
-                .join(Program.class, Join.JoinType.LEFT).as("p")
-                .on(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.ID_PROGRAM))
-                        .eq(ColumnAlias.columnWithTable("p", Program$Table.ID_PROGRAM)))
-                .where(Condition.column(ColumnAlias.columnWithTable("s", Survey$Table.CREATIONDATE)).eq(
-                        creationDate))
-                .and(Condition.column(ColumnAlias.columnWithTable("p", Program$Table.UID)).is(
+
+        return new Select().from(Survey.class).as(surveyName)
+                .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(Survey_Table.id_program.withTable(surveyAlias)
+                        .eq(Program_Table.id_program.withTable(programAlias)))
+                .where(Survey_Table.creationDate.withTable(surveyAlias)
+                        .eq(creationDate))
+                .and(Program_Table.uid.withTable(surveyAlias).is(
                         context.getString(R.string.stockProgramUID))).querySingle();
+
     }
 
     /**
@@ -560,8 +562,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
      * Find the surveys for a program, with a type o no type ans with the event date grater than
      * passed.
      *
-     * @param program    The program of the survey
-     * @param date       The min eventDate of the survey
+     * @param program The program of the survey
+     * @param date    The min eventDate of the survey
      * @return A list of surveys
      */
     public static List<Survey> findSurveysWithProgramAndGreaterDate(Program program, Date date) {
@@ -571,7 +573,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                         .eq(Program_Table.id_program.withTable(programAlias)))
                 .where(Program_Table.id_program.withTable(programAlias)
                         .eq(program.getId_program()))
-                .and(Survey_Table.eventDate.withTable(surveyAlias).greaterThanOrEq(date)).queryList();
+                .and(Survey_Table.eventDate.withTable(surveyAlias).greaterThanOrEq(
+                        date)).queryList();
     }
 
     public static Date getLastDateForSurveyType(int type) {
@@ -584,12 +587,12 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return survey.getEventDate();
     }
 
-    public static Survey getLastSurveyWithType(int type){
-       Survey survey = new Select()
+    public static Survey getLastSurveyWithType(int type) {
+        Survey survey = new Select()
                 .from(Survey.class)
-                .where(Survey_Table.TYPE).eq(type)
-               .orderBy(false, Survey_Table.EVENTDATE)
-               .querySingle();
+                .where(Survey_Table.type.eq(type))
+                .orderBy(OrderBy.fromProperty(Survey_Table.eventDate).descending())
+                .querySingle();
         return survey;
     }
 
@@ -651,6 +654,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Survey_Table.status.eq(Constants.SURVEY_SENDING))
                 .queryList();
     }
+
     public Float getCounterValue(Question question, Option selectedOption) {
         Question optionCounter = question.findCounterByOption(selectedOption);
         if (optionCounter == null) {
@@ -929,7 +933,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         //Add children required by each parent (value+question)
         Survey survey = Survey.findById(id_survey);
         for (Value value : survey.getValuesFromDB()) {
-            if (value.getQuestion().isCompulsory() && value.getId_option()!=null) {
+            if (value.getQuestion().isCompulsory() && value.getId_option() != null) {
                 numRequired += Question.countChildrenByOptionValue(value.getId_option());
             }
         }
@@ -1005,7 +1009,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         }
     }
 
-    public void complete(){
+    public void complete() {
         setStatus(Constants.SURVEY_COMPLETED);
         setCompletionDate(new Date());
         save();
@@ -1186,9 +1190,11 @@ public class Survey extends BaseModel implements VisitableToSDK {
     /**
      * This method removes the children question values from when a parent question is removed
      *
-     * @removeCounters is used to prevent to remove the counter when change the some question in the
+     * @removeCounters is used to prevent to remove the counter when change the some question in
+     * the
      * same level
-     * This changed was required because the counter need be child of the question+option who tigger
+     * This changed was required because the counter need be child of the question+option who
+     * tigger
      * the counter.
      */
     public void removeChildrenValuesFromQuestionRecursively(Question question,
@@ -1198,7 +1204,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
         for (int i = values.size() - 1; i > 0; i--) {
             //This loop removes recursively the values on the children question
             if (questionChildren.contains(values.get(i).getQuestion())) {
-                //Remove the children values but if the child value is a counter is not removed in the first level
+                //Remove the children values but if the child value is a counter is not removed
+                // in the first level
                 if (!values.get(i).getQuestion().isACounter() || removeCounters) {
                     removeValue(values.get(i));
                 }
@@ -1229,6 +1236,30 @@ public class Survey extends BaseModel implements VisitableToSDK {
         IConvertToSDKVisitor.visit(this);
     }
 
+    public static void saveAll(List<Survey> surveys, final IDataSourceCallback<Void> callback) {
+
+        FlowManager.getDatabase(AppDatabase.class)
+                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
+                        new ProcessModelTransaction.ProcessModel<Survey>() {
+                            @Override
+                            public void processModel(Survey survey) {
+                                survey.save();
+                            }
+                        }).addAll(surveys).build())
+                .error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+                        callback.onError(error);
+                    }
+                })
+                .success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+                        callback.onSuccess(null);
+                    }
+                }).build().execute();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -1245,8 +1276,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 : survey.id_org_unit != null) {
             return false;
         }
-        if (id_user != null ? !id_user.equals(survey.id_user) : survey.id_user != null)
+        if (id_user != null ? !id_user.equals(survey.id_user) : survey.id_user != null) {
             return false;
+        }
         if (creationDate != null ? !creationDate.equals(survey.creationDate)
                 : survey.creationDate != null) {
             return false;
@@ -1297,4 +1329,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 ", type=" + type +
                 '}';
     }
+
+
 }

@@ -19,6 +19,11 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
+import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOptionAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOptionName;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -30,9 +35,6 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-/**
- * Created by Jose on 25/05/2015.
- */
 @Table(database = AppDatabase.class)
 public class QuestionOption extends BaseModel {
     @Column
@@ -91,7 +93,7 @@ public class QuestionOption extends BaseModel {
      */
     public static List<QuestionOption> findByQuestionRelation(QuestionRelation questionRelation) {
         return new Select().from(QuestionOption.class).as(AppDatabase.questionOptionName)
-                .join(Match.class, Join.JoinType.LEFT_OUTER).as(AppDatabase.matchName)
+                .join(Match.class, Join.JoinType.LEFT_OUTER).as(matchName)
                 .on(QuestionOption_Table.id_match.withTable(AppDatabase.questionOptionAlias)
                         .eq(Match_Table.id_match.withTable(AppDatabase.matchAlias)))
                 .where(Match_Table.id_question_relation.withTable(AppDatabase.matchAlias).eq(
@@ -100,22 +102,20 @@ public class QuestionOption extends BaseModel {
 
     /**
      * Method to get the matches in questionOption with a question id and a a option
+     *
      * @param id_question the id of the question
-     * @param id_option the id of the option
+     * @param id_option   the id of the option
      * @return The list of matches
      */
     public static List<Match> getMatchesWithQuestionOption(Long id_question, Long id_option) {
-        return new Select().from(Match.class).as("m").join(QuestionOption.class,
-                Join.JoinType.LEFT).as("qo")
-                .on(Condition.column(
-                        ColumnAlias.columnWithTable("m", Match$Table.ID_MATCH))
-                        .eq(ColumnAlias.columnWithTable("qo",
-                                QuestionOption$Table.ID_MATCH))).where(
-                        Condition.column(ColumnAlias.columnWithTable("qo",
-                                QuestionOption$Table.ID_QUESTION))
-                                .is(id_question)).and(Condition.column(
-                        ColumnAlias.columnWithTable("qo", QuestionOption$Table.ID_OPTION))
-                        .is(id_option)).queryList();
+        return new Select().from(Match.class).as(matchName)
+                .join(QuestionOption.class, Join.JoinType.LEFT_OUTER).as(questionOptionName)
+                .on(Match_Table.id_match.withTable(matchAlias)
+                        .eq(QuestionOption_Table.id_question.withTable(questionOptionAlias)))
+                .where(QuestionOption_Table.id_question.withTable(questionOptionAlias).is(
+                        id_question))
+                .and(QuestionOption_Table.id_option.withTable(questionOptionAlias).is(
+                        id_option)).queryList();
     }
 
     /**

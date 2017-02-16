@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 
 public class ReminderSingleQuestionViewHelper {

@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.database.migrations;
+/*package org.eyeseetea.malariacare.database.migrations;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,13 +13,16 @@ import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * Created by manuel on 10/01/17.
- */
+ *//*
+
 @Migration(version = 23, databaseName = AppDatabase.NAME)
 public class Migration23AddTreatmentCsvs extends BaseMigration {
     private static String TAG = ".Migration23";
@@ -70,12 +73,15 @@ public class Migration23AddTreatmentCsvs extends BaseMigration {
 
     }
 
-    /**
+    */
+/**
      * Checks if the current db has data or not
-     */
+ *//*
+
     private boolean hasData() {
         return Program.getFirstProgram() != null;
     }
 
 
 }
+*/

@@ -27,31 +27,27 @@ import com.opencsv.CSVReader;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Answer;
+import org.eyeseetea.malariacare.data.database.model.Answer;
+import org.eyeseetea.malariacare.data.database.model.Header;
+import org.eyeseetea.malariacare.data.database.model.Match;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitLevel;
+import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionOption;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.data.database.model.Score;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.database.model.Drug;
-import org.eyeseetea.malariacare.database.model.Header;
-import org.eyeseetea.malariacare.database.model.Match;
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.database.model.OrgUnit;
-import org.eyeseetea.malariacare.database.model.OrgUnitLevel;
 import org.eyeseetea.malariacare.database.model.Organisation;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.database.model.Score;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.model.Treatment;
-import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
-import org.hisp.dhis.android.sdk.persistence.models.DataValue;
-import org.hisp.dhis.android.sdk.persistence.models.Event;
-import org.hisp.dhis.android.sdk.persistence.models.FailedItem;
-import org.hisp.dhis.android.sdk.persistence.preferences.DateTimeManager;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -131,7 +127,7 @@ public class PopulateDB {
     static HashMap<Long, Treatment> treatmentList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
-        FileCsvs fileCsvs=new FileCsvs();
+        FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvsInFileIfNeeded();
         if (!Tab.isEmpty()) {
             Log.i(TAG, "DB Already loaded, showing surveys...");
@@ -413,18 +409,6 @@ public class PopulateDB {
                 Score.class,
                 Survey.class
         );
-    }
-
-    /**
-     * Deletes all data from the sdk database
-     */
-    public static void wipeSDKData() {
-        Delete.tables(
-                Event.class,
-                DataValue.class,
-                FailedItem.class
-        );
-        DateTimeManager.getInstance().delete();
     }
 
     public static void addTotalQuestions(Context context, List<Question> questions)
@@ -764,7 +748,7 @@ public class PopulateDB {
                             }
                             option.save();
                         } else {
-                            option = Option.findById(Float.valueOf(line[0]));
+                            option = Option.findById(Long.valueOf(line[0]));
                         }
                         optionList.put(Integer.valueOf(line[0]), option);
                         break;
@@ -867,7 +851,7 @@ public class PopulateDB {
         //29;1;6
         Long childId = 6l;
         Long parentId = 5l;
-        Float optionId = 13f;
+        Long optionId = 13l;
         QuestionRelation questionRelation = new QuestionRelation(Question.findByID(childId),
                 QuestionRelation.PARENT_CHILD);
         questionRelation.save();

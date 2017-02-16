@@ -3,18 +3,16 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.model.Match;
+import org.eyeseetea.malariacare.data.database.model.Match_Table;
 
 import java.util.List;
 
-/**
- * Created by manuel on 2/01/17.
- */
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class TreatmentMatch extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
@@ -43,7 +41,7 @@ public class TreatmentMatch extends BaseModel {
     }
 
     public static List<TreatmentMatch> getAllTreatmentMatches() {
-        return new Select().all().from(TreatmentMatch.class).queryList();
+        return new Select().from(TreatmentMatch.class).queryList();
     }
 
     /**
@@ -73,7 +71,7 @@ public class TreatmentMatch extends BaseModel {
             }
             treatment = new Select()
                     .from(Treatment.class)
-                    .where(Condition.column(Treatment$Table.ID_TREATMENT)
+                    .where(Treatment_Table.id_treatment
                             .is(id_treatment)).querySingle();
 
         }
@@ -97,7 +95,7 @@ public class TreatmentMatch extends BaseModel {
             }
             match = new Select()
                     .from(Match.class)
-                    .where(Condition.column(Match$Table.ID_MATCH)
+                    .where(Match_Table.id_match
                             .is(id_match)).querySingle();
         }
         return match;
@@ -105,7 +103,7 @@ public class TreatmentMatch extends BaseModel {
 
     public void setMatch(Match match) {
         this.match = match;
-        id_match = (match != null) ? match.id_match : null;
+        id_match = (match != null) ? match.getId_match() : null;
     }
 
     public void setMatch(Long id_match) {

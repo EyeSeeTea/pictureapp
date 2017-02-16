@@ -26,7 +26,6 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Method;
-import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -79,19 +78,19 @@ public class Program extends BaseModel {
     }
 
     public static List<Program> getAllPrograms() {
-        return new Select().all().from(Program.class).queryList();
+        return new Select().from(Program.class).queryList();
     }
 
     public static Program getFirstProgram() {
         return new Select().from(Program.class).querySingle();
     }
 
-    public static Program getStockProgram(){
+    public static Program getStockProgram() {
         Context context = PreferencesState.getInstance().getContext();
         return new Select()
                 .from(Program.class)
-                .where(Program_Table.UID)
-                        .is(context.getString(R.string.stockProgramUID)).querySingle();
+                .where(Program_Table.uid
+                        .is(context.getString(R.string.stockProgramUID))).querySingle();
     }
 
     public static int getMaxTotalQuestions() {
@@ -169,7 +168,7 @@ public class Program extends BaseModel {
             List<OrgUnitProgramRelation> orgUnitProgramRelations = new Select().from(
                     OrgUnitProgramRelation.class)
                     .where(OrgUnitProgramRelation_Table.id_program.eq(
-                            this.getId_program())
+                            this.getId_program()))
                     .queryList();
             this.orgUnits = new ArrayList<>();
             for (OrgUnitProgramRelation programRelation : orgUnitProgramRelations) {
@@ -179,7 +178,7 @@ public class Program extends BaseModel {
         return orgUnits;
     }
 
-    private Context getContext(){
+    private Context getContext() {
         return PreferencesState.getInstance().getContext();
     }
 
@@ -214,15 +213,15 @@ public class Program extends BaseModel {
     public static Program findById(Long id_program) {
         return new Select()
                 .from(Program.class)
-                .where(Program_Table.ID_PROGRAM)
-                        .is(id_program).querySingle();
+                .where(Program_Table.id_program
+                        .is(id_program)).querySingle();
     }
 
     public static Program findByUID(String UID) {
         return new Select()
                 .from(Program.class)
-                .where(Program_Table.UID)
-                        .is(UID).querySingle();
+                .where(Program_Table.uid
+                        .is(UID)).querySingle();
     }
 
     @Override
@@ -253,5 +252,10 @@ public class Program extends BaseModel {
                 ", uid='" + uid + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public static Program getProgram(String uid) {
+        return new Select().from(Program.class)
+                .where(Program_Table.uid.eq(uid)).querySingle();
     }
 }

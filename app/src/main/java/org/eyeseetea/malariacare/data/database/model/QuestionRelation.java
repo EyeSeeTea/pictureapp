@@ -92,7 +92,7 @@ public class QuestionRelation extends BaseModel {
     public static QuestionRelation findById(Long id) {
         return new Select()
                 .from(QuestionRelation.class)
-                .where(Condition.column(QuestionRelation$Table.ID_QUESTION_RELATION).is(id))
+                .where(QuestionRelation_Table.id_question_relation.is(id))
                 .querySingle();
     }
 
@@ -121,7 +121,7 @@ public class QuestionRelation extends BaseModel {
      */
     public List<Match> getAllMatches() {
         return new Select().from(Match.class)
-                .where(Condition.column(Match$Table.ID_QUESTION_RELATION).eq(
+                .where(Match_Table.id_question_relation.eq(
                         getId_question_relation())).queryList();
     }
 

@@ -158,7 +158,12 @@
 <string name="ACT_x_24">"ACT 24"</string>
 <string name="Cq">"氯喹"</string>
 <string name="Pq">"伯氨喹"</string>
-<string name="monitoring_title_dropdown">"请选择一个时间段"</string>
+
+    <string name="network_error">有與網絡問題 請稍後重試</string>
+    <string name="login_invalid_credentials">無效的憑證</string>
+    <string name="login_invalid_server_url">無效的服務器</string>
+
+    <string name="monitoring_title_dropdown">"请选择一个时间段"</string>
 <string name="ok">"好"</string>
 <string name="cancel">"取消"</string>
 <string name="dialog_title_delete_survey">"删除调查"</string>

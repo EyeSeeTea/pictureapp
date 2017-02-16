@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.database.migrations;
+/*package org.eyeseetea.malariacare.database.migrations;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -7,6 +7,7 @@ import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
@@ -67,10 +68,13 @@ public class Migration23ModifyValuesLastMigration extends BaseMigration {
     public void onPostMigrate() {
     }
 
-    /**
+    */
+/**
      * Checks if the current db has data or not
-     */
+ *//*
+
     private boolean hasData() {
         return Program.getFirstProgram() != null;
     }
-}
+
+}*/

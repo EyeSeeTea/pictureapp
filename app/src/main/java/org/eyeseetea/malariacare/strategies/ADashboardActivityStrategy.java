@@ -9,8 +9,8 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 
 public abstract class ADashboardActivityStrategy {

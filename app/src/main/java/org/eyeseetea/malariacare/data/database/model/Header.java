@@ -72,7 +72,7 @@ public class Header extends BaseModel {
     }
 
     public static List<Header> getAllHeaders() {
-        return new Select().all().from(Header.class).queryList();
+        return new Select().from(Header.class).queryList();
     }
 
     public static Header findById(Long id) {

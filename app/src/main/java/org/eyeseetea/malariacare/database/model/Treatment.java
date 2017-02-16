@@ -1,19 +1,22 @@
 package org.eyeseetea.malariacare.database.model;
 
+import static org.eyeseetea.malariacare.data.database.AppDatabase.drugAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.drugCombinationAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.drugCombinationName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.drugName;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
-import com.raizlabs.android.dbflow.sql.language.ColumnAlias;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class Treatment extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
@@ -45,23 +48,23 @@ public class Treatment extends BaseModel {
     public static Treatment findById(long id) {
         return new Select()
                 .from(Treatment.class)
-                .where(Condition.column(Treatment$Table.ID_TREATMENT).is(id))
+                .where(Treatment_Table.id_treatment.is(id))
                 .querySingle();
 
     }
 
     public static List<Treatment> getAllTreatments() {
-        return new Select().all().from(Treatment.class).queryList();
+        return new Select().from(Treatment.class).queryList();
     }
 
     public List<Drug> getDrugsForTreatment() {
-        return new Select().from(Drug.class).as("d")
-                .join(DrugCombination.class, Join.JoinType.LEFT).as("dc")
-                .on(Condition.column(ColumnAlias.columnWithTable("d", Drug$Table.ID_DRUG))
-                        .eq(ColumnAlias.columnWithTable("dc", DrugCombination$Table.ID_DRUG)))
-                .where(Condition.column(
-                        ColumnAlias.columnWithTable("dc", DrugCombination$Table.ID_TREATMENT))
+        return new Select().from(Drug.class).as(drugName)
+                .join(DrugCombination.class, Join.JoinType.LEFT_OUTER).as(drugCombinationName)
+                .on(Drug_Table.id_drug.withTable(drugAlias)
+                        .eq(DrugCombination_Table.id_drug.withTable(drugCombinationAlias)))
+                .where(DrugCombination_Table.id_treatment.withTable(drugCombinationAlias)
                         .is(id_treatment)).queryList();
+
     }
 
 
@@ -81,7 +84,7 @@ public class Treatment extends BaseModel {
             }
             organisation = new Select()
                     .from(Organisation.class)
-                    .where(Condition.column(Organisation$Table.ID_ORGANISATION)
+                    .where(Organisation_Table.id_organisation
                             .is(id_organisation)).querySingle();
         }
         return organisation;

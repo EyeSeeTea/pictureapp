@@ -106,7 +106,7 @@ public class Option extends BaseModel {
     public static Option findByCode(String code) {
         return new Select()
                 .from(Option.class)
-                .where(Option_Table.CODE).eq(code).querySingle();
+                .where(Option_Table.code.eq(code)).querySingle();
     }
 
     public Long getId_option() {
@@ -255,14 +255,6 @@ public class Option extends BaseModel {
         return (returnValues.size() == 0) ? null : returnValues.get(0).getQuestion();
     }
 
-    public List<Value> getValues() {
-        if (values == null) {
-            values = new Select().from(Value.class)
-                    .where(Value_Table.ID_OPTION).eq(
-                            this.getId_option()).queryList();
-        }
-        return values;
-    }
 
     /**
      * Checks if this option actives the children questions

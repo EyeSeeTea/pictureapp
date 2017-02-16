@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.database.utils.populatedb;
 import android.content.Context;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.io.BufferedReader;
 import java.io.File;

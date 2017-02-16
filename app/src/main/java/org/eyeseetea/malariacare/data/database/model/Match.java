@@ -27,13 +27,15 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.treatmentName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.sql.language.Join;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.Treatment;
 import org.eyeseetea.malariacare.database.model.TreatmentMatch;
+import org.eyeseetea.malariacare.database.model.TreatmentMatch_Table;
+import org.eyeseetea.malariacare.database.model.Treatment_Table;
 
 import java.util.List;
 
@@ -65,7 +67,7 @@ public class Match extends BaseModel {
     public static Match findById(long id) {
         return new Select()
                 .from(Match.class)
-                .where(Match_Table.ID_MATCH).is(id)
+                .where(Match_Table.id_match.is(id))
                 .querySingle();
     }
 
@@ -87,8 +89,8 @@ public class Match extends BaseModel {
      */
     private static List<QuestionThreshold> getQuestionThreshold(Match match) {
         return new Select().from(QuestionThreshold.class)
-                .where(QuestionThreshold_Table.ID_MATCH).eq(
-                        match.getId_match()).queryList();
+                .where(QuestionThreshold_Table.id_match.eq(
+                        match.getId_match())).queryList();
     }
 
     /**
@@ -96,8 +98,8 @@ public class Match extends BaseModel {
      */
     private static List<QuestionOption> getQuestionOptions(Match match) {
         return new Select().from(QuestionOption.class)
-                .where(QuestionOption_Table.ID_MATCH).eq(
-                        match.getId_match()).queryList();
+                .where(QuestionOption_Table.id_match.eq(
+                        match.getId_match())).queryList();
     }
 
     /**
@@ -105,8 +107,8 @@ public class Match extends BaseModel {
      */
     private static List<TreatmentMatch> getTreatmentMatches(Match match) {
         return new Select().from(TreatmentMatch.class)
-                .where(TreatmentMatch_Table.ID_MATCH).eq(
-                        match.getId_match()).queryList();
+                .where(TreatmentMatch_Table.id_match.eq(
+                        match.getId_match())).queryList();
     }
 
     public Treatment getTreatment() {

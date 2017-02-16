@@ -19,8 +19,8 @@ import android.webkit.WebViewClient;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockBuilder;
 import org.eyeseetea.malariacare.services.StockService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;

@@ -74,7 +74,7 @@ public class ReadWriteDB {
 
             Value value = Value.findValue(question.getId_question(), survey);
             if (value != null) {
-                return Option.findById(Float.valueOf(value.getId_option()));
+                return Option.findById(value.getId_option());
             }
         }
         return null;

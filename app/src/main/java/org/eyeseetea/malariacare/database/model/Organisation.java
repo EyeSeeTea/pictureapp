@@ -3,15 +3,14 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class Organisation extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
@@ -23,15 +22,16 @@ public class Organisation extends BaseModel {
 
     public Organisation() {
     }
+
     public static Organisation findById(long id) {
         return new Select()
                 .from(Organisation.class)
-                .where(Condition.column(Organisation$Table.ID_ORGANISATION).is(id))
+                .where(Organisation_Table.id_organisation.is(id))
                 .querySingle();
     }
 
     public static List<Organisation> getAllOrganisations() {
-        return new Select().all().from(Organisation.class).queryList();
+        return new Select().from(Organisation.class).queryList();
     }
 
     public long getId_organisation() {

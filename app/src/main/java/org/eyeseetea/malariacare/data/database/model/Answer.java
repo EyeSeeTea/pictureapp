@@ -66,7 +66,7 @@ public class Answer extends BaseModel {
     }
 
     public static List<Answer> getAllAnswers() {
-        return new Select().all().from(Answer.class).queryList();
+        return new Select().from(Answer.class).queryList();
     }
 
     public static Answer findById(Long id) {

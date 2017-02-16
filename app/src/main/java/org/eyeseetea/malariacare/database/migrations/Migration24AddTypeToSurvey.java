@@ -1,8 +1,6 @@
 package org.eyeseetea.malariacare.database.migrations;
 
-import android.database.sqlite.SQLiteDatabase;
-
-import com.raizlabs.android.dbflow.annotation.Migration;
+/*
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
@@ -27,3 +25,4 @@ public class Migration24AddTypeToSurvey extends BaseMigration {
                 String.format(ALTER_TABLE_ADD_COLUMN, myAdapter.getTableName(), columnName, type));
     }
 }
+*/

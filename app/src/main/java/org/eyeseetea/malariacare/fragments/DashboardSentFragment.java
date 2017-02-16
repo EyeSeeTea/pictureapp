@@ -38,7 +38,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.usecase.HeaderUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
@@ -127,7 +126,8 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
     private void initListView() {
         if (Session.isNotFullOfUnsent(getActivity())) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View header = DashboardHeaderStrategy.getInstance().loadHeader(this.adapter.getHeaderLayout(),
+            View header = DashboardHeaderStrategy.getInstance().loadHeader(
+                    this.adapter.getHeaderLayout(),
                     inflater);
             View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
 

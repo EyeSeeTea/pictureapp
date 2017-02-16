@@ -1,3 +1,4 @@
+/*
 package org.eyeseetea.malariacare.database.migrations;
 
 import android.database.sqlite.SQLiteDatabase;
@@ -26,3 +27,4 @@ public class Migration25CsvsAssestsFile extends BaseMigration {
         }
     }
 }
+*/

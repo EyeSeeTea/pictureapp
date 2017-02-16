@@ -3,18 +3,14 @@ package org.eyeseetea.malariacare.database.model;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
-/**
- * Created by manuel on 2/01/17.
- */
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class DrugCombination extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
@@ -43,7 +39,7 @@ public class DrugCombination extends BaseModel {
     }
 
     public static List<DrugCombination> getAllDrugCombination() {
-        return new Select().all().from(DrugCombination.class).queryList();
+        return new Select().from(DrugCombination.class).queryList();
     }
 
     public long getId_drug_combination() {
@@ -61,7 +57,7 @@ public class DrugCombination extends BaseModel {
             }
             drug = new Select()
                     .from(Drug.class)
-                    .where(Condition.column(Drug$Table.ID_DRUG)
+                    .where(Drug_Table.id_drug
                             .is(id_drug)).querySingle();
         }
         return drug;
@@ -84,7 +80,7 @@ public class DrugCombination extends BaseModel {
             }
             treatment = new Select()
                     .from(Treatment.class)
-                    .where(Condition.column(Treatment$Table.ID_TREATMENT)
+                    .where(Treatment_Table.id_treatment
                             .is(id_treatment)).querySingle();
         }
         return treatment;

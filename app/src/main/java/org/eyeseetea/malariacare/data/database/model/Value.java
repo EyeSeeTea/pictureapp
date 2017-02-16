@@ -287,6 +287,35 @@ public class Value extends BaseModel {
         return idQuestion == this.id_question;
     }
 
+    public static void saveAll(List<Value> values, final IDataSourceCallback<Void> callback) {
+
+        //Refresh survey for assign SurveyId
+        for (Value value : values) {
+            value.setSurvey(value.getSurvey());
+        }
+
+        FlowManager.getDatabase(AppDatabase.class)
+                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
+                        new ProcessModelTransaction.ProcessModel<Value>() {
+                            @Override
+                            public void processModel(Value value) {
+                                value.save();
+                            }
+                        }).addAll(values).build())
+                .error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+                        callback.onError(error);
+                    }
+                })
+                .success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+                        callback.onSuccess(null);
+                    }
+                }).build().execute();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -329,32 +358,5 @@ public class Value extends BaseModel {
                 '}';
     }
 
-    public static void saveAll(List<Value> values, final IDataSourceCallback<Void> callback) {
 
-        //Refresh survey for assign SurveyId
-        for (Value value : values) {
-            value.setSurvey(value.getSurvey());
-        }
-
-        FlowManager.getDatabase(AppDatabase.class)
-                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
-                        new ProcessModelTransaction.ProcessModel<Value>() {
-                            @Override
-                            public void processModel(Value value) {
-                                value.save();
-                            }
-                        }).addAll(values).build())
-                .error(new Transaction.Error() {
-                    @Override
-                    public void onError(Transaction transaction, Throwable error) {
-                        callback.onError(error);
-                    }
-                })
-                .success(new Transaction.Success() {
-                    @Override
-                    public void onSuccess(Transaction transaction) {
-                        callback.onSuccess(null);
-                    }
-                }).build().execute();
-    }
 }

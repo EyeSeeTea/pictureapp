@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.presentation.factory.stock.rows;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.utils.SurveyStock;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -12,10 +12,6 @@ import org.eyeseetea.malariacare.utils.Utils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-/**
- * Created by manuel on 29/12/16.
- */
 
 public class StatusRowBuilder extends StockRowBuilder {
     private float[] balanceSurvey;

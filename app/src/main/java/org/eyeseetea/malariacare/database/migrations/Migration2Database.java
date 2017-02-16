@@ -15,7 +15,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
- */
+ *//*
+
 
 package org.eyeseetea.malariacare.database.migrations;
 
@@ -92,9 +93,11 @@ public class Migration2Database extends BaseMigration {
     public void onPreMigrate() {
     }
 
-    /**
+    */
+/**
      * Adds new columns to database
-     */
+ *//*
+
     @Override
     public void migrate(SQLiteDatabase database) {
 
@@ -132,16 +135,20 @@ public class Migration2Database extends BaseMigration {
 //        }
     }
 
-    /**
+    */
+/**
      * Checks if the current db has data or not
-     */
+ *//*
+
     private boolean hasData() {
         return Program.getFirstProgram() != null;
     }
 
-    /**
+    */
+/**
      * Links the program in the current db
-     */
+ *//*
+
     private void linkProgram() {
         Log.d(TAG, "linking default program to surveys and tabs...");
 
@@ -161,9 +168,11 @@ public class Migration2Database extends BaseMigration {
         tab.save();
     }
 
-    /**
+    */
+/**
      * Loads question.output from assets
-     */
+ *//*
+
     private void moveOutputToQuestion() {
         Log.d(TAG, "moving type questions to question table...");
 
@@ -176,9 +185,11 @@ public class Migration2Database extends BaseMigration {
         }
     }
 
-    /**
+    */
+/**
      * Returns a map with the output for each question:
-     */
+ *//*
+
     private Map<String, Integer> loadAnswerOutputs(AssetManager assetManager) {
         //map<code,output>
         Map<String, Integer> mapQuestion = new HashMap<>();
@@ -202,4 +213,4 @@ public class Migration2Database extends BaseMigration {
         database.execSQL(
                 String.format(ALTER_TABLE_ADD_COLUMN, myAdapter.getTableName(), columnName, type));
     }
-}
+}*/

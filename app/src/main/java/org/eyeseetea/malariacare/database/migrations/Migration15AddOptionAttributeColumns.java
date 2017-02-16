@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.database.migrations;
+/*package org.eyeseetea.malariacare.database.migrations;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
+
 import org.eyeseetea.malariacare.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
@@ -71,10 +72,13 @@ public class Migration15AddOptionAttributeColumns extends BaseMigration {
     public void onPostMigrate() {
     }
 
-    /**
+    */
+/**
      * Checks if the current db has data or not
-     */
+ *//*
+
     private boolean hasData() {
         return Program.getFirstProgram() != null;
     }
-}
+
+}*/

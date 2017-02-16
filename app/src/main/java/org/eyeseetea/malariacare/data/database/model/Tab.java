@@ -137,7 +137,7 @@ public class Tab extends BaseModel {
     public static List<Tab> getTabsBySession() {
         return new Select().from(Tab.class)
                 .where(Tab_Table.id_program.eq(
-                        Session.getSurvey().getProgram().getId_program()))
+                        Session.getMalariaSurvey().getProgram().getId_program()))
                 .orderBy(OrderBy.fromProperty(Tab_Table.order_pos))
                 .queryList();
     }
@@ -242,7 +242,7 @@ public class Tab extends BaseModel {
     public static Tab findById(Long id) {
         return new Select()
                 .from(Tab.class)
-                .where(Tab_Table.ID_TAB).eq(id).querySingle();
+                .where(Tab_Table.id_tab.eq(id)).querySingle();
     }
 
     @Override

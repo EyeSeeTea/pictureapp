@@ -13,7 +13,7 @@ import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.EditCard;
+import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
 import java.util.List;
 
@@ -115,7 +115,7 @@ public abstract class AQuestionAnswerChangedListener {
      */
     private boolean toggleChild(TableRow row, Question rowQuestion, Question childQuestion) {
         if (childQuestion.getId_question().equals(rowQuestion.getId_question())) {
-            if (rowQuestion.isHiddenBySurveyAndHeader(Session.getSurvey())) {
+            if (rowQuestion.isHiddenBySurveyAndHeader(Session.getMalariaSurvey())) {
                 row.setVisibility(View.GONE);
                 hideDefaultValue(rowQuestion);
             } else {
@@ -171,7 +171,7 @@ public abstract class AQuestionAnswerChangedListener {
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
-                final EditCard editCard = (EditCard) tableRow.findViewById(R.id.answer);
+                final CustomEditText editCard = (CustomEditText) tableRow.findViewById(R.id.answer);
                 editCard.setText("");
                 break;
             case Constants.DROPDOWN_LIST:

@@ -19,10 +19,16 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
+import static org.eyeseetea.malariacare.data.database.AppDatabase.answerAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.answerName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.headerAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.headerName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.optionAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.optionName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.programAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.programName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOptionAlias;
@@ -48,10 +54,10 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -388,20 +394,7 @@ public class Question extends BaseModel {
                 .count();
     }
 
-    public static List<Question> getQuestionsByTab(Tab tab) {
-        //Select question from questionrelation where operator=1 and id_match in (..)
-        return new Select().from(Question.class).as(questionName)
-                .join(Header.class, Join.JoinType.LEFT_OUTER).as(headerName)
-                .on(Question_Table.id_header.withTable(questionAlias)
-                        .eq(Header_Table.id_header.withTable(headerAlias)))
-                .join(Tab.class, Join.JoinType.LEFT_OUTER).as(tabName)
-                .on(Header_Table.id_tab.withTable(headerAlias)
-                        .eq(Tab_Table.id_tab.withTable(tabAlias)))
-                .where(Tab_Table.id_tab.withTable(tabAlias)
-                        .eq(tab.getId_tab()))
-                .orderBy(Question_Table.order_pos.withTable(questionAlias),true)
-                .queryList();
-    }
+
 
     /**
      * Method to delete questions in cascade.
@@ -418,31 +411,30 @@ public class Question extends BaseModel {
     }
 
     public static List<Option> getOptions(String UID) {
-        List<Option> options = new Select().from(Option.class).as("o")
-                .join(Answer.class, Join.JoinType.LEFT).as("a")
-                .on(Condition.column(ColumnAlias.columnWithTable("o", Option$Table.ID_ANSWER))
-                        .eq(ColumnAlias.columnWithTable("a", Answer$Table.ID_ANSWER)))
-                .join(Question.class, Join.JoinType.LEFT).as("q")
-                .on(Condition.column(ColumnAlias.columnWithTable("a", Answer$Table.ID_ANSWER))
-                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_ANSWER)))
-                .where(Condition.column(
-                        ColumnAlias.columnWithTable("q", Question$Table.UID))
+        List<Option> options = new Select().from(Option.class).as(optionName)
+                .join(Answer.class, Join.JoinType.LEFT_OUTER).as(answerName)
+                .on(Option_Table.id_answer.withTable(optionAlias)
+                        .eq(Answer_Table.id_answer.withTable(answerAlias)))
+                .join(Question.class, Join.JoinType.LEFT_OUTER).as(questionName)
+                .on(Answer_Table.id_answer.withTable(answerAlias)
+                        .eq(Question_Table.id_answer.withTable(questionAlias)))
+                .where(Question_Table.uid.withTable(questionAlias)
                         .eq(UID)).queryList();
+
         for (int i = 0; options != null && i < options.size(); i++) {
             Option currentOption = options.get(i);
-            currentOption = Option.findById(Float.valueOf(currentOption.getId_option()));
+            currentOption = Option.findById(currentOption.getId_option());
             options.set(i, currentOption);
         }
         return options;
     }
 
     public static Answer getAnswer(String UID) {
-        return new Select().from(Answer.class).as("a")
-                .join(Question.class, Join.JoinType.LEFT).as("q")
-                .on(Condition.column(ColumnAlias.columnWithTable("a", Answer$Table.ID_ANSWER))
-                        .eq(ColumnAlias.columnWithTable("q", Question$Table.ID_ANSWER)))
-                .where(Condition.column(
-                        ColumnAlias.columnWithTable("q", Question$Table.UID))
+        return new Select().from(Answer.class).as(answerName)
+                .join(Question.class, Join.JoinType.LEFT_OUTER).as(questionName)
+                .on(Option_Table.id_answer.withTable(answerAlias)
+                        .eq(Answer_Table.id_answer.withTable(questionAlias)))
+                .where(Question_Table.uid.withTable(questionAlias)
                         .eq(UID)).querySingle();
     }
 
@@ -451,7 +443,7 @@ public class Question extends BaseModel {
      */
     public List<QuestionOption> getQuestionsOptions() {
         return new Select().from(QuestionOption.class)
-                .where(Condition.column(QuestionOption$Table.ID_QUESTION).eq(
+                .where(QuestionOption_Table.id_question.eq(
                         getId_question())).queryList();
     }
 
@@ -460,7 +452,7 @@ public class Question extends BaseModel {
      */
     public List<QuestionThreshold> getQuestionsThresholds() {
         return new Select().from(QuestionThreshold.class)
-                .where(Condition.column(QuestionThreshold$Table.ID_QUESTION).eq(
+                .where(QuestionThreshold_Table.id_question.eq(
                         getId_question())).queryList();
     }
 
@@ -1393,9 +1385,9 @@ public class Question extends BaseModel {
      */
     public boolean isACounter() {
         QuestionRelation questionRelation = new Select().from(QuestionRelation.class).where(
-                Condition.column(QuestionRelation$Table.OPERATION).eq(
+                QuestionRelation_Table.operation.eq(
                         QuestionRelation.COUNTER)).and(
-                Condition.column(QuestionRelation$Table.ID_QUESTION).eq(
+                QuestionRelation_Table.id_question.eq(
                         this.getId_question())).querySingle();
         return questionRelation != null;
     }

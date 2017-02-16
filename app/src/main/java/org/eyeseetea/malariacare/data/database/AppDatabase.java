@@ -46,6 +46,11 @@ public class AppDatabase {
     public static final String treatmentName = "tr";
     public static final String treatmentMatchName = "trm";
     public static final String questionThresholdName = "qt";
+    public static final String drugName = "d";
+    public static final String drugCombinationName = "dc";
+    public static final String surveyName = "s";
+    public static final String optionName = "o";
+    public static final String answerName = "a";
 
     public static final NameAlias questionAlias = NameAlias.builder(questionName).build();
     public static final NameAlias questionRelationAlias = NameAlias.builder(
@@ -69,7 +74,16 @@ public class AppDatabase {
             treatmentMatchName).build();
     public static final NameAlias questionThresholdAlias = NameAlias.builder(
             questionThresholdName).build();
-
+    public static final NameAlias drugAlias = NameAlias.builder(
+            drugName).build();
+    public static final NameAlias drugCombinationAlias = NameAlias.builder(
+            drugCombinationName).build();
+    public static final NameAlias surveyAlias = NameAlias.builder(
+            surveyName).build();
+    public static final NameAlias optionAlias = NameAlias.builder(
+            optionName).build();
+    public static final NameAlias answerAlias = NameAlias.builder(
+            answerName).build();
 
 
     // Aliases used in DHIS2 DB wrappers
@@ -90,5 +104,6 @@ public class AppDatabase {
     public static final NameAlias programAttributeFlowAlias = NameAlias.builder(
             programAttributeFlowName).build();
     public static final NameAlias attributeFlowAlias = NameAlias.builder(attributeFlowName).build();
+
 }
 

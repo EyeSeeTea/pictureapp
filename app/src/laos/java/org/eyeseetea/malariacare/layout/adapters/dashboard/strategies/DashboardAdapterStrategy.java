@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.layout.SurveyInfoUtils;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 

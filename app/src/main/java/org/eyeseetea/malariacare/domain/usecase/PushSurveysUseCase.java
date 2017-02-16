@@ -3,23 +3,24 @@ package org.eyeseetea.malariacare.domain.usecase;
 import android.content.Context;
 import android.util.Log;
 
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.otto.Subscribe;
-
-import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.SyncProgressStatus;
-import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.remote.SdkController;
+import org.eyeseetea.malariacare.data.sync.exporter.PushController;
+import org.eyeseetea.malariacare.data.sync.importer.SyncProgressStatus;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.network.SurveyChecker;
-import org.hisp.dhis.android.sdk.controllers.DhisService;
-import org.hisp.dhis.android.sdk.job.NetworkJob;
-import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
-import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PushSurveysUseCase {
+
+    public interface Callback {
+        void onPushFinished();
+
+        void onPushError(String message);
+    }
+
     public static final String TAG = ".PushSurveysUseCase";
     private Context context;
     private Callback mCallback;
@@ -45,12 +46,12 @@ public class PushSurveysUseCase {
 
     private synchronized void startProgress() {
         Log.d(TAG, "startProgress, registering in bus");
-        Dhis2Application.bus.register(this);
+        SdkController.register(context);
     }
 
     private synchronized void stopProgress() {
         Log.d(TAG, "stopProgress, unregistering from bus");
-        Dhis2Application.bus.unregister(this);
+        SdkController.unregister(context);
     }
 
     /**
@@ -91,12 +92,15 @@ public class PushSurveysUseCase {
         startProgress();
 
         //Init sdk login
-        DhisService.logInUser(HttpUrl.parse(ServerAPIController.getServerUrl()),
-                ServerAPIController.getSDKCredentials());
+        //TODO:jsanchez Login in sdk should be transparent to the use case and be done internally
+        // from IPushController
+        /*SdkLoginController.logInUser(ServerAPIController.getServerUrl(),
+                ServerAPIController.getSDKCredentials());*/
     }
 
-    @Subscribe
-    public void callbackLoginPrePush(NetworkJob.NetworkJobResult<ResourceType> result) {
+    //// FIXME: 28/12/16 call on loginprepush finish
+    //@Subscribe
+    public void callbackLoginPrePush() {
         Log.d(TAG, "callbackLoginPrePush  " + PushController.getInstance().isPushInProgress());
 
 
@@ -104,19 +108,6 @@ public class PushSurveysUseCase {
             return;
         }
         Log.d(TAG, "callbackLoginPrePush");
-        //Nothing to check
-        if (result == null || result.getResourceType() == null || !result.getResourceType().equals(
-                ResourceType.USERS)) {
-            return;
-        }
-
-        //Login failed
-        if (result.getResponseHolder().getApiException() != null) {
-            Log.e(TAG, "callbackLoginPrePush cannot login via sdk");
-            stopProgress();
-            PushController.getInstance().setPushInProgress(false);
-            return;
-        }
 
         callPushBySDK();
     }
@@ -150,7 +141,8 @@ public class PushSurveysUseCase {
     /**
      * Callback that is invoked once the push is over or has failed
      */
-    @Subscribe
+    //// FIXME: 28/12/16 call on push finish
+    //@Subscribe
     public void onPushBySDKFinished(final SyncProgressStatus syncProgressStatus) {
         Log.d(TAG, "onPushBySDKFinished ");
         if (syncProgressStatus == null) {
@@ -182,10 +174,6 @@ public class PushSurveysUseCase {
         }
     }
 
-    public interface Callback {
-        void onPushFinished();
 
-        void onPushError(String message);
-    }
 }
 

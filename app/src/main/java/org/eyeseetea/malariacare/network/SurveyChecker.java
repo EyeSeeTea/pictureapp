@@ -6,24 +6,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.Response;
 
-import org.eyeseetea.malariacare.database.iomodules.dhis.importer.models.EventExtended;
-import org.eyeseetea.malariacare.database.model.OrgUnit;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.remote.SdkController;
+import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
+import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.strategies.SurveyCheckerStrategy;
-import org.hisp.dhis.android.sdk.controllers.wrappers.EventsWrapper;
-import org.hisp.dhis.android.sdk.persistence.models.DataValue;
-import org.hisp.dhis.android.sdk.persistence.models.Event;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-
-/**
- * Created by idelcano on 03/10/2016.
- */
 
 public class SurveyChecker {
 
@@ -58,7 +53,7 @@ public class SurveyChecker {
     /**
      * Get events filtered by program orgUnit and between dates.
      */
-    public static List<Event> getEvents(String program, String orgUnit, Date minDate,
+    public static List<EventExtended> getEvents(String program, String orgUnit, Date minDate,
             Date maxDate) {
         try {
             Response response;
@@ -83,7 +78,7 @@ public class SurveyChecker {
             JsonNode jsonNode = mapper.convertValue(mapper.readTree(events.toString()),
                     JsonNode.class);
 
-            return EventsWrapper.getEvents(jsonNode);
+            return SdkController.getEventsFromEventsWrapper(jsonNode);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -102,7 +97,7 @@ public class SurveyChecker {
         Date maxDate = Survey.getMaxQuarantineEventDate();
         String program = quarantineSurveys.get(0).getProgram().getUid();
         String orgUnit = OrgUnit.findUIDByName(PreferencesState.getInstance().getOrgUnit());
-        List<Event> events = getEvents(program, orgUnit, minDate, maxDate);
+        List<EventExtended> events = getEvents(program, orgUnit, minDate, maxDate);
         if (events != null) {
             for (Survey survey : quarantineSurveys) {
                 updateQuarantineSurveysStatus(events, survey);
@@ -116,7 +111,7 @@ public class SurveyChecker {
      * considered as sent, otherwise it will be considered as just completed and awaiting to be
      * sent
      */
-    private static void updateQuarantineSurveysStatus(List<Event> events, Survey survey) {
+    private static void updateQuarantineSurveysStatus(List<EventExtended> events, Survey survey) {
         SurveyCheckerStrategy surveyCheckerStrategy = new SurveyCheckerStrategy();
         surveyCheckerStrategy.updateQuarantineSurveysStatus(events, survey);
     }
@@ -125,8 +120,8 @@ public class SurveyChecker {
      * Given an event, check through all its DVs if the survey completion date is present in the
      * event in the form of the control DE "Time Capture" whose UID is hardcoded
      */
-    private static boolean surveyDateExistsInEventTimeCaptureControlDE(Survey survey, Event event) {
-        for (DataValue dataValue : event.getDataValues()) {
+    private static boolean surveyDateExistsInEventTimeCaptureControlDE(Survey survey, EventExtended event) {
+        for (DataValueExtended dataValue : event.getDataValues()) {
             if (dataValue.getDataElement().equals(PushClient.DATETIME_CAPTURE_UID)
                     && dataValue.getValue().equals(EventExtended.format(survey.getCompletionDate(),
                     EventExtended.COMPLETION_DATE_FORMAT))) {

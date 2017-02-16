@@ -37,4 +37,8 @@
     <!--Text size for headers-->
     <dimen name="image_size">100dp</dimen>
     <dimen name="image_padding">2dp</dimen>
+
+
+    <!--Old sdk-->
+    <dimen name="medium_text_size">22sp</dimen>
 </resources>

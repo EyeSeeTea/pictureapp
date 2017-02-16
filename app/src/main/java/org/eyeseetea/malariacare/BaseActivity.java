@@ -41,12 +41,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.eyeseetea.malariacare.database.iomodules.dhis.exporter.PushController;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.ExportData;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.ExportData;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.sync.exporter.PushController;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -62,10 +62,6 @@ import java.util.List;
 
 public abstract class BaseActivity extends ActionBarActivity {
 
-    /**
-     * Extra param to annotate the activity to return after settings
-     */
-    public static final String SETTINGS_CALLER_ACTIVITY = "SETTINGS_CALLER_ACTIVITY";
     /**
      * Extra param to annotate the activity to return after settings
      */
@@ -299,7 +295,8 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected void goSettings() {
         Intent intentSettings = new Intent(this, SettingsActivity.class);
-        intentSettings.putExtra(SETTINGS_CALLER_ACTIVITY, this.getClass());
+        intentSettings.putExtra(SettingsActivity.SETTINGS_CALLER_ACTIVITY, this.getClass());
+        intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
         startActivity(new Intent(this, SettingsActivity.class));
     }
 

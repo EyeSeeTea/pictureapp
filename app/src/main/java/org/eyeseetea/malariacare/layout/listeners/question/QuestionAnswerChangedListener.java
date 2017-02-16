@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.layout.listeners.question;
 import android.view.View;
 import android.widget.TableLayout;
 
-import org.eyeseetea.malariacare.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;

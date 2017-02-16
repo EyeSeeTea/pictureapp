@@ -8,14 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 
 import java.util.List;
-
-/**
- * Created by idelcano on 13/10/2016.
- */
 
 public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapter {
 

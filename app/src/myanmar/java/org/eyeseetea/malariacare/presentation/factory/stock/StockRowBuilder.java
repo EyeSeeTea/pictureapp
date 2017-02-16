@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.presentation.factory.stock.rows.StatusRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.stock.utils.SurveyStock;
 import org.eyeseetea.malariacare.utils.Constants;

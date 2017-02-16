@@ -135,4 +135,10 @@
     <string name="developer_option_title">អភិវឌ្ឍន៍បង្ហាញជម្រើស</string>
     <string name="export_data_option_title">មូលដ្ឋានទិន្នន័យដែលបាននាំចេញ</string>
     <string name="dynamic_error_number">លេខមិនត្រឹមត្រូវ</string>
+
+    <string name="settings_menu_logout_message">ការផ្លាស់ប្តូរម៉ាស៊ីនបម្រើឬ orgunit ត្រូវការដើម្បីឡើងវិញការចូល។ រាល់ការស្ទង់មតិមិនត្រូវបានផ្ញើនឹងត្រូវបានលុប។ តើអ្នកពិតជាចង់បន្តឬ?</string>
+    <string name="app_logout">ចាកចេញ</string>
+    <string name="network_error">មានបញ្ហាជាមួយនឹងបណ្តាញនេះគឺជាការ, សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។</string>
+    <string name="login_invalid_credentials">លិខិត​សម្គាល់​មិន​ត្រឹមត្រូវ</string>
+    <string name="login_invalid_server_url">URL របស់ម៉ាស៊ីនបម្រើមិនត្រឹមត្រូវ</string>
 </resources>

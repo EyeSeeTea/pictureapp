@@ -23,7 +23,7 @@ import android.util.Log;
 import android.webkit.WebView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.presentation.factory.monitor.tables.ConsumptionTableBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.tables.SuspectedPositiveTableBuilder;
 import org.eyeseetea.malariacare.webview.IWebViewBuilder;

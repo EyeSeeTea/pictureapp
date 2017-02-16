@@ -4,18 +4,18 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Answer;
-import org.eyeseetea.malariacare.database.model.Drug;
-import org.eyeseetea.malariacare.database.model.Header;
-import org.eyeseetea.malariacare.database.model.Match;
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.model.Answer;
+import org.eyeseetea.malariacare.data.database.model.Drug;
+import org.eyeseetea.malariacare.data.database.model.Header;
+import org.eyeseetea.malariacare.data.database.model.Match;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionOption;
+import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class Treatment {
     private Survey mMalariaSurvey;
     private Survey mStockSurvey;
     private List<Question> mQuestions;
-    private org.eyeseetea.malariacare.database.model.Treatment mTreatment;
+    private org.eyeseetea.malariacare.data.database.model.Treatment mTreatment;
     private HashMap<Long, Integer> doseByQuestion;
 
     public Treatment(Survey malariaSurvey, Survey stockSurvey) {
@@ -62,7 +62,7 @@ public class Treatment {
         return doseByQuestion;
     }
 
-    public org.eyeseetea.malariacare.database.model.Treatment getTreatment() {
+    public org.eyeseetea.malariacare.data.database.model.Treatment getTreatment() {
         return mTreatment;
     }
 
@@ -87,7 +87,7 @@ public class Treatment {
         return null;
     }
 
-    private org.eyeseetea.malariacare.database.model.Treatment getTreatmentFromSurvey() {
+    private org.eyeseetea.malariacare.data.database.model.Treatment getTreatmentFromSurvey() {
 
         List<Value> values = mMalariaSurvey.getValues();
 
@@ -131,7 +131,7 @@ public class Treatment {
             }
         }
 
-        org.eyeseetea.malariacare.database.model.Treatment treatment = null;
+        org.eyeseetea.malariacare.data.database.model.Treatment treatment = null;
         if (treatmentMatch != null) {
             Log.d(TAG, "match: " + treatmentMatch.toString());
             treatment = treatmentMatch.getTreatment();
@@ -141,7 +141,7 @@ public class Treatment {
     }
 
     private List<Question> getQuestionsForTreatment(
-            org.eyeseetea.malariacare.database.model.Treatment treatment) {
+            org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
         List<Question> questions = new ArrayList<>();
         List<Drug> drugs = treatment.getDrugsForTreatment();
 

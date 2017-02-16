@@ -186,4 +186,10 @@
     <string name="developer_option_title">แสดงตัวเลือกนักพัฒนา</string>
     <string name="export_data_option_title">ฐานข้อมูลการส่งออก</string>
     <string name="dynamic_error_number">จำนวนที่ไม่ถูกต้อง</string>
+
+    <string name="settings_menu_logout_message">การเปลี่ยนเซิร์ฟเวอร์หรือหน่วยขององค์กรต้องการที่จะกลับเข้าสู่ระบบ ทุกการสำรวจไม่ส่งจะถูกลบ คุณแน่ใจหรือว่าต้องการดำเนินการต่อ</string>
+    <string name="app_logout">อกจากระบบ</string>
+    <string name="network_error">มีปัญหากับเครือข่ายเป็นโปรดลองอีกครั้งในภายหลัง</string>
+    <string name="login_invalid_credentials">ข้อมูลประจำตัวที่ไม่ถูกต้อง</string>
+    <string name="login_invalid_server_url">URL ของเซิร์ฟเวอร์ไม่ถูกต้อง</string>
 </resources>

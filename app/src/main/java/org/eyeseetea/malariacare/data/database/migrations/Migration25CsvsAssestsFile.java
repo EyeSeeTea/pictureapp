@@ -8,7 +8,7 @@ import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 
 import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.database.utils.populatedb.FileCsvs;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvs;
 
 import java.io.IOException;
 

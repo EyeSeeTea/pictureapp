@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.database.model;
+package org.eyeseetea.malariacare.data.database.model;
 
 import static org.eyeseetea.malariacare.data.database.AppDatabase.drugAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.drugCombinationAlias;

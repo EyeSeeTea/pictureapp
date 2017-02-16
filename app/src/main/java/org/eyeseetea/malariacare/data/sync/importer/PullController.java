@@ -24,10 +24,10 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
-import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;

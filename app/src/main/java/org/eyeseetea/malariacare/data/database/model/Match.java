@@ -32,10 +32,6 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.database.model.Treatment;
-import org.eyeseetea.malariacare.database.model.TreatmentMatch;
-import org.eyeseetea.malariacare.database.model.TreatmentMatch_Table;
-import org.eyeseetea.malariacare.database.model.Treatment_Table;
 
 import java.util.List;
 

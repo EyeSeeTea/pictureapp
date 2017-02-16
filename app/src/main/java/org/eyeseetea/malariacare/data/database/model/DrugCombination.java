@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.database.model;
+package org.eyeseetea.malariacare.data.database.model;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;

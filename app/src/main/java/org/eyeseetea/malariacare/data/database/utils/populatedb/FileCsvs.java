@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.database.utils.populatedb;
+package org.eyeseetea.malariacare.data.database.utils.populatedb;
 
 import android.content.Context;
 import android.util.Log;

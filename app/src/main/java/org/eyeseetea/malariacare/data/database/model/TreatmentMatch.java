@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.database.model;
+package org.eyeseetea.malariacare.data.database.model;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -7,8 +7,6 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.data.database.model.Match;
-import org.eyeseetea.malariacare.data.database.model.Match_Table;
 
 import java.util.List;
 

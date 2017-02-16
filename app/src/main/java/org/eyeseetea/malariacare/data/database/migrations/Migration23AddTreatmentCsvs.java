@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.database.AppDatabase;
 import org.eyeseetea.malariacare.database.model.Program;
 import org.eyeseetea.malariacare.database.model.Tab;
 import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.UpdateDB;
 
 
 import java.io.IOException;

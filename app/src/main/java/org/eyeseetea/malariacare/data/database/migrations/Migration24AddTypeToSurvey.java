@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.database.migrations;
+package org.eyeseetea.malariacare.data.database.migrations;
 
 /*
 import com.raizlabs.android.dbflow.config.FlowManager;

@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.database.migrations;
+package org.eyeseetea.malariacare.data.database.migrations;
 
 /*
 import org.eyeseetea.malariacare.database.AppDatabase;

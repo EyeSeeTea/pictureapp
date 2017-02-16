@@ -11,7 +11,7 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
 

@@ -17,4 +17,8 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
                 && output != Constants.RADIO_GROUP_HORIZONTAL && output != Constants.REMINDER
                 && output != Constants.WARNING;
     }
+    @Override
+    public void initSurveys(boolean readOnly) {
+
+    }
 }

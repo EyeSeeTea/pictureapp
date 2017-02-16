@@ -371,7 +371,8 @@ public class ServerAPIController {
      * Closes server if too many surveys have been pushed
      */
     public static void banOrgUnitIfRequired() {
-        banOrgUnitIfRequired(getServerUrl(), getOrgUnit());
+        //// FIXME: 08/02/2017
+        //banOrgUnitIfRequired(getServerUrl(), getOrgUnit());
     }
 
     /**

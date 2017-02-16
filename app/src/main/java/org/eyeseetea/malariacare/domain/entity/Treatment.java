@@ -43,6 +43,10 @@ public class Treatment {
         return Question.findByUID(context.getString(R.string.dynamicTreatmentQuestionUID));
     }
 
+    public static Question getDynamicStockQuestion() {
+        Context context = PreferencesState.getInstance().getContext();
+        return Question.findByUID(context.getString(R.string.dynamicStockQuestionUID));
+    }
     public boolean hasTreatment() {
         mTreatment = getTreatmentFromSurvey();
         if (mTreatment != null) {

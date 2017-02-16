@@ -12,7 +12,7 @@ import java.util.List;
 public class SurveyStock {
 
     private Survey mSurvey;
-    private float[] surveyValues;
+    private int[] surveyValues;
     public static final int RDT_VALUE = 0,
             ACT6_VALUE = 1,
             ACT12_VALUE = 2,
@@ -23,7 +23,7 @@ public class SurveyStock {
 
     public SurveyStock(Survey survey) {
         mSurvey = survey;
-        surveyValues = new float[7];
+        surveyValues = new int[7];
         createSurveyValues();
     }
 
@@ -32,7 +32,7 @@ public class SurveyStock {
         return mSurvey;
     }
 
-    public float[] getSurveyValues() {
+    public int[] getSurveyValues() {
         return surveyValues;
     }
 
@@ -40,19 +40,19 @@ public class SurveyStock {
         List<Value> values = mSurvey.getValuesFromDB();
         for (Value value : values) {
             if (value.getQuestion().isStockRDT()) {
-                surveyValues[RDT_VALUE] = Float.parseFloat(value.getValue());
+                surveyValues[RDT_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
             } else if (value.getQuestion().isACT6()) {
-                surveyValues[ACT6_VALUE] = Float.parseFloat(value.getValue());
+                surveyValues[ACT6_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
             } else if (value.getQuestion().isACT12()) {
-                surveyValues[ACT12_VALUE] = Float.parseFloat(value.getValue());
+                surveyValues[ACT12_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
             } else if (value.getQuestion().isACT18()) {
-                surveyValues[ACT18_VALUE] = Float.parseFloat(value.getValue());
+                surveyValues[ACT18_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
             } else if (value.getQuestion().isACT24()) {
-                surveyValues[ACT24_VALUE] =Float.parseFloat(value.getValue());
+                surveyValues[ACT24_VALUE] =(int) Math.ceil(Double.parseDouble(value.getValue()));
             } else if (value.getQuestion().isPq()) {
-                surveyValues[PQ_VALUE] = Float.parseFloat(value.getValue());
+                surveyValues[PQ_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
             } else if (value.getQuestion().isCq()) {
-                surveyValues[CQ_VALUE] = Float.parseFloat(value.getValue());
+                surveyValues[CQ_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
             }
         }
     }

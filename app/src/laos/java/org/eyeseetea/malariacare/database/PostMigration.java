@@ -1,3 +1,4 @@
+/*
 package org.eyeseetea.malariacare.database;
 
 
@@ -13,3 +14,4 @@ public class PostMigration {
         Migration21LaoNewRelation.postMigrate();
     }
 }
+*/

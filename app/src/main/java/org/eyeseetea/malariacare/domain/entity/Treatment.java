@@ -148,9 +148,8 @@ public class Treatment {
 
         Question treatmentQuestion = new Question();
         treatmentQuestion.setOutput(Constants.QUESTION_LABEL);
-        //TODO put the correct message no the fk
-        treatmentQuestion.setForm_name(treatment.getDiagnosis() + "");
-        treatmentQuestion.setHelp_text(treatment.getMessage() + "");
+        treatmentQuestion.setForm_name(treatment.getDiagnosis().toString());
+        treatmentQuestion.setHelp_text(treatment.getMessage().toString());
         treatmentQuestion.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
         treatmentQuestion.setHeader(Header.DYNAMIC_TREATMENT_HEADER_ID);
         questions.add(treatmentQuestion);
@@ -320,8 +319,8 @@ public class Treatment {
     }
 
     private String getTitleDose(float dose, String drug) {
-//        return String.format("drugs_%d_of_%s_review_title", dose, drug);
-//        TODO return internationaliced String
-        return dose + " of " + drug;
+        return String.format(
+                getContext().getResources().getString(R.string.drugs_dose_of_drug_review_title),
+                dose, drug);
     }
 }

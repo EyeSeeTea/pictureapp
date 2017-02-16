@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.data.sync.importer;
 
+import android.util.Log;
+
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
@@ -154,6 +156,10 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
         //Datavalue is a value from a question
         Question question = Question.findByUID(questionUID);
+
+        if (question == null) {
+            Log.e(TAG, "Question not found with dataelement uid " + questionUID);
+        }
 
         Value value = new Value();
         value.setQuestion(question);

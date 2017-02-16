@@ -431,7 +431,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                         .eq(Program_Table.id_program.withTable(programAlias)))
                 .where(Survey_Table.creationDate.withTable(surveyAlias)
                         .eq(creationDate))
-                .and(Program_Table.uid.withTable(surveyAlias).is(
+                .and(Program_Table.uid.withTable(programAlias).is(
                         context.getString(R.string.stockProgramUID))).querySingle();
 
     }

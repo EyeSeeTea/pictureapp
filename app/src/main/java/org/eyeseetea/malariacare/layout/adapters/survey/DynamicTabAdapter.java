@@ -547,7 +547,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Treatment treatment = new Treatment(getMalariaSurvey(),
                         Session.getStockSurvey());
                 if (treatment.hasTreatment()) {
-                    org.eyeseetea.malariacare.database.model.Treatment dbTreatment =
+                    org.eyeseetea.malariacare.data.database.model.Treatment dbTreatment =
                             treatment.getTreatment();
                     Question actAnsweredNo = treatment.getACTQuestionAnsweredNo();
                     screenQuestion.setAnswer(treatment.getACTOptions(dbTreatment));

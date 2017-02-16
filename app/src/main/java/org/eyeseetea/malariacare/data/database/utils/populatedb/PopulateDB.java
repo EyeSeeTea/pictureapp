@@ -48,7 +48,7 @@ import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.database.model.StringKey;
+import org.eyeseetea.malariacare.data.database.model.StringKey;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

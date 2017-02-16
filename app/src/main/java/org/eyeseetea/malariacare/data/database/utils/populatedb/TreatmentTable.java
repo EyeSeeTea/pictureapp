@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.database.utils.populatedb;
+package org.eyeseetea.malariacare.data.database.utils.populatedb;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -6,16 +6,16 @@ import android.content.res.Resources;
 import com.opencsv.CSVReader;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.DrugCombination;
-import org.eyeseetea.malariacare.database.model.Match;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.database.model.StringKey;
-import org.eyeseetea.malariacare.database.model.Translation;
-import org.eyeseetea.malariacare.database.model.Treatment;
-import org.eyeseetea.malariacare.database.model.TreatmentMatch;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.model.DrugCombination;
+import org.eyeseetea.malariacare.data.database.model.Match;
+import org.eyeseetea.malariacare.data.database.model.QuestionOption;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.data.database.model.Treatment;
+import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.model.StringKey;
+import org.eyeseetea.malariacare.data.database.model.Translation;
 
 import java.io.File;
 import java.io.IOException;

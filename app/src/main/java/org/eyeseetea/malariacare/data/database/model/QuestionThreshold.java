@@ -223,8 +223,8 @@ public class QuestionThreshold extends BaseModel {
     public static List<QuestionThreshold> getQuestionThresholdsWithMatch(Long matchId) {
         return new Select()
                 .from(QuestionThreshold.class)
-                .where(Condition.column(QuestionThreshold$Table.ID_MATCH)
-                        .is(matchId)).queryList();
+                .where(QuestionThreshold_Table.id_match.is(matchId))
+                .queryList();
     }
 
 

@@ -1,23 +1,25 @@
-package org.eyeseetea.malariacare.database.migrations;
+/*
+package org.eyeseetea.malariacare.data.database.migrations;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.database.model.Drug;
-import org.eyeseetea.malariacare.database.model.DrugCombination;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.populatedb.UpdateDB;
+
+import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.model.Drug;
+import org.eyeseetea.malariacare.data.database.model.DrugCombination;
+import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
 import java.util.List;
 
-@Migration(version = 26, databaseName = AppDatabase.NAME)
+@Migration(version = 26, database = AppDatabase.class)
 public class Migration26PutDoseDrugCombination extends BaseMigration {
     private static String TAG = ".Migration25";
 
@@ -26,6 +28,12 @@ public class Migration26PutDoseDrugCombination extends BaseMigration {
 
     public Migration26PutDoseDrugCombination() {
         instance = this;
+    }
+
+    @Override
+    public void migrate(DatabaseWrapper database) {
+//        MigrationTools.addColumn(database, DrugCombination.class, "dose", "Real");
+        postMigrationRequired = true;
     }
 
     public static void postMigrate() {
@@ -57,16 +65,13 @@ public class Migration26PutDoseDrugCombination extends BaseMigration {
         instance.postMigrationRequired = false;
     }
 
-    @Override
-    public void migrate(SQLiteDatabase database) {
-        MigrationTools.addColumn(database, DrugCombination.class, "dose", "Real");
-        postMigrationRequired = true;
-    }
-
-    /**
+    */
+/**
      * Checks if the current db has data or not
-     */
+     *//*
+
     private boolean hasData() {
         return Program.getFirstProgram() != null;
     }
 }
+*/

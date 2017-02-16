@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Join;
+import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -20,8 +21,14 @@ import java.util.List;
 @Table(database = AppDatabase.class)
 public class Treatment extends BaseModel {
 
-    public static int TYPE_MAIN = 0;
-    public static int TYPE_NOT_MAIN = 1;
+    public static final int TYPE_MAIN = 0;
+    public static final int TYPE_NOT_MAIN = 1;
+    private static final String treatmentName = "t";
+    private static final String treatmentMatchName = "tm";
+
+    public static final NameAlias treatmentAlias = NameAlias.builder(treatmentName).build();
+    public static final NameAlias treatmentMatchAlias = NameAlias.builder(
+            treatmentMatchName).build();
 
     @Column
     @PrimaryKey(autoincrement = true)
@@ -75,15 +82,13 @@ public class Treatment extends BaseModel {
 
     public List<Treatment> getAlternativeTreatments() {
         List<Treatment> treatments = new Select()
-                .from(Treatment.class).as("t")
-                .join(TreatmentMatch.class, Join.JoinType.LEFT).as("tm")
-                .on(Condition.column(ColumnAlias.columnWithTable("t", Treatment$Table.ID_TREATMENT))
-                        .eq(ColumnAlias.columnWithTable("tm", TreatmentMatch$Table.ID_MATCH)))
-                .where(Condition.column(
-                        ColumnAlias.columnWithTable("tm", TreatmentMatch$Table.ID_TREATMENT))
+                .from(Treatment.class).as(treatmentName)
+                .join(TreatmentMatch.class, Join.JoinType.LEFT_OUTER).as(treatmentMatchName)
+                .on(Treatment_Table.id_treatment.withTable(treatmentAlias)
+                        .eq(TreatmentMatch_Table.id_match.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatch_Table.id_treatment.withTable(treatmentMatchAlias)
                         .is(id_treatment))
-                .and(Condition.column(ColumnAlias.columnWithTable("t", Treatment$Table.TYPE))
-                        .is(TYPE_NOT_MAIN))
+                .and(Treatment_Table.type.withTable(treatmentAlias).is(TYPE_NOT_MAIN))
                 .queryList();
 
         //TODO remove this related with DBFlow bug overriding ids
@@ -91,11 +96,11 @@ public class Treatment extends BaseModel {
         for (Treatment treatment : treatments) {
             Treatment correctTreatment = new Select()
                     .from(Treatment.class)
-                    .where(Condition.column(Treatment$Table.DIAGNOSIS).is(treatment.getDiagnosis()))
-                    .and(Condition.column(Treatment$Table.MESSAGE).is(treatment.getMessage()))
-                    .and(Condition.column(Treatment$Table.ID_ORGANISATION).is(
+                    .where(Treatment_Table.diagnosis.is(treatment.getDiagnosis()))
+                    .and(Treatment_Table.message.is(treatment.getMessage()))
+                    .and(Treatment_Table.id_organisation.is(
                             treatment.getOrganisation().getId_organisation()))
-                    .and(Condition.column(Treatment$Table.TYPE).is(treatment.getType()))
+                    .and(Treatment_Table.type.is(treatment.getType()))
                     .querySingle();
             correctIdTreatments.add(correctTreatment);
         }

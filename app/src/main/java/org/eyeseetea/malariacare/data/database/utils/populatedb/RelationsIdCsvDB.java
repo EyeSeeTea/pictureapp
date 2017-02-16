@@ -14,12 +14,12 @@ import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.data.database.model.Organisation;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.database.model.StringKey;
+import org.eyeseetea.malariacare.data.database.model.StringKey;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

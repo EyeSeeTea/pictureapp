@@ -1,19 +1,19 @@
-package org.eyeseetea.malariacare.database.model;
+package org.eyeseetea.malariacare.data.database.model;
 
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.builder.Condition;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.database.AppDatabase;
+
+import org.eyeseetea.malariacare.data.database.AppDatabase;
 
 import java.util.List;
 
 
-@Table(databaseName = AppDatabase.NAME)
+@Table(database = AppDatabase.class)
 public class Translation extends BaseModel {
 
     public static String DEFAULT_LANGUAGE = "default";
@@ -41,7 +41,6 @@ public class Translation extends BaseModel {
 
     public static List<Translation> getAllTranslations() {
         return new Select()
-                .all()
                 .from(Translation.class)
                 .queryList();
     }
@@ -81,24 +80,24 @@ public class Translation extends BaseModel {
     public static String getLocalizedString(Long id_string, String language) {
         Translation translation = new Select()
                 .from(Translation.class)
-                .where(Condition.column(Translation$Table.ID_STRING_KEY).is(id_string))
-                .and(Condition.column(Translation$Table.LANGUAGE).is(language))
+                .where(Translation_Table.id_string_key.is(id_string))
+                .and(Translation_Table.language.is(language))
                 .querySingle();
         if (translation == null || translation.getTranslation() == null
                 || translation.getTranslation().isEmpty()) {
             String generalLanguage = language.split("_")[0];
             translation = new Select()
                     .from(Translation.class)
-                    .where(Condition.column(Translation$Table.ID_STRING_KEY).is(id_string))
-                    .and(Condition.column(Translation$Table.LANGUAGE).is(generalLanguage))
+                    .where(Translation_Table.id_string_key.is(id_string))
+                    .and(Translation_Table.language.is(generalLanguage))
                     .querySingle();
         }
         if (translation == null || translation.getTranslation() == null
                 || translation.getTranslation().isEmpty()) {
             translation = new Select()
                     .from(Translation.class)
-                    .where(Condition.column(Translation$Table.ID_STRING_KEY).is(id_string))
-                    .and(Condition.column(Translation$Table.LANGUAGE).is(DEFAULT_LANGUAGE))
+                    .where(Translation_Table.id_string_key.is(id_string))
+                    .and(Translation_Table.language.is(DEFAULT_LANGUAGE))
                     .querySingle();
         }
 

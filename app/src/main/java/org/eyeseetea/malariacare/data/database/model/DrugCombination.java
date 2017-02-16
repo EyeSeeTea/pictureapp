@@ -101,9 +101,8 @@ public class DrugCombination extends BaseModel {
     public static float getDose(Treatment treatment, Drug drug) {
         DrugCombination drugCombination = new Select()
                 .from(DrugCombination.class)
-                .where(Condition.column(DrugCombination$Table.ID_TREATMENT).is(
-                        treatment.getId_treatment()))
-                .and(Condition.column(DrugCombination$Table.ID_DRUG).is(drug.getId_drug()))
+                .where(DrugCombination_Table.id_treatment.is(treatment.getId_treatment()))
+                .and(DrugCombination_Table.id_drug.is(drug.getId_drug()))
                 .querySingle();
         if (drugCombination != null) {
             return drugCombination.getDose();

@@ -221,8 +221,8 @@ public class QuestionOption extends BaseModel {
     public static List<QuestionOption> getQuestionOptionsWithMatchId(Long id_match) {
         return new Select()
                 .from(QuestionOption.class)
-                .where(Condition.column(QuestionOption$Table.ID_MATCH)
-                        .is(id_match)).queryList();
+                .where(QuestionOption_Table.id_match.is(id_match))
+                .queryList();
     }
 
     @Override

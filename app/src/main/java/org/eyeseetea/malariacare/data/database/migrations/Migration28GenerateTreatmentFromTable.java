@@ -1,17 +1,18 @@
-package org.eyeseetea.malariacare.database.migrations;
+/*
+package org.eyeseetea.malariacare.data.database.migrations;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
-import org.eyeseetea.malariacare.database.AppDatabase;
-import org.eyeseetea.malariacare.database.utils.populatedb.TreatmentTable;
+import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.TreatmentTable;
 
 import java.io.IOException;
 
-@Migration(version = 28, databaseName = AppDatabase.NAME)
+@Migration(version = 28, database = AppDatabase.class)
 public class Migration28GenerateTreatmentFromTable extends BaseMigration {
     private static String TAG = ".Migration28";
 
@@ -20,6 +21,11 @@ public class Migration28GenerateTreatmentFromTable extends BaseMigration {
 
     public Migration28GenerateTreatmentFromTable() {
         instance = this;
+    }
+
+    @Override
+    public void migrate(DatabaseWrapper database) {
+        postMigrationRequired = true;
     }
 
     public static void postMigrate() {
@@ -38,8 +44,5 @@ public class Migration28GenerateTreatmentFromTable extends BaseMigration {
         instance.postMigrationRequired = false;
     }
 
-    @Override
-    public void migrate(SQLiteDatabase database) {
-        postMigrationRequired = true;
-    }
 }
+*/

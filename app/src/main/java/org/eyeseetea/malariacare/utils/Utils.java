@@ -28,7 +28,7 @@ import org.eyeseetea.malariacare.data.database.model.Header;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.model.Translation;
+import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

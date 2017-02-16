@@ -6,7 +6,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Drug;
-import org.eyeseetea.malariacare.database.model.DrugCombination;
+import org.eyeseetea.malariacare.data.database.model.DrugCombination;
 import org.eyeseetea.malariacare.data.database.model.Header;
 import org.eyeseetea.malariacare.data.database.model.Match;
 import org.eyeseetea.malariacare.data.database.model.Option;
@@ -236,11 +236,11 @@ public class Treatment {
     }
 
     public HashMap<Long, Float> getOptionDose(
-            org.eyeseetea.malariacare.database.model.Treatment mainTreatment) {
-        List<org.eyeseetea.malariacare.database.model.Treatment> treatments =
+            org.eyeseetea.malariacare.data.database.model.Treatment mainTreatment) {
+        List<org.eyeseetea.malariacare.data.database.model.Treatment> treatments =
                 mainTreatment.getAlternativeTreatments();
         HashMap<Long, Float> optionDose = new HashMap<>();
-        for (org.eyeseetea.malariacare.database.model.Treatment treatment : treatments) {
+        for (org.eyeseetea.malariacare.data.database.model.Treatment treatment : treatments) {
             List<Drug> drugs = treatment.getDrugsForTreatment();
             for (Drug drug : drugs) {
                 if (drug.isACT24()) {
@@ -261,7 +261,8 @@ public class Treatment {
         return optionDose;
     }
 
-    public Answer getACTOptions(org.eyeseetea.malariacare.database.model.Treatment mainTreatment) {
+    public Answer getACTOptions(
+            org.eyeseetea.malariacare.data.database.model.Treatment mainTreatment) {
         List<Option> options = new ArrayList<>();
         Answer answer = new Answer("stock");
         answer.setId_answer(Answer.DYNAMIC_STOCK_ANSWER_ID);
@@ -288,9 +289,9 @@ public class Treatment {
                 new OptionAttribute("c8b8c7", "question_images/p6_stockout.png"));
         optionOutStock.setId_option(Question.getOutOfStockQuestion().getId_question());
 
-        List<org.eyeseetea.malariacare.database.model.Treatment> treatments =
+        List<org.eyeseetea.malariacare.data.database.model.Treatment> treatments =
                 mainTreatment.getAlternativeTreatments();
-        for (org.eyeseetea.malariacare.database.model.Treatment treatment : treatments) {
+        for (org.eyeseetea.malariacare.data.database.model.Treatment treatment : treatments) {
             List<Drug> alternativeDrugs = treatment.getDrugsForTreatment();
             for (Drug drug : alternativeDrugs) {
                 if (drug.isACT24()) {
@@ -316,11 +317,11 @@ public class Treatment {
     }
 
     private List<Drug> getAlternativeDrugsForTreatment(
-            org.eyeseetea.malariacare.database.model.Treatment mainTreatment) {
-        List<org.eyeseetea.malariacare.database.model.Treatment> alternativeTreatments =
+            org.eyeseetea.malariacare.data.database.model.Treatment mainTreatment) {
+        List<org.eyeseetea.malariacare.data.database.model.Treatment> alternativeTreatments =
                 mainTreatment.getAlternativeTreatments();
         List<Drug> alternativeDrugs = new ArrayList<>();
-        for (org.eyeseetea.malariacare.database.model.Treatment treatment : alternativeTreatments) {
+        for (org.eyeseetea.malariacare.data.database.model.Treatment treatment : alternativeTreatments) {
             alternativeDrugs.addAll(treatment.getDrugsForTreatment());
         }
         return alternativeDrugs;

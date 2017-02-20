@@ -24,26 +24,26 @@
         <item>@string/Pq</item>
     </string-array>
 
-    <string name="malariaProgramUID">RjBwXyc5I66</string>
-    <string name="stockProgramUID">GnAx3VLVfUi</string>
-    <string name="ageQuestionUID">2XX1JoHmO94</string>
-    <string name="sexPregnantQuestionUID">6VV1JoHmO94</string>
-    <string name="severeSymtomsQuestionUID">11V1JoHmO94</string>
-    <string name="rdtQuestionUID">12V1JoHmO94</string>
-    <string name="referralQuestionUID">9fV1JoHmO94</string>
-    <string name="pqQuestionUID">"Sttahtf0iHZ"</string>
-    <string name="cqQuestionUID">jZvZ4Q39J6s</string>
-    <string name="act6QuestionUID">ihlfWLBg7Nr</string>
-    <string name="act12QuestionUID">nN4jwsyjmE9</string>
-    <string name="act18QuestionUID">GqHQPu6yCfu</string>
-    <string name="act24QuestionUID">RUqD8Kckt3B</string>
-    <string name="dynamicStockQuestionUID">9cV1JoHmO95</string>
-    <string name="outOfStockQuestionUID">ZEopAP6tQN4</string>
-    <string name="dynamicTreatmentQuestionUID">9cV1JoHmO94</string>
-    <string name="stockRDTQuestionUID">Sttahtf0iH0</string>
-    <string name="confirmInvalidQuestionUID">15V1JoHmO94</string>
-    <string name="residenceVillageUID">4YY1JoHmO94</string>
-    <string name="patientResidenceVillageOtherCode">patient_residence_village_other_option</string>
+    <string name="malariaProgramUID" translatable="false">RjBwXyc5I66</string>
+    <string name="stockProgramUID" translatable="false">GnAx3VLVfUi</string>
+    <string name="ageQuestionUID" translatable="false">bGH0k4Ubsxx</string>
+    <string name="sexPregnantQuestionUID" translatable="false">NoDataElementSexPregnancy</string>
+    <string name="severeSymtomsQuestionUID" translatable="false">paYP43NHaNV</string>
+    <string name="rdtQuestionUID" translatable="false">FfsqctsJo2s</string>
+    <string name="referralQuestionUID" translatable="false">JqL5jeyDa7N</string>
+    <string name="pqQuestionUID" translatable="false">"AcS0UXwsSsg"</string>
+    <string name="cqQuestionUID" translatable="false">ZvH3wyLVoCX</string>
+    <string name="act6QuestionUID" translatable="false">FUg5X4D538R</string>
+    <string name="act12QuestionUID" translatable="false">oakPX84Jug0</string>
+    <string name="act18QuestionUID" translatable="false">PNkxsc5QwSP</string>
+    <string name="act24QuestionUID" translatable="false">OR8HOulQb62</string>
+    <string name="dynamicStockQuestionUID" translatable="false">NoDataElementOutOfStock</string>
+    <string name="outOfStockQuestionUID" translatable="false">ZEopAP6tQN4</string>
+    <string name="dynamicTreatmentQuestionUID" translatable="false">yPACdIBZEeZ</string>
+    <string name="stockRDTQuestionUID" translatable="false">FGG1GvvS8Xg</string>
+    <string name="confirmInvalidQuestionUID" translatable="false">lhJLBNebHcz</string>
+    <string name="residenceVillageUID" translatable="false">NoDataElementOrgUnit</string>
+    <string name="patientResidenceVillageOtherCode" translatable="false">Dropdown parent</string>
     <string name="myanmar_locale" translatable="false">my</string>
     <string name="chinese_locale" translatable="false">zh</string>
     <string name="treatment_diagnosis" translatable="false">treatment_diagnosis_%d</string>
@@ -56,5 +56,4 @@
     <string name="option_rdt_mixed" translatable="false">rdt_mixed</string>
     <string name="option_rdt_pf" translatable="false">rdt_pf</string>
     <string name="option_rdt_pv" translatable="false">rdt_pv</string>
-
 </resources>

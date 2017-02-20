@@ -19,10 +19,7 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
-import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
-import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOptionAlias;
-import static org.eyeseetea.malariacare.data.database.AppDatabase.questionOptionName;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -33,6 +30,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(database = AppDatabase.class)
@@ -108,14 +106,20 @@ public class QuestionOption extends BaseModel {
      * @return The list of matches
      */
     public static List<Match> getMatchesWithQuestionOption(Long id_question, Long id_option) {
-        return new Select().from(Match.class).as(matchName)
-                .join(QuestionOption.class, Join.JoinType.LEFT_OUTER).as(questionOptionName)
-                .on(Match_Table.id_match.withTable(matchAlias)
-                        .eq(QuestionOption_Table.id_question.withTable(questionOptionAlias)))
-                .where(QuestionOption_Table.id_question.withTable(questionOptionAlias).is(
-                        id_question))
-                .and(QuestionOption_Table.id_option.withTable(questionOptionAlias).is(
-                        id_option)).queryList();
+        List<QuestionOption> questionOptions = new Select()
+                .from(QuestionOption.class)
+                .where(QuestionOption_Table.id_question.is(id_question))
+                .and(QuestionOption_Table.id_option.is(id_option))
+                .queryList();
+        List<Match> matches = new ArrayList<>();
+        for (QuestionOption questionOption : questionOptions) {
+            matches.add(new Select()
+                    .from(Match.class)
+                    .where(Match_Table.id_match.is(questionOption.getMatch().getId_match()))
+                    .querySingle());
+        }
+        return matches;
+//FIXME doing in two query because there is a bug in DBFlow
     }
 
     /**

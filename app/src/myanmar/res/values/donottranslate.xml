@@ -37,7 +37,7 @@
     <string name="act12QuestionUID" translatable="false">oakPX84Jug0</string>
     <string name="act18QuestionUID" translatable="false">PNkxsc5QwSP</string>
     <string name="act24QuestionUID" translatable="false">OR8HOulQb62</string>
-    <string name="dynamicStockQuestionUID" translatable="false">UIDStockQuestion</string>
+    <string name="dynamicStockQuestionUID" translatable="false">NoDataElementOutOfStock</string>
     <string name="outOfStockQuestionUID" translatable="false">ZEopAP6tQN4</string>
     <string name="dynamicTreatmentQuestionUID" translatable="false">yPACdIBZEeZ</string>
     <string name="stockRDTQuestionUID" translatable="false">FGG1GvvS8Xg</string>

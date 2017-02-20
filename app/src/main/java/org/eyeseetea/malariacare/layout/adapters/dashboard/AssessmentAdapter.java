@@ -186,9 +186,12 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
         //fixed the position in the list if the adapter have a header.
         int fixedPosition = getFixedPosition(l);
         //Put selected survey in session
-        Session.setMalariaSurvey(surveys.get(position - fixedPosition));
-        // Go to SurveyActivity
-        DashboardActivity.dashboardActivity.openSentSurvey();
+        Survey malariaSurvey = surveys.get(position - fixedPosition);
+        Session.setMalariaSurvey(malariaSurvey);
+        if (mDashboardAdapterStrategy.hasComplementarySurveyNeeded(malariaSurvey)) {
+            // Go to SurveyActivity
+            DashboardActivity.dashboardActivity.openSentSurvey();
+        }
     }
 
 

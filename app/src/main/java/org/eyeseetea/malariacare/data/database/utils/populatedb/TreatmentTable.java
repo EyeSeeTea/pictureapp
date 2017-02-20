@@ -11,11 +11,11 @@ import org.eyeseetea.malariacare.data.database.model.Match;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.data.database.model.StringKey;
+import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
-import org.eyeseetea.malariacare.data.database.model.Translation;
 
 import java.io.File;
 import java.io.IOException;
@@ -158,7 +158,7 @@ public class TreatmentTable {
             addDrugCombinations(line, drugsCombinationLines, treatmentLines);
 
             if (line[5].equals("Y")) {
-                addMatch(matchLines);
+                addMatch(matchLines, treatmentQuestionRelationId);
                 addTreatmentMatch(treatmentMatchLines, matchLines, treatmentLines);
                 addQuestionOptionAge(line, questionThresholdLines, matchLines);
                 addQuestionOptionPregnant(line, questionOptionLines, matchLines);
@@ -252,8 +252,9 @@ public class TreatmentTable {
         treatmentLines.add(treatmentLine);
         if (line[5].equals("N")) {
             String[] treatmentMatch =
-                    {getNextIdToInsert(treatmentMatchLines), getPreviousMainTreatmentId(
-                            treatmentLines), treatmentLine[0]};
+                    {getNextIdToInsert(treatmentMatchLines), treatmentLine[0],
+                            getMatchIdForTretment(treatmentMatchLines,
+                                    getPreviousMainTreatmentId(treatmentLines))};
             mFileCsvs.insertCsvLine(PopulateDB.TREATMENT_MATCHES_CSV, treatmentMatch);
             treatmentMatchLines.add(treatmentMatch);
         }
@@ -287,8 +288,8 @@ public class TreatmentTable {
         }
     }
 
-    private void addMatch(List<String[]> matchLines) throws IOException {
-        String[] match = {getNextIdToInsert(matchLines), treatmentQuestionRelationId + ""};
+    private void addMatch(List<String[]> matchLines, String questionRelationId) throws IOException {
+        String[] match = {getNextIdToInsert(matchLines), questionRelationId + ""};
         matchLines.add(match);
         mFileCsvs.insertCsvLine(PopulateDB.MATCHES, match);
     }
@@ -444,6 +445,18 @@ public class TreatmentTable {
             }
         }
         return "1";
+    }
+
+    private String getMatchIdForTretment(List<String[]> treatmentMatches, String treatmentId) {
+        if (treatmentMatches != null && !treatmentMatches.isEmpty() && treatmentId != null
+                && !treatmentId.isEmpty()) {
+            for (String[] treatmentMatch : treatmentMatches) {
+                if (treatmentMatch[1].equals(treatmentId)) {
+                    return treatmentMatch[2];
+                }
+            }
+        }
+        return "";
     }
 
     private String getNextIdToInsert(List<String[]> lines) {

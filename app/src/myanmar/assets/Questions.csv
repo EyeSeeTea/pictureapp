@@ -31,3 +31,7 @@
 34;'Code: RDT';'stock_rdt_review_title';'stock_rdt_review_help_text';'RDT';'FGG1GvvS8Xg';4;0;0;11;28;0;22;7;0;'';1
 35;'Code: Stock';'treatment_stock_review_title';'';'act_out_stock';'NoDataElementOutOfStock';3;0;0;12;12;0;28;8;1;'';0
 36;'Code: Out stock';'out_stock_option';'';'out_stock_option';'ZEopAP6tQN4';4;0;0;12;28;0;27;8;0;'question_images/p6_out_stock.png';0
+37;'Code: No Pq selected';'';'';'';'NoDataElementNoPqSelected';3;0;0;7;28;0;24;7;0;'';0
+38;'Code: No Cq selected';'';'';'';'NoDataElementNoCqSelected';3;0;0;7;28;0;24;7;0;'';0
+39;'Code: No Cq question';'treatment_no_cq_title';'';'treatment_no_cq_title';'NoDataElementNoCq';4;0;0;13;30;0;24;7;0;'';0
+40;'Code: No Pq question';'treatment_no_pq_title';'';'treatment_no_pq_title';'NoDataElementNoPq';5;0;0;14;29;0;24;7;0;'';0

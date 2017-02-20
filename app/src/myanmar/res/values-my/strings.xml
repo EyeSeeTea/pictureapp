@@ -342,4 +342,10 @@
 <string name="x24">x24</string>
 <string name="previous_distributions">Previous Distributions</string>
 <string name="drugs_dose_of_drug_review_title">%1$.0f of %2$s</string>
+    <string name="no_pq_cq_out_stock">"Out of stock"</string>
+    <string name="no_pq_adverse_reaction">"History of adverse reaction to Primaquine"</string>
+    <string name="no_cq_adverse_reaction">"History of adverse reaction to Cloroquine"</string>
+    <string name="no_pq_cq_other">"Other reasons"</string>
+    <string name="treatment_no_cq_title">"The reason you are not giving Cloroquine is"</string>
+    <string name="treatment_no_pq_title">"The reason you are not giving Primaquine is"</string>
 </resources>

@@ -7,9 +7,9 @@
 7;'Hidden';'false';0;8;7
 8;'Hidden';'true';0;8;8
 9;'symptoms_fever_yes';'true';0;9;9
-10;'symptoms_fever_no';'False';0;9;10
-11;'symptoms_care_sought_within_24h';'Within 24h';0;10;11
-12;'symptoms_care_sought_after_24h';'After 24h';0;10;12
+10;'symptoms_fever_no';'false';0;9;10
+11;'symptoms_care_sought_within_24h';'true';0;10;11
+12;'symptoms_care_sought_after_24h';'false';0;10;12
 13;'symptoms_severity_yes';'true';0;11;13
 14;'symptoms_severity_no';'false';0;11;14
 15;'rdt_negative';'NEG';0;12;15

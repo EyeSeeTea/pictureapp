@@ -9,7 +9,7 @@ import org.eyeseetea.malariacare.domain.exception.QuestionNotFoundException;
 
 import java.util.List;
 
-public class DataConverterStrategy {
+public class DataConverterStrategy implements IDataConverterStrategy {
 
     private static String ORG_UNIT_QUESTION_UID = "NoDataElementOrgUnit";
 
@@ -22,7 +22,7 @@ public class DataConverterStrategy {
     private static String SEX_QUESTION_UID = "fculIlFe15p";
     private static String PREGNANT_QUESTION_UID = "fxDu5J5eZ4t";
 
-    public static void convert(ConvertFromSDKVisitor converter,
+    public void convert(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
 
         convertOrgUnitDataValue(converter, event);
@@ -30,7 +30,7 @@ public class DataConverterStrategy {
         convertPatientSexPregnancyDataValue(converter, event);
     }
 
-    private static void convertOrgUnitDataValue(ConvertFromSDKVisitor converter,
+    private void convertOrgUnitDataValue(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
         Question orgUnitQuestion = Question.findByUID(ORG_UNIT_QUESTION_UID);
 

@@ -29,12 +29,27 @@ public class OrgUnitToOptionConverter {
 
     public static void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
         for (Question question : questions) {
-            Option option = new Option();
-            option.setAnswer(question.getAnswer());
-            option.setName(orgUnit.getUid());
-            option.setCode(orgUnit.getName());
-            option.save();
+
+            if (!existsOrgUnitAsOptionInQuestion(orgUnit, question)) {
+                Option option = new Option();
+                option.setAnswer(question.getAnswer());
+                option.setName(orgUnit.getUid());
+                option.setCode(orgUnit.getName());
+                option.save();
+            }
         }
+    }
+
+    private static boolean existsOrgUnitAsOptionInQuestion(OrgUnit orgUnit, Question question) {
+        List<Option> options = question.getAnswer().getOptions();
+
+        for (Option option : options) {
+            if (option.getName().equals(orgUnit.getUid())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void removeOldValues(Question question, List<Option> options) {

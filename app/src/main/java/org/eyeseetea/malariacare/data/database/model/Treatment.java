@@ -22,7 +22,7 @@ public class Treatment extends BaseModel {
     @PrimaryKey(autoincrement = true)
     long id_treatment;
     @Column
-    Long id_organisation;
+    Long id_organisation_fk;
     @Column
     String diagnosis;
     @Column
@@ -40,7 +40,7 @@ public class Treatment extends BaseModel {
     public Treatment(long id_treatment, long id_drug_combination, long id_organisation,
             String diagnosis, String message) {
         this.id_treatment = id_treatment;
-        this.id_organisation = id_organisation;
+        this.id_organisation_fk = id_organisation;
         this.diagnosis = diagnosis;
         this.message = message;
     }
@@ -61,8 +61,8 @@ public class Treatment extends BaseModel {
         return new Select().from(Drug.class).as(drugName)
                 .join(DrugCombination.class, Join.JoinType.LEFT_OUTER).as(drugCombinationName)
                 .on(Drug_Table.id_drug.withTable(drugAlias)
-                        .eq(DrugCombination_Table.id_drug.withTable(drugCombinationAlias)))
-                .where(DrugCombination_Table.id_treatment.withTable(drugCombinationAlias)
+                        .eq(DrugCombination_Table.id_drug_fk.withTable(drugCombinationAlias)))
+                .where(DrugCombination_Table.id_treatment_fk.withTable(drugCombinationAlias)
                         .is(id_treatment)).queryList();
 
     }
@@ -79,25 +79,25 @@ public class Treatment extends BaseModel {
 
     public Organisation getOrganisation() {
         if (organisation == null) {
-            if (id_organisation == null) {
+            if (id_organisation_fk == null) {
                 return null;
             }
             organisation = new Select()
                     .from(Organisation.class)
                     .where(Organisation_Table.id_organisation
-                            .is(id_organisation)).querySingle();
+                            .is(id_organisation_fk)).querySingle();
         }
         return organisation;
     }
 
     public void setOrganisation(Long id_organisation) {
-        this.id_organisation = id_organisation;
+        this.id_organisation_fk = id_organisation;
         organisation = null;
     }
 
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
-        this.id_organisation = (organisation != null) ? organisation.getId_organisation() : null;
+        this.id_organisation_fk = (organisation != null) ? organisation.getId_organisation() : null;
     }
 
     public String getDiagnosis() {
@@ -124,7 +124,7 @@ public class Treatment extends BaseModel {
         Treatment treatment = (Treatment) o;
 
         if (id_treatment != treatment.id_treatment) return false;
-        if (id_organisation != treatment.id_organisation) return false;
+        if (id_organisation_fk != treatment.id_organisation_fk) return false;
         if (diagnosis != null ? !diagnosis.equals(treatment.diagnosis)
                 : treatment.diagnosis != null) {
             return false;
@@ -136,7 +136,7 @@ public class Treatment extends BaseModel {
     @Override
     public int hashCode() {
         int result = (int) (id_treatment ^ (id_treatment >>> 32));
-        result = 31 * result + (int) (id_organisation ^ (id_organisation >>> 32));
+        result = 31 * result + (int) (id_organisation_fk ^ (id_organisation_fk >>> 32));
         result = 31 * result + (diagnosis != null ? diagnosis.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
         return result;
@@ -146,7 +146,7 @@ public class Treatment extends BaseModel {
     public String toString() {
         return "Treatment{" +
                 "id_treatment=" + id_treatment +
-                ", id_organisation=" + id_organisation +
+                ", id_organisation=" + id_organisation_fk +
                 ", diagnosis='" + diagnosis + '\'' +
                 ", message='" + message + '\'' +
                 '}';

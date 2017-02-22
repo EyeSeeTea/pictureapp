@@ -128,7 +128,7 @@ public class TabGroup extends BaseModel {
         return "TabGroup{" +
                 "id_tab_group=" + id_tab_group +
                 ", name='" + name + '\'' +
-                ", id_program=" + id_program +
+                ", id_program_fk=" + id_program +
                 ", uid='" + uid + '\'' +
                 '}';
     }

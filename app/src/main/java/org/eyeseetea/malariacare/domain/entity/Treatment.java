@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
@@ -340,6 +341,17 @@ public class Treatment {
     private String getCqTitleDose(float dose) {
         return getTitleDose(dose,
                 getContext().getResources().getString(R.string.drugs_referral_Cq_review_title));
+    }
+
+    public static Question getTreatmentQuestionForTag(Object tag) {
+        Resources resources = PreferencesState.getInstance().getContext().getResources();
+        if (((Question) tag).isCq()) {
+            return Question.findByUID(resources.getString(R.string.stockCqQuestionUID));
+        } else if (((Question) tag).isPq()) {
+            return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
+        } else {
+            return Question.findByUID(resources.getString(R.string.dynamicTreatmentQuestionUID));
+        }
     }
 
     private String getTitleDose(float dose, String drug) {

@@ -154,9 +154,8 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                     && checkedId == customRadioButton.getId()) {
                 value = (int) dose;
             }
-            if (Treatment.isACTQuestion((Question) this.getTag())
-                    && checkedId == customRadioButton.getId()) {
-                notifyAnswerOptionChange(((Option) customRadioButton.getTag()));
+            if (checkedId == customRadioButton.getId()) {
+                notifyAnswerOptionChange(this.getTag(), ((Option) customRadioButton.getTag()));
             }
         }
 
@@ -164,15 +163,14 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         notifyAnswerChanged(String.valueOf(value));
     }
 
-    protected void notifyAnswerOptionChange(Option option) {
+    protected void notifyAnswerOptionChange(Object tag, Option option) {
         if (mOnAnswerOptionChangedListener != null) {
             View view = new View(context);
-            view.setTag(Treatment.getTreatmentQuestion());
+            view.setTag(Treatment.getTreatmentQuestionForTag(tag));
             mOnAnswerOptionChangedListener.onAnswerChanged(view, option);
         }
     }
 
-    //TODO call
     public void setOnAnswerOptionChangedListener(
             AOptionQuestionView.onAnswerChangedListener onAnswerOptionChangedListener) {
         mOnAnswerOptionChangedListener = onAnswerOptionChangedListener;

@@ -50,7 +50,9 @@ public class Constants {
             IMAGES_6,
             IMAGE_3_NO_DATAELEMENT,
             IMAGE_RADIO_GROUP_NO_DATAELEMENT,
-            IMAGE_RADIO_GROUP);
+            IMAGE_RADIO_GROUP,
+            DYNAMIC_STOCK_IMAGE_RADIO_BUTTON
+    );
 
 
     public static final String DEFAULT_SELECT_OPTION = "";

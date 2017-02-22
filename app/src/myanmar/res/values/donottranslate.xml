@@ -56,4 +56,6 @@
     <string name="option_rdt_mixed" translatable="false">rdt_mixed</string>
     <string name="option_rdt_pf" translatable="false">rdt_pf</string>
     <string name="option_rdt_pv" translatable="false">rdt_pv</string>
+    <string name="stockCqQuestionUID" translatable="false">NoDataElementNoCqSelected</string>
+    <string name="stockPqQuestionUID" translatable="false">NoDataElementNoPqSelected</string>
 </resources>

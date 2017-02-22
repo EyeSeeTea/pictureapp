@@ -87,16 +87,19 @@ public class ReadWriteDB {
         }
         if (question.isTreatmentQuestion() && value != null
                 && !option.getId_option().equals(value.getId_option())) {
-            deleteStockSurveyValues();
+            deleteStockSurveyValues(question);
         }
 
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
-            Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
+            Survey survey =
+                    ((question.isStockQuestion() || question.isPq() || question.isACT())
+                            ? Session.getStockSurvey()
                     : Session.getMalariaSurvey());
             if (value == null) {
                 value = new Value(option, question, survey);
             } else {
-                if (!value.getOption().equals(option) && question.hasChildren()) {
+                if (!value.getOption().equals(option) && question.hasChildren()
+                        && !question.isDynamicTreatmentQuestion()) {
                     survey.removeChildrenValuesFromQuestionRecursively(question, false);
                 }
                 value.setOption(option);
@@ -112,8 +115,9 @@ public class ReadWriteDB {
         Value value = question.getValueBySession();
         Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
                 : Session.getMalariaSurvey());
-        if (question.isTreatmentQuestion() && value != null && !value.getValue().equals(answer)) {
-            deleteStockSurveyValues();
+        if ((question.isTreatmentQuestion() || question.isPq() || question.isACT()) && value != null
+                && !value.getValue().equals(answer)) {
+            deleteStockSurveyValues(question);
         }
         if (question.isStockQuestion() && value != null && answer.equals("-1")) {
             value.delete();
@@ -137,11 +141,13 @@ public class ReadWriteDB {
         }
     }
 
-    public static void deleteStockSurveyValues() {
+    public static void deleteStockSurveyValues(Question question) {
         Survey survey = Session.getStockSurvey();
         List<Value> stockValues = survey.getValues();
         for (Value value : stockValues) {
-            value.delete();
+            if ((question.isACT() && value.getQuestion().isACT())) {
+                value.delete();
+            }
         }
         Survey malariaSurvey = Session.getMalariaSurvey();
         List<Value> malariaValues = malariaSurvey.getValues();

@@ -322,8 +322,8 @@
 <string name="status">状态</string>
 <string name="see_receipt">查看之前入库信息</string>
 <string name="new_receipt">新入库物资登记</string>
-<string name="see_balance">查看之前校正库存登记</string>
-<string name="new_balance">校正实际库存登记</string>
+<string name="see_resets">查看之前校正库存登记</string>
+<string name="new_reset">校正实际库存登记</string>
 <string name="treatment_stock_review_title">Treatment out stock</string>
 <string name="act_out_stock">ACT type needed is out of stock, provide combination and explain</string>
 <string name="out_stock_option">Out of stock</string>
@@ -335,4 +335,5 @@
 <string name="x18">x18</string>
 <string name="x24">x24</string>
 <string name="previous_distributions">Previous Distributions</string>
+<string name="reset_on">Reset on:</string>
 </resources>

@@ -248,7 +248,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
 
             int headerString=R.string.fragment_new_receipt;
             if(type==Constants.SURVEY_BALANCE){
-                headerString=R.string.fragment_new_balance;
+                headerString=R.string.fragment_new_reset;
             }
             DashboardHeaderStrategy.getInstance().init(activity, headerString);
             if (activity instanceof DashboardActivity) {
@@ -267,8 +267,11 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
             historicReceiptBalanceFragment.setArguments(bundle);
             replaceFragment(R.id.dashboard_stock_container, historicReceiptBalanceFragment);
 
-            DashboardHeaderStrategy.getInstance().init(activity,
-                    R.string.fragment_historic_receipt_balance);
+            int headerString=R.string.fragment_historic_receipt_balance;
+            if(type==Constants.SURVEY_BALANCE){
+                headerString=R.string.fragment_historic_reset;
+            }
+            DashboardHeaderStrategy.getInstance().init(activity,headerString);
             if (activity instanceof DashboardActivity) {
                 ((DashboardActivity) activity).initNewReceiptFragment();
             }

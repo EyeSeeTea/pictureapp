@@ -328,8 +328,8 @@
 <string name="status">လက်ရှိအခြေအနေ</string>
 <string name="see_receipt">ယခင်ရရှိမှုများကြည့်ရန်</string>
 <string name="new_receipt">ရရှိစာရင်းအသစ်သွင်းရန်</string>
-<string name="see_balance">ယခင်စာရင်းပြင်ဆင်ထားမှုများ ကြည့်ရန်</string>
-<string name="new_balance">ဆေးဝါးကိရိယာစာရင်း ပြင်ဆင်ရန်</string>
+<string name="see_resets">ယခင်စာရင်းပြင်ဆင်ထားမှုများ ကြည့်ရန်</string>
+<string name="new_reset">ဆေးဝါးကိရိယာစာရင်း ပြင်ဆင်ရန်</string>
 <string name="treatment_stock_review_title">Treatment out stock</string>
 <string name="act_out_stock">ACT type needed is out of stock, provide combination and explain</string>
 <string name="out_stock_option">Out of stock</string>
@@ -341,4 +341,5 @@
 <string name="x18">x18</string>
 <string name="x24">x24</string>
 <string name="previous_distributions">Previous Distributions</string>
+<string name="reset_on">Reset on:</string>
 </resources>

@@ -315,11 +315,7 @@ public class NavigationController {
             while (nextNode != null && (nextNode.getQuestion().getHeader().getTab().equals(
                     actualQuestion.getHeader().getTab())
                     || nextNode.getQuestion().getOutput() == Constants.HIDDEN)) {
-                if (nextNode.getSibling() == null) {
-                    nextNode = null;
-                } else {
-                    nextNode = nextNode.next();
-                }
+                nextNode = (nextNode.getSibling() != null) ? nextNode.next() : null;
             }
         }
 

@@ -13,6 +13,7 @@ import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
 import org.hisp.dhis.client.sdk.core.event.EventFilters;
 import org.hisp.dhis.client.sdk.models.attribute.Attribute;
 import org.hisp.dhis.client.sdk.models.attribute.AttributeValue;
+import org.hisp.dhis.client.sdk.models.category.CategoryOption;
 import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
@@ -23,14 +24,13 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func2;
+import rx.functions.Func3;
 import rx.schedulers.Schedulers;
 
 public class PullDhisSDKDataSource {
 
     public static final String USER_CATEGORY_COMBINATION_CATEGORY_OPTION_ATT_CODE =
             "USER_CC_CO_VOL";
-
 
 
     public void pullMetadata(final IDataSourceCallback<List<OrganisationUnit>> callback) {
@@ -42,11 +42,12 @@ public class PullDhisSDKDataSource {
         } else {
 
             Observable.zip(D2.me().organisationUnits().pull(SyncStrategy.NO_DELETE),
-                    D2.attributes().pull(),
-                    new Func2<List<OrganisationUnit>, List<Attribute>, List<OrganisationUnit>>() {
+                    D2.attributes().pull(), D2.categoryOptions().pull(),
+                    new Func3<List<OrganisationUnit>, List<Attribute>, List<CategoryOption>,
+                            List<OrganisationUnit>>() {
                         @Override
                         public List<OrganisationUnit> call(List<OrganisationUnit> organisationUnits,
-                                List<Attribute> attributes) {
+                                List<Attribute> attributes, List<CategoryOption> categoryOptions) {
                             return organisationUnits;
                         }
                     })
@@ -92,7 +93,7 @@ public class PullDhisSDKDataSource {
 
                     eventFilters.setOrganisationUnitUId(organisationUnit.getUId());
 
-                    if (compositeUserAttributeValue != null){
+                    if (compositeUserAttributeValue != null) {
                         String[] userAttributes = compositeUserAttributeValue.getValue().split(";");
 
                         eventFilters.setCategoryCombinationAttribute(userAttributes[0]);

@@ -123,6 +123,7 @@ public class ProgressActivity extends Activity {
 
     private void launchPull(boolean isDemo) {
         PullFilters pullFilters = new PullFilters();
+        pullFilters.setStartDate(PreferencesState.getInstance().getDateStarDateLimit());
         pullFilters.setDemo(isDemo);
 
         mPullUseCase.execute(pullFilters, new PullUseCase.Callback() {

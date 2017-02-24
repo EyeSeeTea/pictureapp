@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
@@ -66,7 +67,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void addDemoButton() {
         ViewGroup loginViewsContainer = (ViewGroup) loginActivity.findViewById(
-                R.id.layout_login_views);
+                R.id.login_dynamic_views_container);
 
         loginActivity.getLayoutInflater().inflate(R.layout.demo_login_button, loginViewsContainer,
                 true);
@@ -110,6 +111,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         PullUseCase pullUseCase = new PullUseCase(pullController);
 
         PullFilters pullFilters = new PullFilters();
+        pullFilters.setStartDate(PreferencesState.getInstance().getDateStarDateLimit());
         pullFilters.setDemo(true);
 
         pullUseCase.execute(pullFilters, new PullUseCase.Callback() {

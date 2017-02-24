@@ -102,7 +102,7 @@ android {
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
             buildConfigField "boolean", "activeButtonNavigator", "true"
-            buildConfigField "boolean", "loginDataDownloadPeriod", "false"
+            buildConfigField "boolean", "loginDataDownloadPeriod", "true"
             buildConfigField "boolean", "translations", "true"
             buildConfigField "boolean", "developerOptions", "true"
             buildConfigField "boolean", "multiuser", "true"

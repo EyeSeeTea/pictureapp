@@ -13,7 +13,6 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
 import org.hisp.dhis.client.sdk.core.event.EventFilters;
-import org.hisp.dhis.client.sdk.models.attribute.Attribute;
 import org.hisp.dhis.client.sdk.models.category.CategoryOption;
 import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
@@ -25,7 +24,7 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func3;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class PullDhisSDKDataSource {
@@ -41,12 +40,12 @@ public class PullDhisSDKDataSource {
         } else {
 
             Observable.zip(D2.me().organisationUnits().pull(SyncStrategy.NO_DELETE),
-                    D2.attributes().pull(), D2.categoryOptions().pull(),
-                    new Func3<List<OrganisationUnit>, List<Attribute>, List<CategoryOption>,
+                    D2.categoryOptions().pull(),
+                    new Func2<List<OrganisationUnit>, List<CategoryOption>,
                             List<OrganisationUnit>>() {
                         @Override
                         public List<OrganisationUnit> call(List<OrganisationUnit> organisationUnits,
-                                List<Attribute> attributes, List<CategoryOption> categoryOptions) {
+                                List<CategoryOption> categoryOptions) {
                             return organisationUnits;
                         }
                     })

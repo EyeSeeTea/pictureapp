@@ -222,7 +222,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         event.setStatus(EventExtended.STATUS_COMPLETED);
         event.setOrganisationUnitId(getSafeOrgUnitUID(survey));
         event.setProgramId(survey.getProgram().getUid());
-        event.setProgramStageId(survey.getProgram().getUid());
+        event.setProgramStageId(survey.getProgram().getStageUid());
         event = updateEventLocation(survey, event);
         event = updateEventDates(survey, event);
         Log.d(TAG, "Saving event " + event.toString());

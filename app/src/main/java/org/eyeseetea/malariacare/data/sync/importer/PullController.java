@@ -152,6 +152,7 @@ public class PullController implements IPullController {
             convertMetaData(callback);
             convertData(callback);
         } catch (Exception ex) {
+            ex.printStackTrace();
             callback.onError(new PullConversionException());
         }
     }

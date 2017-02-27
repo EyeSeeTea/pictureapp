@@ -61,26 +61,6 @@ public abstract class SdkController {
             ProgramStageSectionFlow.class
     };
 
-    //from pull controller
-    public static void register(Object object) {
-        /*try {
-            //Dhis2Application.bus.register(context);
-        } catch (Exception e) {
-            unregister(context);
-            //Dhis2Application.bus.register(context);
-        }
-        */
-    }
-
-    public static void unregister(Object object) {
-        /*try {
-            //Dhis2Application.bus.unregister(context);
-        } catch (Exception e) {
-        }
-        */
-    }
-
-
     public static void postProgress(String msg) {
         /*
         ProgressActivity.step(msg);

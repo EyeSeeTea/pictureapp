@@ -60,6 +60,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -115,6 +116,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
     @Column
     Integer type;
+
+    @Column
+    String uid_event_fk;
 
     /**
      * List of values for this survey
@@ -293,6 +297,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getEventUid() {
+        return uid_event_fk;
+    }
+
+    public void setEventUid(EventFlow event) {
+        this.uid_event_fk = event.getUId();
+    }
+
+    public void setEventUid(String eventuid) {
+        this.uid_event_fk = eventuid;
     }
 
     /**
@@ -1007,7 +1023,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
             complete();
         } else {
             setStatus(Constants.SURVEY_IN_PROGRESS);
-            setCompletionDate(this.eventDate);
             save();
         }
     }
@@ -1089,32 +1104,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
         }
         return rdtValue;
-    }
-
-    /**
-     * Moves the schedule date for this survey to a new given date due to a given reason (comment)
-     */
-    public void reschedule(Date newScheduledDate, String comment) {
-        //Take currentDate
-        Date currentScheduleDate = this.getScheduledDate();
-
-        //Add a history
-        SurveySchedule previousSchedule = new SurveySchedule(this, currentScheduleDate, comment);
-        previousSchedule.save();
-
-        //Clean inner lazy schedulelist
-        surveySchedules = null;
-
-        //Move scheduledate and save
-        this.scheduledDate = newScheduledDate;
-        this.save();
-    }
-
-    public void prepareSurveyCompletionDate() {
-        if (!isSent()) {
-            setCompletionDate(new Date());
-            save();
-        }
     }
 
     /**
@@ -1219,6 +1208,38 @@ public class Survey extends BaseModel implements VisitableToSDK {
         }
     }
 
+
+    public static List<Survey> getAllQuarantineSurveysByProgramAndOrgUnit(Program program, OrgUnit orgUnit) {
+        return new Select().from(Survey.class)
+                .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
+                .and(Survey_Table.id_program.eq(program.getId_program()))
+                .and(Survey_Table.id_org_unit.eq(orgUnit.getId_org_unit()))
+                .orderBy(OrderBy.fromProperty(Survey_Table.eventDate).descending()).queryList();
+    }
+
+    public static Date getMinQuarantineCompletionDateByProgramAndOrgUnit(Program program,
+            OrgUnit orgUnit) {
+        Survey survey = new Select()
+                .from(Survey.class)
+                .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
+                .and(Survey_Table.id_program.eq(program.getId_program()))
+                .and(Survey_Table.id_org_unit.eq(orgUnit.getId_org_unit()))
+                .orderBy(OrderBy.fromProperty(Survey_Table.completionDate).ascending())
+                .querySingle();
+        return survey.getCompletionDate();
+    }
+
+    public static Date getMaxQuarantineEventDateByProgramAndOrgUnit(Program program,
+            OrgUnit orgUnit) {
+        Survey survey = new Select()
+                .from(Survey.class)
+                .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
+                .and(Survey_Table.id_program.eq(program.getId_program()))
+                .and(Survey_Table.id_org_unit.eq(orgUnit.getId_org_unit()))
+                .orderBy(OrderBy.fromProperty(Survey_Table.eventDate).descending())
+                .querySingle();
+        return survey.getEventDate();
+    }
     /**
      * This method get the return the highest number of total pages in the survey question values.
      */
@@ -1332,6 +1353,4 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 ", type=" + type +
                 '}';
     }
-
-
 }

@@ -2,30 +2,35 @@ package org.eyeseetea.malariacare.network;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.remote.SdkController;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.strategies.SurveyCheckerStrategy;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
+import org.hisp.dhis.client.sdk.models.event.Event;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class SurveyChecker {
 
     private static final String DHIS_CHECK_EVENT_API =
-            "/api/events.json??program=%s&orgUnit=%s&startDate=%s&endDate=%s&skipPaging=true"
-                    + "&fields=event,orgUnit,dueDate,program,href,status,eventDate,orgUnitName,"
-                    + "created,completedDate,lastUpdated,completedBy,dataValues";
+            "/api/events.json?program=%s&orgUnit=%s&startDate=%s&endDate=%s&skipPaging=true"
+                    + "&fields=event,orgUnit,program,dataValues";
     private static String TAG = ".CheckSurveys";
 
     /**
@@ -78,7 +83,7 @@ public class SurveyChecker {
             JsonNode jsonNode = mapper.convertValue(mapper.readTree(events.toString()),
                     JsonNode.class);
 
-            return SdkController.getEventsFromEventsWrapper(jsonNode);
+            return getEvents(jsonNode);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -92,19 +97,29 @@ public class SurveyChecker {
      * set as completed and it will be resend.
      */
     public static void checkAllQuarantineSurveys() {
-        List<Survey> quarantineSurveys = Survey.getAllQuarantineSurveys();
-        Date minDate = Survey.getMinQuarantineEventDate();
-        Date maxDate = Survey.getMaxQuarantineEventDate();
-        String program = quarantineSurveys.get(0).getProgram().getUid();
-        String orgUnit = OrgUnit.findUIDByName(PreferencesState.getInstance().getOrgUnit());
-        List<EventExtended> events = getEvents(program, orgUnit, minDate, maxDate);
-        if (events != null) {
-            for (Survey survey : quarantineSurveys) {
-                updateQuarantineSurveysStatus(events, survey);
+        List<Program> programs = Program.getAllPrograms();
+        for (Program program : programs) {
+            for (OrgUnit orgUnit : program.getOrgUnits()) {
+                List<Survey> quarantineSurveys = Survey.getAllQuarantineSurveysByProgramAndOrgUnit(
+                        program, orgUnit);
+                if (quarantineSurveys.size() == 0) {
+                    continue;
+                }
+                Date minDate = Survey.getMinQuarantineCompletionDateByProgramAndOrgUnit(program,
+                        orgUnit);
+                Date maxDate = Survey.getMaxQuarantineEventDateByProgramAndOrgUnit(program,
+                        orgUnit);
+                List<EventExtended> events = getEvents(program.getUid(), orgUnit.getUid(), minDate,
+                        maxDate);
+                if (events != null && events.size() > 0) {
+                    for (Survey survey : quarantineSurveys) {
+                        updateQuarantineSurveysStatus(events, survey);
+                    }
+                }
+
             }
         }
     }
-
     /**
      * Given a list of events, check for the presence of that survey among the events, and update
      * consequently their status. If the survey exist (checked by completion date) then it's
@@ -116,20 +131,35 @@ public class SurveyChecker {
         surveyCheckerStrategy.updateQuarantineSurveysStatus(events, survey);
     }
 
-    /**
-     * Given an event, check through all its DVs if the survey completion date is present in the
-     * event in the form of the control DE "Time Capture" whose UID is hardcoded
-     */
-    private static boolean surveyDateExistsInEventTimeCaptureControlDE(Survey survey, EventExtended event) {
-        for (DataValueExtended dataValue : event.getDataValues()) {
-            if (dataValue.getDataElement().equals(PushClient.DATETIME_CAPTURE_UID)
-                    && dataValue.getValue().equals(EventExtended.format(survey.getCompletionDate(),
-                    EventExtended.COMPLETION_DATE_FORMAT))) {
-                Log.d(TAG, "Found survey" + survey.getId_survey() + "date "
-                        + survey.getCompletionDate() + "dateevent" + dataValue.getValue());
-                return true;
+    public static List<EventExtended> getEvents(JsonNode jsonNode) {
+        TypeReference<List<Event>> typeRef =
+                new TypeReference<List<Event>>() {
+                };
+        List<Event> events;
+        try {
+            if (jsonNode.has("events")) {
+                ObjectMapper objectMapper = new ObjectMapper().registerModule(new JodaModule());
+                events = objectMapper.
+                        readValue(jsonNode.get("events").traverse(), typeRef);
+            } else {
+                events = new ArrayList<>();
             }
+        } catch (IOException e) {
+            events = new ArrayList<>();
+            e.printStackTrace();
         }
-        return false;
+        List<EventExtended> eventExtendedList = new ArrayList<>();
+        for (Event event : events) {
+            EventFlow eventFlow = EventFlow.MAPPER.mapToDatabaseEntity(event);
+            EventExtended eventExtended = new EventExtended(eventFlow);
+            if (event.getDataValues() != null && event.getDataValues().size() > 0) {
+                List<TrackedEntityDataValueFlow> trackedEntityDataValueFlows =
+                        TrackedEntityDataValueFlow.MAPPER.mapToDatabaseEntities(
+                                event.getDataValues());
+                eventExtended.setDataValuesInMemory(trackedEntityDataValueFlows);
+            }
+            eventExtendedList.add(eventExtended);
+        }
+        return eventExtendedList;
     }
 }

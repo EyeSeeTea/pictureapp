@@ -133,6 +133,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         //Set fks
         survey.setOrgUnit(orgUnit);
         survey.setProgram(program);
+        survey.setEventUid(sdkEventExtended.getUid());
         surveys.add(survey);
 
         //Annotate object in map

@@ -25,12 +25,6 @@ public class SurveyCheckerStrategy extends ASurveyCheckerStrategy {
         if (isSent) {
             Log.d(TAG, "Set quarantine survey as sent" + survey.getId_survey());
             survey.setStatus(Constants.SURVEY_SENT);
-            Survey stockSurvey = Survey.getStockSurveyWithCreationDate(survey.getCreationDate());
-            if (stockSurvey != null) {
-                stockSurvey.setStatus(SURVEY_SENT);
-                stockSurvey.save();
-            }
-
         } else {
             //When the completion date for a survey is not present in the server, this survey is
             // not in the server.
@@ -50,7 +44,7 @@ public class SurveyCheckerStrategy extends ASurveyCheckerStrategy {
         for (DataValueExtended dataValue : event.getDataValues()) {
             if (dataValue.getDataElement().equals(PushClient.DATETIME_CAPTURE_UID)
                     && dataValue.getValue().equals(EventExtended.format(survey.getCompletionDate(),
-                    EventExtended.COMPLETION_DATE_FORMAT))) {
+                    EventExtended.DHIS2_GMT_DATE_FORMAT))) {
                 Log.d(TAG, "Found survey" + survey.getId_survey() + "date "
                         + survey.getCompletionDate() + "dateevent" + dataValue.getValue());
                 return true;

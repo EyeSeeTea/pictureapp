@@ -278,32 +278,52 @@ public class ServerAPIController {
      * Checks if data can be pushed into the server
      */
     public static boolean isReadyForPush(String url, String orgUnitCodeOrName) {
+        if (checkIfNetworkIsAvailable(url, orgUnitCodeOrName)) return false;
+
+        if (checkIfIsValidProgram(url, orgUnitCodeOrName)) return false;
+
+        if (checkifOrgUnitExists(url, orgUnitCodeOrName)) return false;
+
+        if (checkIfOrgUnitIsOpen(url, orgUnitCodeOrName)) return false;
+
+        return true;
+    }
+
+    public static boolean checkIfNetworkIsAvailable(String url, String orgUnitCodeOrName) {
         if (!isNetworkAvailable()) {
             Log.w(TAG, String.format("isReadyForPush(%s,%s) -> Network not available", url,
                     orgUnitCodeOrName));
-            return false;
+            return true;
         }
+        return false;
+    }
 
+    public static boolean checkIfIsValidProgram(String url, String orgUnitCodeOrName) {
         if (!isValidProgram(url)) {
             Log.w(TAG, String.format("isReadyForPush(%s,%s) -> Program not found in server", url,
                     orgUnitCodeOrName));
-            return false;
+            return true;
         }
+        return false;
+    }
 
+    public static boolean checkifOrgUnitExists(String url, String orgUnitCodeOrName) {
         if (orgUnitCodeOrName == null || orgUnitCodeOrName.equals("") || !isValidOrgUnit(url,
                 orgUnitCodeOrName)) {
             Log.w(TAG, String.format("isReadyForPush(%s,%s) -> OrgUnit not found in server", url,
                     orgUnitCodeOrName));
-            return false;
+            return true;
         }
+        return false;
+    }
 
+    public static boolean checkIfOrgUnitIsOpen(String url, String orgUnitCodeOrName) {
         if (!isOrgUnitOpen(url, orgUnitCodeOrName)) {
             Log.w(TAG, String.format("isOrgUnitOpen(%s,%s) -> OrgUnit closed, push is not enabled",
                     url, orgUnitCodeOrName));
-            return false;
+            return true;
         }
-
-        return true;
+        return false;
     }
 
     /**

@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Survey;
@@ -34,6 +36,8 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
                 org.eyeseetea.malariacare.data
                 .database.model.Survey.findById(idSurvey);
         Survey survey = new Survey(idSurvey);
+        surveyDB.setProgram(Program.getFirstProgram());
+        surveyDB.setOrgUnit(OrgUnit.getAllOrgUnit().get(0));
         survey.setSurveyAnsweredRatio(surveyDB.reloadSurveyAnsweredRatio());
         surveyDB.updateSurveyStatus();
         survey.setStatus(surveyDB.getStatus());

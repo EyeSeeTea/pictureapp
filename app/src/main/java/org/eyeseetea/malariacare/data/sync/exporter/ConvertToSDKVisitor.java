@@ -27,7 +27,6 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
@@ -216,10 +215,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         EventExtended event = new EventExtended();
 
         //Fixme harcoded programStage and AttributeCategoryOption
-        survey.setProgram(Program.getProgram("FsRWMqGdXgS"));
-        survey.setOrgUnit(OrgUnit.findByUID("rV8AX9l6RUs"));
         event.getEvent().setAttributeCategoryOptions("nTrd5CQKjxd");
-        event.setProgramStageId("OAd2CaZjjDy");
+
         event.setProgramId(survey.getProgram().getUid());
         event.setOrganisationUnitId(survey.getOrgUnit().getUid());
         event.setStatus(EventExtended.STATUS_COMPLETED);

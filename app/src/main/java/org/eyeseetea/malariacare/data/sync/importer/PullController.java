@@ -62,7 +62,7 @@ public class PullController implements IPullController {
 
             populateMetadataFromCsvs(pullFilters.isDemo());
 
-            if (pullFilters.isDemo()) {
+            if (pullFilters.isDemo() || !pullFilters.downloadData()) {
                 callback.onComplete();
             } else {
 

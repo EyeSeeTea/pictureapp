@@ -331,7 +331,7 @@ public class PreferencesState {
                 instance.getContext().getString(R.string.developer_option), false);
     }
 
-    public Date getDateStarDateLimit() {
+    public Date getDateStarDateLimitFilter() {
         String dateLimit = getDataLimitedByDate();
         if (dateLimit.isEmpty()) {
             return null;
@@ -345,5 +345,13 @@ public class PreferencesState {
             calendar.add(Calendar.MONTH, -6);
         }
         return calendar.getTime();
+    }
+
+    public boolean downloadDataFilter() {
+        String downloadData = getDataLimitedByDate();
+        if (downloadData.equals(getContext().getString(R.string.no_data))) {
+            return false;
+        }
+        return true;
     }
 }

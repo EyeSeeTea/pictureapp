@@ -348,7 +348,7 @@
 <string name="see_balance">See Balance</string>
 <string name="new_balance">New Balance</string>
 <string name="treatment_stock_review_title">Treatment out stock</string>
-<string name="act_out_stock">ACT type needed is out of stock, provide combination and explain</string>
+<string name="act_out_stock">Provide another ACT combination and explain to the patient.</string>
 <string name="out_stock_option">Out of stock</string>
 
 <string name="date">Date:</string>

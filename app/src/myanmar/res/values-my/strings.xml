@@ -331,7 +331,7 @@
 <string name="see_balance">ယခင်စာရင်းပြင်ဆင်ထားမှုများ ကြည့်ရန်</string>
 <string name="new_balance">ဆေးဝါးကိရိယာစာရင်း ပြင်ဆင်ရန်</string>
 <string name="treatment_stock_review_title">Treatment out stock</string>
-<string name="act_out_stock">ACT type needed is out of stock, provide combination and explain</string>
+<string name="act_out_stock">အခြားအေစီတီဆေးကဒ်ပေး၍ လူနာအားရှင်းပြပါ။</string>
 <string name="out_stock_option">Out of stock</string>
 <string name="date">Date:</string>
 <string name="date_format_forward_slash">yyyy/mm/dd</string>

@@ -325,7 +325,7 @@
 <string name="see_balance">查看之前校正库存登记</string>
 <string name="new_balance">校正实际库存登记</string>
 <string name="treatment_stock_review_title">Treatment out stock</string>
-<string name="act_out_stock">ACT type needed is out of stock, provide combination and explain</string>
+<string name="act_out_stock">所需的ACT剂型已无库存，请使用其他剂型，并解释用量</string>
 <string name="out_stock_option">Out of stock</string>
 <string name="date">Date:</string>
 <string name="date_format_forward_slash">yyyy/mm/dd</string>

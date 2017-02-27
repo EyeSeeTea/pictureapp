@@ -3,19 +3,12 @@ package org.eyeseetea.malariacare.domain.usecase;
 
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
-import android.util.Log;
-
-import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
-
 import org.eyeseetea.malariacare.data.database.model.Survey;
 
 import java.util.List;
 
 public class MockedPushSurveysUseCase {
     public void execute(Callback callback) {
-        try {
-
-
         List<Survey> surveys = Survey.getAllMalariaSurveysToBeSent();
 
         //Check surveys not in progress
@@ -27,9 +20,6 @@ public class MockedPushSurveysUseCase {
                 stockSurvey.setStatus(SURVEY_SENT);
                 stockSurvey.save();
             }
-        }
-        }catch (InvalidDBConfiguration invalidDBConfiguration){
-            Log.e("PUTO DBFLOW",invalidDBConfiguration.getMessage());
         }
         callback.onPushFinished();
     }

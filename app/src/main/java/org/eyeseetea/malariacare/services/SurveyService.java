@@ -25,7 +25,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
-import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
 
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -146,9 +145,6 @@ public class SurveyService extends IntentService {
 
     private void reloadDashboard() {
         Log.i(TAG, "reloadDashboard");
-        try {
-
-
         List<Survey> surveys = Survey.getAllSurveys();
 
         List<Survey> unsentSurveys = new ArrayList<Survey>();
@@ -178,9 +174,6 @@ public class SurveyService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(
                 new Intent(ALL_UNSENT_SURVEYS_ACTION));
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ALL_SENT_SURVEYS_ACTION));
-        } catch (InvalidDBConfiguration invalidDBConfiguration) {
-            Log.e("PUTO DBFLOW", invalidDBConfiguration.getMessage());
-        }
     }
 
     /**

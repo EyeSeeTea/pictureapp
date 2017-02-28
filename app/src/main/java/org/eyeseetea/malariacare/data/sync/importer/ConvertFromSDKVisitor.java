@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.data.sync.importer;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
@@ -33,6 +34,7 @@ import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.UserAccountExtended;
+import org.eyeseetea.malariacare.data.sync.importer.strategies.ConvertFromSDKVisitorStrategy;
 import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -44,18 +46,24 @@ import java.util.Map;
 public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     private final static String TAG = ".ConvertFromSDKVisitor";
+    private Context mContext;
 
     Map<String, Object> appMapObjects;
     List<Survey> surveys;
     List<Value> values;
     List<OrgUnit> orgUnits;
 
+    private ConvertFromSDKVisitorStrategy mConvertFromSDKVisitorStrategy;
 
-    public ConvertFromSDKVisitor() {
+
+    public ConvertFromSDKVisitor(Context context) {
+        mContext = context;
         appMapObjects = new HashMap();
         surveys = new ArrayList<>();
         values = new ArrayList<>();
         orgUnits = new ArrayList<>();
+
+        mConvertFromSDKVisitorStrategy = new ConvertFromSDKVisitorStrategy(context);
     }
 
     public Map<String, Object> getAppMapObjects() {
@@ -123,22 +131,29 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         Program program = Program.getProgram(sdkEventExtended.getProgramUId());
 
         Survey survey = new Survey();
+
         //Any survey that comes from the pull has been sent
         survey.setStatus(Constants.SURVEY_SENT);
+
         //Set dates
         survey.setCreationDate(sdkEventExtended.getCreationDate());
         survey.setCompletionDate(sdkEventExtended.getEventDate());
         survey.setEventDate(sdkEventExtended.getEventDate());
         survey.setScheduledDate(sdkEventExtended.getScheduledDate());
+
         //Set fks
         survey.setOrgUnit(orgUnit);
         survey.setProgram(program);
         survey.setEventUid(sdkEventExtended.getUid());
+
+        mConvertFromSDKVisitorStrategy.visit(sdkEventExtended, survey);
+
         surveys.add(survey);
 
         //Annotate object in map
         appMapObjects.put(sdkEventExtended.getUid(), survey);
     }
+
 
     @Override
     public void visit(DataValueExtended sdkDataValueExtended) {

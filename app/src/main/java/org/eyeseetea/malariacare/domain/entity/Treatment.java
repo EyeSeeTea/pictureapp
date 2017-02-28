@@ -362,9 +362,13 @@ public class Treatment {
         Question treatmentQuestion = Question.findByUID(
                 getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID));
         Survey malariaSurvey = Session.getMalariaSurvey();
-        //TODO save  value
-//        new Value(Utils.getInternationalizedString(treatment.getDiagnosis()),treatmentQuestion,
-// malariaSurvey).save();
+        List<Value> values = malariaSurvey.getValues();
+        for (Value value : values) {
+            if (value.getQuestion().equals(treatmentQuestion)) {
+                value.setValue(String.valueOf(treatment.getDiagnosis()));
+                break;
+            }
+        }
     }
 
     private String getTitleDose(float dose, String drug) {

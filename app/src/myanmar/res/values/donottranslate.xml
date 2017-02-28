@@ -24,8 +24,8 @@
         <item>@string/Pq</item>
     </string-array>
 
-    <string name="malariaProgramUID" translatable="false">RjBwXyc5I66</string>
-    <string name="stockProgramUID" translatable="false">GnAx3VLVfUi</string>
+    <string name="malariaProgramUID" translatable="false">FsRWMqGdXgS</string>
+    <string name="stockProgramUID" translatable="false">B8KA2uJOVD9</string>
     <string name="ageQuestionUID" translatable="false">bGH0k4Ubsxx</string>
     <string name="sexPregnantQuestionUID" translatable="false">NoDataElementSexPregnancy</string>
     <string name="severeSymtomsQuestionUID" translatable="false">paYP43NHaNV</string>

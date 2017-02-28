@@ -33,7 +33,7 @@ public class SurveyChecker {
 
     private static final String DHIS_CHECK_EVENT_API =
             "/api/events.json?program=%s&orgUnit=%s&startDate=%s&endDate=%s&attributeCos=%s"
-                    + "&attributeCc=$s&skipPaging=true"
+                    + "&attributeCc=%s&skipPaging=true"
                     + "&fields=event,orgUnit,program,dataValues";
     private static String TAG = ".CheckSurveys";
 

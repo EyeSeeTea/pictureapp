@@ -73,7 +73,7 @@ public class PushDhisSDKDataSource {
                             Log.d(TAG,
                                     "Push of events finish. Number of events: "
                                             + mapEventsImportSummary.size());
-                            //callback.onSuccess(mapEventsImportSummary);
+                            callback.onSuccess(mapEventsImportSummary);
                         }
                         //TODO: from data source should comverto always from SDK object to domain
                         // object
@@ -81,7 +81,6 @@ public class PushDhisSDKDataSource {
                         //create a object similar to Map<String,ImportSummary> in domain and
                         // convert before
                         // to invoke callback.onSuccess
-                        callback.onError(new Exception());//// FIXME: 28/02/2017 remove
                     }
                 }, new Action1<Throwable>() {
                     @Override

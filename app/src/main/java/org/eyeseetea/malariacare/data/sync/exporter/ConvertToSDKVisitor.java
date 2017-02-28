@@ -32,6 +32,7 @@ import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.network.PushClient;
@@ -58,6 +59,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
     private final static String TAG = ".ConvertToSDKVisitor";
 
+    private String mCategoryOptionUID;
     /**
      * Context required to recover magic UID for mainScore dataElements
      */
@@ -216,9 +218,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     private EventExtended buildEvent(Survey survey) throws Exception {
         EventExtended event = new EventExtended();
 
-        //Fixme harcoded programStage and AttributeCategoryOption
-        event.getEvent().setAttributeCategoryOptions("nTrd5CQKjxd");
-
+        event.getEvent().setAttributeCategoryOptions(getCategoryOptionUIDByCurrentUser());
         event.setProgramId(survey.getProgram().getUid());
         event.setOrganisationUnitId(survey.getOrgUnit().getUid());
         event.setStatus(EventExtended.STATUS_COMPLETED);
@@ -230,6 +230,14 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         Log.d(TAG, "Saving event " + event.toString());
         event.save();
         return event;
+    }
+
+    private String getCategoryOptionUIDByCurrentUser() {
+        if (mCategoryOptionUID == null) {
+            mCategoryOptionUID = SdkQueries.getCategoryOptionUIDByCurrentUser();
+        }
+
+        return mCategoryOptionUID;
     }
 
     private String getSafeOrgUnitUID(Survey survey) {
@@ -253,7 +261,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         //Creation date is null because it is used by sdk to POST|PUT we always POST a new survey
         event.setLastUpdated(new DateTime(survey.getCompletionDate().getTime()));
         event.setEventDate(new DateTime(survey.getCompletionDate().getTime()));
-        if(survey.getScheduledDate()!=null) {
+        if (survey.getScheduledDate() != null) {
             event.setDueDate(new DateTime(survey.getScheduledDate().getTime()));
         }
         return event;

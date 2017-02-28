@@ -1,10 +1,7 @@
 package org.eyeseetea.malariacare.data.remote.strategies;
 
-import org.hisp.dhis.client.sdk.android.api.D2;
+import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.hisp.dhis.client.sdk.core.event.EventFilters;
-import org.hisp.dhis.client.sdk.models.category.CategoryOption;
-
-import java.util.List;
 
 public class PullDhisSDKDataSourceStrategy implements IPullDhisSDKDataSourceStrategy {
     String mCategoryOptionUID = null;
@@ -21,18 +18,7 @@ public class PullDhisSDKDataSourceStrategy implements IPullDhisSDKDataSourceStra
 
     private String getCategoryOptionUIDByCurrentUser() {
         if (mCategoryOptionUID == null) {
-            String userName =
-                    D2.me().userCredentials().toBlocking().single().getUsername().toLowerCase();
-            List<CategoryOption> categoryOptions =
-                    D2.categoryOptions().list().toBlocking().single();
-
-            for (CategoryOption categoryOption : categoryOptions) {
-                if (categoryOption.getCode() != null
-                        && categoryOption.getCode().toLowerCase().equals(
-                        userName)) {
-                    mCategoryOptionUID = categoryOption.getUId();
-                }
-            }
+            mCategoryOptionUID = SdkQueries.getCategoryOptionUIDByCurrentUser();
         }
 
         return mCategoryOptionUID;

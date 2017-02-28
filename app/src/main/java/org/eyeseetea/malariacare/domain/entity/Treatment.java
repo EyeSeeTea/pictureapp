@@ -18,6 +18,7 @@ import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -41,20 +42,24 @@ public class Treatment {
 
     public static Question getTreatmentQuestion() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.dynamicTreatmentQuestionUID));
+        return Question.findByUID(context.getString(R.string.dynamicTreatmentHideQuestionUID));
     }
 
     public static Question getDynamicStockQuestion() {
         Context context = PreferencesState.getInstance().getContext();
         return Question.findByUID(context.getString(R.string.dynamicStockQuestionUID));
     }
-    public boolean hasTreatment() {
-        mTreatment = getTreatmentFromSurvey();
-        if (mTreatment != null) {
-            mQuestions = getQuestionsForTreatment(mTreatment);
+
+    public static Question getTreatmentQuestionForTag(Object tag) {
+        Resources resources = PreferencesState.getInstance().getContext().getResources();
+        if (((Question) tag).isPq()) {
+            return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
+        } else {
+            return Question.findByUID(
+                    resources.getString(R.string.dynamicTreatmentHideQuestionUID));
         }
-        return mTreatment != null;
     }
+
 
     public List<Question> getQuestions() {
         return mQuestions;
@@ -140,6 +145,15 @@ public class Treatment {
             Log.d(TAG, "treatment: " + treatment.toString());
         }
         return treatment;
+    }
+
+    public boolean hasTreatment() {
+        mTreatment = getTreatmentFromSurvey();
+        if (mTreatment != null) {
+            mQuestions = getQuestionsForTreatment(mTreatment);
+            saveTreatmentInTreatmentQuestion(mTreatment);
+        }
+        return mTreatment != null;
     }
 
     private List<Question> getQuestionsForTreatment(
@@ -343,15 +357,14 @@ public class Treatment {
                 getContext().getResources().getString(R.string.drugs_referral_Cq_review_title));
     }
 
-    public static Question getTreatmentQuestionForTag(Object tag) {
-        Resources resources = PreferencesState.getInstance().getContext().getResources();
-        if (((Question) tag).isCq()) {
-            return Question.findByUID(resources.getString(R.string.stockCqQuestionUID));
-        } else if (((Question) tag).isPq()) {
-            return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
-        } else {
-            return Question.findByUID(resources.getString(R.string.dynamicTreatmentQuestionUID));
-        }
+    private void saveTreatmentInTreatmentQuestion(
+            org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
+        Question treatmentQuestion = Question.findByUID(
+                getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID));
+        Survey malariaSurvey = Session.getMalariaSurvey();
+        //TODO save  value
+//        new Value(Utils.getInternationalizedString(treatment.getDiagnosis()),treatmentQuestion,
+// malariaSurvey).save();
     }
 
     private String getTitleDose(float dose, String drug) {

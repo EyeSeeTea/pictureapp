@@ -26,7 +26,6 @@ import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.domain.exception.NullImportSummary;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.StateFlow;
@@ -67,14 +66,12 @@ public class PushDhisSDKDataSource {
                 .subscribe(new Action1<Map<String, ImportSummary>>() {
                     @Override
                     public void call(Map<String, ImportSummary> mapEventsImportSummary) {
-                        if (mapEventsImportSummary == null) {
-                            callback.onError(new NullImportSummary());
-                        } else {
+                        if (mapEventsImportSummary != null) {
                             Log.d(TAG,
                                     "Push of events finish. Number of events: "
                                             + mapEventsImportSummary.size());
-                            callback.onSuccess(mapEventsImportSummary);
                         }
+                        callback.onSuccess(mapEventsImportSummary);
                         //TODO: from data source should comverto always from SDK object to domain
                         // object
                         // this class should not return sdk objects directly

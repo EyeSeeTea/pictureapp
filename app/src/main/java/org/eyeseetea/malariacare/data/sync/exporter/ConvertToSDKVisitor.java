@@ -303,6 +303,13 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         Log.d(TAG, String.format("ImportSummary %d surveys savedSurveyStatus", surveys.size()));
         for (int i = 0; i < surveys.size(); i++) {
             Survey iSurvey = surveys.get(i);
+            iSurvey.setStatus(Constants.SURVEY_QUARANTINE);
+            Log.d(TAG, "saveSurveyStatus: Starting saving survey Set Survey status as QUARANTINE"
+                    + iSurvey.getId_survey() + " eventuid: " + iSurvey.getEventUid());
+            iSurvey.save();
+            if(importSummaryMap==null) {
+                continue;
+            }
             EventExtended iEvent = new EventExtended(events.get(iSurvey.getId_survey()));
             ImportSummary importSummary = importSummaryMap.get(iEvent.getEvent().getUId());
             FailedItemFlow failedItem = EventExtended.hasConflict(iEvent.getLocalId());
@@ -310,10 +317,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             // network failures).
             //This survey will be checked again in the future push to prevent the duplicates
             // in the server.
-            iSurvey.setStatus(Constants.SURVEY_QUARANTINE);
-            Log.d(TAG, "saveSurveyStatus: Starting saving survey Set Survey status as QUARANTINE"
-                    + iSurvey.getId_survey() + " eventuid: " + iSurvey.getEventUid());
-            iSurvey.save();
             //If the importSummary has a failedItem the survey was saved in the server but
             // never resend, the survey is saved as survey in conflict.
             if (failedItem != null) {

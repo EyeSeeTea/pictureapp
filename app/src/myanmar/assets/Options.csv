@@ -40,9 +40,6 @@
 40;'follow_up_occupation_option_village';'Village';0;27;40
 41;'dynamic_treatment_yes';'Yes';0;28;13
 42;'dynamic_treatment_no';'No';0;28;14
-43;'no_pq_cq_out_stock';'Out stock pq ';0;29;41
-44;'no_pq_adverse_reaction';'Adverse reaction  pq';0;29;42
-45;'no_pq_cq_other';'Other pq cq';0;29;43
-43;'no_pq_cq_out_stock';'Out stock  cq';0;30;41
-44;'no_cq_adverse_reaction';'Adverse reaction cq';0;30;42
-45;'no_pq_cq_other';'Other cq';0;30;43
+43;'no_pq_cq_out_stock';'OUT_OF_STOCK';0;29;41
+44;'no_pq_adverse_reaction';'ADVERSE_REACTIONS';0;29;42
+45;'no_pq_cq_other';'OTHER';0;29;43

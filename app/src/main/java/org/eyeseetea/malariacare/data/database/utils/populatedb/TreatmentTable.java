@@ -134,7 +134,7 @@ public class TreatmentTable {
     private void splitTreatmentTableToCsvs() throws IOException {
         CSVReader reader = new CSVReader(
                 new InputStreamReader(mContext.openFileInput(PopulateDB.TREATMENT_TABLE_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                PopulateDB.SEPARATOR);
 
         initCSVQuestionOptionsIds();
 
@@ -388,7 +388,7 @@ public class TreatmentTable {
             throws IOException {
         String[] drugCombination = {getNextIdToInsert(drugCombinations), getCsvId(uid, 2,
                 PopulateDB.DRUGS_CSV),
-                getLastIdInserted(treatments), dose.replace(",", ".")};
+                getLastIdInserted(treatments), dose};
         mFileCsvs.insertCsvLine(PopulateDB.DRUG_COMBINATIONS_CSV, drugCombination);
         drugCombinations.add(drugCombination);
     }

@@ -113,7 +113,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             //Turn question values into dataValues
             Log.d(TAG, "Creating datavalues from questions...");
             for (Value value : survey.getValues()) {
-                buildAndSaveDataValue(value.getQuestion().getUid(), value.getValue(), event);
+                if (value.getQuestion().hasDataElement()) {
+                    buildAndSaveDataValue(value.getQuestion().getUid(), value.getValue(), event);
+                }
             }
 
             Log.d(TAG, "Saving control dataelements");

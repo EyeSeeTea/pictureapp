@@ -54,6 +54,14 @@ public class Constants {
             DYNAMIC_STOCK_IMAGE_RADIO_BUTTON
     );
 
+    public static final List<Integer> QUESTION_TYPES_NO_DATA_ELEMENT = Arrays.asList(
+            DROPDOWN_OU_LIST,
+            IMAGE_RADIO_GROUP_NO_DATAELEMENT,
+            REMINDER,
+            QUESTION_LABEL,
+            DYNAMIC_STOCK_IMAGE_RADIO_BUTTON
+    );
+
 
     public static final String DEFAULT_SELECT_OPTION = "";
 

@@ -1537,6 +1537,10 @@ public class Question extends BaseModel {
         return false;
     }
 
+    public boolean hasDataElement() {
+        return !Constants.QUESTION_TYPES_NO_DATA_ELEMENT.contains(output);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

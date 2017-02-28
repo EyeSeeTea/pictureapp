@@ -26,6 +26,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
@@ -111,6 +112,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             event = buildEvent(survey);
 
             survey.setEventUid(event.getUid());
+            survey.setEventDate(new Date());//use the eventDate in quarentine queries
             survey.save();
             //Turn question values into dataValues
             Log.d(TAG, "Creating datavalues from questions...");
@@ -176,19 +178,19 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     private void buildControlDataElements(Survey survey, EventExtended event) {
         //save phonemetadata
         PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
-        buildAndSaveDataValue(PushClient.PHONEMETADA_UID, phoneMetaData.getPhone_metaData(), event);
+        buildAndSaveDataValue((PreferencesState.getInstance().getContext().getString(R.string.control_data_element_phone_metadata)), phoneMetaData.getPhone_metaData(), event);
 
         //save Time capture
-        if (PushClient.DATETIME_CAPTURE_UID != null && !PushClient.DATETIME_CAPTURE_UID.equals(
+        if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture).equals(
                 "")) {
-            buildAndSaveDataValue(PushClient.DATETIME_CAPTURE_UID,
+            buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture),
                     EventExtended.format(survey.getCompletionDate(),
                             EventExtended.DHIS2_GMT_DATE_FORMAT), event);
         }
 
         //save Time Sent
-        if (PushClient.DATETIME_SENT_UID != null && !PushClient.DATETIME_SENT_UID.equals("")) {
-            buildAndSaveDataValue(PushClient.DATETIME_SENT_UID,
+        if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent).equals("")) {
+            buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent),
                     EventExtended.format(new Date(), EventExtended.DHIS2_GMT_DATE_FORMAT), event);
         }
     }
@@ -331,6 +333,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 Log.d(TAG, "saveSurveyStatus: importSummary null " + iSurvey.getId_survey());
                 //Saved as quarantine
                 continue;
+            } else  {
+                Log.d(TAG, "saveSurveyStatus: " + importSummary.toString());
             }
 
             //No errors -> Save and next
@@ -339,11 +343,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                         + iSurvey.getId_survey());
                 saveSurveyFromImportSummary(iSurvey);
                 continue;
-            }
-
-            //Errors
-            if (importSummary != null) {
-                Log.d(TAG, "saveSurveyStatus: " + importSummary.toString());
             }
 
             //Generated event must be remove too

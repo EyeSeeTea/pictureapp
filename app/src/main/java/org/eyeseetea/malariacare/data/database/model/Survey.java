@@ -21,6 +21,8 @@ package org.eyeseetea.malariacare.data.database.model;
 
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.orgUnitAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.orgUnitName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.programAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.programName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionAlias;
@@ -247,12 +249,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.id_user = (user != null) ? user.getId_user() : null;
     }
 
-    @Deprecated
     public Date getCreationDate() {
         return creationDate;
     }
 
-    @Deprecated
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
@@ -265,12 +265,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.completionDate = completionDate;
     }
 
-    @Deprecated
     public Date getEventDate() {
         return eventDate;
     }
 
-    @Deprecated
     public void setEventDate(Date eventDate) {
         this.eventDate = eventDate;
     }
@@ -336,6 +334,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                         .isNot(Constants.SURVEY_SENT))
                 .and(Survey_Table.status.withTable(surveyAlias)
                         .isNot(Constants.SURVEY_CONFLICT))
+                .and(Survey_Table.status.withTable(surveyAlias)
+                        .isNot(Constants.SURVEY_QUARANTINE))
                 .and(Program_Table.uid.withTable(programAlias)
                         .isNot(context.getString(R.string.stockProgramUID)))
                 .orderBy(OrderBy.fromProperty(Survey_Table.eventDate.withTable(surveyAlias)))
@@ -356,6 +356,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
                 .where(Survey_Table.status.withTable(surveyAlias)
                         .is(Constants.SURVEY_SENT))
+                .or(Survey_Table.status.withTable(surveyAlias)
+                    .is(Constants.SURVEY_QUARANTINE))//Quarantine surveys should be shown in sentfragment at the momment
                 .and(Program_Table.uid.withTable(programAlias)
                         .isNot(context.getString(R.string.stockProgramUID)))
                 .orderBy(Survey_Table.eventDate, false).queryList();
@@ -761,7 +763,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
      * @return true|false
      */
     public boolean isInProgress() {
-        return !isSent() && !isCompleted() && !isHide();
+        return this.status == Constants.SURVEY_IN_PROGRESS;
     }
 
     public boolean isStockSurvey() {
@@ -1208,6 +1210,15 @@ public class Survey extends BaseModel implements VisitableToSDK {
         }
     }
 
+
+    public static List<OrgUnit> getQuarantineOrgUnits(long programUid) {
+        return new Select().from(OrgUnit.class) .as(orgUnitName)
+        .join(Survey.class, Join.JoinType.LEFT_OUTER).as(surveyName)
+                .on(Survey_Table.id_org_unit.withTable(surveyAlias)
+                        .eq(OrgUnit_Table.id_org_unit.withTable(orgUnitAlias)))
+            .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
+                .and(Survey_Table.id_program.eq(programUid)).queryList();
+    }
 
     public static List<Survey> getAllQuarantineSurveysByProgramAndOrgUnit(Program program, OrgUnit orgUnit) {
         return new Select().from(Survey.class)

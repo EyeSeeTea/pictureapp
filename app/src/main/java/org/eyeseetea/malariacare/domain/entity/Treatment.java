@@ -346,7 +346,7 @@ public class Treatment {
     public static Question getTreatmentQuestionForTag(Object tag) {
         Resources resources = PreferencesState.getInstance().getContext().getResources();
         if (((Question) tag).isCq()) {
-            return Question.findByUID(resources.getString(R.string.stockCqQuestionUID));
+            return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
         } else if (((Question) tag).isPq()) {
             return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
         } else {

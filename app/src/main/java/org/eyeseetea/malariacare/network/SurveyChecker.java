@@ -8,11 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.squareup.okhttp.Response;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
+import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.strategies.SurveyCheckerStrategy;
@@ -28,8 +29,11 @@ import java.util.List;
 
 public class SurveyChecker {
 
+    private static String mCategoryOptionUID;
+
     private static final String DHIS_CHECK_EVENT_API =
-            "/api/events.json?program=%s&orgUnit=%s&startDate=%s&endDate=%s&skipPaging=true"
+            "/api/events.json?program=%s&orgUnit=%s&startDate=%s&endDate=%s&attributeCos=%s"
+                    + "&attributeCc=$s&skipPaging=true"
                     + "&fields=event,orgUnit,program,dataValues";
     private static String TAG = ".CheckSurveys";
 
@@ -47,6 +51,8 @@ public class SurveyChecker {
                         checkAllQuarantineSurveys();
                         PushService.reloadDashboard();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 } finally {
                     Log.d(TAG, "Quarantine thread finished");
                 }
@@ -69,7 +75,9 @@ public class SurveyChecker {
                     new Date(maxDate.getTime() + (8 * 24 * 60 * 60 * 1000)),
                     EventExtended.AMERICAN_DATE_FORMAT);
             String url = String.format(DHIS_URL + DHIS_CHECK_EVENT_API, program, orgUnit, startDate,
-                    endDate);
+                    endDate, getCategoryOptionUIDByCurrentUser(),
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.category_combination));
             Log.d(TAG, url);
             url = ServerAPIController.encodeBlanks(url);
 
@@ -99,7 +107,7 @@ public class SurveyChecker {
     public static void checkAllQuarantineSurveys() {
         List<Program> programs = Program.getAllPrograms();
         for (Program program : programs) {
-            for (OrgUnit orgUnit : program.getOrgUnits()) {
+            for (OrgUnit orgUnit : Survey.getQuarantineOrgUnits(program.getId_program())) {
                 List<Survey> quarantineSurveys = Survey.getAllQuarantineSurveysByProgramAndOrgUnit(
                         program, orgUnit);
                 if (quarantineSurveys.size() == 0) {
@@ -120,6 +128,7 @@ public class SurveyChecker {
             }
         }
     }
+
     /**
      * Given a list of events, check for the presence of that survey among the events, and update
      * consequently their status. If the survey exist (checked by completion date) then it's
@@ -162,4 +171,13 @@ public class SurveyChecker {
         }
         return eventExtendedList;
     }
+
+    private static String getCategoryOptionUIDByCurrentUser() {
+        if (mCategoryOptionUID == null) {
+            mCategoryOptionUID = SdkQueries.getCategoryOptionUIDByCurrentUser();
+        }
+
+        return mCategoryOptionUID;
+    }
+
 }

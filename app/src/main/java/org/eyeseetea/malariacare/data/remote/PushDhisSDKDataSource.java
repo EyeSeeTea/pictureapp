@@ -26,6 +26,7 @@ import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.domain.exception.NullImportSummary;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.StateFlow;
@@ -53,7 +54,7 @@ public class PushDhisSDKDataSource {
 
         final Set<String> eventUids = getEventUidToBePushed();
 
-        if(eventUids.isEmpty() || eventUids.size()==0){
+        if (eventUids.isEmpty() || eventUids.size() == 0) {
             callback.onError(new Exception("Empty events"));
             return;
         }
@@ -66,17 +67,21 @@ public class PushDhisSDKDataSource {
                 .subscribe(new Action1<Map<String, ImportSummary>>() {
                     @Override
                     public void call(Map<String, ImportSummary> mapEventsImportSummary) {
-                        Log.d(TAG,
-                                "Push of events finish. Number of events: "
-                                        + mapEventsImportSummary.size());
-
+                        if (mapEventsImportSummary == null) {
+                            callback.onError(new NullImportSummary());
+                        } else {
+                            Log.d(TAG,
+                                    "Push of events finish. Number of events: "
+                                            + mapEventsImportSummary.size());
+                            //callback.onSuccess(mapEventsImportSummary);
+                        }
                         //TODO: from data source should comverto always from SDK object to domain
                         // object
                         // this class should not return sdk objects directly
                         //create a object similar to Map<String,ImportSummary> in domain and
                         // convert before
                         // to invoke callback.onSuccess
-                        callback.onSuccess(mapEventsImportSummary);
+                        callback.onError(new Exception());//// FIXME: 28/02/2017 remove
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -99,16 +104,18 @@ public class PushDhisSDKDataSource {
             sendingEventUids.add(survey.getEventUid());
         }
         List<EventFlow> eventsFlows = SdkQueries.getEvents();
-        Log.d(TAG, "Size of events " + eventsFlows.size() + "size of surveys" + sendingEventUids.size());
-        if(sendingEventUids.size()!=eventsFlows.size())
+        Log.d(TAG, "Size of events " + eventsFlows.size() + "size of surveys"
+                + sendingEventUids.size());
+        if (sendingEventUids.size() != eventsFlows.size()) {
             Log.d(TAG, "Error in size of events");
-        for(EventFlow eventFlow:eventsFlows){
-            if(eventFlow.getEventDate() !=null && sendingEventUids.contains(eventFlow.getUId())){
+        }
+        for (EventFlow eventFlow : eventsFlows) {
+            if (eventFlow.getEventDate() != null && sendingEventUids.contains(eventFlow.getUId())) {
                 eventUids.add(eventFlow.getUId());
-            }
-            else {
+            } else {
                 Log.d(TAG,
-                        "Error pushing events. The event uid: " + eventFlow.getUId() + "haven't eventDate or is not listed to send");
+                        "Error pushing events. The event uid: " + eventFlow.getUId()
+                                + "haven't eventDate or is not listed to send");
             }
         }
         Log.d(TAG, "Size of valid events " + eventsFlows.size());

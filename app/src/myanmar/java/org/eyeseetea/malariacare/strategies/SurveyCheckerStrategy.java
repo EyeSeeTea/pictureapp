@@ -4,6 +4,8 @@ import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
 import android.util.Log;
 
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -42,7 +44,8 @@ public class SurveyCheckerStrategy extends ASurveyCheckerStrategy {
      */
     private static boolean surveyDateExistsInEventTimeCaptureControlDE(Survey survey, EventExtended event) {
         for (DataValueExtended dataValue : event.getDataValues()) {
-            if (dataValue.getDataElement().equals(PushClient.DATETIME_CAPTURE_UID)
+            if (dataValue.getDataElement().equals(
+                    PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture))
                     && dataValue.getValue().equals(EventExtended.format(survey.getCompletionDate(),
                     EventExtended.DHIS2_GMT_DATE_FORMAT))) {
                 Log.d(TAG, "Found survey" + survey.getId_survey() + "date "

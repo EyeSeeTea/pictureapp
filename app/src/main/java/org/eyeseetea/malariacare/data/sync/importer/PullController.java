@@ -52,7 +52,7 @@ public class PullController implements IPullController {
 
         mPullRemoteDataSource = new PullDhisSDKDataSource();
         mConverter = new ConvertFromSDKVisitor(context);
-        mDataConverter = new DataConverter();
+        mDataConverter = new DataConverter(context);
     }
 
     @Override

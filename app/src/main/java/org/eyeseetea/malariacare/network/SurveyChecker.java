@@ -14,9 +14,10 @@ import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
+import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.services.PushService;
-import org.eyeseetea.malariacare.strategies.SurveyCheckerStrategy;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
 import org.hisp.dhis.client.sdk.models.event.Event;
@@ -129,17 +130,6 @@ public class SurveyChecker {
         }
     }
 
-    /**
-     * Given a list of events, check for the presence of that survey among the events, and update
-     * consequently their status. If the survey exist (checked by completion date) then it's
-     * considered as sent, otherwise it will be considered as just completed and awaiting to be
-     * sent
-     */
-    private static void updateQuarantineSurveysStatus(List<EventExtended> events, Survey survey) {
-        SurveyCheckerStrategy surveyCheckerStrategy = new SurveyCheckerStrategy();
-        surveyCheckerStrategy.updateQuarantineSurveysStatus(events, survey);
-    }
-
     public static List<EventExtended> getEvents(JsonNode jsonNode) {
         TypeReference<List<Event>> typeRef =
                 new TypeReference<List<Event>>() {
@@ -180,4 +170,46 @@ public class SurveyChecker {
         return mCategoryOptionUID;
     }
 
+    public static void updateQuarantineSurveysStatus(List<EventExtended> events, Survey survey) {
+        boolean isSent = false;
+        for (EventExtended event : events) {
+            isSent = surveyDateExistsInEventTimeCaptureControlDE(survey, event);
+            if (isSent) {
+                break;
+            }
+        }
+        if (isSent) {
+            Log.d(TAG, "Set quarantine survey as sent" + survey.getId_survey());
+            survey.setStatus(Constants.SURVEY_SENT);
+        } else {
+            //When the completion date for a survey is not present in the server, this survey is
+            // not in the server.
+            //This survey is set as "completed" and will be send in the future.
+            Log.d(TAG, "Set quarantine survey as completed" + survey.getId_survey());
+            survey.setStatus(Constants.SURVEY_COMPLETED);
+        }
+        survey.save();
+    }
+
+
+    /**
+     * Given an event, check through all its DVs if the survey completion date is present in the
+     * event in the form of the control DE "Time Capture" whose UID is hardcoded
+     */
+    private static boolean surveyDateExistsInEventTimeCaptureControlDE(Survey survey,
+            EventExtended event) {
+        for (DataValueExtended dataValue : DataValueExtended.getExtendedList(
+                event.getDataValuesInMemory())) {
+            if (dataValue.getDataElement().equals(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.control_data_element_datetime_capture))
+                    && dataValue.getValue().equals(EventExtended.format(survey.getCompletionDate(),
+                    EventExtended.DHIS2_GMT_DATE_FORMAT))) {
+                Log.d(TAG, "Found survey" + survey.getId_survey() + "date "
+                        + survey.getCompletionDate() + "dateevent" + dataValue.getValue());
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -6,7 +6,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.sync.exporter.PushController;
 import org.eyeseetea.malariacare.domain.usecase.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.domain.usecase.PushUseCase;
-import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
+import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy {
@@ -42,6 +42,8 @@ public class PushServiceStrategy extends APushServiceStrategy {
     private void executePush() {
         PushController pushController = new PushController(mPushService);
         PushUseCase pushUseCase = new PushUseCase(pushController);
+
+        SurveyChecker.launchQuarantineChecker();
 
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override

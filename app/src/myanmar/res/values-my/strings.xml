@@ -348,4 +348,7 @@
     <string name="no_pq_cq_other">"Other reasons"</string>
     <string name="treatment_no_cq_title">"The reason you are not giving Cloroquine is"</string>
     <string name="treatment_no_pq_title">"The reason you are not giving Primaquine is"</string>
+
+    <string name="error_conflict_message">The event with UID: %1$s. was uploaded with conflict in the data element UID: %2$s with the message: %3$s. Please contact the administrator.</string>
+    <string name="error_conflict_title">Error</string>
 </resources>

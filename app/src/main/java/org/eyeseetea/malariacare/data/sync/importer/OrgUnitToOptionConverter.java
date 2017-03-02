@@ -22,7 +22,6 @@ public class OrgUnitToOptionConverter {
 
     public static void addOUOptionToQuestions(List<Question> questions, OrgUnit orgUnit) {
         for (Question question : questions) {
-
             if (!existsOrgUnitAsOptionInQuestion(orgUnit, question)) {
                 Option option = new Option();
                 option.setAnswer(question.getAnswer());

@@ -348,7 +348,7 @@
 <string name="see_balance">See Balance</string>
 <string name="new_balance">New Balance</string>
 <string name="treatment_stock_review_title">Treatment out stock</string>
-<string name="act_out_stock">ACT type needed is out of stock, provide combination and explain</string>
+<string name="act_out_stock">Provide another ACT combination and explain to the patient.</string>
 <string name="out_stock_option">Out of stock</string>
 
 <string name="date">Date:</string>
@@ -361,11 +361,12 @@
 <string name="previous_distributions">Previous Distributions</string>
 <string name="drugs_dose_of_drug_review_title">%1$.0f of %2$s</string>
 
-    <string name="submit">submit</string>
-    <string name="no_pq_cq_out_stock">"Out of stock"</string>
-    <string name="no_pq_adverse_reaction">"History of adverse reaction to Primaquine"</string>
-    <string name="no_cq_adverse_reaction">"History of adverse reaction to Cloroquine"</string>
-    <string name="no_pq_cq_other">"Other reasons"</string>
-    <string name="treatment_no_cq_title">"The reason you are not giving Cloroquine is"</string>
-    <string name="treatment_no_pq_title">"The reason you are not giving Primaquine is"</string>
+<string name="submit">submit</string>
+<string name="error_no_stock_survey">This survey hasn\'t the stock survey associated</string>
+<string name="no_pq_cq_out_stock">"Out of stock"</string>
+<string name="no_pq_adverse_reaction">"History of adverse reaction to Primaquine"</string>
+<string name="no_cq_adverse_reaction">"History of adverse reaction to Cloroquine"</string>
+<string name="no_pq_cq_other">"Other reasons"</string>
+<string name="treatment_no_cq_title">"The reason you are not giving Cloroquine is"</string>
+<string name="treatment_no_pq_title">"The reason you are not giving Primaquine is"</string>
 </resources>

@@ -82,8 +82,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void sendSurvey() {
         Session.getMalariaSurvey().updateSurveyStatus();
-        Session.getStockSurvey().complete();
+        Survey stockSurvey = Session.getStockSurvey();
+        if (stockSurvey != null) {
+            Session.getStockSurvey().complete();
         new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
+        }
     }
 
     @Override
@@ -95,27 +98,25 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public boolean beforeExit(boolean isBackPressed) {
         Survey malariaSurvey = Session.getMalariaSurvey();
-        boolean isMalariaBackPressed = beforeExitSurvey(isBackPressed, malariaSurvey);
         Survey stockSurvey = Session.getStockSurvey();
-        boolean isStockBackPressed = beforeExitSurvey(isBackPressed, stockSurvey);
-        if (!isMalariaBackPressed || !isStockBackPressed) {
-            return false;
-        }
-        return isBackPressed;
-    }
-
-    private boolean beforeExitSurvey(boolean isBackPressed, Survey survey) {
-        if (survey != null) {
-            boolean isInProgress = survey.isInProgress();
-            survey.getValuesFromDB();
+        if (malariaSurvey != null) {
+            boolean isMalariaInProgress = malariaSurvey.isInProgress();
+            boolean isStockSurveyInProgress = false;
+            if (stockSurvey != null) {
+                isStockSurveyInProgress = stockSurvey.isInProgress();
+                stockSurvey.getValuesFromDB();
+            }
+            malariaSurvey.getValuesFromDB();
             //Exit + InProgress -> delete
-            if (isBackPressed && isInProgress) {
-                if (survey.isStockSurvey()) {
-                    Session.setStockSurvey(null);
-                } else {
+            if (isBackPressed && (isMalariaInProgress || isStockSurveyInProgress)) {
+                if (isMalariaInProgress) {
                     Session.setMalariaSurvey(null);
+                    malariaSurvey.delete();
                 }
-                survey.delete();
+                if (isStockSurveyInProgress) {
+                    Session.setStockSurvey(null);
+                    stockSurvey.delete();
+                }
                 isBackPressed = false;
             }
         }

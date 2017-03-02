@@ -52,21 +52,21 @@ public class Value extends BaseModel {
     String value;
 
     @Column
-    Long id_question;
+    Long id_question_fk;
     /**
      * Reference to the question for this value (loaded lazily)
      */
     Question question;
 
     @Column
-    Long id_survey;
+    Long id_survey_fk;
     /**
      * Reference to the survey of this value (loaded lazily)
      */
     Survey survey;
 
     @Column
-    Long id_option;
+    Long id_option_fk;
     /**
      * Reference to the option of this value (loaded lazily)
      */
@@ -95,7 +95,7 @@ public class Value extends BaseModel {
         }
         return (int) SQLite.selectCountOf()
                 .from(Value.class)
-                .where(Value_Table.id_survey.eq(survey.getId_survey())).count();
+                .where(Value_Table.id_survey_fk.eq(survey.getId_survey())).count();
     }
 
     /**
@@ -108,9 +108,9 @@ public class Value extends BaseModel {
 
         return new Select().from(Value.class).as(valueName)
                 .join(Question.class, Join.JoinType.LEFT_OUTER).as(questionName)
-                .on(Value_Table.id_question.withTable(valueAlias)
+                .on(Value_Table.id_question_fk.withTable(valueAlias)
                         .eq(Question_Table.id_question.withTable(questionAlias)))
-                .where(Value_Table.id_survey.withTable(valueAlias)
+                .where(Value_Table.id_survey_fk.withTable(valueAlias)
                         .eq(survey.getId_survey()))
                 .orderBy(OrderBy.fromProperty(Question_Table.order_pos).ascending()).queryList();
     }
@@ -124,37 +124,37 @@ public class Value extends BaseModel {
     }
 
     public Long getId_option() {
-        return this.id_option;
+        return this.id_option_fk;
     }
 
     public Option getOption() {
         if (option == null) {
-            if (id_option == null) return null;
+            if (id_option_fk == null) return null;
             option = new Select()
                     .from(Option.class)
                     .where(Option_Table.id_option
-                            .is(id_option)).querySingle();
+                            .is(id_option_fk)).querySingle();
         }
         return option;
     }
 
     public void setOption(Option option) {
         this.option = option;
-        this.id_option = (option != null) ? option.getId_option() : null;
+        this.id_option_fk = (option != null) ? option.getId_option() : null;
     }
 
     public void setOption(Long id_option) {
-        this.id_option = id_option;
+        this.id_option_fk = id_option;
         this.option = null;
     }
 
     public Question getQuestion() {
         if (question == null) {
-            if (id_question == null) return null;
+            if (id_question_fk == null) return null;
             question = new Select()
                     .from(Question.class)
                     .where(Question_Table.id_question
-                            .is(id_question)).querySingle();
+                            .is(id_question_fk)).querySingle();
         }
 
         return question;
@@ -162,11 +162,11 @@ public class Value extends BaseModel {
 
     public void setQuestion(Question question) {
         this.question = question;
-        this.id_question = (question != null) ? question.getId_question() : null;
+        this.id_question_fk = (question != null) ? question.getId_question() : null;
     }
 
     public void setQuestion(Long id_question) {
-        this.id_question = id_question;
+        this.id_question_fk = id_question;
         this.question = null;
     }
 
@@ -180,22 +180,22 @@ public class Value extends BaseModel {
 
     public Survey getSurvey() {
         if (survey == null) {
-            if (id_survey == null) return null;
+            if (id_survey_fk == null) return null;
             survey = new Select()
                     .from(Survey.class)
                     .where(Survey_Table.id_survey
-                            .is(id_survey)).querySingle();
+                            .is(id_survey_fk)).querySingle();
         }
         return survey;
     }
 
     public void setSurvey(Survey survey) {
         this.survey = survey;
-        this.id_survey = (survey != null) ? survey.getId_survey() : null;
+        this.id_survey_fk = (survey != null) ? survey.getId_survey() : null;
     }
 
     public void setSurvey(Long id_survey) {
-        this.id_survey = id_survey;
+        this.id_survey_fk = id_survey;
         this.survey = null;
     }
 
@@ -270,7 +270,7 @@ public class Value extends BaseModel {
         }
 
         //Check if both matches
-        return idQuestion == this.id_question && idOption == this.id_option;
+        return idQuestion == this.id_question_fk && idOption == this.id_option_fk;
     }
 
     /**
@@ -284,7 +284,7 @@ public class Value extends BaseModel {
         }
 
         //Check if both matches
-        return idQuestion == this.id_question;
+        return idQuestion == this.id_question_fk;
     }
 
     public static void saveAll(List<Value> values, final IDataSourceCallback<Void> callback) {
@@ -325,15 +325,15 @@ public class Value extends BaseModel {
 
         if (id_value != value1.id_value) return false;
         if (value != null ? !value.equals(value1.value) : value1.value != null) return false;
-        if (id_question != null ? !id_question.equals(value1.id_question)
-                : value1.id_question != null) {
+        if (id_question_fk != null ? !id_question_fk.equals(value1.id_question_fk)
+                : value1.id_question_fk != null) {
             return false;
         }
-        if (id_survey != null ? !id_survey.equals(value1.id_survey) : value1.id_survey != null) {
+        if (id_survey_fk != null ? !id_survey_fk.equals(value1.id_survey_fk) : value1.id_survey_fk != null) {
             return false;
         }
-        return !(id_option != null ? !id_option.equals(value1.id_option)
-                : value1.id_option != null);
+        return !(id_option_fk != null ? !id_option_fk.equals(value1.id_option_fk)
+                : value1.id_option_fk != null);
 
     }
 
@@ -341,9 +341,9 @@ public class Value extends BaseModel {
     public int hashCode() {
         int result = (int) (id_value ^ (id_value >>> 32));
         result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (id_question != null ? id_question.hashCode() : 0);
-        result = 31 * result + (id_survey != null ? id_survey.hashCode() : 0);
-        result = 31 * result + (id_option != null ? id_option.hashCode() : 0);
+        result = 31 * result + (id_question_fk != null ? id_question_fk.hashCode() : 0);
+        result = 31 * result + (id_survey_fk != null ? id_survey_fk.hashCode() : 0);
+        result = 31 * result + (id_option_fk != null ? id_option_fk.hashCode() : 0);
         return result;
     }
 
@@ -352,9 +352,9 @@ public class Value extends BaseModel {
         return "Value{" +
                 "id_value=" + id_value +
                 ", value='" + value + '\'' +
-                ", id_question=" + id_question +
-                ", id_survey=" + id_survey +
-                ", id_option=" + id_option +
+                ", id_question_fk=" + id_question_fk +
+                ", id_survey_fk=" + id_survey_fk +
+                ", id_option_fk=" + id_option_fk +
                 '}';
     }
 

@@ -55,9 +55,7 @@ public class SurveyQuestionValue {
 
     public String getValueQuestion(int question) {
         for (Value value : mSurvey.getValues()) {
-            if(value.getQuestion()==null) {
-                continue;
-            }
+            if (value.getQuestion() == null) return "0";
             switch (question) {
                 case RDT:
                     if (value.getQuestion().isStockRDT()) {

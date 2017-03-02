@@ -18,6 +18,8 @@ import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
+import org.eyeseetea.malariacare.data.database.model.StringKey;
+import org.eyeseetea.malariacare.data.database.model.Translation;
 
 import java.util.HashMap;
 
@@ -175,6 +177,7 @@ public class PopulateRow {
         }
         drugCombination.setDrug(drugsFK.get(Long.parseLong(line[1])));
         drugCombination.setTreatment(treatmentFK.get(Long.parseLong(line[2])));
+        drugCombination.setDose(Float.parseFloat(line[3]));
         return drugCombination;
     }
 
@@ -182,15 +185,17 @@ public class PopulateRow {
      * Method to populate each row of Treatment.csv, execute after populateOrganisations.
      *
      * @param line The row of the csv to populate.
+     * @param stringKeyList
      */
     static Treatment populateTreatments(String[] line, HashMap<Long, Organisation> organisationFK,
-            @Nullable Treatment treatment) {
+            HashMap<Long, StringKey> stringKeyList, @Nullable Treatment treatment) {
         if (treatment == null) {
             treatment = new Treatment();
         }
         treatment.setOrganisation(organisationFK.get(Long.parseLong(line[1])));
-        treatment.setDiagnosis(line[2]);
-        treatment.setMessage(line[3]);
+        treatment.setDiagnosis(stringKeyList.get(Long.valueOf(line[2])).getId_string_key());
+        treatment.setMessage(stringKeyList.get(Long.valueOf(line[3])).getId_string_key());
+        treatment.setType(Integer.parseInt(line[4]));
         return treatment;
     }
 
@@ -218,8 +223,7 @@ public class PopulateRow {
             drug = new Drug();
         }
         drug.setName(line[1]);
-        drug.setDose(Integer.parseInt(line[2]));
-        drug.setQuestion_code(line[3]);
+        drug.setQuestion_code(line[2]);
         return drug;
     }
 
@@ -237,5 +241,25 @@ public class PopulateRow {
                     optionAttributeFK.get(Long.valueOf(line[5])));
         }
         return option;
+    }
+
+    static StringKey populateStringKey(String[] line, @Nullable StringKey stringKey) {
+        if (stringKey == null) {
+            stringKey = new StringKey();
+        }
+        stringKey.setKey(line[1]);
+        return stringKey;
+    }
+
+    public static Translation populateTranslation(String[] line,
+            HashMap<Long, StringKey> stringKeyFK,
+            Translation translation) {
+        if (translation == null) {
+            translation = new Translation();
+        }
+        translation.setId_string_key(stringKeyFK.get(Long.valueOf(line[1])).getId_string_key());
+        translation.setTranslation(line[2]);
+        translation.setLanguage(line[3]);
+        return translation;
     }
 }

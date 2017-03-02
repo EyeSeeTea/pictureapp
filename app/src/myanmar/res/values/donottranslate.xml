@@ -62,4 +62,6 @@
     <string name="control_data_element_datetime_capture" translatable="false">wSRDoeLTAyv</string>
     <string name="control_data_element_datetime_sent" translatable="false">sKPamHqCASp</string>
     <string name="category_combination" translatable="false">GwFkNOXaQcq</string>
+    <string name="category_option_group_set_uid" translatable="false">yVH67wmhryq</string>
+
 </resources>

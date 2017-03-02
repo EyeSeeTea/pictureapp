@@ -137,7 +137,7 @@ public class TreatmentTable {
     private void splitTreatmentTableToCsvs() throws IOException {
         CSVReader reader = new CSVReader(
                 new InputStreamReader(mContext.openFileInput(PopulateDB.TREATMENT_TABLE_CSV)),
-                PopulateDB.SEPARATOR);
+                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
 
         initCSVQuestionOptionsIds();
 
@@ -160,7 +160,7 @@ public class TreatmentTable {
             addTreatment(line, treatmentLines, treatmentMatchLines, messageLines, diagnosisLines);
             addDrugCombinations(line, drugsCombinationLines, treatmentLines);
 
-            if (line[5].equals(MAIN_YES)) {
+            if (line[5].equals("Y")) {
                 addMatch(matchLines, treatmentQuestionRelationId);
                 addTreatmentMatch(treatmentMatchLines, matchLines, treatmentLines);
                 addQuestionOptionAge(line, questionThresholdLines, matchLines);
@@ -381,7 +381,7 @@ public class TreatmentTable {
             String translation, String language)
             throws IOException {
         String[] translationLine = {getNextIdToInsert(translationLines),
-                idStringKey, translation, language};
+                idStringKey, "'" + translation + "'", "'" + language + "'"};
         mFileCsvs.insertCsvLine(PopulateDB.TRANSLATION_CSV, translationLine);
         translationLines.add(translationLine);
     }

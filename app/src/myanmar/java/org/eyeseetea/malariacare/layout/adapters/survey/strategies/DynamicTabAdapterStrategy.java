@@ -23,7 +23,7 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
 
     @Override
     public void initSurveys(boolean readOnly) {
-        if (readOnly && Session.getStockSurvey() == null) {
+        if (readOnly) {
             Survey malaryaSurvey = Session.getMalariaSurvey();
             Session.setStockSurvey(
                     Survey.getStockSurveyWithCreationDate(malaryaSurvey.getCreationDate()));

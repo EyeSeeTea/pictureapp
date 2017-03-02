@@ -13,6 +13,7 @@ import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.DataConverterStrategy;
+import org.eyeseetea.malariacare.data.sync.importer.strategies.IDataConverterStrategy;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.exception.QuestionNotFoundException;
@@ -21,7 +22,9 @@ import java.util.List;
 
 public class DataConverter {
 
-    public static void convert(IPullController.Callback callback, ConvertFromSDKVisitor converter) {
+    IDataConverterStrategy dataConverterStrategy = new DataConverterStrategy();
+
+    public void convert(IPullController.Callback callback, ConvertFromSDKVisitor converter) {
         String orgUnitName = PreferencesState.getInstance().getOrgUnit();
 
         List<OrgUnit> orgUnits = converter.getOrgUnits();
@@ -59,7 +62,7 @@ public class DataConverter {
                     }
 
                     try {
-                        DataConverterStrategy.convert(converter, event);
+                        dataConverterStrategy.convert(converter, event);
                     } catch (QuestionNotFoundException e) {
                         callback.onError(e);
                     }

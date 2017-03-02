@@ -28,7 +28,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
     }
 
     @Override
-    public boolean hasComplementarySurveyNeeded(Survey malariaSurvey) {
+    public boolean hasAllComplementarySurveys(Survey malariaSurvey) {
         Survey stockSurvey = Survey.getStockSurveyWithCreationDate(malariaSurvey.getCreationDate());
         if (stockSurvey != null) {
             Session.setStockSurvey(stockSurvey);
@@ -36,7 +36,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         } else {
             Toast.makeText(mContext,
                     PreferencesState.getInstance().getContext().getString(
-                            R.string.error_survey_not_has_stock_survye_asociated),
+                            R.string.error_no_stock_survey),
                     Toast.LENGTH_SHORT).show();
             return false;
         }

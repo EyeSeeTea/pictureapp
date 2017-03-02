@@ -360,6 +360,6 @@
 <string name="x24">x24</string>
 <string name="previous_distributions">Previous Distributions</string>
 
-    <string name="submit">submit</string>
-    <string name="error_survey_not_has_stock_survye_asociated">This survey hasn\'t the stock survey associated</string>
+<string name="submit">submit</string>
+<string name="error_no_stock_survey">This survey hasn\'t the stock survey associated</string>
 </resources>

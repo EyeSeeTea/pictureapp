@@ -188,7 +188,7 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
         //Put selected survey in session
         Survey malariaSurvey = surveys.get(position - fixedPosition);
         Session.setMalariaSurvey(malariaSurvey);
-        if (mDashboardAdapterStrategy.hasComplementarySurveyNeeded(malariaSurvey)) {
+        if (mDashboardAdapterStrategy.hasAllComplementarySurveys(malariaSurvey)) {
             // Go to SurveyActivity
             DashboardActivity.dashboardActivity.openSentSurvey();
         }

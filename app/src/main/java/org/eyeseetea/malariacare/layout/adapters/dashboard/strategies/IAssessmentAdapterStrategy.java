@@ -6,6 +6,6 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 
 public interface IAssessmentAdapterStrategy {
     void renderSurveySummary(View rowView, Survey survey);
-    boolean hasComplementarySurveyNeeded(Survey malariaSurvey);
+    boolean hasAllComplementarySurveys(Survey malariaSurvey);
 
 }

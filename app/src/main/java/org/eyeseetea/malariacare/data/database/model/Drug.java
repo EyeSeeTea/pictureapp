@@ -1,12 +1,16 @@
 package org.eyeseetea.malariacare.data.database.model;
 
+import android.content.Context;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.util.List;
 
@@ -18,17 +22,14 @@ public class Drug extends BaseModel {
     @Column
     String name;
     @Column
-    int dose;
-    @Column
     String question_code;
 
     public Drug() {
     }
 
-    public Drug(long id_drug, String name, int dose, String question_code) {
+    public Drug(long id_drug, String name, String question_code) {
         this.id_drug = id_drug;
         this.name = name;
-        this.dose = dose;
         this.question_code = question_code;
     }
 
@@ -59,14 +60,6 @@ public class Drug extends BaseModel {
         this.name = name;
     }
 
-    public int getDose() {
-        return dose;
-    }
-
-    public void setDose(int dose) {
-        this.dose = dose;
-    }
-
     public String getQuestion_code() {
         return question_code;
     }
@@ -74,6 +67,35 @@ public class Drug extends BaseModel {
     public void setQuestion_code(String question_code) {
         this.question_code = question_code;
     }
+
+    private Context getContext() {
+        return PreferencesState.getInstance().getContext();
+    }
+
+    public boolean isACT24() {
+        return question_code.equals(getContext().getResources().getString(R.string.act24QuestionUID));
+    }
+
+    public boolean isACT18() {
+        return question_code.equals(getContext().getResources().getString(R.string.act18QuestionUID));
+    }
+
+    public boolean isACT12() {
+        return question_code.equals(getContext().getResources().getString(R.string.act12QuestionUID));
+    }
+
+    public boolean isACT6() {
+        return question_code.equals(getContext().getResources().getString(R.string.act6QuestionUID));
+    }
+
+    public boolean isPq() {
+        return question_code.equals(getContext().getResources().getString(R.string.pqQuestionUID));
+    }
+
+    public boolean isCq() {
+        return question_code.equals(getContext().getResources().getString(R.string.cqQuestionUID));
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -83,7 +105,6 @@ public class Drug extends BaseModel {
         Drug drug = (Drug) o;
 
         if (id_drug != drug.id_drug) return false;
-        if (dose != drug.dose) return false;
         if (name != null ? !name.equals(drug.name) : drug.name != null) return false;
         return question_code != null ? question_code.equals(drug.question_code)
                 : drug.question_code == null;
@@ -94,7 +115,6 @@ public class Drug extends BaseModel {
     public int hashCode() {
         int result = (int) (id_drug ^ (id_drug >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + dose;
         result = 31 * result + (question_code != null ? question_code.hashCode() : 0);
         return result;
     }
@@ -104,10 +124,7 @@ public class Drug extends BaseModel {
         return "Drug{" +
                 "id_drug=" + id_drug +
                 ", name='" + name + '\'' +
-                ", dose=" + dose +
                 ", question_code='" + question_code + '\'' +
                 '}';
     }
-
-
 }

@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.data.sync.importer;
 
+import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
@@ -32,4 +33,6 @@ public interface IConvertFromSDKVisitor {
     void visit(EventExtended sdkEventExtended);
 
     void visit(DataValueExtended sdkDataValueExtended);
+
+    void visit(CategoryOptionGroupExtended categoryOptionGroupExtended);
 }

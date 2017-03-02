@@ -219,6 +219,15 @@ public class QuestionThreshold extends BaseModel {
         return okLowerBound && okUpperBound;
     }
 
+
+    public static List<QuestionThreshold> getQuestionThresholdsWithMatch(Long matchId) {
+        return new Select()
+                .from(QuestionThreshold.class)
+                .where(QuestionThreshold_Table.id_match_fk.is(matchId))
+                .queryList();
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

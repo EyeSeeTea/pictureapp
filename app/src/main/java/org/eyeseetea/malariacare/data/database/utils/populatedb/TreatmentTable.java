@@ -53,9 +53,6 @@ public class TreatmentTable {
     private String optionRDTPfId;
     private String optionRDTPvId;
 
-    private static String MAIN_YES = "'Y'";
-    private static String MAIN_NO = "'N'";
-
 
     public TreatmentTable() {
         mContext = PreferencesState.getInstance().getContext();
@@ -249,11 +246,11 @@ public class TreatmentTable {
             List<String[]> treatmentMatchLines, List<String[]> messageLines,
             List<String[]> diagnosisLines) throws IOException {
         String[] treatmentLine = {getNextIdToInsert(treatmentLines), line[0], getLastIdInserted(
-                diagnosisLines), getLastIdInserted(messageLines), (line[5].equals(MAIN_YES)
+                diagnosisLines), getLastIdInserted(messageLines), (line[5].equals("Y")
                 ? Treatment.TYPE_MAIN : Treatment.TYPE_NOT_MAIN) + ""};
         mFileCsvs.insertCsvLine(PopulateDB.TREATMENT_CSV, treatmentLine);
         treatmentLines.add(treatmentLine);
-        if (line[5].equals(MAIN_NO)) {
+        if (line[5].equals("N")) {
             String[] treatmentMatch =
                     {getNextIdToInsert(treatmentMatchLines), treatmentLine[0],
                             getMatchIdForTretment(treatmentMatchLines,

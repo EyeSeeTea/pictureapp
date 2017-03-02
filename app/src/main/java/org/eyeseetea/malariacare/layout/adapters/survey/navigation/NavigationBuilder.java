@@ -2,10 +2,10 @@ package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.database.model.Answer;
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.Answer;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.WarningStatusChecker;
 import org.eyeseetea.malariacare.utils.Constants;
 

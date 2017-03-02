@@ -2,13 +2,13 @@ package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -315,11 +315,7 @@ public class NavigationController {
             while (nextNode != null && (nextNode.getQuestion().getHeader().getTab().equals(
                     actualQuestion.getHeader().getTab())
                     || nextNode.getQuestion().getOutput() == Constants.HIDDEN)) {
-                if (nextNode.getSibling() == null) {
-                    nextNode = null;
-                } else {
-                    nextNode = nextNode.next();
-                }
+                nextNode = (nextNode.getSibling() != null) ? nextNode.next() : null;
             }
         }
 

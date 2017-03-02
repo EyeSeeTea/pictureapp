@@ -18,9 +18,9 @@
  */
 package org.eyeseetea.malariacare.presentation.factory.monitor.utils;
 
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Value;
 
 /**
  * Decorator that tells if a survey has specific info
@@ -82,7 +82,6 @@ public class SurveyMonitor {
     public SurveyMonitor(Survey survey) {
         mSurvey = survey;
     }
-
 
     public Survey getSurvey() {
         return mSurvey;

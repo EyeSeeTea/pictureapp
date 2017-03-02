@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -38,13 +37,10 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
@@ -95,8 +91,6 @@ public class DashboardActivity extends BaseActivity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         mDashboardActivityStrategy = new DashboardActivityStrategy();
-        AsyncPopulateDB asyncPopulateDB = new AsyncPopulateDB(this);
-        asyncPopulateDB.execute((Void) null);
         dashboardActivity = this;
         setContentView(R.layout.tab_dashboard);
         Survey.removeInProgress();
@@ -161,6 +155,7 @@ public class DashboardActivity extends BaseActivity {
             tabHost.getTabWidget().getChildAt(i).setFocusable(false);
         }
 
+        getSurveysFromService();
     }
 
     public void setTabHostsWithText() {
@@ -193,7 +188,6 @@ public class DashboardActivity extends BaseActivity {
         setTab(context.getResources().getString(R.string.tab_tag_monitor), R.id.tab_monitor_layout,
                 context.getResources().getDrawable(R.drawable.tab_monitor));
     }
-
 
     /**
      * Sets a divider drawable and background.
@@ -624,7 +618,6 @@ public class DashboardActivity extends BaseActivity {
       return   mDashboardActivityStrategy.isHistoricNewReceiptBalanceFragment(this);
     }
 
-
     private boolean isFragmentActive(Class fragmentClass, int layout) {
         Fragment currentFragment = this.getFragmentManager().findFragmentById(layout);
         if (currentFragment.getClass().equals(fragmentClass)) {
@@ -676,59 +669,5 @@ public class DashboardActivity extends BaseActivity {
     public void completeSurvey() {
         mDashboardActivityStrategy.completeSurvey();
         closeSurveyFragment();
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class AsyncPopulateDB extends AsyncTask<Void, Void, Exception> {
-
-        //User user;
-        DashboardActivity dashboardActivity;
-
-        AsyncPopulateDB(DashboardActivity dashboardActivity) {
-            this.dashboardActivity = dashboardActivity;
-        }
-
-        @Override
-        protected Exception doInBackground(Void... params) {
-            try {
-                if (!BuildConfig.multiuser) {
-                    Log.i(TAG, "Creating demo login from dashboard ...");
-                    LoginUseCase loginUseCase = new LoginUseCase(dashboardActivity);
-
-                    Credentials demoCrededentials = Credentials.createDemoCredentials();
-
-                    loginUseCase.execute(demoCrededentials);
-                }
-
-                PopulateDB.initDataIfRequired(dashboardActivity);
-            } catch (Exception ex) {
-                Log.e(TAG, "Error initializing DB: ", ex);
-                return ex;
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(final Exception exception) {
-            //Error
-            if (exception != null) {
-                new AlertDialog.Builder(DashboardActivity.this)
-                        .setTitle(R.string.dialog_title_error)
-                        .setMessage(exception.getMessage())
-                        .setNeutralButton(android.R.string.yes,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface arg0, int arg1) {
-                                        finish();
-                                    }
-                                }).create().show();
-                return;
-            }
-
-            getSurveysFromService();
-        }
     }
 }

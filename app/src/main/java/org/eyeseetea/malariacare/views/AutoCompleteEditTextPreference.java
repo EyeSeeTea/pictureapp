@@ -34,8 +34,8 @@ import android.view.ViewParent;
 import android.widget.AutoCompleteTextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.OrgUnit;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.views.filters.AutocompleteAdapterFilter;
 

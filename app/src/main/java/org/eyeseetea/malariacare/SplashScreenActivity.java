@@ -6,37 +6,20 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
+import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.index.Index;
 
-import org.eyeseetea.malariacare.database.PostMigration;
-import org.eyeseetea.malariacare.database.model.Match;
-import org.eyeseetea.malariacare.database.model.Match$Table;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionOption$Table;
-import org.eyeseetea.malariacare.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.database.model.QuestionRelation$Table;
-import org.eyeseetea.malariacare.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.database.model.QuestionThreshold$Table;
-import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.model.Value$Table;
-import org.eyeseetea.malariacare.database.utils.LocationMemory;
-import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.database.utils.populatedb.PopulateDB;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.InitUseCase;
-import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
-import org.eyeseetea.malariacare.utils.Constants;
-
-import java.io.IOException;
+import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.data.remote.SdkQueries;
+import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
+import org.hisp.dhis.client.sdk.android.api.D2;
 
 import io.fabric.sdk.android.Fabric;
-
-/**
- * Created by idelcano on 12/12/2016.
- */
 
 public class SplashScreenActivity extends Activity {
 
@@ -56,49 +39,61 @@ public class SplashScreenActivity extends Activity {
         Fabric.with(this, new Crashlytics());
         LocationMemory.getInstance().init(getApplicationContext());
 
-        FlowManager.init(this, "_EyeSeeTeaDB");
-        createDBIndexes();
-        PostMigration.launchPostMigration();
+        D2.init(this);
+        FlowConfig flowConfig = new FlowConfig
+                .Builder(this)
+                .addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
+                .build();
+        FlowManager.init(flowConfig);
+        SdkQueries.createDBIndexes();
 
-        //Get maximum total of questions
-        if (!Tab.isEmpty()) {
-            Session.setMaxTotalQuestions(Program.getMaxTotalQuestions());
+        //TODO: after mega merge
+        //PostMigration.launchPostMigration();
+
+        if (!BuildConfig.multiuser) {
+            Log.i(TAG, "Pull on SplashScreen ...");
+
+            PullController pullController = new PullController(
+                    getApplication().getApplicationContext());
+
+            PullUseCase pullUseCase = new PullUseCase(pullController);
+
+            PullFilters pullFilters = new PullFilters();
+            pullFilters.setDemo(true);
+
+            pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
+                @Override
+                public void onComplete() {
+                    Log.d(this.getClass().getSimpleName(), "pull complete");
+                }
+
+                @Override
+                public void onStep(PullStep step) {
+                    Log.d(this.getClass().getSimpleName(), step.toString());
+                }
+
+                @Override
+                public void onError(String message) {
+                    Log.e(this.getClass().getSimpleName(), message);
+                }
+
+                @Override
+                public void onNetworkError() {
+                    Log.e(this.getClass().getSimpleName(), "Network Error");
+                }
+
+                @Override
+                public void onPullConversionError() {
+                    Log.e(this.getClass().getSimpleName(), "Pull Conversion Error");
+                }
+
+                @Override
+                public void onCancel() {
+                    Log.e(this.getClass().getSimpleName(), "Pull oncancel");
+                }
+            });
         }
 
-        try {
-            if (!BuildConfig.multiuser) {
-                Log.i(TAG, "Creating demo login from dashboard ...");
-                LoginUseCase loginUseCase = new LoginUseCase(this);
-
-                Credentials demoCrededentials = Credentials.createDemoCredentials();
-
-                loginUseCase.execute(demoCrededentials);
-            }
-
-            PopulateDB.initDataIfRequired(this);
-        } catch (IOException exception) {
-            Log.e("LoginActivity", "ERROR: DB not loaded");
-        }
-    }
-
-    private void createDBIndexes() {
-        new Index<QuestionOption>(Constants.QUESTION_OPTION_QUESTION_IDX).on(QuestionOption.class,
-                QuestionOption$Table.ID_QUESTION).enable();
-        new Index<QuestionOption>(Constants.QUESTION_OPTION_MATCH_IDX).on(QuestionOption.class,
-                QuestionOption$Table.ID_MATCH).enable();
-
-        new Index<QuestionRelation>(Constants.QUESTION_RELATION_OPERATION_IDX).on(
-                QuestionRelation.class, QuestionRelation$Table.OPERATION).enable();
-        new Index<QuestionRelation>(Constants.QUESTION_RELATION_QUESTION_IDX).on(
-                QuestionRelation.class, QuestionRelation$Table.ID_QUESTION).enable();
-
-        new Index<Match>(Constants.MATCH_QUESTION_RELATION_IDX).on(Match.class,
-                Match$Table.ID_QUESTION_RELATION).enable();
-
-        new Index<QuestionThreshold>(Constants.QUESTION_THRESHOLDS_QUESTION_IDX).on(
-                QuestionThreshold.class, QuestionThreshold$Table.ID_QUESTION).enable();
-
-        new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
     }
 
     public class AsyncInitApplication extends AsyncTask<Void, Void, Exception> {
@@ -122,8 +117,8 @@ public class SplashScreenActivity extends Activity {
         @Override
         protected void onPostExecute(final Exception exception) {
             //Error
-            InitUseCase initUseCase = new InitUseCase(activity);
-            initUseCase.finishAndGo();
+            SplashActivityStrategy splashActivityStrategy = new SplashActivityStrategy(activity);
+            splashActivityStrategy.finishAndGo();
         }
     }
 }

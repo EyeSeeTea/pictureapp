@@ -1,15 +1,13 @@
 package org.eyeseetea.malariacare.views.question.singlequestion;
 
 import android.content.Context;
-import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
-import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 
 import java.util.List;

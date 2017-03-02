@@ -164,7 +164,12 @@
 <string name="ACT_x_24">"အေစီတီ ACT ၂၄လုံးကဒ်"</string>
 <string name="Cq">"ကလိုရိုကွင်း Cq"</string>
 <string name="Pq">"ပရိုင်မာကွင်း Pq"</string>
-<string name="monitoring_title_dropdown">"တစ်ဦးအချိန်ကာလကို select လုပ်ပါ, ကျေးဇူးပြုပြီး"</string>
+
+    <string name="network_error">ကွန်ယက်နှင့်အတူပြဿနာရှိပါတယ်, နောက်တခါထပ်ကြိုးစားကြည့်ပါ။</string>
+    <string name="login_invalid_credentials">မှားနေသောအထောက်အထားများ</string>
+    <string name="login_invalid_server_url">မှားနေသော Server ကို URL ကို</string>
+
+    <string name="monitoring_title_dropdown">"တစ်ဦးအချိန်ကာလကို select လုပ်ပါ, ကျေးဇူးပြုပြီး"</string>
 <string name="ok">"အိုကေ"</string>
 <string name="cancel">"Cancel"</string>
 <string name="dialog_title_delete_survey">"စစ်တမ်းကိုဖျက်မည်"</string>
@@ -326,7 +331,7 @@
 <string name="see_balance">ယခင်စာရင်းပြင်ဆင်ထားမှုများ ကြည့်ရန်</string>
 <string name="new_balance">ဆေးဝါးကိရိယာစာရင်း ပြင်ဆင်ရန်</string>
 <string name="treatment_stock_review_title">Treatment out stock</string>
-<string name="act_out_stock">ACT type needed is out of stock, provide combination and explain</string>
+<string name="act_out_stock">အခြားအေစီတီဆေးကဒ်ပေး၍ လူနာအားရှင်းပြပါ။</string>
 <string name="out_stock_option">Out of stock</string>
 <string name="date">Date:</string>
 <string name="date_format_forward_slash">yyyy/mm/dd</string>
@@ -336,4 +341,5 @@
 <string name="x18">x18</string>
 <string name="x24">x24</string>
 <string name="previous_distributions">Previous Distributions</string>
+<string name="drugs_dose_of_drug_review_title">%1$.0f of %2$s</string>
 </resources>

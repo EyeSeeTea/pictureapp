@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.strategies;
 import android.widget.Toast;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 /**
  * Created by ina on 20/12/2016.

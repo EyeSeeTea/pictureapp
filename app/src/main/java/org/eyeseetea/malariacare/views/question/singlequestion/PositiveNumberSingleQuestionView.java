@@ -7,7 +7,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;

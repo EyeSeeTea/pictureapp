@@ -1,8 +1,8 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
 
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.utils.Constants;
 

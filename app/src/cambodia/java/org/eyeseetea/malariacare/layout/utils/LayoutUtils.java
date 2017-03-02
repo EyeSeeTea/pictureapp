@@ -1,8 +1,8 @@
 package org.eyeseetea.malariacare.layout.utils;
 
 import org.eyeseetea.malariacare.DashboardActivity;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 /**
  * Created by idelcano on 01/11/2016.

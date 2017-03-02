@@ -9,10 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.Value;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
@@ -35,7 +35,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
 
     protected AKeyboardQuestionView.onAnswerChangedListener mOnAnswerChangedListener;
     protected AOptionQuestionView.onAnswerChangedListener mOnAnswerOptionChangedListener;
-    int dose = 0;
+    float dose = 0;
 
     public NumberRadioButtonMultiquestionView(Context context) {
         super(context);
@@ -43,7 +43,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         init(context);
     }
 
-    public void setDose(int dose) {
+    public void setDose(float dose) {
         this.dose = dose;
     }
 

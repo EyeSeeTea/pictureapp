@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -30,7 +30,8 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
     }
 
     private Survey getSurveyWithStatusAndAnsweredRatio(long idSurvey) {
-        org.eyeseetea.malariacare.database.model.Survey surveyDB = org.eyeseetea.malariacare
+        org.eyeseetea.malariacare.data.database.model.Survey surveyDB =
+                org.eyeseetea.malariacare.data
                 .database.model.Survey.findById(idSurvey);
         Survey survey = new Survey(idSurvey);
         survey.setSurveyAnsweredRatio(surveyDB.reloadSurveyAnsweredRatio());
@@ -42,13 +43,13 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
     private void updateRDTStockQuestion(Survey survey) {
         if (survey.getStatus() == Constants.SURVEY_COMPLETED
                 || survey.getStatus() == Constants.SURVEY_SENT) {
-            org.eyeseetea.malariacare.database.model.Survey surveyDBMalaria =
-                    org.eyeseetea.malariacare
+            org.eyeseetea.malariacare.data.database.model.Survey surveyDBMalaria =
+                    org.eyeseetea.malariacare.data
                             .database.model.Survey.findById(survey.getId());
             List<Value> surveyValues = surveyDBMalaria.getValuesFromDB();
 
-            org.eyeseetea.malariacare.database.model.Survey surveyDBStock =
-                    org.eyeseetea.malariacare
+            org.eyeseetea.malariacare.data.database.model.Survey surveyDBStock =
+                    org.eyeseetea.malariacare.data
                             .database.model.Survey.getLastSurveyWithType(Constants.SURVEY_EXPENSE);
 
             Value rdtStockValue = new Value("1", Question.getStockRDTQuestion(), surveyDBStock);

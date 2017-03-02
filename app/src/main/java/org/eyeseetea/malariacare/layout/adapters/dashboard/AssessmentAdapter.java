@@ -30,8 +30,8 @@ import android.widget.ListView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.DashboardAdapterStrategy;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.strategies.IAssessmentAdapterStrategy;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;

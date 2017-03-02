@@ -5,9 +5,9 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.fragments.HistoricReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;

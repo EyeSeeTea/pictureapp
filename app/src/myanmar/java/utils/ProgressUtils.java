@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 
 /**
  * Created by rhardjono on 08/11/2016

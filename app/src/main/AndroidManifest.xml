@@ -49,7 +49,7 @@
             android:value="false" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="org.eyeseetea.malariacare.database.model" />
+            android:value="org.eyeseetea.malariacare.data.database.model" />
 
         <activity
             android:name=".DashboardActivity"

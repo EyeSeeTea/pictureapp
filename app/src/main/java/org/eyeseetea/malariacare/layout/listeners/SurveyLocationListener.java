@@ -26,7 +26,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 
 /**
  * Basic location listener that persist coordinates associated to every survey in preferences

@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
@@ -79,11 +79,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         ImageRadioButtonOption imageRadioButtonOption = new ImageRadioButtonOption(
                 getContext(), true);
 
-        String dose = "";
-        if (optionDose.get(option.getId_option()) != null) {
-            dose = optionDose.get(option.getId_option()) + " x ";
-        }
-        imageRadioButtonOption.setText(dose + option.getInternationalizedCode());
+        imageRadioButtonOption.setText(option.getInternationalizedCode());
         putImageInImageRadioButton(option.getInternationalizedPath(), imageRadioButtonOption);
         imageRadioButtonOption.setOnCheckedChangeListener(this);
         imageRadioButtonOption.setOption(option, mQuestion);
@@ -154,7 +150,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         //Setting a value for the stock question to get max total question correct
         View stockHideView = new View(context);
         stockHideView.setTag(Treatment.getDynamicStockQuestion());
-        Option falseOption = Option.findById(41f);
+        Option falseOption = Option.findById(41l);
         notifyAnsweOptionChange(stockHideView, falseOption);
     }
 

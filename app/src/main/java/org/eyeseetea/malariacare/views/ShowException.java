@@ -23,7 +23,7 @@ package org.eyeseetea.malariacare.views;
 import android.content.Context;
 import android.content.Intent;
 
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 /**
  * Created by ignac on 17/10/2015.

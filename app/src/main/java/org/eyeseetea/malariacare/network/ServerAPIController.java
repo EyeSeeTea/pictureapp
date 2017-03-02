@@ -33,9 +33,9 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.Program;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.ShowException;
@@ -161,7 +161,6 @@ public class ServerAPIController {
      */
     private static String programUID;
 
-    private static org.hisp.dhis.android.sdk.network.Credentials sdkCredentials;
 
     /**
      * Returns current serverUrl
@@ -187,18 +186,13 @@ public class ServerAPIController {
         return programUID;
     }
 
-
+    //TODO jsanchez necessary for lao and cambodia
     /**
      * Returns hardcoded credentials for its use in sdk
      */
-    public static org.hisp.dhis.android.sdk.network.Credentials getSDKCredentials() {
-        if (sdkCredentials == null) {
-            sdkCredentials = new org.hisp.dhis.android.sdk.network.Credentials(getUserPush(),
-                    getPassPush());
-        }
-        return sdkCredentials;
-    }
-
+ /*   public static UserCredentials getSDKCredentials() {
+        return SdkLoginController.getCredentials(getUserPush(), getPassPush());
+    }*/
 
     /**
      * Returns the version of the default server

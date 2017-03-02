@@ -749,6 +749,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     public boolean isStockSurvey() {
+        if (id_program == null) {
+            return false;
+        }
         if (program == null) {
             program = Program.findById(id_program);
         }

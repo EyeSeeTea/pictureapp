@@ -19,6 +19,8 @@ public class DrugCombination extends BaseModel {
     Long id_drug;
     @Column
     Long id_treatment;
+    @Column
+    float dose;
 
     /**
      * Reference to drug (loaded lazily)
@@ -96,6 +98,26 @@ public class DrugCombination extends BaseModel {
         treatment = null;
     }
 
+    public static float getDose(Treatment treatment, Drug drug) {
+        DrugCombination drugCombination = new Select()
+                .from(DrugCombination.class)
+                .where(DrugCombination_Table.id_treatment.is(treatment.getId_treatment()))
+                .and(DrugCombination_Table.id_drug.is(drug.getId_drug()))
+                .querySingle();
+        if (drugCombination != null) {
+            return drugCombination.getDose();
+        }
+        return 0f;
+    }
+
+    public float getDose() {
+        return dose;
+    }
+
+    public void setDose(float dose) {
+        this.dose = dose;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -104,16 +126,19 @@ public class DrugCombination extends BaseModel {
         DrugCombination that = (DrugCombination) o;
 
         if (id_drug_combination != that.id_drug_combination) return false;
-        if (id_drug != that.id_drug) return false;
-        return id_treatment == that.id_treatment;
+        if (Float.compare(that.dose, dose) != 0) return false;
+        if (id_drug != null ? !id_drug.equals(that.id_drug) : that.id_drug != null) return false;
+        return id_treatment != null ? id_treatment.equals(that.id_treatment)
+                : that.id_treatment == null;
 
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id_drug_combination ^ (id_drug_combination >>> 32));
-        result = 31 * result + (int) (id_drug ^ (id_drug >>> 32));
-        result = 31 * result + (int) (id_treatment ^ (id_treatment >>> 32));
+        result = 31 * result + (id_drug != null ? id_drug.hashCode() : 0);
+        result = 31 * result + (id_treatment != null ? id_treatment.hashCode() : 0);
+        result = 31 * result + (dose != +0.0f ? Float.floatToIntBits(dose) : 0);
         return result;
     }
 
@@ -123,6 +148,7 @@ public class DrugCombination extends BaseModel {
                 "id_drug_combination=" + id_drug_combination +
                 ", id_drug=" + id_drug +
                 ", id_treatment=" + id_treatment +
+                ", dose=" + dose +
                 '}';
     }
 }

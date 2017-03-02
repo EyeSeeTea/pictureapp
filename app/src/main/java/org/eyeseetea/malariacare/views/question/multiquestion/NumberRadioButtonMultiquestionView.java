@@ -35,7 +35,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
 
     protected AKeyboardQuestionView.onAnswerChangedListener mOnAnswerChangedListener;
     protected AOptionQuestionView.onAnswerChangedListener mOnAnswerOptionChangedListener;
-    int dose = 0;
+    float dose = 0;
 
     public NumberRadioButtonMultiquestionView(Context context) {
         super(context);
@@ -43,7 +43,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         init(context);
     }
 
-    public void setDose(int dose) {
+    public void setDose(float dose) {
         this.dose = dose;
     }
 

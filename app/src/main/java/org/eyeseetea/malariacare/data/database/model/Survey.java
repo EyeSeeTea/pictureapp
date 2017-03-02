@@ -1241,18 +1241,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
     public static List<OrgUnit> getQuarantineOrgUnits(long programUid) {
         return new Select().from(OrgUnit.class) .as(orgUnitName)
         .join(Survey.class, Join.JoinType.LEFT_OUTER).as(surveyName)
-                .on(Survey_Table.id_org_unit.withTable(surveyAlias)
+                .on(Survey_Table.id_org_unit_fk.withTable(surveyAlias)
                         .eq(OrgUnit_Table.id_org_unit.withTable(orgUnitAlias)))
             .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
-                .and(Survey_Table.id_program.eq(programUid)).queryList();
+                .and(Survey_Table.id_program_fk.eq(programUid)).queryList();
     }
 
     public static List<Survey> getAllQuarantineSurveysByProgramAndOrgUnit(Program program, OrgUnit orgUnit) {
         return new Select().from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
-                .and(Survey_Table.id_program.eq(program.getId_program()))
-                .and(Survey_Table.id_org_unit.eq(orgUnit.getId_org_unit()))
-                .orderBy(OrderBy.fromProperty(Survey_Table.eventDate).descending()).queryList();
+                .and(Survey_Table.id_program_fk.eq(program.getId_program()))
+                .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
+                .orderBy(OrderBy.fromProperty(Survey_Table.event_date).descending()).queryList();
     }
 
     public static Date getMinQuarantineCompletionDateByProgramAndOrgUnit(Program program,
@@ -1260,9 +1260,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
         Survey survey = new Select()
                 .from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
-                .and(Survey_Table.id_program.eq(program.getId_program()))
-                .and(Survey_Table.id_org_unit.eq(orgUnit.getId_org_unit()))
-                .orderBy(OrderBy.fromProperty(Survey_Table.completionDate).ascending())
+                .and(Survey_Table.id_program_fk.eq(program.getId_program()))
+                .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
+                .orderBy(OrderBy.fromProperty(Survey_Table.completion_date).ascending())
                 .querySingle();
         return survey.getCompletionDate();
     }
@@ -1272,9 +1272,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
         Survey survey = new Select()
                 .from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
-                .and(Survey_Table.id_program.eq(program.getId_program()))
-                .and(Survey_Table.id_org_unit.eq(orgUnit.getId_org_unit()))
-                .orderBy(OrderBy.fromProperty(Survey_Table.eventDate).descending())
+                .and(Survey_Table.id_program_fk.eq(program.getId_program()))
+                .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
+                .orderBy(OrderBy.fromProperty(Survey_Table.event_date).descending())
                 .querySingle();
         return survey.getEventDate();
     }

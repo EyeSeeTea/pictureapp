@@ -81,8 +81,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void sendSurvey() {
         Session.getMalariaSurvey().updateSurveyStatus();
-        Session.getStockSurvey().complete();
+        Survey stockSurvey = Session.getStockSurvey();
+        if (stockSurvey != null) {
+            Session.getStockSurvey().complete();
         new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
+        }
     }
 
     @Override
@@ -97,9 +100,12 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         Survey stockSurvey = Session.getStockSurvey();
         if (malariaSurvey != null) {
             boolean isMalariaInProgress = malariaSurvey.isInProgress();
-            boolean isStockSurveyInProgress = stockSurvey.isInProgress();
+            boolean isStockSurveyInProgress = false;
+            if (stockSurvey != null) {
+                stockSurvey.isInProgress();
+                stockSurvey.getValuesFromDB();
+            }
             malariaSurvey.getValuesFromDB();
-            stockSurvey.getValuesFromDB();
             //Exit + InProgress -> delete
             if (isBackPressed && (isMalariaInProgress || isStockSurveyInProgress)) {
                 if (isMalariaInProgress) {

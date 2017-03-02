@@ -42,7 +42,7 @@ public class Match extends BaseModel {
     long id_match;
 
     @Column
-    Long id_question_relation;
+    Long id_question_relation_fk;
     /**
      * Reference to the associated questionRelation (loaded lazily)
      */
@@ -74,7 +74,7 @@ public class Match extends BaseModel {
     public List<QuestionOption> getQuestionOptions() {
         if (questionOptions == null) {
             this.questionOptions = new Select().from(QuestionOption.class)
-                    .where(QuestionOption_Table.id_match.eq(this.getId_match()))
+                    .where(QuestionOption_Table.id_match_fk.eq(this.getId_match()))
                     .queryList();
         }
         return this.questionOptions;
@@ -85,7 +85,7 @@ public class Match extends BaseModel {
      */
     private static List<QuestionThreshold> getQuestionThreshold(Match match) {
         return new Select().from(QuestionThreshold.class)
-                .where(QuestionThreshold_Table.id_match.eq(
+                .where(QuestionThreshold_Table.id_match_fk.eq(
                         match.getId_match())).queryList();
     }
 
@@ -94,7 +94,7 @@ public class Match extends BaseModel {
      */
     private static List<QuestionOption> getQuestionOptions(Match match) {
         return new Select().from(QuestionOption.class)
-                .where(QuestionOption_Table.id_match.eq(
+                .where(QuestionOption_Table.id_match_fk.eq(
                         match.getId_match())).queryList();
     }
 
@@ -103,7 +103,7 @@ public class Match extends BaseModel {
      */
     private static List<TreatmentMatch> getTreatmentMatches(Match match) {
         return new Select().from(TreatmentMatch.class)
-                .where(TreatmentMatch_Table.id_match.eq(
+                .where(TreatmentMatch_Table.id_match_fk.eq(
                         match.getId_match())).queryList();
     }
 
@@ -111,8 +111,8 @@ public class Match extends BaseModel {
         return new Select().from(Treatment.class).as(treatmentName)
                 .join(TreatmentMatch.class, Join.JoinType.LEFT_OUTER).as(treatmentMatchName)
                 .on(Treatment_Table.id_treatment.withTable(treatmentAlias)
-                        .eq(TreatmentMatch_Table.id_treatment.withTable(treatmentMatchAlias)))
-                .where(TreatmentMatch_Table.id_match.withTable(treatmentMatchAlias)
+                        .eq(TreatmentMatch_Table.id_treatment_fk.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatch_Table.id_match_fk.withTable(treatmentMatchAlias)
                         .eq(id_match))
                 .querySingle();
     }
@@ -139,23 +139,23 @@ public class Match extends BaseModel {
 
     public QuestionRelation getQuestionRelation() {
         if (questionRelation == null) {
-            if (id_question_relation == null) return null;
+            if (id_question_relation_fk == null) return null;
             questionRelation = new Select()
                     .from(QuestionRelation.class)
                     .where(QuestionRelation_Table.id_question_relation
-                            .is(id_question_relation)).querySingle();
+                            .is(id_question_relation_fk)).querySingle();
         }
         return questionRelation;
     }
 
     public void setQuestionRelation(QuestionRelation questionRelation) {
         this.questionRelation = questionRelation;
-        this.id_question_relation =
+        this.id_question_relation_fk =
                 (questionRelation != null) ? questionRelation.getId_question_relation() : null;
     }
 
     public void setQuestionRelation(Long id_question_relation) {
-        this.id_question_relation = id_question_relation;
+        this.id_question_relation_fk = id_question_relation;
         this.questionRelation = null;
     }
 
@@ -189,15 +189,15 @@ public class Match extends BaseModel {
         Match match = (Match) o;
 
         if (id_match != match.id_match) return false;
-        return !(id_question_relation != null ? !id_question_relation.equals(
-                match.id_question_relation) : match.id_question_relation != null);
+        return !(id_question_relation_fk != null ? !id_question_relation_fk.equals(
+                match.id_question_relation_fk) : match.id_question_relation_fk != null);
 
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id_match ^ (id_match >>> 32));
-        result = 31 * result + (id_question_relation != null ? id_question_relation.hashCode() : 0);
+        result = 31 * result + (id_question_relation_fk != null ? id_question_relation_fk.hashCode() : 0);
         return result;
     }
 
@@ -205,7 +205,7 @@ public class Match extends BaseModel {
     public String toString() {
         return "Match{" +
                 "id_match=" + id_match +
-                ", id_question_relation=" + id_question_relation +
+                ", id_question_relation_fk=" + id_question_relation_fk +
                 '}';
     }
 }

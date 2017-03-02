@@ -45,14 +45,14 @@ public class QuestionThreshold extends BaseModel {
     long id_question_threshold;
 
     @Column
-    Long id_question;
+    Long id_question_fk;
     /**
      * Reference to its question (lazy)
      */
     Question question;
 
     @Column
-    Long id_match;
+    Long id_match_fk;
     /**
      * Reference to its match (lazy)
      */
@@ -110,8 +110,8 @@ public class QuestionThreshold extends BaseModel {
         return new Select().from(Match.class).as(matchName)
                 .join(QuestionThreshold.class, Join.JoinType.LEFT_OUTER).as(questionThresholdName)
                 .on(Match_Table.id_match.withTable(matchAlias)
-                        .eq(QuestionThreshold_Table.id_match.withTable(questionThresholdAlias)))
-                .where(QuestionThreshold_Table.id_question.withTable(questionThresholdAlias)
+                        .eq(QuestionThreshold_Table.id_match_fk.withTable(questionThresholdAlias)))
+                .where(QuestionThreshold_Table.id_question_fk.withTable(questionThresholdAlias)
                         .is(id_question))
                 .and(QuestionThreshold_Table.minValue.withTable(questionThresholdAlias)
                         .lessThanOrEq(value))
@@ -139,43 +139,43 @@ public class QuestionThreshold extends BaseModel {
 
     public Question getQuestion() {
         if (question == null) {
-            if (id_question == null) return null;
+            if (id_question_fk == null) return null;
             question = new Select()
                     .from(Question.class)
                     .where(Question_Table.id_question
-                            .is(id_question)).querySingle();
+                            .is(id_question_fk)).querySingle();
         }
         return question;
     }
 
     public void setQuestion(Question question) {
         this.question = question;
-        this.id_question = (question != null) ? question.getId_question() : null;
+        this.id_question_fk = (question != null) ? question.getId_question() : null;
     }
 
     public void setQuestion(Long id_question) {
-        this.id_question = id_question;
+        this.id_question_fk = id_question;
         this.question = null;
     }
 
     public Match getMatch() {
         if (match == null) {
-            if (id_match == null) return null;
+            if (id_match_fk == null) return null;
             match = new Select()
                     .from(Match.class)
                     .where(Match_Table.id_match
-                            .is(id_match)).querySingle();
+                            .is(id_match_fk)).querySingle();
         }
         return match;
     }
 
     public void setMatch(Match match) {
         this.match = match;
-        this.id_match = (match != null) ? match.getId_match() : null;
+        this.id_match_fk = (match != null) ? match.getId_match() : null;
     }
 
     public void setMatch(Long id_match) {
-        this.id_match = id_match;
+        this.id_match_fk = id_match;
         this.match = null;
     }
 
@@ -219,6 +219,15 @@ public class QuestionThreshold extends BaseModel {
         return okLowerBound && okUpperBound;
     }
 
+
+    public static List<QuestionThreshold> getQuestionThresholdsWithMatch(Long matchId) {
+        return new Select()
+                .from(QuestionThreshold.class)
+                .where(QuestionThreshold_Table.id_match_fk.is(matchId))
+                .queryList();
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -229,16 +238,16 @@ public class QuestionThreshold extends BaseModel {
         if (id_question_threshold != that.id_question_threshold) return false;
         if (minValue != that.minValue) return false;
         if (maxValue != that.maxValue) return false;
-        if (!id_question.equals(that.id_question)) return false;
-        return id_match.equals(that.id_match);
+        if (!id_question_fk.equals(that.id_question_fk)) return false;
+        return id_match_fk.equals(that.id_match_fk);
 
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id_question_threshold ^ (id_question_threshold >>> 32));
-        result = 31 * result + id_question.hashCode();
-        result = 31 * result + id_match.hashCode();
+        result = 31 * result + id_question_fk.hashCode();
+        result = 31 * result + id_match_fk.hashCode();
         result = 31 * result + minValue;
         result = 31 * result + maxValue;
         return result;
@@ -248,8 +257,8 @@ public class QuestionThreshold extends BaseModel {
     public String toString() {
         return "QuestionThreshold{" +
                 "id_question_threshold=" + id_question_threshold +
-                ", id_question=" + id_question +
-                ", id_match=" + id_match +
+                ", id_question=" + id_question_fk +
+                ", id_match=" + id_match_fk +
                 ", minValue=" + minValue +
                 ", maxValue=" + maxValue +
                 '}';

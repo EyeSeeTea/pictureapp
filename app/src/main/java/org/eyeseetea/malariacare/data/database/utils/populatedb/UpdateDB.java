@@ -23,13 +23,12 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.data.database.model.StringKey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
-import org.eyeseetea.malariacare.data.database.model.Translation;
-
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -312,11 +311,14 @@ public class UpdateDB {
      * Method to update organisations from csvs.
      *
      * @param context Needed to open the csvs.
+     * @param updateCSV
      * @throws IOException If there is a problem opening the csv.
      */
-    public static void updateOrganisations(Context context) throws IOException {
-        FileCsvs fileCsvs = new FileCsvs();
-        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.ORGANISATIONS_CSV);
+    public static void updateOrganisations(Context context, boolean updateCSV) throws IOException {
+        if (updateCSV) {
+            FileCsvs fileCsvs = new FileCsvs();
+            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.ORGANISATIONS_CSV);
+        }
         List<Organisation> organisations = Organisation.getAllOrganisations();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.ORGANISATIONS_CSV)),

@@ -59,7 +59,7 @@ public class StatusRowBuilder extends StockRowBuilder {
                 balanceSurvey[position] = surveyValue;
             } else if (survey.getType() == Constants.SURVEY_RECEIPT) {
                 summationReceiptsUsed[position] += surveyValue;
-            } else if (survey.getType() == Constants.SURVEY_EXPENSE) {
+            } else if (survey.getType() == Constants.SURVEY_ISSUE) {
                 summationReceiptsUsed[position] -= surveyValue;
             }
             columnClasses.set(position + 1, getCSSForValues(position));

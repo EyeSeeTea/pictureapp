@@ -1035,7 +1035,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         if (type == null) {
             return false;
         }
-        return type == Constants.SURVEY_EXPENSE;
+        return type == Constants.SURVEY_ISSUE;
     }
 
     /**

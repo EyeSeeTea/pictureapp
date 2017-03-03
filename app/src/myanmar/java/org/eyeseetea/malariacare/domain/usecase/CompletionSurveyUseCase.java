@@ -50,7 +50,7 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
 
             org.eyeseetea.malariacare.data.database.model.Survey surveyDBStock =
                     org.eyeseetea.malariacare.data
-                            .database.model.Survey.getLastSurveyWithType(Constants.SURVEY_EXPENSE);
+                            .database.model.Survey.getLastSurveyWithType(Constants.SURVEY_ISSUE);
 
             Value rdtStockValue = new Value("1", Question.getStockRDTQuestion(), surveyDBStock);
 

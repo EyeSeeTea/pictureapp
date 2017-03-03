@@ -18,7 +18,7 @@ public class ReceiptsRowBuildder extends CounterRowBuilder {
     @Override
     protected int incrementCount(SurveyStock surveyStock, int newValue) {
         Survey survey = surveyStock.getSurvey();
-        Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
+        Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_RESET);
         if ((maxBalanceDate == null || Utils.dateGreaterOrEqualsThanDate(maxBalanceDate,
                 survey.getEventDate())) && survey.getType().equals(Constants.SURVEY_RECEIPT)) {
             return newValue;

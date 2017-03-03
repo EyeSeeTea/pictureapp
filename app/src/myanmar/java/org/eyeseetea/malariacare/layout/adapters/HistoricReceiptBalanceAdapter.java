@@ -9,23 +9,28 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.domain.entity.SurveyQuestionValue;
+import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.List;
 
 public class HistoricReceiptBalanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Survey> mSurveys;
+    private int mType;
 
     private static final int HEADER_VIEW_TYPE = 0;
     private static final int ROW_VIEW_TYPE = 1;
 
-    public HistoricReceiptBalanceAdapter(List<Survey> surveys) {
+    public HistoricReceiptBalanceAdapter(List<Survey> surveys, int type) {
         mSurveys = surveys;
+        mType = type;
     }
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public TextView title;
         public HeaderViewHolder(View itemView) {
             super(itemView);
+            title = (TextView) itemView.findViewById(R.id.historic_receipt_balance_header_title);
         }
     }
 
@@ -65,7 +70,19 @@ public class HistoricReceiptBalanceAdapter extends RecyclerView.Adapter<Recycler
             Survey survey = mSurveys.get(position - 1);
             putValuesToRow(rowViewHolder, survey);
         }
+        if (holder instanceof HeaderViewHolder) {
+            HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
+            putValuesToHeader(headerViewHolder);
+        }
 
+    }
+
+    private void putValuesToHeader(HeaderViewHolder holder) {
+        if (mType == Constants.SURVEY_RESET) {
+            holder.title.setText(R.string.reset_on);
+        } else {
+            holder.title.setText(R.string.received);
+        }
     }
 
     private void putValuesToRow(RowViewHolder holder, Survey survey) {

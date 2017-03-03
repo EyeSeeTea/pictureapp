@@ -1438,12 +1438,20 @@ public class Question extends BaseModel {
         return uid_question.equals(getContext().getString(R.string.act24QuestionUID));
     }
 
+    public boolean isACT() {
+        return isACT6() || isACT12() || isACT18() || isACT24();
+    }
+
     public boolean isCq() {
         return uid_question.equals(getContext().getString(R.string.cqQuestionUID));
     }
 
     public boolean isPq() {
         return uid_question.equals(getContext().getString(R.string.pqQuestionUID));
+    }
+
+    public boolean isDynamicTreatmentQuestion() {
+        return uid.equals(getContext().getString(R.string.dynamicTreatmentQuestionUID));
     }
 
     public boolean isInvalidRDTQuestion(){
@@ -1528,6 +1536,10 @@ public class Question extends BaseModel {
             }
         }
         return false;
+    }
+
+    public boolean hasDataElement() {
+        return !Constants.QUESTION_TYPES_NO_DATA_ELEMENT.contains(output);
     }
 
     @Override

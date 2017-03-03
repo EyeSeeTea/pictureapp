@@ -3,8 +3,10 @@ package org.eyeseetea.malariacare.services.strategies;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.sync.exporter.PushController;
 import org.eyeseetea.malariacare.domain.usecase.MockedPushSurveysUseCase;
-import org.eyeseetea.malariacare.domain.usecase.PushSurveysUseCase;
+import org.eyeseetea.malariacare.domain.usecase.PushUseCase;
+import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy {
@@ -38,20 +40,47 @@ public class PushServiceStrategy extends APushServiceStrategy {
     }
 
     private void executePush() {
-        PushSurveysUseCase pushUseCase = new PushSurveysUseCase(mPushService);
+        PushController pushController = new PushController(mPushService);
+        PushUseCase pushUseCase = new PushUseCase(pushController);
 
-        pushUseCase.execute(new PushSurveysUseCase.Callback() {
+        SurveyChecker.launchQuarantineChecker();
+
+        pushUseCase.execute(new PushUseCase.Callback() {
             @Override
-            public void onPushFinished() {
-                Log.d(TAG, "onPushFinished");
+            public void onComplete() {
+                Log.d(TAG, "push complete");
                 mPushService.onPushFinished();
             }
 
             @Override
-            public void onPushError(String message) {
-                Log.w(TAG, "onPushError: " + message);
-                mPushService.onPushError(message);
+            public void onPushInProgressError() {
+                onError("Push stopped, There is already a push in progress");
+            }
+
+            @Override
+            public void onPushError() {
+                onError("Unexpected error has occurred in push process");
+            }
+
+            @Override
+            public void onSurveysNotFoundError() {
+                onError("Pending surveys not found");
+            }
+
+            @Override
+            public void onConversionError() {
+                onError("An error has occurred to the conversion in push process");
+            }
+
+            @Override
+            public void onNetworkError() {
+                onError("Network not available");
             }
         });
+    }
+
+    private void onError(String error) {
+        Log.e(TAG, error);
+        mPushService.onPushError(error);
     }
 }

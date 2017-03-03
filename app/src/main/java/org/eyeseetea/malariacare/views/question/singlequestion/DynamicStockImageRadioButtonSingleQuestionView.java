@@ -150,7 +150,13 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         //Setting a value for the stock question to get max total question correct
         View stockHideView = new View(context);
         stockHideView.setTag(Treatment.getDynamicStockQuestion());
+        Question pqHideQuestion = Question.findByUID(
+                context.getString(R.string.stockPqQuestionUID));
         Option falseOption = Option.findById(41l);
+        Value valuePq = pqHideQuestion.getValueBySession();
+        if (valuePq != null) {
+            falseOption = valuePq.getOption();
+        }
         notifyAnsweOptionChange(stockHideView, falseOption);
     }
 

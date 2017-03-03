@@ -13,7 +13,7 @@ import org.eyeseetea.malariacare.network.SurveyChecker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PushSurveysUseCase {
+public class PushUseCase {
 
     public interface Callback {
         void onPushFinished();
@@ -21,22 +21,22 @@ public class PushSurveysUseCase {
         void onPushError(String message);
     }
 
-    public static final String TAG = ".PushSurveysUseCase";
+    public static final String TAG = ".PushUseCase";
     private Context context;
     private Callback mCallback;
 
-    public PushSurveysUseCase(Context context) {
+    public PushUseCase(Context context) {
         this.context = context;
     }
 
     public void execute(Callback callback) {
         mCallback = callback;
 
-        Log.d(TAG, "Push in Progress" + PushController.getInstance().isPushInProgress());
+        Log.d(TAG, "Push in Progress" + PreferencesState.getInstance().isPushInProgress());
 
         SurveyChecker.launchQuarantineChecker();
 
-        if (PushController.getInstance().isPushInProgress()) {
+        if (PreferencesState.getInstance().isPushInProgress()) {
             return;
         }
 
@@ -60,7 +60,7 @@ public class PushSurveysUseCase {
     private void pushAllPendingSurveys() {
         Log.d(TAG, "pushAllPendingSurveys (Thread:" + Thread.currentThread().getId() + ")");
 
-        PushController.getInstance().setPushInProgress(true);
+        PreferencesState.getInstance().setPushInProgress(true);
 
         //Fixme the method getAllUnsentMalariaSurveys returns all the surveys not sent(completed,
         // inprogres, and hide)
@@ -69,13 +69,13 @@ public class PushSurveysUseCase {
 
         //No surveys to send -> done
         if (surveys == null || surveys.isEmpty()) {
-            PushController.getInstance().setPushInProgress(false);
+            PreferencesState.getInstance().setPushInProgress(false);
             return;
         }
 
         //Server is not ready for push -> move on
         if (!ServerAPIController.isReadyForPush()) {
-            PushController.getInstance().setPushInProgress(false);
+            PreferencesState.getInstance().setPushInProgress(false);
             return;
         }
 
@@ -101,10 +101,10 @@ public class PushSurveysUseCase {
     //// FIXME: 28/12/16 call on loginprepush finish
     //@Subscribe
     public void callbackLoginPrePush() {
-        Log.d(TAG, "callbackLoginPrePush  " + PushController.getInstance().isPushInProgress());
+        Log.d(TAG, "callbackLoginPrePush  " + PreferencesState.getInstance().isPushInProgress());
 
 
-        if (!PushController.getInstance().isPushInProgress()) {
+        if (!PreferencesState.getInstance().isPushInProgress()) {
             return;
         }
         Log.d(TAG, "callbackLoginPrePush");
@@ -130,7 +130,7 @@ public class PushSurveysUseCase {
 
         if (filteredSurveys.size() == 0) {
             stopProgress();
-            PushController.getInstance().setPushInProgress(false);
+            PreferencesState.getInstance().setPushInProgress(false);
             return;
         }
 

@@ -71,7 +71,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         Survey survey = new Survey(null, myanmarProgram, Session.getUser());
         survey.save();
         Session.setMalariaSurvey(survey);
-        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser(), Constants.SURVEY_EXPENSE);
+        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser(), Constants.SURVEY_ISSUE);
         stockSurvey.setCreationDate(survey.getCreationDate());
         stockSurvey.save();
         Session.setStockSurvey(stockSurvey);

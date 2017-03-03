@@ -57,8 +57,8 @@ public class SurveyStock {
         }
     }
 
-    public boolean isExpenseSurvey() {
-        return mSurvey.isExpenseSurvey();
+    public boolean isIssueSurvey() {
+        return mSurvey.isIssueSurvey();
     }
 
 }

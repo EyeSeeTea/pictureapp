@@ -5,12 +5,17 @@ import android.content.Context;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+
+import java.util.List;
 
 public class AuthenticationLocalDataSource implements IAuthenticationDataSource {
 
@@ -33,6 +38,8 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         Session.logout();
 
         PopulateDB.wipeDatabase();
+
+        deleteOrgUnitQuestionOptions();
 
         callback.onSuccess(null);
     }
@@ -68,5 +75,18 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, "");
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, "");
         PreferencesState.getInstance().reloadPreferences();
+    }
+
+    private void deleteOrgUnitQuestionOptions() {
+        List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
+        //remove older values, but not the especial "other" option
+        for (Question question : questions) {
+            List<Option> options = question.getAnswer().getOptions();
+            for (Option option : options) {
+                if (QuestionOption.findByQuestionAndOption(question, option).size() == 0) {
+                    option.delete();
+                }
+            }
+        }
     }
 }

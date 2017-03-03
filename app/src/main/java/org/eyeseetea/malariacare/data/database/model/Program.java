@@ -44,7 +44,7 @@ public class Program extends BaseModel {
     @PrimaryKey(autoincrement = true)
     long id_program;
     @Column
-    String uid;
+    String uid_program;
     @Column
     String name;
     @Column
@@ -73,7 +73,7 @@ public class Program extends BaseModel {
     }
 
     public Program(String uid, String name) {
-        this.uid = uid;
+        this.uid_program = uid;
         this.name = name;
     }
 
@@ -89,7 +89,7 @@ public class Program extends BaseModel {
         Context context = PreferencesState.getInstance().getContext();
         return new Select()
                 .from(Program.class)
-                .where(Program_Table.uid
+                .where(Program_Table.uid_program
                         .is(context.getString(R.string.stockProgramUID))).querySingle();
     }
 
@@ -100,18 +100,18 @@ public class Program extends BaseModel {
                 Question_Table.total_questions)
                 .from(Question.class).as(AppDatabase.questionName)
                 .join(Header.class, Join.JoinType.INNER).as(AppDatabase.headerName)
-                .on(Question_Table.id_header.withTable(AppDatabase.questionAlias)
+                .on(Question_Table.id_header_fk.withTable(AppDatabase.questionAlias)
                         .eq(Header_Table.id_header.withTable(AppDatabase.headerAlias)))
 
                 .join(Tab.class, Join.JoinType.INNER).as(AppDatabase.tabName)
-                .on(Header_Table.id_tab.withTable(AppDatabase.headerAlias)
+                .on(Header_Table.id_tab_fk.withTable(AppDatabase.headerAlias)
                         .eq(Tab_Table.id_tab.withTable(AppDatabase.tabAlias)))
 
                 .join(Program.class, Join.JoinType.INNER).as(AppDatabase.programName)
-                .on(Tab_Table.id_program.withTable(AppDatabase.tabAlias)
+                .on(Tab_Table.id_program_fk.withTable(AppDatabase.tabAlias)
                         .eq(Program_Table.id_program.withTable(AppDatabase.programAlias)))
 
-                .where(Program_Table.uid.withTable(AppDatabase.programAlias).eq(
+                .where(Program_Table.uid_program.withTable(AppDatabase.programAlias).eq(
                         p.getUid()))
                 .querySingle();
 
@@ -131,11 +131,11 @@ public class Program extends BaseModel {
     }
 
     public String getUid() {
-        return uid;
+        return uid_program;
     }
 
     public void setUid(String uid) {
-        this.uid = uid;
+        this.uid_program = uid;
     }
 
     public String getName() {
@@ -167,7 +167,7 @@ public class Program extends BaseModel {
         if (orgUnits == null) {
             List<OrgUnitProgramRelation> orgUnitProgramRelations = new Select().from(
                     OrgUnitProgramRelation.class)
-                    .where(OrgUnitProgramRelation_Table.id_program.eq(
+                    .where(OrgUnitProgramRelation_Table.id_program_fk.eq(
                             this.getId_program()))
                     .queryList();
             this.orgUnits = new ArrayList<>();
@@ -199,7 +199,7 @@ public class Program extends BaseModel {
     public List<Tab> getTabs() {
         if (tabs == null) {
             tabs = new Select().from(Tab.class)
-                    .where(Tab_Table.id_program.eq(this.getId_program()))
+                    .where(Tab_Table.id_program_fk.eq(this.getId_program()))
                     .orderBy(Tab_Table.order_pos, true)
                     .queryList();
         }
@@ -207,7 +207,7 @@ public class Program extends BaseModel {
     }
 
     public boolean isStockProgram() {
-        return uid.equals(getContext().getString(R.string.stockProgramUID));
+        return uid_program.equals(getContext().getString(R.string.stockProgramUID));
     }
 
     public static Program findById(Long id_program) {
@@ -220,7 +220,7 @@ public class Program extends BaseModel {
     public static Program findByUID(String UID) {
         return new Select()
                 .from(Program.class)
-                .where(Program_Table.uid
+                .where(Program_Table.uid_program
                         .is(UID)).querySingle();
     }
 
@@ -232,7 +232,7 @@ public class Program extends BaseModel {
         Program program = (Program) o;
 
         if (id_program != program.id_program) return false;
-        if (uid != null ? !uid.equals(program.uid) : program.uid != null) return false;
+        if (uid_program != null ? !uid_program.equals(program.uid_program) : program.uid_program != null) return false;
         return name.equals(program.name);
 
     }
@@ -240,7 +240,7 @@ public class Program extends BaseModel {
     @Override
     public int hashCode() {
         int result = (int) (id_program ^ (id_program >>> 32));
-        result = 31 * result + (uid != null ? uid.hashCode() : 0);
+        result = 31 * result + (uid_program != null ? uid_program.hashCode() : 0);
         result = 31 * result + name.hashCode();
         return result;
     }
@@ -249,13 +249,13 @@ public class Program extends BaseModel {
     public String toString() {
         return "Program{" +
                 "id=" + id_program +
-                ", uid='" + uid + '\'' +
+                ", uid_program='" + uid_program + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }
 
     public static Program getProgram(String uid) {
         return new Select().from(Program.class)
-                .where(Program_Table.uid.eq(uid)).querySingle();
+                .where(Program_Table.uid_program.eq(uid)).querySingle();
     }
 }

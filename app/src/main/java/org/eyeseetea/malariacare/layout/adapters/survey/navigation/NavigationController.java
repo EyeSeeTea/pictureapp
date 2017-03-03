@@ -311,11 +311,14 @@ public class NavigationController {
         nextNode = getCurrentNode().next(option);
         if (nextNode != null && (
                 actualQuestion.getHeader().getTab().getType() == Constants.TAB_MULTI_QUESTION
+                        || actualQuestion.getHeader().getTab().getType()
+                        == Constants.TAB_DYNAMIC_TREATMENT
                         || nextNode.getQuestion().getOutput() == Constants.HIDDEN)) {
             while (nextNode != null && (nextNode.getQuestion().getHeader().getTab().equals(
                     actualQuestion.getHeader().getTab())
                     || nextNode.getQuestion().getOutput() == Constants.HIDDEN)) {
-                nextNode = (nextNode.getSibling() != null) ? nextNode.next() : null;
+                Option optionNext = nextNode.getQuestion().getOptionBySession();
+                nextNode = nextNode.next(optionNext);
             }
         }
 

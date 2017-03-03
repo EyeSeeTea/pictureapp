@@ -76,18 +76,6 @@ public class PushClient {
     private static final String TAG_DATAVALUES = "dataValues";
     private static final String TAG_DATAELEMENT = "dataElement";
     private static final String TAG_VALUE = "value";
-    /**
-     * Hardcoded UID for dataElement PhoneMetaData
-     */
-    public static String PHONEMETADA_UID = "RuNZUhiAmlv";
-    /**
-     * Hardcoded UID for dataElement DATETIME CAPTURE
-     */
-    public static String DATETIME_CAPTURE_UID = "qWMb2UM2ikL";
-    /**
-     * Hardcoded UID for dataElement DATETIME SENT
-     */
-    public static String DATETIME_SENT_UID = "aBahytzj2u0";
     private static String TAG = ".PushClient";
     /**
      * Current server url
@@ -284,14 +272,14 @@ public class PushClient {
         }
 
         PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
-        values.put(prepareDataElementValue(PHONEMETADA_UID, phoneMetaData.getPhone_metaData()));
-        if (DATETIME_CAPTURE_UID != null && !DATETIME_CAPTURE_UID.equals("")) {
-            values.put(prepareDataElementValue(DATETIME_CAPTURE_UID,
+        values.put(prepareDataElementValue((PreferencesState.getInstance().getContext().getString(R.string.control_data_element_phone_metadata)), phoneMetaData.getPhone_metaData()));
+        if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture).equals("")) {
+            values.put(prepareDataElementValue(PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture),
                     EventExtended.format(survey.getCompletionDate(),
                             EventExtended.AMERICAN_DATE_FORMAT)));
         }
-        if (DATETIME_SENT_UID != null && !DATETIME_SENT_UID.equals("")) {
-            values.put(prepareDataElementValue(DATETIME_SENT_UID,
+        if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent).equals("")) {
+            values.put(prepareDataElementValue(PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent),
                     EventExtended.format(new Date(), EventExtended.AMERICAN_DATE_FORMAT)));
         }
         return values;

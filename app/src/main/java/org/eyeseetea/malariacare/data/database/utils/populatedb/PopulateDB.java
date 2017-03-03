@@ -42,13 +42,13 @@ import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.data.database.model.Score;
+import org.eyeseetea.malariacare.data.database.model.StringKey;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -169,6 +169,7 @@ public class PopulateDB {
                         Program program = new Program();
                         program.setUid(line[1]);
                         program.setName(line[2]);
+                        program.setStageUid(line[3]);
                         program.save();
                         programList.put(Integer.valueOf(line[0]), program);
                         break;

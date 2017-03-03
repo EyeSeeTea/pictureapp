@@ -1233,10 +1233,7 @@ public class Question extends BaseModel {
         long optionId = option.getId_option().longValue();
         for (QuestionOption questionOption : questionOptions) {
             //Other options must be discarded
-            long currentOptionId = questionOption.getOption().getId_option().longValue();
-            if (optionId != currentOptionId) {
-                continue;
-            }
+            if (discardOptions(optionId, questionOption)) continue;
             Match match = questionOption.getMatch();
             if (match == null) {
                 continue;
@@ -1262,6 +1259,16 @@ public class Question extends BaseModel {
         return childrenQuestions;
     }
 
+    private boolean discardOptions(long optionId, QuestionOption questionOption) {
+        if(questionOption.getOption()==null)
+            return true;
+        long currentOptionId = questionOption.getOption().getId_option().longValue();
+        if (optionId != currentOptionId) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Find the counter question for this question taking into the account the given option.
      * Only 1 counter question will be activated by option
@@ -1283,10 +1290,7 @@ public class Question extends BaseModel {
         long optionId = option.getId_option().longValue();
         for (QuestionOption questionOption : questionOptions) {
             //Other options must be discarded
-            long currentOptionId = questionOption.getOption().getId_option().longValue();
-            if (optionId != currentOptionId) {
-                continue;
-            }
+            if (discardOptions(optionId, questionOption)) continue;
             Match match = questionOption.getMatch();
             if (match == null) {
                 continue;
@@ -1438,12 +1442,20 @@ public class Question extends BaseModel {
         return uid_question.equals(getContext().getString(R.string.act24QuestionUID));
     }
 
+    public boolean isACT() {
+        return isACT6() || isACT12() || isACT18() || isACT24();
+    }
+
     public boolean isCq() {
         return uid_question.equals(getContext().getString(R.string.cqQuestionUID));
     }
 
     public boolean isPq() {
         return uid_question.equals(getContext().getString(R.string.pqQuestionUID));
+    }
+
+    public boolean isDynamicTreatmentQuestion() {
+        return uid_question.equals(getContext().getString(R.string.dynamicTreatmentQuestionUID));
     }
 
     public boolean isInvalidRDTQuestion(){
@@ -1528,6 +1540,10 @@ public class Question extends BaseModel {
             }
         }
         return false;
+    }
+
+    public boolean hasDataElement() {
+        return !Constants.QUESTION_TYPES_NO_DATA_ELEMENT.contains(output);
     }
 
     @Override

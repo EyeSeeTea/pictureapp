@@ -20,6 +20,7 @@ import org.hisp.dhis.client.sdk.android.api.persistence.flow.ProgramStageFlow_Ta
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow_Table;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.UserAccountFlow;
+import org.hisp.dhis.client.sdk.models.category.CategoryOption;
 import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.program.ProgramType;
 
@@ -147,5 +148,23 @@ public class SdkQueries {
 
         new Index<Value>(Constants.VALUE_IDX).on(Value.class, Value$Table.ID_SURVEY).enable();
         */
+    }
+
+    public static String getCategoryOptionUIDByCurrentUser() {
+        String userName =
+                D2.me().userCredentials().toBlocking().single().getUsername().toLowerCase();
+
+        List<CategoryOption> categoryOptions =
+                D2.categoryOptions().list().toBlocking().single();
+
+        for (CategoryOption categoryOption : categoryOptions) {
+            if (categoryOption.getCode() != null
+                    && categoryOption.getCode().toLowerCase().equals(
+                    userName)) {
+                return categoryOption.getUId();
+            }
+        }
+
+        return null;
     }
 }

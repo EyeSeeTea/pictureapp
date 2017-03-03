@@ -186,4 +186,9 @@ public class ReadWriteDB {
             }
         }
     }
+
+
+    public static Value insertValue(String value, Question question, Survey survey){
+        return  new Value(value, question, survey);
+    }
 }

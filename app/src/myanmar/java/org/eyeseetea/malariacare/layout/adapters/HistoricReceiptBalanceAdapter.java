@@ -78,7 +78,7 @@ public class HistoricReceiptBalanceAdapter extends RecyclerView.Adapter<Recycler
     }
 
     private void putValuesToHeader(HeaderViewHolder holder) {
-        if (mType == Constants.SURVEY_BALANCE) {
+        if (mType == Constants.SURVEY_RESET) {
             holder.title.setText(R.string.reset_on);
         } else {
             holder.title.setText(R.string.received);

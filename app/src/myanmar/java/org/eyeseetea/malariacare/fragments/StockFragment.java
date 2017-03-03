@@ -79,7 +79,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showNewReceiptBalanceFragment(Constants.SURVEY_BALANCE);
+                        showNewReceiptBalanceFragment(Constants.SURVEY_RESET);
                     }
                 });
 
@@ -87,7 +87,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showHistoricReceiptBalanceFragment(Constants.SURVEY_BALANCE);
+                        showHistoricReceiptBalanceFragment(Constants.SURVEY_RESET);
                     }
                 });
         view.findViewById(R.id.fragment_stock_see_receipt).setOnClickListener(
@@ -247,7 +247,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
             replaceFragment(R.id.dashboard_stock_container, newReceiptBalanceFragment);
 
             int headerString=R.string.fragment_new_receipt;
-            if(type==Constants.SURVEY_BALANCE){
+            if (type == Constants.SURVEY_RESET) {
                 headerString=R.string.fragment_new_reset;
             }
             DashboardHeaderStrategy.getInstance().init(activity, headerString);
@@ -268,7 +268,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
             replaceFragment(R.id.dashboard_stock_container, historicReceiptBalanceFragment);
 
             int headerString=R.string.fragment_historic_receipt_balance;
-            if(type==Constants.SURVEY_BALANCE){
+            if (type == Constants.SURVEY_RESET) {
                 headerString=R.string.fragment_historic_reset;
             }
             DashboardHeaderStrategy.getInstance().init(activity,headerString);

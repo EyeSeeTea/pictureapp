@@ -1649,6 +1649,41 @@ public class Question extends BaseModel {
                 '}';
     }
 
+    public List<Question> getPropagationQuestions() {
+        List<Question> propagationQuestion= new ArrayList<>();
+        //No matches no children
+        List<Match> matches = getMatches();
+        if (matches.size() == 0) {
+            this.children = new ArrayList<>();
+            return this.children;
+        }
+
+        Iterator<Match> matchesIterator = matches.iterator();
+        Condition.In in = Match_Table.id_match.withTable(matchAlias)
+                .in(matchesIterator.next().getId_match());
+        while (matchesIterator.hasNext()) {
+            in.and(Long.toString(matchesIterator.next().getId_match()));
+        }
+
+        //Select question from questionrelation where operator=1 and id_match in (..)
+        propagationQuestion = new Select().from(Question.class).as(questionName)
+                //Question + QuestioRelation
+                .join(QuestionRelation.class, Join.JoinType.LEFT_OUTER).as(questionRelationName)
+                .on(Question_Table.id_question.withTable(questionAlias)
+                        .eq(QuestionRelation_Table.id_question_fk.withTable(
+                                questionRelationAlias)))
+                //+Match
+                .join(Match.class, Join.JoinType.LEFT_OUTER).as(matchName)
+                .on(QuestionRelation_Table.id_question_relation.withTable(questionRelationAlias)
+                        .eq(Match_Table.id_question_relation_fk.withTable(matchAlias)))
+                //Parent child relationship
+                .where(in)
+                //In clause
+                .and(QuestionRelation_Table.operation.withTable(questionRelationAlias).eq(
+                        QuestionRelation.MATCH_PROPAGATE)).queryList();
+        return propagationQuestion;
+    }
+
 
     private static class QuestionOrderComparator implements Comparator {
 

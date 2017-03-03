@@ -62,6 +62,11 @@ public class QuestionRelation extends BaseModel {
 
     public static final int TREATMENT_MATCH = 5;
 
+    /**
+     * This match propagate the value from questionrelation question to the matched question
+     */
+    public static final int MATCH_PROPAGATE = 6;
+
     private static final String TAG = ".QuestionRelation";
     @Column
     @PrimaryKey(autoincrement = true)

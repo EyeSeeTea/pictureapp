@@ -280,7 +280,7 @@ public class OrgUnit extends BaseModel {
     public static OrgUnit findByUID(String UID) {
         return new Select()
                 .from(OrgUnit.class)
-                .where(OrgUnit_Table.uid
+                .where(OrgUnit_Table.uid_org_unit
                         .is(UID)).querySingle();
     }
 }

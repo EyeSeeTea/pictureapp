@@ -356,7 +356,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
                 .where(Survey_Table.status.withTable(surveyAlias)
                         .is(Constants.SURVEY_SENT))
-                .where(Survey_Table.status.withTable(surveyAlias)
+                .and(Survey_Table.status.withTable(surveyAlias)
                         .is(Constants.SURVEY_QUARANTINE))
                 .and(Program_Table.uid_program.withTable(programAlias)
                         .isNot(context.getString(R.string.stockProgramUID)))
@@ -1226,7 +1226,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
                 .and(Survey_Table.id_program_fk.eq(program.getId_program()))
                 .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
-                .orderBy(OrderBy.fromProperty(Survey_Table.eventDate).descending()).queryList();
+                .orderBy(OrderBy.fromProperty(Survey_Table.event_date).descending()).queryList();
     }
 
     public static Date getMinQuarantineCompletionDateByProgramAndOrgUnit(Program program,
@@ -1236,7 +1236,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
                 .and(Survey_Table.id_program_fk.eq(program.getId_program()))
                 .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
-                .orderBy(OrderBy.fromProperty(Survey_Table.completionDate).ascending())
+                .orderBy(OrderBy.fromProperty(Survey_Table.completion_date).ascending())
                 .querySingle();
         return survey.getCompletionDate();
     }
@@ -1248,7 +1248,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
                 .and(Survey_Table.id_program_fk.eq(program.getId_program()))
                 .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
-                .orderBy(OrderBy.fromProperty(Survey_Table.eventDate).descending())
+                .orderBy(OrderBy.fromProperty(Survey_Table.event_date).descending())
                 .querySingle();
         return survey.getEventDate();
     }

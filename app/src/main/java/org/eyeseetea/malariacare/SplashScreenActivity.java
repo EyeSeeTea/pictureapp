@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
-import com.raizlabs.android.dbflow.config.FlowConfig;
-import com.raizlabs.android.dbflow.config.FlowManager;
 
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
@@ -40,11 +37,6 @@ public class SplashScreenActivity extends Activity {
         LocationMemory.getInstance().init(getApplicationContext());
 
         D2.init(this);
-        FlowConfig flowConfig = new FlowConfig
-                .Builder(this)
-                .addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
-                .build();
-        FlowManager.init(flowConfig);
         SdkQueries.createDBIndexes();
 
         //TODO: after mega merge

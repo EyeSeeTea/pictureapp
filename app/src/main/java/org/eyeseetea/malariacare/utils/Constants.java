@@ -86,7 +86,7 @@ public class Constants {
             SURVEY_SENDING = 6;
     // ############# SURVEY TYPE ###############
     public static final int SURVEY_NO_TYPE=-1,
-            SURVEY_BALANCE = 0,
+            SURVEY_RESET = 0,
             SURVEY_EXPENSE = 1,
             SURVEY_RECEIPT = 2,
             SURVEY_MCS = 3;

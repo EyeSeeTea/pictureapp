@@ -65,7 +65,7 @@ public class StockService extends IntentService {
     private void prepareStockData() {
         Log.i(TAG, "Preparing stock data...");
 
-        Date lastEvenSurveyDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
+        Date lastEvenSurveyDate = Survey.getLastDateForSurveyType(Constants.SURVEY_RESET);
         Date queryDate = lastEvenSurveyDate;
         if (lastEvenSurveyDate == null || Utils.dateGreaterOrEqualsThanDate(Utils.getTodayDate(),
                 lastEvenSurveyDate)) {

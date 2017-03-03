@@ -126,7 +126,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     /**
      * Added to save the dose by a quetion id when questions are dynamic treatment questions
      */
-    HashMap<Long, Integer> doseByQuestion;
+    HashMap<Long, Float> doseByQuestion;
     /**
      * Flag that indicates if the current survey in session is already sent or not (it affects
      * readonly settings)
@@ -546,10 +546,14 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (screenQuestion.isDynamicStockQuestion()) {
                 Treatment treatment = new Treatment(getMalariaSurvey(),
                         Session.getStockSurvey());
-                Question actAnsweredNo = treatment.getACTQuestionAnsweredNo();
-                screenQuestion.setAnswer(treatment.getACTOptions(actAnsweredNo));
-                ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptionDose(
-                        treatment.getOptionDose(actAnsweredNo));
+                if (treatment.hasTreatment()) {
+                    org.eyeseetea.malariacare.data.database.model.Treatment dbTreatment =
+                            treatment.getTreatment();
+                    Question actAnsweredNo = treatment.getACTQuestionAnsweredNo();
+                    screenQuestion.setAnswer(treatment.getACTOptions(dbTreatment));
+                    ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptionDose(
+                            treatment.getOptionDose(dbTreatment));
+                }
                 ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setQuestion(
                         screenQuestion);
                 ((DynamicStockImageRadioButtonSingleQuestionView) questionView).setOptions(

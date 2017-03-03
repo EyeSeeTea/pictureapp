@@ -93,6 +93,12 @@
                 android:padding="16dp"
                 android:weightSum="1">
 
+                <LinearLayout
+                    android:id="@+id/login_dynamic_views_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"

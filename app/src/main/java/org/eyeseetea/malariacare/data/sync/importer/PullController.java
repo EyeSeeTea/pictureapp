@@ -42,7 +42,8 @@ public class PullController implements IPullController {
     private static String TAG = "PullController";
 
     PullDhisSDKDataSource mPullRemoteDataSource = new PullDhisSDKDataSource();
-    ConvertFromSDKVisitor mConverter = new ConvertFromSDKVisitor();
+    ConvertFromSDKVisitor mConverter;
+    DataConverter mDataConverter;
     private Context mContext;
     private boolean cancelPull;
 
@@ -50,7 +51,8 @@ public class PullController implements IPullController {
         mContext = context;
 
         mPullRemoteDataSource = new PullDhisSDKDataSource();
-        mConverter = new ConvertFromSDKVisitor();
+        mConverter = new ConvertFromSDKVisitor(context);
+        mDataConverter = new DataConverter();
     }
 
     @Override
@@ -186,7 +188,7 @@ public class PullController implements IPullController {
 
         callback.onStep(PullStep.CONVERT_DATA);
 
-        DataConverter.convert(callback, mConverter);
+        mDataConverter.convert(callback, mConverter);
     }
 
     //TODO jsanchez

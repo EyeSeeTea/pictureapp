@@ -4,30 +4,46 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.drugAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.drugCombinationAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.drugCombinationName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.drugName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
+import static org.eyeseetea.malariacare.data.database.model.Organisation_Table.id_organisation;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Join;
+import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(database = AppDatabase.class)
 public class Treatment extends BaseModel {
+
+    public static final int TYPE_MAIN = 0;
+    public static final int TYPE_NOT_MAIN = 1;
+    private static final String treatmentName = "t";
+    private static final String treatmentMatchName = "tm";
+
+    public static final NameAlias treatmentAlias = NameAlias.builder(treatmentName).build();
+    public static final NameAlias treatmentMatchAlias = NameAlias.builder(
+            treatmentMatchName).build();
+
     @Column
     @PrimaryKey(autoincrement = true)
     long id_treatment;
     @Column
-    Long id_organisation;
+    Long id_organisation_fk;
     @Column
-    String diagnosis;
+    Long diagnosis;
     @Column
-    String message;
-
+    Long message;
+    @Column
+    int type;
     /**
      * Reference to organisation (loaded lazily)
      */
@@ -37,10 +53,10 @@ public class Treatment extends BaseModel {
     public Treatment() {
     }
 
-    public Treatment(long id_treatment, long id_drug_combination, long id_organisation,
-            String diagnosis, String message) {
+    public Treatment(long id_treatment, long id_organisation, Long diagnosis, Long message,
+            int type) {
         this.id_treatment = id_treatment;
-        this.id_organisation = id_organisation;
+        this.id_organisation_fk = id_organisation;
         this.diagnosis = diagnosis;
         this.message = message;
     }
@@ -61,12 +77,31 @@ public class Treatment extends BaseModel {
         return new Select().from(Drug.class).as(drugName)
                 .join(DrugCombination.class, Join.JoinType.LEFT_OUTER).as(drugCombinationName)
                 .on(Drug_Table.id_drug.withTable(drugAlias)
-                        .eq(DrugCombination_Table.id_drug.withTable(drugCombinationAlias)))
-                .where(DrugCombination_Table.id_treatment.withTable(drugCombinationAlias)
+                        .eq(DrugCombination_Table.id_drug_fk.withTable(drugCombinationAlias)))
+                .where(DrugCombination_Table.id_treatment_fk.withTable(drugCombinationAlias)
                         .is(id_treatment)).queryList();
 
     }
 
+    public List<Treatment> getAlternativeTreatments() {
+        Match match=new Select()
+                .from(Match.class).as(matchName)
+                .join(TreatmentMatch.class, Join.JoinType.INNER).as(treatmentMatchName)
+                .on(Match_Table.id_match.withTable(matchAlias).is(TreatmentMatch_Table.id_match_fk.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatch_Table.id_treatment_fk.withTable(treatmentMatchAlias).is(id_treatment))
+                .querySingle();
+        List<Treatment> treatments = new Select()
+                .from(Treatment.class).as(treatmentName)
+                .join(TreatmentMatch.class, Join.JoinType.INNER).as(treatmentMatchName)
+                .on(Treatment_Table.id_treatment.withTable(treatmentAlias)
+                        .eq(TreatmentMatch_Table.id_treatment_fk.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatch_Table.id_match_fk.withTable(treatmentMatchAlias)
+                        .is(match.getId_match()))
+                .and(Treatment_Table.type.withTable(treatmentAlias).is(TYPE_NOT_MAIN))
+                .queryList();
+        //FIXME: select split in two because DBFLOW bug
+        return treatments;
+    }
 
     public long getId_treatment() {
         return id_treatment;
@@ -79,41 +114,49 @@ public class Treatment extends BaseModel {
 
     public Organisation getOrganisation() {
         if (organisation == null) {
-            if (id_organisation == null) {
+            if (id_organisation_fk == null) {
                 return null;
             }
             organisation = new Select()
                     .from(Organisation.class)
-                    .where(Organisation_Table.id_organisation
-                            .is(id_organisation)).querySingle();
+                    .where(id_organisation
+                            .is(id_organisation_fk)).querySingle();
         }
         return organisation;
     }
 
     public void setOrganisation(Long id_organisation) {
-        this.id_organisation = id_organisation;
+        this.id_organisation_fk = id_organisation;
         organisation = null;
     }
 
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
-        this.id_organisation = (organisation != null) ? organisation.getId_organisation() : null;
+        this.id_organisation_fk = (organisation != null) ? organisation.getId_organisation() : null;
     }
 
-    public String getDiagnosis() {
+    public Long getDiagnosis() {
         return diagnosis;
     }
 
-    public void setDiagnosis(String diagnosis) {
+    public void setDiagnosis(Long diagnosis) {
         this.diagnosis = diagnosis;
     }
 
-    public String getMessage() {
+    public Long getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Long message) {
         this.message = message;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Override
@@ -124,7 +167,11 @@ public class Treatment extends BaseModel {
         Treatment treatment = (Treatment) o;
 
         if (id_treatment != treatment.id_treatment) return false;
-        if (id_organisation != treatment.id_organisation) return false;
+        if (type != treatment.type) return false;
+        if (id_organisation != null ? !id_organisation.equals(treatment.id_organisation_fk)
+                : treatment.id_organisation_fk != null) {
+            return false;
+        }
         if (diagnosis != null ? !diagnosis.equals(treatment.diagnosis)
                 : treatment.diagnosis != null) {
             return false;
@@ -136,19 +183,23 @@ public class Treatment extends BaseModel {
     @Override
     public int hashCode() {
         int result = (int) (id_treatment ^ (id_treatment >>> 32));
-        result = 31 * result + (int) (id_organisation ^ (id_organisation >>> 32));
+        result = 31 * result + (id_organisation_fk != null ? id_organisation_fk.hashCode() : 0);
         result = 31 * result + (diagnosis != null ? diagnosis.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + type;
         return result;
     }
+
 
     @Override
     public String toString() {
         return "Treatment{" +
                 "id_treatment=" + id_treatment +
-                ", id_organisation=" + id_organisation +
+                ", id_organisation_fk=" + id_organisation_fk +
                 ", diagnosis='" + diagnosis + '\'' +
                 ", message='" + message + '\'' +
+                ", type=" + type +
+                ", organisation=" + organisation +
                 '}';
     }
 

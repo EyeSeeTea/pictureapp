@@ -38,13 +38,13 @@ public class User extends BaseModel {
     @PrimaryKey(autoincrement = true)
     long id_user;
     @Column
-    String uid;
+    String uid_user;
     @Column
     String name;
     @Column
-    long organisation;
+    long organisation_fk;
     @Column
-    long supervisor;
+    long supervisor_fk;
 
     /**
      * List of surveys of this user
@@ -55,17 +55,17 @@ public class User extends BaseModel {
     }
 
     public User(String uid, String name) {
-        this.uid = uid;
+        this.uid_user = uid;
         this.name = name;
     }
 
     public User(long id_user, String uid, String name, long organisation, long supervisor,
             List<Survey> surveys) {
         this.id_user = id_user;
-        this.uid = uid;
+        this.uid_user = uid;
         this.name = name;
-        this.organisation = organisation;
-        this.supervisor = supervisor;
+        this.organisation_fk = organisation;
+        this.supervisor_fk = supervisor;
         this.surveys = surveys;
     }
 
@@ -121,11 +121,11 @@ public class User extends BaseModel {
     }
 
     public String getUid() {
-        return uid;
+        return uid_user;
     }
 
     public void setUid(String uid) {
-        this.uid = uid;
+        this.uid_user = uid;
     }
 
     public String getName() {
@@ -140,26 +140,26 @@ public class User extends BaseModel {
         if (surveys == null) {
             surveys = new Select()
                     .from(Survey.class)
-                    .where(Survey_Table.id_user
+                    .where(Survey_Table.id_user_fk
                             .eq(this.getId_user())).queryList();
         }
         return surveys;
     }
 
     public long getOrganisation() {
-        return organisation;
+        return organisation_fk;
     }
 
     public void setOrganisation(long organisation) {
-        this.organisation = organisation;
+        this.organisation_fk = organisation;
     }
 
     public long getSupervisor() {
-        return supervisor;
+        return supervisor_fk;
     }
 
     public void setSupervisor(long supervisor) {
-        this.supervisor = supervisor;
+        this.supervisor_fk = supervisor;
     }
 
     @Override
@@ -170,9 +170,9 @@ public class User extends BaseModel {
         User user = (User) o;
 
         if (id_user != user.id_user) return false;
-        if (organisation != user.organisation) return false;
-        if (supervisor != user.supervisor) return false;
-        if (uid != null ? !uid.equals(user.uid) : user.uid != null) return false;
+        if (organisation_fk != user.organisation_fk) return false;
+        if (supervisor_fk != user.supervisor_fk) return false;
+        if (uid_user != null ? !uid_user.equals(user.uid_user) : user.uid_user != null) return false;
         return name != null ? name.equals(user.name) : user.name == null;
 
     }
@@ -180,21 +180,21 @@ public class User extends BaseModel {
     @Override
     public int hashCode() {
         int result = (int) (id_user ^ (id_user >>> 32));
-        result = 31 * result + (uid != null ? uid.hashCode() : 0);
+        result = 31 * result + (uid_user != null ? uid_user.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (int) (organisation ^ (organisation >>> 32));
-        result = 31 * result + (int) (supervisor ^ (supervisor >>> 32));
+        result = 31 * result + (int) (organisation_fk ^ (organisation_fk >>> 32));
+        result = 31 * result + (int) (supervisor_fk ^ (supervisor_fk >>> 32));
         return result;
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "id_user=" + id_user +
-                ", uid='" + uid + '\'' +
+                "id_user_fk=" + id_user +
+                ", uid='" + uid_user + '\'' +
                 ", name='" + name + '\'' +
-                ", organisation=" + organisation +
-                ", supervisor=" + supervisor +
+                ", organisation=" + organisation_fk +
+                ", supervisor=" + supervisor_fk +
                 ", surveys=" + surveys +
                 '}';
     }

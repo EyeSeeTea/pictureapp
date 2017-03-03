@@ -305,6 +305,10 @@ public class TreatmentTable {
             addDrugTreatment(drugsCombinationLines, treatmentLines,
                     mContext.getResources().getString(R.string.pqQuestionUID), line[17]);
         }
+        if (!line[18].isEmpty()) {
+            addDrugTreatment(drugsCombinationLines, treatmentLines,
+                    mContext.getResources().getString(R.string.referralQuestionUID), line[18]);
+        }
     }
 
     private void addMatch(List<String[]> matchLines, String questionRelationId) throws IOException {

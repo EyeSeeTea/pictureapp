@@ -170,7 +170,6 @@ public class Treatment {
                 Log.d(TAG, "Question: " + questions.get(questions.size() - 1) + "\n");
             }
         }
-        questions.add(Question.findByUID(getContext().getString(R.string.referralQuestionUID)));
 
         return questions;
     }

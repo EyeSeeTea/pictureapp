@@ -21,7 +21,6 @@ public class MockedPushSurveysUseCase {
                 stockSurvey.save();
             }
         }
-
         callback.onPushFinished();
     }
 

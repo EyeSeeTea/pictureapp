@@ -83,7 +83,7 @@ public class ReadWriteDB {
                             : Session.getMalariaSurvey());
             createOrSaveDDLValue(question, option, value, survey);
             for (Question propagateQuestion : question.getPropagationQuestions()) {
-                createOrSaveDDLValue(propagateQuestion, option, value, Session.getMalariaSurvey());
+                createOrSaveDDLValue(propagateQuestion, option, Value.findValue(propagateQuestion.getId_question(), Session.getMalariaSurvey()), Session.getMalariaSurvey());
             }
         } else {
             deleteValues(question, value);
@@ -118,7 +118,7 @@ public class ReadWriteDB {
         } else {
             createOrSaveValue(question, answer, value, survey);
             for (Question propagateQuestion : question.getPropagationQuestions()) {
-                createOrSaveValue(propagateQuestion, answer, value, Session.getMalariaSurvey());
+                createOrSaveValue(propagateQuestion, answer, Value.findValue(propagateQuestion.getId_question(), Session.getMalariaSurvey()), Session.getMalariaSurvey());
             }
         }
     }
@@ -158,7 +158,7 @@ public class ReadWriteDB {
         List<Value> stockValues = survey.getValues();
         for (Value value : stockValues) {
             if ((question.isACT() && value.getQuestion().isACT())) {
-                deleteValues(question, value);
+                deleteValues(value.getQuestion(), value);
             }
         }
         Survey malariaSurvey = Session.getMalariaSurvey();

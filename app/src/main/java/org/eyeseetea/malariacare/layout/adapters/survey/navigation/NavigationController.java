@@ -7,7 +7,6 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -370,7 +369,7 @@ public class NavigationController {
         }
 
         while (getCurrentNode() != null && getCurrentNode() != warningNode.previous()) {
-            ReadWriteDB.deleteValue(getCurrentQuestion());
+            getCurrentQuestion().deleteValueBySession();
             previous();
         }
     }

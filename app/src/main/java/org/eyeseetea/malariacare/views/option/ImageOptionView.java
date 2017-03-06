@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -84,7 +83,7 @@ public class ImageOptionView extends LinearLayout {
             return;
         }
 
-        String counterValue = ReadWriteDB.readValueQuestion(optionCounter);
+        String counterValue = optionCounter.getQuestionValueBySession();
         if (counterValue == null || counterValue.isEmpty()) {
             return;
         }

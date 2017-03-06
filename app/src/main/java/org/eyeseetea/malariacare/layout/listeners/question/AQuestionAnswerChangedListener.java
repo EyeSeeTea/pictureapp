@@ -10,7 +10,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
@@ -55,7 +54,7 @@ public abstract class AQuestionAnswerChangedListener {
 
     protected void saveValue(View view, String newValue) {
         Question question = (Question) view.findViewById(R.id.answer).getTag();
-        ReadWriteDB.saveValuesText(question, newValue);
+        question.saveValuesText(newValue);
 
         showOrHideChildren(question);
     }
@@ -63,7 +62,7 @@ public abstract class AQuestionAnswerChangedListener {
 
     protected void saveValue(View view, Option option) {
         Question question = (Question) view.findViewById(R.id.answer).getTag();
-        ReadWriteDB.saveValuesDDL(question, option, question.getValueBySession());
+        question.saveValuesDDL(option, question.getValueBySession());
 
         showOrHideChildren(question);
     }
@@ -141,7 +140,7 @@ public abstract class AQuestionAnswerChangedListener {
             case Constants.SHORT_TEXT:
             case Constants.DROPDOWN_LIST:
             case Constants.DROPDOWN_OU_LIST:
-                ReadWriteDB.deleteValue(rowQuestion);
+                rowQuestion.deleteValueBySession();
                 break;
             case Constants.SWITCH_BUTTON:
                 //the 0 option is the left option and is false in the switch, the 1 option is the
@@ -211,7 +210,7 @@ public abstract class AQuestionAnswerChangedListener {
         if (selectedOption == null) {
             return;
         }
-        ReadWriteDB.saveValuesDDL(question, selectedOption, question.getValueBySession());
+        question.saveValuesDDL(selectedOption, question.getValueBySession());
         showOrHideChildren(question);
     }
 

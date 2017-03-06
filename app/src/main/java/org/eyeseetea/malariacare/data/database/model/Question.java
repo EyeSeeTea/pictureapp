@@ -867,8 +867,6 @@ public class Question extends BaseModel {
                     this.sibling.getCode()));
         }
         return this.sibling.isNullQuestion() ? null : this.sibling;
-
-
     }
 
     private Question getSiblingWithParent() {
@@ -968,8 +966,41 @@ public class Question extends BaseModel {
         return this.questionThresholds;
     }
 
+    public Option getAnsweredOption() {
+        Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
+                : Session.getMalariaSurvey());
+
+        Value value = Value.findValue(question.getId_question(), survey);
+        if (value != null) {
+            return Option.findById(value.getId_option());
+        }
+        return null;
+    }
+
+    public Option getOptionByValueInSession() {
+        Option option = null;
+        Value value = question.getValueBySession();
+
+        if (value != null) {
+            option = value.getOption();
+        }
+        return option;
+    }
+
     private Context getContext(){
         return PreferencesState.getInstance().getContext();
+    }
+
+    public String getQuestionValueBySession() {
+        String result = null;
+
+        Value value = getValueBySession();
+
+        if (value != null) {
+            result = value.getValue();
+        }
+
+        return result;
     }
 
     /**
@@ -986,6 +1017,77 @@ public class Question extends BaseModel {
         Float denum = ScoreRegister.calcDenum(this, survey);
         ScoreRegister.addRecord(this, num, denum);
         return Arrays.asList(num, denum);
+    }
+
+    public void saveValuesDDL(Option option, Value value) {
+        //No option, nothing to save
+        if (option == null) {
+            return;
+        }
+        if (value != null && isTreatmentQuestion() && question.isACT()
+                && !option.getId_option().equals(value.getId_option())) {
+            List<Survey> surveys = new ArrayList<>();
+            surveys.add(Session.getStockSurvey());
+            surveys.add(Session.getMalariaSurvey());
+            for (Survey survey : surveys) {
+                survey.deleteStockValues();
+            }
+        }
+
+        if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
+            Survey survey =
+                    ((isStockQuestion() || isPq() || isACT())
+                            ? Session.getStockSurvey()
+                            : Session.getMalariaSurvey());
+            if (value == null) {
+                value = new Value(option, this, survey);
+            } else {
+                if (!value.getOption().equals(option) && hasChildren()
+                        && !isDynamicTreatmentQuestion()) {
+                    survey.removeChildrenValuesFromQuestionRecursively(this, false);
+                }
+                value.setOption(option);
+                value.setValue(option.getName());
+            }
+            value.save();
+        } else {
+            if (value != null) value.delete();
+        }
+    }
+
+    public void saveValuesText(String answer) {
+        Value value = getValueBySession();
+        Survey survey = (isStockQuestion() ? Session.getStockSurvey()
+                : Session.getMalariaSurvey());
+        if ((isTreatmentQuestion() || isPq() || isACT()) && value != null
+                && !value.getValue().equals(answer)) {
+            List<Survey> surveys = new ArrayList<>();
+            surveys.add(Session.getStockSurvey());
+            surveys.add(Session.getMalariaSurvey());
+            for(Survey surveyToClean: surveys) {
+                surveyToClean.deleteStockValues();
+            }
+        }
+        if (isStockQuestion() && value != null && answer.equals("-1")) {
+            value.delete();
+        } else {
+            // If the value is not found we create one
+            if (value == null) {
+                value = new Value(answer, this, survey);
+            } else {
+                value.setOption((Long) null);
+                value.setValue(answer);
+            }
+            value.save();
+        }
+    }
+
+    public void deleteValueBySession() {
+        Value value = getValueBySession();
+
+        if (value != null) {
+            value.delete();
+        }
     }
 
     /*Returns true if the question belongs to a Custom Tab*/
@@ -1451,7 +1553,7 @@ public class Question extends BaseModel {
     }
 
     public boolean isDynamicTreatmentQuestion() {
-        return uid.equals(getContext().getString(R.string.dynamicTreatmentQuestionUID));
+        return uid_question.equals(getContext().getString(R.string.dynamicTreatmentQuestionUID));
     }
 
     public boolean isInvalidRDTQuestion(){

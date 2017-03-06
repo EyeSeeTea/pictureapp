@@ -82,8 +82,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void sendSurvey() {
         Session.getMalariaSurvey().updateSurveyStatus();
-        Session.getStockSurvey().complete();
+        Survey stockSurvey = Session.getStockSurvey();
+        if (stockSurvey != null) {
+            Session.getStockSurvey().complete();
         new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
+        }
     }
 
     @Override

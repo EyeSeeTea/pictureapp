@@ -91,7 +91,7 @@ public class LoginActivity extends AbsLoginActivity {
         }
 
         ViewGroup loginViewsContainer = (ViewGroup) findViewById(
-                R.id.layout_login_views);
+                R.id.login_dynamic_views_container);
 
         getLayoutInflater().inflate(R.layout.login_spinner, loginViewsContainer,
                 true);

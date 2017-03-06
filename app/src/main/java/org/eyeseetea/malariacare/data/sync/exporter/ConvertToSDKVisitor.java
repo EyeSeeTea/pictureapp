@@ -36,7 +36,6 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
-import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.ShowException;
@@ -204,7 +203,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     private void buildAndSaveDataValue(String UID, String value, EventExtended event) {
         DataValueExtended dataValue = new DataValueExtended();
         dataValue.setDataElement(UID);
-        dataValue.setLocalEventId(event.getLocalId());
         dataValue.setEvent(event.getEvent());
         dataValue.setProvidedElsewhere(false);
         if (Session.getUser() != null) {

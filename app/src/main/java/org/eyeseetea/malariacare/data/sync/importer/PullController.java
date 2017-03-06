@@ -20,6 +20,7 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
@@ -201,6 +202,30 @@ public class PullController implements IPullController {
         mDataConverter.convert(callback, mConverter);
     }
 
+    private class PopulateDbAsync extends AsyncTask<Void,Void,Void>
+    {
+        boolean isDemo;
+        Callback callback;
+
+        public PopulateDbAsync(boolean isDemo) {
+            this.isDemo = isDemo;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                populateMetadataFromCsvs(isDemo);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
     //TODO jsanchez
     //public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
 

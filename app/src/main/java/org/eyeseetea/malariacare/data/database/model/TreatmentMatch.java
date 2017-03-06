@@ -16,9 +16,9 @@ public class TreatmentMatch extends BaseModel {
     @PrimaryKey(autoincrement = true)
     long id_treatment_match;
     @Column
-    Long id_treatment;
+    Long id_treatment_fk;
     @Column
-    Long id_match;
+    Long id_match_fk;
     /**
      * Reference to the treatment (loaded lazily)
      */
@@ -34,8 +34,8 @@ public class TreatmentMatch extends BaseModel {
 
     public TreatmentMatch(long id_treatment_match, long id_treatment, long id_match) {
         this.id_treatment_match = id_treatment_match;
-        this.id_treatment = id_treatment;
-        this.id_match = id_match;
+        this.id_treatment_fk = id_treatment;
+        this.id_match_fk = id_match;
     }
 
     public static List<TreatmentMatch> getAllTreatmentMatches() {
@@ -64,13 +64,13 @@ public class TreatmentMatch extends BaseModel {
 
     public Treatment getTreatment() {
         if (treatment == null) {
-            if (id_treatment == null) {
+            if (id_treatment_fk == null) {
                 return null;
             }
             treatment = new Select()
                     .from(Treatment.class)
                     .where(Treatment_Table.id_treatment
-                            .is(id_treatment)).querySingle();
+                            .is(id_treatment_fk)).querySingle();
 
         }
         return treatment;
@@ -78,34 +78,34 @@ public class TreatmentMatch extends BaseModel {
 
     public void setTreatment(Treatment treatment) {
         this.treatment = treatment;
-        id_treatment = (treatment != null) ? treatment.id_treatment : null;
+        id_treatment_fk = (treatment != null) ? treatment.id_treatment : null;
     }
 
     public void setTreatment(long id_treatment) {
-        this.id_treatment = id_treatment;
+        this.id_treatment_fk = id_treatment;
         treatment = null;
     }
 
     public Match getMatch() {
         if (match == null) {
-            if (id_match == null) {
+            if (id_match_fk == null) {
                 return null;
             }
             match = new Select()
                     .from(Match.class)
                     .where(Match_Table.id_match
-                            .is(id_match)).querySingle();
+                            .is(id_match_fk)).querySingle();
         }
         return match;
     }
 
     public void setMatch(Match match) {
         this.match = match;
-        id_match = (match != null) ? match.getId_match() : null;
+        id_match_fk = (match != null) ? match.getId_match() : null;
     }
 
     public void setMatch(Long id_match) {
-        this.id_match = id_match;
+        this.id_match_fk = id_match;
         match = null;
     }
 
@@ -118,16 +118,16 @@ public class TreatmentMatch extends BaseModel {
         TreatmentMatch that = (TreatmentMatch) o;
 
         if (id_treatment_match != that.id_treatment_match) return false;
-        if (id_treatment != that.id_treatment) return false;
-        return id_match == that.id_match;
+        if (id_treatment_fk != that.id_treatment_fk) return false;
+        return id_match_fk == that.id_match_fk;
 
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id_treatment_match ^ (id_treatment_match >>> 32));
-        result = 31 * result + (int) (id_treatment ^ (id_treatment >>> 32));
-        result = 31 * result + (int) (id_match ^ (id_match >>> 32));
+        result = 31 * result + (int) (id_treatment_fk ^ (id_treatment_fk >>> 32));
+        result = 31 * result + (int) (id_match_fk ^ (id_match_fk >>> 32));
         return result;
     }
 
@@ -135,8 +135,8 @@ public class TreatmentMatch extends BaseModel {
     public String toString() {
         return "TreatmentMatch{" +
                 "id_treatment_match=" + id_treatment_match +
-                ", id_treatment=" + id_treatment +
-                ", id_match=" + id_match +
+                ", id_treatment_fk=" + id_treatment_fk +
+                ", id_match_fk=" + id_match_fk +
                 '}';
     }
 

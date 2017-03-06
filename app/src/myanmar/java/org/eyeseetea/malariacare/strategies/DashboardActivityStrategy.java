@@ -71,7 +71,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         Survey survey = new Survey(null, myanmarProgram, Session.getUser());
         survey.save();
         Session.setMalariaSurvey(survey);
-        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser(), Constants.SURVEY_EXPENSE);
+        Survey stockSurvey = new Survey(null, stockProgram, Session.getUser(),
+                Constants.SURVEY_EXPENSE);
         stockSurvey.setCreationDate(survey.getCreationDate());
         stockSurvey.save();
         Session.setStockSurvey(stockSurvey);
@@ -81,8 +82,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void sendSurvey() {
         Session.getMalariaSurvey().updateSurveyStatus();
-        Session.getStockSurvey().complete();
+        Survey stockSurvey = Session.getStockSurvey();
+        if (stockSurvey != null) {
+            Session.getStockSurvey().complete();
         new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
+        }
     }
 
     @Override
@@ -94,22 +98,27 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public boolean beforeExit(boolean isBackPressed) {
         Survey malariaSurvey = Session.getMalariaSurvey();
+        boolean isMalariaBackPressed = beforeExitSurvey(isBackPressed, malariaSurvey);
         Survey stockSurvey = Session.getStockSurvey();
-        if (malariaSurvey != null) {
-            boolean isMalariaInProgress = malariaSurvey.isInProgress();
-            boolean isStockSurveyInProgress = stockSurvey.isInProgress();
-            malariaSurvey.getValuesFromDB();
-            stockSurvey.getValuesFromDB();
+        boolean isStockBackPressed = beforeExitSurvey(isBackPressed, stockSurvey);
+        if (!isMalariaBackPressed || !isStockBackPressed) {
+            return false;
+        }
+        return isBackPressed;
+    }
+
+    private boolean beforeExitSurvey(boolean isBackPressed, Survey survey) {
+        if (survey != null) {
+            boolean isInProgress = survey.isInProgress();
+            survey.getValuesFromDB();
             //Exit + InProgress -> delete
-            if (isBackPressed && (isMalariaInProgress || isStockSurveyInProgress)) {
-                if (isMalariaInProgress) {
-                    Session.setMalariaSurvey(null);
-                    malariaSurvey.delete();
-                }
-                if (isStockSurveyInProgress) {
+            if (isBackPressed && isInProgress) {
+                if (survey.isStockSurvey()) {
                     Session.setStockSurvey(null);
-                    stockSurvey.delete();
+                } else {
+                    Session.setMalariaSurvey(null);
                 }
+                survey.delete();
                 isBackPressed = false;
             }
         }

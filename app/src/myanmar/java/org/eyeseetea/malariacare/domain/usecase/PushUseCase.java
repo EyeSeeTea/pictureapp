@@ -34,8 +34,6 @@ public class PushUseCase {
             return;
         }
 
-        SurveyChecker.launchQuarantineChecker();
-
         mPushController.changePushInProgress(true);
 
         mPushController.push(new IPushController.IPushControllerCallback() {

@@ -42,6 +42,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
@@ -131,10 +132,23 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     @Override
     public void onPause() {
         Log.d(TAG, "onPause");
-        if (!DashboardActivity.dashboardActivity.isLoadingReview()) {
+        if (!DashboardActivity.dashboardActivity.isLoadingReview() && !areActiveSurveysInQuarantine()) {
             beforeExit();
         }
         super.onPause();
+    }
+
+    private boolean areActiveSurveysInQuarantine() {
+        Survey survey = Session.getMalariaSurvey();
+        if(survey !=null && survey.isQuarantine()) {
+            return true;
+        }
+        survey = Session.getStockSurvey();
+        if(survey !=null && survey.isQuarantine()){
+            return true;
+        }
+
+        return false;
     }
 
     private void beforeExit() {

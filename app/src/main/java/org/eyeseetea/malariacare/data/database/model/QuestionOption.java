@@ -40,21 +40,21 @@ public class QuestionOption extends BaseModel {
     long id_question_option;
 
     @Column
-    Long id_option;
+    Long id_option_fk;
     /**
      * Reference to its option (lazy)
      */
     Option option;
 
     @Column
-    Long id_question;
+    Long id_question_fk;
     /**
      * Reference to its question (lazy)
      */
     Question question;
 
     @Column
-    Long id_match;
+    Long id_match_fk;
     /**
      * Reference to its match (lazy)
      */
@@ -79,9 +79,9 @@ public class QuestionOption extends BaseModel {
         }
 
         return new Select().from(QuestionOption.class)
-                .where(QuestionOption_Table.id_question
+                .where(QuestionOption_Table.id_question_fk
                         .is(questionWithOption.getId_question()))
-                .and(QuestionOption_Table.id_option
+                .and(QuestionOption_Table.id_option_fk
                         .is(option.getId_option()))
                 .queryList();
     }
@@ -92,9 +92,9 @@ public class QuestionOption extends BaseModel {
     public static List<QuestionOption> findByQuestionRelation(QuestionRelation questionRelation) {
         return new Select().from(QuestionOption.class).as(AppDatabase.questionOptionName)
                 .join(Match.class, Join.JoinType.LEFT_OUTER).as(matchName)
-                .on(QuestionOption_Table.id_match.withTable(AppDatabase.questionOptionAlias)
+                .on(QuestionOption_Table.id_match_fk.withTable(AppDatabase.questionOptionAlias)
                         .eq(Match_Table.id_match.withTable(AppDatabase.matchAlias)))
-                .where(Match_Table.id_question_relation.withTable(AppDatabase.matchAlias).eq(
+                .where(Match_Table.id_question_relation_fk.withTable(AppDatabase.matchAlias).eq(
                         questionRelation.getId_question_relation())).queryList();
     }
 
@@ -108,8 +108,8 @@ public class QuestionOption extends BaseModel {
     public static List<Match> getMatchesWithQuestionOption(Long id_question, Long id_option) {
         List<QuestionOption> questionOptions = new Select()
                 .from(QuestionOption.class)
-                .where(QuestionOption_Table.id_question.is(id_question))
-                .and(QuestionOption_Table.id_option.is(id_option))
+                .where(QuestionOption_Table.id_question_fk.is(id_question))
+                .and(QuestionOption_Table.id_option_fk.is(id_option))
                 .queryList();
         List<Match> matches = new ArrayList<>();
         for (QuestionOption questionOption : questionOptions) {
@@ -147,65 +147,65 @@ public class QuestionOption extends BaseModel {
 
     public Option getOption() {
         if (option == null) {
-            if (id_option == null) return null;
+            if (id_option_fk == null) return null;
             option = new Select()
                     .from(Option.class)
                     .where(Option_Table.id_option
-                            .is(id_option)).querySingle();
+                            .is(id_option_fk)).querySingle();
         }
         return option;
     }
 
     public void setOption(Long id_option) {
-        this.id_option = id_option;
+        this.id_option_fk = id_option;
         this.option = null;
     }
 
     public void setOption(Option option) {
         this.option = option;
-        this.id_option = (option != null) ? option.getId_option() : null;
+        this.id_option_fk = (option != null) ? option.getId_option() : null;
     }
 
     public Question getQuestion() {
         if (question == null) {
-            if (id_question == null) return null;
+            if (id_question_fk == null) return null;
             question = new Select()
                     .from(Question.class)
                     .where(Question_Table.id_question
-                            .is(id_question)).querySingle();
+                            .is(id_question_fk)).querySingle();
         }
         return question;
     }
 
     public void setQuestion(Long id_question) {
-        this.id_question = id_question;
+        this.id_question_fk = id_question;
         this.question = null;
     }
 
     public void setQuestion(Question question) {
         this.question = question;
-        this.id_question = (question != null) ? question.getId_question() : null;
+        this.id_question_fk = (question != null) ? question.getId_question() : null;
     }
 
     public Match getMatch() {
         if (match == null) {
-            if (id_match == null) return null;
+            if (id_match_fk == null) return null;
             match = new Select()
                     .from(Match.class)
                     .where(Match_Table.id_match
-                            .is(id_match)).querySingle();
+                            .is(id_match_fk)).querySingle();
         }
         return match;
     }
 
     public void setMatch(Long id_match) {
-        this.id_match = id_match;
+        this.id_match_fk = id_match;
         this.match = null;
     }
 
     public void setMatch(Match match) {
         this.match = match;
-        this.id_match = (match != null) ? match.getId_match() : null;
+        this.id_match_fk = (match != null) ? match.getId_match() : null;
     }
 
     /**
@@ -225,7 +225,7 @@ public class QuestionOption extends BaseModel {
     public static List<QuestionOption> getQuestionOptionsWithMatchId(Long id_match) {
         return new Select()
                 .from(QuestionOption.class)
-                .where(QuestionOption_Table.id_match.is(id_match))
+                .where(QuestionOption_Table.id_match_fk.is(id_match))
                 .queryList();
     }
 
@@ -237,23 +237,23 @@ public class QuestionOption extends BaseModel {
         QuestionOption that = (QuestionOption) o;
 
         if (id_question_option != that.id_question_option) return false;
-        if (id_option != null ? !id_option.equals(that.id_option) : that.id_option != null) {
+        if (id_option_fk != null ? !id_option_fk.equals(that.id_option_fk) : that.id_option_fk != null) {
             return false;
         }
-        if (id_question != null ? !id_question.equals(that.id_question)
-                : that.id_question != null) {
+        if (id_question_fk != null ? !id_question_fk.equals(that.id_question_fk)
+                : that.id_question_fk != null) {
             return false;
         }
-        return !(id_match != null ? !id_match.equals(that.id_match) : that.id_match != null);
+        return !(id_match_fk != null ? !id_match_fk.equals(that.id_match_fk) : that.id_match_fk != null);
 
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id_question_option ^ (id_question_option >>> 32));
-        result = 31 * result + (id_option != null ? id_option.hashCode() : 0);
-        result = 31 * result + (id_question != null ? id_question.hashCode() : 0);
-        result = 31 * result + (id_match != null ? id_match.hashCode() : 0);
+        result = 31 * result + (id_option_fk != null ? id_option_fk.hashCode() : 0);
+        result = 31 * result + (id_question_fk != null ? id_question_fk.hashCode() : 0);
+        result = 31 * result + (id_match_fk != null ? id_match_fk.hashCode() : 0);
         return result;
     }
 
@@ -261,9 +261,9 @@ public class QuestionOption extends BaseModel {
     public String toString() {
         return "QuestionOption{" +
                 "id_question_option=" + id_question_option +
-                ", id_option=" + id_option +
-                ", id_question=" + id_question +
-                ", id_match=" + id_match +
+                ", id_option_fk=" + id_option_fk +
+                ", id_question_fk=" + id_question_fk +
+                ", id_match_fk=" + id_match_fk +
                 '}';
     }
 

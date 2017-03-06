@@ -92,6 +92,11 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         }
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        radioGroup.setEnabled(enabled);
+    }
+
     public void setQuestion(Question question) {
         this.question = question;
     }

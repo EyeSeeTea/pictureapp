@@ -66,7 +66,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void addDemoButton() {
         ViewGroup loginViewsContainer = (ViewGroup) loginActivity.findViewById(
-                R.id.layout_login_views);
+                R.id.login_dynamic_views_container);
 
         loginActivity.getLayoutInflater().inflate(R.layout.demo_login_button, loginViewsContainer,
                 true);

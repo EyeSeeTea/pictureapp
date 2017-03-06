@@ -21,11 +21,9 @@ package org.eyeseetea.malariacare.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
-import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -33,6 +31,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -834,18 +833,6 @@ public class ServerAPIController {
     }
 
 
-    @NonNull
-    static String getUserPush() {
-        return PreferencesState.getInstance().getContext().getResources().getString(
-                R.string.user_push);
-    }
-
-    @NonNull
-    static String getPassPush() {
-        return PreferencesState.getInstance().getContext().getResources().getString(
-                R.string.pass_push);
-    }
-
 }
 
 /**
@@ -857,9 +844,7 @@ class BasicAuthenticator implements Authenticator {
     private String credentials;
 
     BasicAuthenticator() {
-
-        credentials = Credentials.basic(ServerAPIController.getUserPush(),
-                ServerAPIController.getPassPush());
+        credentials = AuthenticationApiStrategy.getApiCredentials();
     }
 
     @Override

@@ -36,8 +36,6 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
                 org.eyeseetea.malariacare.data
                 .database.model.Survey.findById(idSurvey);
         Survey survey = new Survey(idSurvey);
-        surveyDB.setProgram(Program.getFirstProgram());
-        surveyDB.setOrgUnit(OrgUnit.getAllOrgUnit().get(0));
         survey.setSurveyAnsweredRatio(surveyDB.reloadSurveyAnsweredRatio());
         surveyDB.updateSurveyStatus();
         survey.setStatus(surveyDB.getStatus());

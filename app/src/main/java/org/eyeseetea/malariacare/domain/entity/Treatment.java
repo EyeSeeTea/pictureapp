@@ -20,6 +20,7 @@ import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -363,11 +364,20 @@ public class Treatment {
                 getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID));
         Survey malariaSurvey = Session.getMalariaSurvey();
         List<Value> values = malariaSurvey.getValues();
+        boolean questionInSurvey = false;
+        String diagnosisMessage = Utils.getInternationalizedString(
+                String.valueOf(treatment.getDiagnosis()));
         for (Value value : values) {
             if (value.getQuestion().equals(treatmentQuestion)) {
-                value.setValue(String.valueOf(treatment.getDiagnosis()));
+                value.setValue(diagnosisMessage);
+                questionInSurvey = true;
                 break;
             }
+        }
+        if (!questionInSurvey) {
+            Value value = new Value(diagnosisMessage, treatmentQuestion,
+                    malariaSurvey);
+            value.insert();
         }
     }
 

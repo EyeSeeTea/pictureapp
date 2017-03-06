@@ -52,7 +52,7 @@ public class Option extends BaseModel {
     @Column
     Float factor;
     @Column
-    Long id_answer;
+    Long id_answer_fk;
 
     /**
      * Reference to parent answer (loaded lazily)
@@ -60,7 +60,7 @@ public class Option extends BaseModel {
     Answer answer;
 
     @Column
-    long id_option_attribute;
+    long id_option_attribute_fk;
 
     /**
      * Reference to extended option attributes (loaded lazily)
@@ -151,18 +151,18 @@ public class Option extends BaseModel {
 
     public Answer getAnswer() {
         if (answer == null) {
-            if (id_answer == null) return null;
+            if (id_answer_fk == null) return null;
             answer = new Select()
                     .from(Answer.class)
                     .where(Answer_Table.id_answer
-                            .is(id_answer)).querySingle();
+                            .is(id_answer_fk)).querySingle();
         }
         return answer;
     }
 
     public void setAnswer(Answer answer) {
         this.answer = answer;
-        this.id_answer = (answer != null) ? answer.getId_answer() : null;
+        this.id_answer_fk = (answer != null) ? answer.getId_answer() : null;
     }
 
     public OptionAttribute getOptionAttribute() {
@@ -170,7 +170,7 @@ public class Option extends BaseModel {
             optionAttribute = new Select().from(
                     OptionAttribute.class)
                     .where(OptionAttribute_Table.id_option_attribute.eq(
-                            id_option_attribute)).querySingle();
+                            id_option_attribute_fk)).querySingle();
         }
         return optionAttribute;
     }
@@ -178,7 +178,7 @@ public class Option extends BaseModel {
     public void setOptionAttribute(
             OptionAttribute optionAttribute) {
         this.optionAttribute = optionAttribute;
-        this.id_option_attribute =
+        this.id_option_attribute_fk =
                 (optionAttribute != null) ? optionAttribute.getId_option_attribute() : null;
     }
 
@@ -249,8 +249,8 @@ public class Option extends BaseModel {
         List<Value> returnValues = new Select().from(Value.class)
                 //// FIXME: 29/12/16  indexed
                 //.indexedBy(Constants.VALUE_IDX)
-                .where(Value_Table.id_option.eq(this.getId_option()))
-                .and(Value_Table.id_survey.eq(survey.getId_survey())).queryList();
+                .where(Value_Table.id_option_fk.eq(this.getId_option()))
+                .and(Value_Table.id_survey_fk.eq(survey.getId_survey())).queryList();
 
         return (returnValues.size() == 0) ? null : returnValues.get(0).getQuestion();
     }
@@ -277,7 +277,7 @@ public class Option extends BaseModel {
     public List<Value> getValues() {
         if (values == null) {
             values = new Select().from(Value.class)
-                    .where(Value_Table.id_option.eq(this.getId_option())).queryList();
+                    .where(Value_Table.id_option_fk.eq(this.getId_option())).queryList();
         }
         return values;
     }
@@ -290,12 +290,12 @@ public class Option extends BaseModel {
         Option option = (Option) o;
 
         if (id_option != option.id_option) return false;
-        if (id_option_attribute != option.id_option_attribute) return false;
+        if (id_option_attribute_fk != option.id_option_attribute_fk) return false;
         if (code != null ? !code.equals(option.code) : option.code != null) return false;
         if (name != null ? !name.equals(option.name) : option.name != null) return false;
         if (factor != null ? !factor.equals(option.factor) : option.factor != null) return false;
-        return !(id_answer != null ? !id_answer.equals(option.id_answer)
-                : option.id_answer != null);
+        return !(id_answer_fk != null ? !id_answer_fk.equals(option.id_answer_fk)
+                : option.id_answer_fk != null);
 
     }
 
@@ -305,8 +305,8 @@ public class Option extends BaseModel {
         result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (factor != null ? factor.hashCode() : 0);
-        result = 31 * result + (id_answer != null ? id_answer.hashCode() : 0);
-        result = 31 * result + (int) (id_option_attribute ^ (id_option_attribute >>> 32));
+        result = 31 * result + (id_answer_fk != null ? id_answer_fk.hashCode() : 0);
+        result = 31 * result + (int) (id_option_attribute_fk ^ (id_option_attribute_fk >>> 32));
         return result;
     }
 
@@ -317,8 +317,8 @@ public class Option extends BaseModel {
                 ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
                 ", factor=" + factor +
-                ", id_answer=" + id_answer +
-                ", id_option_attribute=" + id_option_attribute +
+                ", id_answer_fk=" + id_answer_fk +
+                ", id_option_attribute_fk=" + id_option_attribute_fk +
                 '}';
     }
 }

@@ -60,7 +60,7 @@ public class HistoricReceiptBalanceFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         historicList.setLayoutManager(mLayoutManager);
 
-        mHistoricReceiptBalanceAdapter = new HistoricReceiptBalanceAdapter(mSurveys);
+        mHistoricReceiptBalanceAdapter = new HistoricReceiptBalanceAdapter(mSurveys,type);
         historicList.setAdapter(mHistoricReceiptBalanceAdapter);
 
         view.findViewById(R.id.historic_receipt_balance_back).setOnClickListener(

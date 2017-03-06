@@ -245,7 +245,7 @@ public class TreatmentTable {
     private void addTreatment(String line[], List<String[]> treatmentLines,
             List<String[]> treatmentMatchLines, List<String[]> messageLines,
             List<String[]> diagnosisLines) throws IOException {
-        String[] treatmentLine = {getNextIdToInsert(treatmentLines), "1", getLastIdInserted(
+        String[] treatmentLine = {getNextIdToInsert(treatmentLines), line[0], getLastIdInserted(
                 diagnosisLines), getLastIdInserted(messageLines), (line[5].equals("Y")
                 ? Treatment.TYPE_MAIN : Treatment.TYPE_NOT_MAIN) + ""};
         mFileCsvs.insertCsvLine(PopulateDB.TREATMENT_CSV, treatmentLine);
@@ -378,7 +378,7 @@ public class TreatmentTable {
             String translation, String language)
             throws IOException {
         String[] translationLine = {getNextIdToInsert(translationLines),
-                idStringKey, translation, language};
+                idStringKey, "'" + translation + "'", "'" + language + "'"};
         mFileCsvs.insertCsvLine(PopulateDB.TRANSLATION_CSV, translationLine);
         translationLines.add(translationLine);
     }
@@ -388,7 +388,7 @@ public class TreatmentTable {
             throws IOException {
         String[] drugCombination = {getNextIdToInsert(drugCombinations), getCsvId(uid, 2,
                 PopulateDB.DRUGS_CSV),
-                getLastIdInserted(treatments), dose.replace(",", ".")};
+                getLastIdInserted(treatments), dose};
         mFileCsvs.insertCsvLine(PopulateDB.DRUG_COMBINATIONS_CSV, drugCombination);
         drugCombinations.add(drugCombination);
     }

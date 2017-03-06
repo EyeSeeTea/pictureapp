@@ -52,10 +52,10 @@ public class StatusRowBuilder extends StockRowBuilder {
     protected Object updateColumn(Object oldValue, int surveyValue, SurveyStock surveyStock,
             int position) {
         Survey survey = surveyStock.getSurvey();
-        Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_BALANCE);
+        Date maxBalanceDate = Survey.getLastDateForSurveyType(Constants.SURVEY_RESET);
         if (maxBalanceDate == null || Utils.dateGreaterOrEqualsThanDate(maxBalanceDate,
                 survey.getEventDate())) {
-            if (survey.getType() == Constants.SURVEY_BALANCE) {
+            if (survey.getType() == Constants.SURVEY_RESET) {
                 balanceSurvey[position] = surveyValue;
             } else if (survey.getType() == Constants.SURVEY_RECEIPT) {
                 summationReceiptsUsed[position] += surveyValue;

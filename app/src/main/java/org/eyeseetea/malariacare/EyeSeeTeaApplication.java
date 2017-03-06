@@ -25,6 +25,8 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
+import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -42,6 +44,11 @@ public class EyeSeeTeaApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
+        FlowConfig flowConfig = new FlowConfig
+                .Builder(this)
+                .addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
+                .build();
+        FlowManager.init(flowConfig);
         PreferencesState.getInstance().init(getApplicationContext());
     }
 

@@ -27,4 +27,8 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
         mAssessmentAdapter.showInfo(rowView, R.id.info, survey.getValuesToString());
     }
+    @Override
+    public boolean hasAllComplementarySurveys(Survey malariaSurvey) {
+        return true;
+    }
 }

@@ -16,7 +16,7 @@ public class Organisation extends BaseModel {
     @PrimaryKey(autoincrement = true)
     long id_organisation;
     @Column
-    String uid;
+    String uid_organisation;
     @Column
     String name;
 
@@ -43,11 +43,11 @@ public class Organisation extends BaseModel {
     }
 
     public String getUid() {
-        return uid;
+        return uid_organisation;
     }
 
     public void setUid(String uid) {
-        this.uid = uid;
+        this.uid_organisation = uid;
     }
 
     public String getName() {
@@ -66,7 +66,7 @@ public class Organisation extends BaseModel {
         Organisation that = (Organisation) o;
 
         if (id_organisation != that.id_organisation) return false;
-        if (uid != null ? !uid.equals(that.uid) : that.uid != null) return false;
+        if (uid_organisation != null ? !uid_organisation.equals(that.uid_organisation) : that.uid_organisation != null) return false;
         return name != null ? name.equals(that.name) : that.name == null;
 
     }
@@ -74,7 +74,7 @@ public class Organisation extends BaseModel {
     @Override
     public int hashCode() {
         int result = (int) (id_organisation ^ (id_organisation >>> 32));
-        result = 31 * result + (uid != null ? uid.hashCode() : 0);
+        result = 31 * result + (uid_organisation != null ? uid_organisation.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
@@ -83,7 +83,7 @@ public class Organisation extends BaseModel {
     public String toString() {
         return "Organisation{" +
                 "id_organisation=" + id_organisation +
-                ", uid='" + uid + '\'' +
+                ", uid_organisation='" + uid_organisation + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

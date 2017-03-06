@@ -6,6 +6,7 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.drugCombinatio
 import static org.eyeseetea.malariacare.data.database.AppDatabase.drugName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
+import static org.eyeseetea.malariacare.data.database.model.Organisation_Table.id_organisation;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -36,7 +37,7 @@ public class Treatment extends BaseModel {
     @PrimaryKey(autoincrement = true)
     long id_treatment;
     @Column
-    Long id_organisation;
+    Long id_organisation_fk;
     @Column
     Long diagnosis;
     @Column
@@ -55,7 +56,7 @@ public class Treatment extends BaseModel {
     public Treatment(long id_treatment, long id_organisation, Long diagnosis, Long message,
             int type) {
         this.id_treatment = id_treatment;
-        this.id_organisation = id_organisation;
+        this.id_organisation_fk = id_organisation;
         this.diagnosis = diagnosis;
         this.message = message;
     }
@@ -76,8 +77,8 @@ public class Treatment extends BaseModel {
         return new Select().from(Drug.class).as(drugName)
                 .join(DrugCombination.class, Join.JoinType.LEFT_OUTER).as(drugCombinationName)
                 .on(Drug_Table.id_drug.withTable(drugAlias)
-                        .eq(DrugCombination_Table.id_drug.withTable(drugCombinationAlias)))
-                .where(DrugCombination_Table.id_treatment.withTable(drugCombinationAlias)
+                        .eq(DrugCombination_Table.id_drug_fk.withTable(drugCombinationAlias)))
+                .where(DrugCombination_Table.id_treatment_fk.withTable(drugCombinationAlias)
                         .is(id_treatment)).queryList();
 
     }
@@ -86,15 +87,15 @@ public class Treatment extends BaseModel {
         Match match=new Select()
                 .from(Match.class).as(matchName)
                 .join(TreatmentMatch.class, Join.JoinType.INNER).as(treatmentMatchName)
-                .on(Match_Table.id_match.withTable(matchAlias).is(TreatmentMatch_Table.id_match.withTable(treatmentMatchAlias)))
-                .where(TreatmentMatch_Table.id_treatment.withTable(treatmentMatchAlias).is(id_treatment))
+                .on(Match_Table.id_match.withTable(matchAlias).is(TreatmentMatch_Table.id_match_fk.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatch_Table.id_treatment_fk.withTable(treatmentMatchAlias).is(id_treatment))
                 .querySingle();
         List<Treatment> treatments = new Select()
                 .from(Treatment.class).as(treatmentName)
                 .join(TreatmentMatch.class, Join.JoinType.INNER).as(treatmentMatchName)
                 .on(Treatment_Table.id_treatment.withTable(treatmentAlias)
-                        .eq(TreatmentMatch_Table.id_treatment.withTable(treatmentMatchAlias)))
-                .where(TreatmentMatch_Table.id_match.withTable(treatmentMatchAlias)
+                        .eq(TreatmentMatch_Table.id_treatment_fk.withTable(treatmentMatchAlias)))
+                .where(TreatmentMatch_Table.id_match_fk.withTable(treatmentMatchAlias)
                         .is(match.getId_match()))
                 .and(Treatment_Table.type.withTable(treatmentAlias).is(TYPE_NOT_MAIN))
                 .queryList();
@@ -113,25 +114,25 @@ public class Treatment extends BaseModel {
 
     public Organisation getOrganisation() {
         if (organisation == null) {
-            if (id_organisation == null) {
+            if (id_organisation_fk == null) {
                 return null;
             }
             organisation = new Select()
                     .from(Organisation.class)
-                    .where(Organisation_Table.id_organisation
-                            .is(id_organisation)).querySingle();
+                    .where(id_organisation
+                            .is(id_organisation_fk)).querySingle();
         }
         return organisation;
     }
 
     public void setOrganisation(Long id_organisation) {
-        this.id_organisation = id_organisation;
+        this.id_organisation_fk = id_organisation;
         organisation = null;
     }
 
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
-        this.id_organisation = (organisation != null) ? organisation.getId_organisation() : null;
+        this.id_organisation_fk = (organisation != null) ? organisation.getId_organisation() : null;
     }
 
     public Long getDiagnosis() {
@@ -167,8 +168,8 @@ public class Treatment extends BaseModel {
 
         if (id_treatment != treatment.id_treatment) return false;
         if (type != treatment.type) return false;
-        if (id_organisation != null ? !id_organisation.equals(treatment.id_organisation)
-                : treatment.id_organisation != null) {
+        if (id_organisation != null ? !id_organisation.equals(treatment.id_organisation_fk)
+                : treatment.id_organisation_fk != null) {
             return false;
         }
         if (diagnosis != null ? !diagnosis.equals(treatment.diagnosis)
@@ -182,7 +183,7 @@ public class Treatment extends BaseModel {
     @Override
     public int hashCode() {
         int result = (int) (id_treatment ^ (id_treatment >>> 32));
-        result = 31 * result + (id_organisation != null ? id_organisation.hashCode() : 0);
+        result = 31 * result + (id_organisation_fk != null ? id_organisation_fk.hashCode() : 0);
         result = 31 * result + (diagnosis != null ? diagnosis.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
         result = 31 * result + type;
@@ -194,7 +195,7 @@ public class Treatment extends BaseModel {
     public String toString() {
         return "Treatment{" +
                 "id_treatment=" + id_treatment +
-                ", id_organisation=" + id_organisation +
+                ", id_organisation_fk=" + id_organisation_fk +
                 ", diagnosis='" + diagnosis + '\'' +
                 ", message='" + message + '\'' +
                 ", type=" + type +

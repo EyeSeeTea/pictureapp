@@ -43,6 +43,7 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
@@ -349,17 +350,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
     public static List<Survey> getAllSentMalariaSurveys() {
         Context context = PreferencesState.getInstance().getContext();
         return new Select().from(Survey.class).as(surveyName)
-
                 .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
                 .on(Survey_Table.id_program_fk.withTable(surveyAlias)
                         .eq(Program_Table.id_program.withTable(programAlias)))
 
-                .where(Survey_Table.status.withTable(surveyAlias)
-                        .is(Constants.SURVEY_SENT))
-                .or(Survey_Table.status.withTable(surveyAlias)
-                    .is(Constants.SURVEY_QUARANTINE))//Quarantine surveys should be shown in sentfragment at the momment
-                .and(Program_Table.uid_program.withTable(programAlias)
-                        .isNot(context.getString(R.string.stockProgramUID)))
+                .where(ConditionGroup.clause()
+                        .and(Program_Table.uid_program.withTable(programAlias)
+                                .isNot(context.getString(R.string.stockProgramUID)))
+                        .and(ConditionGroup.clause()
+                                .and(Survey_Table.status.withTable(surveyAlias)
+                                        .is(Constants.SURVEY_SENT))
+                                .or(Survey_Table.status.withTable(surveyAlias)
+                                        .is(Constants.SURVEY_QUARANTINE))))
                 .orderBy(Survey_Table.event_date, false).queryList();
     }
 

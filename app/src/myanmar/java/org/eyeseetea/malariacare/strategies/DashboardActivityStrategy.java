@@ -98,25 +98,27 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public boolean beforeExit(boolean isBackPressed) {
         Survey malariaSurvey = Session.getMalariaSurvey();
+        boolean isMalariaBackPressed = beforeExitSurvey(isBackPressed, malariaSurvey);
         Survey stockSurvey = Session.getStockSurvey();
-        if (malariaSurvey != null) {
-            boolean isMalariaInProgress = malariaSurvey.isInProgress();
-            boolean isStockSurveyInProgress = false;
-            if (stockSurvey != null) {
-                isStockSurveyInProgress = stockSurvey.isInProgress();
-                stockSurvey.getValuesFromDB();
-            }
-            malariaSurvey.getValuesFromDB();
+        boolean isStockBackPressed = beforeExitSurvey(isBackPressed, stockSurvey);
+        if (!isMalariaBackPressed || !isStockBackPressed) {
+            return false;
+        }
+        return isBackPressed;
+    }
+
+    private boolean beforeExitSurvey(boolean isBackPressed, Survey survey) {
+        if (survey != null) {
+            boolean isInProgress = survey.isInProgress();
+            survey.getValuesFromDB();
             //Exit + InProgress -> delete
-            if (isBackPressed && (isMalariaInProgress || isStockSurveyInProgress)) {
-                if (isMalariaInProgress) {
-                    Session.setMalariaSurvey(null);
-                    malariaSurvey.delete();
-                }
-                if (isStockSurveyInProgress) {
+            if (isBackPressed && isInProgress) {
+                if (survey.isStockSurvey()) {
                     Session.setStockSurvey(null);
-                    stockSurvey.delete();
+                } else {
+                    Session.setMalariaSurvey(null);
                 }
+                survey.delete();
                 isBackPressed = false;
             }
         }

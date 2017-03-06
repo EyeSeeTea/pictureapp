@@ -26,7 +26,6 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -37,15 +36,13 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
+import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.exception.DataElementConflictException;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.ShowException;
 import org.hisp.dhis.client.sdk.models.common.importsummary.Conflict;
 import org.hisp.dhis.client.sdk.models.common.importsummary.ImportSummary;
 import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -310,7 +307,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Saves changes in the survey (supposedly after a successful push)
      */
-    public void saveSurveyStatus(Map<String, ImportSummary> importSummaryMap) {
+    public void saveSurveyStatus(Map<String, ImportSummary> importSummaryMap, final
+    IPushController.IPushControllerCallback callback) {
         Log.d(TAG, String.format("ImportSummary %d surveys savedSurveyStatus", surveys.size()));
         for (int i = 0; i < surveys.size(); i++) {
             Survey iSurvey = surveys.get(i);
@@ -339,11 +337,10 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                                 " with error " + conflict.getValue()
                                 + " dataelement pushing survey: "
                                 + iSurvey.getId_survey());
-                        DashboardActivity.showException(
-                                context.getString(R.string.error_conflict_title),
+                        callback.onError(new DataElementConflictException(
                                 String.format(context.getString(R.string.error_conflict_message),
                                         iEvent.getEvent().getUId(), conflict.getObject(),
-                                        conflict.getValue()));
+                                        conflict.getValue()) + ""));
                         iSurvey.setStatus(Constants.SURVEY_CONFLICT);
                     }
                 }

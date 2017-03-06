@@ -356,8 +356,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
                 .where(Survey_Table.status.withTable(surveyAlias)
                         .is(Constants.SURVEY_SENT))
-                .and(Survey_Table.status.withTable(surveyAlias)
-                        .is(Constants.SURVEY_QUARANTINE))
+                .or(Survey_Table.status.withTable(surveyAlias)
+                    .is(Constants.SURVEY_QUARANTINE))//Quarantine surveys should be shown in sentfragment at the momment
                 .and(Program_Table.uid_program.withTable(programAlias)
                         .isNot(context.getString(R.string.stockProgramUID)))
                 .orderBy(Survey_Table.event_date, false).queryList();

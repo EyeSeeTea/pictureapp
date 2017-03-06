@@ -39,6 +39,7 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.tabAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.tabName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueName;
+import static org.eyeseetea.malariacare.data.database.model.TabGroup_Table.uid;
 
 import android.content.Context;
 import android.util.Log;

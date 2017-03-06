@@ -8,6 +8,7 @@ public class PullFilters {
     Date endDate;
     int maxEvents;
     boolean isDemo;
+    boolean downloadData;
 
     public Date getStartDate() {
         return startDate;
@@ -39,5 +40,13 @@ public class PullFilters {
 
     public void setDemo(boolean demo) {
         isDemo = demo;
+    }
+
+    public boolean downloadData() {
+        return downloadData;
+    }
+
+    public void setDownloadData(boolean downloadData) {
+        this.downloadData = downloadData;
     }
 }

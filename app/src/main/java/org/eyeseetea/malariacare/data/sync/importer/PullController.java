@@ -59,22 +59,9 @@ public class PullController implements IPullController {
     @Override
     public void pull(final PullFilters pullFilters, final Callback callback) {
         Log.d(TAG, "Starting PULL process...");
-        try {
 
-            callback.onStep(PullStep.METADATA);
-
-            populateMetadataFromCsvs(pullFilters.isDemo());
-
-            if (pullFilters.isDemo()) {
-                callback.onComplete();
-            } else {
-
-                pullMetada(pullFilters, callback);
-            }
-        } catch (Exception ex) {
-            Log.e(TAG, "pull: " + ex.getLocalizedMessage());
-            callback.onError(ex);
-        }
+        callback.onStep(PullStep.METADATA);
+        new PopulateDbAsync(pullFilters, callback).execute();
     }
 
     @Override
@@ -204,19 +191,23 @@ public class PullController implements IPullController {
 
     private class PopulateDbAsync extends AsyncTask<Void,Void,Void>
     {
-        boolean isDemo;
-        Callback callback;
+        PullFilters mPullFilters;
+        Callback mCallback;
+        Exception mException = null;
 
-        public PopulateDbAsync(boolean isDemo) {
-            this.isDemo = isDemo;
+        public PopulateDbAsync(PullFilters pullFilters, Callback callback) {
+            mPullFilters = pullFilters;
+            mCallback = callback;
         }
+
 
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                populateMetadataFromCsvs(isDemo);
+                populateMetadataFromCsvs(mPullFilters.isDemo());
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "pull: " + e.getLocalizedMessage());
+                mException = e;
             }
             return null;
         }
@@ -224,6 +215,16 @@ public class PullController implements IPullController {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (mException != null) {
+                mCallback.onError(mException);
+            } else {
+                if (mPullFilters.isDemo()) {
+                    mCallback.onComplete();
+                } else {
+                    pullMetada(mPullFilters, mCallback);
+                }
+            }
+
         }
     }
     //TODO jsanchez

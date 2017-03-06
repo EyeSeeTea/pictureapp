@@ -21,11 +21,9 @@ package org.eyeseetea.malariacare.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.squareup.okhttp.Authenticator;
-import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -33,6 +31,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -278,32 +277,52 @@ public class ServerAPIController {
      * Checks if data can be pushed into the server
      */
     public static boolean isReadyForPush(String url, String orgUnitCodeOrName) {
+        if (checkIfNetworkIsAvailable(url, orgUnitCodeOrName)) return false;
+
+        if (checkIfIsValidProgram(url, orgUnitCodeOrName)) return false;
+
+        if (checkifOrgUnitExists(url, orgUnitCodeOrName)) return false;
+
+        if (checkIfOrgUnitIsOpen(url, orgUnitCodeOrName)) return false;
+
+        return true;
+    }
+
+    public static boolean checkIfNetworkIsAvailable(String url, String orgUnitCodeOrName) {
         if (!isNetworkAvailable()) {
             Log.w(TAG, String.format("isReadyForPush(%s,%s) -> Network not available", url,
                     orgUnitCodeOrName));
-            return false;
+            return true;
         }
+        return false;
+    }
 
+    public static boolean checkIfIsValidProgram(String url, String orgUnitCodeOrName) {
         if (!isValidProgram(url)) {
             Log.w(TAG, String.format("isReadyForPush(%s,%s) -> Program not found in server", url,
                     orgUnitCodeOrName));
-            return false;
+            return true;
         }
+        return false;
+    }
 
+    public static boolean checkifOrgUnitExists(String url, String orgUnitCodeOrName) {
         if (orgUnitCodeOrName == null || orgUnitCodeOrName.equals("") || !isValidOrgUnit(url,
                 orgUnitCodeOrName)) {
             Log.w(TAG, String.format("isReadyForPush(%s,%s) -> OrgUnit not found in server", url,
                     orgUnitCodeOrName));
-            return false;
+            return true;
         }
+        return false;
+    }
 
+    public static boolean checkIfOrgUnitIsOpen(String url, String orgUnitCodeOrName) {
         if (!isOrgUnitOpen(url, orgUnitCodeOrName)) {
             Log.w(TAG, String.format("isOrgUnitOpen(%s,%s) -> OrgUnit closed, push is not enabled",
                     url, orgUnitCodeOrName));
-            return false;
+            return true;
         }
-
-        return true;
+        return false;
     }
 
     /**
@@ -814,18 +833,6 @@ public class ServerAPIController {
     }
 
 
-    @NonNull
-    static String getUserPush() {
-        return PreferencesState.getInstance().getContext().getResources().getString(
-                R.string.user_push);
-    }
-
-    @NonNull
-    static String getPassPush() {
-        return PreferencesState.getInstance().getContext().getResources().getString(
-                R.string.pass_push);
-    }
-
 }
 
 /**
@@ -837,9 +844,7 @@ class BasicAuthenticator implements Authenticator {
     private String credentials;
 
     BasicAuthenticator() {
-
-        credentials = Credentials.basic(ServerAPIController.getUserPush(),
-                ServerAPIController.getPassPush());
+        credentials = AuthenticationApiStrategy.getApiCredentials();
     }
 
     @Override

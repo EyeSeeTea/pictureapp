@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.domain.entity.Survey;

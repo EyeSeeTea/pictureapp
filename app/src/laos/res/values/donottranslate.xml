@@ -34,4 +34,9 @@
     <string name="confirmInvalidQuestionUID" translatable="false"></string>
     <string name="residenceVillageUID" translatable="false"></string>
     <string name="patientResidenceVillageOtherCode" translatable="false"></string>
+
+    <string name="control_data_element_phone_metadata" translatable="false">RuNZUhiAmlv</string>
+    <string name="control_data_element_datetime_capture" translatable="false">qWMb2UM2ikL</string>
+    <string name="control_data_element_datetime_sent" translatable="false">aBahytzj2u0</string>
+    <string name="category_cc" translatable="false"></string>
 </resources>

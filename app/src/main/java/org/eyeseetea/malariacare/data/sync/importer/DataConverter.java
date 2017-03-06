@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.data.sync.importer;
 import static org.eyeseetea.malariacare.domain.usecase.pull.PullStep.BUILDING_SURVEYS;
 import static org.eyeseetea.malariacare.domain.usecase.pull.PullStep.BUILDING_VALUES;
 
+import android.content.Context;
+
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
@@ -22,7 +24,11 @@ import java.util.List;
 
 public class DataConverter {
 
-    IDataConverterStrategy dataConverterStrategy = new DataConverterStrategy();
+    IDataConverterStrategy dataConverterStrategy;
+
+    public DataConverter(Context context) {
+        dataConverterStrategy = new DataConverterStrategy(context);
+    }
 
     public void convert(IPullController.Callback callback, ConvertFromSDKVisitor converter) {
         String orgUnitName = PreferencesState.getInstance().getOrgUnit();

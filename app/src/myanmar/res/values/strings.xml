@@ -364,4 +364,10 @@
 <string name="reset_on">Reset on:</string>
 <string name="submit">submit</string>
 <string name="error_no_stock_survey">This survey hasn\'t the stock survey associated</string>
+<string name="no_pq_cq_out_stock">"Out of stock"</string>
+<string name="no_pq_adverse_reaction">"History of adverse reaction to Primaquine"</string>
+<string name="no_cq_adverse_reaction">"History of adverse reaction to Cloroquine"</string>
+<string name="no_pq_cq_other">"Other reasons"</string>
+<string name="treatment_no_cq_title">"The reason you are not giving Cloroquine is"</string>
+<string name="treatment_no_pq_title">"The reason you are not giving Primaquine is"</string>
 </resources>

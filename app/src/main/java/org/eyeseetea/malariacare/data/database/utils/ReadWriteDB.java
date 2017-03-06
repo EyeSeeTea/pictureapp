@@ -19,10 +19,8 @@
 
 package org.eyeseetea.malariacare.data.database.utils;
 
-import org.eyeseetea.malariacare.data.database.model.Match;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -38,20 +36,6 @@ public class ReadWriteDB {
 
         if (value != null) {
             result = value.getValue();
-        }
-
-        return result;
-    }
-
-    public static int readPositionOption(Question question) {
-        int result = 0;
-
-        Value value = question.getValueBySession();
-        if (value != null) {
-
-            List<Option> optionList = question.getAnswer().getOptions();
-            optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
-            result = optionList.indexOf(value.getOption());
         }
 
         return result;
@@ -96,15 +80,13 @@ public class ReadWriteDB {
             Survey survey =
                     ((question.isStockQuestion() || question.isPq() || question.isACT())
                             ? Session.getStockSurvey()
-                    : Session.getMalariaSurvey());
+                            : Session.getMalariaSurvey());
             createOrSaveDDLValue(question, option, value, survey);
-            for (Question propagateQuestion:question.getPropagationQuestions()){
+            for (Question propagateQuestion : question.getPropagationQuestions()) {
                 createOrSaveDDLValue(propagateQuestion, option, value, Session.getMalariaSurvey());
             }
         } else {
-            if (value != null) {
-                deleteValues(question, value);
-            }
+            deleteValues(question, value);
         }
     }
 
@@ -135,18 +117,23 @@ public class ReadWriteDB {
             deleteValues(question, value);
         } else {
             createOrSaveValue(question, answer, value, survey);
-            for (Question propagateQuestion:question.getPropagationQuestions()){
+            for (Question propagateQuestion : question.getPropagationQuestions()) {
                 createOrSaveValue(propagateQuestion, answer, value, Session.getMalariaSurvey());
             }
         }
     }
 
     private static void deleteValues(Question question, Value value) {
-        for (Question propagateQuestion:question.getPropagationQuestions()){
-            Value propagateValue = Value.findValue(propagateQuestion.getId_question(), Session.getMalariaSurvey());
-            propagateValue.delete();
+        if (value != null) {
+            for (Question propagateQuestion : question.getPropagationQuestions()) {
+                Value propagateValue = Value.findValue(propagateQuestion.getId_question(),
+                        Session.getMalariaSurvey());
+                if(propagateValue!=null) {
+                    propagateValue.delete();
+                }
+            }
+            value.delete();
         }
-        value.delete();
     }
 
     private static void createOrSaveValue(Question question, String answer, Value value,
@@ -163,11 +150,7 @@ public class ReadWriteDB {
 
     public static void deleteValue(Question question) {
         Value value = question.getValueBySession();
-
-        if (value != null) {
-            deleteValues(question, value);
-            value.delete();
-        }
+        deleteValues(question, value);
     }
 
     public static void deleteStockSurveyValues(Question question) {
@@ -188,7 +171,7 @@ public class ReadWriteDB {
     }
 
 
-    public static Value insertValue(String value, Question question, Survey survey){
-        return  new Value(value, question, survey);
+    public static Value insertValue(String value, Question question, Survey survey) {
+        return new Value(value, question, survey);
     }
 }

@@ -18,6 +18,7 @@ import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -124,20 +125,23 @@ public class Treatment {
             }
         }
         Log.d(TAG, "matches obtained");
-        Match treatmentMatch = null;
+        List<Match> treatmentMatches = new ArrayList<>();
         for (Match match : ageMatches) {
             if (pregnantMatches.contains(match) && severeMatches.contains(match)
                     && rdtMatches.contains(match)) {
-                treatmentMatch = match;
-                break;
+                treatmentMatches.add(match);
+
             }
         }
-
         org.eyeseetea.malariacare.data.database.model.Treatment treatment = null;
-        if (treatmentMatch != null) {
-            Log.d(TAG, "match: " + treatmentMatch.toString());
-            treatment = treatmentMatch.getTreatment();
-            Log.d(TAG, "treatment: " + treatment.toString());
+        for (Match treatmentMatch : treatmentMatches) {
+            if (treatmentMatch.getTreatment().getOrganisation().equals(
+                    Session.getUser().getOrganisation())) {
+                Log.d(TAG, "match: " + treatmentMatch.toString());
+                treatment = treatmentMatch.getTreatment();
+                Log.d(TAG, "treatment: " + treatment.toString());
+                break;
+            }
         }
         return treatment;
     }

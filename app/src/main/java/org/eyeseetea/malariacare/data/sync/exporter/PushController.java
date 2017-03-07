@@ -30,6 +30,7 @@ import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
+import org.eyeseetea.malariacare.domain.exception.DataElementConflictException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -112,15 +113,17 @@ public class PushController implements IPushController {
                     @Override
                     public void onSuccess(
                             Map<String, ImportSummary> mapEventsImportSummary) {
-                        mConvertToSDKVisitor.saveSurveyStatus(mapEventsImportSummary);
+                        mConvertToSDKVisitor.saveSurveyStatus(mapEventsImportSummary, callback);
                         ServerAPIController.banOrgUnitIfRequired();
                         callback.onComplete();
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
-                        mConvertToSDKVisitor.setSurveysAsQuarantine();
-                        ServerAPIController.banOrgUnitIfRequired();
+                        if(throwable instanceof DataElementConflictException) {
+                            mConvertToSDKVisitor.setSurveysAsQuarantine();
+                            ServerAPIController.banOrgUnitIfRequired();
+                        }
                         callback.onError(throwable);
                     }
                 });

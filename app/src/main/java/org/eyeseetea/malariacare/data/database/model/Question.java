@@ -1024,7 +1024,7 @@ public class Question extends BaseModel {
         if (option == null) {
             return;
         }
-        if (value != null && isTreatmentQuestion() && question.isACT()
+        if (value != null && isTreatmentQuestion() && isACT()
                 && !option.getId_option().equals(value.getId_option())) {
             List<Survey> surveys = new ArrayList<>();
             surveys.add(Session.getStockSurvey());

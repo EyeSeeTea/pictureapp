@@ -967,10 +967,10 @@ public class Question extends BaseModel {
     }
 
     public Option getAnsweredOption() {
-        Survey survey = (question.isStockQuestion() ? Session.getStockSurvey()
+        Survey survey = (isStockQuestion() ? Session.getStockSurvey()
                 : Session.getMalariaSurvey());
 
-        Value value = Value.findValue(question.getId_question(), survey);
+        Value value = Value.findValue(getId_question(), survey);
         if (value != null) {
             return Option.findById(value.getId_option());
         }

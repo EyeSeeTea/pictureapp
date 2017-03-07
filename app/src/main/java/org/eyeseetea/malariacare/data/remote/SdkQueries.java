@@ -4,6 +4,7 @@ import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.hisp.dhis.client.sdk.android.api.D2;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.CategoryOptionGroupFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataElementFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.DataElementFlow_Table;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
@@ -167,4 +168,10 @@ public class SdkQueries {
 
         return null;
     }
+
+    public static List<CategoryOptionGroupFlow> getCategoryOptionGroups() {
+        return new Select().from(CategoryOptionGroupFlow.class)
+                .queryList();
+    }
+
 }

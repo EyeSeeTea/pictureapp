@@ -1464,7 +1464,7 @@ public class Question extends BaseModel {
     }
 
     public boolean isDynamicTreatmentQuestion() {
-        return uid_question.equals(getContext().getString(R.string.dynamicTreatmentQuestionUID));
+        return uid_question.equals(getContext().getString(R.string.dynamicTreatmentHideQuestionUID));
     }
 
     public boolean isInvalidRDTQuestion() {

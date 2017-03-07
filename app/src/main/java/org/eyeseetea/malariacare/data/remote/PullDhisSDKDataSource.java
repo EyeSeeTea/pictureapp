@@ -54,7 +54,8 @@ public class PullDhisSDKDataSource {
                     .subscribe(new Action1<List<OrganisationUnit>>() {
                         @Override
                         public void call(List<OrganisationUnit> organisationUnits) {
-                            callback.onSuccess(organisationUnits);
+                            mPullDhisSDKDataSourceStrategy.onMetadataSucceed(callback,
+                                    organisationUnits);
                         }
                     }, new Action1<Throwable>() {
                         @Override

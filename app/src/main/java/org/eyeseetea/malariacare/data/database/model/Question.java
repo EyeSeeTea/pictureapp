@@ -1234,6 +1234,9 @@ public class Question extends BaseModel {
         long optionId = option.getId_option().longValue();
         for (QuestionOption questionOption : questionOptions) {
             //Other options must be discarded
+            if(questionOption.getOption()==null){
+                continue;
+            }
             long currentOptionId = questionOption.getOption().getId_option().longValue();
             if (optionId != currentOptionId) {
                 continue;
@@ -1284,6 +1287,9 @@ public class Question extends BaseModel {
         long optionId = option.getId_option().longValue();
         for (QuestionOption questionOption : questionOptions) {
             //Other options must be discarded
+            if(questionOption.getOption()==null){
+                continue;
+            }
             long currentOptionId = questionOption.getOption().getId_option().longValue();
             if (optionId != currentOptionId) {
                 continue;
@@ -1452,7 +1458,7 @@ public class Question extends BaseModel {
     }
 
     public boolean isDynamicTreatmentQuestion() {
-        return uid_question.equals(getContext().getString(R.string.dynamicTreatmentQuestionUID));
+        return uid.equals(getContext().getString(R.string.dynamicTreatmentHideQuestionUID));
     }
 
     public boolean isInvalidRDTQuestion(){

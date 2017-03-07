@@ -1027,6 +1027,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
             complete();
         } else {
             setStatus(Constants.SURVEY_IN_PROGRESS);
+            setCompletionDate(this.event_date);
             save();
         }
     }
@@ -1108,32 +1109,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
         }
         return rdtValue;
-    }
-
-    /**
-     * Moves the schedule date for this survey to a new given date due to a given reason (comment)
-     */
-    public void reschedule(Date newScheduledDate, String comment) {
-        //Take currentDate
-        Date currentScheduleDate = this.getScheduledDate();
-
-        //Add a history
-        SurveySchedule previousSchedule = new SurveySchedule(this, currentScheduleDate, comment);
-        previousSchedule.save();
-
-        //Clean inner lazy schedulelist
-        surveySchedules = null;
-
-        //Move scheduledate and save
-        this.scheduled_date = newScheduledDate;
-        this.save();
-    }
-
-    public void prepareSurveyCompletionDate() {
-        if (!isSent()) {
-            setCompletionDate(new Date());
-            save();
-        }
     }
 
     /**

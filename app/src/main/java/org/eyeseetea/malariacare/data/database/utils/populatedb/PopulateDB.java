@@ -290,7 +290,9 @@ public class PopulateDB {
                     case QUESTION_OPTIONS_CSV:
                         QuestionOption questionOption = new QuestionOption();
                         questionOption.setQuestion(questionList.get(Integer.valueOf(line[1])));
-                        questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
+                        if (!line[2].equals("")) {
+                            questionOption.setOption(optionList.get(Integer.valueOf(line[2])));
+                        }
                         if (!line[3].equals("")) {
                             questionOption.setMatch(matchList.get(Long.valueOf(line[3])));
                         }

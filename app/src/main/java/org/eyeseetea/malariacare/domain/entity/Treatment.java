@@ -287,7 +287,7 @@ public class Treatment {
         List<Option> options = new ArrayList<>();
         Answer answer = new Answer("stock");
         answer.setId_answer(Answer.DYNAMIC_STOCK_ANSWER_ID);
-
+        //this options are never saved
         Option optionACT24 = new Option("ACT_x_24", "ACT_x_24", 0f, answer);
         optionACT24.setId_option(Question.getACT24Question().getId_question());
         optionACT24.setOptionAttribute(

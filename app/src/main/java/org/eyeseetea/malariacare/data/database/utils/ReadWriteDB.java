@@ -41,20 +41,6 @@ public class ReadWriteDB {
         return result;
     }
 
-    public static int readPositionOption(Question question) {
-        int result = 0;
-
-        Value value = question.getValueBySession();
-        if (value != null) {
-
-            List<Option> optionList = question.getAnswer().getOptions();
-            optionList.add(0, new Option(Constants.DEFAULT_SELECT_OPTION));
-            result = optionList.indexOf(value.getOption());
-        }
-
-        return result;
-    }
-
     public static Option readOptionAnswered(Question question) {
         Option option = null;
 
@@ -94,21 +80,29 @@ public class ReadWriteDB {
             Survey survey =
                     ((question.isStockQuestion() || question.isPq() || question.isACT())
                             ? Session.getStockSurvey()
-                    : Session.getMalariaSurvey());
-            if (value == null) {
-                value = new Value(option, question, survey);
-            } else {
-                if (!value.getOption().equals(option) && question.hasChildren()
-                        && !question.isDynamicTreatmentQuestion()) {
-                    survey.removeChildrenValuesFromQuestionRecursively(question, false);
-                }
-                value.setOption(option);
-                value.setValue(option.getName());
+                            : Session.getMalariaSurvey());
+            createOrSaveDDLValue(question, option, value, survey);
+            for (Question propagateQuestion : question.getPropagationQuestions()) {
+                createOrSaveDDLValue(propagateQuestion, option, Value.findValue(propagateQuestion.getId_question(), Session.getMalariaSurvey()), Session.getMalariaSurvey());
             }
-            value.save();
         } else {
-            if (value != null) value.delete();
+            deleteValues(question, value);
         }
+    }
+
+    private static void createOrSaveDDLValue(Question question, Option option, Value value,
+            Survey survey) {
+        if (value == null) {
+            value = new Value(option, question, survey);
+        } else {
+            if (!value.getOption().equals(option) && question.hasChildren()
+                    && !question.isDynamicTreatmentQuestion()) {
+                survey.removeChildrenValuesFromQuestionRecursively(question, false);
+            }
+            value.setOption(option);
+            value.setValue(option.getName());
+        }
+        value.save();
     }
 
     public static void saveValuesText(Question question, String answer) {
@@ -120,25 +114,43 @@ public class ReadWriteDB {
             deleteStockSurveyValues(question);
         }
         if (question.isStockQuestion() && value != null && answer.equals("-1")) {
-            value.delete();
+            deleteValues(question, value);
         } else {
-            // If the value is not found we create one
-            if (value == null) {
-                value = new Value(answer, question, survey);
-            } else {
-                value.setOption((Long) null);
-                value.setValue(answer);
+            createOrSaveValue(question, answer, value, survey);
+            for (Question propagateQuestion : question.getPropagationQuestions()) {
+                createOrSaveValue(propagateQuestion, answer, Value.findValue(propagateQuestion.getId_question(), Session.getMalariaSurvey()), Session.getMalariaSurvey());
             }
-            value.save();
         }
+    }
+
+    private static void deleteValues(Question question, Value value) {
+        if (value != null) {
+            for (Question propagateQuestion : question.getPropagationQuestions()) {
+                Value propagateValue = Value.findValue(propagateQuestion.getId_question(),
+                        Session.getMalariaSurvey());
+                if(propagateValue!=null) {
+                    propagateValue.delete();
+                }
+            }
+            value.delete();
+        }
+    }
+
+    private static void createOrSaveValue(Question question, String answer, Value value,
+            Survey survey) {
+        // If the value is not found we create one
+        if (value == null) {
+            value = new Value(answer, question, survey);
+        } else {
+            value.setOption((Long) null);
+            value.setValue(answer);
+        }
+        value.save();
     }
 
     public static void deleteValue(Question question) {
         Value value = question.getValueBySession();
-
-        if (value != null) {
-            value.delete();
-        }
+        deleteValues(question, value);
     }
 
     public static void deleteStockSurveyValues(Question question) {
@@ -146,7 +158,7 @@ public class ReadWriteDB {
         List<Value> stockValues = survey.getValues();
         for (Value value : stockValues) {
             if ((question.isACT() && value.getQuestion().isACT())) {
-                value.delete();
+                deleteValues(value.getQuestion(), value);
             }
         }
         Survey malariaSurvey = Session.getMalariaSurvey();
@@ -156,5 +168,10 @@ public class ReadWriteDB {
                 value.delete();
             }
         }
+    }
+
+
+    public static Value insertValue(String value, Question question, Survey survey) {
+        return new Value(value, question, survey);
     }
 }

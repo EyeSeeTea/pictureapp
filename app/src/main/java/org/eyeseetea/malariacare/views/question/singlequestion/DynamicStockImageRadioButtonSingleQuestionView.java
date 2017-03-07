@@ -128,12 +128,9 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
                 } else {
                     List<Option> options = question.getAnswer().getOptions();
                     for (Option option : options) {
-                        if (option.getName().equals(
+                        if (option.getCode().equals(
                                 PreferencesState.getInstance().getContext().getString(
-                                        R.string.no_option_identifier))
-                                || option.getCode().equals(
-                                PreferencesState.getInstance().getContext().getString(
-                                        R.string.no_option_identifier))) {
+                                        R.string.false_option_identifier))) {
                             notifyAnsweOptionChange(optionView, option);
                         }
                     }
@@ -148,12 +145,9 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         } else {
             List<Option> options = question.getAnswer().getOptions();
             for (Option option : options) {
-                if (option.getName().equals(
+                if (option.getCode().equals(
                         PreferencesState.getInstance().getContext().getString(
-                                R.string.yes_option_identifier))
-                        || option.getCode().equals(
-                        PreferencesState.getInstance().getContext().getString(
-                                R.string.yes_option_identifier))) {
+                                R.string.true_option_identifier))) {
                     notifyAnsweOptionChange(imageRadioButton, option);
                 }
             }
@@ -200,12 +194,9 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             } else if (question.getId_question().equals(value.getQuestion().getId_question())) {
                 List<Option> options = question.getAnswer().getOptions();
                 for (Option option : options) {
-                    if ((option.getName().equals(
+                    if ((option.getCode().equals(
                             PreferencesState.getInstance().getContext().getString(
-                                    R.string.yes_option_identifier))
-                            || option.getCode().equals(
-                            PreferencesState.getInstance().getContext().getString(
-                                    R.string.yes_option_identifier)))
+                                    R.string.true_option_identifier)))
                             && option.getId_option().equals(
                             value.getId_option())) {
                         imageRadioButtonOption.setChecked(true);

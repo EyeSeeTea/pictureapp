@@ -43,5 +43,5 @@
 43;'no_pq_cq_out_stock';'OUT_OF_STOCK';0;29;41
 44;'no_pq_adverse_reaction';'ADVERSE_REACTIONS';0;29;42
 45;'no_pq_cq_other';'OTHER';0;29;43
-46;'yes_option_identifier';'true';0;31;13
-46;'no_option_identifier';'false';0;31;14
+46;'true_option_identifier';'true';0;31;13
+46;'false_option_identifier';'false';0;31;14

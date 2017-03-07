@@ -47,7 +47,7 @@ public class PositiveOrZeroNumberTest {
     }
 
     @Test
-    public void return_positiveNumber_if_create_with_number_input_between_1_and_99()
+    public void return_positiveNumber_if_create_with_number_input_between_0_and_99()
             throws InvalidPositiveOrZeroNumberException {
 
         PositiveOrZeroNumber positiveOrZeroNumber = new PositiveOrZeroNumber(0);
@@ -56,7 +56,7 @@ public class PositiveOrZeroNumberTest {
     }
 
     @Test
-    public void return_positiveNumber_if_parse_with_string_input_between_1_and_99()
+    public void return_positiveNumber_if_parse_with_string_input_between_0_and_99()
             throws InvalidPositiveOrZeroNumberException {
 
 

@@ -147,6 +147,14 @@ public class User extends BaseModel {
     }
 
     public long getOrganisation() {
+        if (organisation_fk == 0) {
+            User user = new Select()
+                    .from(User.class)
+                    .where(User_Table.name.is(name))
+                    .querySingle();
+            organisation_fk = user.getOrganisation();
+        }
+
         return organisation_fk;
     }
 

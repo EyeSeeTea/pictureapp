@@ -322,8 +322,8 @@
 <string name="status">状态</string>
 <string name="see_receipt">查看之前入库信息</string>
 <string name="new_receipt">新入库物资登记</string>
-<string name="see_balance">查看之前校正库存登记</string>
-<string name="new_balance">校正实际库存登记</string>
+<string name="see_resets">查看之前校正库存登记</string>
+<string name="new_reset">校正实际库存登记</string>
 <string name="treatment_stock_review_title">Treatment out stock</string>
 <string name="act_out_stock">所需的ACT剂型已无库存，请使用其他剂型，并解释用量</string>
 <string name="out_stock_option">Out of stock</string>
@@ -337,10 +337,13 @@
 <string name="previous_distributions">Previous Distributions</string>
 <string name="error_no_stock_survey">This survey hasn\'t the stock survey associated</string>
 <string name="drugs_dose_of_drug_review_title">%1$.0f of %2$s</string>
+<string name="reset_on">Reset on:</string>
     <string name="no_pq_cq_out_stock">"Out of stock"</string>
     <string name="no_pq_adverse_reaction">"History of adverse reaction to Primaquine"</string>
     <string name="no_cq_adverse_reaction">"History of adverse reaction to Cloroquine"</string>
     <string name="no_pq_cq_other">"Other reasons"</string>
     <string name="treatment_no_cq_title">"The reason you are not giving Cloroquine is"</string>
     <string name="treatment_no_pq_title">"The reason you are not giving Primaquine is"</string>
+    <string name="error_conflict_message">The event with UID: %1$s. was uploaded with conflict in the data element UID: %2$s with the message: %3$s. Please contact the administrator.</string>
+    <string name="error_conflict_title">Error</string>
 </resources>

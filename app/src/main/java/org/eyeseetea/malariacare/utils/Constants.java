@@ -54,6 +54,14 @@ public class Constants {
             DYNAMIC_STOCK_IMAGE_RADIO_BUTTON
     );
 
+    public static final List<Integer> QUESTION_TYPES_NO_DATA_ELEMENT = Arrays.asList(
+            DROPDOWN_OU_LIST,
+            IMAGE_RADIO_GROUP_NO_DATAELEMENT,
+            REMINDER,
+            QUESTION_LABEL,
+            DYNAMIC_STOCK_IMAGE_RADIO_BUTTON
+    );
+
 
     public static final String DEFAULT_SELECT_OPTION = "";
 
@@ -88,8 +96,8 @@ public class Constants {
             SURVEY_SENDING = 6;
     // ############# SURVEY TYPE ###############
     public static final int SURVEY_NO_TYPE=-1,
-            SURVEY_BALANCE = 0,
-            SURVEY_EXPENSE = 1,
+            SURVEY_RESET = 0,
+            SURVEY_ISSUE = 1,
             SURVEY_RECEIPT = 2,
             SURVEY_MCS = 3;
     public static final String FONTS_XSMALL = "xsmall",

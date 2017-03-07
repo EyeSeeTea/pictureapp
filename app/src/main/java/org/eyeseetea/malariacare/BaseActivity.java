@@ -88,7 +88,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
 
         initView(savedInstanceState);
-        if (PushController.getInstance().isPushInProgress()) {
+        if (PreferencesState.getInstance().isPushInProgress()) {
             List<Survey> surveys = Survey.getAllSendingSurveys();
             Log.d(TAG, "The app was closed in the middle of a push. Surveys sending: "
                     + surveys.size());
@@ -96,7 +96,7 @@ public abstract class BaseActivity extends ActionBarActivity {
                 survey.setStatus(Constants.SURVEY_QUARANTINE);
                 survey.save();
             }
-            PushController.getInstance().setPushInProgress(false);
+            PreferencesState.getInstance().setPushInProgress(false);
         }
         alarmPush = new AlarmPushReceiver();
         alarmPush.setPushAlarm(this);
@@ -197,13 +197,13 @@ public abstract class BaseActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_settings:
                 debugMessage("User asked for settings");
-                if (PushController.getInstance().isPushInProgress()) {
+                if (PreferencesState.getInstance().isPushInProgress()) {
                     Log.d(TAG, "Click in settings true "
-                            + PushController.getInstance().isPushInProgress());
+                            + PreferencesState.getInstance().isPushInProgress());
                     Toast.makeText(this, R.string.toast_push_is_pushing, Toast.LENGTH_SHORT).show();
                 } else {
                     Log.d(TAG, "Click in settings false "
-                            + PushController.getInstance().isPushInProgress());
+                            + PreferencesState.getInstance().isPushInProgress());
                     goSettings();
                 }
                 break;

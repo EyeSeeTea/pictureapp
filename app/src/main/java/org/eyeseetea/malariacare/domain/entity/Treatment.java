@@ -18,7 +18,9 @@ import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,20 +43,24 @@ public class Treatment {
 
     public static Question getTreatmentQuestion() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.dynamicTreatmentQuestionUID));
+        return Question.findByUID(context.getString(R.string.dynamicTreatmentHideQuestionUID));
     }
 
     public static Question getDynamicStockQuestion() {
         Context context = PreferencesState.getInstance().getContext();
         return Question.findByUID(context.getString(R.string.dynamicStockQuestionUID));
     }
-    public boolean hasTreatment() {
-        mTreatment = getTreatmentFromSurvey();
-        if (mTreatment != null) {
-            mQuestions = getQuestionsForTreatment(mTreatment);
+
+    public static Question getTreatmentQuestionForTag(Object tag) {
+        Resources resources = PreferencesState.getInstance().getContext().getResources();
+        if (((Question) tag).isPq()) {
+            return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
+        } else {
+            return Question.findByUID(
+                    resources.getString(R.string.dynamicTreatmentHideQuestionUID));
         }
-        return mTreatment != null;
     }
+
 
     public List<Question> getQuestions() {
         return mQuestions;
@@ -124,22 +130,37 @@ public class Treatment {
             }
         }
         Log.d(TAG, "matches obtained");
-        Match treatmentMatch = null;
+        List<Match> treatmentMatches = new ArrayList<>();
         for (Match match : ageMatches) {
             if (pregnantMatches.contains(match) && severeMatches.contains(match)
                     && rdtMatches.contains(match)) {
-                treatmentMatch = match;
+                treatmentMatches.add(match);
+
+            }
+        }
+        org.eyeseetea.malariacare.data.database.model.Treatment treatment = null;
+        for (Match treatmentMatch : treatmentMatches) {
+            if (Session.getCredentials().isDemoCredentials()) {
+                return treatmentMatch.getTreatment();
+            }
+            if (treatmentMatch.getTreatment().getOrganisation().getId_organisation() ==
+                    Session.getUser().getOrganisation()) {
+                Log.d(TAG, "match: " + treatmentMatch.toString());
+                treatment = treatmentMatch.getTreatment();
+                Log.d(TAG, "treatment: " + treatment.toString());
                 break;
             }
         }
-
-        org.eyeseetea.malariacare.data.database.model.Treatment treatment = null;
-        if (treatmentMatch != null) {
-            Log.d(TAG, "match: " + treatmentMatch.toString());
-            treatment = treatmentMatch.getTreatment();
-            Log.d(TAG, "treatment: " + treatment.toString());
-        }
         return treatment;
+    }
+
+    public boolean hasTreatment() {
+        mTreatment = getTreatmentFromSurvey();
+        if (mTreatment != null) {
+            mQuestions = getQuestionsForTreatment(mTreatment);
+            saveTreatmentInTreatmentQuestion(mTreatment);
+        }
+        return mTreatment != null;
     }
 
     private List<Question> getQuestionsForTreatment(
@@ -171,7 +192,6 @@ public class Treatment {
                 Log.d(TAG, "Question: " + questions.get(questions.size() - 1) + "\n");
             }
         }
-        questions.add(Question.findByUID(getContext().getString(R.string.referralQuestionUID)));
 
         return questions;
     }
@@ -267,7 +287,7 @@ public class Treatment {
         List<Option> options = new ArrayList<>();
         Answer answer = new Answer("stock");
         answer.setId_answer(Answer.DYNAMIC_STOCK_ANSWER_ID);
-
+        //this options are never saved
         Option optionACT24 = new Option("ACT_x_24", "ACT_x_24", 0f, answer);
         optionACT24.setId_option(Question.getACT24Question().getId_question());
         optionACT24.setOptionAttribute(
@@ -343,14 +363,26 @@ public class Treatment {
                 getContext().getResources().getString(R.string.drugs_referral_Cq_review_title));
     }
 
-    public static Question getTreatmentQuestionForTag(Object tag) {
-        Resources resources = PreferencesState.getInstance().getContext().getResources();
-        if (((Question) tag).isCq()) {
-            return Question.findByUID(resources.getString(R.string.stockCqQuestionUID));
-        } else if (((Question) tag).isPq()) {
-            return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
-        } else {
-            return Question.findByUID(resources.getString(R.string.dynamicTreatmentQuestionUID));
+    private void saveTreatmentInTreatmentQuestion(
+            org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
+        Question treatmentQuestion = Question.findByUID(
+                getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID));
+        Survey malariaSurvey = Session.getMalariaSurvey();
+        List<Value> values = malariaSurvey.getValues();
+        boolean questionInSurvey = false;
+        String diagnosisMessage = Utils.getInternationalizedString(
+                String.valueOf(treatment.getDiagnosis()));
+        for (Value value : values) {
+            if (value.getQuestion().equals(treatmentQuestion)) {
+                value.setValue(diagnosisMessage);
+                questionInSurvey = true;
+                break;
+            }
+        }
+        if (!questionInSurvey) {
+            Value value = new Value(diagnosisMessage, treatmentQuestion,
+                    malariaSurvey);
+            value.insert();
         }
     }
 

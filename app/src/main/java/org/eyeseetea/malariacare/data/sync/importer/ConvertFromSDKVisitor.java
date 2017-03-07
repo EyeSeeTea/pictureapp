@@ -22,20 +22,23 @@ package org.eyeseetea.malariacare.data.sync.importer;
 import android.content.Context;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Organisation;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.UserAccountExtended;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.ConvertFromSDKVisitorStrategy;
-import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -144,6 +147,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         //Set fks
         survey.setOrgUnit(orgUnit);
         survey.setProgram(program);
+        survey.setEventUid(sdkEventExtended.getUid());
 
         mConvertFromSDKVisitorStrategy.visit(sdkEventExtended, survey);
 
@@ -165,7 +169,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         }
 
         //Phone metadata -> ignore
-        if (PushClient.PHONEMETADA_UID.equals(questionUID)) {
+        if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_phone_metadata).equals(questionUID)) {
             return;
         }
 
@@ -191,6 +195,31 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
             value.setValue(sdkDataValueExtended.getDataValue().getValue());
         }
         values.add(value);
+    }
+
+    @Override
+    public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
+        boolean alreadyInDB = false;
+        Organisation organisationUser = null;
+        List<Organisation> organisations = Organisation.getAllOrganisations();
+        for (Organisation organisation : organisations) {
+            if (organisation.getName().equals(categoryOptionGroupExtended.getName())) {
+                organisationUser = organisation;
+                organisationUser.setUid(categoryOptionGroupExtended.getUid());
+                organisationUser.save();
+                alreadyInDB = true;
+                break;
+            }
+        }
+        if (!alreadyInDB) {
+            organisationUser = new Organisation();
+            organisationUser.setUid(categoryOptionGroupExtended.getUid());
+            organisationUser.setName(categoryOptionGroupExtended.getName());
+            organisationUser.save();
+        }
+        User me = User.getLoggedUser();
+        me.setOrganisation(organisationUser.getId_organisation());
+        me.save();
     }
 
 }

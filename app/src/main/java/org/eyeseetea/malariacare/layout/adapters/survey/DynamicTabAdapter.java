@@ -49,6 +49,7 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
@@ -256,11 +257,27 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         Question question = (Question) view.getTag();
 
+        if (!selectedOption.getName().isEmpty()
+                && question.getOutput() == Constants.DROPDOWN_OU_LIST) {
+            OrgUnit orgUnit = OrgUnit.findByUID(selectedOption.getName());
+
+            assignOrgUnitToSurvey(Session.getMalariaSurvey(), orgUnit);
+            assignOrgUnitToSurvey(Session.getStockSurvey(), orgUnit);
+        }
+
+
         Question counterQuestion = question.findCounterByOption(selectedOption);
         if (counterQuestion == null) {
             saveOptionValue(view, selectedOption, question, moveToNextQuestion);
         } else if (!(view instanceof ImageRadioButtonSingleQuestionView)) {
             showConfirmCounter(view, selectedOption, question, counterQuestion);
+        }
+    }
+
+    private void assignOrgUnitToSurvey(Survey survey, OrgUnit orgUnit) {
+        if (survey != null) {
+            survey.setOrgUnit(orgUnit);
+            survey.save();
         }
     }
 

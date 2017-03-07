@@ -39,6 +39,9 @@ public class SurveyStock {
     private void createSurveyValues() {
         List<Value> values = mSurvey.getValuesFromDB();
         for (Value value : values) {
+            if(value.getQuestion()==null) {
+                continue;//ignore values without question for example control dataelements
+            }
             if (value.getQuestion().isStockRDT()) {
                 surveyValues[RDT_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
             } else if (value.getQuestion().isACT6()) {
@@ -57,8 +60,8 @@ public class SurveyStock {
         }
     }
 
-    public boolean isExpenseSurvey() {
-        return mSurvey.isExpenseSurvey();
+    public boolean isIssueSurvey() {
+        return mSurvey.isIssueSurvey();
     }
 
 }

@@ -69,8 +69,9 @@
     <string name="tab_tag_stock" translatable="false">tab_stock</string>
     <string name="tab_tag_monitor" translatable="false">tab_monitor</string>
     <string name="fragment_new_receipt" translatable="false">fragment_new_receipt</string>
-    <string name="fragment_new_balance" translatable="false">fragment_new_balance</string>
+    <string name="fragment_new_reset" translatable="false">fragment_new_balance</string>
     <string name="fragment_historic_receipt_balance" translatable="false">fragment_historic_receipt_balance</string>
+    <string name="fragment_historic_reset" translatable="false">fragment_historic_reset</string>
 
     <item name="developer_option" translatable="false" type="string">show_dev_options</item>
     <item name="export_data_option" translatable="false" type="string">export_data_option</item>
@@ -105,4 +106,6 @@
     <string name="description" translatable="false">ImageView description</string>
     <string name="login" translatable="false">Log in</string>
     <string name="regular_font_name" translatable="false">@string/medium_font_name</string>
+
+    <string name="push_in_progress" translatable="false">push_in_progress</string>
 </resources>

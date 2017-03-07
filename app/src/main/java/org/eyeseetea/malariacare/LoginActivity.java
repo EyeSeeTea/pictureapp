@@ -91,7 +91,7 @@ public class LoginActivity extends AbsLoginActivity {
         }
 
         ViewGroup loginViewsContainer = (ViewGroup) findViewById(
-                R.id.layout_login_views);
+                R.id.login_dynamic_views_container);
 
         getLayoutInflater().inflate(R.layout.login_spinner, loginViewsContainer,
                 true);
@@ -191,26 +191,31 @@ public class LoginActivity extends AbsLoginActivity {
 
     public void login(String serverUrl, String username, String password) {
         Credentials credentials = new Credentials(serverUrl, username, password);
+        showProgressBar();
 
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {
+                hidePoregressBar();
                 mLoginActivityStrategy.finishAndGo();
             }
 
             @Override
             public void onServerURLNotValid() {
+                hidePoregressBar();
                 serverText.setError(getString(R.string.login_invalid_server_url));
                 showError(getString(R.string.login_invalid_server_url));
             }
 
             @Override
             public void onInvalidCredentials() {
+                hidePoregressBar();
                 showError(getString(R.string.login_invalid_credentials));
             }
 
             @Override
             public void onNetworkError() {
+                hidePoregressBar();
                 showError(getString(R.string.network_error));
             }
         });
@@ -270,6 +275,18 @@ public class LoginActivity extends AbsLoginActivity {
 
             init();
         }
+    }
+
+    public void showProgressBar() {
+        bar = (ProgressBar) findViewById(R.id.progress_bar_circular);
+        bar.setVisibility(View.VISIBLE);
+        findViewById(R.id.layout_login_views).setVisibility(View.GONE);
+    }
+
+    public void hidePoregressBar() {
+        bar = (ProgressBar) findViewById(R.id.progress_bar_circular);
+        bar.setVisibility(View.GONE);
+        findViewById(R.id.layout_login_views).setVisibility(View.VISIBLE);
     }
 }
 

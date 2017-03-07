@@ -84,10 +84,25 @@ public class ReviewFragment extends Fragment {
                 }
             }
             if (isReviewValue) {
-                reviewValues.add(value);
+                if (!isStockValue(value)) {
+                    reviewValues.add(value);
+                }
             }
         }
         return reviewValues;
+    }
+
+    private boolean isStockValue(Value value) {
+        if(value.getQuestion()==null) {
+            return false;
+        }
+        for(Value stockValue : Session.getStockSurvey().getValuesFromDB())
+        if(stockValue.getQuestion()!=null) {
+            if (stockValue.getQuestion().getUid().equals(value.getQuestion().getUid())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

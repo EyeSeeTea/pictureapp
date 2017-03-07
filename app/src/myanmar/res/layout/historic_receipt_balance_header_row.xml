@@ -11,6 +11,7 @@
         android:orientation="horizontal">
 
         <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:id="@+id/historic_receipt_balance_header_title"
             android:layout_width="67dp"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"

@@ -7,6 +7,8 @@ import com.google.common.collect.Maps;
 
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -32,7 +34,7 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
     private Survey getSurveyWithStatusAndAnsweredRatio(long idSurvey) {
         org.eyeseetea.malariacare.data.database.model.Survey surveyDB =
                 org.eyeseetea.malariacare.data
-                .database.model.Survey.findById(idSurvey);
+                        .database.model.Survey.findById(idSurvey);
         Survey survey = new Survey(idSurvey);
         survey.setSurveyAnsweredRatio(surveyDB.reloadSurveyAnsweredRatio());
         surveyDB.updateSurveyStatus();
@@ -50,12 +52,20 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
 
             org.eyeseetea.malariacare.data.database.model.Survey surveyDBStock =
                     org.eyeseetea.malariacare.data
-                            .database.model.Survey.getLastSurveyWithType(Constants.SURVEY_EXPENSE);
+                            .database.model.Survey.getLastSurveyWithType(Constants.SURVEY_ISSUE);
 
-            Value rdtStockValue = new Value("1", Question.getStockRDTQuestion(), surveyDBStock);
+            Value rdtStockValue = ReadWriteDB.insertValue("1", Question.getStockRDTQuestion(),
+                    surveyDBStock);
 
             rdtStockValue.setValue(Integer.toString(rdtUsed(surveyValues)));
+
             rdtStockValue.save();
+
+            for (Question propagateQuestion : Question.getStockRDTQuestion()
+                    .getPropagationQuestions()) {
+                ReadWriteDB.insertValue(rdtStockValue.getValue(), propagateQuestion,
+                        Session.getMalariaSurvey()).save();
+            }
         }
     }
 
@@ -68,13 +78,14 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
             int invalids;
             try {
                 invalids = Integer.parseInt(answersMap.get(confirmInvalid).getValue());
-            } catch (NumberFormatException exception){
+            } catch (NumberFormatException exception) {
                 invalids = 1;
             }
-            if (answersMap.get(rdtQuestion).getValue().equals("Invalid"))
+            if (answersMap.get(rdtQuestion).getValue().equals("Invalid")) {
                 rdtUsed = invalids;
-            else
+            } else {
                 rdtUsed += invalids;
+            }
         }
         return rdtUsed;
     }

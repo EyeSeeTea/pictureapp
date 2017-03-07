@@ -973,6 +973,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * value.
      */
     public void finishOrNext() {
+        try{
+            System.out.println(Session.getMalariaSurvey().getValuesFromDB().toString());
+            System.out.println(Session.getStockSurvey().getValuesFromDB().toString());
+        }catch (Exception e){}
         if (Validation.hasErrors()) {
             Validation.showErrors();
             isClicked = false;
@@ -1075,6 +1079,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Changes the current question moving backward
      */
     private void previous() {
+        try{
+            System.out.println(Session.getMalariaSurvey().getValuesFromDB().toString());
+            System.out.println(Session.getStockSurvey().getValuesFromDB().toString());
+        }catch (Exception e){}
         if (!navigationController.hasPrevious()) {
             return;
         }

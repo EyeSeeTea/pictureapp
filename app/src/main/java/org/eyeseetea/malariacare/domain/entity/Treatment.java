@@ -130,20 +130,26 @@ public class Treatment {
             }
         }
         Log.d(TAG, "matches obtained");
-        Match treatmentMatch = null;
+        List<Match> treatmentMatches = new ArrayList<>();
         for (Match match : ageMatches) {
             if (pregnantMatches.contains(match) && severeMatches.contains(match)
                     && rdtMatches.contains(match)) {
-                treatmentMatch = match;
-                break;
+                treatmentMatches.add(match);
+
             }
         }
-
         org.eyeseetea.malariacare.data.database.model.Treatment treatment = null;
-        if (treatmentMatch != null) {
-            Log.d(TAG, "match: " + treatmentMatch.toString());
-            treatment = treatmentMatch.getTreatment();
-            Log.d(TAG, "treatment: " + treatment.toString());
+        for (Match treatmentMatch : treatmentMatches) {
+            if (Session.getCredentials().isDemoCredentials()) {
+                return treatmentMatch.getTreatment();
+            }
+            if (treatmentMatch.getTreatment().getOrganisation().getId_organisation() ==
+                    Session.getUser().getOrganisation()) {
+                Log.d(TAG, "match: " + treatmentMatch.toString());
+                treatment = treatmentMatch.getTreatment();
+                Log.d(TAG, "treatment: " + treatment.toString());
+                break;
+            }
         }
         return treatment;
     }

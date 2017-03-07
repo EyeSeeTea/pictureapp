@@ -1708,25 +1708,6 @@ public class Question extends BaseModel {
                         QuestionRelation.MATCH_PROPAGATE))
                 .and(QuestionOption_Table.id_question_fk.withTable(questionOptionAlias).is(
                         id_question)).queryList();
-        System.out.println("matches" + new Select().from(Question.class).as(questionName)
-                //Question + QuestioRelation
-                .join(QuestionRelation.class, Join.JoinType.LEFT_OUTER).as(questionRelationName)
-                .on(Question_Table.id_question.withTable(questionAlias)
-                        .eq(QuestionRelation_Table.id_question_fk.withTable(
-                                questionRelationAlias)))
-                //+Match
-                .join(Match.class, Join.JoinType.LEFT_OUTER).as(matchName)
-                .on(QuestionRelation_Table.id_question_relation.withTable(questionRelationAlias)
-                        .eq(Match_Table.id_question_relation_fk.withTable(matchAlias)))
-                //+Questionoption
-                .join(QuestionOption.class, Join.JoinType.LEFT_OUTER).as(questionOptionName)
-                .on(QuestionOption_Table.id_match_fk.withTable(questionOptionAlias)
-                        .eq(Match_Table.id_match.withTable(matchAlias)))
-                //Parent child relationship
-                .where(QuestionRelation_Table.operation.withTable(questionRelationAlias).eq(
-                        QuestionRelation.MATCH_PROPAGATE))
-                .and(QuestionOption_Table.id_question_fk.withTable(questionOptionAlias).is(
-                        id_question)).getQuery());
         return propagationQuestion;
     }
 

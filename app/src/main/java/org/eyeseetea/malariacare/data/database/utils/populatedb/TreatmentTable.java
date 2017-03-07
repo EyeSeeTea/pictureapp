@@ -138,6 +138,7 @@ public class TreatmentTable {
 
         initCSVQuestionOptionsIds();
 
+        List<String[]> organisationLines = getNotTreatmentLines(PopulateDB.ORGANISATIONS_CSV);
         List<String[]> treatmentLines = new ArrayList<>();
         List<String[]> treatmentMatchLines = new ArrayList<>();
         List<String[]> drugsCombinationLines = new ArrayList<>();
@@ -154,7 +155,8 @@ public class TreatmentTable {
 
             addDiagnosisAndMessageLine(line, stringKeyLines, messageLines, diagnosisLines,
                     translationLines);
-            addTreatment(line, treatmentLines, treatmentMatchLines, messageLines, diagnosisLines);
+            addTreatment(line, treatmentLines, treatmentMatchLines, messageLines, diagnosisLines,
+                    organisationLines);
             addDrugCombinations(line, drugsCombinationLines, treatmentLines);
 
             if (line[5].equals("Y")) {
@@ -171,6 +173,7 @@ public class TreatmentTable {
 
 
     private void updateDB() throws IOException {
+        UpdateDB.updateOrganisations(mContext, false);
         UpdateDB.updateStringKeys(mContext, false);
         UpdateDB.updateTranslations(mContext, false);
         UpdateDB.updateTreatments(mContext, false);
@@ -244,8 +247,11 @@ public class TreatmentTable {
 
     private void addTreatment(String line[], List<String[]> treatmentLines,
             List<String[]> treatmentMatchLines, List<String[]> messageLines,
-            List<String[]> diagnosisLines) throws IOException {
-        String[] treatmentLine = {getNextIdToInsert(treatmentLines), line[0], getLastIdInserted(
+            List<String[]> diagnosisLines, List<String[]> organisationLines) throws IOException {
+
+        String[] organisationLine = addOrganisationLine(line, organisationLines);
+        String[] treatmentLine = {getNextIdToInsert(treatmentLines), organisationLine[0],
+                getLastIdInserted(
                 diagnosisLines), getLastIdInserted(messageLines), (line[5].equals("Y")
                 ? Treatment.TYPE_MAIN : Treatment.TYPE_NOT_MAIN) + ""};
         mFileCsvs.insertCsvLine(PopulateDB.TREATMENT_CSV, treatmentLine);
@@ -258,6 +264,19 @@ public class TreatmentTable {
             mFileCsvs.insertCsvLine(PopulateDB.TREATMENT_MATCHES_CSV, treatmentMatch);
             treatmentMatchLines.add(treatmentMatch);
         }
+    }
+
+    private String[] addOrganisationLine(String[] line, List<String[]> organisationLines)
+            throws IOException {
+        for (String[] organisationLine : organisationLines) {
+            if (organisationLine[2].equals(line[0])) {
+                return organisationLine;
+            }
+        }
+        String[] organisationLine = {getNextIdToInsert(organisationLines), "", line[0]};
+        mFileCsvs.insertCsvLine(PopulateDB.ORGANISATIONS_CSV, organisationLine);
+        organisationLines.add(organisationLine);
+        return organisationLine;
     }
 
     private void addDrugCombinations(String line[], List<String[]> drugsCombinationLines,

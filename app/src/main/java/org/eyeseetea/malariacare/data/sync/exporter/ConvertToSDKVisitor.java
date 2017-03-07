@@ -212,7 +212,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     private void buildAndSaveDataValue(String UID, String value, EventExtended event) {
         DataValueExtended dataValue = new DataValueExtended();
         dataValue.setDataElement(UID);
-        dataValue.setLocalEventId(event.getLocalId());
         dataValue.setEvent(event.getEvent());
         dataValue.setProvidedElsewhere(false);
         if (Session.getUser() != null) {

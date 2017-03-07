@@ -184,7 +184,7 @@ public class TreatmentTable {
 
     private void initCSVQuestionOptionsIds() throws IOException {
         treatmentQuestionId = getCsvId(
-                mContext.getResources().getString(R.string.dynamicTreatmentQuestionUID), 5,
+                mContext.getResources().getString(R.string.dynamicTreatmentHideQuestionUID), 5,
                 PopulateDB.QUESTIONS_CSV);
         treatmentQuestionRelationId = getCsvId(treatmentQuestionId, 2,
                 QuestionRelation.TREATMENT_MATCH + "", 1, PopulateDB.QUESTION_RELATIONS_CSV);

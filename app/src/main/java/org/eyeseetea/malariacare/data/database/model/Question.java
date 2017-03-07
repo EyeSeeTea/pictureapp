@@ -979,7 +979,7 @@ public class Question extends BaseModel {
 
     public Option getOptionByValueInSession() {
         Option option = null;
-        Value value = question.getValueBySession();
+        Value value = getValueBySession();
 
         if (value != null) {
             option = value.getOption();

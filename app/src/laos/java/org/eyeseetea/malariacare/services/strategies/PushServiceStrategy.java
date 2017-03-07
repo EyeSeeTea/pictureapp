@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.services.strategies;
 
-import org.eyeseetea.malariacare.domain.usecase.PushSurveysUseCase;
 import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy {
@@ -12,18 +11,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
     @Override
     public void push() {
-        PushSurveysUseCase pushSurveysUseCase = new PushSurveysUseCase(mPushService);
-
-        pushSurveysUseCase.execute(new PushSurveysUseCase.Callback() {
-            @Override
-            public void onPushFinished() {
-                mPushService.onPushFinished();
-            }
-
-            @Override
-            public void onPushError(String message) {
-                mPushService.onPushError(message);
-            }
-        });
+        Log.d(TAG, "execute push");
+        executePush();
     }
 }

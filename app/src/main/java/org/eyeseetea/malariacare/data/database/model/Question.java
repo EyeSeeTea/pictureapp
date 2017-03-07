@@ -39,6 +39,7 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.tabAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.tabName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueName;
+import static org.eyeseetea.malariacare.data.database.model.TabGroup_Table.uid;
 
 import android.content.Context;
 import android.util.Log;
@@ -1233,6 +1234,9 @@ public class Question extends BaseModel {
         long optionId = option.getId_option().longValue();
         for (QuestionOption questionOption : questionOptions) {
             //Other options must be discarded
+            if(questionOption.getOption()==null){
+                continue;
+            }
             long currentOptionId = questionOption.getOption().getId_option().longValue();
             if (optionId != currentOptionId) {
                 continue;
@@ -1283,6 +1287,9 @@ public class Question extends BaseModel {
         long optionId = option.getId_option().longValue();
         for (QuestionOption questionOption : questionOptions) {
             //Other options must be discarded
+            if(questionOption.getOption()==null){
+                continue;
+            }
             long currentOptionId = questionOption.getOption().getId_option().longValue();
             if (optionId != currentOptionId) {
                 continue;
@@ -1451,7 +1458,7 @@ public class Question extends BaseModel {
     }
 
     public boolean isDynamicTreatmentQuestion() {
-        return uid_question.equals(getContext().getString(R.string.dynamicTreatmentQuestionUID));
+        return uid_question.equals(getContext().getString(R.string.dynamicTreatmentHideQuestionUID));
     }
 
     public boolean isInvalidRDTQuestion(){

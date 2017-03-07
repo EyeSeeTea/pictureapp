@@ -95,7 +95,11 @@ public class PullController implements IPullController {
                 new IDataSourceCallback<List<OrganisationUnit>>() {
                     @Override
                     public void onSuccess(List<OrganisationUnit> organisationUnits) {
-                        pullData(pullFilters, organisationUnits, callback);
+                        if (!pullFilters.downloadData()) {
+                            convertFromSDK(callback, false);
+                        } else {
+                            pullData(pullFilters, organisationUnits, callback);
+                        }
                     }
 
                     @Override
@@ -140,7 +144,7 @@ public class PullController implements IPullController {
                     public void onSuccess(List<Event> result) {
                         PopulateDB.wipeDatabase();
 
-                        convertFromSDK(callback);
+                        convertFromSDK(callback, true);
                     }
 
                     @Override
@@ -151,12 +155,17 @@ public class PullController implements IPullController {
     }
 
 
-    private void convertFromSDK(final Callback callback) {
+    private void convertFromSDK(final Callback callback, boolean convertData) {
         Log.d(TAG, "Converting SDK into APP data");
 
         try {
             convertMetaData(callback);
-            convertData(callback);
+
+            if (convertData) {
+                convertData(callback);
+            } else {
+                callback.onComplete();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             callback.onError(new PullConversionException());

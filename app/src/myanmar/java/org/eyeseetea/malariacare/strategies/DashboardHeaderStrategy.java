@@ -45,13 +45,17 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
                 titleResource = R.string.stock_control;
                 subtitleResource=R.string.new_receipt;
                 break;
-            case R.string.fragment_new_balance:
+            case R.string.fragment_new_reset:
                 titleResource = R.string.stock_control;
-                subtitleResource=R.string.new_balance;
+                subtitleResource=R.string.new_reset;
                 break;
             case R.string.fragment_historic_receipt_balance:
                 titleResource = R.string.stock_control;
                 subtitleResource=R.string.previous_distributions;
+                break;
+            case R.string.fragment_historic_reset:
+                titleResource = R.string.stock_control;
+                subtitleResource=R.string.previous_resets;
                 break;
         }
         setTitle(headerView, R.id.header_title, titleResource);

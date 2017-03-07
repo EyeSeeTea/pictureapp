@@ -140,8 +140,8 @@ public class Treatment {
         }
         org.eyeseetea.malariacare.data.database.model.Treatment treatment = null;
         for (Match treatmentMatch : treatmentMatches) {
-            if (treatmentMatch.getTreatment().getOrganisation().equals(
-                    Session.getUser().getOrganisation())) {
+            if (treatmentMatch.getTreatment().getOrganisation().getId_organisation() ==
+                    Session.getUser().getOrganisation()) {
                 Log.d(TAG, "match: " + treatmentMatch.toString());
                 treatment = treatmentMatch.getTreatment();
                 Log.d(TAG, "treatment: " + treatment.toString());

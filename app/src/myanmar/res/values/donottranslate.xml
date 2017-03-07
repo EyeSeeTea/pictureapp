@@ -39,6 +39,7 @@
     <string name="act24QuestionUID" translatable="false">OR8HOulQb62</string>
     <string name="dynamicStockQuestionUID" translatable="false">NoDataElementOutOfStock</string>
     <string name="outOfStockQuestionUID" translatable="false">ZEopAP6tQN4</string>
+    <string name="dynamicTreatmentHideQuestionUID" translatable="false">NoDataDynamicTreatment</string>
     <string name="dynamicTreatmentQuestionUID" translatable="false">yPACdIBZEeZ</string>
     <string name="stockRDTQuestionUID" translatable="false">FGG1GvvS8Xg</string>
     <string name="confirmInvalidQuestionUID" translatable="false">lhJLBNebHcz</string>
@@ -62,4 +63,6 @@
     <string name="control_data_element_datetime_capture" translatable="false">wSRDoeLTAyv</string>
     <string name="control_data_element_datetime_sent" translatable="false">sKPamHqCASp</string>
     <string name="category_combination" translatable="false">GwFkNOXaQcq</string>
+    <string name="category_option_group_set_uid" translatable="false">yVH67wmhryq</string>
+
 </resources>

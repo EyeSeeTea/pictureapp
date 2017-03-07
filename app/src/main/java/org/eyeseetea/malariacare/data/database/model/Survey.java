@@ -1050,11 +1050,11 @@ public class Survey extends BaseModel implements VisitableToSDK {
                         R.string.rdtPositive));
     }
 
-    public boolean isExpenseSurvey() {
+    public boolean isIssueSurvey() {
         if (type == null) {
             return false;
         }
-        return type == Constants.SURVEY_EXPENSE;
+        return type == Constants.SURVEY_ISSUE;
     }
 
     /**

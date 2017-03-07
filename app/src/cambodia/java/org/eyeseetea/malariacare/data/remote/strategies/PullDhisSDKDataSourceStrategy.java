@@ -6,4 +6,10 @@ public class PullDhisSDKDataSourceStrategy implements IPullDhisSDKDataSourceStra
     public void setEventFilters(EventFilters eventFilters) {
 
     }
+
+    @Override
+    public void onMetadataSucceed(IDataSourceCallback callback,
+            List<OrganisationUnit> organisationUnits) {
+        callback.onSuccess(organisationUnits);
+    }
 }

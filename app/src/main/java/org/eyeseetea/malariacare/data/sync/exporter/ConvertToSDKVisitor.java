@@ -36,15 +36,13 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
+import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.exception.DataElementConflictException;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.ShowException;
-import org.hisp.dhis.client.sdk.android.api.persistence.flow.FailedItemFlow;
+import org.hisp.dhis.client.sdk.models.common.importsummary.Conflict;
 import org.hisp.dhis.client.sdk.models.common.importsummary.ImportSummary;
 import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -177,20 +175,31 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     private void buildControlDataElements(Survey survey, EventExtended event) {
         //save phonemetadata
         PhoneMetaData phoneMetaData = Session.getPhoneMetaData();
-        buildAndSaveDataValue((PreferencesState.getInstance().getContext().getString(R.string.control_data_element_phone_metadata)), phoneMetaData.getPhone_metaData(), event);
+        buildAndSaveDataValue((PreferencesState.getInstance().getContext().getString(
+                R.string.control_data_element_phone_metadata)), phoneMetaData.getPhone_metaData(),
+                event);
 
         //save Time capture
-        if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture).equals(
+        if (PreferencesState.getInstance().getContext().getString(
+                R.string.control_data_element_datetime_capture) != null
+                && !PreferencesState.getInstance().getContext().getString(
+                R.string.control_data_element_datetime_capture).equals(
                 "")) {
-            buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_capture),
+            buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(
+                    R.string.control_data_element_datetime_capture),
                     EventExtended.format(survey.getCompletionDate(),
                             EventExtended.DHIS2_GMT_DATE_FORMAT), event);
         }
 
         //save Time Sent
-        if (PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent) != null && !PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent).equals("")) {
-            buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(R.string.control_data_element_datetime_sent),
-                    EventExtended.format(new Date(), EventExtended.DHIS2_GMT_DATE_FORMAT), event);
+        if (PreferencesState.getInstance().getContext().getString(
+                R.string.control_data_element_datetime_sent) != null
+                && !PreferencesState.getInstance().getContext().getString(
+                R.string.control_data_element_datetime_sent).equals("")) {
+            buildAndSaveDataValue(PreferencesState.getInstance().getContext().getString(
+                    R.string.control_data_element_datetime_sent),
+                    EventExtended.format(new Date(), EventExtended.DHIS2_GMT_DATE_FORMAT),
+                    event);
         }
     }
 
@@ -297,7 +306,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Saves changes in the survey (supposedly after a successful push)
      */
-    public void saveSurveyStatus(Map<String, ImportSummary> importSummaryMap) {
+    public void saveSurveyStatus(Map<String, ImportSummary> importSummaryMap, final
+    IPushController.IPushControllerCallback callback) {
         Log.d(TAG, String.format("ImportSummary %d surveys savedSurveyStatus", surveys.size()));
         for (int i = 0; i < surveys.size(); i++) {
             Survey iSurvey = surveys.get(i);
@@ -305,26 +315,33 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             Log.d(TAG, "saveSurveyStatus: Starting saving survey Set Survey status as QUARANTINE"
                     + iSurvey.getId_survey() + " eventuid: " + iSurvey.getEventUid());
             iSurvey.save();
-            if(importSummaryMap==null) {
+            if (importSummaryMap == null) {
                 continue;
             }
             EventExtended iEvent = new EventExtended(events.get(iSurvey.getId_survey()));
             ImportSummary importSummary = importSummaryMap.get(iEvent.getEvent().getUId());
-            FailedItemFlow failedItem = EventExtended.hasConflict(iEvent.getLocalId());
+            List<Conflict> conflicts = importSummary.getConflicts();
             //Sets the survey status as quarantine to prevent wrong importSummaries (F.E. in
             // network failures).
             //This survey will be checked again in the future push to prevent the duplicates
             // in the server.
             //If the importSummary has a failedItem the survey was saved in the server but
             // never resend, the survey is saved as survey in conflict.
-            if (failedItem != null) {
-                Log.d(TAG, "saveSurveyStatus: Faileditem not null " + iSurvey.getId_survey());
-                List<String> failedUids = getFailedUidQuestion(failedItem.getErrorMessage());
-                for (String uid : failedUids) {
-                    Log.d(TAG, "saveSurveyStatus: PUSH process...Conflict in " + uid
-                            + " dataelement pushing survey: "
-                            + iSurvey.getId_survey());
-                    iSurvey.setStatus(Constants.SURVEY_CONFLICT);
+            if (conflicts != null && conflicts.size() > 0) {
+                for (Conflict conflict : conflicts) {
+                    Log.d(TAG, "saveSurveyStatus: Faileditem not null " + iSurvey.getId_survey());
+                    if (conflict.getObject() != null) {
+                        Log.d(TAG, "saveSurveyStatus: PUSH process...Conflict in "
+                                + conflict.getObject() +
+                                " with error " + conflict.getValue()
+                                + " dataelement pushing survey: "
+                                + iSurvey.getId_survey());
+                        callback.onError(new DataElementConflictException(
+                                String.format(context.getString(R.string.error_conflict_message),
+                                        iEvent.getEvent().getUId(), conflict.getObject(),
+                                        conflict.getValue()) + ""));
+                        iSurvey.setStatus(Constants.SURVEY_CONFLICT);
+                    }
                 }
                 iSurvey.save();
                 continue;
@@ -334,7 +351,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 Log.d(TAG, "saveSurveyStatus: importSummary null " + iSurvey.getId_survey());
                 //Saved as quarantine
                 continue;
-            } else  {
+            } else {
                 Log.d(TAG, "saveSurveyStatus: " + importSummary.toString());
             }
 
@@ -379,38 +396,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             return true;
         }
         return importSummary.getImportCount().getImported() == 0;
-    }
-
-
-    /**
-     * Get dataelement fails from errormessage JSON.
-     */
-    private List<String> getFailedUidQuestion(String responseData) {
-        String message = "";
-        List<String> uid = new ArrayList<>();
-        JSONArray jsonArrayResponse = null;
-        JSONObject jsonObjectResponse = null;
-        try {
-            jsonObjectResponse = new JSONObject(responseData);
-            message = jsonObjectResponse.getString("message");
-            jsonObjectResponse = new JSONObject(jsonObjectResponse.getString("response"));
-            jsonArrayResponse = new JSONArray(jsonObjectResponse.getString("importSummaries"));
-            jsonObjectResponse = new JSONObject(jsonArrayResponse.getString(0));
-            jsonArrayResponse = new JSONArray(jsonObjectResponse.getString("conflicts"));
-            //values
-            for (int i = 0; i < jsonArrayResponse.length(); i++) {
-                jsonObjectResponse = new JSONObject(jsonArrayResponse.getString(i));
-                uid.add(jsonObjectResponse.getString("object"));
-            }
-        } catch (JSONException e) {
-            Log.d(TAG, "Error import summary response: " + responseData);
-            e.printStackTrace();
-            return null;
-        }
-        if (message != "") {
-            ShowException.showError(message, PreferencesState.getInstance().getContext());
-        }
-        return uid;
     }
 
     public void setSurveysAsQuarantine() {

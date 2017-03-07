@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
+import org.eyeseetea.malariacare.domain.exception.DataElementConflictException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.network.SurveyChecker;
@@ -20,6 +21,8 @@ public class PushUseCase {
         void onConversionError();
 
         void onNetworkError();
+
+        void onInformativeError(String message);
     }
 
     private IPushController mPushController;
@@ -54,6 +57,8 @@ public class PushUseCase {
                     callback.onConversionError();
                 } else if (throwable instanceof SurveysToPushNotFoundException) {
                     callback.onSurveysNotFoundError();
+                }else if (throwable instanceof DataElementConflictException){
+                    callback.onInformativeError(throwable.getMessage());
                 } else {
                     callback.onPushError();
                 }

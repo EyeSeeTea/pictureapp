@@ -18,7 +18,7 @@ public class ConvertFromSDKVisitorStrategy implements IConvertFromSDKVisitorStra
     public void visit(EventExtended sdkEventExtended, Survey convertingSurvey) {
         if (convertingSurvey.getProgram().getUid().equals(mContext.getString(
                 R.string.stockProgramUID))) {
-            convertingSurvey.setType(Constants.SURVEY_EXPENSE);
+            convertingSurvey.setType(Constants.SURVEY_ISSUE);
         } else {
             convertingSurvey.setType(Constants.SURVEY_NO_TYPE);
         }

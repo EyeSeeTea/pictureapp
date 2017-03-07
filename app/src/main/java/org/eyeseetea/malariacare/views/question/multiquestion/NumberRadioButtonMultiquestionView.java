@@ -72,11 +72,22 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         }
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
-            if (((Option) customRadioButton.getTag()).getName().equals("No") && Float.parseFloat(
+            Option option = (Option) customRadioButton.getTag();
+            if ((option.getName().equals(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.no_option_identifier))
+                    || option.getCode().equals(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.no_option_identifier))) && Float.parseFloat(
                     value.getValue())
                     == 0) {
                 customRadioButton.setChecked(true);
-            } else if (((Option) customRadioButton.getTag()).getName().equals("Yes")
+            } else if ((option.getName().equals(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.yes_option_identifier))
+                    || option.getCode().equals(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.yes_option_identifier)))
                     && Float.parseFloat(
                     value.getValue()) > 0) {
                 customRadioButton.setChecked(true);
@@ -152,10 +163,21 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         int value = 0;
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
-            if (((Option) customRadioButton.getTag()).getName().equals("No")
+            Option option = (Option) customRadioButton.getTag();
+            if ((option.getName().equals(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.no_option_identifier))
+                    || option.getCode().equals(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.no_option_identifier)))
                     && checkedId == customRadioButton.getId()) {
                 value = 0;
-            } else if (((Option) customRadioButton.getTag()).getName().equals("Yes")
+            } else if ((option.getName().equals(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.yes_option_identifier))
+                    || option.getCode().equals(
+                    PreferencesState.getInstance().getContext().getString(
+                            R.string.yes_option_identifier)))
                     && checkedId == customRadioButton.getId()) {
                 value = (int) dose;
             }

@@ -28,6 +28,8 @@ import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExtended;
+import org.eyeseetea.malariacare.data.sync.importer.strategies.APullControllerStrategy;
+import org.eyeseetea.malariacare.data.sync.importer.strategies.PullControllerStrategy;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
@@ -44,15 +46,17 @@ public class PullController implements IPullController {
     PullDhisSDKDataSource mPullRemoteDataSource = new PullDhisSDKDataSource();
     ConvertFromSDKVisitor mConverter;
     DataConverter mDataConverter;
+    private APullControllerStrategy mPullControllerStrategy = new PullControllerStrategy();
     private Context mContext;
     private boolean cancelPull;
+
 
     public PullController(Context context) {
         mContext = context;
 
         mPullRemoteDataSource = new PullDhisSDKDataSource();
         mConverter = new ConvertFromSDKVisitor(context);
-        mDataConverter = new DataConverter();
+        mDataConverter = new DataConverter(context);
     }
 
     @Override
@@ -163,6 +167,7 @@ public class PullController implements IPullController {
                 callback.onComplete();
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             callback.onError(new PullConversionException());
         }
     }
@@ -186,6 +191,7 @@ public class PullController implements IPullController {
         }
 
         OrgUnitToOptionConverter.convert();
+        mPullControllerStrategy.convertMetadata(mConverter);
     }
 
     private void convertData(final Callback callback) {

@@ -21,6 +21,8 @@ package org.eyeseetea.malariacare.data.database.model;
 
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.orgUnitAlias;
+import static org.eyeseetea.malariacare.data.database.AppDatabase.orgUnitName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.programAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.programName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.questionAlias;
@@ -41,6 +43,7 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
@@ -60,6 +63,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -115,6 +119,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
     @Column
     Integer type;
+
+    @Column
+    String uid_event_fk;
 
     /**
      * List of values for this survey
@@ -243,12 +250,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.id_user_fk = (user != null) ? user.getId_user() : null;
     }
 
-    @Deprecated
     public Date getCreationDate() {
         return creation_date;
     }
 
-    @Deprecated
     public void setCreationDate(Date creationDate) {
         this.creation_date = creationDate;
     }
@@ -261,12 +266,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.completion_date = completionDate;
     }
 
-    @Deprecated
     public Date getEventDate() {
         return event_date;
     }
 
-    @Deprecated
     public void setEventDate(Date eventDate) {
         this.event_date = eventDate;
     }
@@ -295,6 +298,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.type = type;
     }
 
+    public String getEventUid() {
+        return uid_event_fk;
+    }
+
+    public void setEventUid(EventFlow event) {
+        this.uid_event_fk = event.getUId();
+    }
+
+    public void setEventUid(String eventuid) {
+        this.uid_event_fk = eventuid;
+    }
+
     /**
      * Returns a concrete survey, if it exists
      */
@@ -320,6 +335,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                         .isNot(Constants.SURVEY_SENT))
                 .and(Survey_Table.status.withTable(surveyAlias)
                         .isNot(Constants.SURVEY_CONFLICT))
+                .and(Survey_Table.status.withTable(surveyAlias)
+                        .isNot(Constants.SURVEY_QUARANTINE))
                 .and(Program_Table.uid_program.withTable(programAlias)
                         .isNot(context.getString(R.string.stockProgramUID)))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date.withTable(surveyAlias)))
@@ -333,15 +350,18 @@ public class Survey extends BaseModel implements VisitableToSDK {
     public static List<Survey> getAllSentMalariaSurveys() {
         Context context = PreferencesState.getInstance().getContext();
         return new Select().from(Survey.class).as(surveyName)
-
                 .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
                 .on(Survey_Table.id_program_fk.withTable(surveyAlias)
                         .eq(Program_Table.id_program.withTable(programAlias)))
 
-                .where(Survey_Table.status.withTable(surveyAlias)
-                        .is(Constants.SURVEY_SENT))
-                .and(Program_Table.uid_program.withTable(programAlias)
-                        .isNot(context.getString(R.string.stockProgramUID)))
+                .where(ConditionGroup.clause()
+                        .and(Program_Table.uid_program.withTable(programAlias)
+                                .isNot(context.getString(R.string.stockProgramUID)))
+                        .and(ConditionGroup.clause()
+                                .and(Survey_Table.status.withTable(surveyAlias)
+                                        .is(Constants.SURVEY_SENT))
+                                .or(Survey_Table.status.withTable(surveyAlias)
+                                        .is(Constants.SURVEY_QUARANTINE))))
                 .orderBy(Survey_Table.event_date, false).queryList();
     }
 
@@ -745,7 +765,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
      * @return true|false
      */
     public boolean isInProgress() {
-        return !isSent() && !isCompleted() && !isHide();
+        return this.status == Constants.SURVEY_IN_PROGRESS;
     }
 
     public boolean isStockSurvey() {
@@ -1007,7 +1027,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
             complete();
         } else {
             setStatus(Constants.SURVEY_IN_PROGRESS);
-            setCompletionDate(this.event_date);
             save();
         }
     }
@@ -1219,6 +1238,47 @@ public class Survey extends BaseModel implements VisitableToSDK {
         }
     }
 
+
+    public static List<OrgUnit> getQuarantineOrgUnits(long programUid) {
+        return new Select().from(OrgUnit.class) .as(orgUnitName)
+        .join(Survey.class, Join.JoinType.LEFT_OUTER).as(surveyName)
+                .on(Survey_Table.id_org_unit_fk.withTable(surveyAlias)
+                        .eq(OrgUnit_Table.id_org_unit.withTable(orgUnitAlias)))
+            .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
+                .and(Survey_Table.id_program_fk.eq(programUid)).queryList();
+    }
+
+    public static List<Survey> getAllQuarantineSurveysByProgramAndOrgUnit(Program program, OrgUnit orgUnit) {
+        return new Select().from(Survey.class)
+                .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
+                .and(Survey_Table.id_program_fk.eq(program.getId_program()))
+                .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
+                .orderBy(OrderBy.fromProperty(Survey_Table.event_date).descending()).queryList();
+    }
+
+    public static Date getMinQuarantineCompletionDateByProgramAndOrgUnit(Program program,
+            OrgUnit orgUnit) {
+        Survey survey = new Select()
+                .from(Survey.class)
+                .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
+                .and(Survey_Table.id_program_fk.eq(program.getId_program()))
+                .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
+                .orderBy(OrderBy.fromProperty(Survey_Table.completion_date).ascending())
+                .querySingle();
+        return survey.getCompletionDate();
+    }
+
+    public static Date getMaxQuarantineEventDateByProgramAndOrgUnit(Program program,
+            OrgUnit orgUnit) {
+        Survey survey = new Select()
+                .from(Survey.class)
+                .where(Survey_Table.status.eq(Constants.SURVEY_QUARANTINE))
+                .and(Survey_Table.id_program_fk.eq(program.getId_program()))
+                .and(Survey_Table.id_org_unit_fk.eq(orgUnit.getId_org_unit()))
+                .orderBy(OrderBy.fromProperty(Survey_Table.event_date).descending())
+                .querySingle();
+        return survey.getEventDate();
+    }
     /**
      * This method get the return the highest number of total pages in the survey question values.
      */
@@ -1332,6 +1392,4 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 ", type=" + type +
                 '}';
     }
-
-
 }

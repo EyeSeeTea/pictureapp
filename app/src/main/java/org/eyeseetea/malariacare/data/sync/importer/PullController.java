@@ -52,7 +52,7 @@ public class PullController implements IPullController {
 
         mPullRemoteDataSource = new PullDhisSDKDataSource();
         mConverter = new ConvertFromSDKVisitor(context);
-        mDataConverter = new DataConverter();
+        mDataConverter = new DataConverter(context);
     }
 
     @Override
@@ -163,6 +163,7 @@ public class PullController implements IPullController {
                 callback.onComplete();
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             callback.onError(new PullConversionException());
         }
     }

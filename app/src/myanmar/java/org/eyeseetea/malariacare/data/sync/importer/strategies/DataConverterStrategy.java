@@ -1,5 +1,8 @@
 package org.eyeseetea.malariacare.data.sync.importer.strategies;
 
+import android.content.Context;
+
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
@@ -22,6 +25,13 @@ public class DataConverterStrategy implements IDataConverterStrategy {
     private static String SEX_QUESTION_UID = "fculIlFe15p";
     private static String PREGNANT_QUESTION_UID = "fxDu5J5eZ4t";
 
+    Context mContext;
+
+    public DataConverterStrategy(Context context) {
+        mContext = context;
+    }
+
+
     public void convert(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
 
@@ -32,6 +42,12 @@ public class DataConverterStrategy implements IDataConverterStrategy {
 
     private void convertOrgUnitDataValue(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
+
+
+        if (event.getProgramUId().equals(mContext.getString(R.string.stockProgramUID))) {
+            return;
+        }
+
         Question orgUnitQuestion = Question.findByUID(ORG_UNIT_QUESTION_UID);
 
         if (orgUnitQuestion == null) {
@@ -47,8 +63,13 @@ public class DataConverterStrategy implements IDataConverterStrategy {
 
     }
 
-    private static void convertPatientSexPregnancyDataValue(ConvertFromSDKVisitor converter,
+    private void convertPatientSexPregnancyDataValue(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
+
+        if (event.getProgramUId().equals(mContext.getString(R.string.stockProgramUID))) {
+            return;
+        }
+
         Question sexPregnancyQuestion = Question.findByUID(SEX_PREGNANCY_QUESTION_UID);
 
         if (sexPregnancyQuestion == null) {

@@ -19,12 +19,20 @@
 
 package org.eyeseetea.malariacare.data.sync.importer.models;
 
-import android.util.Log;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.IConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.VisitableFromSDK;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow_Table;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.FailedItemFlow;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.FailedItemFlow_Table;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
+import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow_Table;
 import org.hisp.dhis.client.sdk.models.event.Event;
+import org.hisp.dhis.client.sdk.models.trackedentity.TrackedEntityDataValue;
 import org.joda.time.DateTime;
 
 import java.text.ParseException;
@@ -38,50 +46,51 @@ import java.util.List;
  */
 public class EventExtended implements VisitableFromSDK {
 
-    public final static String COMPLETION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    public final static String AMERICAN_DATE_FORMAT = "yyyy-MM-dd";
     private final static String TAG = ".EventExtended";
+    public final static String DHIS2_GMT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    public final static String DHIS2_LONG_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public final static String AMERICAN_DATE_FORMAT = "yyyy-MM-dd";
 
 
     public static final Event.EventStatus STATUS_ACTIVE = Event.EventStatus.ACTIVE;
     public static final Event.EventStatus STATUS_COMPLETED = Event.EventStatus.COMPLETED;
+    public static final Event.EventStatus STATUS_FUTURE_VISIT = Event.EventStatus.SCHEDULED;
     public static final Event.EventStatus STATUS_SKIPPED = Event.EventStatus.SKIPPED;
 
-    EventFlow event;
+    List<TrackedEntityDataValueFlow> dataValuesInMemory;
 
-    public EventExtended() {
-        this.event = new EventFlow();
-    }
+    EventFlow event;
 
     public EventExtended(EventFlow event) {
         this.event = event;
     }
 
-    /**
-     * Turns a given date into a parseable String according to sdk date format
-     */
-    public static String format(Date date) {
-        if (date == null) {
-            return null;
-        }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(COMPLETION_DATE_FORMAT);
-        return simpleDateFormat.format(date);
+    public EventExtended(EventExtended event) {
+        this.event = event.getEvent();
     }
 
-    /**
-     * Turns a given date into a parseable String according to sdk date format
-     */
-    public static String format(Date date, String format) {
-        if (date == null) {
-            return null;
-        }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-        return simpleDateFormat.format(date);
+    public EventExtended() {
+        event = new EventFlow();
+        event.generateUId();
     }
 
     @Override
     public void accept(IConvertFromSDKVisitor visitor) {
         visitor.visit(this);
+    }
+
+    public List<TrackedEntityDataValueFlow> getDataValuesInMemory() {
+        return dataValuesInMemory;
+    }
+
+    public void setDataValuesInMemory(
+            List<TrackedEntityDataValueFlow> dataValuesInMemory) {
+        this.dataValuesInMemory = dataValuesInMemory;
+    }
+
+    public void setStatus(Event.EventStatus statusCompleted) {
+        event.setStatus(statusCompleted);
+
     }
 
     public EventFlow getEvent() {
@@ -95,14 +104,13 @@ public class EventExtended implements VisitableFromSDK {
         if (event == null) {
             return null;
         }
-
         return event.getCreated().toDate();
     }
 
     /**
      * Returns the survey.completionDate associated with this event (lastUpdated field)
      */
-    public Date getCompletionDate() {
+    public Date getLastUpdated() {
         if (event == null) {
             return null;
         }
@@ -114,75 +122,103 @@ public class EventExtended implements VisitableFromSDK {
      * Returns the survey.eventDate associated with this event (eventDate field)
      */
     public Date getEventDate() {
-        if (event == null) {
-            return null;
-        }
-
-        return event.getEventDate().toDate();
+        return (event.getEventDate() != null) ? event.getEventDate().toDate() : null;
     }
 
     /**
      * Returns the survey.eventDate associated with this event (dueDate field)
      */
-    public Date getScheduledDate() {
-        if (event == null) {
-            return null;
-        }
-
-        return event.getDueDate().toDate();
+    public Date getDueDate() {
+        return (event != null) ? event.getDueDate().toDate() : null;
     }
 
-    private Date parseDate(String dateAsString) {
-        if (dateAsString == null) {
-            return null;
-        }
+    public static Date parseDate(String dateAsString, String format) throws ParseException {
+        return (dateAsString != null) ? new SimpleDateFormat(format).parse(dateAsString) : null;
+    }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(COMPLETION_DATE_FORMAT);
+    public static Date parseShortDate(String dateAsString) {
         try {
-            return simpleDateFormat.parse(dateAsString);
-        } catch (ParseException e) {
-            Log.e(TAG, String.format("Event (%s) cannot parse date %s", event.getUId(),
-                    e.getLocalizedMessage()));
+            return parseDate(dateAsString, AMERICAN_DATE_FORMAT);
+        } catch (ParseException ex) {
+            ex.printStackTrace();
             return null;
         }
     }
 
-    public List<DataValueExtended> getDataValues() {
-        //// FIXME: 09/11/2016
-        return null;
+    public static Date parseLongDate(String dateAsString) {
+        try {
+            return parseDate(dateAsString, DHIS2_GMT_DATE_FORMAT);
+        } catch (ParseException ex) {
+            return parseShortDate(dateAsString);
+        }
     }
 
-    public String getOrganisationUnitId() {
-        return event.getOrgUnit();
+    public static String formatLong(Date date) {
+        return format(date, DHIS2_GMT_DATE_FORMAT);
     }
 
-    public String getProgramUId() {
-        return event.getProgram();
+    public static String formatShort(Date date) {
+        return format(date, AMERICAN_DATE_FORMAT);
     }
 
-    public String getUid() {
-        return event.getUId();
+    /**
+     * Turns a given date into a parseable String according to sdk date format
+     */
+    public static String format(Date date, String format) {
+        return (date != null) ? new SimpleDateFormat(format).format(date) : null;
     }
 
-    public Long getLocalId() {
-        return event.getId();
+
+    /**
+     * Checks whether the given event contains errors in SDK FailedItemExtended table or has been
+     * successful.
+     * If not return null, it is becouse this item had a conflict.
+     */
+    public static FailedItemFlow hasConflict(long localId) {
+        return new Select()
+                .from(FailedItemFlow.class)
+                .where(FailedItemFlow_Table.itemId
+                        .is(localId)).querySingle();
     }
 
-    public void delete() {
-        event.delete();
+    public EventFlow removeDataValues() {
+        //Remove all dataValues
+        List<TrackedEntityDataValueFlow> dataValues = new Select().from(
+                TrackedEntityDataValueFlow.class)
+                .where(TrackedEntityDataValueFlow_Table.event.eq(event.getUId()))
+                .queryList();
+        if (dataValues != null) {
+            for (int i = dataValues.size() - 1; i >= 0; i--) {
+                TrackedEntityDataValueFlow dataValue = dataValues.get(i);
+                dataValue.delete();
+                dataValues.remove(i);
+            }
+        }
+        //// TODO: 15/11/2016
+        //event.setDataValues(null);
+        event.save();
+        return event;
     }
 
-    public void setStatus(Event.EventStatus statusCompleted) {
-        event.setStatus(statusCompleted);
+    public static long count() {
+        return SQLite.selectCountOf()
+                .from(EventFlow.class)
+                .count();
     }
 
-    //// FIXME: 09/11/2016
-    public void setFromServer(boolean value) {
-        return;
+    public static List<EventFlow> getAllEvents() {
+        return new Select().from(EventFlow.class).queryList();
     }
 
-    public void setOrganisationUnitId(String orgUnitUID) {
-        event.setOrgUnit(orgUnitUID);
+    public static EventFlow getEvent(String eventUid) {
+        return new Select()
+                .from(EventFlow.class)
+                .where(EventFlow_Table.uId.eq(eventUid))
+                .querySingle();
+    }
+
+    public void setOrganisationUnitId(String uid) {
+        event.setOrgUnit(uid);
     }
 
     public void setProgramId(String uid) {
@@ -193,12 +229,8 @@ public class EventExtended implements VisitableFromSDK {
         event.setProgramStage(uid);
     }
 
-    public void save() {
-        event.save();
-    }
-
-    public void setLastUpdated(DateTime time) {
-        event.setLastUpdated(time);
+    public void setLastUpdated(DateTime dateTime) {
+        event.setLastUpdated(dateTime);
     }
 
     public void setEventDate(DateTime dateTime) {
@@ -209,6 +241,37 @@ public class EventExtended implements VisitableFromSDK {
         event.setDueDate(dateTime);
     }
 
+    public long getLocalId() {
+        return event.getId();
+    }
+
+    public String getUid() {
+        return event.getUId();
+    }
+
+    public String getOrganisationUnitId() {
+        return event.getOrgUnit();
+    }
+
+    public String getProgramStageId() {
+        return event.getProgramStage();
+    }
+
+    public List<DataValueExtended> getDataValues() {
+        Event eventModel = SdkQueries.getEvent(event.getUId());
+        List<TrackedEntityDataValue> trackedEntityDataValues = eventModel.getDataValues();
+        List<DataValueExtended> dataValueExtendeds = new ArrayList<>();
+        for (TrackedEntityDataValue trackedEntityDataValue : trackedEntityDataValues) {
+            dataValueExtendeds.add(new DataValueExtended(
+                    TrackedEntityDataValueFlow.MAPPER.mapToDatabaseEntity(trackedEntityDataValue)));
+        }
+        return dataValueExtendeds;
+    }
+
+    public String getProgramId() {
+        return event.getProgram();
+    }
+
     public void setLatitude(double latitude) {
         event.setLatitude(latitude);
     }
@@ -217,11 +280,31 @@ public class EventExtended implements VisitableFromSDK {
         event.setLongitude(longitude);
     }
 
-    public static List<EventExtended> getExtendedList(List<EventFlow> events){
-        List <EventExtended> eventExtendeds = new ArrayList<>();
-        for(EventFlow pojoFlow:events){
+    public void save() {
+        event.save();
+    }
+
+
+    public static List<EventExtended> getExtendedList(List<EventFlow> events) {
+        List<EventExtended> eventExtendeds = new ArrayList<>();
+        for (EventFlow pojoFlow : events) {
             eventExtendeds.add(new EventExtended(pojoFlow));
         }
         return eventExtendeds;
+    }
+
+    public Date getScheduledDate() {
+        if (event.getDueDate() == null) {
+            return null;
+        }
+        return event.getDueDate().toDate();
+    }
+
+    public void delete() {
+        event.delete();
+    }
+
+    public String getProgramUId() {
+        return event.getProgram();
     }
 }

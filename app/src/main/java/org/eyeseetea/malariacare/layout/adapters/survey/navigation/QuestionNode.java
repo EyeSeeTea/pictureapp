@@ -234,7 +234,7 @@ public class QuestionNode {
         }
 
         //Parent -> Try parent's sibling
-        return this.parentNode.nextBySibling();
+        return this.parentNode.nextAnyWay(null);
     }
 
     /**

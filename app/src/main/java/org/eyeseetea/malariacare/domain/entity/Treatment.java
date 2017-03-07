@@ -20,6 +20,7 @@ import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,20 +43,24 @@ public class Treatment {
 
     public static Question getTreatmentQuestion() {
         Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.dynamicTreatmentQuestionUID));
+        return Question.findByUID(context.getString(R.string.dynamicTreatmentHideQuestionUID));
     }
 
     public static Question getDynamicStockQuestion() {
         Context context = PreferencesState.getInstance().getContext();
         return Question.findByUID(context.getString(R.string.dynamicStockQuestionUID));
     }
-    public boolean hasTreatment() {
-        mTreatment = getTreatmentFromSurvey();
-        if (mTreatment != null) {
-            mQuestions = getQuestionsForTreatment(mTreatment);
+
+    public static Question getTreatmentQuestionForTag(Object tag) {
+        Resources resources = PreferencesState.getInstance().getContext().getResources();
+        if (((Question) tag).isPq()) {
+            return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
+        } else {
+            return Question.findByUID(
+                    resources.getString(R.string.dynamicTreatmentHideQuestionUID));
         }
-        return mTreatment != null;
     }
+
 
     public List<Question> getQuestions() {
         return mQuestions;
@@ -146,6 +151,15 @@ public class Treatment {
         return treatment;
     }
 
+    public boolean hasTreatment() {
+        mTreatment = getTreatmentFromSurvey();
+        if (mTreatment != null) {
+            mQuestions = getQuestionsForTreatment(mTreatment);
+            saveTreatmentInTreatmentQuestion(mTreatment);
+        }
+        return mTreatment != null;
+    }
+
     private List<Question> getQuestionsForTreatment(
             org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
         List<Question> questions = new ArrayList<>();
@@ -175,7 +189,6 @@ public class Treatment {
                 Log.d(TAG, "Question: " + questions.get(questions.size() - 1) + "\n");
             }
         }
-        questions.add(Question.findByUID(getContext().getString(R.string.referralQuestionUID)));
 
         return questions;
     }
@@ -347,14 +360,26 @@ public class Treatment {
                 getContext().getResources().getString(R.string.drugs_referral_Cq_review_title));
     }
 
-    public static Question getTreatmentQuestionForTag(Object tag) {
-        Resources resources = PreferencesState.getInstance().getContext().getResources();
-        if (((Question) tag).isCq()) {
-            return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
-        } else if (((Question) tag).isPq()) {
-            return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
-        } else {
-            return Question.findByUID(resources.getString(R.string.dynamicTreatmentQuestionUID));
+    private void saveTreatmentInTreatmentQuestion(
+            org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
+        Question treatmentQuestion = Question.findByUID(
+                getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID));
+        Survey malariaSurvey = Session.getMalariaSurvey();
+        List<Value> values = malariaSurvey.getValues();
+        boolean questionInSurvey = false;
+        String diagnosisMessage = Utils.getInternationalizedString(
+                String.valueOf(treatment.getDiagnosis()));
+        for (Value value : values) {
+            if (value.getQuestion().equals(treatmentQuestion)) {
+                value.setValue(diagnosisMessage);
+                questionInSurvey = true;
+                break;
+            }
+        }
+        if (!questionInSurvey) {
+            Value value = new Value(diagnosisMessage, treatmentQuestion,
+                    malariaSurvey);
+            value.insert();
         }
     }
 

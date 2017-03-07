@@ -65,7 +65,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     private void addDemoButton() {
-        ViewGroup loginViewsContainer = (ViewGroup) loginActivity.findViewById(
+        final ViewGroup loginViewsContainer = (ViewGroup) loginActivity.findViewById(
                 R.id.login_dynamic_views_container);
 
         loginActivity.getLayoutInflater().inflate(R.layout.demo_login_button, loginViewsContainer,
@@ -78,7 +78,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onClick(View v) {
 
                 Credentials demoCrededentials = Credentials.createDemoCredentials();
-
+                loginActivity.showProgressBar();
                 loginActivity.mLoginUseCase.execute(demoCrededentials,
                         new ALoginUseCase.Callback() {
                             @Override
@@ -115,6 +115,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
+                loginActivity.hidePoregressBar();
                 finishAndGo(DashboardActivity.class);
             }
 
@@ -125,21 +126,25 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
             @Override
             public void onError(String message) {
+                loginActivity.hidePoregressBar();
                 Log.e(this.getClass().getSimpleName(), message);
             }
 
             @Override
             public void onPullConversionError() {
+                loginActivity.hidePoregressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull conversion error");
             }
 
             @Override
             public void onCancel() {
+                loginActivity.hidePoregressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull cancel");
             }
 
             @Override
             public void onNetworkError() {
+                loginActivity.hidePoregressBar();
                 Log.e(this.getClass().getSimpleName(), "Network Error");
             }
         });

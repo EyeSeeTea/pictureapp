@@ -20,6 +20,7 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
@@ -62,22 +63,9 @@ public class PullController implements IPullController {
     @Override
     public void pull(final PullFilters pullFilters, final Callback callback) {
         Log.d(TAG, "Starting PULL process...");
-        try {
 
-            callback.onStep(PullStep.METADATA);
-
-            populateMetadataFromCsvs(pullFilters.isDemo());
-
-            if (pullFilters.isDemo()) {
-                callback.onComplete();
-            } else {
-
-                pullMetada(pullFilters, callback);
-            }
-        } catch (Exception ex) {
-            Log.e(TAG, "pull: " + ex.getLocalizedMessage());
-            callback.onError(ex);
-        }
+        callback.onStep(PullStep.METADATA);
+        new PopulateDbAsync(pullFilters, callback).execute();
     }
 
     @Override
@@ -206,6 +194,44 @@ public class PullController implements IPullController {
         mDataConverter.convert(callback, mConverter);
     }
 
+    private class PopulateDbAsync extends AsyncTask<Void,Void,Void>
+    {
+        PullFilters mPullFilters;
+        Callback mCallback;
+        Exception mException = null;
+
+        public PopulateDbAsync(PullFilters pullFilters, Callback callback) {
+            mPullFilters = pullFilters;
+            mCallback = callback;
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                populateMetadataFromCsvs(mPullFilters.isDemo());
+            } catch (IOException e) {
+                Log.e(TAG, "pull: " + e.getLocalizedMessage());
+                mException = e;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (mException != null) {
+                mCallback.onError(mException);
+            } else {
+                if (mPullFilters.isDemo()) {
+                    mCallback.onComplete();
+                } else {
+                    pullMetada(mPullFilters, mCallback);
+                }
+            }
+
+        }
+    }
     //TODO jsanchez
     //public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
 

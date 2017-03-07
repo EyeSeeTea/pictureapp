@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.domain.entity;
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
 public class Credentials {
-    private static final String DEMO_USER = "demo";
+    public static final String DEMO_USER = "demo";
     private static final String DEMO_SERVER = "demo.server";
 
     private String username;

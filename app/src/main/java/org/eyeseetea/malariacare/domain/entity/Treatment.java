@@ -140,6 +140,9 @@ public class Treatment {
         }
         org.eyeseetea.malariacare.data.database.model.Treatment treatment = null;
         for (Match treatmentMatch : treatmentMatches) {
+            if (Session.getUser().getName().equals(Credentials.DEMO_USER)) {
+                return treatmentMatch.getTreatment();
+            }
             if (treatmentMatch.getTreatment().getOrganisation().getId_organisation() ==
                     Session.getUser().getOrganisation()) {
                 Log.d(TAG, "match: " + treatmentMatch.toString());

@@ -28,6 +28,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -67,6 +69,7 @@ public class DashboardActivity extends BaseActivity {
     ReviewFragment reviewFragment;
     SurveyFragment surveyFragment;
     DashboardActivityStrategy mDashboardActivityStrategy;
+    static Handler handler;
     /**
      * Flag that controls the fragment change animations
      */
@@ -90,6 +93,7 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        handler = new Handler(Looper.getMainLooper());
         mDashboardActivityStrategy = new DashboardActivityStrategy();
         dashboardActivity = this;
         setContentView(R.layout.tab_dashboard);
@@ -669,5 +673,32 @@ public class DashboardActivity extends BaseActivity {
     public void completeSurvey() {
         mDashboardActivityStrategy.completeSurvey();
         closeSurveyFragment();
+    }
+    //Show dialog exception from class without activity.
+    public static void showException(final String title, final String errorMessage) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Run your task here
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        String dialogTitle = "", dialogMessage = "";
+                        if (title != null) {
+                            dialogTitle = title;
+                        }
+                        if (errorMessage != null) {
+                            dialogMessage = errorMessage;
+                        }
+                        new AlertDialog.Builder(dashboardActivity)
+                                .setCancelable(false)
+                                .setTitle(dialogTitle)
+                                .setMessage(dialogMessage)
+                                .setNeutralButton(android.R.string.ok, null)
+                                .create().show();
+                    }
+                });
+            }
+        }, 1000);
     }
 }

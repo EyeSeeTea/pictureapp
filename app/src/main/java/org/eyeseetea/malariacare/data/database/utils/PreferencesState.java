@@ -331,6 +331,21 @@ public class PreferencesState {
                 instance.getContext().getString(R.string.developer_option), false);
     }
 
+    public boolean isPushInProgress() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.push_in_progress), false);
+    }
+
+    public void setPushInProgress(boolean inProgress) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.push_in_progress), inProgress);
+        editor.commit();
+    }
+
     public Date getDateStarDateLimitFilter() {
         String dateLimit = getDataLimitedByDate();
         if (dateLimit.isEmpty()) {

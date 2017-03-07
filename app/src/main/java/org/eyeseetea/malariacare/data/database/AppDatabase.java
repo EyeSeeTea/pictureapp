@@ -51,6 +51,7 @@ public class AppDatabase {
     public static final String surveyName = "s";
     public static final String optionName = "o";
     public static final String answerName = "a";
+    public static final String orgUnitName = "ou";
 
     public static final NameAlias questionAlias = NameAlias.builder(questionName).build();
     public static final NameAlias questionRelationAlias = NameAlias.builder(
@@ -84,6 +85,8 @@ public class AppDatabase {
             optionName).build();
     public static final NameAlias answerAlias = NameAlias.builder(
             answerName).build();
+    public static final NameAlias orgUnitAlias = NameAlias.builder(
+            orgUnitName).build();
 
 
     // Aliases used in DHIS2 DB wrappers

@@ -29,7 +29,7 @@ public class AvailableRowBuilder extends CounterRowBuilder {
                     || survey.getType().equals(
                     Constants.SURVEY_RECEIPT)) {
                 return newValue;
-            } else if (survey.getType().equals(Constants.SURVEY_EXPENSE)) {
+            } else if (survey.getType().equals(Constants.SURVEY_ISSUE)) {
                 return (-newValue);
             }
         }

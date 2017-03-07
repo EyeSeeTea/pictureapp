@@ -39,6 +39,7 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.tabAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.tabName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueName;
+import static org.eyeseetea.malariacare.data.database.model.TabGroup_Table.uid;
 
 import android.content.Context;
 import android.util.Log;
@@ -1233,6 +1234,9 @@ public class Question extends BaseModel {
         long optionId = option.getId_option().longValue();
         for (QuestionOption questionOption : questionOptions) {
             //Other options must be discarded
+            if(questionOption.getOption()==null){
+                continue;
+            }
             long currentOptionId = questionOption.getOption().getId_option().longValue();
             if (optionId != currentOptionId) {
                 continue;
@@ -1283,6 +1287,9 @@ public class Question extends BaseModel {
         long optionId = option.getId_option().longValue();
         for (QuestionOption questionOption : questionOptions) {
             //Other options must be discarded
+            if(questionOption.getOption()==null){
+                continue;
+            }
             long currentOptionId = questionOption.getOption().getId_option().longValue();
             if (optionId != currentOptionId) {
                 continue;
@@ -1438,12 +1445,20 @@ public class Question extends BaseModel {
         return uid_question.equals(getContext().getString(R.string.act24QuestionUID));
     }
 
+    public boolean isACT() {
+        return isACT6() || isACT12() || isACT18() || isACT24();
+    }
+
     public boolean isCq() {
         return uid_question.equals(getContext().getString(R.string.cqQuestionUID));
     }
 
     public boolean isPq() {
         return uid_question.equals(getContext().getString(R.string.pqQuestionUID));
+    }
+
+    public boolean isDynamicTreatmentQuestion() {
+        return uid_question.equals(getContext().getString(R.string.dynamicTreatmentHideQuestionUID));
     }
 
     public boolean isInvalidRDTQuestion(){
@@ -1528,6 +1543,10 @@ public class Question extends BaseModel {
             }
         }
         return false;
+    }
+
+    public boolean hasDataElement() {
+        return !Constants.QUESTION_TYPES_NO_DATA_ELEMENT.contains(output);
     }
 
     @Override

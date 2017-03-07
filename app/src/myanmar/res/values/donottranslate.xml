@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="specific_language_font" translatable="false">saysettha_ot.ttf</string>
-    <string name="user_push" translatable="false">LAMCS</string>
-    <string name="pass_push" translatable="false">LAMCSadmin1</string>
+    <string name="user_push" translatable="false"></string>
+    <string name="pass_push" translatable="false"></string>
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
@@ -24,7 +24,7 @@
         <item>@string/Pq</item>
     </string-array>
 
-    <string name="malariaProgramUID" translatable="false">RjBwXyc5I66</string>
+    <string name="malariaProgramUID" translatable="false">FsRWMqGdXgS</string>
     <string name="stockProgramUID" translatable="false">B8KA2uJOVD9</string>
     <string name="ageQuestionUID" translatable="false">bGH0k4Ubsxx</string>
     <string name="sexPregnantQuestionUID" translatable="false">NoDataElementSexPregnancy</string>
@@ -39,6 +39,7 @@
     <string name="act24QuestionUID" translatable="false">OR8HOulQb62</string>
     <string name="dynamicStockQuestionUID" translatable="false">NoDataElementOutOfStock</string>
     <string name="outOfStockQuestionUID" translatable="false">ZEopAP6tQN4</string>
+    <string name="dynamicTreatmentHideQuestionUID" translatable="false">NoDataDynamicTreatment</string>
     <string name="dynamicTreatmentQuestionUID" translatable="false">yPACdIBZEeZ</string>
     <string name="stockRDTQuestionUID" translatable="false">FGG1GvvS8Xg</string>
     <string name="confirmInvalidQuestionUID" translatable="false">lhJLBNebHcz</string>
@@ -56,4 +57,12 @@
     <string name="option_rdt_mixed" translatable="false">rdt_mixed</string>
     <string name="option_rdt_pf" translatable="false">rdt_pf</string>
     <string name="option_rdt_pv" translatable="false">rdt_pv</string>
+    <string name="stockPqQuestionUID" translatable="false">NoDataElementNoPqSelected</string>
+
+    <string name="control_data_element_phone_metadata" translatable="false">LRYXAP3Lfcu</string>
+    <string name="control_data_element_datetime_capture" translatable="false">wSRDoeLTAyv</string>
+    <string name="control_data_element_datetime_sent" translatable="false">sKPamHqCASp</string>
+    <string name="category_combination" translatable="false">GwFkNOXaQcq</string>
+    <string name="category_option_group_set_uid" translatable="false">yVH67wmhryq</string>
+
 </resources>

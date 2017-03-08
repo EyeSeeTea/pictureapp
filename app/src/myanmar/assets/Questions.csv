@@ -34,11 +34,11 @@
 37;'Code: No Pq selected';'';'';'';'NoDataElementNoPqSelected';2;0;0;7;28;0;24;7;0;'';0
 40;'Code: No Pq question';'treatment_no_pq_title';'';'treatment_no_pq_title';'Lsmjv2E992L';3;0;0;14;29;0;25;8;0;'';0
 41;'Code: Treat';'treatment_review_title';'';'Dynamic treatment';'yPACdIBZEeZ';3;0;0;7;28;0;21;7;0;'question_images/work_in_progress.png';0
-42;'Code: Malaria Stock ACT x 12';'';'';'ACT_x_12';'oakPX84Jug0';4;0;0;15;28;0;21;7;0;'';1
-43;'Code: Malaria Stock ACT x 18';'';'';'ACT_x_18';'PNkxsc5QwSP';4;0;0;15;28;0;21;7;0;'';1
-44;'Code: Malaria Stock ACT x 24';'';'';'ACT_x_24';'OR8HOulQb62';4;0;0;15;28;0;21;7;0;'';1
-45;'Code: Malaria Stock ACT x 6';'';'';'ACT_x_6';'FUg5X4D538R';4;0;0;15;28;0;21;7;0;'';1
-46;'Code: Malaria Stock Cq';'';'';'Cq';'ZvH3wyLVoCX';4;0;0;15;28;0;21;7;0;'';1
-47;'Code: Malaria Stock Pq';'';'';'Pq';'AcS0UXwsSsg';4;0;0;15;28;0;21;7;0;'';1
-48;'Code: Malaria Stock RDT';'';'';'RDT';'FGG1GvvS8Xg';3;0;0;15;28;0;21;7;0;'';1
-49;'Code: Malaria Stock No Pq question';'';'';'';'Lsmjv2E992L';3;0;0;15;29;0;21;8;0;'';0
+42;'Code: Malaria Stock ACT x 12';'';'';'ACT_x_12';'oakPX84Jug0';4;0;0;15;28;0;21;0;0;'';1
+43;'Code: Malaria Stock ACT x 18';'';'';'ACT_x_18';'PNkxsc5QwSP';4;0;0;15;28;0;21;0;0;'';1
+44;'Code: Malaria Stock ACT x 24';'';'';'ACT_x_24';'OR8HOulQb62';4;0;0;15;28;0;21;0;0;'';1
+45;'Code: Malaria Stock ACT x 6';'';'';'ACT_x_6';'FUg5X4D538R';4;0;0;15;28;0;21;0;0;'';1
+46;'Code: Malaria Stock Cq';'';'';'Cq';'ZvH3wyLVoCX';4;0;0;15;28;0;21;0;0;'';1
+47;'Code: Malaria Stock Pq';'';'';'Pq';'AcS0UXwsSsg';4;0;0;15;28;0;21;0;0;'';1
+48;'Code: Malaria Stock RDT';'';'';'RDT';'FGG1GvvS8Xg';3;0;0;15;28;0;21;0;0;'';1
+49;'Code: Malaria Stock No Pq question';'';'';'';'Lsmjv2E992L';3;0;0;15;29;0;21;0;0;'';0

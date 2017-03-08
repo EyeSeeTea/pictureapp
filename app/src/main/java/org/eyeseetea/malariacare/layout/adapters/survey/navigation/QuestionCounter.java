@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare.layout.adapters.survey.navigation;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
 
 /**
  * POJO that represents a counter question, is never shown but its value is increased
@@ -24,16 +23,16 @@ public class QuestionCounter {
     }
 
     public void increaseRepetitions() {
-        String currentRepetitionsStr = ReadWriteDB.readValueQuestion(counterQuestion);
+        String currentRepetitionsStr = counterQuestion.getQuestionValueBySession();
         Integer increasedRepetitions = toInteger(currentRepetitionsStr) + 1;
-        ReadWriteDB.saveValuesText(counterQuestion, increasedRepetitions.toString());
+        counterQuestion.saveValuesText(increasedRepetitions.toString());
         Log.i(TAG, String.format("Counter %s updated, current value %d", counterQuestion.getCode(),
                 increasedRepetitions));
     }
 
     //Limits the counter by a number of failed attempts.
     public boolean isMaxCounterLimit(Integer limit) {
-        Integer currentRepetitions = toInteger(ReadWriteDB.readValueQuestion(counterQuestion));
+        Integer currentRepetitions = toInteger(counterQuestion.getQuestionValueBySession());
         Log.i(TAG, String.format("Counter %s updated, current value %d", counterQuestion.getCode(),
                 currentRepetitions));
         return !(limit == infinite_counter_number || currentRepetitions < limit);

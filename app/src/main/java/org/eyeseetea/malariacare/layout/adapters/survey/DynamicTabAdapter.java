@@ -57,7 +57,6 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.domain.entity.Validation;
@@ -83,11 +82,9 @@ import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.NumberRadioButtonMultiquestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion
-        .DynamicStockImageRadioButtonSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.DynamicStockImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies
-        .ConfirmCounterSingleCustomViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -286,7 +283,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     public void saveTextValue(View view, String newValue, boolean moveToNextQuestion) {
         Question question = (Question) view.getTag();
-        ReadWriteDB.saveValuesText(question, newValue);
+        question.saveValuesText(newValue);
 
         if (moveToNextQuestion) {
             navigationController.isMovingToForward = true;
@@ -298,7 +295,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     public void saveOptionValue(View view, Option selectedOption, Question question,
             boolean moveToNextQuestion) {
-        Option answeredOption = ReadWriteDB.getOptionAnsweredFromDB(question);
+        Option answeredOption = (question != null) ? question.getAnsweredOption() : null;
         Value value = question.getValueBySession();
 
         if (goingBackwardAndModifiedValues(value, answeredOption, selectedOption)) {
@@ -306,7 +303,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             isBackward = false;
         }
 
-        ReadWriteDB.saveValuesDDL(question, selectedOption, value);
+        question.saveValuesDDL(selectedOption, value);
 
         if (question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
                 question.getOutput().equals(Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT)) {
@@ -367,7 +364,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         int optionPosition = (option.getCode().equals(matchOption.getCode())) ? MATCH_POSITION
                 : DOESNT_MATCH_POSITION;
 
-        ReadWriteDB.saveValuesDDL(matchQuestion,
+        matchQuestion.saveValuesDDL(
                 matchQuestion.getAnswer().getOptions().get(optionPosition),
                 matchQuestion.getValueBySession());
     }
@@ -914,7 +911,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.SHORT_TEXT:
             case Constants.DROPDOWN_LIST:
             case Constants.DROPDOWN_OU_LIST:
-                ReadWriteDB.deleteValue(rowQuestion);
+                rowQuestion.deleteValueBySession();
                 break;
             case Constants.SWITCH_BUTTON:
                 //the 0 option is the left option and is false in the switch, the 1 option is the
@@ -1169,7 +1166,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         if (selectedOption == null) {
             return;
         }
-        ReadWriteDB.saveValuesDDL(question, selectedOption, question.getValueBySession());
+        question.saveValuesDDL(selectedOption, question.getValueBySession());
         showOrHideChildren(question);
     }
 }

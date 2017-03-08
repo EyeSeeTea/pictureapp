@@ -369,4 +369,19 @@ public class PreferencesState {
         }
         return true;
     }
+
+    public boolean isPullComplete() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.is_pull_done), false);
+    }
+    public void setIsPullComplete(boolean isPullComplete) {
+        isPullComplete = isPullComplete;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.is_pull_done), isPullComplete);
+        editor.commit();
+    }
 }

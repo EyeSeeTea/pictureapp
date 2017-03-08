@@ -815,7 +815,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         if (score != null) {
             score.delete();
         }
-        for (Value value : getValues()) {
+        for (Value value : getValuesFromDB()) {
             value.delete();
         }
         super.delete();
@@ -1038,7 +1038,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     public void deleteStockValues(){
-        List<Value> values = getValues();
+        List<Value> values = getValuesFromDB();
         for (Value value : values) {
             if ((value.getQuestion().isACT()) || value.getQuestion().isOutStockQuestion()) {
                 value.delete();

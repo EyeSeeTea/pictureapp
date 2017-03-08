@@ -252,7 +252,7 @@ public class PushClient {
      * Add a dataElement per value (answer)
      */
     private JSONArray prepareValues(JSONArray values) throws Exception {
-        for (Value value : survey.getValues()) {
+        for (Value value : survey.getValuesFromDB()) {
             values.put(prepareValue(value));
         }
         return values;

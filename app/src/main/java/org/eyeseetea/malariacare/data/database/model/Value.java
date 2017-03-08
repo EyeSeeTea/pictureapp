@@ -203,7 +203,7 @@ public class Value extends BaseModel {
      * Looks for the value with the given question
      */
     public static Value findValue(Long idQuestion, Survey survey) {
-        for (Value value : survey.getValues()) {
+        for (Value value : survey.getValuesFromDB()) {
             if (value.matchesQuestion(idQuestion)) {
                 return value;
             }
@@ -216,7 +216,7 @@ public class Value extends BaseModel {
      * Looks for the value with the given question + option
      */
     public static Value findValue(Long idQuestion, Long idOption, Survey survey) {
-        for (Value value : survey.getValues()) {
+        for (Value value : survey.getValuesFromDB()) {
             if (value.matchesQuestionOption(idQuestion, idOption)) {
                 return value;
             }

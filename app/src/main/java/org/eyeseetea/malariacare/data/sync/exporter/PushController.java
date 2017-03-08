@@ -77,7 +77,7 @@ public class PushController implements IPushController {
 
                 for (Survey srv : surveys) {
                     Log.d("DpBlank", "Survey to push " + srv.toString());
-                    for (Value dv : srv.getValues()) {
+                    for (Value dv : srv.getValuesFromDB()) {
                         Log.d("DpBlank", "Values to push " + dv.toString());
                     }
                 }

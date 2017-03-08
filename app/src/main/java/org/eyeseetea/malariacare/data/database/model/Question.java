@@ -1043,19 +1043,15 @@ public class Question extends BaseModel {
                     ((isStockQuestion() || isPq() || isACT())
                             ? Session.getStockSurvey()
                             : Session.getMalariaSurvey());
-            if (value == null) {
-                value = new Value(option, this, survey);
-            } else {
-                if (!value.getOption().equals(option) && hasChildren()
-                        && !isDynamicTreatmentQuestion()) {
-                    survey.removeChildrenValuesFromQuestionRecursively(this, false);
-                }
-                value.setOption(option);
-                value.setValue(option.getName());
+
+            createOrSaveDDLValue(option, value, survey);
+            for (Question propagateQuestion : this.getPropagationQuestions()) {
+                propagateQuestion.createOrSaveDDLValue(option,
+                        Value.findValue(propagateQuestion.getId_question(),
+                                Session.getMalariaSurvey()), Session.getMalariaSurvey());
             }
-            value.save();
         } else {
-            if (value != null) value.delete();
+            deleteValues(value);
         }
     }
 
@@ -1068,29 +1064,68 @@ public class Question extends BaseModel {
             List<Survey> surveys = new ArrayList<>();
             surveys.add(Session.getStockSurvey());
             surveys.add(Session.getMalariaSurvey());
-            for(Survey surveyToClean: surveys) {
+            for (Survey surveyToClean : surveys) {
                 surveyToClean.deleteStockValues();
             }
         }
         if (isStockQuestion() && value != null && answer.equals("-1")) {
-            value.delete();
+            deleteValues(value);
         } else {
-            // If the value is not found we create one
-            if (value == null) {
-                value = new Value(answer, this, survey);
-            } else {
-                value.setOption((Long) null);
-                value.setValue(answer);
+            createOrSaveValue(answer, value, survey);
+            for (Question propagateQuestion : getPropagationQuestions()) {
+                propagateQuestion.createOrSaveValue(answer,
+                        Value.findValue(propagateQuestion.getId_question(),
+                                Session.getMalariaSurvey()), Session.getMalariaSurvey());
             }
-            value.save();
         }
+    }
+
+    private void deleteValues(Value value) {
+        if (value != null) {
+            for (Question propagateQuestion : this.getPropagationQuestions()) {
+                Value propagateValue = Value.findValue(propagateQuestion.getId_question(),
+                        Session.getMalariaSurvey());
+                if (propagateValue != null) {
+                    propagateValue.delete();
+                }
+            }
+            value.delete();
+        }
+}
+
+    private void createOrSaveDDLValue(Option option, Value value,
+            Survey survey) {
+        if (value == null) {
+            value = new Value(option, this, survey);
+        } else {
+            if (!value.getOption().equals(option) && this.hasChildren()
+                    && !this.isDynamicTreatmentQuestion()) {
+                survey.removeChildrenValuesFromQuestionRecursively(this, false);
+            }
+            value.setOption(option);
+            value.setValue(option.getName());
+        }
+
+        value.save();
+    }
+
+    private void createOrSaveValue(String answer, Value value,
+            Survey survey) {
+        // If the value is not found we create one
+        if (value == null) {
+            value = new Value(answer, this, survey);
+        } else {
+            value.setOption((Long) null);
+            value.setValue(answer);
+        }
+        value.save();
     }
 
     public void deleteValueBySession() {
         Value value = getValueBySession();
 
         if (value != null) {
-            value.delete();
+            deleteValues(value);
         }
     }
 
@@ -1199,7 +1234,8 @@ public class Question extends BaseModel {
 
     public boolean hasParent() {
         if (parent == null) {
-            long countChildQuestionRelations = SQLite.selectCountOf().from(QuestionRelation.class)
+            long countChildQuestionRelations = SQLite.selectCountOf().from(
+                    QuestionRelation.class)
                     //// FIXME: 29/12/16
                     //.indexedBy(Constants.QUESTION_RELATION_QUESTION_IDX)
                     .where(QuestionRelation_Table.id_question_fk.eq(
@@ -1311,7 +1347,8 @@ public class Question extends BaseModel {
     }
 
     /**
-     * Find the first children question for this question taking into the account the given option
+     * Find the first children question for this question taking into the account the given
+     * option
      */
     public Question findFirstChildrenByOption(Option option) {
         List<Question> childrenQuestions = findChildrenByOption(option);
@@ -1430,7 +1467,8 @@ public class Question extends BaseModel {
     }
 
     /**
-     * Returns a list of questionOptions that activates this question (might be several though it
+     * Returns a list of questionOptions that activates this question (might be several
+     * though it
      * tends to be just one)
      */
     public List<QuestionOption> findParents() {
@@ -1474,7 +1512,8 @@ public class Question extends BaseModel {
     }
 
     private boolean isNotAnswered(Question question) {
-        if (question.getValueBySession() == null || question.getValueBySession().getValue() == null
+        if (question.getValueBySession() == null
+                || question.getValueBySession().getValue() == null
                 || question.getValueBySession().getValue().length() == 0) {
             return true;
         }
@@ -1570,7 +1609,8 @@ public class Question extends BaseModel {
     }
 
     public boolean isDynamicTreatmentQuestion() {
-        return uid_question.equals(getContext().getString(R.string.dynamicTreatmentHideQuestionUID));
+        return uid_question.equals(
+                getContext().getString(R.string.dynamicTreatmentHideQuestionUID));
     }
 
     public boolean isInvalidRDTQuestion() {
@@ -1697,7 +1737,8 @@ public class Question extends BaseModel {
                 : question.denominator_w != null) {
             return false;
         }
-        if (feedback != null ? !feedback.equals(question.feedback) : question.feedback != null) {
+        if (feedback != null ? !feedback.equals(question.feedback)
+                : question.feedback != null) {
             return false;
         }
         if (id_header_fk != null ? !id_header_fk.equals(question.id_header_fk)
@@ -1818,16 +1859,16 @@ public class Question extends BaseModel {
     }
 
 
-    private static class QuestionOrderComparator implements Comparator {
+private static class QuestionOrderComparator implements Comparator {
 
-        @Override
-        public int compare(Object o1, Object o2) {
+    @Override
+    public int compare(Object o1, Object o2) {
 
-            Question question1 = (Question) o1;
-            Question question2 = (Question) o2;
+        Question question1 = (Question) o1;
+        Question question2 = (Question) o2;
 
-            return new Integer(
-                    question1.getOrder_pos().compareTo(new Integer(question2.getOrder_pos())));
-        }
+        return new Integer(
+                question1.getOrder_pos().compareTo(new Integer(question2.getOrder_pos())));
     }
+}
 }

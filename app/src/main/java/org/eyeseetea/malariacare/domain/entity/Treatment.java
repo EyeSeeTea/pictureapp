@@ -304,11 +304,12 @@ public class Treatment {
         optionACT18.setId_option(Question.getACT18Question().getId_question());
         optionACT18.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx18.png"));
+        Question outStockQuestion = Question.getOutOfStockQuestion();
         Option optionOutStock = new Option("out_stock_option", "out_stock_option", 0f,
-                answer);
+                outStockQuestion.getAnswer());
         optionOutStock.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p6_stockout.png"));
-        optionOutStock.setId_option(Question.getOutOfStockQuestion().getId_question());
+        optionOutStock.setId_option(outStockQuestion.getId_question());
 
         List<org.eyeseetea.malariacare.data.database.model.Treatment> treatments =
                 mainTreatment.getAlternativeTreatments();

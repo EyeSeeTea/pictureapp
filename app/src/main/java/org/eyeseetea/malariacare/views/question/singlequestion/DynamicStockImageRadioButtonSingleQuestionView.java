@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
@@ -127,7 +128,9 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
                 } else {
                     List<Option> options = question.getAnswer().getOptions();
                     for (Option option : options) {
-                        if (option.getName().equals("No")) {
+                        if (option.getCode().equals(
+                                PreferencesState.getInstance().getContext().getString(
+                                        R.string.false_option_identifier))) {
                             notifyAnsweOptionChange(optionView, option);
                         }
                     }
@@ -142,7 +145,9 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         } else {
             List<Option> options = question.getAnswer().getOptions();
             for (Option option : options) {
-                if (option.getName().equals("Yes")) {
+                if (option.getCode().equals(
+                        PreferencesState.getInstance().getContext().getString(
+                                R.string.true_option_identifier))) {
                     notifyAnsweOptionChange(imageRadioButton, option);
                 }
             }
@@ -189,7 +194,10 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             } else if (question.getId_question().equals(value.getQuestion().getId_question())) {
                 List<Option> options = question.getAnswer().getOptions();
                 for (Option option : options) {
-                    if (option.getName().equals("Yes") && option.getId_option().equals(
+                    if ((option.getCode().equals(
+                            PreferencesState.getInstance().getContext().getString(
+                                    R.string.true_option_identifier)))
+                            && option.getId_option().equals(
                             value.getId_option())) {
                         imageRadioButtonOption.setChecked(true);
                     }

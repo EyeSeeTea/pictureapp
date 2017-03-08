@@ -57,7 +57,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
@@ -680,7 +679,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         if (optionCounter == null) {
             return 0f;
         }
-        String counterValue = ReadWriteDB.readValueQuestion(optionCounter);
+        String counterValue = optionCounter.getQuestionValueBySession();
         if (counterValue == null || counterValue.isEmpty()) {
             return 0f;
         }
@@ -1036,6 +1035,15 @@ public class Survey extends BaseModel implements VisitableToSDK {
         setStatus(Constants.SURVEY_COMPLETED);
         setCompletionDate(new Date());
         save();
+    }
+
+    public void deleteStockValues(){
+        List<Value> values = getValues();
+        for (Value value : values) {
+            if ((value.getQuestion().isACT()) || value.getQuestion().isOutStockQuestion()) {
+                value.delete();
+            }
+        }
     }
 
     /**

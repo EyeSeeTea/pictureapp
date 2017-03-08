@@ -4,7 +4,6 @@ import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,7 @@ public class ReminderStatusChecker extends StatusChecker {
      * Checks if the given questionOption is activated
      */
     private boolean isSelected(QuestionOption questionOption) {
-        Option currentOption = ReadWriteDB.readOptionAnswered(questionOption.getQuestion());
+        Option currentOption = questionOption.getQuestion().getOptionByValueInSession();
         return currentOption != null
                 && currentOption.getId_option() == questionOption.getOption().getId_option();
     }

@@ -554,7 +554,9 @@ public class DashboardActivity extends BaseActivity {
 
     public void sendSurvey(View view) {
         surveyFragment.mReviewMode = false;
-        sendSurvey();
+        if(!isReadOnly) {
+            sendSurvey();
+        }
     }
 
     public void reviewSurvey(View view) {

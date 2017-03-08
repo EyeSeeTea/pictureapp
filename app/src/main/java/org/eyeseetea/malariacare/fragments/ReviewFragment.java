@@ -18,6 +18,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,11 @@ public class ReviewFragment extends Fragment {
                         || questionRelation.isAWarning() || questionRelation.isAMatch()) {
                     isReviewValue = false;
                 }
+            }
+            int output = value.getQuestion().getOutput();
+            if (output == Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT
+                    || output == Constants.DYNAMIC_STOCK_IMAGE_RADIO_BUTTON) {
+                isReviewValue = false;
             }
             if (isReviewValue) {
                 if (!isStockValue(value)) {

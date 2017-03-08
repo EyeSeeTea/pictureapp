@@ -97,7 +97,7 @@ public class Treatment {
 
     private org.eyeseetea.malariacare.data.database.model.Treatment getTreatmentFromSurvey() {
 
-        List<Value> values = mMalariaSurvey.getValues();
+        List<Value> values = mMalariaSurvey.getValuesFromDB();
 
         List<Match> ageMatches = new ArrayList<>();
         List<Match> pregnantMatches = new ArrayList<>();
@@ -369,7 +369,7 @@ public class Treatment {
         Question treatmentQuestion = Question.findByUID(
                 getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID));
         Survey malariaSurvey = Session.getMalariaSurvey();
-        List<Value> values = malariaSurvey.getValues();
+        List<Value> values = malariaSurvey.getValues();//this values should be get from memory because the treatment options are in memory
         boolean questionInSurvey = false;
         String diagnosisMessage = Utils.getInternationalizedString(
                 String.valueOf(treatment.getDiagnosis()));

@@ -198,6 +198,18 @@ public class Value extends BaseModel {
         this.id_survey_fk = id_survey;
         this.survey = null;
     }
+    /**
+     * Looks for the value with the given question
+     */
+    public static Value findValueFromDatabase(Long idQuestion, Survey survey) {
+        for (Value value : survey.getValuesFromDBWithoutSave()) {
+            if (value.matchesQuestion(idQuestion)) {
+                return value;
+            }
+        }
+        //No matches -> null
+        return null;
+    }
 
     /**
      * Looks for the value with the given question

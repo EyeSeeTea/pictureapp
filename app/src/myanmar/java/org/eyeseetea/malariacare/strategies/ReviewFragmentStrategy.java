@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
@@ -15,6 +16,9 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
     final String TITLE_SEPARATOR = ": ";
 
     public TableRow createViewRow(TableRow rowView, Value value) {
+
+        rowView.setTag(getCorrectQuestion(value.getQuestion()));
+
         //Sets the value text in the row and add the question as tag.
         CustomTextView valueTextView = (CustomTextView) rowView.findViewById(
                 R.id.review_content_text);
@@ -44,5 +48,22 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
         }
         return rowView;
+    }
+
+
+    private Question getCorrectQuestion(Question question) {
+        if (question.getUid().equals(PreferencesState.getInstance().getContext().getString(
+                R.string.dynamicTreatmentQuestionUID)) || question.getUid().equals(
+                PreferencesState.getInstance().getContext().getString(
+                        R.string.referralQuestionUID))) {
+            return Question.findByUID(PreferencesState.getInstance().getContext().getString(
+                    R.string.dynamicTreatmentHideQuestionUID));
+        }
+        if (question.getUid().equals(PreferencesState.getInstance().getContext().getString(
+                R.string.outOfStockQuestionUID))) {
+            return Question.findByUID(PreferencesState.getInstance().getContext().getString(
+                    R.string.dynamicStockQuestionUID));
+        }
+        return question;
     }
 }

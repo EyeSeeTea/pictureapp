@@ -597,9 +597,12 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     public static Date getLastDateForSurveyType(int type) {
-        Survey survey = SQLite.select(Method.max(Survey_Table.event_date)).
+        Survey survey = new Select().
                 from(Survey.class)
-                .where(Survey_Table.type.eq(type)).querySingle();
+                .where(Survey_Table.type.eq(type))
+                .groupBy(Survey_Table.id_survey)
+                .having(Survey_Table.event_date.is(Method.max(Survey_Table.event_date)))
+                .querySingle();
         if (survey == null) {
             return new Date(0);
         }

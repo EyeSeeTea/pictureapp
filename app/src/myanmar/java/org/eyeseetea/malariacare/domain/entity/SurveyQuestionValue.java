@@ -54,7 +54,7 @@ public class SurveyQuestionValue {
 
 
     public String getValueQuestion(int question) {
-        for (Value value : mSurvey.getValuesFromDB()) {
+        for (Value value : mSurvey.getValues()) {//this values should be get from memory because the treatment options are in memory
             if(value.getQuestion()==null) {
                 continue;
             }

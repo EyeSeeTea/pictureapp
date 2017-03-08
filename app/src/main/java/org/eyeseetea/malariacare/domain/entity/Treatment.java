@@ -369,7 +369,7 @@ public class Treatment {
         Question treatmentQuestion = Question.findByUID(
                 getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID));
         Survey malariaSurvey = Session.getMalariaSurvey();
-        List<Value> values = malariaSurvey.getValuesFromDB();
+        List<Value> values = malariaSurvey.getValues();//this values should be get from memory because the treatment options are in memory
         boolean questionInSurvey = false;
         String diagnosisMessage = Utils.getInternationalizedString(
                 String.valueOf(treatment.getDiagnosis()));

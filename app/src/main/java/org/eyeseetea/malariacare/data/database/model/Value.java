@@ -198,12 +198,24 @@ public class Value extends BaseModel {
         this.id_survey_fk = id_survey;
         this.survey = null;
     }
+    /**
+     * Looks for the value with the given question
+     */
+    public static Value findValueFromDatabase(Long idQuestion, Survey survey) {
+        for (Value value : survey.getValuesFromDBWithoutSave()) {
+            if (value.matchesQuestion(idQuestion)) {
+                return value;
+            }
+        }
+        //No matches -> null
+        return null;
+    }
 
     /**
      * Looks for the value with the given question
      */
     public static Value findValue(Long idQuestion, Survey survey) {
-        for (Value value : survey.getValuesFromDB()) {
+        for (Value value : survey.getValues()) {
             if (value.matchesQuestion(idQuestion)) {
                 return value;
             }
@@ -216,7 +228,7 @@ public class Value extends BaseModel {
      * Looks for the value with the given question + option
      */
     public static Value findValue(Long idQuestion, Long idOption, Survey survey) {
-        for (Value value : survey.getValuesFromDB()) {
+        for (Value value : survey.getValues()) {
             if (value.matchesQuestionOption(idQuestion, idOption)) {
                 return value;
             }

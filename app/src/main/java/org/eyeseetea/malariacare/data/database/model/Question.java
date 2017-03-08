@@ -1074,7 +1074,7 @@ public class Question extends BaseModel {
             createOrSaveValue(answer, value, survey);
             for (Question propagateQuestion : getPropagationQuestions()) {
                 propagateQuestion.createOrSaveValue(answer,
-                        Value.findValue(propagateQuestion.getId_question(),
+                        Value.findValueFromDatabase(propagateQuestion.getId_question(),
                                 Session.getMalariaSurvey()), Session.getMalariaSurvey());
             }
         }
@@ -1083,7 +1083,7 @@ public class Question extends BaseModel {
     private void deleteValues(Value value) {
         if (value != null) {
             for (Question propagateQuestion : this.getPropagationQuestions()) {
-                Value propagateValue = Value.findValue(propagateQuestion.getId_question(),
+                Value propagateValue = Value.findValueFromDatabase(propagateQuestion.getId_question(),
                         Session.getMalariaSurvey());
                 if (propagateValue != null) {
                     propagateValue.delete();

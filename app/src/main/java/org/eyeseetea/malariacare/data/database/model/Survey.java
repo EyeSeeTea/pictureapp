@@ -57,6 +57,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
@@ -866,6 +867,16 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return values;
     }
 
+
+    /**
+     * Returns the list of answered values from this survey
+     */
+    public List<Value> getValuesFromDBWithoutSave() {
+        return new Select()
+                .from(Value.class)
+                .where(Value_Table.id_survey_fk
+                        .eq(this.getId_survey())).queryList();
+    }
     /**
      * Returns the list of questions from answered values
      */
@@ -1212,6 +1223,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 //Remove the children values but if the child value is a counter is not removed
                 // in the first level
                 if (!values.get(i).getQuestion().isACounter() || removeCounters) {
+                    for(Question questionPropagated:values.get(i).getQuestion().getPropagationQuestions()){
+                        removeValue(questionPropagated.getValueBySurvey(Session.getMalariaSurvey()));
+                    }
                     removeValue(values.get(i));
                 }
                 for (Question child : questionChildren) {

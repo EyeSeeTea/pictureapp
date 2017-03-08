@@ -25,6 +25,7 @@ import org.eyeseetea.malariacare.views.DatePickerFragment;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class NewReceiptBalanceFragment extends Fragment {
@@ -63,7 +64,7 @@ public class NewReceiptBalanceFragment extends Fragment {
         pq = (EditText) view.findViewById(R.id.new_receipt_balance_pq);
         cq = (EditText) view.findViewById(R.id.new_receipt_balance_cq);
 
-
+        putTodayDate();
         view.findViewById(R.id.new_receipt_balance_back).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -94,6 +95,11 @@ public class NewReceiptBalanceFragment extends Fragment {
                 datePickerFragment.show(getFragmentManager(), TAG);
             }
         });
+    }
+
+    private void putTodayDate() {
+        Date todayDate = Calendar.getInstance().getTime();
+        date.setText(Utils.parseDateToString(todayDate, "yyyy/MM/dd"));
     }
 
     private void submitPressed() {

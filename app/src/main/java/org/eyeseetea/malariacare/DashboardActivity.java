@@ -567,7 +567,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void reviewSurvey() {
-        DashboardActivity.moveToQuestion = (Session.getMalariaSurvey().getValues().get(
+        DashboardActivity.moveToQuestion = (Session.getMalariaSurvey().getValuesFromDB().get(
                 0).getQuestion());
         hideReview();
     }

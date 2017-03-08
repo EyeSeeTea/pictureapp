@@ -7,7 +7,6 @@ import com.google.common.collect.Maps;
 
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.data.database.utils.ReadWriteDB;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -54,7 +53,7 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
                     org.eyeseetea.malariacare.data
                             .database.model.Survey.getLastSurveyWithType(Constants.SURVEY_ISSUE);
 
-            Value rdtStockValue = ReadWriteDB.insertValue("1", Question.getStockRDTQuestion(),
+            Value rdtStockValue = Question.getStockRDTQuestion().insertValue("1",
                     surveyDBStock);
 
             rdtStockValue.setValue(Integer.toString(rdtUsed(surveyValues)));
@@ -63,7 +62,7 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
 
             for (Question propagateQuestion : Question.getStockRDTQuestion()
                     .getPropagationQuestions()) {
-                ReadWriteDB.insertValue(rdtStockValue.getValue(), propagateQuestion,
+                propagateQuestion.insertValue(rdtStockValue.getValue(),
                         Session.getMalariaSurvey()).save();
             }
         }

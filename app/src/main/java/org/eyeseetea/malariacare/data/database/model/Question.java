@@ -1379,6 +1379,10 @@ public class Question extends BaseModel {
         return false;
     }
 
+    public Value insertValue(String value, Survey survey) {
+        return new Value(value, this, survey);
+    }
+
     /**
      * Find the counter question for this question taking into the account the given option.
      * Only 1 counter question will be activated by option

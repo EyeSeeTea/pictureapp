@@ -19,6 +19,8 @@
 
 package org.eyeseetea.malariacare.data.sync.importer.models;
 
+import android.database.sqlite.SQLiteConstraintException;
+
 import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
@@ -121,7 +123,12 @@ public class DataValueExtended implements VisitableFromSDK {
     }
 
     public void save() {
-        dataValue.save();
+        try {
+            dataValue.save();
+        }catch (SQLiteConstraintException e){
+            System.out.println(dataValue.toString());
+            throw e;
+        }
     }
 
     public static List<DataValueExtended> getExtendedList(

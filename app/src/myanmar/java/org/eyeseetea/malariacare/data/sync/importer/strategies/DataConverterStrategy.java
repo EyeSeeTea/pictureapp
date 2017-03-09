@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.data.sync.importer.strategies;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Question;
@@ -13,6 +14,7 @@ import org.eyeseetea.malariacare.domain.exception.QuestionNotFoundException;
 import java.util.List;
 
 public class DataConverterStrategy implements IDataConverterStrategy {
+    private static String TAG = ".DataConverterStrategy";
 
     private static String ORG_UNIT_QUESTION_UID = "NoDataElementOrgUnit";
 
@@ -73,8 +75,8 @@ public class DataConverterStrategy implements IDataConverterStrategy {
         Question sexPregnancyQuestion = Question.findByUID(SEX_PREGNANCY_QUESTION_UID);
 
         if (sexPregnancyQuestion == null) {
-            throw new QuestionNotFoundException(
-                    String.format("Question with uid %s not found", SEX_PREGNANCY_QUESTION_UID));
+            Log.d(TAG, event.getUid() + "With invalid sexPregnancy question");
+            return;
         }
 
         List<DataValueExtended> dataValues = DataValueExtended.getExtendedList(
@@ -83,10 +85,14 @@ public class DataConverterStrategy implements IDataConverterStrategy {
         DataValueExtended sexDataValue = getDataValue(dataValues, SEX_QUESTION_UID);
         DataValueExtended pregnancyDataValue = getDataValue(dataValues, PREGNANT_QUESTION_UID);
 
+        if (sexDataValue == null || pregnancyDataValue == null) {
+            Log.d(TAG, event.getUid() + "With invalid sexPregnancy question");
+            return;
+        }
+
         DataValueExtended OrgUnitDataValue = new DataValueExtended();
         OrgUnitDataValue.setEvent(event.getEvent());
         OrgUnitDataValue.setDataElement(sexPregnancyQuestion.getUid());
-
         if (sexDataValue.getValue().equals("F")) {
             if (pregnancyDataValue.getValue().equals("true")) {
                 OrgUnitDataValue.setValue(SEX_PREGNANCY_PREGNANT_VALUE);

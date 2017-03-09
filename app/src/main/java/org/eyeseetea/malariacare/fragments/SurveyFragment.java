@@ -203,9 +203,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
      * Prepares the selected tab to be shown
      */
     private View prepareTab(Tab selectedTab) {
-        if(getActivity()==null || getActivity().getApplicationContext()==null) {
-            return null;
-        }
         LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
 
         if (selectedTab.isCompositeScore()) {
@@ -313,8 +310,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         @Override
         protected void onPostExecute(View viewContent) {
             super.onPostExecute(viewContent);
-            if(viewContent==null)
-                return;
+
             Tab tab = tabs.get(0);
 
             content.removeAllViews();
@@ -340,6 +336,8 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive");
+            //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close surveys crash
+            Session.setIsLoadingSurvey(true);
             List<CompositeScore> compositeScores;
             List<Tab> tabs;
             Session.valuesLock.readLock().lock();

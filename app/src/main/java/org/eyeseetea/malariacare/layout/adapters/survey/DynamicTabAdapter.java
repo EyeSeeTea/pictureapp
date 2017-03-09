@@ -504,6 +504,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
+
+        //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close surveys crash
+        Session.setIsLoadingSurvey(false);
+        if(Session.shouldPressBackOnLoadSurvey()) {
+            DashboardActivity.dashboardActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    DashboardActivity.dashboardActivity.onBackPressed();
+                }
+            });
+        }
         return rowView;
     }
 

@@ -476,7 +476,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 if (treatment.hasTreatment()) {
                     screenQuestions = treatment.getQuestions();
                     doseByQuestion = treatment.getDoseByQuestion();
+                } else {
+                    screenQuestions = treatment.getNoTreatmentQuestions();
                 }
+
             } else if (Tab.isMultiQuestionTab(tabType)) {
                 screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
             } else {

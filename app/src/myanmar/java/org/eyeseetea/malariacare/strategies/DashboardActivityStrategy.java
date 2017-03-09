@@ -14,6 +14,8 @@ import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.StockFragment;
 import org.eyeseetea.malariacare.utils.Constants;
 
+import java.util.Date;
+
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private StockFragment stockFragment;
@@ -73,7 +75,8 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         Session.setMalariaSurvey(survey);
         Survey stockSurvey = new Survey(null, stockProgram, Session.getUser(),
                 Constants.SURVEY_ISSUE);
-        stockSurvey.setCreationDate(survey.getCreationDate());
+        stockSurvey.setEventDate(
+                survey.getEventDate());//asociate the malaria survey to the stock survey
         stockSurvey.save();
         Session.setStockSurvey(stockSurvey);
         prepareLocationListener(activity, survey);
@@ -85,14 +88,31 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         Survey stockSurvey = Session.getStockSurvey();
         if (stockSurvey != null) {
             Session.getStockSurvey().complete();
-        new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
+            Date eventDate = new Date();
+            saveEventDate(Session.getMalariaSurvey(), eventDate);
+            saveEventDate(Session.getStockSurvey(), eventDate);
+            new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
         }
     }
 
     @Override
     public void completeSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
-        Session.getStockSurvey().complete();
+        Date eventDate = new Date();
+        //Complete malariaSurvey
+        Survey survey = Session.getMalariaSurvey();
+        saveEventDate(survey, eventDate);
+        survey.updateSurveyStatus();
+        //Complete stockSurvey
+        survey = Session.getStockSurvey();
+        saveEventDate(survey, eventDate);
+        survey.complete();
+    }
+
+    //The eventDate is used to identify the stock survey for each malaria survey
+    //and in quarantine to set the endDate in api queries.
+    private void saveEventDate(Survey survey, Date eventDate) {
+        survey.setEventDate(eventDate);
+        survey.save();
     }
 
     @Override

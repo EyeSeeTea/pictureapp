@@ -231,8 +231,9 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         Value pqValue = null;
         List<Value> values = Session.getMalariaSurvey().getValuesFromDB();
         for (Value sValue : values) {
-            if(sValue.getQuestion()==null)
+            if (sValue.getQuestion() == null) {
                 continue;
+            }
             if (sValue.getQuestion().equals(actQuestion)) {
                 actValue = sValue;
                 break;

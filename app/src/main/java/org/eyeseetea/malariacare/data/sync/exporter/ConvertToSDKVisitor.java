@@ -37,7 +37,7 @@ import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
-import org.eyeseetea.malariacare.domain.exception.DataElementConflictException;
+import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.models.common.importsummary.Conflict;
@@ -335,7 +335,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                                 " with error " + conflict.getValue()
                                 + " dataelement pushing survey: "
                                 + iSurvey.getId_survey());
-                        callback.onError(new DataElementConflictException(
+                        callback.onError(new ImportSummaryErrorException(
                                 String.format(context.getString(R.string.error_conflict_message),
                                         iEvent.getEvent().getUId(), conflict.getObject(),
                                         conflict.getValue()) + ""));
@@ -344,6 +344,16 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 }
                 iSurvey.save();
                 continue;
+            }
+            else if(importSummary !=null && importSummary.getStatus()== ImportSummary.Status.ERROR){
+                Log.d(TAG, "saveSurveyStatus: PUSH error process..."
+                        + importSummary.getDescription()
+                        + " dataelement pushing survey: "
+                        + iSurvey.getId_survey());
+                callback.onError(new ImportSummaryErrorException(
+                        importSummary.getDescription() + ""));
+                iSurvey.setStatus(Constants.SURVEY_CONFLICT);
+                iSurvey.save();
             }
 
             if (importSummary == null) {

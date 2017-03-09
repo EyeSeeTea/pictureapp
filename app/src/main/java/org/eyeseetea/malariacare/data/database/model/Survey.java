@@ -1062,7 +1062,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
     public void deleteStockValues(){
         List<Value> values = getValuesFromDB();
         for (Value value : values) {
-            if ((value.getQuestion().isACT()) || value.getQuestion().isOutStockQuestion()) {
+            if ((value.getQuestion().isACT() && !value.getValue().equals("0"))
+                    || value.getQuestion().isOutStockQuestion()) {
                 for(Question questionPropagated:value.getQuestion().getPropagationQuestions()){
                     removeValue(questionPropagated.getValueBySurvey(Session.getMalariaSurvey()));
                 }

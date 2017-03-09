@@ -353,4 +353,6 @@
 <string name="error_conflict_message">具有UID：％1$s 的事件。 已在冲突的数据元素UID：％2$s 中上传，并显示消息：％3$s。 请与管理员联系。</string>
 <string name="error_conflict_title">错误</string>
 <string name="submit">提交</string>
+    <string name="true_option_identifier">是</string>
+    <string name="false_option_identifier">没有</string>
 </resources>

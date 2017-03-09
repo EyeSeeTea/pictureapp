@@ -137,7 +137,6 @@ public class LoginActivity extends AbsLoginActivity {
 
     @Override
     protected void onLoginButtonClicked(Editable server, Editable username, Editable password) {
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
             askEula(R.string.app_EULA, R.raw.eula, LoginActivity.this);
@@ -196,26 +195,26 @@ public class LoginActivity extends AbsLoginActivity {
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {
-                hidePoregressBar();
+                hideProgressBar();
                 mLoginActivityStrategy.finishAndGo();
             }
 
             @Override
             public void onServerURLNotValid() {
-                hidePoregressBar();
+                hideProgressBar();
                 serverText.setError(getString(R.string.login_invalid_server_url));
                 showError(getString(R.string.login_invalid_server_url));
             }
 
             @Override
             public void onInvalidCredentials() {
-                hidePoregressBar();
+                hideProgressBar();
                 showError(getString(R.string.login_invalid_credentials));
             }
 
             @Override
             public void onNetworkError() {
-                hidePoregressBar();
+                hideProgressBar();
                 showError(getString(R.string.network_error));
             }
         });
@@ -283,7 +282,7 @@ public class LoginActivity extends AbsLoginActivity {
         findViewById(R.id.layout_login_views).setVisibility(View.GONE);
     }
 
-    public void hidePoregressBar() {
+    public void hideProgressBar() {
         bar = (ProgressBar) findViewById(R.id.progress_bar_circular);
         bar.setVisibility(View.GONE);
         findViewById(R.id.layout_login_views).setVisibility(View.VISIBLE);

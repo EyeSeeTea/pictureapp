@@ -6,9 +6,14 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitLevel;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
+import org.eyeseetea.malariacare.data.database.model.Score;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
@@ -37,7 +42,7 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
         Session.logout();
 
-        PopulateDB.wipeDatabase();
+        PopulateDB.wipeDataBase();
 
         deleteOrgUnitQuestionOptions();
 
@@ -46,6 +51,7 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
     @Override
     public void login(Credentials credentials, IDataSourceCallback<UserAccount> callback) {
+
         User user = new User(credentials.getUsername(), credentials.getUsername());
 
         User.insertLoggedUser(user);

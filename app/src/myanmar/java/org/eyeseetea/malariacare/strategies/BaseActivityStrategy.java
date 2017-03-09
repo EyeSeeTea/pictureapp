@@ -10,7 +10,6 @@ import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 

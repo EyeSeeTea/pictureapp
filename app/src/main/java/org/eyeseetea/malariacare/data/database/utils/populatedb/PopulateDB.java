@@ -98,39 +98,6 @@ public class PopulateDB {
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
 
-
-    Class<? extends BaseModel>[] populateTables= new Class[] {
-            User.class,
-            StringKey.class,
-            Translation.class,
-            Program.class,
-            Tab.class,
-            Header.class,
-            Answer.class,
-            OptionAttribute.class,
-            Option.class,
-            Question.class,
-            QuestionRelation.class,
-            Match.class,
-            QuestionOption.class,
-            QuestionThreshold.class,
-            Drug.class,
-            Organisation.class,
-            Treatment.class,
-            DrugCombination.class,
-            TreatmentMatch.class,
-    };
-
-    public static List<Class<? extends BaseModel>> allDataTables= Arrays.asList(
-            Value.class,
-            Score.class,
-            Survey.class
-    );
-    public static List<Class<? extends BaseModel>> allServerPopulatedTables= Arrays.asList(
-            Organisation.class,
-            OrgUnit.class
-    );
-
    public static List<Class<? extends BaseModel>> allMandatoryTables= Arrays.asList(
             User.class,
             StringKey.class,
@@ -249,12 +216,6 @@ public class PopulateDB {
             throw e;
         }
         Log.i(TAG, "DB Loaded ...DONE");
-    }
-
-
-    private static boolean hasPopulateDbMandatoryTablesPopulated() {
-
-        return false;
     }
 
     public static boolean hasMandatoryTables() {

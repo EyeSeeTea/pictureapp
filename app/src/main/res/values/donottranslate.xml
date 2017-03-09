@@ -14,7 +14,6 @@
     <item name="org_unit" translatable="false" type="string">org_unit</item>
     <string name="pref_cat_server" translatable="false">pref_cat_server</string>
     <item name="language_code" translatable="false" type="string">language_code</item>
-    <item name="is_pull_done" translatable="false" type="string">is_pull_done</item>
 
     <string name="PUSH_PERIOD" translatable="false">10</string>
 

@@ -29,7 +29,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
     @Override
     public boolean hasAllComplementarySurveys(Survey malariaSurvey) {
-        Survey stockSurvey = Survey.getStockSurveyWithCreationDate(malariaSurvey.getCreationDate());
+        Survey stockSurvey = Survey.getStockSurveyWithEventDate(malariaSurvey.getEventDate());
         if (stockSurvey != null) {
             Session.setStockSurvey(stockSurvey);
             return true;

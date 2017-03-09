@@ -30,15 +30,14 @@
 33;'Code: Pq';'drugs_referral_Pq_review_title';'drugs_referral_Pq_review_help_text';'Pq';'AcS0UXwsSsg';4;0;0;11;28;0;27;7;0;'question_images/p5_pq.png';1
 34;'Code: RDT';'stock_rdt_review_title';'stock_rdt_review_help_text';'RDT';'FGG1GvvS8Xg';3;0;0;11;28;0;22;7;0;'';1
 35;'Code: Stock';'treatment_stock_review_title';'';'act_out_stock';'NoDataElementOutOfStock';4;0;0;12;28;0;28;8;1;'';0
-36;'Code: Out stock';'out_stock_option';'';'out_stock_option';'ZEopAP6tQN4';4;0;0;12;31;0;27;8;0;'question_images/p6_out_stock.png';0
+36;'Code: Out stock';'out_stock_option';'';'out_stock_option';'ZEopAP6tQN4';4;0;0;12;31;0;8;8;0;'question_images/p6_out_stock.png';0
 37;'Code: No Pq selected';'';'';'';'NoDataElementNoPqSelected';2;0;0;7;28;0;24;7;0;'';0
 40;'Code: No Pq question';'treatment_no_pq_title';'';'treatment_no_pq_title';'Lsmjv2E992L';3;0;0;14;29;0;25;8;0;'';0
 41;'Code: Treat';'treatment_review_title';'';'Dynamic treatment';'yPACdIBZEeZ';3;0;0;7;28;0;21;7;0;'question_images/work_in_progress.png';0
-42;'Code: Malaria Stock ACT x 12';'';'';'ACT_x_12';'oakPX84Jug0';4;0;0;15;28;0;21;7;0;'';1
-43;'Code: Malaria Stock ACT x 18';'';'';'ACT_x_18';'PNkxsc5QwSP';4;0;0;15;28;0;21;7;0;'';1
-44;'Code: Malaria Stock ACT x 24';'';'';'ACT_x_24';'OR8HOulQb62';4;0;0;15;28;0;21;7;0;'';1
-45;'Code: Malaria Stock ACT x 6';'';'';'ACT_x_6';'FUg5X4D538R';4;0;0;15;28;0;21;7;0;'';1
-46;'Code: Malaria Stock Cq';'';'';'Cq';'ZvH3wyLVoCX';4;0;0;15;28;0;21;7;0;'';1
-47;'Code: Malaria Stock Pq';'';'';'Pq';'AcS0UXwsSsg';4;0;0;15;28;0;21;7;0;'';1
-48;'Code: Malaria Stock RDT';'';'';'RDT';'FGG1GvvS8Xg';3;0;0;15;28;0;21;7;0;'';1
-49;'Code: Malaria Stock No Pq question';'';'';'';'Lsmjv2E992L';3;0;0;15;29;0;21;8;0;'';0
+42;'Code: Malaria Stock ACT x 12';'';'';'ACT_x_12';'oakPX84Jug0';4;0;0;15;28;0;21;0;0;'';1
+43;'Code: Malaria Stock ACT x 18';'';'';'ACT_x_18';'PNkxsc5QwSP';4;0;0;15;28;0;21;0;0;'';1
+44;'Code: Malaria Stock ACT x 24';'';'';'ACT_x_24';'OR8HOulQb62';4;0;0;15;28;0;21;0;0;'';1
+45;'Code: Malaria Stock ACT x 6';'';'';'ACT_x_6';'FUg5X4D538R';4;0;0;15;28;0;21;0;0;'';1
+46;'Code: Malaria Stock Cq';'';'';'Cq';'ZvH3wyLVoCX';4;0;0;15;28;0;21;0;0;'';1
+47;'Code: Malaria Stock Pq';'';'';'Pq';'AcS0UXwsSsg';4;0;0;15;28;0;21;0;0;'';1
+48;'Code: Malaria Stock RDT';'';'';'RDT';'FGG1GvvS8Xg';3;0;0;15;28;0;21;0;0;'';1

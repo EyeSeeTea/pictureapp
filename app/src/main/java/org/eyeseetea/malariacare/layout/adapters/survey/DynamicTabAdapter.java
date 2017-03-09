@@ -149,19 +149,16 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         this.navigationController = initNavigationController(tab);
         this.readOnly = getMalariaSurvey() != null && !getMalariaSurvey().isInProgress();
 
-        //On create dynamictabadapter, if is not readonly and has value not null it should come
-        // from reviewFragment
-        if (!readOnly) {
             Question question = navigationController.getCurrentQuestion();
             if (question.getValueBySession() != null) {
                 if (DashboardActivity.moveToQuestion != null) {
                     goToQuestion(DashboardActivity.moveToQuestion);
                     DashboardActivity.moveToQuestion = null;
                 } else {
-                    goToLastQuestion();
+                    goToQuestion(question);
                 }
             }
-        }
+
 
         int totalPages = 0;
         if (getMalariaSurvey() != null) {
@@ -476,7 +473,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 if (treatment.hasTreatment()) {
                     screenQuestions = treatment.getQuestions();
                     doseByQuestion = treatment.getDoseByQuestion();
+                } else {
+                    screenQuestions = treatment.getNoTreatmentQuestions();
                 }
+
             } else if (Tab.isMultiQuestionTab(tabType)) {
                 screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
             } else {

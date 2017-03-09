@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
@@ -42,7 +43,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onCreate() {
-        if (existsLoggedUser()) {
+        if (existsLoggedUser() && PopulateDB.hasMandatoryTables()) {
             LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
                     new LoadUserAndCredentialsUseCase(loginActivity);
 
@@ -52,6 +53,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         } else {
             //TODO jsanchez, this is necessary because oncreate is called from
             //AsyncTask review Why is invoked from AsyncTask, It's not very correct
+            PopulateDB.wipeDataBase();
             loginActivity.runOnUiThread(new Runnable() {
                 public void run() {
                     addDemoButton();
@@ -115,7 +117,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
-                loginActivity.hidePoregressBar();
+                loginActivity.hideProgressBar();
                 finishAndGo(DashboardActivity.class);
             }
 
@@ -126,25 +128,25 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
             @Override
             public void onError(String message) {
-                loginActivity.hidePoregressBar();
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), message);
             }
 
             @Override
             public void onPullConversionError() {
-                loginActivity.hidePoregressBar();
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull conversion error");
             }
 
             @Override
             public void onCancel() {
-                loginActivity.hidePoregressBar();
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull cancel");
             }
 
             @Override
             public void onNetworkError() {
-                loginActivity.hidePoregressBar();
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Network Error");
             }
         });

@@ -417,4 +417,19 @@ public class Treatment {
                 getContext().getResources().getString(R.string.drugs_dose_of_drug_review_title),
                 dose, drug);
     }
+
+    public List<Question> getNoTreatmentQuestions() {
+        List<Question> questions = new ArrayList<>();
+
+        Question treatmentQuestion = new Question();
+        treatmentQuestion.setOutput(Constants.QUESTION_LABEL);
+        treatmentQuestion.setForm_name("");
+        treatmentQuestion.setHelp_text(
+                getContext().getResources().getResourceName(R.string.error_no_treatment));
+        treatmentQuestion.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
+        treatmentQuestion.setHeader(Header.DYNAMIC_TREATMENT_HEADER_ID);
+        questions.add(treatmentQuestion);
+
+        return questions;
+    }
 }

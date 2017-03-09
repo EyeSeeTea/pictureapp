@@ -62,6 +62,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     protected AssessmentAdapter adapter;
     private SurveyReceiver surveyReceiver;
     private List<Survey> surveys;
+    private boolean viewCreated = false;
 
     public DashboardUnsentFragment() {
         this.surveys = new ArrayList();
@@ -80,6 +81,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         if (container == null) {
             return null;
         }
+        viewCreated = true;
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -127,6 +129,12 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         unregisterFragmentReceiver();
 
         super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewCreated = false;
     }
 
     /**
@@ -250,8 +258,10 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
             }
         }
         this.adapter.notifyDataSetChanged();
-        LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
-        setListShown(true);
+        if (viewCreated) {
+            LayoutUtils.measureListViewHeightBasedOnChildren(getListView());
+            setListShown(true);
+        }
     }
 
 

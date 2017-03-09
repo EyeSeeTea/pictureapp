@@ -183,7 +183,9 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                 value = (int) dose;
             }
 
-            if (checkedId == customRadioButton.getId()) {
+            if (checkedId == customRadioButton.getId()
+                    && !((Question) this.getTag()).getUid().equals(
+                    context.getString(R.string.cqQuestionUID))) {
                 notifyAnswerOptionChange(this.getTag(), ((Option) customRadioButton.getTag()));
                 changeTotalQuestions();
             }

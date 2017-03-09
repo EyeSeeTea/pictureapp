@@ -203,6 +203,9 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
      * Prepares the selected tab to be shown
      */
     private View prepareTab(Tab selectedTab) {
+        if(getActivity()==null || getActivity().getApplicationContext()==null) {
+            return null;
+        }
         LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
 
         if (selectedTab.isCompositeScore()) {
@@ -310,7 +313,8 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         @Override
         protected void onPostExecute(View viewContent) {
             super.onPostExecute(viewContent);
-
+            if(viewContent==null)
+                return;
             Tab tab = tabs.get(0);
 
             content.removeAllViews();

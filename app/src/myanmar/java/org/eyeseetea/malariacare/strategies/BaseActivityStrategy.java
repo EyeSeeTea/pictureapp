@@ -72,7 +72,6 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     public void logout() {
-        PreferencesState.getInstance().setIsPullComplete(false);
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
@@ -43,7 +43,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onCreate() {
-        if (PreferencesState.getInstance().isPullComplete()) {
+        if (existsLoggedUser() && PopulateDB.hasMandatoryTables()) {
             LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
                     new LoadUserAndCredentialsUseCase(loginActivity);
 
@@ -53,6 +53,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         } else {
             //TODO jsanchez, this is necessary because oncreate is called from
             //AsyncTask review Why is invoked from AsyncTask, It's not very correct
+            PopulateDB.wipeDataBase();
             loginActivity.runOnUiThread(new Runnable() {
                 public void run() {
                     addDemoButton();

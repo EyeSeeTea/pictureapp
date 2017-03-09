@@ -137,7 +137,6 @@ public class LoginActivity extends AbsLoginActivity {
 
     @Override
     protected void onLoginButtonClicked(Editable server, Editable username, Editable password) {
-        PreferencesState.getInstance().setIsPullComplete(false);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
             askEula(R.string.app_EULA, R.raw.eula, LoginActivity.this);

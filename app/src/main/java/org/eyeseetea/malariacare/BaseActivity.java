@@ -71,13 +71,12 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     private BaseActivityStrategy mBaseActivityStrategy = new BaseActivityStrategy(this);
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
+
         PreferencesState.getInstance().loadsLanguageInActivity();
-        if(!PreferencesState.getInstance().isPullComplete()){
-            finishAndGo(LoginActivity.class);
-        }
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);

@@ -35,7 +35,6 @@ public class PullUseCase {
                 //invoke remove current OrgUnit from here (only laos and cambodia)
 
                 callback.onComplete();
-                PreferencesState.getInstance().setIsPullComplete(true);
             }
 
             @Override

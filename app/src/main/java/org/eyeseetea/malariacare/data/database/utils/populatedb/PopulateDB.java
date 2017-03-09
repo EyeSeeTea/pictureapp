@@ -24,17 +24,25 @@ import android.content.Context;
 import android.util.Log;
 
 import com.opencsv.CSVReader;
+import com.raizlabs.android.dbflow.config.DatabaseDefinition;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Delete;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.model.Answer;
+import org.eyeseetea.malariacare.data.database.model.CompositeScore;
 import org.eyeseetea.malariacare.data.database.model.Drug;
+import org.eyeseetea.malariacare.data.database.model.DrugCombination;
 import org.eyeseetea.malariacare.data.database.model.Header;
 import org.eyeseetea.malariacare.data.database.model.Match;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitLevel;
+import org.eyeseetea.malariacare.data.database.model.OrgUnitProgramRelation;
 import org.eyeseetea.malariacare.data.database.model.Organisation;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
@@ -44,8 +52,13 @@ import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.data.database.model.Score;
 import org.eyeseetea.malariacare.data.database.model.StringKey;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.SurveySchedule;
 import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.TabGroup;
+import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
+import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
+import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -84,6 +97,94 @@ public class PopulateDB {
     public static final String ORG_UNIT_CSV = "OrgUnit.csv";
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
+
+
+    Class<? extends BaseModel>[] populateTables= new Class[] {
+            User.class,
+            StringKey.class,
+            Translation.class,
+            Program.class,
+            Tab.class,
+            Header.class,
+            Answer.class,
+            OptionAttribute.class,
+            Option.class,
+            Question.class,
+            QuestionRelation.class,
+            Match.class,
+            QuestionOption.class,
+            QuestionThreshold.class,
+            Drug.class,
+            Organisation.class,
+            Treatment.class,
+            DrugCombination.class,
+            TreatmentMatch.class,
+    };
+
+    public static List<Class<? extends BaseModel>> allDataTables= Arrays.asList(
+            Value.class,
+            Score.class,
+            Survey.class
+    );
+    public static List<Class<? extends BaseModel>> allServerPopulatedTables= Arrays.asList(
+            Organisation.class,
+            OrgUnit.class
+    );
+
+   public static List<Class<? extends BaseModel>> allMandatoryTables= Arrays.asList(
+            User.class,
+            StringKey.class,
+            Translation.class,
+            Program.class,
+            Tab.class,
+            Header.class,
+            Answer.class,
+            OptionAttribute.class,
+            Option.class,
+            Question.class,
+            QuestionRelation.class,
+            Match.class,
+            QuestionOption.class,
+            QuestionThreshold.class,
+            Drug.class,
+            Organisation.class,
+            Treatment.class,
+            DrugCombination.class,
+            TreatmentMatch.class,
+            OrgUnitLevel.class,
+            OrgUnit.class
+   );
+
+    public static List<Class<? extends BaseModel>> allTables= Arrays.asList(
+            CompositeScore.class,
+            OrgUnitProgramRelation.class,
+            Score.class,
+            SurveySchedule.class,
+            TabGroup.class,
+            Survey.class,
+            Value.class,
+            User.class,
+            StringKey.class,
+            Translation.class,
+            Program.class,
+            Tab.class,
+            Header.class,
+            Answer.class,
+            OptionAttribute.class,
+            Option.class,
+            Question.class,
+            QuestionRelation.class,
+            Match.class,
+            QuestionOption.class,
+            QuestionThreshold.class,
+            Drug.class,
+            Organisation.class,
+            Treatment.class,
+            DrugCombination.class,
+            TreatmentMatch.class,
+            OrgUnitLevel.class,
+            OrgUnit.class
+    );
     private static final List<String> tables2populate = Arrays.asList(
             STRING_KEY_CSV,
             TRANSLATION_CSV,
@@ -132,15 +233,12 @@ public class PopulateDB {
     static HashMap<Long, Organisation> organisationList = new HashMap<>();
     static HashMap<Long, Treatment> treatmentList = new HashMap<>();
     static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
+
     public static void initDataIfRequired(Context context) throws IOException {
         FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvsInFileIfNeeded();
         TreatmentTable treatmentTable = new TreatmentTable();
         treatmentTable.generateTreatmentMatrixIFNeeded();
-        if (!Tab.isEmpty()) {
-            Log.i(TAG, "DB Already loaded, showing surveys...");
-            return;
-        }
 
         Log.i(TAG, "DB empty, loading data ...");
         try {
@@ -150,7 +248,22 @@ public class PopulateDB {
         } catch (IOException e) {
             throw e;
         }
-        Log.i(TAG, "DB empty, loading data ...DONE");
+        Log.i(TAG, "DB Loaded ...DONE");
+    }
+
+
+    private static boolean hasPopulateDbMandatoryTablesPopulated() {
+
+        return false;
+    }
+
+    public static boolean hasMandatoryTables() {
+        for(Class table:allMandatoryTables){
+            if(SQLite.selectCountOf().from(table).count() == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static void populateDB(Context context) throws IOException {
@@ -409,16 +522,29 @@ public class PopulateDB {
     /**
      * Deletes all data from the app database
      */
-    public static void wipeDatabase() {
+    public static void wipeTables(Class<? extends  BaseModel>[] classes) {
         Delete.tables(
-                Value.class,
-                Score.class,
-                Survey.class,
-                OrgUnit.class,
-                OrgUnitLevel.class
+                classes
         );
     }
 
+    public static void wipeDataBase() {
+        wipeTables((Class<? extends BaseModel>[]) allTables.toArray());
+        deleteSQLiteMetadata();
+    }
+
+
+    /**
+     * This method removes the sqlite_sequence table that contains the last autoincrement value for
+     * each table
+     */
+    private static void deleteSQLiteMetadata() {
+        String sqlCopy = "Delete from sqlite_sequence";
+        DatabaseDefinition databaseDefinition =
+                FlowManager.getDatabase(AppDatabase.class);
+        databaseDefinition.getWritableDatabase().execSQL(sqlCopy);
+
+    }
     /**
      * Delete all surveys from database (and its related info)
      */

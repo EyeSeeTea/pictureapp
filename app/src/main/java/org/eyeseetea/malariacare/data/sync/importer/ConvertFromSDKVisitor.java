@@ -199,7 +199,6 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     @Override
     public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
-        boolean alreadyInDB = false;
         Organisation organisationUser = null;
         List<Organisation> organisations = Organisation.getAllOrganisations();
         for (Organisation organisation : organisations) {
@@ -207,19 +206,11 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
                 organisationUser = organisation;
                 organisationUser.setUid(categoryOptionGroupExtended.getUid());
                 organisationUser.save();
-                alreadyInDB = true;
+                User me = User.getLoggedUser();
+                me.setOrganisation(organisationUser.getId_organisation());
+                me.save();
                 break;
             }
         }
-        if (!alreadyInDB) {
-            organisationUser = new Organisation();
-            organisationUser.setUid(categoryOptionGroupExtended.getUid());
-            organisationUser.setName(categoryOptionGroupExtended.getName());
-            organisationUser.save();
-        }
-        User me = User.getLoggedUser();
-        me.setOrganisation(organisationUser.getId_organisation());
-        me.save();
     }
-
 }

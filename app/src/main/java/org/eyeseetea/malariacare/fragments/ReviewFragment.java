@@ -78,6 +78,9 @@ public class ReviewFragment extends Fragment {
         List<Value> allValues = survey.getValuesFromDB();
         for (Value value : allValues) {
             boolean isReviewValue = true;
+            if (value.getQuestion() == null) {
+                continue;
+            }
             for (QuestionRelation questionRelation : value.getQuestion().getQuestionRelations()) {
                 if (questionRelation.isACounter() || questionRelation.isAReminder()
                         || questionRelation.isAWarning() || questionRelation.isAMatch()) {
@@ -99,13 +102,14 @@ public class ReviewFragment extends Fragment {
     }
 
     private boolean isStockValue(Value value) {
-        if(value.getQuestion()==null) {
+        if (value.getQuestion() == null) {
             return false;
         }
-        for(Value stockValue : Session.getStockSurvey().getValuesFromDB())
-        if(stockValue.getQuestion()!=null) {
-            if (stockValue.getQuestion().getUid().equals(value.getQuestion().getUid())) {
-                return true;
+        for (Value stockValue : Session.getStockSurvey().getValuesFromDB()) {
+            if (stockValue.getQuestion() != null) {
+                if (stockValue.getQuestion().getUid().equals(value.getQuestion().getUid())) {
+                    return true;
+                }
             }
         }
         return false;

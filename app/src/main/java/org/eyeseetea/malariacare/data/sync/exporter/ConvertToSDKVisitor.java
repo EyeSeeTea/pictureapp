@@ -109,7 +109,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             event = buildEvent(survey);
 
             survey.setEventUid(event.getUid());
-            survey.setEventDate(new Date());//use the eventDate in quarentine queries
             survey.save();
             //Turn question values into dataValues
             Log.d(TAG, "Creating datavalues from questions...");
@@ -269,7 +268,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
         //Creation date is null because it is used by sdk to POST|PUT we always POST a new survey
         event.setLastUpdated(new DateTime(survey.getCompletionDate().getTime()));
-        event.setEventDate(new DateTime(survey.getCompletionDate().getTime()));
+        event.setEventDate(new DateTime(survey.getEventDate().getTime()));
         if (survey.getScheduledDate() != null) {
             event.setDueDate(new DateTime(survey.getScheduledDate().getTime()));
         }

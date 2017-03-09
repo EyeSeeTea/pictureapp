@@ -442,15 +442,15 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit_fk)).queryList();
     }
 
-    public static Survey getStockSurveyWithCreationDate(Date creation_date) {
+    public static Survey getStockSurveyWithEventDate(Date event_date) {
         Context context = PreferencesState.getInstance().getContext();
 
         return new Select().from(Survey.class).as(surveyName)
                 .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
                 .on(Survey_Table.id_program_fk.withTable(surveyAlias)
                         .eq(Program_Table.id_program.withTable(programAlias)))
-                .where(Survey_Table.creation_date.withTable(surveyAlias)
-                        .eq(creation_date))
+                .where(Survey_Table.event_date.withTable(surveyAlias)
+                        .eq(event_date))
                 .and(Program_Table.uid_program.withTable(programAlias).is(
                         context.getString(R.string.stockProgramUID))).querySingle();
 
@@ -481,6 +481,15 @@ public class Survey extends BaseModel implements VisitableToSDK {
     public static List<Survey> getAllCompletedSurveys() {
         return new Select().from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_COMPLETED))
+                .orderBy(OrderBy.fromProperty(Survey_Table.event_date))
+                .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit_fk)).queryList();
+    }
+
+    public static List<Survey> getAllCompletedSurveysNoReceiptReset() {
+        return new Select().from(Survey.class)
+                .where(Survey_Table.status.eq(Constants.SURVEY_COMPLETED))
+                .and(Survey_Table.type.isNot(Constants.SURVEY_RECEIPT))
+                .and(Survey_Table.type.isNot(Constants.SURVEY_RESET))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date))
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit_fk)).queryList();
     }
@@ -946,7 +955,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
      * @return SurveyAnsweredRatio that hold the total & answered questions.
      */
     public SurveyAnsweredRatio reloadSurveyAnsweredRatio() {
-
         SurveyAnsweredRatio surveyAnsweredRatio;
         //First parent is always required and not calculated.
         int numRequired = 1;
@@ -1395,4 +1403,5 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 ", type=" + type +
                 '}';
     }
+
 }

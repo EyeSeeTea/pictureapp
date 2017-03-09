@@ -106,6 +106,9 @@ public class Treatment {
         for (Value value : values) {
             Question question = value.getQuestion();
             //Getting matches for questions of age, pregnant, severe and rdt.
+            if (question == null) {
+                continue;
+            }
             if (question.getUid().equals(getContext().getString(R.string.ageQuestionUID))) {
                 ageMatches =
                         QuestionThreshold.getMatchesWithQuestionValue(
@@ -343,7 +346,8 @@ public class Treatment {
         List<org.eyeseetea.malariacare.data.database.model.Treatment> alternativeTreatments =
                 mainTreatment.getAlternativeTreatments();
         List<Drug> alternativeDrugs = new ArrayList<>();
-        for (org.eyeseetea.malariacare.data.database.model.Treatment treatment : alternativeTreatments) {
+        for (org.eyeseetea.malariacare.data.database.model.Treatment treatment :
+                alternativeTreatments) {
             alternativeDrugs.addAll(treatment.getDrugsForTreatment());
         }
         return alternativeDrugs;
@@ -369,11 +373,16 @@ public class Treatment {
         Question treatmentQuestion = Question.findByUID(
                 getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID));
         Survey malariaSurvey = Session.getMalariaSurvey();
-        List<Value> values = malariaSurvey.getValues();//this values should be get from memory because the treatment options are in memory
+        List<Value> values =
+                malariaSurvey.getValues();//this values should be get from memory because the
+        // treatment options are in memory
         boolean questionInSurvey = false;
         String diagnosisMessage = Utils.getInternationalizedString(
                 String.valueOf(treatment.getDiagnosis()));
         for (Value value : values) {
+            if (value.getQuestion() == null) {
+                continue;
+            }
             if (value.getQuestion().equals(treatmentQuestion)) {
                 value.setValue(diagnosisMessage);
                 questionInSurvey = true;

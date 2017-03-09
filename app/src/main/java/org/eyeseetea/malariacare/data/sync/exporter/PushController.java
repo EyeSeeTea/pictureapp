@@ -66,7 +66,7 @@ public class PushController implements IPushController {
         } else {
             Log.d(TAG, "Network connected");
 
-            List<Survey> surveys = Survey.getAllCompletedSurveys();
+            List<Survey> surveys = Survey.getAllCompletedSurveysNoReceiptReset();
 
             //Fixme Check if is necessary other conditions
             if (surveys == null || surveys.size() == 0) {

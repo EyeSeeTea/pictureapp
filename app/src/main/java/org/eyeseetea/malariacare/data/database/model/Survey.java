@@ -485,6 +485,15 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit_fk)).queryList();
     }
 
+    public static List<Survey> getAllCompletedSurveysNoReceiptReset() {
+        return new Select().from(Survey.class)
+                .where(Survey_Table.status.eq(Constants.SURVEY_COMPLETED))
+                .and(Survey_Table.type.isNot(Constants.SURVEY_RECEIPT))
+                .and(Survey_Table.type.isNot(Constants.SURVEY_RESET))
+                .orderBy(OrderBy.fromProperty(Survey_Table.event_date))
+                .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit_fk)).queryList();
+    }
+
     /**
      * Returns the last surveys (by date) with status put to "Completed"
      */
@@ -1394,4 +1403,5 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 ", type=" + type +
                 '}';
     }
+
 }

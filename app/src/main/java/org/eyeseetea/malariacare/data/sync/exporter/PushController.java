@@ -30,7 +30,7 @@ import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
-import org.eyeseetea.malariacare.domain.exception.DataElementConflictException;
+import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -120,7 +120,7 @@ public class PushController implements IPushController {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        if(throwable instanceof DataElementConflictException) {
+                        if(throwable instanceof ImportSummaryErrorException) {
                             mConvertToSDKVisitor.setSurveysAsQuarantine();
                             ServerAPIController.banOrgUnitIfRequired();
                         }

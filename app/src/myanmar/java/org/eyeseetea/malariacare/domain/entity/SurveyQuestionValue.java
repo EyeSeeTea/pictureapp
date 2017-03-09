@@ -60,37 +60,37 @@ public class SurveyQuestionValue {
             }
             switch (question) {
                 case RDT:
-                    if (value.getQuestion().isStockRDT()) {
+                    if (mSurvey.isStockSurvey() && value.getQuestion().isStockRDT()) {
                         return value.getValue();
                     }
                     break;
                 case ACT6:
-                    if (value.getQuestion().isACT6()) {
+                    if (mSurvey.isStockSurvey() &&value.getQuestion().isACT6()) {
                         return value.getValue();
                     }
                     break;
                 case ACT12:
-                    if (value.getQuestion().isACT12()) {
+                    if (mSurvey.isStockSurvey() &&value.getQuestion().isACT12()) {
                         return value.getValue();
                     }
                     break;
                 case ACT18:
-                    if (value.getQuestion().isACT18()) {
+                    if (mSurvey.isStockSurvey() &&value.getQuestion().isACT18()) {
                         return value.getValue();
                     }
                     break;
                 case ACT24:
-                    if (value.getQuestion().isACT24()) {
+                    if (mSurvey.isStockSurvey() &&value.getQuestion().isACT24()) {
                         return value.getValue();
                     }
                     break;
                 case PQ:
-                    if (value.getQuestion().isPq()) {
+                    if (mSurvey.isStockSurvey() &&value.getQuestion().isPq()) {
                         return value.getValue();
                     }
                     break;
                 case CQ:
-                    if (value.getQuestion().isCq()) {
+                    if (mSurvey.isStockSurvey() &&value.getQuestion().isCq()) {
                         return value.getValue();
                     }
                     break;

@@ -52,8 +52,6 @@ public class PullDhisSDKDataSourceStrategy implements IPullDhisSDKDataSourceStra
                         callback.onError(throwable);
                     }
                 });
-
-        callback.onSuccess(organisationUnits);
     }
 
     private String getCategoryOptionUIDByCurrentUser() {

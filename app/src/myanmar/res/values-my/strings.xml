@@ -362,4 +362,5 @@
 <string name="submit">တင်သွင်း</string>
 <string name="true_option_identifier">ဟုတ်ကဲ့</string>
 <string name="false_option_identifier">အဘယ်သူမျှမ</string>
+    <string name="error_no_treatment">"posts များ၏ဤပေါင်းစပ်ကုသရှိပါတယ်မဟုတ်ပါဘူး။ ထိုအုပ်ချုပ်ရေးမှူးစကားပြော ကျေးဇူးပြု."</string>
 </resources>

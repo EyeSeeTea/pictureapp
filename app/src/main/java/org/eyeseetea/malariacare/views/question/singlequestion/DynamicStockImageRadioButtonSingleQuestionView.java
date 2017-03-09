@@ -130,7 +130,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
                     for (Option option : options) {
                         if (option.getCode().equals(
                                 PreferencesState.getInstance().getContext().getString(
-                                        R.string.false_option_identifier))) {
+                                        R.string.false_option_id))) {
                             notifyAnsweOptionChange(optionView, option);
                         }
                     }
@@ -147,7 +147,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             for (Option option : options) {
                 if (option.getCode().equals(
                         PreferencesState.getInstance().getContext().getString(
-                                R.string.true_option_identifier))) {
+                                R.string.true_option_id))) {
                     notifyAnsweOptionChange(imageRadioButton, option);
                 }
             }
@@ -196,7 +196,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
                 for (Option option : options) {
                     if ((option.getCode().equals(
                             PreferencesState.getInstance().getContext().getString(
-                                    R.string.true_option_identifier)))
+                                    R.string.true_option_id)))
                             && option.getId_option().equals(
                             value.getId_option())) {
                         imageRadioButtonOption.setChecked(true);

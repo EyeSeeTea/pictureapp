@@ -160,10 +160,32 @@ public class Treatment {
     public boolean hasTreatment() {
         mTreatment = getTreatmentFromSurvey();
         if (mTreatment != null) {
+            putACTDefaultYes();
             mQuestions = getQuestionsForTreatment(mTreatment);
             saveTreatmentInTreatmentQuestion(mTreatment);
         }
         return mTreatment != null;
+    }
+
+    private void putACTDefaultYes() {
+        Question actHiddenQuestion = Question.findByUID(
+                getContext().getString(R.string.dynamicTreatmentHideQuestionUID));
+        List<Value> values = Session.getMalariaSurvey().getValuesFromDB();
+        Value actValue = null;
+        for (Value value : values) {
+            if (value.getQuestion().equals(actHiddenQuestion)) {
+                actValue = value;
+            }
+        }
+        if (actValue == null) {
+            actValue = new Value(
+                    Option.findByCode(getContext().getString(R.string.dynamic_treatment_yes_code)),
+                    actHiddenQuestion, Session.getMalariaSurvey());
+        } else {
+            actValue.setOption(
+                    Option.findByCode(getContext().getString(R.string.dynamic_treatment_yes_code)));
+        }
+        actValue.save();
     }
 
     private List<Question> getQuestionsForTreatment(

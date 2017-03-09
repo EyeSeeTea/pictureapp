@@ -59,6 +59,7 @@
     <string name="option_rdt_pv" translatable="false">rdt_pv</string>
     <string name="stockPqQuestionUID" translatable="false">NoDataElementNoPqSelected</string>
     <string name="alternativePqQuestionUID" translatable="false">Lsmjv2E992L</string>
+    <string name="dynamic_treatment_yes_code" translatable="false">dynamic_treatment_yes</string>
 
     <string name="control_data_element_phone_metadata" translatable="false">LRYXAP3Lfcu</string>
     <string name="control_data_element_datetime_capture" translatable="false">wSRDoeLTAyv</string>

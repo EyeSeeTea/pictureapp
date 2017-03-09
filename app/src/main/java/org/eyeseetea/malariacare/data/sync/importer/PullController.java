@@ -130,8 +130,6 @@ public class PullController implements IPullController {
                 new IDataSourceCallback<List<Event>>() {
                     @Override
                     public void onSuccess(List<Event> result) {
-                        PopulateDB.wipeDatabase();
-
                         convertFromSDK(callback, true);
                     }
 

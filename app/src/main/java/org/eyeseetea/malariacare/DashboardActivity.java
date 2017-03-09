@@ -454,6 +454,11 @@ public class DashboardActivity extends BaseActivity {
      * It is called when the user press back in a surveyFragment
      */
     private void onSurveyBackPressed() {
+        //// FIXME: 09/03/2017 Refactor. If the survey is loading the survey should be closed at the end
+        if(Session.isIsLoadingSurvey()){
+            Session.setShouldPressBackOnLoadSurvey(true);
+            return;
+        }
         Log.d(TAG, "onBackPressed");
         Survey survey = Session.getMalariaSurvey();
         if (!survey.isSent()) {
@@ -490,26 +495,31 @@ public class DashboardActivity extends BaseActivity {
      * After that, loads the Assess fragment(DashboardUnSentFragment) in the Assess tab.
      */
     public void closeSurveyFragment() {
-        boolean isSent = false;
-        isReadOnly = false;
-        isLoadingReview = false;
-        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
-        LayoutUtils.setDashboardActionBar(actionBar);
-        tabHost.getTabWidget().setVisibility(View.VISIBLE);
-        ScoreRegister.clear();
-        if (Session.getMalariaSurvey() != null) {
-            isSent = Session.getMalariaSurvey().isSent();
-        }
-        if (isBackPressed) {
-            beforeExit();
-        }
-        surveyFragment.unregisterFragmentReceiver();
-        if (isSent) {
-            tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
-            initAssess();
-        } else {
-            initAssess();
-            unsentFragment.reloadData();
+        //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close surveys crash
+        //The survey only can be closed when is load
+        if(!Session.isIsLoadingSurvey()) {
+            Session.setShouldPressBackOnLoadSurvey(false);
+            boolean isSent = false;
+            isReadOnly = false;
+            isLoadingReview = false;
+            android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+            LayoutUtils.setDashboardActionBar(actionBar);
+            tabHost.getTabWidget().setVisibility(View.VISIBLE);
+            ScoreRegister.clear();
+            if (Session.getMalariaSurvey() != null) {
+                isSent = Session.getMalariaSurvey().isSent();
+            }
+            if (isBackPressed) {
+                beforeExit();
+            }
+            surveyFragment.unregisterFragmentReceiver();
+            if (isSent) {
+                tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
+                initAssess();
+            } else {
+                initAssess();
+                unsentFragment.reloadData();
+            }
         }
     }
 

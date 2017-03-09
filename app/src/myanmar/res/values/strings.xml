@@ -368,7 +368,7 @@
 <string name="treatment_no_pq_title">"The reason you are not giving Primaquine is"</string>
 <string name="error_conflict_message">The event with UID: %1$s. was uploaded with conflict in the data element UID: %2$s with the message: %3$s. Please contact the administrator.</string>
 <string name="error_conflict_title">"Error"</string>
-<string name="error_no_treatment">"There's not treatment for this combination of entries. Please talk to the administrator"</string>
+<string name="error_no_treatment">"There\'s not treatment for this combination of entries. Please talk to the administrator"</string>
 <string name="true_option_identifier">Yes</string>
 <string name="false_option_identifier">No</string>
 </resources>

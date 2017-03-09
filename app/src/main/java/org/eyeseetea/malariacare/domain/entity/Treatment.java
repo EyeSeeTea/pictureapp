@@ -84,6 +84,9 @@ public class Treatment {
                 actQuestion = question;
                 List<Value> values = mStockSurvey.getValuesFromDB();
                 for (Value value : values) {
+                    if(value.getQuestion()==null){
+                        continue;
+                    }
                     if (value.getQuestion().getId_question().equals(actQuestion.getId_question())) {
                         if (Float.parseFloat(value.getValue()) == 0) {
                             return actQuestion;

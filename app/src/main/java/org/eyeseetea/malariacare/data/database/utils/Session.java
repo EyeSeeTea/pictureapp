@@ -73,6 +73,13 @@ public class Session {
      */
     private static PhoneMetaData phoneMetaData;
     /**
+     * The exitOfSurvey
+     */
+    //FIXME: 09/03/2017    This variable should disappear instance of a refactor in loading of a new survey
+    private static boolean isLoadingSurvey;
+    //FIXME: 09/03/2017    This variable should disappear instance of a refactor in loading of a new survey
+    private static boolean shouldPressBackOnLoadSurvey;
+    /**
      * The maximum total of questions in programm
      */
     private static int maxTotalQuestions;
@@ -81,6 +88,22 @@ public class Session {
      * Map that holds non serializable results from services
      */
     private static Map<String, Object> serviceValues = new HashMap<>();
+
+    public static boolean shouldPressBackOnLoadSurvey() {
+        return shouldPressBackOnLoadSurvey;
+    }
+
+    public static void setShouldPressBackOnLoadSurvey(boolean shouldPressBackOnLoadSurvey) {
+        Session.shouldPressBackOnLoadSurvey = shouldPressBackOnLoadSurvey;
+    }
+
+    public static boolean isIsLoadingSurvey() {
+        return isLoadingSurvey;
+    }
+
+    public static void setIsLoadingSurvey(boolean value) {
+        isLoadingSurvey = value;
+    }
 
     public static Survey getMalariaSurvey() {
         return malariaSurvey;

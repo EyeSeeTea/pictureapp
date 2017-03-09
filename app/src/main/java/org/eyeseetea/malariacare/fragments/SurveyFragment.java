@@ -336,6 +336,8 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive");
+            //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close surveys crash
+            Session.setIsLoadingSurvey(true);
             List<CompositeScore> compositeScores;
             List<Tab> tabs;
             Session.valuesLock.readLock().lock();

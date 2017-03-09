@@ -16,6 +16,7 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -392,27 +393,42 @@ public class Treatment {
 
     private void saveTreatmentInTreatmentQuestion(
             org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
-        Question treatmentQuestion = Question.findByUID(
+        Question treatmentQuestionSend = Question.findByUID(
                 getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID));
+        Question treatmentQuestionShow = Question.findByUID(
+                getContext().getResources().getString(R.string.treatmentDiagnosisVisibleQuestion));
         Survey malariaSurvey = Session.getMalariaSurvey();
         List<Value> values =
                 malariaSurvey.getValues();//this values should be get from memory because the
         // treatment options are in memory
         boolean questionInSurvey = false;
+        boolean questionShowInSurvey = false;
         String diagnosisMessage = Utils.getInternationalizedString(
                 String.valueOf(treatment.getDiagnosis()));
+        String defaultDiagnosisMessage = Translation.getLocalizedString(treatment.getDiagnosis(),
+                Translation.DEFAULT_LANGUAGE);
         for (Value value : values) {
             if (value.getQuestion() == null) {
                 continue;
             }
-            if (value.getQuestion().equals(treatmentQuestion)) {
-                value.setValue(diagnosisMessage);
+            if (value.getQuestion().equals(treatmentQuestionSend)) {
+                value.setValue(defaultDiagnosisMessage);
                 questionInSurvey = true;
-                break;
+                value.save();
+            }
+            if (value.getQuestion().equals(treatmentQuestionShow)) {
+                value.setValue(diagnosisMessage);
+                questionShowInSurvey = true;
+                value.save();
             }
         }
+        if (!questionShowInSurvey) {
+            Value value = new Value(diagnosisMessage, treatmentQuestionShow,
+                    malariaSurvey);
+            value.insert();
+        }
         if (!questionInSurvey) {
-            Value value = new Value(diagnosisMessage, treatmentQuestion,
+            Value value = new Value(defaultDiagnosisMessage, treatmentQuestionSend,
                     malariaSurvey);
             value.insert();
         }

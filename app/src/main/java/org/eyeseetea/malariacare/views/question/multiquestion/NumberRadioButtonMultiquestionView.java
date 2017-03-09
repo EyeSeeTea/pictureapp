@@ -13,6 +13,7 @@ import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
@@ -181,8 +182,10 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                     && checkedId == customRadioButton.getId()) {
                 value = (int) dose;
             }
+
             if (checkedId == customRadioButton.getId()) {
                 notifyAnswerOptionChange(this.getTag(), ((Option) customRadioButton.getTag()));
+                changeTotalQuestions();
             }
         }
 
@@ -212,5 +215,39 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
     public void setOnAnswerChangedListener(
             AKeyboardQuestionView.onAnswerChangedListener onAnswerChangedListener) {
         mOnAnswerChangedListener = onAnswerChangedListener;
+    }
+
+    /**
+     * Changing the total questions of the alternative pq questions depending on the answer provided
+     */
+    private void changeTotalQuestions() {
+        Question pqQuestion = Question.findByUID(
+                context.getString(R.string.pqQuestionUID));
+        Question actQuestion = Question.findByUID(
+                context.getString(R.string.alternativePqQuestionUID));
+        Question alternativePqQuestion = Question.findByUID(
+                context.getString(R.string.alternativePqQuestionUID));
+        Value actValue = null;
+        Value pqValue = null;
+        List<Value> values = Session.getMalariaSurvey().getValuesFromDB();
+        for (Value sValue : values) {
+            if (sValue.getQuestion().equals(actQuestion)) {
+                actValue = sValue;
+                break;
+            }
+            if (sValue.getQuestion().getUid().equals(pqQuestion.getUid())) {
+                pqValue = sValue;
+                break;
+            }
+        }
+        if ((actValue == null || actValue.getOption().getName().equals(
+                PreferencesState.getInstance().getContext().getString(
+                        R.string.yes_option_identifier)))
+                || (pqValue == null || Float.parseFloat(pqValue.getValue()) > 0)) {
+            alternativePqQuestion.setTotalQuestions(8);
+        } else {
+            alternativePqQuestion.setTotalQuestions(9);
+        }
+        alternativePqQuestion.save();
     }
 }

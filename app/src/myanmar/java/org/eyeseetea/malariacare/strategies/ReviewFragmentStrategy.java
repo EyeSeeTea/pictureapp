@@ -54,7 +54,10 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         if (question.getUid().equals(PreferencesState.getInstance().getContext().getString(
                 R.string.dynamicTreatmentQuestionUID)) || question.getUid().equals(
                 PreferencesState.getInstance().getContext().getString(
-                        R.string.referralQuestionUID))) {
+                        R.string.referralQuestionUID))
+                || question.getUid().equals(
+                PreferencesState.getInstance().getContext().getString(
+                        R.string.treatmentDiagnosisVisibleQuestion))) {
             return Question.findByUID(PreferencesState.getInstance().getContext().getString(
                     R.string.dynamicTreatmentHideQuestionUID));
         }

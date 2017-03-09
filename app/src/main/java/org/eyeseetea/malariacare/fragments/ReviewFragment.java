@@ -88,7 +88,7 @@ public class ReviewFragment extends Fragment {
                 }
             }
             int output = value.getQuestion().getOutput();
-            if (output == Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT
+            if (output == Constants.HIDDEN
                     || output == Constants.DYNAMIC_STOCK_IMAGE_RADIO_BUTTON) {
                 isReviewValue = false;
             }

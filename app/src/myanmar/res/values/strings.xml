@@ -372,5 +372,8 @@
 <string name="true_option_identifier">Yes</string>
 <string name="false_option_identifier">No</string>
 <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
-    <string name="monitor_row_title_negative" translatable="false">negative</string>
+<string name="monitor_row_title_negative">Negative</string>
+<string name="rdt_mixed">Mixed</string>
+<string name="rdt_pf">Pf</string>
+<string name="rdt_pv">Pv</string>
 </resources>

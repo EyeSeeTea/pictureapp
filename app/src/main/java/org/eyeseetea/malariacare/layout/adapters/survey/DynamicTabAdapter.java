@@ -84,6 +84,8 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.NumberRadioButtonMultiquestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.DynamicStockImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.PhoneSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
@@ -673,27 +675,27 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         if (questionView instanceof AKeyboardQuestionView) {
             ((AKeyboardQuestionView) questionView).setOnAnswerChangedListener(
-                    new QuestionAnswerChangedListener(tableLayout, this,
+                    new QuestionAnswerChangedListener(this,
                             !GradleVariantConfig.isButtonNavigationActive()));
         } else if (questionView instanceof AOptionQuestionView) {
             ((AOptionQuestionView) questionView).setOnAnswerChangedListener(
-                    new QuestionAnswerChangedListener(tableLayout, this,
+                    new QuestionAnswerChangedListener(this,
                             !GradleVariantConfig.isButtonNavigationActive()));
         } else if (questionView instanceof NumberRadioButtonMultiquestionView) {
             ((NumberRadioButtonMultiquestionView) questionView).setOnAnswerChangedListener(
-                    new QuestionAnswerChangedListener(tableLayout, this,
+                    new QuestionAnswerChangedListener(this,
                             !GradleVariantConfig.isButtonNavigationActive()));
             ((NumberRadioButtonMultiquestionView) questionView).setOnAnswerOptionChangedListener(
-                    new QuestionAnswerChangedListener(tableLayout, this,
+                    new QuestionAnswerChangedListener(this,
                             !GradleVariantConfig.isButtonNavigationActive()));
         } else if (questionView instanceof DynamicStockImageRadioButtonSingleQuestionView) {
             ((DynamicStockImageRadioButtonSingleQuestionView) questionView)
                     .setOnAnswerChangedListener(
-                            new QuestionAnswerChangedListener(tableLayout, this,
+                            new QuestionAnswerChangedListener(this,
                                     !GradleVariantConfig.isButtonNavigationActive()));
             ((DynamicStockImageRadioButtonSingleQuestionView) questionView)
                     .setOnAnswerOptionChangedListener(
-                            new QuestionAnswerChangedListener(tableLayout, this,
+                            new QuestionAnswerChangedListener(this,
                                     !GradleVariantConfig.isButtonNavigationActive()));
         }
     }

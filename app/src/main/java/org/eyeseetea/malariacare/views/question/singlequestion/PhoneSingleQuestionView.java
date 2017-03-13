@@ -19,6 +19,7 @@ import org.eyeseetea.sdk.presentation.views.CustomEditText;
 public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView implements IQuestionView {
     CustomEditText mCustomEditText;
     CustomButton sendButton;
+    Boolean isClicked=false;
 
     public PhoneSingleQuestionView(Context context) {
         super(context);
@@ -79,13 +80,18 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
     }
 
     private void validateAnswer(Context context) {
-        try {
-            Phone phone = new Phone(mCustomEditText.getText().toString());
-            hideKeyboard(mCustomEditText);
-            notifyAnswerChanged(phone.getValue());
-            Validation.getInstance().removeInputError(mCustomEditText);
-        } catch (InvalidPhoneException e) {
-            Validation.getInstance().addinvalidInput(mCustomEditText, context.getString(R.string.dynamic_error_phone_format));
+        if (!isClicked) {
+            isClicked = true;
+            try {
+                Phone phone = new Phone(mCustomEditText.getText().toString());
+                hideKeyboard(mCustomEditText);
+                notifyAnswerChanged(phone.getValue());
+                Validation.getInstance().removeInputError(mCustomEditText);
+            } catch (InvalidPhoneException e) {
+                Validation.getInstance().addinvalidInput(mCustomEditText,
+                        context.getString(R.string.dynamic_error_phone_format));
+            }
+            isClicked = false;
         }
     }
 

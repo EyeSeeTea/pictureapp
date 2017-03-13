@@ -9,7 +9,6 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
@@ -50,16 +49,6 @@ public class Migration2ChangeOptionPfPv extends BaseMigration {
     @Override
     public void migrate(DatabaseWrapper database) {
             postMigrationRequired = true;
-    }
-
-    @Override
-    public void onPostMigrate() {
-        super.onPostMigrate();
-        try {
-            UpdateDB.updateOptions(PreferencesState.getInstance().getContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private boolean hasData() {

@@ -599,6 +599,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
             }
 
+            System.out.println(survey.getValuesFromDB());
 
             if (questionView instanceof AOptionQuestionView) {
                 ((AOptionQuestionView) questionView).setQuestion(screenQuestion);

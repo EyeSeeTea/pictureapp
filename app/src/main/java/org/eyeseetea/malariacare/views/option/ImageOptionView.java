@@ -112,6 +112,7 @@ public class ImageOptionView extends LinearLayout {
                         mSelectedOption = true;
                         mOnOptionSelectedListener.onOptionSelected(v, mOption);
                     }
+                    isClicked = false;
                 }
             }
         });

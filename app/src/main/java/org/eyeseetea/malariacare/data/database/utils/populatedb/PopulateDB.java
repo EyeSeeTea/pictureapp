@@ -98,30 +98,6 @@ public class PopulateDB {
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
 
-   public static List<Class<? extends BaseModel>> allMandatoryTables= Arrays.asList(
-            User.class,
-            StringKey.class,
-            Translation.class,
-            Program.class,
-            Tab.class,
-            Header.class,
-            Answer.class,
-            OptionAttribute.class,
-            Option.class,
-            Question.class,
-            QuestionRelation.class,
-            Match.class,
-            QuestionOption.class,
-            QuestionThreshold.class,
-            Drug.class,
-            Organisation.class,
-            Treatment.class,
-            DrugCombination.class,
-            TreatmentMatch.class,
-            OrgUnitLevel.class,
-            OrgUnit.class
-   );
-
     public static List<Class<? extends BaseModel>> allTables= Arrays.asList(
             CompositeScore.class,
             OrgUnitProgramRelation.class,
@@ -202,6 +178,10 @@ public class PopulateDB {
     static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
+        if(PopulateDB.hasMandatoryTables()) {
+            Log.i(TAG, "Your DB is already populated");
+            return;
+        }
         FileCsvs fileCsvs = new FileCsvs();
         fileCsvs.saveCsvsInFileIfNeeded();
         TreatmentTable treatmentTable = new TreatmentTable();
@@ -219,7 +199,7 @@ public class PopulateDB {
     }
 
     public static boolean hasMandatoryTables() {
-        for(Class table:allMandatoryTables){
+        for(Class table: CustomCompulsoryTables.getAllMandatoryTables()){
             if(SQLite.selectCountOf().from(table).count() == 0) {
                 return false;
             }

@@ -371,4 +371,6 @@
 <string name="error_no_treatment">"There\'s not treatment for this combination of entries. Please talk to the administrator"</string>
 <string name="true_option_identifier">Yes</string>
 <string name="false_option_identifier">No</string>
+<string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
+    <string name="monitor_row_title_negative" translatable="false">negative</string>
 </resources>

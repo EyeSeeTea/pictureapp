@@ -188,6 +188,8 @@
     <string name="developer_option_title">Show developer options</string>
     <string name="export_data_option_title">Export database</string>
     <string name="dynamic_error_number">Invalid Number</string>
+    <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
+    <string name="monitor_row_title_negative" translatable="false">negative</string>
 
     <string name="settings_menu_logout_message">Changing the server or orgunit needs to re-login. Every not-sent survey will be deleted. Are you sure you want to continue?</string>
     <string name="app_logout">Logout</string>

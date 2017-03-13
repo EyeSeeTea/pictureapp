@@ -58,9 +58,7 @@
     <string name="chinese_locale" translatable="false">@string/nonexistent</string>
     <string name="treatment_message" translatable="false">@string/nonexistent</string>
     <string name="alternativePqQuestionUID" translatable="false">@string/nonexistent</string>
-
-    <string name="monitor_row_title_negative" translatable="false">@string/nonexistent</string>
-    <string name="monitor_row_title_positivity_rate" translatable="false">@string/nonexistent</string>
+    <string name="dynamic_treatment_yes_code" translatable="false">@string/nonexistent</string>
 
     <string name="category_cc" translatable="false">@string/nonexistent</string>
     <string name="category_combination" translatable="false">@string/nonexistent</string>

@@ -13,8 +13,8 @@
 13;'symptoms_severity_yes';'true';0;11;13
 14;'symptoms_severity_no';'false';0;11;14
 15;'rdt_negative';'NEG';0;12;15
-16;'rdt_pf';'PF';0;12;16
-17;'rdt_pv';'PV';0;12;17
+16;'rdt_pf';'PF';0;12;17
+17;'rdt_pv';'PV';0;12;16
 18;'rdt_mixed';'MIX';0;12;18
 19;'rdt_invalid';'INV';2;12;19
 20;'negative_result_text';'negative_result_subtext';0;13;20

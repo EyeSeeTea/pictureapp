@@ -4,6 +4,7 @@ package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
+import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
@@ -26,7 +27,7 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
         if (readOnly) {
             Survey malariaSurvey = Session.getMalariaSurvey();
             Session.setStockSurvey(
-                    Survey.getStockSurveyWithEventDate(malariaSurvey.getEventDate()));
+                    SurveyFragmentStrategy.getStockSurveyWithEventDate(malariaSurvey.getEventDate()));
         }
     }
 }

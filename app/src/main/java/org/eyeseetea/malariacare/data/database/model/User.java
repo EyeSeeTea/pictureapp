@@ -84,6 +84,8 @@ public class User extends BaseModel {
 
         if (userDB == null) {
             user.save();
+        }else{
+            System.out.println("User already saved"+user.toString());
         }
     }
 

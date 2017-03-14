@@ -85,14 +85,6 @@ public class Program extends BaseModel {
         return new Select().from(Program.class).querySingle();
     }
 
-    public static Program getStockProgram() {
-        Context context = PreferencesState.getInstance().getContext();
-        return new Select()
-                .from(Program.class)
-                .where(Program_Table.uid_program
-                        .is(context.getString(R.string.stockProgramUID))).querySingle();
-    }
-
     public static int getMaxTotalQuestions() {
         int maxTotalQuestions = 0;
         Program p = Program.getFirstProgram();
@@ -206,17 +198,12 @@ public class Program extends BaseModel {
         return tabs;
     }
 
-    public boolean isStockProgram() {
-        return uid_program.equals(getContext().getString(R.string.stockProgramUID));
-    }
-
     public static Program findById(Long id_program) {
         return new Select()
                 .from(Program.class)
                 .where(Program_Table.id_program
                         .is(id_program)).querySingle();
     }
-
     public static Program findByUID(String UID) {
         return new Select()
                 .from(Program.class)

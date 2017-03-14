@@ -133,7 +133,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             survey.getValuesFromDB();
             //Exit + InProgress -> delete
             if (isBackPressed && isInProgress) {
-                if (survey.isStockSurvey()) {
+                if (SurveyFragmentStrategy.isStockSurvey(survey)) {
                     Session.setStockSurvey(null);
                 } else {
                     Session.setMalariaSurvey(null);

@@ -13,6 +13,7 @@ import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.model.QuestionStrategy;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
@@ -123,7 +124,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             if (imageRadioButton != optionView && optionView.isChecked()) {
                 optionView.setChecked(false);
                 Question question = (Question) optionView.getTag();
-                if (!question.isOutStockQuestion()) {
+                if (!QuestionStrategy.isOutStockQuestion(question.getUid())) {
                     notifyAnswerChanged(optionView, String.valueOf(-1));
                 } else {
                     List<Option> options = question.getAnswer().getOptions();
@@ -139,7 +140,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             }
         }
         Question question = (Question) imageRadioButton.getTag();
-        if (!question.isOutStockQuestion()) {
+        if (!QuestionStrategy.isOutStockQuestion(question.getUid())) {
             notifyAnswerChanged(imageRadioButton,
                     String.valueOf(optionDose.get(imageRadioButton.getOption().getId_option())));
         } else {
@@ -186,7 +187,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             ImageRadioButtonOption imageRadioButtonOption =
                     (ImageRadioButtonOption) answersContainer.getChildAt(i);
             Question question = (Question) imageRadioButtonOption.getTag();
-            if (!question.isOutStockQuestion()
+            if (!QuestionStrategy.isOutStockQuestion(question.getUid())
                     && question.getId_question().equals(value.getQuestion().getId_question())
                     && Float.parseFloat(
                     value.getValue()) > 0) {

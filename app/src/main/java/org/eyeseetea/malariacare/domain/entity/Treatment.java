@@ -20,6 +20,7 @@ import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.model.QuestionStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
@@ -54,7 +55,7 @@ public class Treatment {
 
     public static Question getTreatmentQuestionForTag(Object tag) {
         Resources resources = PreferencesState.getInstance().getContext().getResources();
-        if (((Question) tag).isPq()) {
+        if (QuestionStrategy.isPq(((Question) tag).getUid())) {
             return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
         } else {
             return Question.findByUID(
@@ -294,16 +295,16 @@ public class Treatment {
             List<Drug> drugs = treatment.getDrugsForTreatment();
             for (Drug drug : drugs) {
                 if (drug.isACT24()) {
-                    optionDose.put(Question.getACT24Question().getId_question(),
+                    optionDose.put(QuestionStrategy.getACT24Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
                 } else if (drug.isACT18()) {
-                    optionDose.put(Question.getACT18Question().getId_question(),
+                    optionDose.put(QuestionStrategy.getACT18Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
                 } else if (drug.isACT12()) {
-                    optionDose.put(Question.getACT12Question().getId_question(),
+                    optionDose.put(QuestionStrategy.getACT12Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
                 } else if (drug.isACT6()) {
-                    optionDose.put(Question.getACT6Question().getId_question(),
+                    optionDose.put(QuestionStrategy.getACT6Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
                 }
             }
@@ -318,22 +319,22 @@ public class Treatment {
         answer.setId_answer(Answer.DYNAMIC_STOCK_ANSWER_ID);
         //this options are never saved
         Option optionACT24 = new Option("ACT_x_24", "ACT_x_24", 0f, answer);
-        optionACT24.setId_option(Question.getACT24Question().getId_question());
+        optionACT24.setId_option(QuestionStrategy.getACT24Question().getId_question());
         optionACT24.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx24.png"));
         Option optionACT12 = new Option("ACT_x_12", "ACT_x_12", 0f, answer);
-        optionACT12.setId_option(Question.getACT12Question().getId_question());
+        optionACT12.setId_option(QuestionStrategy.getACT12Question().getId_question());
         optionACT12.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx12.png"));
         Option optionACT6 = new Option("ACT_x_6", "ACT_x_6", 0f, answer);
-        optionACT6.setId_option(Question.getACT6Question().getId_question());
+        optionACT6.setId_option(QuestionStrategy.getACT6Question().getId_question());
         optionACT6.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx6.png"));
         Option optionACT18 = new Option("ACT_x_18", "ACT_x_18", 0f, answer);
-        optionACT18.setId_option(Question.getACT18Question().getId_question());
+        optionACT18.setId_option(QuestionStrategy.getACT18Question().getId_question());
         optionACT18.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx18.png"));
-        Question outStockQuestion = Question.getOutOfStockQuestion();
+        Question outStockQuestion = QuestionStrategy.getOutOfStockQuestion();
         Option optionOutStock = new Option("out_stock_option", "out_stock_option", 0f,
                 outStockQuestion.getAnswer());
         optionOutStock.setOptionAttribute(

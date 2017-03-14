@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.presentation.factory.stock.utils;
 
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.model.QuestionStrategy;
 
 import java.util.List;
 
@@ -42,19 +43,19 @@ public class SurveyStock {
             if(value.getQuestion()==null) {
                 continue;//ignore values without question for example control dataelements
             }
-            if (value.getQuestion().isStockRDT()) {
+            if (QuestionStrategy.isStockRDT(value.getQuestion().getUid())) {
                 surveyValues[RDT_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (value.getQuestion().isACT6()) {
+            } else if (QuestionStrategy.isACT6(value.getQuestion().getUid())) {
                 surveyValues[ACT6_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (value.getQuestion().isACT12()) {
+            } else if (QuestionStrategy.isACT12(value.getQuestion().getUid())) {
                 surveyValues[ACT12_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (value.getQuestion().isACT18()) {
+            } else if (QuestionStrategy.isACT18(value.getQuestion().getUid())) {
                 surveyValues[ACT18_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (value.getQuestion().isACT24()) {
+            } else if (QuestionStrategy.isACT24(value.getQuestion().getUid())) {
                 surveyValues[ACT24_VALUE] =(int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (value.getQuestion().isPq()) {
+            } else if (QuestionStrategy.isPq(value.getQuestion().getUid())) {
                 surveyValues[PQ_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (value.getQuestion().isCq()) {
+            } else if (QuestionStrategy.isCq(value.getQuestion().getUid())) {
                 surveyValues[CQ_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
             }
         }

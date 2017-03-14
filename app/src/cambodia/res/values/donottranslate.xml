@@ -12,8 +12,6 @@
     <string name="work_in_progress" translatable="false">Work in progress</string>
 
 
-    <string name="malariaProgramUID" translatable="false"></string>
-    <string name="stockProgramUID" translatable="false"></string>
     <string name="ageQuestionUID" translatable="false"></string>
     <string name="sexPregnantQuestionUID" translatable="false"></string>
     <string name="severeSymtomsQuestionUID" translatable="false"></string>

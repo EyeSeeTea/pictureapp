@@ -48,6 +48,7 @@ import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,7 +254,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                 + newListSurveys.size());
         this.surveys.clear();
         for (Survey survey : newListSurveys) {
-            if (!survey.isStockSurvey()) {
+            if (!SurveyFragmentStrategy.isStockSurvey(survey)) {
                 this.surveys.add(survey);
             }
         }

@@ -21,6 +21,7 @@ import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.model.QuestionStrategy;
+import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
@@ -114,7 +115,7 @@ public class Treatment {
             if (question == null) {
                 continue;
             }
-            if (question.getUid().equals(getContext().getString(R.string.ageQuestionUID))) {
+            if (Qquestion.getUid().equals(getContext().getString(R.string.ageQuestionUID))) {
                 ageMatches =
                         QuestionThreshold.getMatchesWithQuestionValue(
                                 question.getId_question(), Integer.parseInt(value.getValue()));
@@ -385,22 +386,10 @@ public class Treatment {
         return PreferencesState.getInstance().getContext();
     }
 
-    private String getPqTitleDose(float dose) {
-        return getTitleDose(dose,
-                getContext().getResources().getString(R.string.drugs_referral_Pq_review_title));
-    }
-
-    private String getCqTitleDose(float dose) {
-        return getTitleDose(dose,
-                getContext().getResources().getString(R.string.drugs_referral_Cq_review_title));
-    }
-
     private void saveTreatmentInTreatmentQuestion(
             org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
-        Question treatmentQuestionSend = Question.findByUID(
-                getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID));
-        Question treatmentQuestionShow = Question.findByUID(
-                getContext().getResources().getString(R.string.treatmentDiagnosisVisibleQuestion));
+        Question treatmentQuestionSend = QuestionStrategy.getDynamicTreatmentQuestion();
+        Question treatmentQuestionShow = QuestionStrategy.getTreatmentDiagnosisVisibleQuestion();
         Survey malariaSurvey = Session.getMalariaSurvey();
         List<Value> values =
                 malariaSurvey.getValues();//this values should be get from memory because the
@@ -438,20 +427,13 @@ public class Treatment {
         }
     }
 
-    private String getTitleDose(float dose, String drug) {
-        return String.format(
-                getContext().getResources().getString(R.string.drugs_dose_of_drug_review_title),
-                dose, drug);
-    }
-
     public List<Question> getNoTreatmentQuestions() {
         List<Question> questions = new ArrayList<>();
 
         Question treatmentQuestion = new Question();
         treatmentQuestion.setOutput(Constants.QUESTION_LABEL);
         treatmentQuestion.setForm_name("");
-        treatmentQuestion.setHelp_text(
-                getContext().getResources().getResourceName(R.string.error_no_treatment));
+        treatmentQuestion.setHelp_text(SurveyFragmentStrategy.getTreatmentError());
         treatmentQuestion.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
         treatmentQuestion.setHeader(Header.DYNAMIC_TREATMENT_HEADER_ID);
         questions.add(treatmentQuestion);

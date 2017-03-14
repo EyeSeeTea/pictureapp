@@ -14,6 +14,7 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.model.QuestionStrategy;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
@@ -182,10 +183,9 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                     && checkedId == customRadioButton.getId()) {
                 value = (int) dose;
             }
-
+            Question question =(Question) this.getTag();
             if (checkedId == customRadioButton.getId()
-                    && !((Question) this.getTag()).getUid().equals(
-                    context.getString(R.string.cqQuestionUID))) {
+                    && !QuestionStrategy.isCq(question.getUid())) {
                 notifyAnswerOptionChange(this.getTag(), ((Option) customRadioButton.getTag()));
                 changeTotalQuestions();
             }
@@ -223,12 +223,9 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
      * Changing the total questions of the alternative pq questions depending on the answer provided
      */
     private void changeTotalQuestions() {
-        Question pqQuestion = Question.findByUID(
-                context.getString(R.string.pqQuestionUID));
-        Question actQuestion = Question.findByUID(
-                context.getString(R.string.alternativePqQuestionUID));
-        Question alternativePqQuestion = Question.findByUID(
-                context.getString(R.string.alternativePqQuestionUID));
+        Question pqQuestion = QuestionStrategy.getPqQuestion();
+        Question actQuestion = QuestionStrategy.getAlternativePqQuestion();//// FIXME: 14/03/2017 is it correct?
+        Question alternativePqQuestion = QuestionStrategy.getAlternativePqQuestion();
         Value actValue = null;
         Value pqValue = null;
         List<Value> values = Session.getMalariaSurvey().getValuesFromDB();

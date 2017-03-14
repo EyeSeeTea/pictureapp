@@ -44,6 +44,8 @@ public class QuestionStrategy {
 
     public static boolean isPq(String uid_question) {        return false;}
 
+    public static boolean isCq(String uid_question) {        return false;}
+
     public static boolean isDynamicTreatmentQuestion(String uid_question) {        return false;}
 
     public static Question getACT6Question() {        return null;}
@@ -58,5 +60,25 @@ public class QuestionStrategy {
 
     public static boolean isStockQuestion(Question question ) {
         return false;
+    }
+
+    public static Question getDynamicTreatmentQuestion() {
+        return  null;
+    }
+
+    public static Question getTreatmentDiagnosisVisibleQuestion() {
+        return null;
+    }
+
+    public static Question getStockPqQuestion() {
+        return  null;
+    }
+
+    public static Question getPqQuestion() {
+        return null;
+    }
+
+    public static Question getAlternativePqQuestion() {
+        return null;
     }
 }

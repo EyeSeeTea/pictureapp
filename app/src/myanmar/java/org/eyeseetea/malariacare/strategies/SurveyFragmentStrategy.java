@@ -67,4 +67,24 @@ public class SurveyFragmentStrategy extends ASurveyFragmentStrategy {
                         context.getString(R.string.stockProgramUID))).querySingle();
 
     }
+
+    private String getTitleDose(float dose, String drug) {
+        return String.format(
+                PreferenceState.getInstance().getContext().getResources().getString(R.string.drugs_dose_of_drug_review_title),
+                dose, drug);
+    }
+    public static String getTreatmentError() {
+        return PreferenceState.getInstance().getContext().getResources().getResourceName(R.string.error_no_treatment)
+    }
+
+
+    private String getPqTitleDose(float dose) {
+        return getTitleDose(dose,
+                getContext().getResources().getString(R.string.drugs_referral_Pq_review_title));
+    }
+
+    private String getCqTitleDose(float dose) {
+        return  getTitleDose(dose,
+                getContext().getResources().getString(R.string.drugs_referral_Cq_review_title));
+    }
 }

@@ -74,27 +74,27 @@ public class Drug extends BaseModel {
     }
 
     public boolean isACT24() {
-        return question_code.equals(getContext().getResources().getString(R.string.act24QuestionUID));
+        return QuestionStrategy.isACT24(question_code);
     }
 
     public boolean isACT18() {
-        return question_code.equals(getContext().getResources().getString(R.string.act18QuestionUID));
+        return QuestionStrategy.isACT18(question_code);
     }
 
     public boolean isACT12() {
-        return question_code.equals(getContext().getResources().getString(R.string.act12QuestionUID));
+        return QuestionStrategy.isACT12(question_code);
     }
 
     public boolean isACT6() {
-        return question_code.equals(getContext().getResources().getString(R.string.act6QuestionUID));
+        return QuestionStrategy.isACT6(question_code);
     }
 
     public boolean isPq() {
-        return question_code.equals(getContext().getResources().getString(R.string.pqQuestionUID));
+        return QuestionStrategy.isPq(question_code);
     }
 
     public boolean isCq() {
-        return question_code.equals(getContext().getResources().getString(R.string.cqQuestionUID));
+        return QuestionStrategy.isCq(question_code);
     }
 
 

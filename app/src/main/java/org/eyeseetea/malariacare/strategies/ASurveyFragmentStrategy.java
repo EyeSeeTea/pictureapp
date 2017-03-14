@@ -44,4 +44,21 @@ public abstract class ASurveyFragmentStrategy {
     public static Survey getStockSurveyWithEventDate(Date event_date) {
         return null;
     }
+
+    public static String getTitleDose(float dose, String drug) {
+        return "";
+    }
+
+    public static String getTreatmentError() {
+        return "";
+    }
+    private String getPqTitleDose(float dose) {
+        return getTitleDose(dose,
+                "");
+    }
+
+    private String getCqTitleDose(float dose) {
+        return  getTitleDose(dose,
+                "");
+    }
 }

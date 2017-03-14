@@ -147,4 +147,30 @@ public class QuestionStrategy {
         }
         return false;
     }
+
+    public static Question getDynamicTreatmentQuestion() {
+        return  Question.findByUID(
+                PreferencesState.getInstance().getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID);
+    }
+
+    public static Question getDynamicTreatmentQuestion() {
+        return  Question.findByUID(
+                PreferencesState.getInstance().getContext().getResources().getString(R.string.dynamicTreatmentQuestionUID);
+    }
+    public static Question getTreatmentDiagnosisVisibleQuestion() {
+        return  Question.findByUID(
+                PreferencesState.getInstance().getContext().getResources().getString(R.string.treatmentDiagnosisVisibleQuestion);
+    }
+    public static Question getStockPqQuestion() {
+        return  Question.findByUID(
+                PreferencesState.getInstance().getContext().getResources().getString(R.string.stockPqQuestionUID);
+    }
+    public static Question getPqQuestion() {
+        return  Question.findByUID(
+                PreferencesState.getInstance().getContext().getResources().getString(R.string.pqQuestionUID);
+    }
+    public static Question getAlternativePqQuestion() {
+        return  Question.findByUID(
+                PreferencesState.getInstance().getContext().getResources().getString(R.string.alternativePqQuestionUID);
+    }
 }

@@ -62,6 +62,7 @@ import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.strategies.PopulateDBStrategy;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -202,10 +203,7 @@ public class PopulateDB {
     static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
-        FileCsvs fileCsvs = new FileCsvs();
-        fileCsvs.saveCsvsInFileIfNeeded();
-        TreatmentTable treatmentTable = new TreatmentTable();
-        treatmentTable.generateTreatmentMatrixIFNeeded();
+        PopulateDBStrategy.init();
 
         Log.i(TAG, "DB empty, loading data ...");
         try {

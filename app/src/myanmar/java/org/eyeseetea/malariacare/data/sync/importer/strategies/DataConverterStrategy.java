@@ -4,7 +4,9 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
@@ -14,18 +16,8 @@ import org.eyeseetea.malariacare.domain.exception.QuestionNotFoundException;
 import java.util.List;
 
 public class DataConverterStrategy implements IDataConverterStrategy {
-    private static String TAG = ".DataConverterStrategy";
 
     private static String ORG_UNIT_QUESTION_UID = "NoDataElementOrgUnit";
-
-    private static String SEX_PREGNANCY_QUESTION_UID = "NoDataElementSexPregnancy";
-
-    private static String SEX_PREGNANCY_MALE_VALUE = "NoDataElementM";
-    private static String SEX_PREGNANCY_FEMALE_VALUE = "NoDataElementF";
-    private static String SEX_PREGNANCY_PREGNANT_VALUE = "NoDataElementFP";
-
-    private static String SEX_QUESTION_UID = "fculIlFe15p";
-    private static String PREGNANT_QUESTION_UID = "fxDu5J5eZ4t";
 
     Context mContext;
 
@@ -37,18 +29,15 @@ public class DataConverterStrategy implements IDataConverterStrategy {
     public void convert(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
 
-        convertOrgUnitDataValue(converter, event);
+        if (!event.getProgramUId().equals(mContext.getString(R.string.stockProgramUID))) {
+            convertOrgUnitDataValue(converter, event);
 
-        convertPatientSexPregnancyDataValue(converter, event);
+            convertNoDataElementMatchQuestions(converter, event);
+        }
     }
 
     private void convertOrgUnitDataValue(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
-
-
-        if (event.getProgramUId().equals(mContext.getString(R.string.stockProgramUID))) {
-            return;
-        }
 
         Question orgUnitQuestion = Question.findByUID(ORG_UNIT_QUESTION_UID);
 
@@ -57,6 +46,8 @@ public class DataConverterStrategy implements IDataConverterStrategy {
                     String.format("Question with uid %s not found", ORG_UNIT_QUESTION_UID));
         }
 
+        createDataValueExtended(event, orgUnitQuestion.getUid(), event.getOrganisationUnitId(),
+                converter);
         DataValueExtended OrgUnitDataValue = new DataValueExtended();
         OrgUnitDataValue.setEvent(event.getEvent());
         OrgUnitDataValue.setDataElement(orgUnitQuestion.getUid());
@@ -65,50 +56,87 @@ public class DataConverterStrategy implements IDataConverterStrategy {
 
     }
 
-    private void convertPatientSexPregnancyDataValue(ConvertFromSDKVisitor converter,
-            EventExtended event) throws QuestionNotFoundException {
-
-        if (event.getProgramUId().equals(mContext.getString(R.string.stockProgramUID))) {
-            return;
-        }
-
-        Question sexPregnancyQuestion = Question.findByUID(SEX_PREGNANCY_QUESTION_UID);
-
-        if (sexPregnancyQuestion == null) {
-            Log.d(TAG, event.getUid() + "With invalid sexPregnancy question");
-            return;
-        }
+    private void convertNoDataElementMatchQuestions(ConvertFromSDKVisitor converter,
+            EventExtended event) {
+        List<Question> questionsWithMatch = Question.getAllQuestionsWithMatch();
 
         List<DataValueExtended> dataValues = DataValueExtended.getExtendedList(
                 SdkQueries.getDataValues(event.getUid()));
 
-        DataValueExtended sexDataValue = getDataValue(dataValues, SEX_QUESTION_UID);
-        DataValueExtended pregnancyDataValue = getDataValue(dataValues, PREGNANT_QUESTION_UID);
-
-        if (sexDataValue == null || pregnancyDataValue == null) {
-            Log.d(TAG, event.getUid() + "With invalid sexPregnancy question");
-            return;
+        for (Question question : questionsWithMatch) {
+            createValueForQuestion(question, event, dataValues, converter);
         }
+    }
 
-        DataValueExtended OrgUnitDataValue = new DataValueExtended();
-        OrgUnitDataValue.setEvent(event.getEvent());
-        OrgUnitDataValue.setDataElement(sexPregnancyQuestion.getUid());
-        if (sexDataValue.getValue().equals("F")) {
-            if (pregnancyDataValue.getValue().equals("true")) {
-                OrgUnitDataValue.setValue(SEX_PREGNANCY_PREGNANT_VALUE);
-            } else {
-                OrgUnitDataValue.setValue(SEX_PREGNANCY_FEMALE_VALUE);
+    public static final int TRUE_POSITION = 1;
+
+    private void createValueForQuestion(Question question, EventExtended event,
+            List<DataValueExtended> dataValues, ConvertFromSDKVisitor converter) {
+
+        List<QuestionOption> matchedQuestionOptions = question.getQuestionOptionsOfTypeMatch();
+
+        List<Option> optionsWithoutMatch = question.getAnswer().getOptions();
+
+        Option selectedOption = null;
+
+        for (QuestionOption matchedQuestionOption : matchedQuestionOptions) {
+            Question matchedQuestion =
+                    matchedQuestionOption.getMatch().getQuestionRelation().getQuestion();
+
+            Option matchedOption = matchedQuestionOption.getOption();
+
+            if (optionsWithoutMatch.contains(matchedOption)) {
+                optionsWithoutMatch.remove(matchedOption);
             }
-        } else {
-            OrgUnitDataValue.setValue(SEX_PREGNANCY_MALE_VALUE);
+
+            DataValueExtended valueFromServer = getValueFromServer(dataValues,
+                    matchedQuestion.getUid());
+
+            if (valueFromServer != null) {
+                Option trueHiddenOption = matchedQuestion.getAnswer().getOptions().get(
+                        TRUE_POSITION);
+
+                Option selectedHiddenOption = matchedQuestion.findOptionByValue(
+                        valueFromServer.getValue());
+
+                if (selectedHiddenOption.getName().equals(trueHiddenOption.getName())) {
+                    selectedOption = matchedOption;
+                    break;
+                }
+            } else {
+                Log.e(this.getClass().getSimpleName(),
+                        "Value not create for question " + question.getUid());
+                return;
+            }
         }
 
+        if (selectedOption == null) {
+            if (optionsWithoutMatch.size() > 0) {
+                selectedOption = optionsWithoutMatch.get(0);
+            }
+        }
 
-        OrgUnitDataValue.accept(converter);
+        if (selectedOption != null) {
+            createDataValueExtended(event, question.getUid(), selectedOption.getName(), converter);
+        } else {
+            Log.e(this.getClass().getSimpleName(),
+                    "Value not create for question " + question.getUid());
+        }
 
     }
 
-    private static DataValueExtended getDataValue(List<DataValueExtended> dataValues, String uid) {
+    private void createDataValueExtended(EventExtended event, String dataElement,
+            String value, ConvertFromSDKVisitor converter) {
+        DataValueExtended dataValueExtended = new DataValueExtended();
+        dataValueExtended.setEvent(event.getEvent());
+        dataValueExtended.setDataElement(dataElement);
+        dataValueExtended.setValue(value);
+
+        dataValueExtended.accept(converter);
+    }
+
+    private static DataValueExtended getValueFromServer(List<DataValueExtended> dataValues,
+            String uid) {
         DataValueExtended dataValuesExtended = null;
 
         for (DataValueExtended dataValue : dataValues) {

@@ -16,7 +16,7 @@
 16;'Code: Vomiting';'patient_advice_vomiting_review_title';'patient_advice_vomiting_hepltext';'patient_advice_title_vomiting';'NoDataElementAdviceVomiting';5;0;0;8;16;0;23;7;0;'question_images/p7_vomiting.png';0
 17;'Code: Taking m';'patient_advice_medication_with_food_review_title';'patient_advice_medication_with_food_helptext';'patient_advice_title_medication_with_food';'NoDataElementAdviceMedication';6;0;0;8;17;0;23;7;0;'question_images/p7_taking.png';0
 18;'Code: Side ef';'patient_advice_side_effects_title';'patient_advice_side_effects_helptext';'patient_advice_title_side_effects';'NoDataElementAdviceSideEffects';7;0;0;8;18;0;23;7;0;'question_images/p7_side_effects.png';0
-19;'Code: When to get';'patient_advice_help_review_title';'patient_advice_hepltext';'patient_advice_title_help';'NoDataElementAdviceWhenYouGet';8;0;0;8;19;0;23;7;0;'question_images/p7_help.png';0
+19;'Code: When to get';'patient_advice_help_review_title';'patient_advice_helptext';'patient_advice_title_help';'NoDataElementAdviceWhenYouGet';8;0;0;8;19;0;23;7;0;'question_images/p7_help.png';0
 20;'Code: travelling';'follow_up_travelling_review_title';'follow_up_travelling_helptext';'follow_up_travelling_question';'V17tH1oi0E1';9;0;0;9;20;0;8;7;0;'question_images/p8_occupation.png';0
 21;'Code: LLIN Q1';'follow_up_LLIN_ITN_usage_review_title';'follow_up_LLIN_ITN_usage_helptext';'follow_up_LLIN_ITN_usage_question';'FDEErGTFbGF';11;0;0;9;21;0;8;7;0;'question_images/p8_llin1.png';0
 22;'Code: LLIN Q2';'follow_up_LLIN_ITN_ownership_review_title';'follow_up_LLIN_ITN_ownership_helptext';'follow_up_LLIN_ITN_ownership_question';'yjr9A4PQ73U';12;0;0;9;22;0;8;7;0;'question_images/p8_llin2.png';0

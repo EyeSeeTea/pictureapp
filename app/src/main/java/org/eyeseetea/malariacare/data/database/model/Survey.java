@@ -1017,9 +1017,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 PreferencesState.getInstance().getContext().getString(
                         R.string.malariaProgramUID));
         List<Value> stockValues = this.getValuesFromDB();
-        List<Value> malariaValues = this.getValuesFromDB();
+        List<Value> malariaValues = malariaSurvey.getValuesFromDB();
         org.eyeseetea.malariacare.domain.entity.Treatment treatment = new Treatment(malariaSurvey,
                 this);
+        treatment.hasTreatment();
         List<Question> mainTreatmentQuestions = treatment.getQuestions();
         for (Question question : mainTreatmentQuestions) {
             if (question.isCompulsory()) {

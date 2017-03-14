@@ -87,7 +87,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         Session.getMalariaSurvey().updateSurveyStatus();
         Survey stockSurvey = Session.getStockSurvey();
         if (stockSurvey != null) {
-            Session.getStockSurvey().complete();
             Date eventDate = new Date();
             saveEventDate(Session.getMalariaSurvey(), eventDate);
             saveEventDate(Session.getStockSurvey(), eventDate);
@@ -105,7 +104,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         //Complete stockSurvey
         survey = Session.getStockSurvey();
         saveEventDate(survey, eventDate);
-        survey.complete();
+        survey.updateSurveyStatus();
     }
 
     //The eventDate is used to identify the stock survey for each malaria survey

@@ -1,8 +1,11 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import java.util.Date;
+
 public class Survey {
     private long id;
     private int status;
+    private Date eventDate;
     private SurveyAnsweredRatio mSurveyAnsweredRatio;
 
     public Survey() {
@@ -44,6 +47,14 @@ public class Survey {
         mSurveyAnsweredRatio = surveyAnsweredRatio;
     }
 
+    public Date getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -52,7 +63,8 @@ public class Survey {
         Survey survey = (Survey) o;
 
         if (id != survey.id) return false;
-        return status == survey.status;
+        if (status != survey.status) return false;
+        return eventDate != null ? eventDate.equals(survey.eventDate) : survey.eventDate == null;
 
     }
 
@@ -60,6 +72,7 @@ public class Survey {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + status;
+        result = 31 * result + (eventDate != null ? eventDate.hashCode() : 0);
         return result;
     }
 
@@ -68,6 +81,7 @@ public class Survey {
         return "Survey{" +
                 "id=" + id +
                 ", status=" + status +
+                ", eventDate=" + eventDate +
                 '}';
     }
 }

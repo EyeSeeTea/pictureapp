@@ -28,6 +28,10 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
     public void execute(long idSurvey) {
         Survey survey = getSurveyWithStatusAndAnsweredRatio(idSurvey);
         updateRDTStockQuestion(survey);
+        org.eyeseetea.malariacare.data.database.model.Survey stockSurvey =
+                org.eyeseetea.malariacare.data.database.model.Survey.getStockSurveyWithEventDate(
+                        survey.getEventDate());
+        getSurveyWithStatusAndAnsweredRatio(stockSurvey.getId_survey());
     }
 
     private Survey getSurveyWithStatusAndAnsweredRatio(long idSurvey) {
@@ -35,6 +39,7 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
                 org.eyeseetea.malariacare.data
                         .database.model.Survey.findById(idSurvey);
         Survey survey = new Survey(idSurvey);
+        survey.setEventDate(surveyDB.getEventDate());
         survey.setSurveyAnsweredRatio(surveyDB.reloadSurveyAnsweredRatio());
         surveyDB.updateSurveyStatus();
         survey.setStatus(surveyDB.getStatus());

@@ -6,14 +6,10 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.OrgUnitLevel;
+import org.eyeseetea.malariacare.data.database.model.Organisation;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
-import org.eyeseetea.malariacare.data.database.model.Score;
-import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
@@ -60,6 +56,9 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         Session.setCredentials(credentials);
 
         saveCredentials(credentials);
+        if (credentials.isDemoCredentials()) {
+            addTestOrganisation();
+        }
 
         callback.onSuccess(null);
     }
@@ -81,6 +80,13 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, "");
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_password, "");
         PreferencesState.getInstance().reloadPreferences();
+    }
+
+    private void addTestOrganisation() {
+        Organisation testOrganisation = new Organisation();
+        testOrganisation.setName(mContext.getString(R.string.test_organisation_name));
+        testOrganisation.setUid(mContext.getString(R.string.test_organisation_uid));
+        testOrganisation.insert();
     }
 
     private void deleteOrgUnitQuestionOptions() {

@@ -118,7 +118,6 @@ public class PopulateDB {
             Treatment.class,
             DrugCombination.class,
             TreatmentMatch.class,
-            OrgUnitLevel.class,
             OrgUnit.class
    );
 
@@ -221,6 +220,7 @@ public class PopulateDB {
     public static boolean hasMandatoryTables() {
         for(Class table:allMandatoryTables){
             if(SQLite.selectCountOf().from(table).count() == 0) {
+                Log.d(TAG, "Mandatory table is empty"+ table);
                 return false;
             }
         }

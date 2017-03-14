@@ -62,6 +62,7 @@ import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
+import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
@@ -454,6 +455,17 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .and(Program_Table.uid_program.withTable(programAlias).is(
                         context.getString(R.string.stockProgramUID))).querySingle();
 
+    }
+
+    public static Survey getSurveyWithEventDateProgram(Date event_date, String programUID) {
+
+        return new Select().from(Survey.class).as(surveyName)
+                .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(Survey_Table.id_program_fk.withTable(surveyAlias)
+                        .eq(Program_Table.id_program.withTable(programAlias)))
+                .where(Survey_Table.event_date.withTable(surveyAlias).eq(event_date))
+                .and(Program_Table.uid_program.withTable(programAlias).is(programUID))
+                .querySingle();
     }
 
     /**
@@ -955,6 +967,14 @@ public class Survey extends BaseModel implements VisitableToSDK {
      * @return SurveyAnsweredRatio that hold the total & answered questions.
      */
     public SurveyAnsweredRatio reloadSurveyAnsweredRatio() {
+        if (!this.isStockSurvey()) {
+            return reloadMalariaSurveyAnsweredRatio();
+        } else {
+            return reloadStockSurveyAnsweredRatio();
+        }
+    }
+
+    private SurveyAnsweredRatio reloadMalariaSurveyAnsweredRatio() {
         SurveyAnsweredRatio surveyAnsweredRatio;
         //First parent is always required and not calculated.
         int numRequired = 1;
@@ -987,6 +1007,84 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
         SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);
         return surveyAnsweredRatio;
+    }
+
+    private SurveyAnsweredRatio reloadStockSurveyAnsweredRatio() {
+        int numRequired = 0, numAnswered = 0;
+        boolean checkACTAlternative = false, checkPQAlternative = false;
+        SurveyAnsweredRatio surveyAnsweredRatio;
+        Survey malariaSurvey = getSurveyWithEventDateProgram(this.getEventDate(),
+                PreferencesState.getInstance().getContext().getString(
+                        R.string.malariaProgramUID));
+        List<Value> stockValues = this.getValuesFromDB();
+        List<Value> malariaValues = this.getValuesFromDB();
+        org.eyeseetea.malariacare.domain.entity.Treatment treatment = new Treatment(malariaSurvey,
+                this);
+        List<Question> mainTreatmentQuestions = treatment.getQuestions();
+        for (Question question : mainTreatmentQuestions) {
+            if (question.isCompulsory()) {
+                numRequired++;
+                if (question.isStockQuestion()) {
+                    for (Value value : stockValues) {
+                        if (value.getQuestion().getUid().equals(question.getUid())) {
+                            if (value.getValue() != null) numAnswered++;
+                            if (value.getValue().equals("0")) {
+                                if (question.isACT()) {
+                                    numRequired++;
+                                    checkACTAlternative = true;
+                                } else if (question.isPq()) {
+                                    numRequired++;
+                                    checkPQAlternative = true;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    for (Value value : malariaValues) {
+                        if (value.getQuestion().getUid().equals(question.getUid())
+                                && value.getValue() != null) {
+                            numAnswered++;
+                        }
+                    }
+                }
+            }
+        }
+        if (checkACTAlternative) {
+            boolean checkOutStockQuestion = true;
+            for (Question question : treatment.getACTAlternativeStockQuestions()) {
+                for (Value value : stockValues) {
+                    if (value.getValue() != null && value.getQuestion().getUid().equals(
+                            question.getUid()) && !value.getValue().equals("0")) {
+                        checkOutStockQuestion = false;
+                        numAnswered++;
+                    }
+                }
+            }
+            if (checkOutStockQuestion) {
+                for (Value value : malariaValues) {
+                    if (value.getQuestion().getUid().equals(
+                            PreferencesState.getInstance().getContext().getString(
+                                    R.string.outOfStockQuestionUID)) && value.getValue() != null) {
+                        numAnswered++;
+                    }
+                }
+            }
+        }
+        if (checkPQAlternative) {
+            for (Value value : malariaValues) {
+                if (value.getQuestion().equals(Question.findByUID(
+                        PreferencesState.getInstance().getContext().getResources().getString(
+                                R.string.alternativePqQuestionUID)))
+                        && value.getValue() != null) {
+                    numAnswered++;
+                }
+            }
+        }
+        surveyAnsweredRatio = new SurveyAnsweredRatio(numRequired, numAnswered);
+
+        SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);
+        return surveyAnsweredRatio;
+
     }
 
 

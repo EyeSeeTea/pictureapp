@@ -6,7 +6,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.User;
@@ -56,9 +55,6 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         Session.setCredentials(credentials);
 
         saveCredentials(credentials);
-        if (credentials.isDemoCredentials()) {
-            addTestOrganisation();
-        }
 
         callback.onSuccess(null);
     }
@@ -82,12 +78,6 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         PreferencesState.getInstance().reloadPreferences();
     }
 
-    private void addTestOrganisation() {
-        Organisation testOrganisation = new Organisation();
-        testOrganisation.setName(mContext.getString(R.string.test_organisation_name));
-        testOrganisation.setUid(mContext.getString(R.string.test_organisation_uid));
-        testOrganisation.insert();
-    }
 
     private void deleteOrgUnitQuestionOptions() {
         List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();

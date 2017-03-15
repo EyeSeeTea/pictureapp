@@ -43,7 +43,7 @@ import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitLevel;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitProgramRelation;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
+import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
@@ -114,7 +114,7 @@ public class PopulateDB {
             QuestionOption.class,
             QuestionThreshold.class,
             Drug.class,
-            Organisation.class,
+           Partner.class,
             Treatment.class,
             DrugCombination.class,
             TreatmentMatch.class,
@@ -145,7 +145,7 @@ public class PopulateDB {
             QuestionOption.class,
             QuestionThreshold.class,
             Drug.class,
-            Organisation.class,
+            Partner.class,
             Treatment.class,
             DrugCombination.class,
             TreatmentMatch.class,
@@ -197,7 +197,7 @@ public class PopulateDB {
     static Map<Integer, OrgUnitLevel> orgUnitLevelList = new LinkedHashMap();
     static Map<Integer, OrgUnit> orgUnitList = new LinkedHashMap();
     static HashMap<Long, Drug> drugList = new HashMap<>();
-    static HashMap<Long, Organisation> organisationList = new HashMap<>();
+    static HashMap<Long, Partner> organisationList = new HashMap<>();
     static HashMap<Long, Treatment> treatmentList = new HashMap<>();
     static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
 
@@ -390,9 +390,9 @@ public class PopulateDB {
                         drugList.put(Long.parseLong(line[0]), drug);
                         break;
                     case ORGANISATIONS_CSV:
-                        Organisation organisation = PopulateRow.populateOrganisations(line, null);
-                        organisation.insert();
-                        organisationList.put(Long.parseLong(line[0]), organisation);
+                        Partner partner = PopulateRow.populateOrganisations(line, null);
+                        partner.insert();
+                        organisationList.put(Long.parseLong(line[0]), partner);
                         break;
                     case TREATMENT_CSV:
                         Treatment treatment = PopulateRow.populateTreatments(line, organisationList,

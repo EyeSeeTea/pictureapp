@@ -11,43 +11,43 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import java.util.List;
 
 @Table(database = AppDatabase.class)
-public class Organisation extends BaseModel {
+public class Partner extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
-    long id_organisation;
+    long id_partner;
     @Column
-    String uid_organisation;
+    String uid_partner;
     @Column
     String name;
 
-    public Organisation() {
+    public Partner() {
     }
 
-    public static Organisation findById(long id) {
+    public static Partner findById(long id) {
         return new Select()
-                .from(Organisation.class)
-                .where(Organisation_Table.id_organisation.is(id))
+                .from(Partner.class)
+                .where(Partner_Table.id_partner.is(id))
                 .querySingle();
     }
 
-    public static List<Organisation> getAllOrganisations() {
-        return new Select().from(Organisation.class).queryList();
+    public static List<Partner> getAllOrganisations() {
+        return new Select().from(Partner.class).queryList();
     }
 
-    public long getId_organisation() {
-        return id_organisation;
+    public long getId_partner() {
+        return id_partner;
     }
 
-    public void setId_organisation(long id_organisation) {
-        this.id_organisation = id_organisation;
+    public void setId_partner(long id_partner) {
+        this.id_partner = id_partner;
     }
 
     public String getUid() {
-        return uid_organisation;
+        return uid_partner;
     }
 
     public void setUid(String uid) {
-        this.uid_organisation = uid;
+        this.uid_partner = uid;
     }
 
     public String getName() {
@@ -63,27 +63,30 @@ public class Organisation extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Organisation that = (Organisation) o;
+        Partner that = (Partner) o;
 
-        if (id_organisation != that.id_organisation) return false;
-        if (uid_organisation != null ? !uid_organisation.equals(that.uid_organisation) : that.uid_organisation != null) return false;
+        if (id_partner != that.id_partner) return false;
+        if (uid_partner != null ? !uid_partner.equals(that.uid_partner)
+                : that.uid_partner != null) {
+            return false;
+        }
         return name != null ? name.equals(that.name) : that.name == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id_organisation ^ (id_organisation >>> 32));
-        result = 31 * result + (uid_organisation != null ? uid_organisation.hashCode() : 0);
+        int result = (int) (id_partner ^ (id_partner >>> 32));
+        result = 31 * result + (uid_partner != null ? uid_partner.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "Organisation{" +
-                "id_organisation=" + id_organisation +
-                ", uid_organisation='" + uid_organisation + '\'' +
+        return "Partner{" +
+                "id_partner=" + id_partner +
+                ", uid_partner='" + uid_partner + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

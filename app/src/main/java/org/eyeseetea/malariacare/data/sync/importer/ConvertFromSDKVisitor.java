@@ -26,7 +26,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
+import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -199,15 +199,15 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
 
     @Override
     public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
-        Organisation organisationUser = null;
-        List<Organisation> organisations = Organisation.getAllOrganisations();
-        for (Organisation organisation : organisations) {
-            if (organisation.getName().equals(categoryOptionGroupExtended.getName())) {
-                organisationUser = organisation;
-                organisationUser.setUid(categoryOptionGroupExtended.getUid());
-                organisationUser.save();
+        Partner partnerUser = null;
+        List<Partner> partners = Partner.getAllOrganisations();
+        for (Partner partner : partners) {
+            if (partner.getName().equals(categoryOptionGroupExtended.getName())) {
+                partnerUser = partner;
+                partnerUser.setUid(categoryOptionGroupExtended.getUid());
+                partnerUser.save();
                 User me = User.getLoggedUser();
-                me.setOrganisation(organisationUser.getId_organisation());
+                me.setOrganisation(partnerUser.getId_partner());
                 me.save();
                 break;
             }

@@ -9,17 +9,17 @@ import org.eyeseetea.malariacare.data.database.model.Header;
 import org.eyeseetea.malariacare.data.database.model.Match;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
+import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.data.database.model.StringKey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
-import org.eyeseetea.malariacare.data.database.model.Translation;
 
 import java.util.HashMap;
 
@@ -187,7 +187,7 @@ public class PopulateRow {
      * @param line The row of the csv to populate.
      * @param stringKeyList
      */
-    static Treatment populateTreatments(String[] line, HashMap<Long, Organisation> organisationFK,
+    static Treatment populateTreatments(String[] line, HashMap<Long, Partner> organisationFK,
             HashMap<Long, StringKey> stringKeyList, @Nullable Treatment treatment) {
         if (treatment == null) {
             treatment = new Treatment();
@@ -200,17 +200,17 @@ public class PopulateRow {
     }
 
     /**
-     * Method to populate each row of Organisation.csv.
+     * Method to populate each row of Partner.csv.
      *
      * @param line The row of the csv to populate.
      */
-    static Organisation populateOrganisations(String[] line, @Nullable Organisation organisation) {
-        if (organisation == null) {
-            organisation = new Organisation();
+    static Partner populateOrganisations(String[] line, @Nullable Partner partner) {
+        if (partner == null) {
+            partner = new Partner();
         }
-        organisation.setUid(line[1]);
-        organisation.setName(line[2]);
-        return organisation;
+        partner.setUid(line[1]);
+        partner.setName(line[2]);
+        return partner;
     }
 
     /**

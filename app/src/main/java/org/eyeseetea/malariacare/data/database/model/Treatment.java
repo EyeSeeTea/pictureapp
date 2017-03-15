@@ -35,7 +35,7 @@ public class Treatment extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_treatment;
-    @Column
+    @Column(name = "id_organisation_fk")
     Long id_partner_fk;
     @Column
     Long diagnosis;

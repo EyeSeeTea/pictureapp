@@ -33,7 +33,6 @@ public class SplashScreenActivity extends Activity {
     }
 
     private void init() {
-        Fabric.with(this, new Crashlytics());
         LocationMemory.getInstance().init(getApplicationContext());
 
         D2.init(this);

@@ -25,12 +25,15 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.raizlabs.android.dbflow.config.EyeSeeTeaGeneratedDatabaseHolder;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.utils.Permissions;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by nacho on 04/08/15.
@@ -44,12 +47,13 @@ public class EyeSeeTeaApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
+        Fabric.with(this, new Crashlytics());
+        PreferencesState.getInstance().init(getApplicationContext());
         FlowConfig flowConfig = new FlowConfig
                 .Builder(this)
                 .addDatabaseHolder(EyeSeeTeaGeneratedDatabaseHolder.class)
                 .build();
         FlowManager.init(flowConfig);
-        PreferencesState.getInstance().init(getApplicationContext());
     }
 
     @Override

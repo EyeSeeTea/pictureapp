@@ -29,13 +29,10 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.eyeseetea.malariacare.views.FontUtils;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Singleton that holds info related to preferences

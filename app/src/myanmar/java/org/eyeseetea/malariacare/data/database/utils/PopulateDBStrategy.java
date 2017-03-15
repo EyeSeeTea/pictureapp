@@ -1,31 +1,46 @@
-package org.eyeseetea.malariacare.strategies;
+package org.eyeseetea.malariacare.data.database.utils;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.content.Context;
 
-import org.eyeseetea.malariacare.BaseActivity;
-import org.eyeseetea.malariacare.LoginActivity;
+import com.opencsv.CSVReader;
+
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
-import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.data.database.model.Answer;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvs;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.IPopulateDBStrategy;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateRow;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.RelationsIdCsvDB;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.TreatmentTableOperations;
 
-public class PopulateDBStrategy {
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.List;
 
-    public static void init() {
+public class PopulateDBStrategy implements IPopulateDBStrategy {
+
+    public void init() {
         try {
             FileCsvs fileCsvs = new FileCsvs();
             fileCsvs.saveCsvsInFileIfNeeded();
             TreatmentTableOperations treatmentTable = new TreatmentTableOperations();
             treatmentTable.generateTreatmentMatrixIFNeeded();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public InputStream openFile(Context context, String table)
+            throws IOException, FileNotFoundException {
+        return context.openFileInput(table);
+    }
 
 
 

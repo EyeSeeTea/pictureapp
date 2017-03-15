@@ -33,32 +33,8 @@
     <string name="control_data_element_phone_metadata" translatable="false">RuNZUhiAmlv</string>
     <string name="control_data_element_datetime_capture" translatable="false">qWMb2UM2ikL</string>
     <string name="control_data_element_datetime_sent" translatable="false">aBahytzj2u0</string>
-    <string name="error_no_treatment" translatable="false"> </string>
 
-    <string name="nonexistent" translatable="false">nonexistent</string>
-    <string name="dynamicTreatmentHideQuestionUID" translatable="false">@string/nonexistent</string>
-    <string name="stockPqQuestionUID" translatable="false">@string/nonexistent</string>
-    <string name="drugs_referral_Pq_review_title" translatable="false">@string/nonexistent</string>
-    <string name="drugs_referral_Cq_review_title" translatable="false">@string/nonexistent</string>
-    <string name="treatmentDiagnosisVisibleQuestion" translatable="false">@string/nonexistent</string>
-    <string name="drugs_dose_of_drug_review_title" translatable="false">@string/nonexistent</string>
-
-    <string name="option_sex_pregnant" translatable="false">@string/nonexistent</string>
-    <string name="option_sex_male" translatable="false">@string/nonexistent</string>
-    <string name="option_sex_female" translatable="false">@string/nonexistent</string>
-    <string name="option_severe" translatable="false">@string/nonexistent</string>
-    <string name="option_severe_no" translatable="false">@string/nonexistent</string>
-    <string name="option_rdt_mixed" translatable="false">@string/nonexistent</string>
-    <string name="option_rdt_pf" translatable="false">@string/nonexistent</string>
-    <string name="option_rdt_pv" translatable="false">@string/nonexistent</string>
-    <string name="treatment_diagnosis" translatable="false">@string/nonexistent</string>
-    <string name="myanmar_locale" translatable="false">@string/nonexistent</string>
-    <string name="chinese_locale" translatable="false">@string/nonexistent</string>
-    <string name="treatment_message" translatable="false">@string/nonexistent</string>
-    <string name="alternativePqQuestionUID" translatable="false">@string/nonexistent</string>
-    <string name="dynamic_treatment_yes_code" translatable="false">@string/nonexistent</string>
-
-    <string name="category_cc" translatable="false">@string/nonexistent</string>
-    <string name="category_combination" translatable="false">@string/nonexistent</string>
+    <string name="category_cc" translatable="false">nonexistent</string>
+    <string name="category_combination" translatable="false">nonexistent</string>
 
 </resources>

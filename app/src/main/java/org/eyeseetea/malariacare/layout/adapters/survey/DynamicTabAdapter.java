@@ -58,7 +58,7 @@ import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.model.QuestionStrategy;
+import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
@@ -532,7 +532,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         // Se get the value from Session
         int visibility = View.GONE;
 
-        Survey survey = SurveyFragmentStrategy.getRenderSurvey(screenQuestion);
+        Survey survey = new SurveyFragmentStrategy().getRenderSurvey(screenQuestion);
 
         if (!screenQuestion.isHiddenBySurveyAndHeader(survey)
                 || !Tab.isMultiQuestionTab(tabType)) {
@@ -566,7 +566,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 ((IImageQuestionView) questionView).setImage(
                         screenQuestion.getInternationalizedPath());
             }
-            if (SurveyFragmentStrategy.isDynamicStockQuestion(screenQuestion)) {
+            if (new SurveyFragmentStrategy().isDynamicStockQuestion(screenQuestion)) {
                 Treatment treatment = new Treatment(getMalariaSurvey(),
                         Session.getStockSurvey());
                 if (treatment.hasTreatment()) {
@@ -804,7 +804,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private boolean isCounterValueEqualToMax(Question question, Option selectedOption) {
 
-        Survey survey = (QuestionStrategy.isStockQuestion(question)) ? Session.getStockSurvey()
+        Survey survey = (new QuestionStrategy().isStockQuestion(question)) ? Session.getStockSurvey()
                 : getMalariaSurvey();
 
         Float counterValue = survey.getCounterValue(question, selectedOption);
@@ -890,7 +890,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean toggleChild(TableRow row, Question rowQuestion, Question childQuestion) {
         if (childQuestion.getId_question().equals(rowQuestion.getId_question())) {
-            Survey survey = (QuestionStrategy.isStockQuestion(rowQuestion)) ? Session.getStockSurvey()
+            Survey survey = (new QuestionStrategy().isStockQuestion(rowQuestion)) ? Session.getStockSurvey()
                     : getMalariaSurvey();
 
             if (rowQuestion.isHiddenBySurveyAndHeader(survey)) {

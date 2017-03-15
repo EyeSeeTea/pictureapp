@@ -254,7 +254,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
                 + newListSurveys.size());
         this.surveys.clear();
         for (Survey survey : newListSurveys) {
-            if (!SurveyFragmentStrategy.isStockSurvey(survey)) {
+            if (!new SurveyFragmentStrategy().isStockSurvey(survey)) {
                 this.surveys.add(survey);
             }
         }

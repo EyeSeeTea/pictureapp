@@ -8,10 +8,9 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.model.QuestionStrategy;
+import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
 
 import java.util.List;
 
@@ -74,27 +73,27 @@ public class Drug extends BaseModel {
     }
 
     public boolean isACT24() {
-        return QuestionStrategy.isACT24(question_code);
+        return new QuestionStrategy().isACT24(question_code);
     }
 
     public boolean isACT18() {
-        return QuestionStrategy.isACT18(question_code);
+        return new QuestionStrategy().isACT18(question_code);
     }
 
     public boolean isACT12() {
-        return QuestionStrategy.isACT12(question_code);
+        return new QuestionStrategy().isACT12(question_code);
     }
 
     public boolean isACT6() {
-        return QuestionStrategy.isACT6(question_code);
+        return new QuestionStrategy().isACT6(question_code);
     }
 
     public boolean isPq() {
-        return QuestionStrategy.isPq(question_code);
+        return new QuestionStrategy().isPq(question_code);
     }
 
     public boolean isCq() {
-        return QuestionStrategy.isCq(question_code);
+        return new QuestionStrategy().isCq(question_code);
     }
 
 

@@ -27,7 +27,7 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
         if (readOnly) {
             Survey malariaSurvey = Session.getMalariaSurvey();
             Session.setStockSurvey(
-                    SurveyFragmentStrategy.getStockSurveyWithEventDate(malariaSurvey.getEventDate()));
+                    new SurveyFragmentStrategy().getStockSurveyWithEventDate(malariaSurvey.getEventDate()));
         }
     }
 }

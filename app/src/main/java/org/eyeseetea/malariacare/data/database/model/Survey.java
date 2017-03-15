@@ -59,7 +59,7 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
-import org.eyeseetea.malariacare.data.model.QuestionStrategy;
+import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
@@ -938,12 +938,12 @@ public class Survey extends BaseModel implements VisitableToSDK {
         Question rootQuestion = Question.findRootQuestion(tab);
         Question localQuestion = rootQuestion;
         while (localQuestion.getSibling() != null) {
-            if (localQuestion.isCompulsory() && !QuestionStrategy.isStockQuestion(localQuestion)) {
+            if (localQuestion.isCompulsory() && !new QuestionStrategy().isStockQuestion(localQuestion)) {
                 numRequired++;
             }
             localQuestion = localQuestion.getSibling();
         }
-        if (QuestionStrategy.isStockQuestion(localQuestion) || !localQuestion.isCompulsory()) {
+        if (new QuestionStrategy().isStockQuestion(localQuestion) || !localQuestion.isCompulsory()) {
             numRequired--;
         }
 
@@ -1038,8 +1038,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
             if(value.getQuestion() == null){
                 continue;
             }
-            if ((QuestionStrategy.isACT(value.getQuestion().getUid()) && !value.getValue().equals("0"))
-                    || QuestionStrategy.isOutStockQuestion(value.getQuestion().getUid())) {
+            if ((new QuestionStrategy().isACT(value.getQuestion().getUid()) && !value.getValue().equals("0"))
+                    || new QuestionStrategy().isOutStockQuestion(value.getQuestion().getUid())) {
                 for(Question questionPropagated:value.getQuestion().getPropagationQuestions()){
                     removeValue(questionPropagated.getValueBySurvey(Session.getMalariaSurvey()));
                 }

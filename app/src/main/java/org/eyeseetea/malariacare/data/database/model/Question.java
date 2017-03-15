@@ -54,11 +54,10 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.model.QuestionStrategy;
+import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -799,7 +798,7 @@ public class Question extends BaseModel {
      */
     public Value getValueBySession() {
         Survey survey =
-                (!QuestionStrategy.isStockQuestion(this)) ? Session.getMalariaSurvey() : Session.getStockSurvey();
+                (!new QuestionStrategy().isStockQuestion(this)) ? Session.getMalariaSurvey() : Session.getStockSurvey();
         return this.getValueBySurvey(survey);
     }
 
@@ -827,7 +826,7 @@ public class Question extends BaseModel {
      * Gets the option of this question in the current survey in session
      */
     public Option getOptionBySession() {
-        if (!QuestionStrategy.isStockQuestion(this)) {
+        if (!new QuestionStrategy().isStockQuestion(this)) {
             return this.getOptionBySurvey(Session.getMalariaSurvey());
         } else {
             return this.getOptionBySurvey(Session.getStockSurvey());
@@ -976,7 +975,7 @@ public class Question extends BaseModel {
     }
 
     public Option getAnsweredOption() {
-        Survey survey = (QuestionStrategy.isStockQuestion(this) ? Session.getStockSurvey()
+        Survey survey = (new QuestionStrategy().isStockQuestion(this) ? Session.getStockSurvey()
                 : Session.getMalariaSurvey());
 
         Value value = Value.findValue(getId_question(), survey);
@@ -1033,7 +1032,7 @@ public class Question extends BaseModel {
         if (option == null) {
             return;
         }
-        if (value != null && QuestionStrategy.isTreatmentQuestion(getUid()) && QuestionStrategy.isACT(getUid())
+        if (value != null && new QuestionStrategy().isTreatmentQuestion(getUid()) && new QuestionStrategy().isACT(getUid())
                 && !option.getId_option().equals(value.getId_option())) {
             List<Survey> surveys = new ArrayList<>();
             surveys.add(Session.getStockSurvey());
@@ -1045,7 +1044,7 @@ public class Question extends BaseModel {
 
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
             Survey survey =
-                    ((QuestionStrategy.isStockQuestion(this) || QuestionStrategy.isPq(getUid()) || QuestionStrategy.isACT(getUid()))
+                    ((new QuestionStrategy().isStockQuestion(this) || new QuestionStrategy().isPq(getUid()) || new QuestionStrategy().isACT(getUid()))
                             ? Session.getStockSurvey()
                             : Session.getMalariaSurvey());
 
@@ -1062,9 +1061,9 @@ public class Question extends BaseModel {
 
     public void saveValuesText(String answer) {
         Value value = getValueBySession();
-        Survey survey = (QuestionStrategy.isStockQuestion(this) ? Session.getStockSurvey()
+        Survey survey = (new QuestionStrategy().isStockQuestion(this) ? Session.getStockSurvey()
                 : Session.getMalariaSurvey());
-        if ((QuestionStrategy.isTreatmentQuestion(getUid()) || QuestionStrategy.isPq(getUid()) || QuestionStrategy.isACT(getUid())) && value != null
+        if ((new QuestionStrategy().isTreatmentQuestion(getUid()) || new QuestionStrategy().isPq(getUid()) || new QuestionStrategy().isACT(getUid())) && value != null
                 && !value.getValue().equals(answer)) {
             List<Survey> surveys = new ArrayList<>();
             surveys.add(Session.getStockSurvey());
@@ -1073,7 +1072,7 @@ public class Question extends BaseModel {
                 surveyToClean.deleteStockValues();
             }
         }
-        if (QuestionStrategy.isStockQuestion(this) && value != null && answer.equals("-1")) {
+        if (new QuestionStrategy().isStockQuestion(this) && value != null && answer.equals("-1")) {
             deleteValues(value);
         } else {
             createOrSaveValue(answer, value, survey);
@@ -1104,7 +1103,7 @@ public class Question extends BaseModel {
             value = new Value(option, this, survey);
         } else {
             if (!value.getOption().equals(option) && this.hasChildren()
-                    && !QuestionStrategy.isDynamicTreatmentQuestion(getUid())) {
+                    && !new QuestionStrategy().isDynamicTreatmentQuestion(getUid())) {
                 survey.removeChildrenValuesFromQuestionRecursively(this, false);
             }
             value.setOption(option);
@@ -1543,7 +1542,7 @@ public class Question extends BaseModel {
         //get all the questions in the same screen page
         if (getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
             questions = getQuestionsByTab(getHeader().getTab());
-        } else if (SurveyFragmentStrategy.isDynamicStockQuestion(this)) {
+        } else if (new SurveyFragmentStrategy().isDynamicStockQuestion(this)) {
             List<Option> options = getAnswer().getOptions();
             for (Option option : options) {
                 Question question = findByID(option.getId_option());
@@ -1559,7 +1558,7 @@ public class Question extends BaseModel {
         }
         for (Question question : questions) {
             Survey survey =
-                    (QuestionStrategy.isStockQuestion(this)) ? Session.getStockSurvey() : Session.getMalariaSurvey();
+                    (new QuestionStrategy().isStockQuestion(this)) ? Session.getStockSurvey() : Session.getMalariaSurvey();
             if (question.isCompulsory() && !question.isHiddenBySurveyAndHeader(
                     survey) && isNotAnswered(question)) {
                 return true;

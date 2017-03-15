@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.domain.entity;
 
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.data.model.QuestionStrategy;
+import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
 public class SurveyQuestionValue {
@@ -62,42 +62,42 @@ public class SurveyQuestionValue {
             }
             switch (question) {
                 case RDT:
-                    if (SurveyFragmentStrategy.isStockSurvey(mSurvey) && QuestionStrategy.isStockRDT(value.getQuestion().getUid())) {
+                    if (new SurveyFragmentStrategy().isStockSurvey(mSurvey) && new QuestionStrategy().isStockRDT(value.getQuestion().getUid())) {
                         return value.getValue();
                     }
                     break;
                 case ACT6:
-                    if (SurveyFragmentStrategy.isStockSurvey(mSurvey) && QuestionStrategy.isACT6(value.getQuestion().getUid())) {
+                    if (new SurveyFragmentStrategy().isStockSurvey(mSurvey) && new QuestionStrategy().isACT6(value.getQuestion().getUid())) {
                         return value.getValue();
                     }
                     break;
                 case ACT12:
-                    if (SurveyFragmentStrategy.isStockSurvey(mSurvey) && QuestionStrategy.isACT12(value.getQuestion().getUid())) {
+                    if (new SurveyFragmentStrategy().isStockSurvey(mSurvey) && new QuestionStrategy().isACT12(value.getQuestion().getUid())) {
                         return value.getValue();
                     }
                     break;
                 case ACT18:
-                    if (SurveyFragmentStrategy.isStockSurvey(mSurvey) && QuestionStrategy.isACT18(value.getQuestion().getUid())) {
+                    if (new SurveyFragmentStrategy().isStockSurvey(mSurvey) && new QuestionStrategy().isACT18(value.getQuestion().getUid())) {
                         return value.getValue();
                     }
                     break;
                 case ACT24:
-                    if (SurveyFragmentStrategy.isStockSurvey(mSurvey) && QuestionStrategy.isACT24(value.getQuestion().getUid())) {
+                    if (new SurveyFragmentStrategy().isStockSurvey(mSurvey) && new QuestionStrategy().isACT24(value.getQuestion().getUid())) {
                         return value.getValue();
                     }
                     break;
                 case PQ:
-                    if (SurveyFragmentStrategy.isStockSurvey(mSurvey) && QuestionStrategy.isPq(value.getQuestion().getUid())) {
+                    if (new SurveyFragmentStrategy().isStockSurvey(mSurvey) && new QuestionStrategy().isPq(value.getQuestion().getUid())) {
                         return value.getValue();
                     }
                     break;
                 case CQ:
-                    if (SurveyFragmentStrategy.isStockSurvey(mSurvey) && QuestionStrategy.isCq(value.getQuestion().getUid())) {
+                    if (new SurveyFragmentStrategy().isStockSurvey(mSurvey) && new QuestionStrategy().isCq(value.getQuestion().getUid())) {
                         return value.getValue();
                     }
                     break;
                 case OUT_STOCK:
-                    if (QuestionStrategy.isOutStockQuestion(value.getQuestion().getUid())) {
+                    if (new QuestionStrategy().isOutStockQuestion(value.getQuestion().getUid())) {
                         return value.getValue();
                     }
                     break;

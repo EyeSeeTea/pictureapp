@@ -227,7 +227,7 @@ public class PopulateRow {
         return drug;
     }
 
-    static Option populateOption(String[] line, HashMap<Long, Answer> answerFK,
+    public static Option populateOption(String[] line, HashMap<Long, Answer> answerFK,
             HashMap<Long, OptionAttribute> optionAttributeFK, @Nullable Option option) {
         if (option == null) {
             option = new Option();

@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.presentation.factory.stock.utils;
 
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.data.model.QuestionStrategy;
+import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
 
 import java.util.List;
 
@@ -43,19 +43,19 @@ public class SurveyStock {
             if(value.getQuestion()==null) {
                 continue;//ignore values without question for example control dataelements
             }
-            if (QuestionStrategy.isStockRDT(value.getQuestion().getUid())) {
+            if (new QuestionStrategy().isStockRDT(value.getQuestion().getUid())) {
                 surveyValues[RDT_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (QuestionStrategy.isACT6(value.getQuestion().getUid())) {
+            } else if (new QuestionStrategy().isACT6(value.getQuestion().getUid())) {
                 surveyValues[ACT6_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (QuestionStrategy.isACT12(value.getQuestion().getUid())) {
+            } else if (new QuestionStrategy().isACT12(value.getQuestion().getUid())) {
                 surveyValues[ACT12_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (QuestionStrategy.isACT18(value.getQuestion().getUid())) {
+            } else if (new QuestionStrategy().isACT18(value.getQuestion().getUid())) {
                 surveyValues[ACT18_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (QuestionStrategy.isACT24(value.getQuestion().getUid())) {
+            } else if (new QuestionStrategy().isACT24(value.getQuestion().getUid())) {
                 surveyValues[ACT24_VALUE] =(int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (QuestionStrategy.isPq(value.getQuestion().getUid())) {
+            } else if (new QuestionStrategy().isPq(value.getQuestion().getUid())) {
                 surveyValues[PQ_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
-            } else if (QuestionStrategy.isCq(value.getQuestion().getUid())) {
+            } else if (new QuestionStrategy().isCq(value.getQuestion().getUid())) {
                 surveyValues[CQ_VALUE] = (int) Math.ceil(Double.parseDouble(value.getValue()));
             }
         }

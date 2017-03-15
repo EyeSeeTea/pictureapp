@@ -7,7 +7,6 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.surveyName;
 import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurvey;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -20,19 +19,23 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Survey_Table;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.model.QuestionStrategy;
+import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
 
 import java.util.Date;
 
-public class SurveyFragmentStrategy extends ASurveyFragmentStrategy {
-    public static Survey getRenderSurvey(Question screenQuestion) {
-        return (QuestionStrategy.isStockQuestion(screenQuestion) || isDynamicStockQuestion(
+public class SurveyFragmentStrategy  implements ISurveyFragmentStrategy {
+
+    public SurveyFragmentStrategy(){};
+    @Override
+    public Survey getRenderSurvey(Question screenQuestion) {
+        return (new QuestionStrategy().isStockQuestion(screenQuestion) || isDynamicStockQuestion(
                 screenQuestion))
                 ? Session.getStockSurvey()
                 : getMalariaSurvey();
     }
 
-    public static boolean isDynamicStockQuestion(Question screenQuestion) {
+    @Override
+    public boolean isDynamicStockQuestion(Question screenQuestion) {
         if (screenQuestion.getUid() != null) {
             return screenQuestion.getUid().equals(
                     PreferencesState.getInstance().getContext().getString(
@@ -42,19 +45,21 @@ public class SurveyFragmentStrategy extends ASurveyFragmentStrategy {
     }
 
 
-    public static boolean isStockSurvey(Survey survey) {
+    @Override
+    public boolean isStockSurvey(Survey survey) {
         return survey.getProgram().getUid().equals(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.stockProgramUID));
     }
 
-    public static String getMalariaProgram() {
+    public String getMalariaProgram() {
         return Program.findByUID(PreferencesState.getInstance().getContext().getString(
                 R.string.malariaProgramUID)).getUid();
     }
 
 
-    public static Survey getStockSurveyWithEventDate(Date event_date) {
+    @Override
+    public Survey getStockSurveyWithEventDate(Date event_date) {
         Context context = PreferencesState.getInstance().getContext();
 
         return new Select().from(Survey.class).as(surveyName)
@@ -68,23 +73,26 @@ public class SurveyFragmentStrategy extends ASurveyFragmentStrategy {
 
     }
 
-    private String getTitleDose(float dose, String drug) {
+    @Override
+    public String getTitleDose(float dose, String drug) {
         return String.format(
-                PreferenceState.getInstance().getContext().getResources().getString(R.string.drugs_dose_of_drug_review_title),
+                PreferencesState.getInstance().getContext().getResources().getString(R.string.drugs_dose_of_drug_review_title),
                 dose, drug);
     }
-    public static String getTreatmentError() {
-        return PreferenceState.getInstance().getContext().getResources().getResourceName(R.string.error_no_treatment)
+    @Override
+    public String getTreatmentError() {
+        return PreferencesState.getInstance().getContext().getResources().getResourceName(R.string.error_no_treatment);
     }
 
-
-    private String getPqTitleDose(float dose) {
+    @Override
+    public String getPqTitleDose(float dose) {
         return getTitleDose(dose,
-                getContext().getResources().getString(R.string.drugs_referral_Pq_review_title));
+                PreferencesState.getInstance().getContext().getResources().getString(R.string.drugs_referral_Pq_review_title));
     }
 
-    private String getCqTitleDose(float dose) {
+    @Override
+    public String getCqTitleDose(float dose) {
         return  getTitleDose(dose,
-                getContext().getResources().getString(R.string.drugs_referral_Cq_review_title));
+                PreferencesState.getInstance().getContext().getResources().getString(R.string.drugs_referral_Cq_review_title));
     }
 }

@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
@@ -20,7 +19,7 @@ import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.model.QuestionStrategy;
+import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -44,26 +43,6 @@ public class Treatment {
         doseByQuestion = new HashMap<>();
     }
 
-    public static Question getTreatmentQuestion() {
-        Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.dynamicTreatmentHideQuestionUID));
-    }
-
-    public static Question getDynamicStockQuestion() {
-        Context context = PreferencesState.getInstance().getContext();
-        return Question.findByUID(context.getString(R.string.dynamicStockQuestionUID));
-    }
-
-    public static Question getTreatmentQuestionForTag(Object tag) {
-        Resources resources = PreferencesState.getInstance().getContext().getResources();
-        if (QuestionStrategy.isPq(((Question) tag).getUid())) {
-            return Question.findByUID(resources.getString(R.string.stockPqQuestionUID));
-        } else {
-            return Question.findByUID(
-                    resources.getString(R.string.dynamicTreatmentHideQuestionUID));
-        }
-    }
-
 
     public List<Question> getQuestions() {
         return mQuestions;
@@ -81,8 +60,8 @@ public class Treatment {
         List<Question> questions = mStockSurvey.getQuestionsFromValues();
         Question actQuestion = null;
         for (Question question : questions) {
-            if (isACT24Question(question) || isACT18Question(question) || isACT12Question(question)
-                    || isACT6Question(question)) {
+            if (new QuestionStrategy().isACT24Question(question) || new QuestionStrategy().isACT18Question(question) || new QuestionStrategy().isACT12Question(question)
+                    || new QuestionStrategy().isACT6Question(question)) {
                 actQuestion = question;
                 List<Value> values = mStockSurvey.getValuesFromDB();
                 for (Value value : values) {
@@ -115,24 +94,22 @@ public class Treatment {
             if (question == null) {
                 continue;
             }
-            if (Qquestion.getUid().equals(getContext().getString(R.string.ageQuestionUID))) {
+            if (new QuestionStrategy().isAgeQuestion(question)) {
                 ageMatches =
                         QuestionThreshold.getMatchesWithQuestionValue(
                                 question.getId_question(), Integer.parseInt(value.getValue()));
                 Log.d(TAG, "age size: " + ageMatches.size());
-            } else if (question.getUid().equals(
-                    getContext().getString(R.string.sexPregnantQuestionUID))) {
+            } else if (new QuestionStrategy().isSexPregnantQuestion(question.getUid())) {
                 pregnantMatches = QuestionOption.getMatchesWithQuestionOption(
                         question.getId_question(),
                         value.getId_option());
                 Log.d(TAG, "pregnant size: " + pregnantMatches.size());
-            } else if (question.getUid().equals(
-                    getContext().getString(R.string.severeSymtomsQuestionUID))) {
+            } else if (new QuestionStrategy().isSevereSymtomsQuestion(question.getUid())) {
                 severeMatches = QuestionOption.getMatchesWithQuestionOption(
                         question.getId_question(),
                         value.getId_option());
                 Log.d(TAG, "severe size: " + severeMatches.size());
-            } else if (question.getUid().equals(getContext().getString(R.string.rdtQuestionUID))) {
+            } else if (new QuestionStrategy().isRdtQuestion(question.getUid())) {
                 rdtMatches = QuestionOption.getMatchesWithQuestionOption(question.getId_question(),
                         value.getId_option());
                 Log.d(TAG, "rdt size: " + rdtMatches.size());
@@ -174,8 +151,7 @@ public class Treatment {
     }
 
     private void putACTDefaultYes() {
-        Question actHiddenQuestion = Question.findByUID(
-                getContext().getString(R.string.dynamicTreatmentHideQuestionUID));
+        Question actHiddenQuestion = new QuestionStrategy().getDynamicTreatmentHideQuestion();
         List<Value> values = Session.getMalariaSurvey().getValuesFromDB();
         Value actValue = null;
         for (Value value : values) {
@@ -184,12 +160,10 @@ public class Treatment {
             }
         }
         if (actValue == null) {
-            actValue = new Value(
-                    Option.findByCode(getContext().getString(R.string.dynamic_treatment_yes_code)),
+            actValue = new Value(new QuestionStrategy().getOptionTreatmentYesCode(),
                     actHiddenQuestion, Session.getMalariaSurvey());
         } else {
-            actValue.setOption(
-                    Option.findByCode(getContext().getString(R.string.dynamic_treatment_yes_code)));
+            actValue.setOption(new QuestionStrategy().getOptionTreatmentYesCode() );
         }
         actValue.save();
     }
@@ -210,10 +184,10 @@ public class Treatment {
         for (Drug drug : drugs) {
             Question question = Question.findByUID(drug.getQuestion_code());
             if (question != null) {
-                if (isPq(question)) {
-                    question.setForm_name(getPqTitleDose(DrugCombination.getDose(treatment, drug)));
-                } else if (isCq(question)) {
-                    question.setForm_name(getCqTitleDose(DrugCombination.getDose(treatment, drug)));
+                if (new QuestionStrategy().isPq(question.getUid())) {
+                    question.setForm_name(new SurveyFragmentStrategy().getPqTitleDose(DrugCombination.getDose(treatment, drug)));
+                } else if (new QuestionStrategy().isCq(question.getUid())) {
+                    question.setForm_name(new SurveyFragmentStrategy().getCqTitleDose(DrugCombination.getDose(treatment, drug)));
                 }
                 doseByQuestion.put(question.getId_question(),
                         DrugCombination.getDose(treatment, drug));
@@ -227,66 +201,6 @@ public class Treatment {
         return questions;
     }
 
-    public boolean isACT6Question(Question question) {
-        if (question != null && question.getUid().equals(
-                getContext().getString(R.string.act6QuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isACT12Question(Question question) {
-        if (question != null && question.getUid().equals(
-                getContext().getString(R.string.act12QuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isACT18Question(Question question) {
-        if (question != null && question.getUid().equals(
-                getContext().getString(R.string.act18QuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isACT24Question(Question question) {
-        if (question != null && question.getUid().equals(
-                getContext().getString(R.string.act24QuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isACTQuestion(Question question) {
-        Context context = PreferencesState.getInstance().getContext();
-        if (question.getUid().equals(context.getString(R.string.act6QuestionUID))
-                || question != null && question.getUid().equals(
-                context.getString(R.string.act12QuestionUID))
-                || question != null && question.getUid().equals(
-                context.getString(R.string.act18QuestionUID))
-                || question != null && question.getUid().equals(
-                context.getString(R.string.act24QuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isPq(Question question) {
-        if (question.getUid().equals(getContext().getString(R.string.pqQuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isCq(Question question) {
-        if (question.getUid().equals(getContext().getString(R.string.cqQuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
     public HashMap<Long, Float> getOptionDose(
             org.eyeseetea.malariacare.data.database.model.Treatment mainTreatment) {
         List<org.eyeseetea.malariacare.data.database.model.Treatment> treatments =
@@ -296,16 +210,16 @@ public class Treatment {
             List<Drug> drugs = treatment.getDrugsForTreatment();
             for (Drug drug : drugs) {
                 if (drug.isACT24()) {
-                    optionDose.put(QuestionStrategy.getACT24Question().getId_question(),
+                    optionDose.put(new QuestionStrategy().getACT24Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
                 } else if (drug.isACT18()) {
-                    optionDose.put(QuestionStrategy.getACT18Question().getId_question(),
+                    optionDose.put(new QuestionStrategy().getACT18Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
                 } else if (drug.isACT12()) {
-                    optionDose.put(QuestionStrategy.getACT12Question().getId_question(),
+                    optionDose.put(new QuestionStrategy().getACT12Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
                 } else if (drug.isACT6()) {
-                    optionDose.put(QuestionStrategy.getACT6Question().getId_question(),
+                    optionDose.put(new QuestionStrategy().getACT6Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
                 }
             }
@@ -320,22 +234,22 @@ public class Treatment {
         answer.setId_answer(Answer.DYNAMIC_STOCK_ANSWER_ID);
         //this options are never saved
         Option optionACT24 = new Option("ACT_x_24", "ACT_x_24", 0f, answer);
-        optionACT24.setId_option(QuestionStrategy.getACT24Question().getId_question());
+        optionACT24.setId_option(new QuestionStrategy().getACT24Question().getId_question());
         optionACT24.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx24.png"));
         Option optionACT12 = new Option("ACT_x_12", "ACT_x_12", 0f, answer);
-        optionACT12.setId_option(QuestionStrategy.getACT12Question().getId_question());
+        optionACT12.setId_option(new QuestionStrategy().getACT12Question().getId_question());
         optionACT12.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx12.png"));
         Option optionACT6 = new Option("ACT_x_6", "ACT_x_6", 0f, answer);
-        optionACT6.setId_option(QuestionStrategy.getACT6Question().getId_question());
+        optionACT6.setId_option(new QuestionStrategy().getACT6Question().getId_question());
         optionACT6.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx6.png"));
         Option optionACT18 = new Option("ACT_x_18", "ACT_x_18", 0f, answer);
-        optionACT18.setId_option(QuestionStrategy.getACT18Question().getId_question());
+        optionACT18.setId_option(new QuestionStrategy().getACT18Question().getId_question());
         optionACT18.setOptionAttribute(
                 new OptionAttribute("c8b8c7", "question_images/p5_actx18.png"));
-        Question outStockQuestion = QuestionStrategy.getOutOfStockQuestion();
+        Question outStockQuestion = new QuestionStrategy().getOutOfStockQuestion();
         Option optionOutStock = new Option("out_stock_option", "out_stock_option", 0f,
                 outStockQuestion.getAnswer());
         optionOutStock.setOptionAttribute(
@@ -388,8 +302,8 @@ public class Treatment {
 
     private void saveTreatmentInTreatmentQuestion(
             org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
-        Question treatmentQuestionSend = QuestionStrategy.getDynamicTreatmentQuestion();
-        Question treatmentQuestionShow = QuestionStrategy.getTreatmentDiagnosisVisibleQuestion();
+        Question treatmentQuestionSend = new QuestionStrategy().getDynamicTreatmentQuestion();
+        Question treatmentQuestionShow = new QuestionStrategy().getTreatmentDiagnosisVisibleQuestion();
         Survey malariaSurvey = Session.getMalariaSurvey();
         List<Value> values =
                 malariaSurvey.getValues();//this values should be get from memory because the
@@ -433,7 +347,7 @@ public class Treatment {
         Question treatmentQuestion = new Question();
         treatmentQuestion.setOutput(Constants.QUESTION_LABEL);
         treatmentQuestion.setForm_name("");
-        treatmentQuestion.setHelp_text(SurveyFragmentStrategy.getTreatmentError());
+        treatmentQuestion.setHelp_text(new SurveyFragmentStrategy().getTreatmentError());
         treatmentQuestion.setCompulsory(Question.QUESTION_NOT_COMPULSORY);
         treatmentQuestion.setHeader(Header.DYNAMIC_TREATMENT_HEADER_ID);
         questions.add(treatmentQuestion);

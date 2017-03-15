@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.strategies;
 
+
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -7,7 +8,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 
 import java.util.Date;
 
-public class SurveyFragmentStrategy implements ISurveyFragmentStrategy {
+public class SurveyFragmentStrategy  implements ISurveyFragmentStrategy {
 
     @Override
     public Survey getRenderSurvey(Question screenQuestion) {

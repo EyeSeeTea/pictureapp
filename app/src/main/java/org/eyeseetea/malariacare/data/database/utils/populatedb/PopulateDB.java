@@ -981,4 +981,8 @@ public class PopulateDB {
                 = new QuestionOption(Option.findById(optionId), Question.findByID(parentId), match);
         questionOption.save();
     }
+
+    public static void initDBQuery() {
+        Tab.getAllTabs();
+    }
 }

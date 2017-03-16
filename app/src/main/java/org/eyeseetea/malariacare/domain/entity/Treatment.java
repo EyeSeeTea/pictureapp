@@ -395,8 +395,7 @@ public class Treatment {
     }
 
     private void saveTreatmentInTreatmentQuestion(
-
-
+            
             //TODO: set value to hide question is realized without match relation
             // because is a question of type label. This is unique and isolated case
             // when exists one more case we should refactor this to more generic code

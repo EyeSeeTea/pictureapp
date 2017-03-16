@@ -237,7 +237,7 @@ public class RelationsIdCsvDB {
         List<Partner> partners = Partner.getAllOrganisations();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(context.openFileInput(PopulateDB.ORGANISATIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.PARTNER_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {

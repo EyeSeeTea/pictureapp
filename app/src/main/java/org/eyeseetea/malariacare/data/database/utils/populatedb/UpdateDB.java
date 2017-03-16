@@ -317,11 +317,11 @@ public class UpdateDB {
     public static void updateOrganisations(Context context, boolean updateCSV) throws IOException {
         if (updateCSV) {
             FileCsvs fileCsvs = new FileCsvs();
-            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.ORGANISATIONS_CSV);
+            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.PARTNER_CSV);
         }
         List<Partner> partners = Partner.getAllOrganisations();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(context.openFileInput(PopulateDB.ORGANISATIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.PARTNER_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;

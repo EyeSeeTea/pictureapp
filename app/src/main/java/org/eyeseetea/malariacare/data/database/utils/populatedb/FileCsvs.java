@@ -34,7 +34,7 @@ public class FileCsvs {
             PopulateDB.QUESTION_OPTIONS_CSV,
             PopulateDB.QUESTION_THRESHOLDS_CSV,
             PopulateDB.DRUGS_CSV,
-            PopulateDB.ORGANISATIONS_CSV,
+            PopulateDB.PARTNER_CSV,
             PopulateDB.TREATMENT_CSV,
             PopulateDB.DRUG_COMBINATIONS_CSV,
             PopulateDB.TREATMENT_MATCHES_CSV,

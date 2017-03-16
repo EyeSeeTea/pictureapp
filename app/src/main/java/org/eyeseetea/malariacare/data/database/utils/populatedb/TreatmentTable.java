@@ -138,7 +138,7 @@ public class TreatmentTable {
 
         initCSVQuestionOptionsIds();
 
-        List<String[]> organisationLines = getNotTreatmentLines(PopulateDB.ORGANISATIONS_CSV);
+        List<String[]> organisationLines = getNotTreatmentLines(PopulateDB.PARTNER_CSV);
         List<String[]> treatmentLines = new ArrayList<>();
         List<String[]> treatmentMatchLines = new ArrayList<>();
         List<String[]> drugsCombinationLines = new ArrayList<>();
@@ -274,7 +274,7 @@ public class TreatmentTable {
             }
         }
         String[] organisationLine = {getNextIdToInsert(organisationLines), "", line[0]};
-        mFileCsvs.insertCsvLine(PopulateDB.ORGANISATIONS_CSV, organisationLine);
+        mFileCsvs.insertCsvLine(PopulateDB.PARTNER_CSV, organisationLine);
         organisationLines.add(organisationLine);
         return organisationLine;
     }

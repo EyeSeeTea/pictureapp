@@ -86,7 +86,7 @@ public class PopulateDB {
     public static final String QUESTION_THRESHOLDS_CSV = "QuestionThresholds.csv";
     public static final String DRUG_COMBINATIONS_CSV = "DrugCombinations.csv";
     public static final String DRUGS_CSV = "Drugs.csv";
-    public static final String ORGANISATIONS_CSV = "Organisations.csv";
+    public static final String PARTNER_CSV = "Partner.csv";
     public static final String TREATMENT_MATCHES_CSV = "TreatmentMatches.csv";
     public static final String TREATMENT_CSV = "Treatments.csv";
     public static final String TREATMENT_TABLE_CSV = "TreatmentTable.csv";
@@ -167,7 +167,7 @@ public class PopulateDB {
             QUESTION_OPTIONS_CSV,
             QUESTION_THRESHOLDS_CSV,
             DRUGS_CSV,
-            ORGANISATIONS_CSV,
+            PARTNER_CSV,
             TREATMENT_CSV,
             DRUG_COMBINATIONS_CSV,
             TREATMENT_MATCHES_CSV);
@@ -389,7 +389,7 @@ public class PopulateDB {
                         drug.insert();
                         drugList.put(Long.parseLong(line[0]), drug);
                         break;
-                    case ORGANISATIONS_CSV:
+                    case PARTNER_CSV:
                         Partner partner = PopulateRow.populateOrganisations(line, null);
                         partner.insert();
                         organisationList.put(Long.parseLong(line[0]), partner);

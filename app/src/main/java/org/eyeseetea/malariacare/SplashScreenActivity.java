@@ -42,9 +42,9 @@ public class SplashScreenActivity extends Activity {
         SdkQueries.createDBIndexes();
         //Added to execute a query in DB, because DBFLow doesn't do any migration until a query
         // is executed
-        if (PopulateDB.hasMandatoryTables()) {
-            PostMigration.launchPostMigration();
-        }
+        PopulateDB.initDBQuery();
+        PostMigration.launchPostMigration();
+
 
         if (!BuildConfig.multiuser) {
             Log.i(TAG, "Pull on SplashScreen ...");

@@ -104,7 +104,7 @@ public class PullController implements IPullController {
 
         if (isDemo) {
             createDummyOrgUnitsDataInDB();
-            createDummyOriganisationInDB();
+            createDummyOrganisationInDB();
         }
     }
 
@@ -121,7 +121,7 @@ public class PullController implements IPullController {
         }
     }
 
-    private void createDummyOriganisationInDB() {
+    private void createDummyOrganisationInDB() {
         Organisation testOrganisation = new Organisation();
         testOrganisation.setName(mContext.getString(R.string.test_organisation_name));
         testOrganisation.setUid(mContext.getString(R.string.test_organisation_uid));

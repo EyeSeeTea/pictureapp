@@ -33,8 +33,4 @@
     <string name="control_data_element_phone_metadata" translatable="false">RuNZUhiAmlv</string>
     <string name="control_data_element_datetime_capture" translatable="false">qWMb2UM2ikL</string>
     <string name="control_data_element_datetime_sent" translatable="false">aBahytzj2u0</string>
-
-    <string name="category_cc" translatable="false">nonexistent</string>
-    <string name="category_combination" translatable="false">nonexistent</string>
-
 </resources>

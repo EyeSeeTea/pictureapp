@@ -72,30 +72,6 @@ public class Drug extends BaseModel {
         return PreferencesState.getInstance().getContext();
     }
 
-    public boolean isACT24() {
-        return new QuestionStrategy().isACT24(question_code);
-    }
-
-    public boolean isACT18() {
-        return new QuestionStrategy().isACT18(question_code);
-    }
-
-    public boolean isACT12() {
-        return new QuestionStrategy().isACT12(question_code);
-    }
-
-    public boolean isACT6() {
-        return new QuestionStrategy().isACT6(question_code);
-    }
-
-    public boolean isPq() {
-        return new QuestionStrategy().isPq(question_code);
-    }
-
-    public boolean isCq() {
-        return new QuestionStrategy().isCq(question_code);
-    }
-
 
     @Override
     public boolean equals(Object o) {

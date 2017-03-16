@@ -209,16 +209,16 @@ public class Treatment {
         for (org.eyeseetea.malariacare.data.database.model.Treatment treatment : treatments) {
             List<Drug> drugs = treatment.getDrugsForTreatment();
             for (Drug drug : drugs) {
-                if (drug.isACT24()) {
+                if (isACT24(drug.getQuestion_code())) {
                     optionDose.put(new QuestionStrategy().getACT24Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
-                } else if (drug.isACT18()) {
+                } else if (isACT18(drug.getQuestion_code())) {
                     optionDose.put(new QuestionStrategy().getACT18Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
-                } else if (drug.isACT12()) {
+                } else if (isACT12(drug.getQuestion_code())) {
                     optionDose.put(new QuestionStrategy().getACT12Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
-                } else if (drug.isACT6()) {
+                } else if (isACT6(drug.getQuestion_code())) {
                     optionDose.put(new QuestionStrategy().getACT6Question().getId_question(),
                             DrugCombination.getDose(treatment, drug));
                 }
@@ -261,16 +261,16 @@ public class Treatment {
         for (org.eyeseetea.malariacare.data.database.model.Treatment treatment : treatments) {
             List<Drug> alternativeDrugs = treatment.getDrugsForTreatment();
             for (Drug drug : alternativeDrugs) {
-                if (drug.isACT24()) {
+                if (isACT24(drug.getQuestion_code())) {
                     optionACT24.setCode(treatment.getMessage().toString());
                     options.add(optionACT24);
-                } else if (drug.isACT18()) {
+                } else if (isACT18(drug.getQuestion_code())) {
                     optionACT18.setCode(treatment.getMessage().toString());
                     options.add(optionACT18);
-                } else if (drug.isACT12()) {
+                } else if (isACT12(drug.getQuestion_code())) {
                     optionACT12.setCode(treatment.getMessage().toString());
                     options.add(optionACT12);
-                } else if (drug.isACT6()) {
+                } else if (isACT6(drug.getQuestion_code())) {
                     optionACT6.setCode(treatment.getMessage().toString());
                     options.add(optionACT6);
                 }
@@ -281,6 +281,23 @@ public class Treatment {
         answer.setOptions(options);
 
         return answer;
+    }
+
+    private static boolean isACT24(String uid_question) {
+        return uid_question.equals(PreferencesState.getInstance().getContext().getString(R.string.act24QuestionUID));
+    }
+    private static boolean isACT18(String uid_question) {
+        return uid_question.equals(PreferencesState.getInstance().getContext().getString(R.string.act18QuestionUID));
+    }
+    private static boolean isACT12(String uid_question) {
+        return uid_question.equals(PreferencesState.getInstance().getContext().getString(R.string.act12QuestionUID));
+    }
+    private static boolean isACT6(String uid_question) {
+        return uid_question.equals(PreferencesState.getInstance().getContext().getString(R.string.act6QuestionUID));
+    }
+
+    public static boolean isACT(String uid_question) {
+        return isACT6(uid_question) || isACT12(uid_question) || isACT18(uid_question) || isACT24(uid_question);
     }
 
     private List<Drug> getAlternativeDrugsForTreatment(

@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.Treatment;
 
 public class QuestionStrategy implements IQuestionStrategy {
     @Override
@@ -44,28 +45,8 @@ public class QuestionStrategy implements IQuestionStrategy {
     }
 
     @Override
-    public boolean isACT6(String uid_question) {
-        return uid_question.equals(PreferencesState.getInstance().getContext().getString(R.string.act6QuestionUID));
-    }
-
-    @Override
-    public boolean isACT12(String uid_question) {
-        return uid_question.equals(PreferencesState.getInstance().getContext().getString(R.string.act12QuestionUID));
-    }
-
-    @Override
-    public boolean isACT18(String uid_question) {
-        return uid_question.equals(PreferencesState.getInstance().getContext().getString(R.string.act18QuestionUID));
-    }
-
-    @Override
-    public boolean isACT24(String uid_question) {
-        return uid_question.equals(PreferencesState.getInstance().getContext().getString(R.string.act24QuestionUID));
-    }
-
-    @Override
     public boolean isACT(String uid_question) {
-        return isACT6(uid_question) || isACT12(uid_question) || isACT18(uid_question) || isACT24(uid_question);
+        return org.eyeseetea.malariacare.domain.entity.Treatment.isACT(uid_question);
     }
 
     @Override

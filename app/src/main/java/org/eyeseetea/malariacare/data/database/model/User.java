@@ -41,7 +41,7 @@ public class User extends BaseModel {
     String uid_user;
     @Column
     String name;
-    @Column(name = "organisation_fk")
+    @Column
     long partner_fk;
     @Column
     long supervisor_fk;

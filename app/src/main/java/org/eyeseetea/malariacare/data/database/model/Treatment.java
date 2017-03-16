@@ -6,7 +6,6 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.drugCombinatio
 import static org.eyeseetea.malariacare.data.database.AppDatabase.drugName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
-import static org.eyeseetea.malariacare.data.database.model.Partner_Table.id_partner;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -35,7 +34,7 @@ public class Treatment extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)
     long id_treatment;
-    @Column(name = "id_organisation_fk")
+    @Column
     Long id_partner_fk;
     @Column
     Long diagnosis;
@@ -118,7 +117,7 @@ public class Treatment extends BaseModel {
             }
             mPartner = new Select()
                     .from(Partner.class)
-                    .where(id_partner
+                    .where(Partner_Table.id_partner
                             .is(id_partner_fk)).querySingle();
         }
         return mPartner;
@@ -167,7 +166,7 @@ public class Treatment extends BaseModel {
 
         if (id_treatment != treatment.id_treatment) return false;
         if (type != treatment.type) return false;
-        if (id_partner != null ? !id_partner.equals(treatment.id_partner_fk)
+        if (id_partner_fk != null ? !id_partner_fk.equals(treatment.id_partner_fk)
                 : treatment.id_partner_fk != null) {
             return false;
         }

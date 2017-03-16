@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
@@ -30,7 +31,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
 
     @Override
     public boolean hasAllComplementarySurveys(Survey malariaSurvey) {
-        Survey stockSurvey = new SurveyFragmentStrategy().getStockSurveyWithEventDate(malariaSurvey.getEventDate());
+        Survey stockSurvey = TreatmentQueries.getStockSurveyWithEventDate(malariaSurvey.getEventDate());
         if (stockSurvey != null) {
             Session.setStockSurvey(stockSurvey);
             return true;

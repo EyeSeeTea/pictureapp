@@ -18,7 +18,7 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
+import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.DatePickerFragment;
@@ -129,18 +129,18 @@ public class NewReceiptBalanceFragment extends Fragment {
         survey.setStatus(Constants.SURVEY_COMPLETED);
         survey.save();
         new Value(rdt.getText().toString().isEmpty() ? rdt.getHint().toString()
-                : rdt.getText().toString(), new QuestionStrategy().getStockRDTQuestion(), survey).save();
+                : rdt.getText().toString(), TreatmentQueries.getStockRDTQuestion(), survey).save();
         new Value(act6.getText().toString().isEmpty() ? act6.getHint().toString()
-                : act6.getText().toString(), new QuestionStrategy().getACT6Question(), survey).save();
+                : act6.getText().toString(), TreatmentQueries.getACT6Question(), survey).save();
         new Value(act12.getText().toString().isEmpty() ? act12.getHint().toString()
-                : act12.getText().toString(), new QuestionStrategy().getACT12Question(), survey).save();
+                : act12.getText().toString(), TreatmentQueries.getACT12Question(), survey).save();
         new Value(act18.getText().toString().isEmpty() ? act18.getHint().toString()
-                : act18.getText().toString(), new QuestionStrategy().getACT18Question(), survey).save();
+                : act18.getText().toString(), TreatmentQueries.getACT18Question(), survey).save();
         new Value(act24.getText().toString().isEmpty() ? act24.getHint().toString()
-                : act24.getText().toString(), new QuestionStrategy().getACT24Question(), survey).save();
+                : act24.getText().toString(), TreatmentQueries.getACT24Question(), survey).save();
         new Value(pq.getText().toString().isEmpty() ? pq.getHint().toString()
-                : pq.getText().toString(), new QuestionStrategy().getPqQuestion(), survey).save();
+                : pq.getText().toString(), TreatmentQueries.getPqQuestion(), survey).save();
         new Value(cq.getText().toString().isEmpty() ? cq.getHint().toString()
-                : cq.getText().toString(), new QuestionStrategy().getCqQuestion(), survey).save();
+                : cq.getText().toString(), TreatmentQueries.getCqQuestion(), survey).save();
     }
 }

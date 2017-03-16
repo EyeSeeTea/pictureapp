@@ -58,7 +58,6 @@ import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
@@ -460,7 +459,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
 
-            mDynamicTabAdapterStrategy.addAdditionalQuestions(tabType, screenQuestions);
+            screenQuestions = mDynamicTabAdapterStrategy.addAdditionalQuestions(tabType, screenQuestions);
 
             if (Tab.isMultiQuestionTab(tabType)) {
                 screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
@@ -736,8 +735,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private boolean isCounterValueEqualToMax(Question question, Option selectedOption) {
 
-        Survey survey = (new QuestionStrategy().isStockQuestion(question)) ? Session.getStockSurvey()
-                : getMalariaSurvey();
+        Survey survey =  SurveyFragmentStrategy.getSessionSurveyByQuestion(question);
 
         Float counterValue = survey.getCounterValue(question, selectedOption);
 
@@ -822,8 +820,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean toggleChild(TableRow row, Question rowQuestion, Question childQuestion) {
         if (childQuestion.getId_question().equals(rowQuestion.getId_question())) {
-            Survey survey = (new QuestionStrategy().isStockQuestion(rowQuestion)) ? Session.getStockSurvey()
-                    : getMalariaSurvey();
+            Survey survey =   SurveyFragmentStrategy.getSessionSurveyByQuestion(rowQuestion);
 
             if (rowQuestion.isHiddenBySurveyAndHeader(survey)) {
                 row.setVisibility(View.GONE);

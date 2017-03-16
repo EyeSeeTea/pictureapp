@@ -14,7 +14,7 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
+import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -184,7 +184,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
             }
             Question question =(Question) this.getTag();
             if (checkedId == customRadioButton.getId()
-                    && !new QuestionStrategy().isCq(question.getUid())) {
+                    && !TreatmentQueries.isCq(question.getUid())) {
                 notifyAnswerOptionChange(this.getTag(), ((Option) customRadioButton.getTag()));
                 changeTotalQuestions();
             }
@@ -197,7 +197,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
     protected void notifyAnswerOptionChange(Object tag, Option option) {
         if (mOnAnswerOptionChangedListener != null) {
             View view = new View(context);
-            view.setTag(new QuestionStrategy().getTreatmentQuestionForTag(tag));
+            view.setTag(TreatmentQueries.getTreatmentQuestionForTag(tag));
             mOnAnswerOptionChangedListener.onAnswerChanged(view, option);
         }
     }
@@ -222,9 +222,9 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
      * Changing the total questions of the alternative pq questions depending on the answer provided
      */
     private void changeTotalQuestions() {
-        Question pqQuestion = new QuestionStrategy().getPqQuestion();
-        Question actQuestion = new QuestionStrategy().getAlternativePqQuestion();//// FIXME: 14/03/2017 is it correct?
-        Question alternativePqQuestion = new QuestionStrategy().getAlternativePqQuestion();
+        Question pqQuestion = TreatmentQueries.getPqQuestion();
+        Question actQuestion = TreatmentQueries.getAlternativePqQuestion();//// FIXME: 14/03/2017 is it correct?
+        Question alternativePqQuestion = TreatmentQueries.getAlternativePqQuestion();
         Value actValue = null;
         Value pqValue = null;
         List<Value> values = Session.getMalariaSurvey().getValuesFromDB();

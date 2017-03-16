@@ -8,8 +8,8 @@ import com.google.common.collect.Maps;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
 import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
@@ -54,14 +54,14 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
                     org.eyeseetea.malariacare.data
                             .database.model.Survey.getLastSurveyWithType(Constants.SURVEY_ISSUE);
 
-            Value rdtStockValue = new QuestionStrategy().getStockRDTQuestion().insertValue("1",
+            Value rdtStockValue = TreatmentQueries.getStockRDTQuestion().insertValue("1",
                     surveyDBStock);
 
             rdtStockValue.setValue(Integer.toString(rdtUsed(surveyValues)));
 
             rdtStockValue.save();
 
-            for (Question propagateQuestion : new QuestionStrategy().getStockRDTQuestion()
+            for (Question propagateQuestion : TreatmentQueries.getStockRDTQuestion()
                     .getPropagationQuestions()) {
                 propagateQuestion.insertValue(rdtStockValue.getValue(),
                         Session.getMalariaSurvey()).save();
@@ -72,8 +72,8 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
     private int rdtUsed(List<Value> surveyValues) {
         int rdtUsed = 1;
         Map<Question, Value> answersMap = Maps.uniqueIndex(surveyValues, valuesToQuestions);
-        Question rdtQuestion = new QuestionStrategy().getRDTQuestion();
-        Question confirmInvalid = new QuestionStrategy().getInvalidCounterQuestion();
+        Question rdtQuestion = TreatmentQueries.getRDTQuestion();
+        Question confirmInvalid = TreatmentQueries.getInvalidCounterQuestion();
         if (answersMap.keySet().contains(confirmInvalid)) {
             int invalids;
             try {

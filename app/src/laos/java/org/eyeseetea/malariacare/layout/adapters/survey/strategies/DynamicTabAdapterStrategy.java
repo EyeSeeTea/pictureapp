@@ -24,23 +24,28 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
     }
     @Override
     public void initSurveys(boolean readOnly) {
-
+        return;
     }
 
     @Override
-    public void addAdditionalQuestions(int tabType, List<Question> screenQuestions) {
-
+    public List<Question> addAdditionalQuestions(int tabType, List<Question> screenQuestions) {
+        return null;
     }
 
     @Override
-    public void instanceOfVariantDependant(IQuestionView questionView, Question screenQuestion) {
+    public void instanceOfSingleQuestion(IQuestionView questionView, Question screenQuestion) {
+        return;
+    }
 
+    @Override
+    public void instanceOfMultiQuestion(IQuestionView questionView, Question screenQuestion) {
+        return;
     }
 
     @Override
     public void renderParticularSurvey(Question screenQuestion, Survey survey,
             IQuestionView questionView) {
-
+        return;
     }
 
     @Override
@@ -51,6 +56,6 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
     @Override
     public void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter,
             IQuestionView questionView) {
-
+        return;
     }
 }

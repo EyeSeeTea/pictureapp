@@ -59,10 +59,10 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
-import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
+import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
@@ -636,7 +636,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .querySingle();
     }
 
-    private static void removeValue(Value value) {
+    public static void removeValue(Value value) {
         value.delete();
     }
 
@@ -937,15 +937,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         Tab tab = program.getTabs().get(0);
         Question rootQuestion = Question.findRootQuestion(tab);
         Question localQuestion = rootQuestion;
-        while (localQuestion.getSibling() != null) {
-            if (localQuestion.isCompulsory() && !new QuestionStrategy().isStockQuestion(localQuestion)) {
-                numRequired++;
-            }
-            localQuestion = localQuestion.getSibling();
-        }
-        if (new QuestionStrategy().isStockQuestion(localQuestion) || !localQuestion.isCompulsory()) {
-            numRequired--;
-        }
+        numRequired = SurveyFragmentStrategy.getNumRequired(numRequired, localQuestion);
 
         //Add children required by each parent (value+question)
         Survey survey = Survey.findById(id_survey);
@@ -1031,23 +1023,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
         setCompletionDate(new Date());
         save();
     }
-
-    public void deleteStockValues(){
-        List<Value> values = getValuesFromDB();
-        for (Value value : values) {
-            if(value.getQuestion() == null){
-                continue;
-            }
-            if ((new QuestionStrategy().isACT(value.getQuestion().getUid()) && !value.getValue().equals("0"))
-                    || new QuestionStrategy().isOutStockQuestion(value.getQuestion().getUid())) {
-                for(Question questionPropagated:value.getQuestion().getPropagationQuestions()){
-                    removeValue(questionPropagated.getValueBySurvey(Session.getMalariaSurvey()));
-                }
-                value.delete();
-            }
-        }
-    }
-
     /**
      * Checks if the answer to the first question is 'Yes'
      *

@@ -27,7 +27,7 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.utils.QuestionStrategy;
+import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -152,8 +152,7 @@ public class ScoreRegister {
      * Calculates the numerator of the given question in the current survey
      */
     public static float calcNum(Question question) {
-        Survey survey = (new QuestionStrategy().isStockQuestion(question)) ? Session.getStockSurvey()
-                : Session.getMalariaSurvey();
+        Survey survey = SurveyFragmentStrategy.getSessionSurveyByQuestion(question);
         return calcNum(question, survey);
     }
 
@@ -176,8 +175,7 @@ public class ScoreRegister {
      * Calculates the numerator of the given question in the current survey
      */
     public static float calcDenum(Question question) {
-        Survey survey = (new QuestionStrategy().isStockQuestion(question)) ? Session.getStockSurvey()
-                : Session.getMalariaSurvey();
+        Survey survey = SurveyFragmentStrategy.getSessionSurveyByQuestion(question);
         return calcDenum(question, survey);
     }
 

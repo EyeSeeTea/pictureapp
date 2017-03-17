@@ -103,10 +103,10 @@ public class Option extends BaseModel {
                 .where(Option_Table.id_option.eq(id)).querySingle();
     }
 
-    public static Option findByCode(String code) {
+    public static Option findByName(String name) {
         return new Select()
                 .from(Option.class)
-                .where(Option_Table.code.eq(code)).querySingle();
+                .where(Option_Table.name.eq(name)).querySingle();
     }
 
     public Long getId_option() {
@@ -125,12 +125,12 @@ public class Option extends BaseModel {
         this.name = name;
     }
 
-    public String getInternationalizedCode() {
-        return Utils.getInternationalizedString(code);
-    }
-
     public String getInternationalizedName() {
         return Utils.getInternationalizedString(name);
+    }
+
+    public String getInternationalizedCode() {
+        return Utils.getInternationalizedString(code);
     }
 
     public String getCode() {

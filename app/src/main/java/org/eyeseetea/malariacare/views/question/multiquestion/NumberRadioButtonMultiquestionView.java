@@ -121,7 +121,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                     (CustomRadioButton) lInflater.inflate(
                             R.layout.uncheckeable_radiobutton, null);
             radioButton.setTag(option);
-            radioButton.setText(option.getInternationalizedCode());
+            radioButton.setText(option.getInternationalizedName());
             fixRadioButtonWidth(radioButton);
 
             radioButton.setEnabled(radioGroup.isEnabled());

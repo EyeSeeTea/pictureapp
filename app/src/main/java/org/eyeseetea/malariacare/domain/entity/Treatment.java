@@ -183,11 +183,11 @@ public class Treatment {
         }
         if (actValue == null) {
             actValue = new Value(
-                    Option.findByCode(getContext().getString(R.string.dynamic_treatment_yes_code)),
+                    Option.findByName(getContext().getString(R.string.dynamic_treatment_yes_code)),
                     actHiddenQuestion, Session.getMalariaSurvey());
         } else {
             actValue.setOption(
-                    Option.findByCode(getContext().getString(R.string.dynamic_treatment_yes_code)));
+                    Option.findByName(getContext().getString(R.string.dynamic_treatment_yes_code)));
         }
         actValue.save();
     }

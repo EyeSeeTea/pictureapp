@@ -1140,7 +1140,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                         && value.getQuestion().getCode().equals(
                         PreferencesState.getInstance().getContext().getString(
                                 R.string.Result_code))) {
-                    rdtValue = value.getOption().getInternationalizedCode();
+                    rdtValue = value.getOption().getInternationalizedName();
                 }
             }
 
@@ -1183,7 +1183,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
             if (codeQuestionFilter.contains(qCode)) {
                 String val =
-                        (value.getOption() != null) ? value.getOption().getInternationalizedCode()
+                        (value.getOption() != null) ? value.getOption().getInternationalizedName()
                                 : value.getValue();
                 if (val != null) {
                     map.put(qCode, val);
@@ -1211,7 +1211,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
             for (Value value : values) {
                 valuesString += "Value: " + value.getValue();
                 if (value.getOption() != null) {
-                    valuesString += " Option: " + value.getOption().getInternationalizedName();
+                    valuesString += " Option: " + value.getOption().getInternationalizedCode();
                 }
                 if (value.getQuestion() != null) {
                     valuesString += " Question: " + value.getQuestion().getDe_name() + "\n";

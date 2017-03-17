@@ -36,7 +36,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
             });
 
             questionTextView.setText(questionTextView.getText().toString() +
-                    ((value.getOption() != null) ? value.getOption().getInternationalizedCode()
+                    ((value.getOption() != null) ? value.getOption().getInternationalizedName()
                             : value.getValue()));
 
             if (value.getOption() != null && value.getOption().getBackground_colour() != null) {

@@ -15,11 +15,11 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.data.database.model.StringKey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
-import org.eyeseetea.malariacare.data.database.model.Translation;
 
 import java.util.HashMap;
 
@@ -232,8 +232,8 @@ public class PopulateRow {
         if (option == null) {
             option = new Option();
         }
-        option.setCode(line[1]);
-        option.setName(line[2]);
+        option.setCode(line[2]);
+        option.setName(line[1]);
         option.setFactor(Float.valueOf(line[3]));
         option.setAnswer(answerFK.get(Long.valueOf(line[4])));
         if (line[5] != null && !line[5].isEmpty()) {

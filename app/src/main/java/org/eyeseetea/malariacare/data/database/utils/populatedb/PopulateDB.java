@@ -305,8 +305,8 @@ public class PopulateDB {
                         break;
                     case OPTIONS_CSV:
                         Option option = new Option();
-                        option.setCode(line[1]);
-                        option.setName(line[2]);
+                        option.setCode(line[2]);
+                        option.setName(line[1]);
                         option.setFactor(Float.valueOf(line[3]));
                         option.setAnswer(answerList.get(Integer.valueOf(line[4])));
                         if (line[5] != null && !line[5].isEmpty()) {

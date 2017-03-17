@@ -125,12 +125,12 @@ public class NavigationController {
     }
 
     public Question next(Option option) {
-        Log.d(TAG, String.format("next(%s)...", option == null ? "" : option.getName()));
+        Log.d(TAG, String.format("next(%s)...", option == null ? "" : option.getCode()));
         QuestionNode nextNode;
 
         //Trigger counters -> no movement
         if (!isInitialMove() && existsPendingCounter(option)) {
-            Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getName(),
+            Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getCode(),
                     getCurrentQuestion().getCode()));
             return getCurrentQuestion();
         }
@@ -160,7 +160,7 @@ public class NavigationController {
 
 
         //Return next question
-        Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getName(),
+        Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getCode(),
                 nextQuestion.getCode()));
         return nextNode.getQuestion();
     }

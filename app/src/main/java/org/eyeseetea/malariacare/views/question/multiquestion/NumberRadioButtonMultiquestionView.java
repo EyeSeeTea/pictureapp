@@ -74,19 +74,19 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
             Option option = (Option) customRadioButton.getTag();
-            if ((option.getName().equals(
+            if ((option.getCode().equals(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.no_option_identifier))
-                    || option.getCode().equals(
+                    || option.getName().equals(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.no_option_identifier))) && Float.parseFloat(
                     value.getValue())
                     == 0) {
                 customRadioButton.setChecked(true);
-            } else if ((option.getName().equals(
+            } else if ((option.getCode().equals(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.yes_option_identifier))
-                    || option.getCode().equals(
+                    || option.getName().equals(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.yes_option_identifier)))
                     && Float.parseFloat(
@@ -165,18 +165,18 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
             Option option = (Option) customRadioButton.getTag();
-            if ((option.getName().equals(
+            if ((option.getCode().equals(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.no_option_identifier))
-                    || option.getCode().equals(
+                    || option.getName().equals(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.no_option_identifier)))
                     && checkedId == customRadioButton.getId()) {
                 value = 0;
-            } else if ((option.getName().equals(
+            } else if ((option.getCode().equals(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.yes_option_identifier))
-                    || option.getCode().equals(
+                    || option.getName().equals(
                     PreferencesState.getInstance().getContext().getString(
                             R.string.yes_option_identifier)))
                     && checkedId == customRadioButton.getId()) {
@@ -245,7 +245,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                 break;
             }
         }
-        if ((actValue == null || actValue.getOption().getName().equals(
+        if ((actValue == null || actValue.getOption().getCode().equals(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.yes_option_identifier)))
                 || (pqValue == null || Float.parseFloat(pqValue.getValue()) > 0)) {

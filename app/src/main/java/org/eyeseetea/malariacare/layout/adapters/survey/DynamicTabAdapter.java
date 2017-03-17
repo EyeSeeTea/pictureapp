@@ -189,9 +189,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public static Boolean findSwitchBoolean(Question question) {
         Value value = question.getValueBySession();
-        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
+        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getName())) {
             return true;
-        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())) {
+        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getName())) {
             return false;
         }
         return false;
@@ -254,9 +254,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         Question question = (Question) view.getTag();
 
-        if (!selectedOption.getName().isEmpty()
+        if (!selectedOption.getCode().isEmpty()
                 && question.getOutput() == Constants.DROPDOWN_OU_LIST) {
-            OrgUnit orgUnit = OrgUnit.findByUID(selectedOption.getName());
+            OrgUnit orgUnit = OrgUnit.findByUID(selectedOption.getCode());
 
             assignOrgUnitToSurvey(Session.getMalariaSurvey(), orgUnit);
             assignOrgUnitToSurvey(Session.getStockSurvey(), orgUnit);
@@ -358,7 +358,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void switchHiddenMatch(Question question, Option option, Question matchQuestion,
             Option matchOption) {
-        int optionPosition = (option.getCode().equals(matchOption.getCode())) ? MATCH_POSITION
+        int optionPosition = (option.getName().equals(matchOption.getName())) ? MATCH_POSITION
                 : DOESNT_MATCH_POSITION;
 
         matchQuestion.saveValuesDDL(

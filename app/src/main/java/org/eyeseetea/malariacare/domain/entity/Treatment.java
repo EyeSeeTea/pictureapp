@@ -346,16 +346,16 @@ public class Treatment {
             List<Drug> alternativeDrugs = treatment.getDrugsForTreatment();
             for (Drug drug : alternativeDrugs) {
                 if (drug.isACT24()) {
-                    optionACT24.setCode(treatment.getMessage().toString());
+                    optionACT24.setName(treatment.getMessage().toString());
                     options.add(optionACT24);
                 } else if (drug.isACT18()) {
-                    optionACT18.setCode(treatment.getMessage().toString());
+                    optionACT18.setName(treatment.getMessage().toString());
                     options.add(optionACT18);
                 } else if (drug.isACT12()) {
-                    optionACT12.setCode(treatment.getMessage().toString());
+                    optionACT12.setName(treatment.getMessage().toString());
                     options.add(optionACT12);
                 } else if (drug.isACT6()) {
-                    optionACT6.setCode(treatment.getMessage().toString());
+                    optionACT6.setName(treatment.getMessage().toString());
                     options.add(optionACT6);
                 }
             }

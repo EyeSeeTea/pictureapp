@@ -181,7 +181,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
 
             //Return proper option if possible
             for (Option option : options) {
-                if (option.getName().equals(text)) {
+                if (option.getCode().equals(text)) {
                     return option;
                 }
             }

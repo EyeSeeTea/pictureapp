@@ -232,8 +232,8 @@ public class PopulateRow {
         if (option == null) {
             option = new Option();
         }
-        option.setCode(line[2]);
-        option.setName(line[1]);
+        option.setName(line[2]);
+        option.setCode(line[1]);
         option.setFactor(Float.valueOf(line[3]));
         option.setAnswer(answerFK.get(Long.valueOf(line[4])));
         if (line[5] != null && !line[5].isEmpty()) {

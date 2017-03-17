@@ -1038,7 +1038,7 @@ public class Question extends BaseModel {
             }
         }
 
-        if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
+        if (!option.getCode().equals(Constants.DEFAULT_SELECT_OPTION)) {
             Survey survey =
                     ((isStockQuestion() || isPq() || isACT())
                             ? Session.getStockSurvey()
@@ -1103,7 +1103,7 @@ public class Question extends BaseModel {
                 survey.removeChildrenValuesFromQuestionRecursively(this, false);
             }
             value.setOption(option);
-            value.setValue(option.getName());
+            value.setValue(option.getCode());
         }
 
         value.save();

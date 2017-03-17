@@ -52,7 +52,7 @@ public class ImageOptionView extends LinearLayout {
 
         if (option.getOptionAttribute().hasHorizontalAlignment()
                 && option.getOptionAttribute().hasVerticalAlignment()) {
-            mOptionTextView.setText(Utils.getInternationalizedString(option.getCode()));
+            mOptionTextView.setText(Utils.getInternationalizedString(option.getName()));
             mOptionTextView.setGravity(option.getOptionAttribute().getGravity());
         } else {
             mOptionTextView.setVisibility(View.GONE);

@@ -44,9 +44,9 @@ public abstract class AQuestionAnswerChangedListener {
      */
     public static Boolean findSwitchBoolean(Question question) {
         Value value = question.getValueBySession();
-        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
+        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getName())) {
             return true;
-        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())) {
+        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getName())) {
             return false;
         }
         return false;

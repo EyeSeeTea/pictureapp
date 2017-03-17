@@ -1113,7 +1113,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 if (value.getOption() != null && value.getQuestion() != null
                         && value.getQuestion().getCode().equals(
                         PreferencesState.getInstance().getContext().getString(R.string.RDT_code))) {
-                    rdtValue = value.getOption().getName();
+                    rdtValue = value.getOption().getCode();
                 }
             }
 

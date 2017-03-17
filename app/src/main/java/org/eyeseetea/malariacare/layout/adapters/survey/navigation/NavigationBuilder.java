@@ -107,7 +107,7 @@ public class NavigationBuilder {
             }
 
             Log.d(TAG, String.format("'%s' + '%s' --> '%s'", currentQuestion.getCode(),
-                    option.getName(), firstChildrenQuestion.getCode()));
+                    option.getCode(), firstChildrenQuestion.getCode()));
             //Build navigation from there
             QuestionNode childNode;
             //Option that references self

@@ -1858,8 +1858,21 @@ public class Question extends BaseModel {
         return propagationQuestion;
     }
 
+    public static int getTotalQuestionsInDb() {
+        return (int) SQLite.selectCountOf()
+                .from(Question.class).count();
+    }
 
-private static class QuestionOrderComparator implements Comparator {
+    public static Long getOrderedIdByPosition(int position) {
+        List<Question> questions = new Select(Question_Table.id_question)
+                .from(Question.class)
+                .limit(1).offset(position)
+                .orderBy(OrderBy.fromProperty(Question_Table.id_question).ascending()).queryList();
+        return questions.get(0).getId_question();
+    }
+
+
+    private static class QuestionOrderComparator implements Comparator {
 
     @Override
     public int compare(Object o1, Object o2) {

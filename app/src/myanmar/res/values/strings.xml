@@ -371,4 +371,9 @@
 <string name="error_no_treatment">"There\'s not treatment for this combination of entries. Please talk to the administrator"</string>
 <string name="true_option_identifier">Yes</string>
 <string name="false_option_identifier">No</string>
+
+    <string name="survey_first_step">"Recovering questions..."</string>
+    <string name="survey_second_step">"Building questions..."</string>
+    <string name="survey_third_step">"Building Treatment matrix..."</string>
+    <string name="survey_fourth_step">"Creating Survey..."</string>
 </resources>

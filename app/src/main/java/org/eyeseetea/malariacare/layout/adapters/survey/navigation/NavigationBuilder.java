@@ -6,6 +6,7 @@ import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.WarningStatusChecker;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -27,6 +28,10 @@ public class NavigationBuilder {
      * Maps that holds the relationships between a Question and the warnings that it might trigger
      */
     private Map<Long, List<QuestionNode>> warningsXQuestion;
+    /**
+     * Questions ordered by id
+     */
+    private List<Question> questionsOrderedById;
 
     private NavigationBuilder() {
         warningsXQuestion = new HashMap<>();
@@ -52,7 +57,6 @@ public class NavigationBuilder {
 
         Log.d(TAG, String.format("build(%s)", tab.getName()));
         Question rootQuestion = Question.findRootQuestion(tab);
-
         //NO first question -> nothing to build
         if (rootQuestion == null) {
             return null;
@@ -69,6 +73,7 @@ public class NavigationBuilder {
         if (currentQuestion == null) {
             return null;
         }
+
         QuestionNode currentNode = new QuestionNode(currentQuestion);
 
         //A warning is added to the map
@@ -76,6 +81,7 @@ public class NavigationBuilder {
         //A normal node subscribes to its warnings
         subscribeWarnings(currentNode);
 
+        moveProgressTextMessage(currentNode.getQuestion().getId_question());
         //Add children navigation
         buildChildren(currentNode);
         //Add sibling navigation
@@ -83,7 +89,17 @@ public class NavigationBuilder {
         //Add counters
         buildCounters(currentNode);
 
+
         return currentNode;
+    }
+
+    private void moveProgressTextMessage(final Long currentQuestion) {
+        int totalQuestionsInDb = Question.getTotalQuestionsInDb();
+        if (currentQuestion == Question.getOrderedIdByPosition(
+                1 + Math.round((75 * totalQuestionsInDb) / 100))
+                ) {
+            SurveyFragment.nextProgressMessage(currentQuestion);
+        }
     }
 
     /**
@@ -138,9 +154,10 @@ public class NavigationBuilder {
         }
         Log.d(TAG, String.format("'%s' -(sibling)-> '%s'", currentQuestion.getCode(),
                 nextQuestion.getCode()));
+
         QuestionNode nextNode = buildNode(nextQuestion);
         currentNode.setSibling(nextNode);
-        nextNode.setPreviousSibling(currentNode);
+        nextNode.setPreviousSibling(nextNode);
     }
 
     /**

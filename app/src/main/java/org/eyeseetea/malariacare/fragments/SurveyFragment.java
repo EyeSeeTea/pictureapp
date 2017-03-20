@@ -44,15 +44,19 @@ import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -80,6 +84,11 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
      * Progress dialog shown while loading
      */
     private ProgressBar progressBar;
+    /**
+     * Progress text shown while loading
+     */
+    public static CustomTextView progressText;
+    public static Iterator<String> messageIterator;
     /**
      * Parent view of main content
      */
@@ -197,6 +206,19 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     private void createProgress() {
         content = (LinearLayout) llLayout.findViewById(R.id.content);
         progressBar = (ProgressBar) llLayout.findViewById(R.id.survey_progress);
+        progressText = (CustomTextView) llLayout.findViewById(R.id.progress_text);
+        createProgressMessages();
+    }
+
+    private void createProgressMessages() {
+        List<String> messagesList = new ArrayList<>();
+        //// FIXME: 20/03/2017 it is a fake flow.
+        messagesList.add(PreferencesState.getInstance().getContext().getString(R.string.survey_first_step));
+        messagesList.add(PreferencesState.getInstance().getContext().getString(R.string.survey_second_step));
+        messagesList.add(PreferencesState.getInstance().getContext().getString(R.string.survey_third_step));
+        messagesList.add(PreferencesState.getInstance().getContext().getString(R.string.survey_third_step));
+        messagesList.add(PreferencesState.getInstance().getContext().getString(R.string.survey_fourth_step));
+        messageIterator = messagesList.iterator();
     }
 
     /**
@@ -221,6 +243,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
      */
     private void stopProgress() {
         this.progressBar.setVisibility(View.GONE);
+        this.progressText.setVisibility(View.GONE);
         this.content.setVisibility(View.VISIBLE);
 
     }
@@ -229,6 +252,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         this.content.setVisibility(View.GONE);
         this.progressBar.setVisibility(View.VISIBLE);
         this.progressBar.setEnabled(true);
+        this.progressText.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -277,6 +301,20 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
 
+    public static void nextProgressMessage(Long questionId) {
+        SurveyFragment.nextProgressMessage();
+    }
+
+    private static void nextProgressMessage() {
+            DashboardActivity.dashboardActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    if(messageIterator.hasNext()) {
+                        progressText.setText(messageIterator.next());
+                    }
+                }
+            });
+    }
+
     public class AsyncReloadAdaptersAndChangeTab extends AsyncTask<Void, Integer, View> {
 
         private List<Tab> tabs;
@@ -298,7 +336,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         protected View doInBackground(Void... params) {
             tabsList.clear();
             tabsList.addAll(tabs);
-
             tabAdaptersCache.reloadAdapters(tabs, compositeScores);
 
             Log.d(TAG, "doInBackground(" + Thread.currentThread().getId() + ")..");

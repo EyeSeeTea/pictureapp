@@ -27,6 +27,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 
+import java.util.Date;
 import java.util.List;
 
 @Table(database = AppDatabase.class)
@@ -45,6 +46,13 @@ public class User extends BaseModel {
     long organisation_fk;
     @Column
     long supervisor_fk;
+    @Column
+    String announcement;
+    @Column
+    Date close_date;
+    @Column
+    Date last_updated;
+
 
     /**
      * List of surveys of this user
@@ -136,6 +144,30 @@ public class User extends BaseModel {
         this.name = name;
     }
 
+    public String getAnnouncement() {
+        return announcement;
+    }
+
+    public void setAnnouncement(String announcement) {
+        this.announcement = announcement;
+    }
+
+    public Date getClose_date() {
+        return close_date;
+    }
+
+    public void setClose_date(Date close_date) {
+        this.close_date = close_date;
+    }
+
+    public Date getLast_updated() {
+        return last_updated;
+    }
+
+    public void setLast_updated(Date last_updated) {
+        this.last_updated = last_updated;
+    }
+
     public List<Survey> getSurveys() {
         if (surveys == null) {
             surveys = new Select()
@@ -180,8 +212,19 @@ public class User extends BaseModel {
         if (id_user != user.id_user) return false;
         if (organisation_fk != user.organisation_fk) return false;
         if (supervisor_fk != user.supervisor_fk) return false;
-        if (uid_user != null ? !uid_user.equals(user.uid_user) : user.uid_user != null) return false;
-        return name != null ? name.equals(user.name) : user.name == null;
+        if (uid_user != null ? !uid_user.equals(user.uid_user) : user.uid_user != null) {
+            return false;
+        }
+        if (name != null ? !name.equals(user.name) : user.name != null) return false;
+        if (announcement != null ? !announcement.equals(user.announcement)
+                : user.announcement != null) {
+            return false;
+        }
+        if (close_date != null ? !close_date.equals(user.close_date) : user.close_date != null) {
+            return false;
+        }
+        return last_updated != null ? last_updated.equals(user.last_updated)
+                : user.last_updated == null;
 
     }
 
@@ -192,18 +235,24 @@ public class User extends BaseModel {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (int) (organisation_fk ^ (organisation_fk >>> 32));
         result = 31 * result + (int) (supervisor_fk ^ (supervisor_fk >>> 32));
+        result = 31 * result + (announcement != null ? announcement.hashCode() : 0);
+        result = 31 * result + (close_date != null ? close_date.hashCode() : 0);
+        result = 31 * result + (last_updated != null ? last_updated.hashCode() : 0);
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id_user_fk=" + id_user +
-                ", uid='" + uid_user + '\'' +
-                ", name='" + name + '\'' +
-                ", organisation=" + organisation_fk +
-                ", supervisor=" + supervisor_fk +
-                ", surveys=" + surveys +
-                '}';
+    public User(long id_user, String uid_user, String name, long organisation_fk,
+            long supervisor_fk,
+            String announcement, Date close_date, Date last_updated,
+            List<Survey> surveys) {
+        this.id_user = id_user;
+        this.uid_user = uid_user;
+        this.name = name;
+        this.organisation_fk = organisation_fk;
+        this.supervisor_fk = supervisor_fk;
+        this.announcement = announcement;
+        this.close_date = close_date;
+        this.last_updated = last_updated;
+        this.surveys = surveys;
     }
 }

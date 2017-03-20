@@ -73,7 +73,6 @@ public class NavigationBuilder {
         if (currentQuestion == null) {
             return null;
         }
-
         QuestionNode currentNode = new QuestionNode(currentQuestion);
 
         //A warning is added to the map
@@ -88,7 +87,6 @@ public class NavigationBuilder {
         buildSibling(currentNode);
         //Add counters
         buildCounters(currentNode);
-
 
         return currentNode;
     }
@@ -154,10 +152,9 @@ public class NavigationBuilder {
         }
         Log.d(TAG, String.format("'%s' -(sibling)-> '%s'", currentQuestion.getCode(),
                 nextQuestion.getCode()));
-
         QuestionNode nextNode = buildNode(nextQuestion);
         currentNode.setSibling(nextNode);
-        nextNode.setPreviousSibling(nextNode);
+        nextNode.setPreviousSibling(currentNode);
     }
 
     /**

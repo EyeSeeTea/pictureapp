@@ -7,11 +7,12 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.UpdateDB;
 
 import java.io.IOException;
+import java.util.List;
 
 @Migration(version = 3, database = AppDatabase.class)
 public class Migration3RefactorHelptext extends BaseMigration {
@@ -52,6 +53,8 @@ public class Migration3RefactorHelptext extends BaseMigration {
 
 
     private boolean hasData() {
-        return Program.getFirstProgram() != null;
+        List<Question> questions = Question.getAllQuestions();
+
+        return questions != null && questions.size() > 0;
     }
 }

@@ -34,6 +34,9 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
     Context context;
     Question question;
 
+    String yesOptionIdentifier;
+    String noOptionIdentifier;
+
     protected AKeyboardQuestionView.onAnswerChangedListener mOnAnswerChangedListener;
     protected AOptionQuestionView.onAnswerChangedListener mOnAnswerOptionChangedListener;
     float dose = 0;
@@ -74,27 +77,20 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
             Option option = (Option) customRadioButton.getTag();
-            if ((option.getName().equals(
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.no_option_identifier))
-                    || option.getCode().equals(
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.no_option_identifier))) && Float.parseFloat(
-                    value.getValue())
-                    == 0) {
+            if (isOptionIdentifier(option, noOptionIdentifier)
+                    && Float.parseFloat(value.getValue()) == 0) {
                 customRadioButton.setChecked(true);
-            } else if ((option.getName().equals(
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.yes_option_identifier))
-                    || option.getCode().equals(
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.yes_option_identifier)))
-                    && Float.parseFloat(
-                    value.getValue()) > 0) {
+            } else if (isOptionIdentifier(option, yesOptionIdentifier)
+                    && Float.parseFloat(value.getValue()) > 0) {
                 customRadioButton.setChecked(true);
             }
         }
 
+    }
+
+    private boolean isOptionIdentifier(Option option, String optionIdentifier) {
+        return option.getName().equals(optionIdentifier) ||
+                option.getCode().equals(optionIdentifier);
     }
 
     @Override
@@ -138,6 +134,9 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         image = (ImageView) view.findViewById(R.id.question_image_row);
         radioGroup = (RadioGroup) view.findViewById(R.id.answer);
         radioGroup.setOrientation(HORIZONTAL);
+
+        yesOptionIdentifier = context.getString(R.string.yes_option_identifier);
+        noOptionIdentifier = context.getString(R.string.no_option_identifier);
     }
 
 
@@ -165,20 +164,10 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
             CustomRadioButton customRadioButton = (CustomRadioButton) radioGroup.getChildAt(i);
             Option option = (Option) customRadioButton.getTag();
-            if ((option.getName().equals(
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.no_option_identifier))
-                    || option.getCode().equals(
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.no_option_identifier)))
+            if (isOptionIdentifier(option, noOptionIdentifier)
                     && checkedId == customRadioButton.getId()) {
                 value = 0;
-            } else if ((option.getName().equals(
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.yes_option_identifier))
-                    || option.getCode().equals(
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.yes_option_identifier)))
+            } else if (isOptionIdentifier(option, yesOptionIdentifier)
                     && checkedId == customRadioButton.getId()) {
                 value = (int) dose;
             }
@@ -245,9 +234,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                 break;
             }
         }
-        if ((actValue == null || actValue.getOption().getName().equals(
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.yes_option_identifier)))
+        if ((actValue == null || actValue.getOption().getName().equals(yesOptionIdentifier))
                 || (pqValue == null || Float.parseFloat(pqValue.getValue()) > 0)) {
             alternativePqQuestion.setTotalQuestions(8);
         } else {

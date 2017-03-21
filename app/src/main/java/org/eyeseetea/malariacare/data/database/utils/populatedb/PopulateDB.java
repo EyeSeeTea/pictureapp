@@ -60,9 +60,11 @@ import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -128,6 +130,7 @@ public class PopulateDB {
             OrgUnitLevel.class,
             OrgUnit.class
     );
+
     private static final List<String> tables2populate = Arrays.asList(
             STRING_KEY_CSV,
             TRANSLATION_CSV,
@@ -182,10 +185,7 @@ public class PopulateDB {
             Log.i(TAG, "Your DB is already populated");
             return;
         }
-        FileCsvs fileCsvs = new FileCsvs();
-        fileCsvs.saveCsvsInFileIfNeeded();
-        TreatmentTable treatmentTable = new TreatmentTable();
-        treatmentTable.generateTreatmentMatrixIFNeeded();
+        new PopulateDBStrategy().init();
 
         Log.i(TAG, "DB empty, loading data ...");
         try {
@@ -212,10 +212,19 @@ public class PopulateDB {
         cleanInnerLists();
         for (String table : tables2populate) {
             Log.i(TAG, "Loading csv: " + table);
-            CSVReader reader = new CSVReader(
-                    new InputStreamReader(context.openFileInput(table)),
-                    SEPARATOR, QUOTECHAR);
-
+            CSVReader reader = null;
+            try {
+                reader = new CSVReader(
+                        new InputStreamReader(new PopulateDBStrategy().openFile(context, table)),
+                        SEPARATOR, QUOTECHAR);
+            } catch (FileNotFoundException e ) {
+                tableNotExistLog(e, table);
+            } catch (IOException e) {
+                tableNotExistLog(e,table);
+            }
+            if (reader == null) {
+                continue;
+            }
             String[] line;
             while ((line = reader.readNext()) != null) {
                 switch (table) {
@@ -404,6 +413,11 @@ public class PopulateDB {
         cleanInnerLists();
     }
 
+    private static void tableNotExistLog(Exception e, String table) {
+        Log.i(TAG, "Table " + table + " is not populated");
+        e.printStackTrace();
+    }
+
     public static void populateDummyData(Context context) throws IOException {
         //Reset inner references
         cleanDummyLists();
@@ -463,7 +477,7 @@ public class PopulateDB {
     /**
      * Deletes all data from the app database
      */
-    public static void wipeTables(Class<? extends  BaseModel>[] classes) {
+    public static void wipeTables(Class<? extends BaseModel>[] classes) {
         Delete.tables(
                 classes
         );
@@ -946,5 +960,9 @@ public class PopulateDB {
         QuestionOption questionOption
                 = new QuestionOption(Option.findById(optionId), Question.findByID(parentId), match);
         questionOption.save();
+    }
+
+    public static void initDBQuery() {
+        Tab.getAllTabs();
     }
 }

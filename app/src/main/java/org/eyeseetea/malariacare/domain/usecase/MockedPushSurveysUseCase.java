@@ -1,25 +1,17 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
 
-import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
-
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
 import java.util.List;
 
 public class MockedPushSurveysUseCase {
     public void execute(Callback callback) {
-        List<Survey> surveys = Survey.getAllMalariaSurveysToBeSent();
+        List<Survey> surveys = Survey.getAllMalariaSurveysToBeSent(new SurveyFragmentStrategy().getMalariaProgram());
 
-        //Check surveys not in progress
         for (Survey survey : surveys) {
-            survey.setStatus(SURVEY_SENT);
-            survey.save();
-            Survey stockSurvey = Survey.getStockSurveyWithEventDate(survey.getEventDate());
-            if (stockSurvey != null) {
-                stockSurvey.setStatus(SURVEY_SENT);
-                stockSurvey.save();
-            }
+            SurveyFragmentStrategy.setSurveyAsSent(survey);
         }
         callback.onPushFinished();
     }

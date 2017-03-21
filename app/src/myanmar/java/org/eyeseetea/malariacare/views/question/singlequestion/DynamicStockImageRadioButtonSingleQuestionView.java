@@ -13,7 +13,7 @@ import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.domain.entity.Treatment;
+import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
@@ -123,7 +123,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             if (imageRadioButton != optionView && optionView.isChecked()) {
                 optionView.setChecked(false);
                 Question question = (Question) optionView.getTag();
-                if (!question.isOutStockQuestion()) {
+                if (!TreatmentQueries.isOutStockQuestion(question.getUid())) {
                     notifyAnswerChanged(optionView, String.valueOf(-1));
                 } else {
                     List<Option> options = question.getAnswer().getOptions();
@@ -139,7 +139,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             }
         }
         Question question = (Question) imageRadioButton.getTag();
-        if (!question.isOutStockQuestion()) {
+        if (!TreatmentQueries.isOutStockQuestion(question.getUid())) {
             notifyAnswerChanged(imageRadioButton,
                     String.valueOf(optionDose.get(imageRadioButton.getOption().getId_option())));
         } else {
@@ -154,9 +154,8 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         }
         //Setting a value for the stock question to get max total question correct
         View stockHideView = new View(context);
-        stockHideView.setTag(Treatment.getDynamicStockQuestion());
-        Question pqHideQuestion = Question.findByUID(
-                context.getString(R.string.stockPqQuestionUID));
+        stockHideView.setTag(TreatmentQueries.getDynamicStockQuestion());
+        Question pqHideQuestion = TreatmentQueries.getStockPqQuestion();
         Option falseOption = Option.findById(41l);
         Value valuePq = pqHideQuestion.getValueBySession();
         if (valuePq != null) {
@@ -186,7 +185,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             ImageRadioButtonOption imageRadioButtonOption =
                     (ImageRadioButtonOption) answersContainer.getChildAt(i);
             Question question = (Question) imageRadioButtonOption.getTag();
-            if (!question.isOutStockQuestion()
+            if (!TreatmentQueries.isOutStockQuestion(question.getUid())
                     && question.getId_question().equals(value.getQuestion().getId_question())
                     && Float.parseFloat(
                     value.getValue()) > 0) {

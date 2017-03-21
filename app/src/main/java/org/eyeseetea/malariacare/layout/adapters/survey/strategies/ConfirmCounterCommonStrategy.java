@@ -64,6 +64,7 @@ public class ConfirmCounterCommonStrategy {
             BaseLayoutUtils.putImageInImageView(questionCounter.getInternationalizedPath(),
                     imageView);
             imageView.setVisibility(View.VISIBLE);
+            DynamicTabAdapter.swipeTouchListener.addTouchableView(imageView);
         }
 
         //Question "header" is in the first option in Options.csv
@@ -71,6 +72,7 @@ public class ConfirmCounterCommonStrategy {
         if (questionOptions.get(0) != null) {
             CustomTextView textCard = (CustomTextView) rootView.findViewById(R.id.questionTextRow);
             textCard.setText(questionOptions.get(0).getInternationalizedCode());
+            DynamicTabAdapter.swipeTouchListener.addTouchableView(textCard);
         }
         //Question "confirm button" is in the second option in Options.csv
         if (questionOptions.get(1) != null) {

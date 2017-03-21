@@ -16,12 +16,14 @@ public class ReminderSingleQuestionViewHelper {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.questionImageRow);
             BaseLayoutUtils.putImageInImageViewDensityHight(path, imageView);
             imageView.setVisibility(View.VISIBLE);
+            DynamicTabAdapter.swipeTouchListener.addTouchableView(imageView);
         }
     }
 
     public static void setWarningText(View rootView, Option option) {
         TextView okText = (TextView) rootView.findViewById(R.id.questionTextRow);
         okText.setText(option.getInternationalizedCode());
+        DynamicTabAdapter.swipeTouchListener.addTouchableView(okText);
     }
 
     public static void setWarningValue(View rootView, final Option option,

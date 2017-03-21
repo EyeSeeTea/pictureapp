@@ -131,7 +131,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * tabs
      * Listener that detects taps on buttons & swipe
      */
-    private SwipeTouchListener swipeTouchListener;
+    public static SwipeTouchListener swipeTouchListener;
     private boolean mReviewMode = false;
     private boolean isBackward = true;
 
@@ -576,7 +576,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             tableRow.addView((View) questionView);
 
-            swipeTouchListener.addClickableView(tableRow);
+            swipeTouchListener.addTouchableView(rowView);
+            swipeTouchListener.addTouchableView(tableRow);
+            swipeTouchListener.addTouchableView((View) questionView);
+            swipeTouchListener.addClickableView((View) questionView);
 
             setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
         }

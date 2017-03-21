@@ -67,7 +67,7 @@
     <string name="control_data_element_datetime_sent" translatable="false">sKPamHqCASp</string>
     <string name="category_combination" translatable="false">GwFkNOXaQcq</string>
     <string name="category_option_group_set_uid" translatable="false">yVH67wmhryq</string>
-    <string name="test_organisation_name">test_organisation</string>
-    <string name="test_organisation_uid">9fV2JoHmO94</string>
+    <string name="test_partner_name">test_partner</string>
+    <string name="test_partner_uid">9fV2JoHmO94</string>
 
 </resources>

@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Organisation;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvs;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.IPopulateDBStrategy;
@@ -88,5 +89,15 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
                             R.string.residenceVillageUID)));
             option.save();
         }
+    }
+
+
+    public static void createDummyOrganisationInDB() {
+        Organisation testOrganisation = new Organisation();
+        testOrganisation.setName(PreferencesState.getInstance().getContext().getString(
+                R.string.test_organisation_name));
+        testOrganisation.setUid(PreferencesState.getInstance().getContext().getString(
+                R.string.test_organisation_uid));
+        testOrganisation.insert();
     }
 }

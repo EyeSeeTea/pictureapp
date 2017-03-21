@@ -1,25 +1,14 @@
 package org.eyeseetea.malariacare.strategies;
 
-import static org.eyeseetea.malariacare.data.database.AppDatabase.programAlias;
-import static org.eyeseetea.malariacare.data.database.AppDatabase.programName;
-import static org.eyeseetea.malariacare.data.database.AppDatabase.surveyAlias;
-import static org.eyeseetea.malariacare.data.database.AppDatabase.surveyName;
 import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurvey;
 import static org.eyeseetea.malariacare.domain.entity.TreatmentQueries.isStockQuestion;
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
-import android.content.Context;
-
-import com.raizlabs.android.dbflow.sql.language.Join;
-import com.raizlabs.android.dbflow.sql.language.Select;
-
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Program_Table;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Survey_Table;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -27,7 +16,6 @@ import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class SurveyFragmentStrategy {
@@ -187,12 +175,5 @@ public class SurveyFragmentStrategy {
     public static Survey getSessionSurveyByQuestion(Question question) {
         return  (TreatmentQueries.isStockQuestion(question)) ? Session.getStockSurvey()
             : Session.getMalariaSurvey();
-    }
-
-    public static void createDummyOrganisationInDB() {
-        Organisation testOrganisation = new Organisation();
-        testOrganisation.setName(PreferencesState.getInstance().getContext().getString(R.string.test_organisation_name));
-        testOrganisation.setUid(PreferencesState.getInstance().getContext().getString(R.string.test_organisation_uid));
-        testOrganisation.insert();
     }
 }

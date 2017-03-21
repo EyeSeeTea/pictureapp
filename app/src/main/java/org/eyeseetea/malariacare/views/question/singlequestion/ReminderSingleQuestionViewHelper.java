@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 
 public class ReminderSingleQuestionViewHelper {
@@ -32,7 +33,10 @@ public class ReminderSingleQuestionViewHelper {
         imageOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reminderSingleQuestionView.notifyAnswerChanged(option);
+                if(!DynamicTabAdapter.isClicked){
+                    DynamicTabAdapter.isClicked = true;
+                    reminderSingleQuestionView.notifyAnswerChanged(option);
+                }
             }
         });
 

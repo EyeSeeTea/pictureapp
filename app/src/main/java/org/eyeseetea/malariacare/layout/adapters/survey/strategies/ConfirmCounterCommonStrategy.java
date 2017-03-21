@@ -36,6 +36,7 @@ public class ConfirmCounterCommonStrategy {
             @Override
             public void onClick(View v) {
                 //Leave current question as it was
+                isClicked = true;
                 removeConfirmCounter(v);
                 mDynamicTabAdapter.notifyDataSetChanged();
                 isClicked = false;
@@ -47,9 +48,13 @@ public class ConfirmCounterCommonStrategy {
         yesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDynamicTabAdapter.navigationController.increaseCounterRepetitions(selectedOption);
-                removeConfirmCounter(v);
-                mDynamicTabAdapter.saveOptionValue(view, selectedOption, question, true);
+                if(!isClicked) {
+                    isClicked = true;
+                    mDynamicTabAdapter.navigationController.increaseCounterRepetitions(
+                            selectedOption);
+                    removeConfirmCounter(v);
+                    mDynamicTabAdapter.saveOptionValue(view, selectedOption, question, true);
+                }
             }
         });
 

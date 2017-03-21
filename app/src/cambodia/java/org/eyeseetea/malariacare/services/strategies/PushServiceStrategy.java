@@ -13,7 +13,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
     @Override
     public void push() {
-        Log.d(TAG, "execute push");
-        executePush();
+        if (Session.getCredentials().isLogged()) {
+            Log.d(TAG, "execute push");
+            executePush();
+        } else {
+            Log.d(TAG, "execute push fails, not logged");
+        }
     }
 }

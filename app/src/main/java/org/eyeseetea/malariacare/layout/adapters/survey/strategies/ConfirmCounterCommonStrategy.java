@@ -36,7 +36,6 @@ public class ConfirmCounterCommonStrategy {
             @Override
             public void onClick(View v) {
                 //Leave current question as it was
-                isClicked = true;
                 removeConfirmCounter(v);
                 mDynamicTabAdapter.notifyDataSetChanged();
                 isClicked = false;
@@ -48,13 +47,9 @@ public class ConfirmCounterCommonStrategy {
         yesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isClicked) {
-                    isClicked = true;
-                    mDynamicTabAdapter.navigationController.increaseCounterRepetitions(
-                            selectedOption);
-                    removeConfirmCounter(v);
-                    mDynamicTabAdapter.saveOptionValue(view, selectedOption, question, true);
-                }
+                mDynamicTabAdapter.navigationController.increaseCounterRepetitions(selectedOption);
+                removeConfirmCounter(v);
+                mDynamicTabAdapter.saveOptionValue(view, selectedOption, question, true);
             }
         });
 
@@ -76,22 +71,18 @@ public class ConfirmCounterCommonStrategy {
         if (questionOptions.get(0) != null) {
             CustomTextView textCard = (CustomTextView) rootView.findViewById(R.id.questionTextRow);
             textCard.setText(questionOptions.get(0).getInternationalizedCode());
-            textCard.setTextSize(questionOptions.get(0).getOptionAttribute().getText_size());
         }
         //Question "confirm button" is in the second option in Options.csv
         if (questionOptions.get(1) != null) {
             CustomTextView confirmTextCard = (CustomTextView) rootView.findViewById(
                     R.id.textcard_confirm_yes);
             confirmTextCard.setText(questionOptions.get(1).getInternationalizedCode());
-            confirmTextCard.setTextSize(questionOptions.get(1).getOptionAttribute().getText_size());
         }
         //Question "no confirm button" is in the third option in Options.csv
         if (questionOptions.get(2) != null) {
             CustomTextView noConfirmTextCard = (CustomTextView) rootView.findViewById(
                     R.id.textcard_confirm_no);
             noConfirmTextCard.setText(questionOptions.get(2).getInternationalizedCode());
-            noConfirmTextCard.setTextSize(questionOptions.get(
-                    2).getOptionAttribute().getText_size());
         }
     }
 

@@ -22,7 +22,6 @@ public class ReminderSingleQuestionViewHelper {
     public static void setWarningText(View rootView, Option option) {
         TextView okText = (TextView) rootView.findViewById(R.id.questionTextRow);
         okText.setText(option.getInternationalizedCode());
-        okText.setTextSize(option.getOptionAttribute().getText_size());
     }
 
     public static void setWarningValue(View rootView, final Option option,
@@ -42,6 +41,5 @@ public class ReminderSingleQuestionViewHelper {
 
         TextView okText = (TextView) rootView.findViewById(R.id.textcard_confirm_yes);
         okText.setText(option.getInternationalizedCode());
-        okText.setTextSize(option.getOptionAttribute().getText_size());
     }
 }

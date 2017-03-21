@@ -1863,7 +1863,7 @@ public class Question extends BaseModel {
                 .from(Question.class).count();
     }
 
-    public static Long getOrderedIdByPosition(int position) {
+    public static Long getIdByPosition(int position) {
         List<Question> questions = new Select(Question_Table.id_question)
                 .from(Question.class)
                 .limit(1).offset(position)

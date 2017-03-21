@@ -93,7 +93,7 @@ public class NavigationBuilder {
 
     private void moveProgressTextMessage(final Long currentQuestion) {
         int totalQuestionsInDb = Question.getTotalQuestionsInDb();
-        if (currentQuestion == Question.getOrderedIdByPosition(
+        if (currentQuestion == Question.getIdByPosition(
                 1 + Math.round((75 * totalQuestionsInDb) / 100))
                 ) {
             SurveyFragment.nextProgressMessage(currentQuestion);

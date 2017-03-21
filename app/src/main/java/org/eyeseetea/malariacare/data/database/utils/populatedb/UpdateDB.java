@@ -476,6 +476,8 @@ public class UpdateDB {
 
     }
 
+
+
     public static void insertLastLines(int numeberLines, Context context)
             throws IOException {
         HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(context);

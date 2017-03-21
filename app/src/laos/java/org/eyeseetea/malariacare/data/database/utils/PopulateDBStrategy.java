@@ -18,4 +18,6 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
         AssetManager assetMgr = context.getAssets();
         return assetMgr.open(table);
     }
+    public static void createDummyOrganisationInDB() {
+    }
 }

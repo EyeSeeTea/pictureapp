@@ -30,7 +30,7 @@ public class SurveyFragmentStrategy {
 
     }
 
-    public static Survey getSaveValuesDDLSurvey() {
+    public static Survey getSaveValuesDDLSurvey(Question question) {
         return Session.getMalariaSurvey();
     }
 

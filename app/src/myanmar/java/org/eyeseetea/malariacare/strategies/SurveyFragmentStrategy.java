@@ -188,4 +188,11 @@ public class SurveyFragmentStrategy {
         return  (TreatmentQueries.isStockQuestion(question)) ? Session.getStockSurvey()
             : Session.getMalariaSurvey();
     }
+
+    public static void createDummyOrganisationInDB() {
+        Organisation testOrganisation = new Organisation();
+        testOrganisation.setName(PreferencesState.getInstance().getContext().getString(R.string.test_organisation_name));
+        testOrganisation.setUid(PreferencesState.getInstance().getContext().getString(R.string.test_organisation_uid));
+        testOrganisation.insert();
+    }
 }

@@ -34,11 +34,6 @@
     <string name="server_name">"DHIS เซิร์ฟเวอร์ URL"</string>
     <string name="settings_select_language">"ภาษา"</string>
     <string name="pref_header_general">"ทั่วไป"</string>
-    <string name="font_size_level0">"XSMALL"</string>
-    <string name="font_size_level1">"เล็ก"</string>
-    <string name="font_size_level2">"กลาง"</string>
-    <string name="font_size_level3">"ใหญ่"</string>
-    <string name="font_size_level4">"XLarge"</string>
     <string name="dialog_title_push">"ไดรฟ์ข้อมูลที่มี"</string>
     <string name="dialog_title_push_response">"ในการตอบสนองดัน"</string>
     <string name="dialog_info_push_ok">"การสำรวจได้แรงหนุนการส่งออกไปยังเซิร์ฟเวอร์."</string>

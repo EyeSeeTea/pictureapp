@@ -184,11 +184,6 @@
 <string name="dynamic_error_phone_format">"ဖုန်းနံပါတ်အဘို့အမှားနေသော format နဲ့"</string>
 <string name="dynamic_error_age">"မှားနေသောအသက်အရွယ်"</string>
 <string name="pref_header_general">"ယေဘုယျ"</string>
-<string name="font_size_level0">"x ကသေးငယ်"</string>
-<string name="font_size_level1">"သေးငယ်သော"</string>
-<string name="font_size_level2">"အလယ်အလတ်"</string>
-<string name="font_size_level3">"ကြီးမားသော"</string>
-<string name="font_size_level4">"x ကကြီးမား"</string>
 <string name="dialog_title_push">"ဒေတာတွန်းအားပေး"</string>
 <string name="dialog_title_push_response">"တုန့်ပြန်တွန်း"</string>
 <string name="dialog_info_push_ok">"စစ်တမ်းဒေတာဆာဗာတွန်း။ ရလဒ်များ:"</string>

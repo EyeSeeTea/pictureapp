@@ -33,11 +33,6 @@
     <string name="font_size">"Tamaño de fuentes"</string>
     <string name="server_name">"URL de servidor DHIS"</string>
     <string name="pref_header_general">"General"</string>
-    <string name="font_size_level0">"xsmall"</string>
-    <string name="font_size_level1">"small"</string>
-    <string name="font_size_level2">"medium"</string>
-    <string name="font_size_level3">"large"</string>
-    <string name="font_size_level4">"xlarge"</string>
     <string name="dialog_title_push">"Enviando datos"</string>
     <string name="dialog_title_push_response">"Respuesta carga"</string>
     <string name="dialog_info_push_ok">"Datos subidos correctamente al servidor. Resultados: "</string>

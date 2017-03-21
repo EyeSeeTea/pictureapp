@@ -1,15 +1,25 @@
 package org.eyeseetea.malariacare.data.database.migrations;
 
+import android.util.Log;
+
 import com.raizlabs.android.dbflow.annotation.Migration;
 import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.model.Partner;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvs;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.TreatmentTable;
+
+import java.io.IOException;
 
 @Migration(version = 4, database = AppDatabase.class)
 public class Migration4RenameOrganisationToPartner extends BaseMigration {
+    private static String TAG = ".Migration4";
 
     Migration4RenameOrganisationToPartner instance;
+
 
 
     public Migration4RenameOrganisationToPartner() {
@@ -55,5 +65,20 @@ public class Migration4RenameOrganisationToPartner extends BaseMigration {
         String renameTreatment = "ALTER TABLE TreatmentTemp RENAME TO Treatment";
         database.execSQL(renameTreatment);
 
+        FileCsvs fileCsvs = new FileCsvs();
+        try {
+            fileCsvs.copyCsvFile("Organisations.csv",PopulateDB.PARTNER_CSV);
+        } catch (IOException e) {
+            Log.e(TAG, "Error copying csv\n" + e.getMessage());
+            e.printStackTrace();
+        }
+
+//        TreatmentTable treatmentTable=new TreatmentTable();
+//        try {
+//            treatmentTable.generateTreatmentMatrix();
+//        } catch (IOException e) {
+//            Log.e(TAG, "Error getting treatment\n" + e.getMessage());
+//            e.printStackTrace();
+//        }
     }
 }

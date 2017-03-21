@@ -76,6 +76,26 @@ public class FileCsvs {
         }
     }
 
+    public void copyCsvFile(String csvFrom, String csvTo) throws IOException {
+        if (!fileExists(csvTo)) {
+            createFile(csvTo);
+        } else {
+            mContext.deleteFile(csvTo);
+            createFile(csvTo);
+        }
+        if (fileExists(csvFrom)) {
+            FileOutputStream outputStream = mContext.openFileOutput(csvTo, Context.MODE_PRIVATE);
+            BufferedReader reader = new BufferedReader(
+                    new FileReader(mContext.getFilesDir() + "/" + csvFrom));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                outputStream.write((line + "\n").getBytes());
+            }
+            outputStream.close();
+            reader.close();
+        }
+    }
+
     private boolean fileExists(String fname) {
         File file = mContext.getFileStreamPath(fname);
         return file.exists();

@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.services.strategies;
 
 import android.util.Log;
 
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy {

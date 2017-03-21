@@ -453,13 +453,13 @@ public class Question extends BaseModel {
         return options;
     }
 
-    public static Answer getAnswer(String UID) {
+    public static Answer getAnswer(String questionUID) {
         return new Select().from(Answer.class).as(answerName)
                 .join(Question.class, Join.JoinType.LEFT_OUTER).as(questionName)
-                .on(Option_Table.id_answer_fk.withTable(answerAlias)
-                        .eq(Answer_Table.id_answer.withTable(questionAlias)))
+                .on(Question_Table.id_answer_fk.withTable(questionAlias)
+                        .eq(Answer_Table.id_answer.withTable(answerAlias)))
                 .where(Question_Table.uid_question.withTable(questionAlias)
-                        .eq(UID)).querySingle();
+                        .eq(questionUID)).querySingle();
     }
 
     /**

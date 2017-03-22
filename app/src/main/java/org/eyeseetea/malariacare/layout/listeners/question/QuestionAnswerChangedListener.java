@@ -15,7 +15,7 @@ public class QuestionAnswerChangedListener implements
     private DynamicTabAdapter mDynamicTabAdapter;
     private boolean mAdvanceToNextQuestion;
 
-    public QuestionAnswerChangedListener(TableLayout tableLayout,
+    public QuestionAnswerChangedListener(
             DynamicTabAdapter dynamicTabAdapter, boolean advanceToNextQuestion) {
 
         mDynamicTabAdapter = dynamicTabAdapter;

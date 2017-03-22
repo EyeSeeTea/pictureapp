@@ -65,6 +65,7 @@ import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.domain.usecase.AReloadSurveyAnsweredRatioUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ReloadSurveyAnsweredRatioUseCase;
+import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
@@ -252,7 +253,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
         this.user = user;
         this.id_user_fk = (user != null) ? user.getId_user() : null;
     }
-
     public Date getCreationDate() {
         return creation_date;
     }
@@ -343,7 +343,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     /**
      * Returns all the malaria surveys with status yet not put to "Sent"
      */
-    public static List<Survey> getAllUnsentMalariaSurveys() {
+    public static List<Survey> getAllUnsentMalariaSurveys(String malariaProgramUid) {
         Context context = PreferencesState.getInstance().getContext();
         return new Select().from(Survey.class).as(surveyName)
                 .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
@@ -356,7 +356,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .and(Survey_Table.status.withTable(surveyAlias)
                         .isNot(Constants.SURVEY_QUARANTINE))
                 .and(Program_Table.uid_program.withTable(programAlias)
-                        .isNot(context.getString(R.string.stockProgramUID)))
+                        .is(malariaProgramUid))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date.withTable(surveyAlias)))
                 .orderBy(OrderBy.fromProperty(
                         Survey_Table.id_org_unit_fk.withTable(surveyAlias))).queryList();
@@ -365,7 +365,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     /**
      * Returns all the malaria surveys with status put to "Sent"
      */
-    public static List<Survey> getAllSentMalariaSurveys() {
+    public static List<Survey> getAllSentMalariaSurveys(String malariaProgramUid) {
         Context context = PreferencesState.getInstance().getContext();
         return new Select().from(Survey.class).as(surveyName)
                 .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
@@ -374,7 +374,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
                 .where(ConditionGroup.clause()
                         .and(Program_Table.uid_program.withTable(programAlias)
-                                .isNot(context.getString(R.string.stockProgramUID)))
+                                .is(malariaProgramUid))
                         .and(ConditionGroup.clause()
                                 .and(Survey_Table.status.withTable(surveyAlias)
                                         .is(Constants.SURVEY_SENT))
@@ -436,7 +436,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     /**
      * Returns all the surveys with status put to "Sent"
      */
-    public static List<Survey> getAllMalariaSurveysToBeSent() {
+    public static List<Survey> getAllMalariaSurveysToBeSent(String malariaProgramUid) {
         Context context = PreferencesState.getInstance().getContext();
         return new Select().from(Survey.class).as(surveyName)
                 .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
@@ -445,7 +445,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Survey_Table.status.withTable(surveyAlias)
                         .eq(Constants.SURVEY_COMPLETED))
                 .and(Program_Table.uid_program.withTable(programAlias)
-                        .isNot(context.getString(R.string.stockProgramUID)))
+                        .is(malariaProgramUid))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date))
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit_fk)).queryList();
     }
@@ -679,7 +679,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .querySingle();
     }
 
-    private static void removeValue(Value value) {
+    public static void removeValue(Value value) {
         value.delete();
     }
 
@@ -807,19 +807,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
      */
     public boolean isInProgress() {
         return this.status == Constants.SURVEY_IN_PROGRESS;
-    }
-
-    public boolean isStockSurvey() {
-        if (id_program_fk == null) {
-            return false;
-        }
-        if (program == null) {
-            program = Program.findById(id_program_fk);
-        }
-        if (program != null) {
-            return program.isStockProgram();
-        }
-        return false;
     }
 
     public Float getMainScore() {
@@ -980,15 +967,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         Tab tab = program.getTabs().get(0);
         Question rootQuestion = Question.findRootQuestion(tab);
         Question localQuestion = rootQuestion;
-        while (localQuestion.getSibling() != null) {
-            if (localQuestion.isCompulsory() && !localQuestion.isStockQuestion()) {
-                numRequired++;
-            }
-            localQuestion = localQuestion.getSibling();
-        }
-        if (localQuestion.isStockQuestion() || !localQuestion.isCompulsory()) {
-            numRequired--;
-        }
+        numRequired = SurveyFragmentStrategy.getNumRequired(numRequired, localQuestion);
 
         //Add children required by each parent (value+question)
         Survey survey = Survey.findById(id_survey);
@@ -1155,23 +1134,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
         setCompletionDate(new Date());
         save();
     }
-
-    public void deleteStockValues(){
-        List<Value> values = getValuesFromDB();
-        for (Value value : values) {
-            if(value.getQuestion() == null){
-                continue;
-            }
-            if ((value.getQuestion().isACT() && !value.getValue().equals("0"))
-                    || value.getQuestion().isOutStockQuestion()) {
-                for(Question questionPropagated:value.getQuestion().getPropagationQuestions()){
-                    removeValue(questionPropagated.getValueBySurvey(Session.getMalariaSurvey()));
-                }
-                value.delete();
-            }
-        }
-    }
-
     /**
      * Checks if the answer to the first question is 'Yes'
      *
@@ -1505,4 +1467,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 '}';
     }
 
+    public static boolean findByProgramUid(String string) {
+        return false;
+    }
 }

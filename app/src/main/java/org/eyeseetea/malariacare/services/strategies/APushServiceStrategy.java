@@ -24,19 +24,6 @@ public abstract class APushServiceStrategy {
 
     public abstract void push();
 
-
-    protected void executeMockedPush() {
-        MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase();
-
-        mockedPushSurveysUseCase.execute(new MockedPushSurveysUseCase.Callback() {
-            @Override
-            public void onPushFinished() {
-                Log.d(TAG, "onPushMockFinished");
-                mPushService.onPushFinished();
-            }
-        });
-    }
-
     protected void executePush() {
         PushController pushController = new PushController(mPushService);
         PushUseCase pushUseCase = new PushUseCase(pushController);

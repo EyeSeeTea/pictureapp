@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/questionLayoutBackground"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/review_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_above="@+id/review_image_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_weight="1"
+        android:dividerHeight="0dp"></ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:background="@color/orange">
+
+        <ImageView
+            android:id="@id/review_image_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="sendSurvey"
+            android:scaleType="fitEnd"
+            android:src="@drawable/check"
+            android:paddingRight="8dp" />
+
+        <ImageView
+            android:id="@+id/review_cancel_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@color/orange"
+            android:onClick="reviewSurvey"
+            android:scaleType="fitStart"
+            android:src="@drawable/cancel"
+            android:paddingLeft="8dp" />
+    </LinearLayout>
+</LinearLayout>

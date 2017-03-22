@@ -23,8 +23,11 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Organisation;
+import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
@@ -102,6 +105,7 @@ public class PullController implements IPullController {
 
         if (isDemo) {
             createDummyOrgUnitsDataInDB();
+            PopulateDBStrategy.createDummyOrganisationInDB();
         }
     }
 

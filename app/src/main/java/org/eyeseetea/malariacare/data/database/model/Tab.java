@@ -231,14 +231,6 @@ public class Tab extends BaseModel {
         return tabType == Constants.TAB_MULTI_QUESTION;
     }
 
-    public boolean isDynamicTreatmentTab() {
-        return isDynamicTreatmentTab(getType());
-    }
-
-    public static boolean isDynamicTreatmentTab(int tabType) {
-        return tabType == Constants.TAB_DYNAMIC_TREATMENT;
-    }
-
     public static Tab findById(Long id) {
         return new Select()
                 .from(Tab.class)

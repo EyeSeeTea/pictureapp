@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TreatmentTable {
+public class TreatmentTableOperations {
     private static final List<String> csvsToDelete = Arrays.asList(
             PopulateDB.STRING_KEY_CSV,
             PopulateDB.TRANSLATION_CSV,
@@ -54,7 +54,7 @@ public class TreatmentTable {
     private String optionRDTPvId;
 
 
-    public TreatmentTable() {
+    public TreatmentTableOperations() {
         mContext = PreferencesState.getInstance().getContext();
         mFileCsvs = new FileCsvs();
     }

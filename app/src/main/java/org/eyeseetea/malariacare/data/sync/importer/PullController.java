@@ -27,6 +27,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Organisation;
+import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
@@ -104,7 +105,7 @@ public class PullController implements IPullController {
 
         if (isDemo) {
             createDummyOrgUnitsDataInDB();
-            createDummyOrganisationInDB();
+            PopulateDBStrategy.createDummyOrganisationInDB();
         }
     }
 
@@ -119,13 +120,6 @@ public class PullController implements IPullController {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void createDummyOrganisationInDB() {
-        Organisation testOrganisation = new Organisation();
-        testOrganisation.setName(mContext.getString(R.string.test_organisation_name));
-        testOrganisation.setUid(mContext.getString(R.string.test_organisation_uid));
-        testOrganisation.insert();
     }
 
     private void pullData(PullFilters pullFilters, List<OrganisationUnit> organisationUnits,

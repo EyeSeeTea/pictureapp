@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.presentation.factory.stock.StockBuilder;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -73,7 +75,7 @@ public class StockService extends IntentService {
         }
 
         List<Survey> sentSurveysForStock = Survey.findSurveysWithProgramAndGreaterDate(
-                Program.getStockProgram(), queryDate);
+                Program.findByUID(PreferencesState.getInstance().getContext().getString(R.string.stockProgramUID)), queryDate);
 
         Log.i(TAG, String.format("Found %d surveys to build monitor info, aggregating data...",
                 sentSurveysForStock.size()));

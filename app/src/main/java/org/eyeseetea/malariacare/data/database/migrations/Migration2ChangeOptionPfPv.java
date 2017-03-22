@@ -35,7 +35,7 @@ public class Migration2ChangeOptionPfPv extends BaseMigration {
         //Data? Add new default data
         if (instance.hasData()) {
             try {
-                UpdateDB.updateOptions(PreferencesState.getInstance().getContext());
+                UpdateDBStrategy.updateOptions(PreferencesState.getInstance().getContext());
             } catch (IOException e) {
                 e.printStackTrace();
             }

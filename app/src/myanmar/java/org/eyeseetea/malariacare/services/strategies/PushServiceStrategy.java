@@ -26,4 +26,16 @@ public class PushServiceStrategy extends APushServiceStrategy {
             executePush();
         }
     }
+
+    protected void executeMockedPush() {
+        MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase();
+
+        mockedPushSurveysUseCase.execute(new MockedPushSurveysUseCase.Callback() {
+            @Override
+            public void onPushFinished() {
+                Log.d(TAG, "onPushMockFinished");
+                mPushService.onPushFinished();
+            }
+        });
+    }
 }

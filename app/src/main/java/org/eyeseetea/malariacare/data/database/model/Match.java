@@ -165,7 +165,7 @@ public class Match extends BaseModel {
     public QuestionThreshold getQuestionThreshold() {
         //Find threshold with this match
         return new Select().from(QuestionThreshold.class)
-                .where(Match_Table.id_match
+                .where(QuestionThreshold_Table.id_match_fk
                         .is(id_match)).querySingle();
     }
 

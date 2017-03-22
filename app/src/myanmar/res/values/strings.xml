@@ -371,4 +371,6 @@
 <string name="error_no_treatment">"There\'s not treatment for this combination of entries. Please talk to the administrator"</string>
 <string name="true_option_identifier">Yes</string>
 <string name="false_option_identifier">No</string>
+<string name="confirmation_really_exit_title">"Really Exit?"</string>
+<string name="confirmation_really_exit">"Are you sure you want to exit the app?"</string>
 </resources>

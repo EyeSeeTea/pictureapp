@@ -40,7 +40,10 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
                         .database.model.Survey.findById(idSurvey);
         Survey survey = new Survey(idSurvey);
         survey.setEventDate(surveyDB.getEventDate());
-        survey.setSurveyAnsweredRatio(surveyDB.reloadSurveyAnsweredRatio());
+        AReloadSurveyAnsweredRatioUseCase
+                reloadSurveyUseCase = new ReloadSurveyAnsweredRatioUseCase(surveyDB);
+        reloadSurveyUseCase.execute();
+        survey.setSurveyAnsweredRatio(surveyDB.getAnsweredQuestionRatio());
         surveyDB.updateSurveyStatus();
         survey.setStatus(surveyDB.getStatus());
         return survey;

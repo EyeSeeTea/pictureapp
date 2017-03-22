@@ -63,6 +63,8 @@ import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
+import org.eyeseetea.malariacare.domain.usecase.AReloadSurveyAnsweredRatioUseCase;
+import org.eyeseetea.malariacare.domain.usecase.ReloadSurveyAnsweredRatioUseCase;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
@@ -309,6 +311,21 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
     public void setEventUid(String eventuid) {
         this.uid_event_fk = eventuid;
+    }
+
+    /**
+     * Ratio of completion is cached into answeredQuestionRatio in order to speed up loading
+     */
+    public SurveyAnsweredRatio getAnsweredQuestionRatio() {
+        if (answeredQuestionRatio == null) {
+            answeredQuestionRatio = SurveyAnsweredRatioCache.get(this.getId_survey());
+            if (answeredQuestionRatio == null) {
+                AReloadSurveyAnsweredRatioUseCase
+                        reloadSurveyUseCase = new ReloadSurveyAnsweredRatioUseCase(this);
+                reloadSurveyUseCase.execute();
+            }
+        }
+        return answeredQuestionRatio;
     }
 
     /**
@@ -948,30 +965,9 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return values;
     }
 
-    /**
-     * Ratio of completion is cached into answeredQuestionRatio in order to speed up loading
-     */
-    public SurveyAnsweredRatio getAnsweredQuestionRatio() {
-        if (answeredQuestionRatio == null) {
-            answeredQuestionRatio = SurveyAnsweredRatioCache.get(this.getId_survey());
-            if (answeredQuestionRatio == null) {
-                answeredQuestionRatio = reloadSurveyAnsweredRatio();
-            }
-        }
-        return answeredQuestionRatio;
-    }
-
-    /**
-     * Calculates the current ratio of completion for this survey
-     *
-     * @return SurveyAnsweredRatio that hold the total & answered questions.
-     */
-    public SurveyAnsweredRatio reloadSurveyAnsweredRatio() {
-        if (!this.isStockSurvey()) {
-            return reloadMalariaSurveyAnsweredRatio();
-        } else {
-            return reloadStockSurveyAnsweredRatio();
-        }
+    public void setAnsweredQuestionRatio(
+            SurveyAnsweredRatio answeredQuestionRatio) {
+        this.answeredQuestionRatio = answeredQuestionRatio;
     }
 
     private SurveyAnsweredRatio reloadMalariaSurveyAnsweredRatio() {
@@ -1140,10 +1136,12 @@ public class Survey extends BaseModel implements VisitableToSDK {
             return;
         }
 
-        SurveyAnsweredRatio answeredRatio = this.reloadSurveyAnsweredRatio();
+        AReloadSurveyAnsweredRatioUseCase reloadSurveyUseCase =
+                new ReloadSurveyAnsweredRatioUseCase(this);
+        reloadSurveyUseCase.execute();
 
         //Update status & completionDate
-        if (answeredRatio.isCompleted()) {
+        if (answeredQuestionRatio.isCompleted()) {
             complete();
         } else {
             setStatus(Constants.SURVEY_IN_PROGRESS);

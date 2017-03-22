@@ -20,4 +20,6 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
     }
     public static void createDummyOrganisationInDB() {
     }
+    public static  void createDummyOrgUnitsDataInDB(Context context) {
+    }
 }

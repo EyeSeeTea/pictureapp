@@ -17,6 +17,7 @@ import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateRow;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.RelationsIdCsvDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.TreatmentTableOperations;
+import org.eyeseetea.malariacare.data.sync.importer.OrgUnitToOptionConverter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -99,5 +100,20 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
         testOrganisation.setUid(PreferencesState.getInstance().getContext().getString(
                 R.string.test_organisation_uid));
         testOrganisation.insert();
+    }
+
+
+
+    public static  void createDummyOrgUnitsDataInDB(Context context) {
+        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
+
+        if (orgUnits.size() == 0) {
+            try {
+                PopulateDB.populateDummyData(context);
+                OrgUnitToOptionConverter.convert();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

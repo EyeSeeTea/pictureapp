@@ -104,21 +104,8 @@ public class PullController implements IPullController {
         PopulateDB.initDataIfRequired(mContext);
 
         if (isDemo) {
-            createDummyOrgUnitsDataInDB();
+            PopulateDBStrategy.createDummyOrgUnitsDataInDB(mContext);
             PopulateDBStrategy.createDummyOrganisationInDB();
-        }
-    }
-
-    private void createDummyOrgUnitsDataInDB() {
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-
-        if (orgUnits.size() == 0) {
-            try {
-                PopulateDB.populateDummyData(mContext);
-                OrgUnitToOptionConverter.convert();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 

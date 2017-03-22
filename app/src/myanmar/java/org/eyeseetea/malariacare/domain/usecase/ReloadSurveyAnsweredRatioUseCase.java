@@ -8,6 +8,8 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
+import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
+import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
 import java.util.List;
 
@@ -18,7 +20,8 @@ public class ReloadSurveyAnsweredRatioUseCase extends AReloadSurveyAnsweredRatio
 
     @Override
     public void execute() {
-        if (!survey.isStockSurvey()) {
+        SurveyFragmentStrategy surveyFragmentStrategy = new SurveyFragmentStrategy();
+        if (!surveyFragmentStrategy.isStockSurvey(survey)) {
             reloadMalariaSurveyAnsweredRatio();
         } else {
             reloadStockSurveyAnsweredRatio();
@@ -43,15 +46,15 @@ public class ReloadSurveyAnsweredRatioUseCase extends AReloadSurveyAnsweredRatio
         for (Question question : mainTreatmentQuestions) {
             if (question.isCompulsory()) {
                 numRequired++;
-                if (question.isStockQuestion()) {
+                if (TreatmentQueries.isStockQuestion(question)) {
                     for (Value value : stockValues) {
                         if (value.getQuestion().getUid().equals(question.getUid())) {
                             if (value.getValue() != null) numAnswered++;
                             if (value.getValue().equals("0")) {
-                                if (question.isACT()) {
+                                if (TreatmentQueries.isACT(question.getUid())) {
                                     numRequired++;
                                     checkACTAlternative = true;
-                                } else if (question.isPq()) {
+                                } else if (TreatmentQueries.isPq(question.getUid())) {
                                     numRequired++;
                                     checkPQAlternative = true;
                                 }

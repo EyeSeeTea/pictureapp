@@ -1858,17 +1858,16 @@ public class Question extends BaseModel {
         return propagationQuestion;
     }
 
+    private static class QuestionOrderComparator implements Comparator {
 
-private static class QuestionOrderComparator implements Comparator {
+        @Override
+        public int compare(Object o1, Object o2) {
 
-    @Override
-    public int compare(Object o1, Object o2) {
+            Question question1 = (Question) o1;
+            Question question2 = (Question) o2;
 
-        Question question1 = (Question) o1;
-        Question question2 = (Question) o2;
-
-        return new Integer(
-                question1.getOrder_pos().compareTo(new Integer(question2.getOrder_pos())));
+            return new Integer(
+                    question1.getOrder_pos().compareTo(new Integer(question2.getOrder_pos())));
+        }
     }
-}
 }

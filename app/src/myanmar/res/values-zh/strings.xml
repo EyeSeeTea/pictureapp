@@ -353,7 +353,13 @@
 <string name="error_conflict_message">具有UID：％1$s 的事件。 已在冲突的数据元素UID：％2$s 中上传，并显示消息：％3$s。 请与管理员联系。</string>
 <string name="error_conflict_title">错误</string>
 <string name="submit">提交</string>
-    <string name="true_option_identifier">是</string>
-    <string name="false_option_identifier">没有</string>
-    <string name="error_no_treatment">"没有对这种组合条目的治疗。 请与管理员联系"</string>
+<string name="true_option_identifier">是</string>
+<string name="false_option_identifier">没有</string>
+<string name="error_no_treatment">"没有对这种组合条目的治疗。 请与管理员联系"</string>
+<string name="confirmation_really_exit_title">"真的退出吗？"</string>
+<string name="confirmation_really_exit">"您确定要退出应用程序吗？"</string>
+<string name="survey_first_step">"正在恢复调查问题..."</string>
+<string name="survey_second_step">"建筑调查常见问题..."</string>
+<string name="survey_third_step">"建筑调查处理矩阵"</string>
+<string name="survey_fourth_step">"正在创建调查..."</string>
 </resources>

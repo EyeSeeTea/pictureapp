@@ -1,10 +1,16 @@
 package org.eyeseetea.malariacare.data.remote.strategies;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.hisp.dhis.client.sdk.android.api.D2;
+import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
 import org.hisp.dhis.client.sdk.core.event.EventFilters;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.util.List;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class PullDhisSDKDataSourceStrategy implements IPullDhisSDKDataSourceStrategy {
     public void setEventFilters(EventFilters eventFilters) {

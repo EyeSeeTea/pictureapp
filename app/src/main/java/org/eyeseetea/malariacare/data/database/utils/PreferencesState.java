@@ -324,6 +324,20 @@ public class PreferencesState {
         prefEditor.commit(); // finally save changes
     }
 
+    public boolean getPullDataAfterMetadata() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.pull_data_after_metadata), true);
+    }
+
+    public void setPullDataAfterMetadata(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.pull_data_after_metadata),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
     public boolean getDataFilteredByOrgUnit() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
@@ -407,5 +421,9 @@ public class PreferencesState {
     }
     public boolean getDataLimitedByPreferenceOrgUnit() {
         return getDataFilteredByOrgUnit();
+    }
+
+    public boolean pullDataAfterMetadata() {
+        return getPullDataAfterMetadata();
     }
 }

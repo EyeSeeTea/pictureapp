@@ -41,13 +41,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public Preference.OnPreferenceClickListener getOnPreferenceClickListener() {
-        PreferencesState.getInstance().setMetaDataDownload(true);
         return loginRequiredOnPreferenceClickListener;
     }
 
     @Override
     public Preference.OnPreferenceChangeListener getOnPreferenceChangeListener() {
-        PreferencesState.getInstance().setMetaDataDownload(true);
         return pullRequiredOnPreferenceChangeListener;
     }
 

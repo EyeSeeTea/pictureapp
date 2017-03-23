@@ -16,7 +16,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public void onBackPressed() {
         Intent intent = new Intent(loginActivity, SettingsActivity.class);
 
-        intent.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
+        //intent.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
 
         loginActivity.startActivity(intent);
     }

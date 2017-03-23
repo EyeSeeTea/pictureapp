@@ -28,6 +28,7 @@ import java.util.List;
 
 public class PopulateDBStrategy implements IPopulateDBStrategy {
 
+    @Override
     public void init() {
         try {
             FileCsvs fileCsvs = new FileCsvs();
@@ -39,6 +40,7 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
         }
     }
 
+    @Override
     public InputStream openFile(Context context, String table)
             throws IOException, FileNotFoundException {
         return context.openFileInput(table);
@@ -93,7 +95,8 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
     }
 
 
-    public static void createDummyOrganisationInDB() {
+    @Override
+    public void createDummyOrganisationInDB() {
         Organisation testOrganisation = new Organisation();
         testOrganisation.setName(PreferencesState.getInstance().getContext().getString(
                 R.string.test_organisation_name));
@@ -104,7 +107,8 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
 
 
 
-    public static  void createDummyOrgUnitsDataInDB(Context context) {
+    @Override
+    public void createDummyOrgUnitsDataInDB(Context context) {
         List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
 
         if (orgUnits.size() == 0) {
@@ -117,7 +121,8 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
         }
     }
 
-    public static void logoutWipe() {
+    @Override
+    public void logoutWipe() {
         PopulateDB.wipeDataBase();
     }
 }

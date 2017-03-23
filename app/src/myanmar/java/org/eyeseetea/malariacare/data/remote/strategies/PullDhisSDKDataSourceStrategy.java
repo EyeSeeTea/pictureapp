@@ -61,4 +61,34 @@ public class PullDhisSDKDataSourceStrategy implements IPullDhisSDKDataSourceStra
 
         return mCategoryOptionUID;
     }
+    @Override
+    public void pullMetadata(
+            final IPullDhisSDKDataSourceStrategy mPullDhisSDKDataSourceStrategy,
+            final IDataSourceCallback<List<OrganisationUnit>> callback){
+        Observable.zip(D2.me().organisationUnits().pull(SyncStrategy.NO_DELETE),
+                D2.categoryOptions().pull(),
+                new Func2<List<OrganisationUnit>, List<CategoryOption>,
+                        List<OrganisationUnit>>() {
+                    @Override
+                    public List<OrganisationUnit> call(List<OrganisationUnit> organisationUnits,
+                            List<CategoryOption> categoryOptions) {
+                        return organisationUnits;
+                    }
+                })
+                .subscribeOn(Schedulers.io()).
+                observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<OrganisationUnit>>() {
+                    @Override
+                    public void call(List<OrganisationUnit> organisationUnits) {
+                        mPullDhisSDKDataSourceStrategy.onMetadataSucceed(callback,
+                                organisationUnits);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        callback.onError(throwable);
+                    }
+                });
+
+    }
 }

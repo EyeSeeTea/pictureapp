@@ -12,22 +12,28 @@ import java.io.InputStream;
 
 public class PopulateDBStrategy implements IPopulateDBStrategy {
 
+    @Override
     public void init() {
     }
 
+    @Override
     public InputStream openFile(Context context, String table) throws IOException,
             FileNotFoundException {
         AssetManager assetMgr = context.getAssets();
         return assetMgr.open(table);
     }
 
-    public static void createDummyOrganisationInDB() {
-    }
 
-    public static  void createDummyOrgUnitsDataInDB(Context context) {
-    }
-
-    public static void logoutWipe() {
+    @Override
+    public void logoutWipe() {
         PopulateDB.wipeOrgUnitsAndEvents();
+    }
+
+    @Override
+    public void createDummyOrganisationInDB() {
+    }
+
+    @Override
+    public void createDummyOrgUnitsDataInDB(Context context) {
     }
 }

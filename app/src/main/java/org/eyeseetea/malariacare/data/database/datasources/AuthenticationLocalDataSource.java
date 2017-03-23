@@ -37,7 +37,11 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
         Session.logout();
 
-        PopulateDBStrategy.logoutWipe();
+        //reset org_unit
+        PreferencesState.getInstance().saveStringPreference(R.string.org_unit,
+                "");
+
+        new PopulateDBStrategy().logoutWipe();
 
         deleteOrgUnitQuestionOptions();
 

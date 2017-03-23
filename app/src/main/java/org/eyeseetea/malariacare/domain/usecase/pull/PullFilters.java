@@ -11,6 +11,7 @@ public class PullFilters {
     boolean downloadData;
     boolean downloadMetaData;
     String dataByOrgUnit;
+    boolean pullDataAfterMetadata;
 
     public Date getStartDate() {
         return startDate;
@@ -48,16 +49,15 @@ public class PullFilters {
         return downloadData;
     }
 
-    public void setDownloadData(boolean downloadMetaData) {
-        this.downloadMetaData = downloadMetaData;
+    public void setDownloadDataRequired(boolean downloadData) {
+        this.downloadData = downloadData;
     }
 
-    public boolean downloadMetaData() {
+    public void setPullMetaData(boolean downloadMetaData) {
+        this.downloadMetaData = downloadMetaData;
+    }
+    public boolean pullMetaData() {
         return downloadMetaData;
-    }
-
-    public void setDownloadMetaData(boolean downloadMetaData) {
-        this.downloadMetaData = downloadMetaData;
     }
 
     public String getDataByOrgUnit() {
@@ -67,5 +67,12 @@ public class PullFilters {
     public void setDataByOrgUnit(String dataByOrgUnit) {
         this.dataByOrgUnit
                 = dataByOrgUnit;
+    }
+
+    public void setPullDataAfterMetadata(boolean pullDataAfterMetadata) {
+        this.pullDataAfterMetadata = pullDataAfterMetadata;
+    }
+    public boolean pullDataAfterMetadata() {
+        return pullDataAfterMetadata;
     }
 }

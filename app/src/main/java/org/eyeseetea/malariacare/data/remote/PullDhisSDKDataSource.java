@@ -48,7 +48,7 @@ public class PullDhisSDKDataSource {
 
                 for (OrganisationUnit organisationUnit : organisationUnits) {
                     if(pullFilters.getDataByOrgUnit() != null && !pullFilters.getDataByOrgUnit().equals("")){
-                        if(!pullFilters.getDataByOrgUnit().equals(organisationUnit.getUId())){
+                        if(!pullFilters.getDataByOrgUnit().equals(organisationUnit.getName())){
                             continue;
                         }
                     }

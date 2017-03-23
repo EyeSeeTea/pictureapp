@@ -375,6 +375,11 @@ public class PreferencesState {
     }
 
     public boolean isUserAccept() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        userAccept = sharedPreferences.getBoolean(
+                context.getResources().getString(R.string.user_accept_key),
+                false);
         return userAccept;
     }
 

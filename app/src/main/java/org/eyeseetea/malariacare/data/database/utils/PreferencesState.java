@@ -29,6 +29,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.views.FontUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -108,6 +109,11 @@ public class PreferencesState {
     }
 
     public void reloadPreferences() {
+        if (context == null) {
+            Log.d(TAG, "reloadPreferences: "
+                    + " the context is null");
+            return;
+        }
         scale = initScale();
         showNumDen = initShowNumDen();
         orgUnit = initOrgUnit();
@@ -249,6 +255,13 @@ public class PreferencesState {
 
     public void setDataLimitedByDate(String value) {
         saveStringPreference(R.string.data_limited_by_date, value);
+    }
+
+    public void onCreateActivityPreferences(Resources resources, Resources.Theme theme) {
+        loadsLanguageInActivity();
+        if (theme != null) {
+            FontUtils.applyFontStyleByPreference(resources, theme);
+        }
     }
 
     public void loadsLanguageInActivity() {

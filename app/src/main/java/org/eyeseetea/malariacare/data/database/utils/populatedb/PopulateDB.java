@@ -100,31 +100,7 @@ public class PopulateDB {
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
 
-    public static List<Class<? extends BaseModel>> allMandatoryTables = Arrays.asList(
-            User.class,
-            StringKey.class,
-            Translation.class,
-            Program.class,
-            Tab.class,
-            Header.class,
-            Answer.class,
-            OptionAttribute.class,
-            Option.class,
-            Question.class,
-            QuestionRelation.class,
-            Match.class,
-            QuestionOption.class,
-            QuestionThreshold.class,
-            Drug.class,
-            Organisation.class,
-            Treatment.class,
-            DrugCombination.class,
-            TreatmentMatch.class,
-            OrgUnitLevel.class,
-            OrgUnit.class
-    );
-
-    public static List<Class<? extends BaseModel>> allTables = Arrays.asList(
+    public static List<Class<? extends BaseModel>> allTables= Arrays.asList(
             CompositeScore.class,
             OrgUnitProgramRelation.class,
             Score.class,
@@ -154,6 +130,7 @@ public class PopulateDB {
             OrgUnitLevel.class,
             OrgUnit.class
     );
+
     private static final List<String> tables2populate = Arrays.asList(
             STRING_KEY_CSV,
             TRANSLATION_CSV,
@@ -204,6 +181,10 @@ public class PopulateDB {
     static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
+        if(PopulateDB.hasMandatoryTables()) {
+            Log.i(TAG, "Your DB is already populated");
+            return;
+        }
         new PopulateDBStrategy().init();
 
         Log.i(TAG, "DB empty, loading data ...");
@@ -218,8 +199,8 @@ public class PopulateDB {
     }
 
     public static boolean hasMandatoryTables() {
-        for (Class table : allMandatoryTables) {
-            if (SQLite.selectCountOf().from(table).count() == 0) {
+        for(Class table: CustomCompulsoryTables.getAllMandatoryTables()){
+            if(SQLite.selectCountOf().from(table).count() == 0) {
                 return false;
             }
         }
@@ -519,7 +500,6 @@ public class PopulateDB {
         databaseDefinition.getWritableDatabase().execSQL(sqlCopy);
 
     }
-
     /**
      * Delete all surveys from database (and its related info)
      */
@@ -984,5 +964,15 @@ public class PopulateDB {
 
     public static void initDBQuery() {
         Tab.getAllTabs();
+    }
+
+    public static void wipeOrgUnitsAndEvents() {
+        wipeTables((Class<? extends BaseModel>[]) Arrays.asList(
+                OrgUnit.class,
+                Survey.class,
+                Value.class,
+                Score.class,
+                SurveySchedule.class,
+                User.class).toArray());
     }
 }

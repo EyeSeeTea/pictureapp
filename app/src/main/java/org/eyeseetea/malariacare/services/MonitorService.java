@@ -28,6 +28,7 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.TimePeriodCalculator;
+import org.eyeseetea.malariacare.services.strategies.MonitorServiceStrategy;
 
 import java.util.List;
 
@@ -83,8 +84,7 @@ public class MonitorService extends IntentService {
         Log.i(TAG, "Preparing monitor data...");
 
         //Take last 6 months sent surveys in order to create monitor stats on top of them.
-        List<Survey> sentSurveysForMonitor = Survey.findSentSurveysAfterDate(
-                TimePeriodCalculator.getInstance().getMinDateForMonitor());
+        List<Survey> sentSurveysForMonitor = MonitorServiceStrategy.getMonitoringSurveys(TimePeriodCalculator.getInstance().getMinDateForMonitor());
 
         Log.i(TAG, String.format("Found %d surveys to build monitor info, aggregating data...",
                 sentSurveysForMonitor.size()));

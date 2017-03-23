@@ -102,7 +102,7 @@ public class ReviewFragment extends Fragment {
     }
 
     private boolean isStockValue(Value value) {
-        if (value.getQuestion() == null) {
+        if (Session.getStockSurvey()==null || value.getQuestion() == null) {
             return false;
         }
         for (Value stockValue : Session.getStockSurvey().getValuesFromDB()) {

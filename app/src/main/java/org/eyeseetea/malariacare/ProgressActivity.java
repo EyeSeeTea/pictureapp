@@ -124,7 +124,12 @@ public class ProgressActivity extends Activity {
     private void launchPull(boolean isDemo) {
         PullFilters pullFilters = new PullFilters();
         pullFilters.setStartDate(PreferencesState.getInstance().getDateStarDateLimitFilter());
-        pullFilters.setDownloadData(PreferencesState.getInstance().downloadDataFilter());
+        pullFilters.setDownloadDataRequired(PreferencesState.getInstance().downloadDataFilter());
+        pullFilters.setPullDataAfterMetadata(PreferencesState.getInstance().getPullDataAfterMetadata());
+        pullFilters.setPullMetaData(PreferencesState.getInstance().downloadMetaData());
+        if(PreferencesState.getInstance().getDataFilteredByOrgUnit()) {
+            pullFilters.setDataByOrgUnit(PreferencesState.getInstance().getOrgUnit());
+        }
         pullFilters.setDemo(isDemo);
 
         mPullUseCase.execute(pullFilters, new PullUseCase.Callback() {

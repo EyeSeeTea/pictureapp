@@ -17,6 +17,7 @@ import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateRow;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.RelationsIdCsvDB;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.TreatmentTableOperations;
+import org.eyeseetea.malariacare.data.sync.importer.OrgUnitToOptionConverter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.util.List;
 
 public class PopulateDBStrategy implements IPopulateDBStrategy {
 
+    @Override
     public void init() {
         try {
             FileCsvs fileCsvs = new FileCsvs();
@@ -38,6 +40,7 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
         }
     }
 
+    @Override
     public InputStream openFile(Context context, String table)
             throws IOException, FileNotFoundException {
         return context.openFileInput(table);
@@ -92,12 +95,34 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
     }
 
 
-    public static void createDummyOrganisationInDB() {
+    @Override
+    public void createDummyOrganisationInDB() {
         Organisation testOrganisation = new Organisation();
         testOrganisation.setName(PreferencesState.getInstance().getContext().getString(
                 R.string.test_organisation_name));
         testOrganisation.setUid(PreferencesState.getInstance().getContext().getString(
                 R.string.test_organisation_uid));
         testOrganisation.insert();
+    }
+
+
+
+    @Override
+    public void createDummyOrgUnitsDataInDB(Context context) {
+        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
+
+        if (orgUnits.size() == 0) {
+            try {
+                PopulateDB.populateDummyData(context);
+                OrgUnitToOptionConverter.convert();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void logoutWipe() {
+        PopulateDB.wipeDataBase();
     }
 }

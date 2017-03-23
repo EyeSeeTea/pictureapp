@@ -20,6 +20,7 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         IQuestionView {
     CustomEditText numberPicker;
     CustomButton sendButton;
+    Boolean isClicked=false;
 
     public PositiveNumberSingleQuestionView(Context context) {
         super(context);
@@ -62,7 +63,7 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         sendButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                validateAnswer(context);
+                    validateAnswer(context);
             }
         });
 
@@ -80,14 +81,20 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
     }
 
     private void validateAnswer(Context context) {
-        try {
-            PositiveNumber positiveNumber = PositiveNumber.parse(numberPicker.getText().toString());
-            hideKeyboard(numberPicker);
-            notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
-            Validation.getInstance().removeInputError(numberPicker);
-        } catch (InvalidPositiveNumberException e) {
-            Validation.getInstance().addinvalidInput(numberPicker, context.getString(R.string.dynamic_error_age));
-            numberPicker.setError(context.getString(R.string.dynamic_error_age));
+        if(!isClicked) {
+            isClicked = true;
+            try {
+                PositiveNumber positiveNumber = PositiveNumber.parse(
+                        numberPicker.getText().toString());
+                Validation.getInstance().removeInputError(numberPicker);
+                hideKeyboard(numberPicker);
+                notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
+            } catch (InvalidPositiveNumberException e) {
+                Validation.getInstance().addinvalidInput(numberPicker,
+                        context.getString(R.string.dynamic_error_age));
+                numberPicker.setError(context.getString(R.string.dynamic_error_age));
+            }
+            isClicked = false;
         }
     }
 

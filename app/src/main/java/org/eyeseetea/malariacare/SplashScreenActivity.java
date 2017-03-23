@@ -7,7 +7,9 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
@@ -37,9 +39,11 @@ public class SplashScreenActivity extends Activity {
 
         D2.init(this);
         SdkQueries.createDBIndexes();
+        //Added to execute a query in DB, because DBFLow doesn't do any migration until a query
+        // is executed
+        PopulateDB.initDBQuery();
+        PostMigration.launchPostMigration();
 
-        //TODO: after mega merge
-        //PostMigration.launchPostMigration();
 
         if (!BuildConfig.multiuser) {
             Log.i(TAG, "Pull on SplashScreen ...");

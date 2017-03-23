@@ -68,4 +68,8 @@
     <string name="category_combination" translatable="false">GwFkNOXaQcq</string>
     <string name="category_option_group_set_uid" translatable="false">yVH67wmhryq</string>
 
+    <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
+    <string name="GPS_LATITUDE_DEFAULT" translatable="false">16.010790</string>
+    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">96.852446</string>
+
 </resources>

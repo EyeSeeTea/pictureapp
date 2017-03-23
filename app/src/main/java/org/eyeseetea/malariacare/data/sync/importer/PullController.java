@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
@@ -108,8 +109,12 @@ public class PullController implements IPullController {
                 ConversionFilter conversionFilter = new ConversionFilter();
                 conversionFilter.setConvertMetaData(false);
                 conversionFilter.setConvertData(true);
+                conversionFilter.setOrgUnitFromDB(true);
                 List<OrganisationUnit> organisationUnitsList = D2.me().organisationUnits().list().toBlocking().first();
                 pullData(pullFilters, organisationUnitsList, callback, conversionFilter);
+            }
+            else{
+                callback.onComplete();
             }
         }
     }
@@ -155,7 +160,7 @@ public class PullController implements IPullController {
             }
 
             if (conversionFilter.dataConversion()) {
-                convertData(callback);
+                convertData(conversionFilter, callback);
             } else {
                 callback.onComplete();
             }
@@ -187,7 +192,7 @@ public class PullController implements IPullController {
         mPullControllerStrategy.convertMetadata(mConverter);
     }
 
-    private void convertData(final Callback callback) {
+    private void convertData(ConversionFilter conversionFilter, final Callback callback) {
 
         if (cancelPull) {
             callback.onCancel();
@@ -196,6 +201,9 @@ public class PullController implements IPullController {
 
         callback.onStep(PullStep.CONVERT_DATA);
 
+        if(conversionFilter.getOrgUnitFromDB()){
+            mConverter.setOrgUnits(OrgUnit.getAllOrgUnit());
+        }
         mDataConverter.convert(callback, mConverter);
     }
 

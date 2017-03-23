@@ -213,4 +213,8 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
             }
         }
     }
+
+    public void setOrgUnits(List<OrgUnit> allOrgUnitsInDB) {
+        orgUnits = allOrgUnitsInDB;
+    }
 }

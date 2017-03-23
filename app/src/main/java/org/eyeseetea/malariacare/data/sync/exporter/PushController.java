@@ -114,7 +114,7 @@ public class PushController implements IPushController {
                     public void onSuccess(
                             Map<String, ImportSummary> mapEventsImportSummary) {
                         mConvertToSDKVisitor.saveSurveyStatus(mapEventsImportSummary, callback);
-                        ServerAPIController.banOrgUnitIfRequired();
+
                         callback.onComplete();
                     }
 
@@ -122,7 +122,6 @@ public class PushController implements IPushController {
                     public void onError(Throwable throwable) {
                         if(throwable instanceof ImportSummaryErrorException) {
                             mConvertToSDKVisitor.setSurveysAsQuarantine();
-                            ServerAPIController.banOrgUnitIfRequired();
                         }
                         callback.onError(throwable);
                     }

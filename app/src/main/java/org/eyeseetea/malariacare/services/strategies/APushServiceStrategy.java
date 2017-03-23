@@ -7,7 +7,6 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.PushController;
-import org.eyeseetea.malariacare.domain.usecase.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.domain.usecase.PushUseCase;
 import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.services.PushService;
@@ -64,7 +63,14 @@ public abstract class APushServiceStrategy {
 
             @Override
             public void onInformativeError(String message) {
-                showInDialog(message);
+                showInDialog(PreferencesState.getInstance().getContext().getString(
+                        R.string.error_conflict_title), message);
+            }
+
+            @Override
+            public void onBannedOrgUnitError() {
+                showInDialog("", PreferencesState.getInstance().getContext().getString(
+                        R.string.exception_org_unit_banned));
             }
         });
     }
@@ -74,9 +80,7 @@ public abstract class APushServiceStrategy {
         mPushService.onPushError(error);
     }
 
-    public void showInDialog(String message) {
-        DashboardActivity.dashboardActivity.showException(
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.error_conflict_title), message);
+    public void showInDialog(String title, String message) {
+        DashboardActivity.dashboardActivity.showException(title, message);
     }
 }

@@ -42,7 +42,7 @@ public class User extends BaseModel {
     @Column
     String name;
     @Column
-    long organisation_fk;
+    Long organisation_fk;
     @Column
     long supervisor_fk;
 
@@ -148,13 +148,17 @@ public class User extends BaseModel {
         return surveys;
     }
 
-    public long getOrganisation() {
-        if (organisation_fk == 0) {
+    public Long getOrganisationId() {
+        return  organisation_fk;
+    }
+
+    public Long getOrganisation() {
+        if (organisation_fk == null) {
             User user = new Select()
                     .from(User.class)
                     .where(User_Table.name.is(name))
                     .querySingle();
-            organisation_fk = user.getOrganisation();
+            organisation_fk = user.getOrganisationId();
         }
 
         return organisation_fk;

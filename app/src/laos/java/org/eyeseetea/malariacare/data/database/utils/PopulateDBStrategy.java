@@ -22,4 +22,7 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
     }
     public static  void createDummyOrgUnitsDataInDB(Context context) {
     }
+    public static void logoutWipe() {
+        PopulateDB.wipeOrgUnitsAndEvents();
+    }
 }

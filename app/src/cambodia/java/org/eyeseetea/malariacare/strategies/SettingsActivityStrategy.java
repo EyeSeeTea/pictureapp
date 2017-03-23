@@ -4,6 +4,7 @@ import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
 
@@ -40,11 +41,13 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
     @Override
     public Preference.OnPreferenceClickListener getOnPreferenceClickListener() {
+        PreferencesState.getInstance().setMetaDataDownload(true);
         return loginRequiredOnPreferenceClickListener;
     }
 
     @Override
     public Preference.OnPreferenceChangeListener getOnPreferenceChangeListener() {
+        PreferencesState.getInstance().setMetaDataDownload(true);
         return pullRequiredOnPreferenceChangeListener;
     }
 

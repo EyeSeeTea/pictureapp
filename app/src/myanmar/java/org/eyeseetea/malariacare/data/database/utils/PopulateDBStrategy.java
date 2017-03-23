@@ -116,4 +116,8 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
             }
         }
     }
+
+    public static void logoutWipe() {
+        PopulateDB.wipeDataBase();
+    }
 }

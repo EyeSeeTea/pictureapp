@@ -11,20 +11,14 @@ import org.eyeseetea.malariacare.data.remote.strategies.PullDhisSDKDataSourceStr
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.hisp.dhis.client.sdk.android.api.D2;
-import org.hisp.dhis.client.sdk.core.common.controllers.SyncStrategy;
 import org.hisp.dhis.client.sdk.core.event.EventFilters;
-import org.hisp.dhis.client.sdk.models.category.CategoryOption;
 import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
 import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class PullDhisSDKDataSource {
@@ -38,32 +32,7 @@ public class PullDhisSDKDataSource {
         if (!isNetworkAvailable) {
             callback.onError(new NetworkException());
         } else {
-
-            Observable.zip(D2.me().organisationUnits().pull(SyncStrategy.NO_DELETE),
-                    D2.categoryOptions().pull(),
-                    new Func2<List<OrganisationUnit>, List<CategoryOption>,
-                            List<OrganisationUnit>>() {
-                        @Override
-                        public List<OrganisationUnit> call(List<OrganisationUnit> organisationUnits,
-                                List<CategoryOption> categoryOptions) {
-                            return organisationUnits;
-                        }
-                    })
-                    .subscribeOn(Schedulers.io()).
-                    observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<List<OrganisationUnit>>() {
-                        @Override
-                        public void call(List<OrganisationUnit> organisationUnits) {
-                            mPullDhisSDKDataSourceStrategy.onMetadataSucceed(callback,
-                                    organisationUnits);
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            callback.onError(throwable);
-                        }
-                    });
-
+            new PullDhisSDKDataSourceStrategy().pullMetadata(mPullDhisSDKDataSourceStrategy, callback);
         }
     }
 
@@ -78,6 +47,11 @@ public class PullDhisSDKDataSource {
                 List<Event> events = new ArrayList<>();
 
                 for (OrganisationUnit organisationUnit : organisationUnits) {
+                    if(pullFilters.getDataByOrgUnit() != null && !pullFilters.getDataByOrgUnit().equals("")){
+                        if(!pullFilters.getDataByOrgUnit().equals(organisationUnit.getUId())){
+                            continue;
+                        }
+                    }
                     Scheduler pullEventsThread = Schedulers.newThread();
 
                     EventFilters eventFilters = new EventFilters();

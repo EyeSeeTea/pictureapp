@@ -965,4 +965,14 @@ public class PopulateDB {
     public static void initDBQuery() {
         Tab.getAllTabs();
     }
+
+    public static void wipeOrgUnitsAndEvents() {
+        wipeTables((Class<? extends BaseModel>[]) Arrays.asList(
+                OrgUnit.class,
+                Survey.class,
+                Value.class,
+                Score.class,
+                SurveySchedule.class,
+                User.class).toArray());
+    }
 }

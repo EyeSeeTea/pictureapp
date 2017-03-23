@@ -23,10 +23,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
@@ -38,6 +35,7 @@ import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
@@ -81,23 +79,30 @@ public class PullController implements IPullController {
             callback.onCancel();
             return;
         }
-
-        mPullRemoteDataSource.pullMetadata(
-                new IDataSourceCallback<List<OrganisationUnit>>() {
-                    @Override
-                    public void onSuccess(List<OrganisationUnit> organisationUnits) {
-                        if (!pullFilters.downloadData()) {
-                            convertFromSDK(callback, false);
-                        } else {
-                            pullData(pullFilters, organisationUnits, callback);
+        if(pullFilters.downloadMetaData()) {
+            mPullRemoteDataSource.pullMetadata(
+                    new IDataSourceCallback<List<OrganisationUnit>>() {
+                        @Override
+                        public void onSuccess(List<OrganisationUnit> organisationUnits) {
+                            if (!pullFilters.downloadData()) {
+                                convertFromSDK(callback, false);
+                            } else {
+                                pullData(pullFilters, organisationUnits, callback);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                });
+                        @Override
+                        public void onError(Throwable throwable) {
+                            callback.onError(throwable);
+                        }
+                    });
+        }
+        else{
+            if(pullFilters.downloadData()) {
+                List<OrganisationUnit> organisationUnitsList = D2.me().organisationUnits().list().toBlocking().first();
+                pullData(pullFilters, organisationUnitsList, callback);
+            }
+        }
     }
 
     private void populateMetadataFromCsvs(boolean isDemo) throws IOException {
@@ -221,44 +226,4 @@ public class PullController implements IPullController {
 
         }
     }
-    //TODO jsanchez
-    //public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
-
-    //TODO jsanchez
-    /**
-     * Returns the correct data from the limited date in shared preferences
-     */
-/*    private Date getDateFromString(String selectedDateLimit) {
-        Calendar day = Calendar.getInstance();
-        if (selectedDateLimit.equals(
-                PreferencesState.getInstance().getContext().getString(R.string.last_6_days))) {
-            day.add(Calendar.DAY_OF_YEAR, -6);
-        } else if (selectedDateLimit.equals(
-                PreferencesState.getInstance().getContext().getString(R.string.last_6_weeks))) {
-            day.add(Calendar.WEEK_OF_YEAR, -6);
-        } else if (selectedDateLimit.equals(
-                PreferencesState.getInstance().getContext().getString(R.string.last_6_months))) {
-            day.add(Calendar.MONTH, -6);
-        }
-        return day.getTime();
-    }*/
-
-    //TODO jsanchez
-/*
-            SdkPullController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
-            String selectedDateLimit = PreferencesState.getInstance().getDataLimitedByDate();
-
-            //Limit of data by date is selected
-            if (BuildConfig.loginDataDownloadPeriod) {
-                SdkPullController.setStartDate(
-                        EventExtended.format(getDateFromString(selectedDateLimit),
-                                EventExtended.AMERICAN_DATE_FORMAT));
-            }
-
-            if (selectedDateLimit.equals(
-                    PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
-                pullMetaData();
-            } else {
-                pullMetaDataAndData();
-            }*/
 }

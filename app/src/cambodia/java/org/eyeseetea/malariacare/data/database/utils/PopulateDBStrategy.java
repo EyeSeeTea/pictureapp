@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 
 import org.eyeseetea.malariacare.data.database.utils.populatedb.IPopulateDBStrategy;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,5 +25,9 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
     }
 
     public static  void createDummyOrgUnitsDataInDB(Context context) {
+    }
+
+    public static void logoutWipe() {
+        PopulateDB.wipeOrgUnitsAndEvents();
     }
 }

@@ -196,10 +196,8 @@ public class LoginActivity extends AbsLoginActivity {
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {
-                hideProgressBar();
                 AsyncPullAnnouncement asyncPullAnnouncement = new AsyncPullAnnouncement();
                 asyncPullAnnouncement.execute(LoginActivity.this);
-                mLoginActivityStrategy.finishAndGo();
             }
 
             @Override
@@ -307,8 +305,12 @@ public class LoginActivity extends AbsLoginActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            //TODO
-//            onSuccess(isUserClosed);
+            hideProgressBar();
+            if (isUserClosed) {
+                Log.d("USER CLosed", "user closed");
+            } else {
+                mLoginActivityStrategy.finishAndGo();
+            }
         }
     }
 

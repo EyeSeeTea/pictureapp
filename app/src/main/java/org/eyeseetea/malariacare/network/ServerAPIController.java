@@ -19,6 +19,7 @@
 package org.eyeseetea.malariacare.network;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -693,8 +694,15 @@ public class ServerAPIController {
 
     public static User pullUserAttributes(User loggedUser) {
         String lastMessage = loggedUser.getAnnouncement();
-        String url = PreferencesState.getInstance().getDhisURL() + TAG_USER + String.format(
-                QUERY_USER_ATTRIBUTES, loggedUser.getUid());
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = context.getSharedPreferences(
+                context.getString(R.string.announcement_preferences),
+                Context.MODE_PRIVATE);
+        String uid = sharedPreferences.getString(context.getString(R.string.uid_user_push), "");
+
+        String url =
+                PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
+                        QUERY_USER_ATTRIBUTES, uid);
 
         url = encodeBlanks(url);
         try {
@@ -744,9 +752,17 @@ public class ServerAPIController {
         if (Session.getCredentials().isDemoCredentials()) {
             return false;
         }
+
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = context.getSharedPreferences(
+                context.getString(R.string.announcement_preferences),
+                Context.MODE_PRIVATE);
+        String uid = sharedPreferences.getString(context.getString(R.string.uid_user_push), "");
+
         //Lets for a last event with that orgunit/program
-        String url = PreferencesState.getInstance().getDhisURL() + TAG_USER + String.format(
-                QUERY_USER_ATTRIBUTES, loggedUser.getUid());
+        String url =
+                PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
+                        QUERY_USER_ATTRIBUTES, uid);
 
         url = encodeBlanks(url);
         Date closedDate = null;

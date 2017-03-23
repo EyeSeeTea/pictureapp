@@ -740,7 +740,8 @@ public class DashboardActivity extends BaseActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            if (loggedUser.getAnnouncement() != null && !loggedUser.getAnnouncement().equals("")
+            if (loggedUser != null && loggedUser.getAnnouncement() != null
+                    && !loggedUser.getAnnouncement().equals("")
                     && !PreferencesState.getInstance().isUserAccept()) {
                 Log.d(TAG, "show logged announcement");
 //                AUtils.showAnnouncement(R.string.admin_announcement, loggedUser.getAnnouncement(),

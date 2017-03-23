@@ -1,11 +1,14 @@
 package org.eyeseetea.malariacare.data.remote;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
@@ -77,6 +80,17 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                         @Override
                         public void call(
                                 org.hisp.dhis.client.sdk.models.user.UserAccount dhisUserAccount) {
+                            if (credentials.getUsername().equals(
+                                    PreferencesState.getInstance().getContext().getString(
+                                            R.string.user_push))) {
+                                SharedPreferences sharedPreferences = mContext.getSharedPreferences(
+                                        mContext.getString(R.string.announcement_preferences),
+                                        Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString(mContext.getString(R.string.uid_user_push),
+                                        dhisUserAccount.getUId());
+                                editor.commit();
+                            }
                             UserAccount userAccount = new UserAccount(credentials.getUsername(),
                                     credentials.isDemoCredentials());
                             callback.onSuccess(userAccount);

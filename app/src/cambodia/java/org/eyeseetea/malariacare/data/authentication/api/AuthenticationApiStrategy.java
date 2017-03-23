@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.domain.usecase.api;
+package org.eyeseetea.malariacare.data.authentication.api;
 
 public class AuthenticationApiStrategy extends AuthenticationApi {
     //Authentication

@@ -60,9 +60,11 @@ import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -98,7 +100,7 @@ public class PopulateDB {
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
 
-   public static List<Class<? extends BaseModel>> allMandatoryTables= Arrays.asList(
+    public static List<Class<? extends BaseModel>> allMandatoryTables = Arrays.asList(
             User.class,
             StringKey.class,
             Translation.class,
@@ -120,9 +122,9 @@ public class PopulateDB {
             TreatmentMatch.class,
             OrgUnitLevel.class,
             OrgUnit.class
-   );
+    );
 
-    public static List<Class<? extends BaseModel>> allTables= Arrays.asList(
+    public static List<Class<? extends BaseModel>> allTables = Arrays.asList(
             CompositeScore.class,
             OrgUnitProgramRelation.class,
             Score.class,
@@ -202,10 +204,7 @@ public class PopulateDB {
     static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
-        FileCsvs fileCsvs = new FileCsvs();
-        fileCsvs.saveCsvsInFileIfNeeded();
-        TreatmentTable treatmentTable = new TreatmentTable();
-        treatmentTable.generateTreatmentMatrixIFNeeded();
+        new PopulateDBStrategy().init();
 
         Log.i(TAG, "DB empty, loading data ...");
         try {
@@ -219,8 +218,8 @@ public class PopulateDB {
     }
 
     public static boolean hasMandatoryTables() {
-        for(Class table:allMandatoryTables){
-            if(SQLite.selectCountOf().from(table).count() == 0) {
+        for (Class table : allMandatoryTables) {
+            if (SQLite.selectCountOf().from(table).count() == 0) {
                 return false;
             }
         }
@@ -232,10 +231,19 @@ public class PopulateDB {
         cleanInnerLists();
         for (String table : tables2populate) {
             Log.i(TAG, "Loading csv: " + table);
-            CSVReader reader = new CSVReader(
-                    new InputStreamReader(context.openFileInput(table)),
-                    SEPARATOR, QUOTECHAR);
-
+            CSVReader reader = null;
+            try {
+                reader = new CSVReader(
+                        new InputStreamReader(new PopulateDBStrategy().openFile(context, table)),
+                        SEPARATOR, QUOTECHAR);
+            } catch (FileNotFoundException e ) {
+                tableNotExistLog(e, table);
+            } catch (IOException e) {
+                tableNotExistLog(e,table);
+            }
+            if (reader == null) {
+                continue;
+            }
             String[] line;
             while ((line = reader.readNext()) != null) {
                 switch (table) {
@@ -424,6 +432,11 @@ public class PopulateDB {
         cleanInnerLists();
     }
 
+    private static void tableNotExistLog(Exception e, String table) {
+        Log.i(TAG, "Table " + table + " is not populated");
+        e.printStackTrace();
+    }
+
     public static void populateDummyData(Context context) throws IOException {
         //Reset inner references
         cleanDummyLists();
@@ -483,7 +496,7 @@ public class PopulateDB {
     /**
      * Deletes all data from the app database
      */
-    public static void wipeTables(Class<? extends  BaseModel>[] classes) {
+    public static void wipeTables(Class<? extends BaseModel>[] classes) {
         Delete.tables(
                 classes
         );
@@ -506,6 +519,7 @@ public class PopulateDB {
         databaseDefinition.getWritableDatabase().execSQL(sqlCopy);
 
     }
+
     /**
      * Delete all surveys from database (and its related info)
      */

@@ -365,4 +365,9 @@
 <string name="error_no_treatment">"posts များ၏ဤပေါင်းစပ်ကုသရှိပါတယ်မဟုတ်ပါဘူး။ ထိုအုပ်ချုပ်ရေးမှူးစကားပြော ကျေးဇူးပြု."</string>
 <string name="confirmation_really_exit_title">"သင်အမှန်တကယ်နုတ်ထွက်ဖို့လိုသလား?"</string>
 <string name="confirmation_really_exit">"သငျသညျအပလီကေးမှထွက်ရန်ချင်သေချာလား?"</string>
+<string name="survey_first_step">"စစ်တမ်းမေးခွန်းများကိုပြန်လည်ထူထောင်..."</string>
+<string name="survey_second_step">"စစ်တမ်းပုံမှန်မေးခွန်းများကိုတည်ဆောက်ခြင်း..."</string>
+<string name="survey_third_step">"အဆောက်အအုံစစ်တမ်းကုသ matrix ကို..."</string>
+<string name="survey_fourth_step">"စစ်တမ်းဖန်တီးနေ..."</string>
+
 </resources>

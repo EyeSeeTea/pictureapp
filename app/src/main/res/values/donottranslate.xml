@@ -17,10 +17,6 @@
 
     <string name="PUSH_PERIOD" translatable="false">10</string>
 
-    <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
-    <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
-    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
-
     <string name="font_size_system" translatable="false">system</string>
 
     <string name="settings_array_values_font_sizes_def" translatable="false">@string/font_size_level2</string>

@@ -70,7 +70,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -113,7 +113,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -156,7 +156,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -199,7 +199,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -242,7 +242,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -285,7 +285,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -328,7 +328,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"

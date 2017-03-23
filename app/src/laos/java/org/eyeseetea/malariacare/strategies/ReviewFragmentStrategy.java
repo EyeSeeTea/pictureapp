@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
@@ -24,8 +25,11 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
             textCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Question question = (Question) v.getTag();
-                    DashboardActivity.dashboardActivity.hideReview(question);
+                    if(!DynamicTabAdapter.isClicked) {
+                        DynamicTabAdapter.isClicked=true;
+                        Question question = (Question) v.getTag();
+                        DashboardActivity.dashboardActivity.hideReview(question);
+                    }
                 }
             });
 

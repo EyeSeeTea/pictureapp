@@ -1,5 +1,9 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
+import static org.hisp.dhis.client.sdk.ui.bindings.presenters.SettingsPresenterImpl.TAG;
+
+import android.util.Log;
+
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
@@ -7,7 +11,9 @@ import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.network.BanOrgUnitExecutor;
+import org.eyeseetea.malariacare.utils.Utils;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class PushUseCase {
@@ -121,9 +127,8 @@ public class PushUseCase {
     }
 
     private boolean isSurveysOverLimit(List<Survey> surveyList) {
-        return true;
 
-/*        int countDates = 0;
+        int countDates = 0;
 
         if (surveyList.size() >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
             for (int i = 0; i < surveyList.size(); i++) {
@@ -142,7 +147,7 @@ public class PushUseCase {
                 }
             }
         }
-        return false;*/
+        return false;
     }
 }
 

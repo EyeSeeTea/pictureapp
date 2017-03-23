@@ -25,6 +25,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.preference.PreferenceManager;
 
+import org.eyeseetea.malariacare.R;
+
 /**
  * Created by arrizabalaga on 23/09/15.
  */
@@ -84,7 +86,11 @@ public class LocationMemory {
 
         //No coordinates were stored for the given survey
         if (longitude == 0 && latitude == 0) {
-            return null;
+            location.setLongitude(Double.parseDouble(context.getString(
+                    R.string.GPS_LONGITUDE_DEFAULT)));
+            location.setLatitude(Double.parseDouble(context.getString(
+                    R.string.GPS_LATITUDE_DEFAULT)));
+            return location;
         }
 
         //Found

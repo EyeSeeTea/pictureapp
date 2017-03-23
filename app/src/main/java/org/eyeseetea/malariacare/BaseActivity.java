@@ -76,10 +76,10 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
 
-        PreferencesState.getInstance().loadsLanguageInActivity();
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
 
         if (EyeSeeTeaApplication.permissions == null) {
             EyeSeeTeaApplication.permissions = Permissions.getInstance(this);
@@ -102,8 +102,6 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
         alarmPush = new AlarmPushReceiver();
         alarmPush.setPushAlarm(this);
-
-        FontUtils.applyFontStyleByPreference(getResources(), getTheme());
 
         mBaseActivityStrategy.onCreate();
     }

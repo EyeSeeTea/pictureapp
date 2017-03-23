@@ -92,7 +92,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -135,7 +135,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -178,7 +178,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -221,7 +221,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -264,7 +264,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -307,7 +307,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -351,7 +351,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>

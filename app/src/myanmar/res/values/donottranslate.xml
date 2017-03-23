@@ -67,6 +67,7 @@
     <string name="control_data_element_datetime_sent" translatable="false">sKPamHqCASp</string>
     <string name="category_combination" translatable="false">GwFkNOXaQcq</string>
     <string name="category_option_group_set_uid" translatable="false">yVH67wmhryq</string>
+    <string name="category_option_group_matrix_uid" translatable="false">zc8VhcjUVIT</string>
 
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">16.010790</string>

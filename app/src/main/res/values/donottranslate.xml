@@ -112,4 +112,7 @@
     <string name="no_option_identifier" translatable="false">No</string>
     <string name="true_option_id" translatable="false">true_option_identifier</string>
     <string name="false_option_id" translatable="false">false_option_identifier</string>
+
+    <string name="user_accept_key" translatable="false">user_accept_key</string>
+    <string name="show_announcement_key" translatable="false">show_announcement_key</string>
 </resources>

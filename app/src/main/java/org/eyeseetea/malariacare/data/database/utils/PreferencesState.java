@@ -76,6 +76,10 @@ public class PreferencesState {
      * Map that holds the relationship between a scale and a set of dimensions
      */
     private Map<String, Map<String, Float>> scaleDimensionsMap;
+    /**
+     * Flag that determines if the user did accept the announcement
+     */
+    private boolean userAccept;
 
     private PreferencesState() {
     }
@@ -368,5 +372,19 @@ public class PreferencesState {
             return false;
         }
         return true;
+    }
+
+    public boolean isUserAccept() {
+        return userAccept;
+    }
+
+    public boolean setUserAccept(boolean isAccepted) {
+        this.userAccept = isAccepted;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.user_accept_key), isAccepted);
+        editor.commit();
+        return userAccept;
     }
 }

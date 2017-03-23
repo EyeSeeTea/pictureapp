@@ -34,6 +34,8 @@ import java.util.List;
 public class User extends BaseModel {
 
     private static final String DUMMY_USER = "user";
+    public static final String ATTRIBUTE_USER_CLOSE_DATE = "USER_CLOSE_DATE";
+    public static final String ATTRIBUTE_USER_ANNOUNCEMENT = "USER_ANNOUNCEMENT";
 
     @Column
     @PrimaryKey(autoincrement = true)

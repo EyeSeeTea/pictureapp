@@ -45,6 +45,7 @@ import android.widget.Toast;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
@@ -196,6 +197,8 @@ public class LoginActivity extends AbsLoginActivity {
             @Override
             public void onLoginSuccess() {
                 hideProgressBar();
+                AsyncPullAnnouncement asyncPullAnnouncement = new AsyncPullAnnouncement();
+                asyncPullAnnouncement.execute(LoginActivity.this);
                 mLoginActivityStrategy.finishAndGo();
             }
 
@@ -287,6 +290,28 @@ public class LoginActivity extends AbsLoginActivity {
         bar.setVisibility(View.GONE);
         findViewById(R.id.layout_login_views).setVisibility(View.VISIBLE);
     }
+
+
+    public class AsyncPullAnnouncement extends AsyncTask<LoginActivity, Void, Void> {
+        //userCloseChecker is never saved, Only for check if the date is closed.
+        LoginActivity loginActivity;
+        boolean isUserClosed = false;
+
+        @Override
+        protected Void doInBackground(LoginActivity... params) {
+            loginActivity = params[0];
+            isUserClosed = ServerAPIController.isUserClosed(Session.getUser());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            //TODO
+//            onSuccess(isUserClosed);
+        }
+    }
+
 }
 
 

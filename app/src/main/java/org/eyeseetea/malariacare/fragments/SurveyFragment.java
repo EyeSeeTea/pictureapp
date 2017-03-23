@@ -67,6 +67,13 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
 
     public static final String TAG = ".SurveyActivity";
     /**
+     * Progress text shown while loading
+     */
+    public static CustomTextView progressText;
+    public static Iterator<String> messageIterator;
+    public static int messagesCount;
+    public boolean mReviewMode = false;
+    /**
      * Actual layout to be accessible in the fragment
      */
     RelativeLayout llLayout;
@@ -84,11 +91,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
      */
     private ProgressBar progressBar;
     /**
-     * Progress text shown while loading
-     */
-    public static CustomTextView progressText;
-    public static Iterator<String> messageIterator;
-    /**
      * Parent view of main content
      */
     private LinearLayout content;
@@ -96,7 +98,20 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
      * Flags required to decide if the survey must be deleted or not
      */
     private boolean isBackPressed = false;
-    public boolean mReviewMode = false;
+
+    public static void nextProgressMessage() {
+        DashboardActivity.dashboardActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                if (messageIterator.hasNext()) {
+                    progressText.setText(messageIterator.next());
+                }
+            }
+        });
+    }
+
+    public static int progressMessagesCount() {
+        return messagesCount;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -140,7 +155,8 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     @Override
     public void onPause() {
         Log.d(TAG, "onPause");
-        if (!DashboardActivity.dashboardActivity.isLoadingReview() && !areActiveSurveysInQuarantine()) {
+        if (!DashboardActivity.dashboardActivity.isLoadingReview()
+                && !areActiveSurveysInQuarantine()) {
             beforeExit();
         }
         super.onPause();
@@ -148,11 +164,11 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
 
     private boolean areActiveSurveysInQuarantine() {
         Survey survey = Session.getMalariaSurvey();
-        if(survey !=null && survey.isQuarantine()) {
+        if (survey != null && survey.isQuarantine()) {
             return true;
         }
         survey = Session.getStockSurvey();
-        if(survey !=null && survey.isQuarantine()){
+        if (survey != null && survey.isQuarantine()) {
             return true;
         }
 
@@ -182,8 +198,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
                     tabZero);
 
             //Get options from question
-//            List<Option> options=tabAdapter.progressTabStatus.getCurrentQuestion().getAnswer()
-// .getOptions();
             List<Option> options =
                     tabAdapter.navigationController.getCurrentQuestion().getAnswer().getOptions();
 
@@ -212,12 +226,17 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     private void createProgressMessages() {
         List<String> messagesList = new ArrayList<>();
         //// FIXME: 20/03/2017 it is a fake flow.
-        messagesList.add(PreferencesState.getInstance().getContext().getString(R.string.survey_first_step));
-        messagesList.add(PreferencesState.getInstance().getContext().getString(R.string.survey_second_step));
-        messagesList.add(PreferencesState.getInstance().getContext().getString(R.string.survey_third_step));
-        messagesList.add(PreferencesState.getInstance().getContext().getString(R.string.survey_third_step));
-        messagesList.add(PreferencesState.getInstance().getContext().getString(R.string.survey_fourth_step));
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_first_step));
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_second_step));
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_third_step));
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_fourth_step));
         messageIterator = messagesList.iterator();
+        // An iterator doesn't return properly its size after next() has been called
+        messagesCount = messagesList.size();
     }
 
     /**
@@ -290,7 +309,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         getActivity().getApplicationContext().startService(surveysIntent);
     }
 
-
     @Override
     public void reloadData() {
 
@@ -298,20 +316,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
 
     public void reloadHeader(Activity activity) {
         DashboardHeaderStrategy.getInstance().hideHeader(activity);
-    }
-
-    public static void nextProgressMessage(Long questionId) {
-        SurveyFragment.nextProgressMessage();
-    }
-
-    private static void nextProgressMessage() {
-            DashboardActivity.dashboardActivity.runOnUiThread(new Runnable() {
-                public void run() {
-                    if(messageIterator.hasNext()) {
-                        progressText.setText(messageIterator.next());
-                    }
-                }
-            });
     }
 
     public class AsyncReloadAdaptersAndChangeTab extends AsyncTask<Void, Integer, View> {
@@ -372,7 +376,8 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive");
-            //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close surveys crash
+            //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close
+            // surveys crash
             Session.setIsLoadingSurvey(true);
             List<CompositeScore> compositeScores;
             List<Tab> tabs;

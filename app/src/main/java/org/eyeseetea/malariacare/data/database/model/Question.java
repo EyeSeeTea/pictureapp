@@ -1858,30 +1858,16 @@ public class Question extends BaseModel {
         return propagationQuestion;
     }
 
-    public static int getTotalQuestionsInDb() {
-        return (int) SQLite.selectCountOf()
-                .from(Question.class).count();
-    }
-
-    public static Long getIdByPosition(int position) {
-        List<Question> questions = new Select(Question_Table.id_question)
-                .from(Question.class)
-                .limit(1).offset(position)
-                .orderBy(OrderBy.fromProperty(Question_Table.id_question).ascending()).queryList();
-        return questions.get(0).getId_question();
-    }
-
-
     private static class QuestionOrderComparator implements Comparator {
 
-    @Override
-    public int compare(Object o1, Object o2) {
+        @Override
+        public int compare(Object o1, Object o2) {
 
-        Question question1 = (Question) o1;
-        Question question2 = (Question) o2;
+            Question question1 = (Question) o1;
+            Question question2 = (Question) o2;
 
-        return new Integer(
-                question1.getOrder_pos().compareTo(new Integer(question2.getOrder_pos())));
+            return new Integer(
+                    question1.getOrder_pos().compareTo(new Integer(question2.getOrder_pos())));
+        }
     }
-}
 }

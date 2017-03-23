@@ -23,7 +23,7 @@ public class NavigationBuilder {
     private static String TAG = "NavigationBuilder";
 
     private static NavigationBuilder instance;
-
+    private static int MAX_STEPS = 67;
     /**
      * Maps that holds the relationships between a Question and the warnings that it might trigger
      */
@@ -32,6 +32,7 @@ public class NavigationBuilder {
      * Questions ordered by id
      */
     private List<Question> questionsOrderedById;
+    private int step = 0;
 
     private NavigationBuilder() {
         warningsXQuestion = new HashMap<>();
@@ -61,6 +62,8 @@ public class NavigationBuilder {
         if (rootQuestion == null) {
             return null;
         }
+        //init steps counter
+        step = 0;
         QuestionNode rootNode = buildNode(rootQuestion);
         return new NavigationController(rootNode);
     }
@@ -73,6 +76,7 @@ public class NavigationBuilder {
         if (currentQuestion == null) {
             return null;
         }
+
         QuestionNode currentNode = new QuestionNode(currentQuestion);
 
         //A warning is added to the map
@@ -80,7 +84,7 @@ public class NavigationBuilder {
         //A normal node subscribes to its warnings
         subscribeWarnings(currentNode);
 
-        moveProgressTextMessage(currentNode.getQuestion().getId_question());
+        nextStepMessage();
         //Add children navigation
         buildChildren(currentNode);
         //Add sibling navigation
@@ -91,12 +95,12 @@ public class NavigationBuilder {
         return currentNode;
     }
 
-    private void moveProgressTextMessage(final Long currentQuestion) {
-        int totalQuestionsInDb = Question.getTotalQuestionsInDb();
-        if (currentQuestion == Question.getIdByPosition(
-                1 + Math.round((75 * totalQuestionsInDb) / 100))
-                ) {
-            SurveyFragment.nextProgressMessage(currentQuestion);
+    private void nextStepMessage() {
+        step++;
+        int totalSteps = SurveyFragment.progressMessagesCount();
+        int messageStep = Math.round(MAX_STEPS / totalSteps);
+        if (step % messageStep == 1) {
+            SurveyFragment.nextProgressMessage();
         }
     }
 

@@ -40,11 +40,14 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
@@ -56,6 +59,7 @@ import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
+import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -724,6 +728,22 @@ public class DashboardActivity extends BaseActivity {
         getSurveysFromService();
     }
 
+    public void executeLogout() {
+        IAuthenticationManager iAuthenticationManager = new AuthenticationManager(this);
+        LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+        logoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                finishAndGo(LoginActivity.class);
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.e("." + this.getClass().getSimpleName(), message);
+            }
+        });
+    }
+
     public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {
         User loggedUser;
 
@@ -739,17 +759,21 @@ public class DashboardActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
-            if (loggedUser != null && loggedUser.getAnnouncement() != null
-                    && !loggedUser.getAnnouncement().equals("")
-                    && !PreferencesState.getInstance().isUserAccept()) {
-                Log.d(TAG, "show logged announcement");
-//                AUtils.showAnnouncement(R.string.admin_announcement, loggedUser.getAnnouncement(),
-//                        DashboardActivity.this);
-                //show model dialog
-            } else {
-//                AUtils.checkUserClosed(loggedUser, DashboardActivity.this);
+            if (loggedUser != null) {
+                if (loggedUser.getAnnouncement() != null
+                        && !loggedUser.getAnnouncement().equals("")
+                        && !PreferencesState.getInstance().isUserAccept()) {
+                    Log.d(TAG, "show logged announcement");
+                    AnnouncementMessageDialog.showAnnouncement(R.string.admin_announcement,
+                            loggedUser.getAnnouncement(),
+                            DashboardActivity.this);
+                    //show model dialog
+                } else {
+                    AnnouncementMessageDialog.checkUserClosed(loggedUser, DashboardActivity.this);
+                }
             }
         }
     }
+
+
 }

@@ -53,6 +53,7 @@ import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
 import org.hisp.dhis.client.sdk.ui.activities.AbsLoginActivity;
 
 import java.io.InputStream;
@@ -308,6 +309,9 @@ public class LoginActivity extends AbsLoginActivity {
             hideProgressBar();
             if (isUserClosed) {
                 Log.d("USER CLosed", "user closed");
+                AnnouncementMessageDialog.closeUser(R.string.admin_announcement,
+                        PreferencesState.getInstance().getContext().getString(R.string.user_close),
+                        LoginActivity.this);
             } else {
                 mLoginActivityStrategy.finishAndGo();
             }

@@ -166,7 +166,7 @@ public class ServerAPIController {
     private static String CODE = "code";
     private static String ATTRIBUTE = "attribute";
     private static String VALUE = "value";
-    private static String DHIS2_GMT_NEW_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+    private static String DHIS2_GMT_NEW_DATE_FORMAT = "yyyy-MM-dd";
     private static String TAG_USER = "users";
     private static String QUERY_USER_ATTRIBUTES =
             "/%s?fields=attributeValues[value,attribute[code]]id&paging=false";

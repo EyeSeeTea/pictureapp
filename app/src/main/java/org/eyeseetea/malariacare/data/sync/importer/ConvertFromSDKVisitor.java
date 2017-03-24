@@ -201,16 +201,23 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
         Organisation organisationUser = null;
         List<Organisation> organisations = Organisation.getAllOrganisations();
+        User me = User.getLoggedUser();
         for (Organisation organisation : organisations) {
             if (organisation.getName().equals(categoryOptionGroupExtended.getName())) {
                 organisationUser = organisation;
                 organisationUser.setUid(categoryOptionGroupExtended.getUid());
                 organisationUser.save();
-                User me = User.getLoggedUser();
                 me.setOrganisation(organisationUser.getId_organisation());
                 me.save();
                 break;
             }
+        }
+        if(me.getOrganisation()== null){
+            organisationUser = Organisation.getDefaultOrganization();
+            organisationUser.setUid(PreferencesState.getInstance().getContext().getString(R.string.category_option_group_matrix_uid));
+            organisationUser.save();
+            me.setOrganisation(organisationUser.getId_organisation());
+            me.save();
         }
     }
 

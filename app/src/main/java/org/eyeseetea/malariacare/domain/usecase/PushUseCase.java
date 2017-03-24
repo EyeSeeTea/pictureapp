@@ -1,9 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import static org.hisp.dhis.client.sdk.ui.bindings.presenters.SettingsPresenterImpl.TAG;
-
-import android.util.Log;
-
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -13,9 +9,7 @@ import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.network.BanOrgUnitExecutor;
-import org.eyeseetea.malariacare.utils.Utils;
 
-import java.util.Calendar;
 import java.util.List;
 
 public class PushUseCase {
@@ -139,7 +133,13 @@ public class PushUseCase {
     }
 
     private boolean isSurveysOverLimit(List<Survey> surveyList) {
-        //TODO: simplify this method
+        //TODO: For Cambodia the surveys are never above the limit, we may need it for laos,
+        // it is commented for this moment necessary.
+        // Surely it would have to create a strategy in that case
+        return false;
+
+
+/*        //TODO: simplify this method
         int countDates = 0;
 
         if (surveyList.size() >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
@@ -159,7 +159,7 @@ public class PushUseCase {
                 }
             }
         }
-        return false;
+        return false;*/
     }
 }
 

@@ -62,7 +62,6 @@ public class PushUseCase {
                 if (isBanned)
                 {
                     callback.onBannedOrgUnitError();
-
                     resetOrgUnit();
                 } else {
                     runPush(callback);
@@ -128,6 +127,7 @@ public class PushUseCase {
                 @Override
                 public void onSuccess() {
                     System.out.println("OrgUnit banned successfully");
+                    resetOrgUnit();
                 }
 
                 @Override

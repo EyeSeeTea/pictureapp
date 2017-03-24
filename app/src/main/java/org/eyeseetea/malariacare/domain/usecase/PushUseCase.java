@@ -4,7 +4,9 @@ import static org.hisp.dhis.client.sdk.ui.bindings.presenters.SettingsPresenterI
 
 import android.util.Log;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
@@ -57,9 +59,11 @@ public class PushUseCase {
         mBanOrgUnitExecutor.isOrgUnitBanned(new BanOrgUnitExecutor.isOrgUnitBannedCallback() {
             @Override
             public void onSuccess(boolean isBanned) {
-                if (isBanned) //TODO add user accept ban warning in APushServiceStrategy??
+                if (isBanned)
                 {
                     callback.onBannedOrgUnitError();
+
+                    resetOrgUnit();
                 } else {
                     runPush(callback);
                 }
@@ -72,6 +76,13 @@ public class PushUseCase {
         });
 
 
+    }
+
+    private void resetOrgUnit() {
+        //TODO: use case should not invoke directly PreferenceState because belongs to the outer
+        // layer
+        PreferencesState.getInstance().saveStringPreference(R.string.org_unit, "");
+        PreferencesState.getInstance().reloadPreferences();
     }
 
     private void runPush(final Callback callback) {
@@ -108,6 +119,7 @@ public class PushUseCase {
     }
 
     private void banOrgUnitIfRequired(final Callback callback) {
+        //TODO: use case should not invoke directly Survey because belongs to the outer layer
         List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys(
                 DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR);
 
@@ -127,7 +139,7 @@ public class PushUseCase {
     }
 
     private boolean isSurveysOverLimit(List<Survey> surveyList) {
-
+        //TODO: simplify this method
         int countDates = 0;
 
         if (surveyList.size() >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {

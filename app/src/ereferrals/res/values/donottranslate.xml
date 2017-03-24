@@ -14,16 +14,6 @@
     <string name="monitor_table_title_stock_header" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
 
 
-    <string-array name="stock_table_drugs_strings">
-        <item>@string/RDT</item>
-        <item>@string/ACT_x_6</item>
-        <item>@string/ACT_x_12</item>
-        <item>@string/ACT_x_18</item>
-        <item>@string/ACT_x_24</item>
-        <item>@string/Cq</item>
-        <item>@string/Pq</item>
-    </string-array>
-
     <string name="malariaProgramUID" translatable="false">FsRWMqGdXgS</string>
     <string name="stockProgramUID" translatable="false">B8KA2uJOVD9</string>
     <string name="ageQuestionUID" translatable="false">bGH0k4Ubsxx</string>

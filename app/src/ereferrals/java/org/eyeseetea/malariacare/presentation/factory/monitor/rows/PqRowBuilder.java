@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonito
 public class PqRowBuilder extends CounterRowBuilder {
 
     public PqRowBuilder(Context context) {
-        super(context, context.getString(R.string.Pq));
+        super(context, "");
     }
 
     @Override

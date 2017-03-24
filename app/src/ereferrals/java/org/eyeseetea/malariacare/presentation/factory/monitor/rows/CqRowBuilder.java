@@ -10,7 +10,7 @@ import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonito
  */
 public class CqRowBuilder extends CounterRowBuilder {
     public CqRowBuilder(Context context) {
-        super(context, context.getString(R.string.Cq));
+        super(context, "");
     }
 
     @Override

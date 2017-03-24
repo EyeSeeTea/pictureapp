@@ -11,7 +11,7 @@ import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonito
 public class ReferralOptionRowBuilder extends CounterRowBuilder {
 
     public ReferralOptionRowBuilder(Context context) {
-        super(context, context.getString(R.string.referrals));
+        super(context, "");
     }
 
     @Override

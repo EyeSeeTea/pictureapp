@@ -10,7 +10,7 @@ import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonito
  */
 public class ACT18RowBuilder extends CounterRowBuilder {
     public ACT18RowBuilder(Context context) {
-        super(context, context.getString(R.string.ACT_x_18));
+        super(context,"");
     }
 
     @Override

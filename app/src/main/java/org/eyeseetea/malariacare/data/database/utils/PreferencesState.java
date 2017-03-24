@@ -328,7 +328,7 @@ public class PreferencesState {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
         return sharedPreferences.getBoolean(
-                instance.getContext().getString(R.string.pull_data_after_metadata), true);
+                instance.getContext().getString(R.string.pull_data_after_metadata), false);
     }
 
     public void setPullDataAfterMetadata(Boolean value) {
@@ -418,12 +418,5 @@ public class PreferencesState {
 
     public void setDataLimitedByPreferenceOrgUnit(boolean value) {
         setDataFilteredByOrgUnit(value);
-    }
-    public boolean getDataLimitedByPreferenceOrgUnit() {
-        return getDataFilteredByOrgUnit();
-    }
-
-    public boolean pullDataAfterMetadata() {
-        return getPullDataAfterMetadata();
     }
 }

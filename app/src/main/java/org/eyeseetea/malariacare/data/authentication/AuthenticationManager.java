@@ -36,7 +36,6 @@ public class AuthenticationManager implements IAuthenticationManager {
     @Override
     public void hardcodedLogin(String url, Callback<UserAccount> callback) {
         remoteLogin(getHardcodedServerCredentials(url), callback);
-
     }
 
     @Override

@@ -180,7 +180,7 @@ public class ProgressActivity extends Activity {
 
     private void showException(int stringId) {
         String title = getDialogTitle();
-
+        Log.d(TAG, getString(stringId));
         new AlertDialog.Builder(this)
                 .setCancelable(false)
                 .setTitle(title)

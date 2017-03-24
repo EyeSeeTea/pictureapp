@@ -316,4 +316,5 @@
 <string name="error_no_treatment">"没有对这种组合条目的治疗。 请与管理员联系"</string>
 <string name="true_option_identifier">"是"</string>
 <string name="false_option_identifier">"没有"</string>
+    <string name="survey_first_step">"Survey first step"</string>
 </resources>

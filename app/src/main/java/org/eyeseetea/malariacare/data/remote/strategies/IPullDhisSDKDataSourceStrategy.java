@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface IPullDhisSDKDataSourceStrategy {
     void setEventFilters(EventFilters eventFilters);
-
+    void pullMetadata(IPullDhisSDKDataSourceStrategy mPullDhisSDKDataSourceStrategy,  final IDataSourceCallback<List<OrganisationUnit>> callback);
     void onMetadataSucceed(IDataSourceCallback callback, List<OrganisationUnit> organisationUnits);
 }

@@ -22,6 +22,7 @@ package org.eyeseetea.malariacare.views;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
@@ -31,7 +32,9 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.AutoCompleteTextView;
 
+import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.views.filters.AutocompleteAdapterFilter;
@@ -46,18 +49,25 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
     private Context context;
     private AutoCompleteTextView mEditText = null;
 
-    /**
-     * Current server version, required to check permissions after change according to this
-     */
-    private String serverVersion;
-
     public AutoCompleteEditTextPreference(final Context context, AttributeSet attrs) {
         super(context, attrs);
         mEditText = new AutoCompleteTextView(context, attrs);
         mEditText.setThreshold(0);
         this.context = context;
     }
+    SettingsActivity settingsActivity;
 
+    private void pullData() {
+        PreferencesState.getInstance().setMetaDataDownload(false);
+        PreferencesState.getInstance().setPullDataAfterMetadata(true);
+        PreferencesState.getInstance().setDataLimitedByPreferenceOrgUnit(true);
+
+        settingsActivity.startActivity(new Intent(settingsActivity, ProgressActivity.class));
+    }
+
+    public void setContext(SettingsActivity settingsActivity) {
+        this.settingsActivity=settingsActivity;
+    }
     public void pullOrgUnits() {
 
         //Reload options
@@ -105,11 +115,19 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                         R.string.eula_accepted), false) && positiveResult) {
             String value = mEditText.getText().toString();
 
+            boolean pullRequired = false;
+            if(!PreferencesState.getInstance().getOrgUnit().equals(value)) {
+                pullRequired=true;
+            }
             PreferencesState.getInstance().saveStringPreference(R.string.org_unit,
                     value);
             PreferencesState.getInstance().reloadPreferences();
+
             //Super invokes changeListener
             callChangeListener(value);
+            if(pullRequired){
+                pullData();
+            }
         }
     }
 }

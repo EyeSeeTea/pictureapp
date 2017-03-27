@@ -141,4 +141,6 @@
 
     <string name="error_conflict_message">The event with UID: %1$s. was uploaded with conflict in the data element UID: %2$s with the message: %3$s. Please contact the administrator.</string>
     <string name="error_conflict_title">"Error"</string>
+    <string name="confirmation_really_exit_title">"Really Exit?"</string>
+    <string name="confirmation_really_exit">"Are you sure you want to exit the app?"</string>
 </resources>

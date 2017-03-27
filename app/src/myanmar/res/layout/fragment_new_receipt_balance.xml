@@ -70,7 +70,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -92,7 +92,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -113,7 +113,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -135,7 +135,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -156,7 +156,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -178,7 +178,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -199,7 +199,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -221,7 +221,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -242,7 +242,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -264,7 +264,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -285,7 +285,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -307,7 +307,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>
@@ -328,7 +328,7 @@
                 android:paddingRight="20dp">
 
                 <org.eyeseetea.sdk.presentation.views.CustomTextView
-                    android:layout_width="94dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/medium_purple_rounded_background"
                     android:paddingBottom="2dp"
@@ -351,7 +351,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/dark_purple"
-                    android:textColorHint="@color/dark_purple"
+                    android:textColorHint="@color/hint"
                     android:textSize="?attr/font_small"
                     app:font_name="@string/specific_language_font" />
             </LinearLayout>

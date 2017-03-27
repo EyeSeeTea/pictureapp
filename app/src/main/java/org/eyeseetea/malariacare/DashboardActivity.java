@@ -437,8 +437,8 @@ public class DashboardActivity extends BaseActivity {
     public void confirmExitApp() {
         Log.d(TAG, "back pressed");
         new AlertDialog.Builder(this)
-                .setTitle("Really Exit?")
-                .setMessage("Are you sure you want to exit the app?")
+                .setTitle(R.string.confirmation_really_exit_title)
+                .setMessage(R.string.confirmation_really_exit)
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 

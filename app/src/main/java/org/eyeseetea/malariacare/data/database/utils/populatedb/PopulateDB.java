@@ -100,7 +100,30 @@ public class PopulateDB {
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
 
-    public static List<Class<? extends BaseModel>> allTables= Arrays.asList(
+    public static List<Class<? extends BaseModel>> allMandatoryTables = Arrays.asList(
+            User.class,
+            StringKey.class,
+            Translation.class,
+            Program.class,
+            Tab.class,
+            Header.class,
+            Answer.class,
+            OptionAttribute.class,
+            Option.class,
+            Question.class,
+            QuestionRelation.class,
+            Match.class,
+            QuestionOption.class,
+            QuestionThreshold.class,
+            Drug.class,
+            Organisation.class,
+            Treatment.class,
+            DrugCombination.class,
+            TreatmentMatch.class,
+            OrgUnit.class
+    );
+
+    public static List<Class<? extends BaseModel>> allTables = Arrays.asList(
             CompositeScore.class,
             OrgUnitProgramRelation.class,
             Score.class,
@@ -199,8 +222,9 @@ public class PopulateDB {
     }
 
     public static boolean hasMandatoryTables() {
-        for(Class table: CustomCompulsoryTables.getAllMandatoryTables()){
-            if(SQLite.selectCountOf().from(table).count() == 0) {
+        for (Class table : allMandatoryTables) {
+            if (SQLite.selectCountOf().from(table).count() == 0) {
+                Log.d(TAG, "Mandatory table is empty"+ table);
                 return false;
             }
         }

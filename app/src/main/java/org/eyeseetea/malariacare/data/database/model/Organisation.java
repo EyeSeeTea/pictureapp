@@ -20,6 +20,7 @@ public class Organisation extends BaseModel {
     @Column
     String name;
 
+    static final String DEFAULT_ORGANISATION = "MATRIX";
     public Organisation() {
     }
 
@@ -30,6 +31,13 @@ public class Organisation extends BaseModel {
                 .querySingle();
     }
 
+
+    public static Organisation getDefaultOrganization() {
+        return new Select()
+                .from(Organisation.class)
+                .where(Organisation_Table.name.is(DEFAULT_ORGANISATION))
+                .querySingle();
+    }
     public static List<Organisation> getAllOrganisations() {
         return new Select().from(Organisation.class).queryList();
     }

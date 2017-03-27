@@ -78,7 +78,7 @@ public class SurveyFragmentStrategy {
     }
 
     public String getMalariaProgram() {
-        return Program.getFirstProgram().getUid();
+        return Program.getFirstProgram() != null ? Program.getFirstProgram().getUid() : null;
     }
 
     public void removeSurveysInSession() {

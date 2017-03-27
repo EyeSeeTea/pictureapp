@@ -26,12 +26,20 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
         int titleResource = 0, subtitleResource = 0;
         switch (tabTag) {
             case R.string.tab_tag_assess:
-                titleResource = R.string.new_case_title;
+                titleResource = R.string.open_tab_title;
                 subtitleResource = R.string.unsent_data;
                 break;
             case R.string.tab_tag_improve:
-                titleResource = R.string.past_cases;
+                titleResource = R.string.closed_tab_title;
                 subtitleResource = R.string.sent_data;
+                break;
+            case R.string.tab_tag_offline:
+                titleResource = R.string.offline_tab_title;
+                subtitleResource = R.string.status_subtitle;
+                break;
+            case R.string.tab_tag_monitor:
+                titleResource = R.string.status_tab_title;
+                subtitleResource = R.string.status_subtitle;
                 break;
         }
         setTitle(headerView, R.id.header_title, titleResource);

@@ -186,7 +186,7 @@ public class MonitorFragment extends Fragment implements IDashboardFragment, IWe
     }
 
     public void reloadHeader(Activity activity) {
-//        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_monitor);
+        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_monitor);
     }
 
     /**

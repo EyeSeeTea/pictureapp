@@ -149,7 +149,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         if (Session.getStockSurvey() != null) {
             Session.getStockSurvey().getValuesFromDB();
         }
-
     }
 
     @Override

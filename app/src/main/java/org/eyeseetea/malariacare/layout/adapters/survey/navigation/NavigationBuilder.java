@@ -15,10 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by arrizabalaga on 2/06/16.
- */
 public class NavigationBuilder {
+    //TODO: Refactor to clean architecture
 
     private static String TAG = "NavigationBuilder";
 

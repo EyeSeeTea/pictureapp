@@ -192,6 +192,8 @@
     <string name="network_error">"Il y a un problème avec le réseau. Veuillez réessayer plus tard."</string>
     <string name="login_invalid_credentials">"les informations d'identification invalides"</string>
     <string name="login_invalid_server_url">"URL du serveur non valide"</string>
-    <string name="error_conflict_message">The event with UID: %1$s. was uploaded with conflict in the data element UID: %2$s with the message: %3$s. Please contact the administrator.</string>
-    <string name="error_conflict_title">"Error"</string>
+    <string name="error_conflict_message">"L'événement avec UID:%1$s. A été téléchargé avec un conflit dans l'élément de données UID:%2$s avec le message:%3$s. Veuillez contacter l'administrateur."</string>
+    <string name="error_conflict_title">"Erreur"</string>
+    <string name="confirmation_really_exit_title">"Vraiment Quitter?"</string>
+    <string name="confirmation_really_exit">"Voulez-vous vraiment quitter l'application?"</string>
 </resources>

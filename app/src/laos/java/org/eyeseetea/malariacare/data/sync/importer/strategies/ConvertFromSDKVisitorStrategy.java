@@ -17,4 +17,7 @@ public class ConvertFromSDKVisitorStrategy implements IConvertFromSDKVisitorStra
     public void visit(EventExtended sdkEventExtended, Survey convertingSurvey) {
         convertingSurvey.setType(Constants.SURVEY_NO_TYPE);
     }
+
+    public static void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
+    }
 }

@@ -40,7 +40,6 @@ import android.widget.RelativeLayout;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
-import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
@@ -94,10 +93,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
      * Parent view of main content
      */
     private LinearLayout content;
-    /**
-     * Flags required to decide if the survey must be deleted or not
-     */
-    private boolean isBackPressed = false;
 
     public static void nextProgressMessage() {
         DashboardActivity.dashboardActivity.runOnUiThread(new Runnable() {
@@ -183,33 +178,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         Log.d(TAG, "onStop");
         unregisterFragmentReceiver();
         super.onStop();
-    }
-
-    /**
-     * Finds the option from the current answer associated with the given text.
-     * Only for dynamicTabAdapter, required for automated testing.
-     */
-    public Option findOptionByText(String text) {
-        try {
-            //Find adapter
-            Tab tabZero = this.tabsList.get(0);
-            DynamicTabAdapter tabAdapter = (DynamicTabAdapter) this.tabAdaptersCache.findAdapter(
-                    tabZero);
-
-            //Get options from question
-            List<Option> options =
-                    tabAdapter.navigationController.getCurrentQuestion().getAnswer().getOptions();
-
-            //Return proper option if possible
-            for (Option option : options) {
-                if (option.getName().equals(text)) {
-                    return option;
-                }
-            }
-        } catch (Exception ex) {
-            return null;
-        }
-        return null;
     }
 
     /**

@@ -10,4 +10,4 @@
 10;'Classification';'Has the patient slept overnight outside of the village in the past two weeks?';;'តើអ្នកជំងឺធ្លាប់គេង ពេលយប់នៅខាងក្រៅភូមិដែលគាត់រស់នៅដែរ ឬ ទេ កាលពី ២សប្តាហ៍មុន?';'ff3lAAW1VLh';5;0;0;1;10;0;10;9;0;'';1
 11;'Occupation';'What is the patient\'s occupation?';;'តើអ្នកជំងឺប្រកបមុខរបរអ្វី?';'Zf8O1uzl3JJ';6;0;0;1;11;0;15;9;0;'';1
 12;'Phone';'Please enter your patient\'s phone number.';;'សូមវាយបញ្ចូលលេខទូរស័ព្ទអ្នកជំងឺ';'rDubghVv1L8';7;0;0;1;12;0;13;9;0;'';0
-13;'Pregnant months';'How many months has the patient been pregnant?';;'តើមានមនុស្សប៉ុន្មានខែអ្នកជំងឺបានមានផ្ទៃពោះ?';'newdataelement';1;0;0;1;4;0;26;10;1;'';1
+13;'Pregnant months';'How many months has the patient been pregnant?';;'តើមានមនុស្សប៉ុន្មានខែអ្នកជំងឺបានមានផ្ទៃពោះ?';'rOYCCgVECcN';1;0;0;1;4;0;26;10;1;'';1

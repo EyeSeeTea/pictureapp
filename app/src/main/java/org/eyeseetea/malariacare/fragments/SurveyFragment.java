@@ -31,7 +31,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -39,29 +38,19 @@ import android.widget.RelativeLayout;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.CompositeScore;
-import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
-import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-/**
- * Activity that supports the data entry for the surveys.
- */
 public class SurveyFragment extends Fragment implements IDashboardFragment {
 
     public static final String TAG = ".SurveyActivity";
@@ -76,11 +65,9 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
      * Actual layout to be accessible in the fragment
      */
     RelativeLayout llLayout;
-    /**
-     * List of tabs that belongs to the current selected survey
-     */
-    private List<Tab> tabsList = new ArrayList<>();
-    private TabAdaptersCache tabAdaptersCache = new TabAdaptersCache();
+
+    private DynamicTabAdapter dynamicTabAdapter;
+
     /**
      * Receiver of data from SurveyService
      */
@@ -212,15 +199,9 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     private View prepareTab(Tab selectedTab) {
         LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
 
-        if (selectedTab.isCompositeScore()) {
-            //Initialize scores x question not loaded yet
-            List<Tab> notLoadedTabs = tabAdaptersCache.getNotLoadedTabs();
-            ScoreRegister.initScoresForQuestions(Question.listAllByTabs(notLoadedTabs),
-                    Session.getMalariaSurvey());
-        }
-        ITabAdapter tabAdapter = tabAdaptersCache.findAdapter(selectedTab);
+        dynamicTabAdapter = new DynamicTabAdapter(selectedTab, getActivity(), mReviewMode);
 
-        return inflater.inflate(tabAdapter.getLayout(), content, false);
+        return inflater.inflate(dynamicTabAdapter.getLayout(), content, false);
     }
 
     /**
@@ -288,12 +269,9 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     public class AsyncReloadAdaptersAndChangeTab extends AsyncTask<Void, Integer, View> {
 
         private List<Tab> tabs;
-        private List<CompositeScore> compositeScores;
 
-        public AsyncReloadAdaptersAndChangeTab(List<Tab> tabs,
-                List<CompositeScore> compositeScores) {
+        public AsyncReloadAdaptersAndChangeTab(List<Tab> tabs) {
             this.tabs = tabs;
-            this.compositeScores = compositeScores;
         }
 
         @Override
@@ -304,10 +282,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
 
         @Override
         protected View doInBackground(Void... params) {
-            tabsList.clear();
-            tabsList.addAll(tabs);
-            tabAdaptersCache.reloadAdapters(tabs, compositeScores);
-
             Log.d(TAG, "doInBackground(" + Thread.currentThread().getId() + ")..");
             View view = prepareTab(tabs.get(0));
             Log.d(TAG, "doInBackground(" + Thread.currentThread().getId() + ")..DONE");
@@ -318,17 +292,15 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         protected void onPostExecute(View viewContent) {
             super.onPostExecute(viewContent);
 
-            Tab tab = tabs.get(0);
-
             content.removeAllViews();
             content.addView(viewContent);
-            ITabAdapter tabAdapter = tabAdaptersCache.findAdapter(tab);
 
             ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
-            if (tabAdapter instanceof DynamicTabAdapter) {
-                ((DynamicTabAdapter) tabAdapter).addOnSwipeListener(listViewTab);
-            }
-            listViewTab.setAdapter((BaseAdapter) tabAdapter);
+
+            dynamicTabAdapter.addOnSwipeListener(listViewTab);
+
+            listViewTab.setAdapter(dynamicTabAdapter);
+
             stopProgress();
         }
     }
@@ -346,15 +318,9 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
             //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close
             // surveys crash
             Session.setIsLoadingSurvey(true);
-            List<CompositeScore> compositeScores;
+
             List<Tab> tabs;
-            Session.valuesLock.readLock().lock();
-            try {
-                compositeScores = (List<CompositeScore>) Session.popServiceValue(
-                        SurveyService.PREPARE_SURVEY_ACTION_COMPOSITE_SCORES);
-            } finally {
-                Session.valuesLock.readLock().unlock();
-            }
+
             Session.valuesLock.readLock().lock();
             try {
                 tabs = (List<Tab>) Session.popServiceValue(
@@ -363,108 +329,8 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
                 Session.valuesLock.readLock().unlock();
             }
 
-            new AsyncReloadAdaptersAndChangeTab(tabs, compositeScores)
+            new AsyncReloadAdaptersAndChangeTab(tabs)
                     .execute((Void) null);
-        }
-    }
-
-    /**
-     * Inner class that resolves each Tab as it is required (lazy manner) instead of loading all of
-     * them at once.
-     */
-    private class TabAdaptersCache {
-
-        /**
-         * Cache of {tab: adapter} for each tab in the survey
-         */
-        private Map<Tab, ITabAdapter> adapters = new HashMap<Tab, ITabAdapter>();
-
-        /**
-         * List of composite scores of the current survey
-         */
-        private List<CompositeScore> compositeScores;
-
-        /**
-         * Flag that optimizes the load of compositeScore the next time
-         */
-        private boolean compositeScoreTabShown = false;
-
-        /**
-         * Finds the right adapter according to the selected tab.
-         * Tabs are lazy trying to speed up the first load
-         *
-         * @param tab Tab whose adapter is searched.
-         * @return The right adapter to deal with that Tab
-         */
-        public ITabAdapter findAdapter(Tab tab) {
-            ITabAdapter adapter = adapters.get(tab);
-            if (adapter == null) {
-                adapter = buildAdapter(tab);
-                //The 'Score' tab has no adapter
-                if (adapter != null) {
-                    this.adapters.put(tab, adapter);
-                }
-            }
-            return adapter;
-        }
-
-        public List<Tab> getNotLoadedTabs() {
-            List<Tab> notLoadedTabs = new ArrayList<Tab>();
-            //If has already been shown NOTHING to reload
-            if (compositeScoreTabShown) {
-                return notLoadedTabs;
-            }
-
-            compositeScoreTabShown = true;
-            notLoadedTabs = new ArrayList<>(tabsList);
-            Set<Tab> loadedTabs = adapters.keySet();
-            notLoadedTabs.removeAll(loadedTabs);
-            return notLoadedTabs;
-        }
-
-        /**
-         * Resets the state of the cache.
-         * Called form the receiver once data is ready.
-         */
-        public void reloadAdapters(List<Tab> tabs, List<CompositeScore> compositeScores) {
-            Tab firstTab = tabs.get(0);
-            this.adapters.clear();
-            this.adapters.put(firstTab, buildAdapter(firstTab));
-            this.compositeScores = compositeScores;
-        }
-
-        /**
-         * Returns the list of adapters.
-         * Puts every adapter (for every tab) into the cache if is not already there.
-         */
-        public List<ITabAdapter> list() {
-            //The cache only has loaded Tabs
-            if (this.adapters.size() < tabsList.size()) {
-                cacheAllTabs();
-            }
-            //Return full list of adapters
-            return new ArrayList<ITabAdapter>(this.adapters.values());
-
-        }
-
-        /**
-         * Puts every adapter (for every tab) into the cache if is not already there.
-         */
-        public void cacheAllTabs() {
-            for (Tab tab : tabsList) {
-                findAdapter(tab);
-            }
-        }
-
-        /**
-         * Builds the right adapter for the given tab
-         */
-        private ITabAdapter buildAdapter(Tab tab) {
-            if (tab.isDynamicTab() || tab.isMultiQuestionTab()) {
-                return new DynamicTabAdapter(tab, getActivity(), mReviewMode);
-            }
-
-            return null;
         }
     }
 }

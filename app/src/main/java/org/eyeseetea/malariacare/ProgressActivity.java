@@ -60,7 +60,7 @@ public class ProgressActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FontUtils.applyFontStyleByPreference(getResources(), getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
 
         initializeDependencies();
 

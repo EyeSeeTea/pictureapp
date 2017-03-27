@@ -44,15 +44,18 @@ import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,6 +66,13 @@ import java.util.Set;
 public class SurveyFragment extends Fragment implements IDashboardFragment {
 
     public static final String TAG = ".SurveyActivity";
+    /**
+     * Progress text shown while loading
+     */
+    public static CustomTextView progressText;
+    public static Iterator<String> messageIterator;
+    public static int messagesCount;
+    public boolean mReviewMode = false;
     /**
      * Actual layout to be accessible in the fragment
      */
@@ -88,7 +98,20 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
      * Flags required to decide if the survey must be deleted or not
      */
     private boolean isBackPressed = false;
-    public boolean mReviewMode = false;
+
+    public static void nextProgressMessage() {
+        DashboardActivity.dashboardActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                if (messageIterator.hasNext()) {
+                    progressText.setText(messageIterator.next());
+                }
+            }
+        });
+    }
+
+    public static int progressMessagesCount() {
+        return messagesCount;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -132,7 +155,8 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     @Override
     public void onPause() {
         Log.d(TAG, "onPause");
-        if (!DashboardActivity.dashboardActivity.isLoadingReview() && !areActiveSurveysInQuarantine()) {
+        if (!DashboardActivity.dashboardActivity.isLoadingReview()
+                && !areActiveSurveysInQuarantine()) {
             beforeExit();
         }
         super.onPause();
@@ -140,11 +164,11 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
 
     private boolean areActiveSurveysInQuarantine() {
         Survey survey = Session.getMalariaSurvey();
-        if(survey !=null && survey.isQuarantine()) {
+        if (survey != null && survey.isQuarantine()) {
             return true;
         }
         survey = Session.getStockSurvey();
-        if(survey !=null && survey.isQuarantine()){
+        if (survey != null && survey.isQuarantine()) {
             return true;
         }
 
@@ -174,8 +198,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
                     tabZero);
 
             //Get options from question
-//            List<Option> options=tabAdapter.progressTabStatus.getCurrentQuestion().getAnswer()
-// .getOptions();
             List<Option> options =
                     tabAdapter.navigationController.getCurrentQuestion().getAnswer().getOptions();
 
@@ -197,6 +219,24 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
     private void createProgress() {
         content = (LinearLayout) llLayout.findViewById(R.id.content);
         progressBar = (ProgressBar) llLayout.findViewById(R.id.survey_progress);
+        progressText = (CustomTextView) llLayout.findViewById(R.id.progress_text);
+        createProgressMessages();
+    }
+
+    private void createProgressMessages() {
+        List<String> messagesList = new ArrayList<>();
+        //// FIXME: 20/03/2017 it is a fake flow.
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_first_step));
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_second_step));
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_third_step));
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_fourth_step));
+        messageIterator = messagesList.iterator();
+        // An iterator doesn't return properly its size after next() has been called
+        messagesCount = messagesList.size();
     }
 
     /**
@@ -221,6 +261,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
      */
     private void stopProgress() {
         this.progressBar.setVisibility(View.GONE);
+        this.progressText.setVisibility(View.GONE);
         this.content.setVisibility(View.VISIBLE);
 
     }
@@ -229,6 +270,7 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         this.content.setVisibility(View.GONE);
         this.progressBar.setVisibility(View.VISIBLE);
         this.progressBar.setEnabled(true);
+        this.progressText.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -267,7 +309,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         getActivity().getApplicationContext().startService(surveysIntent);
     }
 
-
     @Override
     public void reloadData() {
 
@@ -298,7 +339,6 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         protected View doInBackground(Void... params) {
             tabsList.clear();
             tabsList.addAll(tabs);
-
             tabAdaptersCache.reloadAdapters(tabs, compositeScores);
 
             Log.d(TAG, "doInBackground(" + Thread.currentThread().getId() + ")..");
@@ -336,7 +376,8 @@ public class SurveyFragment extends Fragment implements IDashboardFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive");
-            //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close surveys crash
+            //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close
+            // surveys crash
             Session.setIsLoadingSurvey(true);
             List<CompositeScore> compositeScores;
             List<Tab> tabs;

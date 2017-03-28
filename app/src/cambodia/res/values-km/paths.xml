@@ -14,16 +14,16 @@
     <string name="Option_treatment_euartesim">question_images/t_euartesim.png</string>
     <string name="Option_treatment_asmq">question_images/t_asmq.png</string>
     <string name="Option_treatment_referral">question_images/t_referral.png</string>
-    <string name="Option_dha_pip_age_five">question_images/e_age_five_en.png</string>
-    <string name="Option_dha_pip_age_ten">question_images/e_age_ten_en.png</string>
-    <string name="Option_dha_pip_age_fifteen">question_images/e_age_fifteen_en.png</string>
-    <string name="Option_dha_pip_age_fifteen_sixty">question_images/e_age_fifteen_sixty_en.png</string>
-    <string name="Option_question_asmq_age_five">question_images/asmq_age_five_en.png</string>
-    <string name="Option_question_asmq_age_seven">question_images/asmq_age_seven_en.png</string>
-    <string name="Option_question_asmq_age_thirteen">question_images/asmq_age_thirteen_en.png</string>
-    <string name="Option_question_asmq_referral_children">question_images/asmq_r_children_en.png</string>
-    <string name="Option_question_asmq_referral_pregnant">question_images/asmq_r_pregnant_en.png</string>
-    <string name="Option_question_asmq_referral_stock_out">question_images/asmq_r_act_stock_out_en.png</string>
+    <string name="Option_dha_pip_age_five">question_images/e_age_five_km.png</string>
+    <string name="Option_dha_pip_age_ten">question_images/e_age_ten_km.png</string>
+    <string name="Option_dha_pip_age_fifteen">question_images/e_age_fifteen_km.png</string>
+    <string name="Option_dha_pip_age_fifteen_sixty">question_images/e_age_fifteen_sixty_km.png</string>
+    <string name="Option_question_asmq_age_five">question_images/asmq_age_five_km.png</string>
+    <string name="Option_question_asmq_age_seven">question_images/asmq_age_seven_km.png</string>
+    <string name="Option_question_asmq_age_thirteen">question_images/asmq_age_thirteen_km.png</string>
+    <string name="Option_question_asmq_referral_children">question_images/asmq_r_children_km.png</string>
+    <string name="Option_question_asmq_referral_pregnant">question_images/asmq_r_pregnant_km.png</string>
+    <string name="Option_question_asmq_referral_stock_out">question_images/asmq_r_act_stock_out_km.png</string>
     <string name="Option_question_classification_yes">question_images/asmq_cc_yes.png</string>
     <string name="Option_question_classification_no">question_images/asmq_cc_no.png</string>
     <string name="Option_question_occupation_plantation">question_images/asmq_o_plantation.png</string>
@@ -31,5 +31,5 @@
     <string name="Option_question_occupation_forest">question_images/asmq_o_forest.png</string>
     <string name="Option_question_occupation_security">question_images/asmq_o_security.png</string>
     <string name="Option_question_occupation_other">question_images/asmq_o_other.png</string>
-    <string name="Option_question_asmq_referral_suspected">question_images/asmq_r_suspected_treatment_failure_en.png</string>
+    <string name="Option_question_asmq_referral_suspected">question_images/asmq_r_suspected_treatment_failure_km.png</string>
 </resources>

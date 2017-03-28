@@ -1,0 +1,13 @@
+1;'Code: FN';'patient_first_name_review_title';'patient_first_name_enter_helptext';'patient_first_name';'fake_uid';1;0;0;1;1;0;4;1;1;;1
+2;'Code: LN';'patient_last_name_title';'patient_last_name_helptext';'patient_last_name';'fake_uid';2;0;0;1;2;0;4;1;1;;1
+3;'Code: G';'patient_gender_title';'patient_gender_helptext';'patient_gender';'fake_uid';3;0;0;1;3;0;4;1;1;;1
+4;'Code: MN';'patient_mother_name_title';'patient_mother_name_helptext';'patient_mother_name';'fake_uid';4;0;0;1;4;0;4;1;1;;1
+5;'Code: BD';'patient_birth_district_title';'patient_first_district_helptext';'patient_first_district';'fake_uid';5;0;0;1;5;0;4;1;1;;1
+6;'Code: YB';'patient_year_birth_title';'patient_year_birth_helptext';'patient_year_birth';'fake_uid';6;0;0;1;6;0;5;1;1;;1
+7;'Code: NC';'patient_number_children_title';'patient_number_children_helptext';'patient_number_children';'fake_uid';7;0;0;1;7;0;2;1;1;;1
+8;'Code: CM';'patient_current_method_title';'patient_current_method_helptext';'patient_current_method';'fake_uid';8;0;0;1;8;0;19;1;1;;1
+9;'Code: CF';'patient_channel_referral_title';'patient_channel_referral_helptext';'patient_channel_referral';'fake_uid';9;0;0;1;9;0;19;1;1;;1
+10;'Code: CS';'patient_civil_status_title';'patient_civil_status_helptext';'patient_civil_status';'fake_uid';10;0;0;1;10;0;19;1;1;;1
+11;'Code: OP';'patient_ownership_phone_title';'patient_ownership_phone_helptext';'patient_ownership_phone';'fake_uid';11;0;0;1;11;0;19;1;1;;1
+12;'Code: PN';'patient_phone_number_title';'patient_phone_number_helptext';'patient_phone_number';'fake_uid';12;0;0;1;12;0;13;1;1;;1
+13;'Code: P';'patient_program_title';'patient_program_helptext';'patient_program';'fake_uid';13;0;0;1;13;0;19;1;1;;0

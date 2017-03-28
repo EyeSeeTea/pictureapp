@@ -57,8 +57,4 @@ public class Credentials {
                 username.hashCode() *
                 password.hashCode();
     }
-
-    public static boolean isLogged() {
-        return PreferencesState.getInstance().getOrgUnit().equals("");
-    }
 }

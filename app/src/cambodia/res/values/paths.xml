@@ -6,7 +6,6 @@
     <string name="Option_reason_refuse">question_images/ntr_refuse.png</string>
     <string name="Option_reason_danger">question_images/ntr_danger.png</string>
     <string name="Option_reason_stock_out">question_images/ntr_stock_out.png</string>
-
     <string name="Option_sex_male">question_images/sex_male.png</string>
     <string name="Option_sex_female">question_images/sex_female.png</string>
     <string name="Option_specie_pf">question_images/specie_pf.png</string>
@@ -32,4 +31,6 @@
     <string name="Option_question_occupation_forest">question_images/asmq_o_forest.png</string>
     <string name="Option_question_occupation_security">question_images/asmq_o_security.png</string>
     <string name="Option_question_occupation_other">question_images/asmq_o_other.png</string>
+    <string name="Option_question_asmq_referral_suspected">question_images/asmq_r_suspected_treatment_failure_en.png</string>
+
 </resources>

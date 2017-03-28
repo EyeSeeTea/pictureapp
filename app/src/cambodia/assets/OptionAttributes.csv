@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 1;'f38b00';'Option_rdt_positive'
 2;'00b3e3';'Option_rdt_negative'
 3;'003745';'Option_rdt_not_tested'
@@ -29,3 +30,4 @@
 29;'799900';'Option_question_occupation_forest'
 30;'00b3e3';'Option_question_occupation_security'
 31;'003745';'Option_question_occupation_other'
+32;'00b4e3';'Option_question_asmq_referral_suspected'

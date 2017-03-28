@@ -19,7 +19,6 @@ import org.eyeseetea.sdk.presentation.views.CustomEditText;
 public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView implements IQuestionView {
     CustomEditText mCustomEditText;
     CustomButton sendButton;
-    Boolean isClicked=false;
 
     public PhoneSingleQuestionView(Context context) {
         super(context);
@@ -62,7 +61,7 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validateAnswer(context);
+                action(context);
             }
         });
 
@@ -70,7 +69,6 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    validateAnswer(context);
                     return true;
                 }
 
@@ -79,22 +77,18 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
         });
     }
 
-    private void validateAnswer(Context context) {
-        if (!isClicked) {
-            isClicked = true;
-            try {
-                Phone phone = new Phone(mCustomEditText.getText().toString());
-                hideKeyboard(mCustomEditText);
-                Validation.getInstance().removeInputError(mCustomEditText);
-                String value = phone.getValue();
-                notifyAnswerChanged(value);
-            } catch (InvalidPhoneException e) {
-                Validation.getInstance().addinvalidInput(mCustomEditText,
-                        context.getString(R.string.dynamic_error_phone_format));
-                mCustomEditText.setError(context.getString(R.string.dynamic_error_phone_format));
-            }
-            isClicked = false;
+    @Override
+    public void validateAnswer(Context context) {
+        try {
+            Phone phone = new Phone(mCustomEditText.getText().toString());
+            hideKeyboard(mCustomEditText);
+            Validation.getInstance().removeInputError(mCustomEditText);
+            String value = phone.getValue();
+            notifyAnswerChanged(value);
+        } catch (InvalidPhoneException e) {
+            Validation.getInstance().addinvalidInput(mCustomEditText,
+                    context.getString(R.string.dynamic_error_phone_format));
+            mCustomEditText.setError(context.getString(R.string.dynamic_error_phone_format));
         }
     }
-
 }

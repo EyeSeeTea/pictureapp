@@ -5,7 +5,7 @@
 <string name="new_case_title">"NEW CASE"</string>
 <string name="open_tab_title">"OPEN"</string>
 <string name="closed_tab_title">"CLOSED"</string>
-<string name="offline_tab_title">"OFFLINE"</string>
+<string name="tab_tag_stock">"offline"</string>
 <string name="status_tab_title">"STATUS"</string>
 <string name="survey_completed">"Survey completed"</string>
 <string name="survey_completed_text">"The survey has been successfully completed."</string>
@@ -35,10 +35,10 @@
 <string name="dashboard_menu_logout_message">"All unsent surveys will be deleted. Are you sure you want to continue?"</string>
 <string name="settings_menu_about">"About"</string>
 <string name="past_cases">"PAST CASES"</string>
-<string name="sent_data">"Sent Data"</string>
+<string name="sent_data">"Closed"</string>
 <string name="status_subtitle">""</string>
-<string name="unsent_data">"Unsent Data"</string>
-<string name="monitoring_title">"MONITORING"</string>
+<string name="unsent_data">"Open"</string>
+<string name="monitoring_title">"Status"</string>
 <string name="monitoring_label_option_months">"Last 6 months"</string>
 <string name="monitoring_label_option_days">"Last 6 days"</string>
 <string name="monitoring_label_option_weeks">"Last 6 weeks"</string>

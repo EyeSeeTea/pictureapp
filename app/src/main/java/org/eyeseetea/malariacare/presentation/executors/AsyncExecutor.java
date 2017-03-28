@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.presentation.executors;
 
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
-import org.eyeseetea.malariacare.domain.usecase.UseCase;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -30,15 +29,15 @@ public class AsyncExecutor implements IAsyncExecutor {
     }
 
     @Override
-    public void run(final UseCase useCase) {
-        if (useCase == null) {
-            throw new IllegalArgumentException("useCase to execute can't be null");
+    public void run(final Runnable runnable) {
+        if (runnable == null) {
+            throw new IllegalArgumentException("runnable to execute can't be null");
         }
 
         threadPoolExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                useCase.run();
+                runnable.run();
             }
         });
     }

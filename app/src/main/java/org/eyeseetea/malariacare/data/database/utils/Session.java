@@ -29,6 +29,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 
 import java.util.HashMap;
@@ -76,7 +77,7 @@ public class Session {
      * The exitOfSurvey
      */
     //FIXME: 09/03/2017    This variable should disappear instance of a refactor in loading of a new survey
-    private static boolean isLoadingSurvey;
+    private static boolean isLoadingNavigationController;
     //FIXME: 09/03/2017    This variable should disappear instance of a refactor in loading of a new survey
     private static boolean shouldPressBackOnLoadSurvey;
     /**
@@ -84,26 +85,12 @@ public class Session {
      */
     private static int maxTotalQuestions;
 
+    private static NavigationController sNavigationController;
+
     /**
      * Map that holds non serializable results from services
      */
     private static Map<String, Object> serviceValues = new HashMap<>();
-
-    public static boolean shouldPressBackOnLoadSurvey() {
-        return shouldPressBackOnLoadSurvey;
-    }
-
-    public static void setShouldPressBackOnLoadSurvey(boolean shouldPressBackOnLoadSurvey) {
-        Session.shouldPressBackOnLoadSurvey = shouldPressBackOnLoadSurvey;
-    }
-
-    public static boolean isIsLoadingSurvey() {
-        return isLoadingSurvey;
-    }
-
-    public static void setIsLoadingSurvey(boolean value) {
-        isLoadingSurvey = value;
-    }
 
     public static Survey getMalariaSurvey() {
         return malariaSurvey;
@@ -226,5 +213,21 @@ public class Session {
 
     public static synchronized void setMaxTotalQuestions(int maxTotalQuestions) {
         Session.maxTotalQuestions = maxTotalQuestions;
+    }
+
+    public static boolean isIsLoadingNavigationController() {
+        return isLoadingNavigationController;
+    }
+
+    public static void setIsLoadingNavigationController(boolean value) {
+        isLoadingNavigationController = value;
+    }
+
+    public static NavigationController getNavigationController() {
+        return sNavigationController;
+    }
+
+    public static void setNavigationController(NavigationController navigationController) {
+        sNavigationController = navigationController;
     }
 }

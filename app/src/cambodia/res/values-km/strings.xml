@@ -143,4 +143,10 @@
     <string name="login_invalid_server_url">URL របស់ម៉ាស៊ីនបម្រើមិនត្រឹមត្រូវ</string>
     <string name="error_conflict_message">The event with UID: %1$s. was uploaded with conflict in the data element UID: %2$s with the message: %3$s. Please contact the administrator.</string>
     <string name="error_conflict_title">"Error"</string>
+    <string name="confirmation_really_exit_title">"ពិតជាចេញ?"</string>
+    <string name="confirmation_really_exit">"តើអ្នកប្រាកដជាចង់ចេញពីកម្មវិធីនេះ?"</string>
+    <string name="survey_first_step">"កំពុងទៅយកសំណួរ ..."</string>
+     <string name="survey_second_step">"សំណួរអគារ ..."</string> 
+    <string name="survey_third_step">"ដើមឈើសំណួរអគារ ..."</string> 
+    <string name="survey_fourth_step">"ការបង្កើតអេក្រង់ ..."</string>
 </resources>

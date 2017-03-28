@@ -38,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -254,6 +255,8 @@ public class DashboardActivity extends BaseActivity {
 
         ImageView imageView = (ImageView) tabIndicator.getChildAt(0);
         imageView.setTag(tabName);
+        TextView tabTitle= (TextView) tabIndicator.getChildAt(1);
+        tabTitle.setTextSize(getResources().getDimensionPixelSize(R.dimen.dashboard_tab_text_size));
     }
 
 

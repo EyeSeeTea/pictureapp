@@ -237,6 +237,10 @@ public class Tab extends BaseModel {
                 .where(Tab_Table.id_tab.eq(id)).querySingle();
     }
 
+    public static Tab getFirstTab() {
+        return new Select().from(Tab.class).querySingle();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

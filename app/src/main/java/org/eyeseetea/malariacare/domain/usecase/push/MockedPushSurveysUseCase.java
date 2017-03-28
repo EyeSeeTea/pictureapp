@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.domain.usecase;
+package org.eyeseetea.malariacare.domain.usecase.push;
 
 
 import org.eyeseetea.malariacare.data.database.model.Survey;

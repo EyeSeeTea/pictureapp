@@ -19,6 +19,8 @@ import java.util.Map;
  * Created by arrizabalaga on 2/06/16.
  */
 public class NavigationController {
+    //TODO: Refactor to clean architecture
+
     private static final int FIRST_MOVE_IDX = -1;
     private static final String TAG = "NavigationController";
     /**

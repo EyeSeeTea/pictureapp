@@ -35,12 +35,15 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.strategies.ProgressActivityStrategy;
-import org.eyeseetea.malariacare.views.FontUtils;
 
 public class ProgressActivity extends Activity {
 
@@ -73,9 +76,11 @@ public class ProgressActivity extends Activity {
         AuthenticationManager authenticationManager = new AuthenticationManager(this);
 
         IPullController pullController = new PullController(this);
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
 
         mLogoutUseCase = new LogoutUseCase(authenticationManager);
-        mPullUseCase = new PullUseCase(pullController);
+        mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
     }
 
     private void prepareUI() {

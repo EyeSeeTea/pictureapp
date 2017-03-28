@@ -145,4 +145,5 @@
     <string name="error_conflict_title">"កំហុសក្នុងការ"</string>
     <string name="confirmation_really_exit_title">"ពិតជាចេញ?"</string>
     <string name="confirmation_really_exit">"តើអ្នកប្រាកដជាចង់ចេញពីកម្មវិធីនេះ?"</string>
+    <string name="run_in_demo_mode">"រត់នៅក្នុងរបៀបបង្ហាញសាកល្បង"</string>
 </resources>

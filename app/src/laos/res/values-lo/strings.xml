@@ -210,4 +210,5 @@
     <string name="error_conflict_title">"Error"</string>
     <string name="confirmation_really_exit_title">"ແທ້ອອກຈາກ?"</string>
     <string name="confirmation_really_exit">"ທ່ານທີ່ທ່ານກໍາລັງໃຫ້ແນ່ໃຈວ່າຕ້ອງການທີ່ຈະອອກຈາກ app ໄດ້?"</string>
+    <string name="run_in_demo_mode">"ດໍາເນີນການໃນຮູບແບບຕົວຢ່າງ"</string>
 </resources>

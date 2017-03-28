@@ -48,5 +48,8 @@
         android:id="@+id/export_db"
         android:orderInCategory="106"
         android:title="@string/export_data_option_title" />
-
+    <item
+        android:id="@+id/demo_mode"
+        android:orderInCategory="107"
+        android:title="@string/run_in_demo_mode" />
 </menu>

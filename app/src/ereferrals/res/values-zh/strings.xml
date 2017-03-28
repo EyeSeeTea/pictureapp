@@ -318,4 +318,5 @@
 <string name="false_option_identifier">"没有"</string>
 <string name="confirmation_really_exit_title">"真的退出吗？"</string>
 <string name="confirmation_really_exit">"您确定要退出应用程序吗？"</string>
+<string name="run_in_demo_mode">"在演示模式下运行"</string>
 </resources>

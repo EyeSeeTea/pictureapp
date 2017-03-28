@@ -2,6 +2,8 @@ package org.eyeseetea.malariacare.domain.entity;
 
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+
 public class Credentials {
     private static final String DEMO_USER = "demo";
     private static final String DEMO_SERVER = "demo.server";
@@ -56,4 +58,7 @@ public class Credentials {
                 password.hashCode();
     }
 
+    public static boolean isLogged() {
+        return PreferencesState.getInstance().getOrgUnit().equals("");
+    }
 }

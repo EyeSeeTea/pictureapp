@@ -23,7 +23,11 @@ public class LoginUseCase extends ALoginUseCase {
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
-                        logoutAndHardcodedLogin(credentials, loginCallback);
+                        if (!credentials.isDemoCredentials()) {
+                            logoutAndHardcodedLogin(credentials, loginCallback);
+                        } else {
+                            loginCallback.onLoginSuccess();
+                        }
                     }
 
                     @Override

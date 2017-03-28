@@ -192,6 +192,8 @@
     <string name="network_error">มีปัญหากับเครือข่ายเป็นโปรดลองอีกครั้งในภายหลัง</string>
     <string name="login_invalid_credentials">ข้อมูลประจำตัวที่ไม่ถูกต้อง</string>
     <string name="login_invalid_server_url">URL ของเซิร์ฟเวอร์ไม่ถูกต้อง</string>
-    <string name="error_conflict_message">The event with UID: %1$s. was uploaded with conflict in the data element UID: %2$s with the message: %3$s. Please contact the administrator.</string>
-    <string name="error_conflict_title">"Error"</string>
+    <string name="error_conflict_message">เหตุการณ์ที่มี UID:%1$s ถูกอัปโหลดโดยมีข้อขัดแย้งในองค์ประกอบข้อมูล UID:%2$s ด้วยข้อความ:%3$s โปรดติดต่อผู้ดูแลระบบ</string>
+    <string name="error_conflict_title">"ข้อผิดพลาด"</string>
+    <string name="confirmation_really_exit_title">"จริงๆออก?"</string>
+    <string name="confirmation_really_exit">"คุณแน่ใจหรือไม่ว่าต้องการออกจากแอป"</string>
 </resources>

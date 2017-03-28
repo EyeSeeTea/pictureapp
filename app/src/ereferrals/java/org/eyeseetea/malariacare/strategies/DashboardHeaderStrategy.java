@@ -33,8 +33,8 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
                 titleResource = R.string.closed_tab_title;
                 subtitleResource = R.string.sent_data;
                 break;
-            case R.string.tab_tag_offline:
-                titleResource = R.string.offline_tab_title;
+            case R.string.tab_tag_stock:
+                titleResource = R.string.tab_tag_stock;
                 subtitleResource = R.string.status_subtitle;
                 break;
             case R.string.tab_tag_monitor:

@@ -1,6 +1,6 @@
 1;'common_option_method_none';'none';0;8;1
-2;'common_option_method_condom';'condoms';0;8;1
-3;'common_option_method_injection';'injectable';0;8;1
+2;'common_option_method_condom';'condons';0;8;1
+3;'common_option_method_injection';'inyectable';0;8;1
 4;'common_option_method_pills';'pills';0;8;1
 5;'common_option_method_implant';'implant';0;8;1
 6;'common_option_method_iud';'iud';0;8;1
@@ -19,3 +19,5 @@
 19;'common_option_program_familyPlanning';'familyPlaning';0;13;1
 20;'common_option_program_cervicalCancer';'cervicalCancer';0;13;1
 21;'common_option_program_antinatalCare';'antinatalCare';0;13;1
+22;'common_option_gender_male';'male';0;3;1
+23;'common_option_gender_female';'female';0;3;1

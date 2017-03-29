@@ -176,5 +176,7 @@
     <string name="common_option_program_familyPlanning">"Family Planning"</string>
     <string name="common_option_program_cervicalCancer">"Cervical Cancer"</string>
     <string name="common_option_program_antinatalCare">"Antinatal Care"</string>
+    <string name="common_option_gender_male">"Male"</string>
+    <string name="common_option_gender_female">"Female"</string>
 
 </resources>

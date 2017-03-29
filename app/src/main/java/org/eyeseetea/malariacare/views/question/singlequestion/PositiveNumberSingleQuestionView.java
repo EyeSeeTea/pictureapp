@@ -20,7 +20,6 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         IQuestionView {
     CustomEditText numberPicker;
     CustomButton sendButton;
-    Boolean isClicked=false;
 
     public PositiveNumberSingleQuestionView(Context context) {
         super(context);
@@ -71,7 +70,7 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    validateAnswer(context);
+                    action(context);
                     return true;
                 }
 
@@ -80,9 +79,8 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         });
     }
 
-    private void validateAnswer(Context context) {
-        if(!isClicked) {
-            isClicked = true;
+    @Override
+    public void validateAnswer(Context context) {
             try {
                 PositiveNumber positiveNumber = PositiveNumber.parse(
                         numberPicker.getText().toString());
@@ -94,8 +92,6 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
                         context.getString(R.string.dynamic_error_age));
                 numberPicker.setError(context.getString(R.string.dynamic_error_age));
             }
-            isClicked = false;
-        }
     }
 
 }

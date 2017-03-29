@@ -6,7 +6,6 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.drugCombinatio
 import static org.eyeseetea.malariacare.data.database.AppDatabase.drugName;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.matchName;
-import static org.eyeseetea.malariacare.data.database.model.Organisation_Table.id_organisation;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -18,7 +17,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Table(database = AppDatabase.class)
@@ -37,7 +35,7 @@ public class Treatment extends BaseModel {
     @PrimaryKey(autoincrement = true)
     long id_treatment;
     @Column
-    Long id_organisation_fk;
+    Long id_partner_fk;
     @Column
     Long diagnosis;
     @Column
@@ -45,9 +43,9 @@ public class Treatment extends BaseModel {
     @Column
     int type;
     /**
-     * Reference to organisation (loaded lazily)
+     * Reference to mPartner (loaded lazily)
      */
-    Organisation organisation;
+    Partner mPartner;
 
 
     public Treatment() {
@@ -56,7 +54,7 @@ public class Treatment extends BaseModel {
     public Treatment(long id_treatment, long id_organisation, Long diagnosis, Long message,
             int type) {
         this.id_treatment = id_treatment;
-        this.id_organisation_fk = id_organisation;
+        this.id_partner_fk = id_organisation;
         this.diagnosis = diagnosis;
         this.message = message;
     }
@@ -112,27 +110,27 @@ public class Treatment extends BaseModel {
     }
 
 
-    public Organisation getOrganisation() {
-        if (organisation == null) {
-            if (id_organisation_fk == null) {
+    public Partner getPartner() {
+        if (mPartner == null) {
+            if (id_partner_fk == null) {
                 return null;
             }
-            organisation = new Select()
-                    .from(Organisation.class)
-                    .where(id_organisation
-                            .is(id_organisation_fk)).querySingle();
+            mPartner = new Select()
+                    .from(Partner.class)
+                    .where(Partner_Table.id_partner
+                            .is(id_partner_fk)).querySingle();
         }
-        return organisation;
+        return mPartner;
     }
 
-    public void setOrganisation(Long id_organisation) {
-        this.id_organisation_fk = id_organisation;
-        organisation = null;
+    public void setPartner(Long id_organisation) {
+        this.id_partner_fk = id_organisation;
+        mPartner = null;
     }
 
-    public void setOrganisation(Organisation organisation) {
-        this.organisation = organisation;
-        this.id_organisation_fk = (organisation != null) ? organisation.getId_organisation() : null;
+    public void setOrganisation(Partner partner) {
+        this.mPartner = partner;
+        this.id_partner_fk = (partner != null) ? partner.getId_partner() : null;
     }
 
     public Long getDiagnosis() {
@@ -168,8 +166,8 @@ public class Treatment extends BaseModel {
 
         if (id_treatment != treatment.id_treatment) return false;
         if (type != treatment.type) return false;
-        if (id_organisation != null ? !id_organisation.equals(treatment.id_organisation_fk)
-                : treatment.id_organisation_fk != null) {
+        if (id_partner_fk != null ? !id_partner_fk.equals(treatment.id_partner_fk)
+                : treatment.id_partner_fk != null) {
             return false;
         }
         if (diagnosis != null ? !diagnosis.equals(treatment.diagnosis)
@@ -183,7 +181,7 @@ public class Treatment extends BaseModel {
     @Override
     public int hashCode() {
         int result = (int) (id_treatment ^ (id_treatment >>> 32));
-        result = 31 * result + (id_organisation_fk != null ? id_organisation_fk.hashCode() : 0);
+        result = 31 * result + (id_partner_fk != null ? id_partner_fk.hashCode() : 0);
         result = 31 * result + (diagnosis != null ? diagnosis.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
         result = 31 * result + type;
@@ -195,11 +193,11 @@ public class Treatment extends BaseModel {
     public String toString() {
         return "Treatment{" +
                 "id_treatment=" + id_treatment +
-                ", id_organisation_fk=" + id_organisation_fk +
+                ", id_partner_fk=" + id_partner_fk +
                 ", diagnosis='" + diagnosis + '\'' +
                 ", message='" + message + '\'' +
                 ", type=" + type +
-                ", organisation=" + organisation +
+                ", mPartner=" + mPartner +
                 '}';
     }
 

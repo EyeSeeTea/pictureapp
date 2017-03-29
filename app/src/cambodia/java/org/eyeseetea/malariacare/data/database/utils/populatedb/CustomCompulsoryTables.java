@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.database.utils.populatedb;
+package org.eyeseetea.malariacare.data.database.populatedb;
 
 import com.raizlabs.android.dbflow.structure.BaseModel;
 

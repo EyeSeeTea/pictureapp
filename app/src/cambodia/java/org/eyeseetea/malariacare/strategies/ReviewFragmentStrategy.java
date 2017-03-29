@@ -43,4 +43,11 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         }
         return rowView;
     }
+
+    public static boolean isValidValue(Value value) {
+        if (value.getQuestion() == null) {
+            return false;
+        }
+        return true;
+    }
 }

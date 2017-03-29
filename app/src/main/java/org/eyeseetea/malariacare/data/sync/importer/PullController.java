@@ -20,11 +20,11 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
@@ -66,8 +66,22 @@ public class PullController implements IPullController {
     public void pull(final PullFilters pullFilters, final Callback callback) {
         Log.d(TAG, "Starting PULL process...");
 
-        callback.onStep(PullStep.METADATA);
-        new PopulateDbAsync(pullFilters, callback).execute();
+        try {
+
+            callback.onStep(PullStep.METADATA);
+
+            populateMetadataFromCsvs(pullFilters.isDemo());
+
+            if (pullFilters.isDemo()) {
+                callback.onComplete();
+            } else {
+
+                pullMetada(pullFilters, callback);
+            }
+        } catch (Exception ex) {
+            Log.e(TAG, "pull: " + ex.getLocalizedMessage());
+            callback.onError(ex);
+        }
     }
 
     @Override
@@ -183,45 +197,6 @@ public class PullController implements IPullController {
         } catch (Exception ex) {
             ex.printStackTrace();
             callback.onError(new PullConversionException());
-        }
-    }
-
-    private class PopulateDbAsync extends AsyncTask<Void,Void,Void>
-    {
-        PullFilters mPullFilters;
-        Callback mCallback;
-        Exception mException = null;
-
-        public PopulateDbAsync(PullFilters pullFilters, Callback callback) {
-            mPullFilters = pullFilters;
-            mCallback = callback;
-        }
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                populateMetadataFromCsvs(mPullFilters.isDemo());
-            } catch (IOException e) {
-                Log.e(TAG, "pull: " + e.getLocalizedMessage());
-                mException = e;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (mException != null) {
-                mCallback.onError(mException);
-            } else {
-                if (mPullFilters.isDemo()) {
-                    mCallback.onComplete();
-                } else {
-                    pullMetada(mPullFilters, mCallback);
-                }
-            }
-
         }
     }
 }

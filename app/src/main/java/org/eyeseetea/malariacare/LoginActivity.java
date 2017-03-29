@@ -82,6 +82,7 @@ public class LoginActivity extends AbsLoginActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
     }

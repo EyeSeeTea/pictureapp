@@ -4,19 +4,12 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.ACT12RowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.ACT18RowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.ACT24RowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.ACT6RowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.CqRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.rows.NegativeRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PeriodRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PfPvRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PfRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PositivityRateRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PqRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PvRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.RDTRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.rows.ReferralOptionRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.rows.TestedRowBuilder;
 
@@ -35,13 +28,6 @@ public class MonitorUtils extends AMonitorUtils {
     public List<MonitorRowBuilder> defineRows() {
         List<MonitorRowBuilder> rowBuilders = new ArrayList<>();
         rowBuilders.add(new PeriodRowBuilder(context, R.string.consumption));
-        rowBuilders.add(new RDTRowBuilder(context));
-        rowBuilders.add(new ACT6RowBuilder(context));
-        rowBuilders.add(new ACT12RowBuilder(context));
-        rowBuilders.add(new ACT18RowBuilder(context));
-        rowBuilders.add(new ACT24RowBuilder(context));
-        rowBuilders.add(new CqRowBuilder(context));
-        rowBuilders.add(new PqRowBuilder(context));
         return rowBuilders;
     }
 

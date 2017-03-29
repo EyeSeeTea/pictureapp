@@ -20,13 +20,10 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
@@ -67,8 +64,22 @@ public class PullController implements IPullController {
     public void pull(final PullFilters pullFilters, final Callback callback) {
         Log.d(TAG, "Starting PULL process...");
 
-        callback.onStep(PullStep.METADATA);
-        new PopulateDbAsync(pullFilters, callback).execute();
+        try {
+
+            callback.onStep(PullStep.METADATA);
+
+            populateMetadataFromCsvs(pullFilters.isDemo());
+
+            if (pullFilters.isDemo()) {
+                callback.onComplete();
+            } else {
+
+                pullMetada(pullFilters, callback);
+            }
+        } catch (Exception ex) {
+            Log.e(TAG, "pull: " + ex.getLocalizedMessage());
+            callback.onError(ex);
+        }
     }
 
     @Override
@@ -195,83 +206,4 @@ public class PullController implements IPullController {
 
         mDataConverter.convert(callback, mConverter);
     }
-
-    private class PopulateDbAsync extends AsyncTask<Void,Void,Void>
-    {
-        PullFilters mPullFilters;
-        Callback mCallback;
-        Exception mException = null;
-
-        public PopulateDbAsync(PullFilters pullFilters, Callback callback) {
-            mPullFilters = pullFilters;
-            mCallback = callback;
-        }
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                populateMetadataFromCsvs(mPullFilters.isDemo());
-            } catch (IOException e) {
-                Log.e(TAG, "pull: " + e.getLocalizedMessage());
-                mException = e;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (mException != null) {
-                mCallback.onError(mException);
-            } else {
-                if (mPullFilters.isDemo()) {
-                    mCallback.onComplete();
-                } else {
-                    pullMetada(mPullFilters, mCallback);
-                }
-            }
-
-        }
-    }
-    //TODO jsanchez
-    //public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
-
-    //TODO jsanchez
-    /**
-     * Returns the correct data from the limited date in shared preferences
-     */
-/*    private Date getDateFromString(String selectedDateLimit) {
-        Calendar day = Calendar.getInstance();
-        if (selectedDateLimit.equals(
-                PreferencesState.getInstance().getContext().getString(R.string.last_6_days))) {
-            day.add(Calendar.DAY_OF_YEAR, -6);
-        } else if (selectedDateLimit.equals(
-                PreferencesState.getInstance().getContext().getString(R.string.last_6_weeks))) {
-            day.add(Calendar.WEEK_OF_YEAR, -6);
-        } else if (selectedDateLimit.equals(
-                PreferencesState.getInstance().getContext().getString(R.string.last_6_months))) {
-            day.add(Calendar.MONTH, -6);
-        }
-        return day.getTime();
-    }*/
-
-    //TODO jsanchez
-/*
-            SdkPullController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
-            String selectedDateLimit = PreferencesState.getInstance().getDataLimitedByDate();
-
-            //Limit of data by date is selected
-            if (BuildConfig.loginDataDownloadPeriod) {
-                SdkPullController.setStartDate(
-                        EventExtended.format(getDateFromString(selectedDateLimit),
-                                EventExtended.AMERICAN_DATE_FORMAT));
-            }
-
-            if (selectedDateLimit.equals(
-                    PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
-                pullMetaData();
-            } else {
-                pullMetaDataAndData();
-            }*/
 }

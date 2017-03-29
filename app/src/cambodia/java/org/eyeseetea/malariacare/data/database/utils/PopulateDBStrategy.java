@@ -3,8 +3,6 @@ package org.eyeseetea.malariacare.data.database.utils;
 import android.content.Context;
 import android.content.res.AssetManager;
 
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.IPopulateDBStrategy;
 
 import java.io.FileNotFoundException;

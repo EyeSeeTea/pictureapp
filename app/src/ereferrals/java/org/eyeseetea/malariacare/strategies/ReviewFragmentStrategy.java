@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -52,5 +53,19 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
     private Question getCorrectQuestion(Question question) {
         return question;
+    }
+
+    public static boolean isValidValue(Value value) {
+        if (Session.getStockSurvey()==null || value.getQuestion() == null) {
+            return false;
+        }
+        for (Value stockValue : Session.getStockSurvey().getValuesFromDB()) {
+            if (stockValue.getQuestion() != null) {
+                if (stockValue.getQuestion().getUid().equals(value.getQuestion().getUid())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

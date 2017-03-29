@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.services.strategies;
 
 import android.util.Log;
 
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy {
@@ -13,7 +14,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
     @Override
     public void push() {
-        Log.d(TAG, "execute push");
-        executePush();
+        if (Session.getCredentials().isLogged()) {
+            Log.d(TAG, "execute push");
+            executePush();
+        } else {
+            Log.d(TAG, "execute push fails, not logged");
+        }
     }
 }

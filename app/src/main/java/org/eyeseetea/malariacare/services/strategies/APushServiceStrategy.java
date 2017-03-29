@@ -7,7 +7,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.PushController;
-import org.eyeseetea.malariacare.domain.usecase.PushUseCase;
+import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.services.PushService;
 

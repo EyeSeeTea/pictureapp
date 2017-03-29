@@ -69,6 +69,8 @@ public class DashboardSentFilter {
 
             }
         });
+        reloadSurveyFilter();
+        reloadSentSurveys();
     }
 
     private void reloadSurveyFilter() {

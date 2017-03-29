@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.domain.entity.SurveyQuestionValue;
+import org.eyeseetea.malariacare.domain.entity.SurveyQuestionTreatmentValue;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
@@ -86,7 +86,7 @@ public class HistoricReceiptBalanceAdapter extends RecyclerView.Adapter<Recycler
     }
 
     private void putValuesToRow(RowViewHolder holder, Survey survey) {
-        SurveyQuestionValue surveyQuestionValue = new SurveyQuestionValue(survey);
+        SurveyQuestionTreatmentValue surveyQuestionValue = new SurveyQuestionTreatmentValue(survey);
         holder.rdt.setText(surveyQuestionValue.getRDTValue());
         holder.act6.setText(surveyQuestionValue.getACT6Value());
         holder.act12.setText(surveyQuestionValue.getACT12Value());

@@ -54,6 +54,7 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
     }
 
     private void init(Context context) {
+
         inflate(context, R.layout.dynamic_tab_reminder_row, this);
     }
 

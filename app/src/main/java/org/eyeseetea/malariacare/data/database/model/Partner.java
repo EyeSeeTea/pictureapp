@@ -20,8 +20,9 @@ public class Partner extends BaseModel {
     @Column
     String name;
 
-    public Partner() {
-    }
+    public Partner() {}
+    static final String DEFAULT_PARTNER = "MATRIX";
+
 
     public static Partner findById(long id) {
         return new Select()
@@ -32,6 +33,13 @@ public class Partner extends BaseModel {
 
     public static List<Partner> getAllOrganisations() {
         return new Select().from(Partner.class).queryList();
+    }
+
+    public static Partner getDefaultOrganization() {
+        return new Select()
+                .from(Partner.class)
+                .where(Partner_Table.name.is(DEFAULT_PARTNER))
+                .querySingle();
     }
 
     public long getId_partner() {

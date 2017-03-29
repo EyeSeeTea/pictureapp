@@ -98,7 +98,7 @@ android {
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm_bb'
-            versionName "1.0.2"
+            versionName "1.0.3"
             buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "false"
             buildConfigField "boolean", "activeButtonNavigator", "true"
@@ -110,6 +110,21 @@ android {
             buildConfigField "boolean", "patientTestedByDefault", "true"
             buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.SCMMDBProvider\""
         }
+        ereferrals {
+            applicationId 'org.eyeseetea.surveillance_ref_bb'
+            versionName "1.0.0"
+            buildConfigField "boolean", "reviewScreen", "true"
+            buildConfigField "boolean", "activeSwipeNavigator", "false"
+            buildConfigField "boolean", "activeButtonNavigator", "true"
+            buildConfigField "boolean", "loginDataDownloadPeriod", "true"
+            buildConfigField "boolean", "translations", "true"
+            buildConfigField "boolean", "developerOptions", "true"
+            buildConfigField "boolean", "multiuser", "true"
+            buildConfigField "boolean", "activeStockFragment", "true"
+            buildConfigField "boolean", "patientTestedByDefault", "true"
+            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.REFDBProvider\""
+        }
+
     }
     lintOptions {
         disable 'RtlSymmetry', 'RtlHardcoded'

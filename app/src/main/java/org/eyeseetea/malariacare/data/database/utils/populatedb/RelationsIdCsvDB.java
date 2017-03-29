@@ -50,7 +50,7 @@ public class RelationsIdCsvDB {
         return headerFK;
     }
 
-    static HashMap<Long, Answer> getAnswerFKRelationCsvDB(Context context)
+    public static HashMap<Long, Answer> getAnswerFKRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, Answer> answerFK = new HashMap<>();
         List<Answer> answers = Answer.getAllAnswers();
@@ -322,7 +322,7 @@ public class RelationsIdCsvDB {
         return treatmentFK;
     }
 
-    static HashMap<Long, OptionAttribute> getOptionAttributeIdRelationCsvDB(Context context)
+    public static HashMap<Long, OptionAttribute> getOptionAttributeIdRelationCsvDB(Context context)
             throws IOException {
         HashMap<Long, OptionAttribute> optionAttributeFK = new HashMap<>();
         List<OptionAttribute> optionAttributes = OptionAttribute.getAllOptionAttributes();

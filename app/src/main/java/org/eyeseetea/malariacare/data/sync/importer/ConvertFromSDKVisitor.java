@@ -196,21 +196,8 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         }
         values.add(value);
     }
-
     @Override
     public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
-        Partner partnerUser = null;
-        List<Partner> partners = Partner.getAllOrganisations();
-        for (Partner partner : partners) {
-            if (partner.getName().equals(categoryOptionGroupExtended.getName())) {
-                partnerUser = partner;
-                partnerUser.setUid(categoryOptionGroupExtended.getUid());
-                partnerUser.save();
-                User me = User.getLoggedUser();
-                me.setOrganisation(partnerUser.getId_partner());
-                me.save();
-                break;
-            }
-        }
+        ConvertFromSDKVisitorStrategy.visit(categoryOptionGroupExtended);
     }
 }

@@ -75,7 +75,7 @@ android {
             buildConfigField "boolean", "activeSwipeNavigator", "true"
             buildConfigField "boolean", "activeButtonNavigator", "false"
             buildConfigField "boolean", "loginDataDownloadPeriod", "true"
-            buildConfigField "boolean", "translations", "false"
+            buildConfigField "boolean", "translations", "true"
             buildConfigField "boolean", "developerOptions", "false"
             buildConfigField "boolean", "multiuser", "false"
             buildConfigField "boolean", "activeStockFragment", "false"

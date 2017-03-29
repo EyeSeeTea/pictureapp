@@ -153,6 +153,7 @@ public class PopulateDB {
             OrgUnitLevel.class,
             OrgUnit.class
     );
+
     private static final List<String> tables2populate = Arrays.asList(
             STRING_KEY_CSV,
             TRANSLATION_CSV,
@@ -203,6 +204,10 @@ public class PopulateDB {
     static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
+        if(PopulateDB.hasMandatoryTables()) {
+            Log.i(TAG, "Your DB is already populated");
+            return;
+        }
         new PopulateDBStrategy().init();
 
         Log.i(TAG, "DB empty, loading data ...");
@@ -519,7 +524,6 @@ public class PopulateDB {
         databaseDefinition.getWritableDatabase().execSQL(sqlCopy);
 
     }
-
     /**
      * Delete all surveys from database (and its related info)
      */

@@ -50,6 +50,7 @@ import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
@@ -557,7 +558,10 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the exit Review button
      */
     public void exitReview(View view) {
-        reviewShowDone();
+        if(!DynamicTabAdapter.isClicked) {
+            DynamicTabAdapter.isClicked = true;
+            reviewShowDone();
+        }
     }
 
     public void sendSurvey(View view) {
@@ -604,12 +608,14 @@ public class DashboardActivity extends BaseActivity {
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         sendSurvey();
+                        DynamicTabAdapter.isClicked=false;
                     }
                 });
         msgConfirmation.setNegativeButton(R.string.survey_review,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         reviewSurvey();
+                        DynamicTabAdapter.isClicked=false;
                     }
                 });
 

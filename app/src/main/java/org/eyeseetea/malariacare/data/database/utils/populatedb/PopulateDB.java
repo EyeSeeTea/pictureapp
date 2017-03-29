@@ -43,7 +43,7 @@ import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitLevel;
 import org.eyeseetea.malariacare.data.database.model.OrgUnitProgramRelation;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
+import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
@@ -88,7 +88,7 @@ public class PopulateDB {
     public static final String QUESTION_THRESHOLDS_CSV = "QuestionThresholds.csv";
     public static final String DRUG_COMBINATIONS_CSV = "DrugCombinations.csv";
     public static final String DRUGS_CSV = "Drugs.csv";
-    public static final String ORGANISATIONS_CSV = "Organisations.csv";
+    public static final String PARTNER_CSV = "Partner.csv";
     public static final String TREATMENT_MATCHES_CSV = "TreatmentMatches.csv";
     public static final String TREATMENT_CSV = "Treatments.csv";
     public static final String TREATMENT_TABLE_CSV = "TreatmentTable.csv";
@@ -116,7 +116,7 @@ public class PopulateDB {
             QuestionOption.class,
             QuestionThreshold.class,
             Drug.class,
-            Organisation.class,
+           Partner.class,
             Treatment.class,
             DrugCombination.class,
             TreatmentMatch.class,
@@ -146,7 +146,7 @@ public class PopulateDB {
             QuestionOption.class,
             QuestionThreshold.class,
             Drug.class,
-            Organisation.class,
+            Partner.class,
             Treatment.class,
             DrugCombination.class,
             TreatmentMatch.class,
@@ -169,7 +169,7 @@ public class PopulateDB {
             QUESTION_OPTIONS_CSV,
             QUESTION_THRESHOLDS_CSV,
             DRUGS_CSV,
-            ORGANISATIONS_CSV,
+            PARTNER_CSV,
             TREATMENT_CSV,
             DRUG_COMBINATIONS_CSV,
             TREATMENT_MATCHES_CSV);
@@ -199,7 +199,7 @@ public class PopulateDB {
     static Map<Integer, OrgUnitLevel> orgUnitLevelList = new LinkedHashMap();
     static Map<Integer, OrgUnit> orgUnitList = new LinkedHashMap();
     static HashMap<Long, Drug> drugList = new HashMap<>();
-    static HashMap<Long, Organisation> organisationList = new HashMap<>();
+    static HashMap<Long, Partner> organisationList = new HashMap<>();
     static HashMap<Long, Treatment> treatmentList = new HashMap<>();
     static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
 
@@ -402,10 +402,10 @@ public class PopulateDB {
                         drug.insert();
                         drugList.put(Long.parseLong(line[0]), drug);
                         break;
-                    case ORGANISATIONS_CSV:
-                        Organisation organisation = PopulateRow.populateOrganisations(line, null);
-                        organisation.insert();
-                        organisationList.put(Long.parseLong(line[0]), organisation);
+                    case PARTNER_CSV:
+                        Partner partner = PopulateRow.populateOrganisations(line, null);
+                        partner.insert();
+                        organisationList.put(Long.parseLong(line[0]), partner);
                         break;
                     case TREATMENT_CSV:
                         Treatment treatment = PopulateRow.populateTreatments(line, organisationList,

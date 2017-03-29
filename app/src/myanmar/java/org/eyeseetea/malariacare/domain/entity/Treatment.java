@@ -128,7 +128,7 @@ public class Treatment {
             if (Session.getCredentials().isDemoCredentials()) {
                 return treatmentMatch.getTreatment();
             }
-            if (treatmentMatch.getTreatment().getOrganisation().getId_organisation() ==
+            if (treatmentMatch.getTreatment().getPartner().getId_partner() ==
                     Session.getUser().getOrganisation()) {
                 Log.d(TAG, "match: " + treatmentMatch.toString());
                 treatment = treatmentMatch.getTreatment();

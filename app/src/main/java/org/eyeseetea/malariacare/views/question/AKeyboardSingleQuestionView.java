@@ -25,8 +25,5 @@ public abstract class AKeyboardSingleQuestionView extends AKeyboardQuestionView 
         }
     }
 
-    public void validateAnswer(Context context) {
-    }
-
-    ;
+    protected abstract void validateAnswer(Context context);
 }

@@ -3,10 +3,11 @@ package org.eyeseetea.malariacare.strategies;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ListView;
 
-/**
- * Created by ina on 20/12/2016.
- */
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 
 public class DashboardHeaderStrategy  extends  ADashboardHeaderStrategy{
 
@@ -22,5 +23,14 @@ public class DashboardHeaderStrategy  extends  ADashboardHeaderStrategy{
 
     @Override
     public void hideHeader(Activity activity) {
+    }
+
+    public View loadFilter(LayoutInflater inflater) {
+        return null;
+    }
+
+    public void initFilters(DashboardSentFragment dashboardSentFragment, ListView listView,
+            List<Survey> surveysFromService) {
+        return;
     }
 }

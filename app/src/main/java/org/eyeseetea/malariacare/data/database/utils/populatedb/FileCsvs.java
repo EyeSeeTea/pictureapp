@@ -34,7 +34,7 @@ public class FileCsvs {
             PopulateDB.QUESTION_OPTIONS_CSV,
             PopulateDB.QUESTION_THRESHOLDS_CSV,
             PopulateDB.DRUGS_CSV,
-            PopulateDB.ORGANISATIONS_CSV,
+            PopulateDB.PARTNER_CSV,
             PopulateDB.TREATMENT_CSV,
             PopulateDB.DRUG_COMBINATIONS_CSV,
             PopulateDB.TREATMENT_MATCHES_CSV,
@@ -67,6 +67,26 @@ public class FileCsvs {
             FileOutputStream outputStream = mContext.openFileOutput(csvName, Context.MODE_PRIVATE);
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(mContext.getAssets().open(csvName)));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                outputStream.write((line + "\n").getBytes());
+            }
+            outputStream.close();
+            reader.close();
+        }
+    }
+
+    public void copyCsvFile(String csvFrom, String csvTo) throws IOException {
+        if (!fileExists(csvTo)) {
+            createFile(csvTo);
+        } else {
+            mContext.deleteFile(csvTo);
+            createFile(csvTo);
+        }
+        if (fileExists(csvFrom)) {
+            FileOutputStream outputStream = mContext.openFileOutput(csvTo, Context.MODE_PRIVATE);
+            BufferedReader reader = new BufferedReader(
+                    new FileReader(mContext.getFilesDir() + "/" + csvFrom));
             String line = "";
             while ((line = reader.readLine()) != null) {
                 outputStream.write((line + "\n").getBytes());

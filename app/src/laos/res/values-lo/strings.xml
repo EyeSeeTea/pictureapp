@@ -206,6 +206,12 @@
     <string name="network_error">ມີບັນຫາກັບເຄືອຂ່າຍໄດ້, ກະລຸນາພະຍາຍາມອີກເທື່ອຫນຶ່ງຕໍ່ມາ.</string>
     <string name="login_invalid_credentials">ຂໍ້ມູນທີ່ບໍ່ຖືກຕ້ອງ</string>
     <string name="login_invalid_server_url">URL Server ບໍ່ຖືກຕ້ອງ</string>
-    <string name="error_conflict_message">The event with UID: %1$s. was uploaded with conflict in the data element UID: %2$s with the message: %3$s. Please contact the administrator.</string>
+    <string name="error_conflict_message">ໃນກໍລະນີທີ່ມີ UID:%1$s. ໄດ້ອັບກັບຂໍ້ຂັດແຍ່ງໃນ UID ອົງປະກອບຂໍ້ມູນ:%2$s ທີ່ມີຂໍ້ຄວາມ:%3$s. ກະລຸນາຕິດຕໍ່ຫາບໍລິຫານ.</string>
     <string name="error_conflict_title">"Error"</string>
+    <string name="confirmation_really_exit_title">"ແທ້ອອກຈາກ?"</string>
+    <string name="confirmation_really_exit">"ທ່ານທີ່ທ່ານກໍາລັງໃຫ້ແນ່ໃຈວ່າຕ້ອງການທີ່ຈະອອກຈາກ app ໄດ້?"</string>
+    <string name="survey_first_step">"ສະແດງຄໍາຖາມ ..."</string>
+     <string name="survey_second_step">"ຄໍາຖາມກໍ່ສ້າງ ..."</string> 
+    <string name="survey_third_step">"ຕົ້ນໄມ້ຖາມກໍ່ສ້າງ ..."</string> 
+    <string name="survey_fourth_step">"ສ້າງຫນ້າຈໍ ..."</string>
 </resources>

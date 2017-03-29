@@ -15,7 +15,7 @@ public class OfflineFragment extends Fragment implements IDashboardFragment{
 
     @Override
     public void reloadHeader(Activity activity) {
-        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_offline);
+        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_stock);
     }
 
     @Override

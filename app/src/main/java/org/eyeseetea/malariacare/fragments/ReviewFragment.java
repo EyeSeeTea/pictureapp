@@ -94,27 +94,12 @@ public class ReviewFragment extends Fragment {
                 isReviewValue = false;
             }
             if (isReviewValue) {
-                if (!ReviewFragmentStrategy.isValidValue(value)) {
+                if (ReviewFragmentStrategy.isValidValue(value)) {
                     reviewValues.add(value);
                 }
             }
         }
         return reviewValues;
-    }
-
-    private boolean isStockValue(Value value) {
-        if (value.getQuestion() == null || Session.getStockSurvey() == null) {
-            return false;
-        }
-
-        for (Value stockValue : Session.getStockSurvey().getValuesFromDB()) {
-            if (stockValue.getQuestion() != null) {
-                if (stockValue.getQuestion().getUid().equals(value.getQuestion().getUid())) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**

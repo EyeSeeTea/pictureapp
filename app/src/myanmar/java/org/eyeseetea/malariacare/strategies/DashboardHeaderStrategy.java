@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
+import java.util.List;
 
 public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
 

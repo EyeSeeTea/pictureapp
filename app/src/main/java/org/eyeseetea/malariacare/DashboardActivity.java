@@ -41,6 +41,7 @@ import android.widget.TabWidget;
 
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
@@ -48,6 +49,8 @@ import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.services.SurveyService;
@@ -160,6 +163,12 @@ public class DashboardActivity extends BaseActivity {
         }
 
         getSurveysFromService();
+
+        initNavigationController();
+    }
+
+    private void initNavigationController() {
+        NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
     }
 
     public void setTabHostsWithText() {
@@ -454,11 +463,6 @@ public class DashboardActivity extends BaseActivity {
      * It is called when the user press back in a surveyFragment
      */
     private void onSurveyBackPressed() {
-        //// FIXME: 09/03/2017 Refactor. If the survey is loading the survey should be closed at the end
-        if(Session.isIsLoadingSurvey()){
-            Session.setShouldPressBackOnLoadSurvey(true);
-            return;
-        }
         Log.d(TAG, "onBackPressed");
         Survey survey = Session.getMalariaSurvey();
         if (!survey.isSent()) {
@@ -495,31 +499,26 @@ public class DashboardActivity extends BaseActivity {
      * After that, loads the Assess fragment(DashboardUnSentFragment) in the Assess tab.
      */
     public void closeSurveyFragment() {
-        //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close surveys crash
-        //The survey only can be closed when is load
-        if(!Session.isIsLoadingSurvey()) {
-            Session.setShouldPressBackOnLoadSurvey(false);
-            boolean isSent = false;
-            isReadOnly = false;
-            isLoadingReview = false;
-            android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
-            LayoutUtils.setDashboardActionBar(actionBar);
-            tabHost.getTabWidget().setVisibility(View.VISIBLE);
-            ScoreRegister.clear();
-            if (Session.getMalariaSurvey() != null) {
-                isSent = Session.getMalariaSurvey().isSent();
-            }
-            if (isBackPressed) {
-                beforeExit();
-            }
-            surveyFragment.unregisterFragmentReceiver();
-            if (isSent) {
-                tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
-                initAssess();
-            } else {
-                initAssess();
-                unsentFragment.reloadData();
-            }
+        boolean isSent = false;
+        isReadOnly = false;
+        isLoadingReview = false;
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+        LayoutUtils.setDashboardActionBar(actionBar);
+        tabHost.getTabWidget().setVisibility(View.VISIBLE);
+        ScoreRegister.clear();
+        if (Session.getMalariaSurvey() != null) {
+            isSent = Session.getMalariaSurvey().isSent();
+        }
+        if (isBackPressed) {
+            beforeExit();
+        }
+
+        if (isSent) {
+            tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
+            initAssess();
+        } else {
+            initAssess();
+            unsentFragment.reloadData();
         }
     }
 
@@ -559,12 +558,15 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the exit Review button
      */
     public void exitReview(View view) {
-        reviewShowDone();
+        if(!DynamicTabAdapter.isClicked) {
+            DynamicTabAdapter.isClicked = true;
+            reviewShowDone();
+        }
     }
 
     public void sendSurvey(View view) {
         surveyFragment.mReviewMode = false;
-        if(!isReadOnly) {
+        if (!isReadOnly) {
             sendSurvey();
         } else {
             closeSurveyFragment();
@@ -606,12 +608,14 @@ public class DashboardActivity extends BaseActivity {
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         sendSurvey();
+                        DynamicTabAdapter.isClicked=false;
                     }
                 });
         msgConfirmation.setNegativeButton(R.string.survey_review,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         reviewSurvey();
+                        DynamicTabAdapter.isClicked=false;
                     }
                 });
 
@@ -633,7 +637,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private boolean isNewHistoricReceiptBalanceFragmentActive() {
-      return   mDashboardActivityStrategy.isHistoricNewReceiptBalanceFragment(this);
+        return mDashboardActivityStrategy.isHistoricNewReceiptBalanceFragment(this);
     }
 
     private boolean isFragmentActive(Class fragmentClass, int layout) {
@@ -688,6 +692,7 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.completeSurvey();
         closeSurveyFragment();
     }
+
     //Show dialog exception from class without activity.
     public static void showException(final String title, final String errorMessage) {
         handler.postDelayed(new Runnable() {

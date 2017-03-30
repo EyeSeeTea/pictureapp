@@ -48,7 +48,6 @@ import org.eyeseetea.malariacare.network.PushClient;
 import org.eyeseetea.malariacare.network.PushResult;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
-import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,7 +212,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
      * Register a survey receiver to load surveys into the listadapter
      */
     public void registerFragmentReceiver() {
-        Log.d(TAG, "registerFragmentReceiver");
+        Log.d(TAG, "initializeSurvey");
 
         if (surveyReceiver == null) {
             surveyReceiver = new SurveyReceiver();

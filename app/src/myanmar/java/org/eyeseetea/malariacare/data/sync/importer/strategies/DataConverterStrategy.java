@@ -17,14 +17,27 @@ import java.util.List;
 
 public class DataConverterStrategy implements IDataConverterStrategy {
 
+    public static final int TRUE_POSITION = 1;
     private static String ORG_UNIT_QUESTION_UID = "NoDataElementOrgUnit";
-
     Context mContext;
+
 
     public DataConverterStrategy(Context context) {
         mContext = context;
     }
 
+    private static DataValueExtended getValueFromServer(List<DataValueExtended> dataValues,
+            String uid) {
+        DataValueExtended dataValuesExtended = null;
+
+        for (DataValueExtended dataValue : dataValues) {
+            if (dataValue.getDataElement().equals(uid)) {
+                dataValuesExtended = dataValue;
+            }
+        }
+
+        return dataValuesExtended;
+    }
 
     public void convert(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
@@ -67,8 +80,6 @@ public class DataConverterStrategy implements IDataConverterStrategy {
             createValueForQuestion(question, event, dataValues, converter);
         }
     }
-
-    public static final int TRUE_POSITION = 1;
 
     private void createValueForQuestion(Question question, EventExtended event,
             List<DataValueExtended> dataValues, ConvertFromSDKVisitor converter) {
@@ -133,18 +144,5 @@ public class DataConverterStrategy implements IDataConverterStrategy {
         dataValueExtended.setValue(value);
 
         dataValueExtended.accept(converter);
-    }
-
-    private static DataValueExtended getValueFromServer(List<DataValueExtended> dataValues,
-            String uid) {
-        DataValueExtended dataValuesExtended = null;
-
-        for (DataValueExtended dataValue : dataValues) {
-            if (dataValue.getDataElement().equals(uid)) {
-                dataValuesExtended = dataValue;
-            }
-        }
-
-        return dataValuesExtended;
     }
 }

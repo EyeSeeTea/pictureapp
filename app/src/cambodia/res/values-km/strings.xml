@@ -154,7 +154,4 @@
     <string name="unsent_survey_filter_option_this_month">"ខែ​នេះ"</string>
     <string name="unsent_survey_filter_option_last_week">"សប្ដាហ៍​មុន"</string>
     <string name="unsent_survey_filter_option_last_month">"ខែមុន"</string>
-    <string name="unsent_survey_filter_option_last_6_days">"ចុងក្រោយ 6 ថ្ងៃ"</string>
-    <string name="unsent_survey_filter_option_last_6_weeks">"6 សប្តាហ៍ចុងក្រោយនេះ"</string>
-    <string name="unsent_survey_filter_option_last_6_months">"6 ខែចុងក្រោយ"</string>
 </resources>

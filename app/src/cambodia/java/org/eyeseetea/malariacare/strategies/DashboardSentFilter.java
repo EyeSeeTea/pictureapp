@@ -9,7 +9,7 @@ import android.widget.Spinner;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.domain.usecase.SurveyFilter;
+import org.eyeseetea.malariacare.domain.usecase.DateFilter;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.layout.adapters.general.StringArrayAdapter;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
@@ -25,7 +25,7 @@ public class DashboardSentFilter {
     List<Survey> surveysList;
     Spinner filterSpinnerSurveys;
     String lastFilterSelection;
-    SurveyFilter surveyFilter;
+    DateFilter surveyFilter;
     CustomTextView surveyCases;
     DashboardSentFragment dashboardSentFragment;
     /*
@@ -36,7 +36,7 @@ public class DashboardSentFilter {
     public void initFilters(DashboardSentFragment dashboardSentFragment, ListView listView, List<Survey> surveyList) {
         this.surveysList = surveyList;
         this.dashboardSentFragment = dashboardSentFragment;
-        surveyFilter = new SurveyFilter();
+        surveyFilter = new DateFilter();
         surveyCases = (CustomTextView) listView.findViewById(R.id.survey_cases);
         initOrgUnitFilters(listView);
         reloadSentSurveys();
@@ -75,12 +75,12 @@ public class DashboardSentFilter {
 
     private void reloadSurveyFilter() {
         Context context = PreferencesState.getInstance().getContext();
-        surveyFilter = new SurveyFilter();
-        if(lastFilterSelection.equals(context.getString(R.string.unsent_survey_filter_option_last_6_days))){
+        surveyFilter = new DateFilter();
+        if(lastFilterSelection.equals(context.getString(R.string.last_6_days))){
             surveyFilter.setLast6Days(true);
-        }else if(lastFilterSelection.equals(context.getString(R.string.unsent_survey_filter_option_last_6_weeks))) {
+        }else if(lastFilterSelection.equals(context.getString(R.string.last_6_weeks))) {
             surveyFilter.setLast6Weeks(true);
-        }else if(lastFilterSelection.equals(context.getString(R.string.unsent_survey_filter_option_last_6_months))) {
+        }else if(lastFilterSelection.equals(context.getString(R.string.last_6_months))) {
             surveyFilter.setLast6Month(true);
         }else if(lastFilterSelection.equals(context.getString(R.string.unsent_survey_filter_option_last_week))) {
             surveyFilter.setLastWeek(true);
@@ -126,11 +126,11 @@ public class DashboardSentFilter {
         filterList.add(PreferencesState.getInstance().getContext().getString(
                 R.string.unsent_survey_filter_option_last_month));
         filterList.add(PreferencesState.getInstance().getContext().getString(
-                R.string.unsent_survey_filter_option_last_6_days));
+                R.string.last_6_days));
         filterList.add(PreferencesState.getInstance().getContext().getString(
-                R.string.unsent_survey_filter_option_last_6_weeks));
+                R.string.last_6_weeks));
         filterList.add(PreferencesState.getInstance().getContext().getString(
-                R.string.unsent_survey_filter_option_last_6_months));
+                R.string.last_6_months));
         return filterList;
     }
 }

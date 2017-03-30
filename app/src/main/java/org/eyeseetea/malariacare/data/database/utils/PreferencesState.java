@@ -28,6 +28,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.DateFilter;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.FontUtils;
 
@@ -302,19 +303,23 @@ public class PreferencesState {
     }
 
     public Date getDateStarDateLimitFilter() {
+        DateFilter dateFilter = new DateFilter();
+
         String dateLimit = getDataLimitedByDate();
         if (dateLimit.isEmpty()) {
             return null;
         }
-        Calendar calendar = Calendar.getInstance();
         if (dateLimit.equals(getContext().getString(R.string.last_6_days))) {
-            calendar.add(Calendar.DAY_OF_YEAR, -6);
+            dateFilter.setLast6Days(true);
         } else if (dateLimit.equals(getContext().getString(R.string.last_6_weeks))) {
-            calendar.add(Calendar.WEEK_OF_YEAR, -6);
+            dateFilter.setLast6Weeks(true);
         } else if (dateLimit.equals(getContext().getString(R.string.last_6_months))) {
-            calendar.add(Calendar.MONTH, -6);
+            dateFilter.setLast6Month(true);
         }
-        return calendar.getTime();
+
+        Calendar calendar = Calendar.getInstance();
+        Date date = dateFilter.getStartFilterDate(calendar);
+        return date;
     }
 
     public boolean downloadDataFilter() {

@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class SurveyFilter {
+public class DateFilter {
 
     boolean all = true;
     boolean thisWeek;
@@ -86,26 +86,49 @@ public class SurveyFilter {
         if (isLast6Days()) {
             calendar.add(Calendar.DAY_OF_YEAR, -6);
         } else if (isLast6Weeks()) {
+            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
             calendar.add(Calendar.WEEK_OF_YEAR, -6);
         } else if (isLast6Month()) {
-            calendar.add(Calendar.MONTH, -6);
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.add(Calendar.MONTH, -7);
         } else if (isLastWeek()) {
-            calendar.add(Calendar.WEEK_OF_YEAR, -2);
-        } else if (isThisWeek()) {
+            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
             calendar.add(Calendar.WEEK_OF_YEAR, -1);
+        } else if (isThisWeek()) {
+            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
         } else if (isThisMonth()) {
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.add(Calendar.MONTH, -1);
         } else if (isLastMonth()) {
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.add(Calendar.MONTH, -2);
         }
         return calendar.getTime();
     }
 
     public Date getEndFilterDate(Calendar calendar) {
-        if (isLastWeek()) {
+        if (isLast6Days()) {
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+        }else if (isLastWeek()) {
             calendar.add(Calendar.WEEK_OF_YEAR, -1);
-        } else if (isLastMonth()) {
-            calendar.add(Calendar.MONTH, -1);
+            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+            calendar.add(Calendar.DAY_OF_YEAR, 6);
+        } else if (isLastMonth() || isLast6Month()) {
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+        }else if (isThisWeek()){
+            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+            calendar.add(Calendar.DAY_OF_YEAR, 6);
+        }else if (isThisMonth()){
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.add(Calendar.MONTH, 1);
+            calendar.set(Calendar.DAY_OF_MONTH, -1);
+        }else if (isLast6Month()){
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.DAY_OF_MONTH, -1);
+        } else if (isLast6Weeks()) {
+            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
         }
         return calendar.getTime();
     }

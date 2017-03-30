@@ -133,7 +133,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
 
     @Override
     public void registerFragmentReceiver() {
-        Log.d(TAG, "registerFragmentReceiver");
+        Log.d(TAG, "initializeSurvey");
 
         if (mStockReceiver == null) {
             mStockReceiver = new StockReceiver();

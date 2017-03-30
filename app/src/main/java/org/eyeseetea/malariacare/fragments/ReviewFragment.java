@@ -18,6 +18,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class ReviewFragment extends Fragment {
                 isReviewValue = false;
             }
             if (isReviewValue) {
-                if (!isStockValue(value)) {
+                if (!ReviewFragmentStrategy.isValidValue(value)) {
                     reviewValues.add(value);
                 }
             }

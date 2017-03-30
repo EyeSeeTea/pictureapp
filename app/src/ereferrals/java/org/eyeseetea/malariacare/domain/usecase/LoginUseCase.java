@@ -5,6 +5,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.network.ServerAPIController;
 
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
@@ -18,7 +19,7 @@ public class LoginUseCase extends ALoginUseCase {
 
     @Override
     public void execute(Credentials credentials, final Callback callback) {
-        mAuthenticationManager.login(credentials,
+        mAuthenticationManager.login(ServerAPIController.getServerUrl(),
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {

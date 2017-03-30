@@ -175,4 +175,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public void initViews() {
 
     }
+
+    @Override
+    public void onLoginSuccess(Credentials credentials) {
+        loginActivity.hideProgressBar();
+        finishAndGo();
+    }
 }

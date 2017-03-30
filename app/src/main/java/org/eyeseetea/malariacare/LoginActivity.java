@@ -190,14 +190,13 @@ public class LoginActivity extends AbsLoginActivity {
     }
 
     public void login(String serverUrl, String username, String password) {
-        Credentials credentials = new Credentials(serverUrl, username, password);
+        final Credentials credentials = new Credentials(serverUrl, username, password);
         showProgressBar();
 
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {
-                hideProgressBar();
-                mLoginActivityStrategy.finishAndGo();
+                mLoginActivityStrategy.onLoginSuccess(credentials);
             }
 
             @Override

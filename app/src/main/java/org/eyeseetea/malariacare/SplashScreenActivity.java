@@ -5,20 +5,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-
+import org.eyeseetea.malariacare.data.database.PostMigration;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
-import org.eyeseetea.malariacare.database.PostMigration;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
 import org.hisp.dhis.client.sdk.android.api.D2;
-
-import io.fabric.sdk.android.Fabric;
 
 public class SplashScreenActivity extends Activity {
 
@@ -35,7 +35,6 @@ public class SplashScreenActivity extends Activity {
     }
 
     private void init() {
-        Fabric.with(this, new Crashlytics());
         LocationMemory.getInstance().init(getApplicationContext());
 
         D2.init(this);
@@ -51,8 +50,10 @@ public class SplashScreenActivity extends Activity {
 
             PullController pullController = new PullController(
                     getApplication().getApplicationContext());
+            IAsyncExecutor asyncExecutor = new AsyncExecutor();
+            IMainExecutor mainExecutor = new UIThreadExecutor();
 
-            PullUseCase pullUseCase = new PullUseCase(pullController);
+            PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
 
             PullFilters pullFilters = new PullFilters();
             pullFilters.setDemo(true);

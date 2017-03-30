@@ -12,6 +12,19 @@ import java.io.InputStream;
 
 public class PopulateDBStrategy implements IPopulateDBStrategy {
 
+    public static List<Class<? extends BaseModel>> allMandatoryTables = Arrays.asList(
+            Program.class,
+            Tab.class,
+            Header.class,
+            Answer.class,
+            OptionAttribute.class,
+            Option.class,
+            Question.class,
+            QuestionRelation.class,
+            Match.class,
+            QuestionOption.class
+    );
+
     @Override
     public void init() {
     }
@@ -35,5 +48,8 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
 
     @Override
     public void createDummyOrgUnitsDataInDB(Context context) {
+    }
+    public static List<Class<? extends BaseModel>> getAllMandatoryTables() {
+        return allMandatoryTables;
     }
 }

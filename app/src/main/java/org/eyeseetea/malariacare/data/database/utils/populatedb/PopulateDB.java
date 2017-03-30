@@ -116,7 +116,7 @@ public class PopulateDB {
             QuestionOption.class,
             QuestionThreshold.class,
             Drug.class,
-           Partner.class,
+            Partner.class,
             Treatment.class,
             DrugCombination.class,
             TreatmentMatch.class,
@@ -204,7 +204,7 @@ public class PopulateDB {
     static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
-        if(PopulateDB.hasMandatoryTables()) {
+        if (PopulateDB.hasMandatoryTables()) {
             Log.i(TAG, "Your DB is already populated");
             return;
         }
@@ -224,7 +224,7 @@ public class PopulateDB {
     public static boolean hasMandatoryTables() {
         for (Class table : allMandatoryTables) {
             if (SQLite.selectCountOf().from(table).count() == 0) {
-                Log.d(TAG, "Mandatory table is empty"+ table);
+                Log.d(TAG, "Mandatory table is empty" + table);
                 return false;
             }
         }
@@ -241,10 +241,10 @@ public class PopulateDB {
                 reader = new CSVReader(
                         new InputStreamReader(new PopulateDBStrategy().openFile(context, table)),
                         SEPARATOR, QUOTECHAR);
-            } catch (FileNotFoundException e ) {
+            } catch (FileNotFoundException e) {
                 tableNotExistLog(e, table);
             } catch (IOException e) {
-                tableNotExistLog(e,table);
+                tableNotExistLog(e, table);
             }
             if (reader == null) {
                 continue;

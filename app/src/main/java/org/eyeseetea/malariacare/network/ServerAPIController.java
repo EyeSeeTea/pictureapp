@@ -844,7 +844,7 @@ class BasicAuthenticator implements Authenticator {
     private String credentials;
 
     BasicAuthenticator() {
-        credentials =  AuthenticationApiStrategy.getApiCredentials();
+        credentials = AuthenticationApiStrategy.getApiCredentials();
     }
 
     @Override

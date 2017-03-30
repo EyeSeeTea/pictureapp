@@ -182,7 +182,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                     && checkedId == customRadioButton.getId()) {
                 value = (int) dose;
             }
-            Question question =(Question) this.getTag();
+            Question question = (Question) this.getTag();
             if (checkedId == customRadioButton.getId()
                     && !TreatmentQueries.isCq(question.getUid())) {
                 notifyAnswerOptionChange(this.getTag(), ((Option) customRadioButton.getTag()));
@@ -223,7 +223,8 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
      */
     private void changeTotalQuestions() {
         Question pqQuestion = TreatmentQueries.getPqQuestion();
-        Question actQuestion = TreatmentQueries.getAlternativePqQuestion();//// FIXME: 14/03/2017 is it correct?
+        Question actQuestion =
+                TreatmentQueries.getAlternativePqQuestion();//// FIXME: 14/03/2017 is it correct?
         Question alternativePqQuestion = TreatmentQueries.getAlternativePqQuestion();
         Value actValue = null;
         Value pqValue = null;

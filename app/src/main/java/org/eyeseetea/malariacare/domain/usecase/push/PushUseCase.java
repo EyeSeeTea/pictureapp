@@ -56,7 +56,7 @@ public class PushUseCase {
                     callback.onConversionError();
                 } else if (throwable instanceof SurveysToPushNotFoundException) {
                     callback.onSurveysNotFoundError();
-                }else if (throwable instanceof ImportSummaryErrorException){
+                } else if (throwable instanceof ImportSummaryErrorException) {
                     callback.onInformativeError(throwable.getMessage());
                 } else {
                     callback.onPushError();

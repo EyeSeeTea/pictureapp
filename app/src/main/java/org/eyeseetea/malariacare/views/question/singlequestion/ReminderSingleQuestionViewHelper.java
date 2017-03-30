@@ -34,7 +34,7 @@ public class ReminderSingleQuestionViewHelper {
         imageOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!DynamicTabAdapter.isClicked){
+                if (!DynamicTabAdapter.isClicked) {
                     DynamicTabAdapter.isClicked = true;
                     reminderSingleQuestionView.notifyAnswerChanged(option);
                 }

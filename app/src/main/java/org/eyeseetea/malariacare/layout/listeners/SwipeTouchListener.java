@@ -66,6 +66,7 @@ public class SwipeTouchListener implements View.OnTouchListener {
     public void addClickableView(View view) {
         clickableViews.add(view);
     }
+
     /**
      * Adds a clickable view
      */
@@ -109,15 +110,15 @@ public class SwipeTouchListener implements View.OnTouchListener {
     }
 
     public void onClick(View view) {
-            Log.e(".DynamicTabAdapter", "empty onclick");
+        Log.e(".DynamicTabAdapter", "empty onclick");
     }
 
     public void onSwipeRight() {
-            Log.e(".DynamicTabAdapter", "onSwipeRight(DEFAULT)");
+        Log.e(".DynamicTabAdapter", "onSwipeRight(DEFAULT)");
     }
 
     public void onSwipeLeft() {
-            Log.e(".DynamicTabAdapter", "onSwipeLeft(DEFAULT)");
+        Log.e(".DynamicTabAdapter", "onSwipeLeft(DEFAULT)");
     }
 
     /**

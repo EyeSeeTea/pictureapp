@@ -1,10 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Drug;
 import org.eyeseetea.malariacare.data.database.model.DrugCombination;
@@ -59,7 +57,8 @@ public class Treatment {
         List<Question> questions = mStockSurvey.getQuestionsFromValues();
         Question actQuestion = null;
         for (Question question : questions) {
-            if (TreatmentQueries.isACT24Question(question) || TreatmentQueries.isACT18Question(question) || TreatmentQueries.isACT12Question(question)
+            if (TreatmentQueries.isACT24Question(question) || TreatmentQueries.isACT18Question(
+                    question) || TreatmentQueries.isACT12Question(question)
                     || TreatmentQueries.isACT6Question(question)) {
                 actQuestion = question;
                 List<Value> values = mStockSurvey.getValuesFromDB();
@@ -162,7 +161,7 @@ public class Treatment {
             actValue = new Value(TreatmentQueries.getOptionTreatmentYesCode(),
                     actHiddenQuestion, Session.getMalariaSurvey());
         } else {
-            actValue.setOption(TreatmentQueries.getOptionTreatmentYesCode() );
+            actValue.setOption(TreatmentQueries.getOptionTreatmentYesCode());
         }
         actValue.save();
     }
@@ -184,9 +183,11 @@ public class Treatment {
             Question question = Question.findByUID(drug.getQuestion_code());
             if (question != null) {
                 if (TreatmentQueries.isPq(question.getUid())) {
-                    question.setForm_name(TreatmentQueries.getPqTitleDose(DrugCombination.getDose(treatment, drug)));
+                    question.setForm_name(TreatmentQueries.getPqTitleDose(
+                            DrugCombination.getDose(treatment, drug)));
                 } else if (TreatmentQueries.isCq(question.getUid())) {
-                    question.setForm_name(TreatmentQueries.getCqTitleDose(DrugCombination.getDose(treatment, drug)));
+                    question.setForm_name(TreatmentQueries.getCqTitleDose(
+                            DrugCombination.getDose(treatment, drug)));
                 }
                 doseByQuestion.put(question.getId_question(),
                         DrugCombination.getDose(treatment, drug));

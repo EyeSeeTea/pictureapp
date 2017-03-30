@@ -77,7 +77,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);
-        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
 
         if (EyeSeeTeaApplication.permissions == null) {
             EyeSeeTeaApplication.permissions = Permissions.getInstance(this);

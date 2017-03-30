@@ -625,7 +625,7 @@ public class Question extends BaseModel {
         this.id_header_fk = (header != null) ? header.getId_header() : null;
     }
 
-    public Long getHeaderForeingKeyId(){
+    public Long getHeaderForeingKeyId() {
         return id_header_fk;
     }
     public Integer getOutput() {

@@ -44,7 +44,6 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
     }
 
 
-
     public static void updateOptions(Context context) throws IOException {
         List<Option> optionToDelete = Question.getOptions(
                 PreferencesState.getInstance().getContext().getString(

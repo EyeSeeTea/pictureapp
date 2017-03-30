@@ -5,15 +5,15 @@
 <string name="new_case_title">"NEW CASE"</string>
 <string name="patient_profile_subtitle">"Patient profile"</string>
 <string name="patient_name">"Patient name"</string>
-<string name="patient_name_enter_helptext">"Enter full patient name"</string>
+    <string name="patient_name_enter_helptext">"Enter full patient name"</string>
 <string name="patient_age">"Patient age"</string>
-<string name="patient_age_enter_helptext">"Enter patient age in years"</string>
+    <string name="patient_age_enter_helptext">"Enter patient age in years"</string>
 <string name="patient_phone">"Patient phone"</string>
-<string name="patient_phone_enter_helptext">"Enter phone number"</string>
-<string name="patient_residence_village_helptext">"Patient Residence"</string>
+    <string name="patient_phone_enter_helptext">"Enter phone number"</string>
+    <string name="patient_residence_village_helptext">"Patient Residence"</string>
 <string name="patient_residence_village_other_option">"Other"</string>
 <string name="patient_residence_village_location">"If other, enter location"</string>
-<string name="patient_residence_village_other_helptext">"Enter village or location"</string>
+    <string name="patient_residence_village_other_helptext">"Enter village or location"</string>
 <string name="patient_sex_pregnancy">"Patient sex"</string>
 <string name="patient_sex_male">"Male"</string>
 <string name="patient_sex_female">"Female"</string>
@@ -22,15 +22,15 @@
 <!-- We should think about capitalisations of words -->
 <string name="symptoms_title">"Symptoms"</string>
 <string name="symptoms_fever">"Malaria symptoms present?"</string>
-<string name="symptoms_fever_helptext"></string>
+    <string name="symptoms_fever_helptext"></string>
 <string name="symptoms_fever_yes">"Yes"</string>
 <string name="symptoms_fever_no">"No"</string>
 <string name="symptoms_care_sought">"Care sought within 24 hours?"</string>
-<string name="symptoms_care_sought_helptext"></string>
+    <string name="symptoms_care_sought_helptext"></string>
 <string name="symptoms_care_sought_within_24h">"Yes"</string>
 <string name="symptoms_care_sought_after_24h">"No"</string>
 <string name="symptoms_severity">"Severe symptoms present?"</string>
-<string name="symptoms_severity_helptext"></string>
+    <string name="symptoms_severity_helptext"></string>
 <string name="symptoms_severity_yes">"Yes"</string>
 <string name="symptoms_severity_no">"No"</string>
 <string name="rdt_test_result">"Test result"</string>
@@ -64,25 +64,25 @@
 <string name="drugs_referral_Pqx2_question">"Pq 2?"</string>
 <string name="drugs_referral_Pqx2_yes">"Yes"</string>
 <string name="drugs_referral_Pqx2_no">"No"</string>
-<string name="drugs_referral_referred_question_helptext">"Referred?"</string>
+    <string name="drugs_referral_referred_question_helptext">"Referred?"</string>
 <string name="drugs_referral_yes">"Yes"</string>
 <string name="drugs_referral_no">"No"</string>
 <string name="patient_advice">"Patient advice"</string>
 <string name="patient_advice_title_vomiting">"If  you vomit within 30 minutes, repeat dose."</string>
-<string name="patient_advice_vomiting_hepltext"></string>
+    <string name="patient_advice_vomiting_hepltext"></string>
 <string name="patient_advice_title_medication_with_food">"Take this medication with food."</string>
-<string name="patient_advice_medication_with_food_helptext"></string>
+    <string name="patient_advice_medication_with_food_helptext"></string>
 
 <!-- Will this show up only for patients prescribed primaquine? Or for all? -->
 <string name="patient_advice_title_side_effects">"If you have dark urine, stop primaquine and go to the nearest health facility."</string>
-<string name="patient_advice_side_effects_helptext"></string>
+    <string name="patient_advice_side_effects_helptext"></string>
 <string name="patient_advice_title_help">"If you do not feel better within 1 day, or start to feel worse, go to the nearest health facility."</string>
-<string name="patient_advice_helptext">"."</string>
+    <string name="patient_advice_helptext">"."</string>
 <string name="follow_up">"Follow-up"</string>
 <string name="follow_up_travelling_question">"Have you traveled overnight in the last month?"</string>
 
 <!-- This is to be seen on the screen -->
-<string name="follow_up_travelling_helptext"></string>
+    <string name="follow_up_travelling_helptext"></string>
 <string name="follow_up_travelling_yes">"Yes"</string>
 <string name="follow_up_travelling_no">"No"</string>
 
@@ -95,13 +95,13 @@
 <string name="follow_up_LLIN_ITN_usage_question">"Did you sleep under a LLIN or ITN last night?"</string>
 
 <!-- This text is to show up? -->
-<string name="follow_up_LLIN_ITN_usage_helptext"></string>
+    <string name="follow_up_LLIN_ITN_usage_helptext"></string>
 <string name="follow_up_LLIN_ITN_usage_yes">"Yes"</string>
 <string name="follow_up_LLIN_ITN_usage_no">"No"</string>
 <string name="follow_up_LLIN_ITN_ownership_question">"Do you have a LLIN or ITN?"</string>
 
 <!-- This text is to show up -->
-<string name="follow_up_LLIN_ITN_ownership_helptext"></string>
+    <string name="follow_up_LLIN_ITN_ownership_helptext"></string>
 <string name="follow_up_LLIN_ITN_ownership_yes">"Yes"</string>
 <string name="follow_up_LLIN_ITN_ownership_no">"No"</string>
 <string name="follow_up_end_test">"End test"</string>
@@ -205,7 +205,7 @@
 <string name="progress_pull_preparing_orgs">"Loading organisations ..."</string>
 <string name="progress_pull_surveys">"Loading surveys ..."</string>
 <string name="progress_pull_connecting">"Connecting to DHIS server ..."</string>
-<string name="progress_pull_done">"done"</string>
+    <string name="progress_pull_done">"done"</string>
 <string name="progress_push_no_survey">"No survey found for pushing"</string>
 <string name="progress_push_posting_survey">"Pushing survey data to server ..."</string>
 <string name="progress_push_preparing_survey">"Preparing survey for pushing ..."</string>
@@ -280,13 +280,13 @@
 <string name="drugs_32_of_Pq_review_title">"Pq 32"</string>
 <string name="drugs_48_of_Pq_review_title">"Pq 48"</string>
 <string name="stock_rdt_review_title">"RDT"</string>
-<string name="drugs_referral_ACT12_review_helptext"></string>
-<string name="drugs_referral_ACT18_review_helptext"></string>
-<string name="drugs_referral_ACT24_review_helptext"></string>
-<string name="drugs_referral_ACT6_review_helptext"></string>
-<string name="drugs_referral_Cq_review_helptext"></string>
-<string name="drugs_referral_Pq_review_helptext"></string>
-<string name="stock_rdt_review_helptext"></string>
+    <string name="drugs_referral_ACT12_review_helptext"></string>
+    <string name="drugs_referral_ACT18_review_helptext"></string>
+    <string name="drugs_referral_ACT24_review_helptext"></string>
+    <string name="drugs_referral_ACT6_review_helptext"></string>
+    <string name="drugs_referral_Cq_review_helptext"></string>
+    <string name="drugs_referral_Pq_review_helptext"></string>
+    <string name="stock_rdt_review_helptext"></string>
 <string name="drug_act">"ACT"</string>
 <string name="tab_dynamic_treatment">"Dynamic treatment"</string>
 <string name="dynamic_treatment_yes">"Yes"</string>
@@ -309,33 +309,33 @@
 <string name="x18">"18'"</string>
 <string name="x24">"24'"</string>
 <string name="previous_distributions">"Previous distributions"</string>
-<string name="network_error">"There is a problem with the network, please try again later."</string>
-<string name="login_invalid_credentials">"Invalid credentials"</string>
-<string name="login_invalid_server_url">"Invalid Server URL"</string>
-<string name="see_resets">"See Resets"</string>
-<string name="new_reset">"New Reset"</string>
-<string name="previous_resets">"Previous Resets"</string>
-<string name="drugs_dose_of_drug_review_title">"%1$.0f of %2$s"</string>
-<string name="reset_on">"Reset on:"</string>
-<string name="submit">"submit"</string>
-<string name="error_no_stock_survey">"This survey hasn't the stock survey associated"</string>
+    <string name="network_error">"There is a problem with the network, please try again later."</string>
+    <string name="login_invalid_credentials">"Invalid credentials"</string>
+    <string name="login_invalid_server_url">"Invalid Server URL"</string>
+    <string name="see_resets">"See Resets"</string>
+    <string name="new_reset">"New Reset"</string>
+    <string name="previous_resets">"Previous Resets"</string>
+    <string name="drugs_dose_of_drug_review_title">"%1$.0f of %2$s"</string>
+    <string name="reset_on">"Reset on:"</string>
+    <string name="submit">"submit"</string>
+    <string name="error_no_stock_survey">"This survey hasn't the stock survey associated"</string>
 <string name="no_pq_cq_out_stock">"Out of stock"</string>
 <string name="no_pq_adverse_reaction">"History of adverse reaction to Primaquine"</string>
 <string name="no_cq_adverse_reaction">"History of adverse reaction to Cloroquine"</string>
 <string name="no_pq_cq_other">"Other reasons"</string>
 <string name="treatment_no_cq_title">"The reason you are not giving Cloroquine is"</string>
 <string name="treatment_no_pq_title">"The reason you are not giving Primaquine is"</string>
-<string name="error_conflict_message">"The event with UID: %1$s. was uploaded with conflict in the data element UID: %2$s with the message: %3$s. Please contact the administrator."</string>
+    <string name="error_conflict_message">"The event with UID: %1$s. was uploaded with conflict in the data element UID: %2$s with the message: %3$s. Please contact the administrator."</string>
 <string name="error_conflict_title">"Error"</string>
 <string name="error_no_treatment">"There\'s not treatment for this combination of entries. Please talk to the administrator"</string>
-<string name="true_option_identifier">"Yes"</string>
-<string name="false_option_identifier">"No"</string>
-<string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
-<string name="monitor_row_title_negative">Negative</string>
-<string name="confirmation_really_exit_title">"Really Exit?"</string>
-<string name="confirmation_really_exit">"Are you sure you want to exit the app?"</string>
-<string name="survey_first_step">"Retrieving questions..."</string>
-<string name="survey_second_step">"Building questions..."</string>
-<string name="survey_third_step">"Building treatment matrix..."</string>
-<string name="survey_fourth_step">"Creating screens..."</string>
+    <string name="true_option_identifier">"Yes"</string>
+    <string name="false_option_identifier">"No"</string>
+    <string name="monitor_row_title_positivity_rate">"Positivity rate"</string>
+    <string name="monitor_row_title_negative">Negative</string>
+    <string name="confirmation_really_exit_title">"Really Exit?"</string>
+    <string name="confirmation_really_exit">"Are you sure you want to exit the app?"</string>
+    <string name="survey_first_step">"Retrieving questions..."</string>
+    <string name="survey_second_step">"Building questions..."</string>
+    <string name="survey_third_step">"Building treatment matrix..."</string>
+    <string name="survey_fourth_step">"Creating screens..."</string>
 </resources>

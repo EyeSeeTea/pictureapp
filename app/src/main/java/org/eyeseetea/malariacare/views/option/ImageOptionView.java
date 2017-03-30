@@ -24,7 +24,7 @@ public class ImageOptionView extends LinearLayout {
     Option mOption;
     OnOptionSelectedListener mOnOptionSelectedListener;
     private Boolean mSelectedOption;
-    boolean isClicked=false;
+    boolean isClicked = false;
 
     public ImageOptionView(Context context) {
         super(context);
@@ -106,7 +106,7 @@ public class ImageOptionView extends LinearLayout {
         mOptionImageView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isClicked) {
+                if (!isClicked) {
                     isClicked = true;
                     if (mOnOptionSelectedListener != null && isEnabled()) {
                         mSelectedOption = true;

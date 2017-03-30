@@ -84,8 +84,8 @@ public class User extends BaseModel {
 
         if (userDB == null) {
             user.save();
-        }else{
-            System.out.println("User already saved"+user.toString());
+        } else {
+            System.out.println("User already saved" + user.toString());
         }
     }
 
@@ -149,7 +149,7 @@ public class User extends BaseModel {
     }
 
     public Long getOrganisationId() {
-        return  partner_fk;
+        return partner_fk;
     }
 
     public long getOrganisation() {

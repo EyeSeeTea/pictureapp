@@ -37,7 +37,6 @@ import android.util.DisplayMetrics;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
-import org.eyeseetea.malariacare.views.FontUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -207,7 +206,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         mSettingsActivityStrategy.onCreate();
     }
 
@@ -368,7 +367,8 @@ public class SettingsActivity extends PreferenceActivity implements
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            PreferencesState.getInstance().onCreateActivityPreferences(getResources(), null);//the theme not exist in a static context
+            PreferencesState.getInstance().onCreateActivityPreferences(getResources(),
+                    null);//the theme not exist in a static context
             addPreferencesFromResource(R.xml.pref_general);
 
 

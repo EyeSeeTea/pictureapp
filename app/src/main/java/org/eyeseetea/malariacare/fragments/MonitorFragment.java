@@ -122,7 +122,7 @@ public class MonitorFragment extends Fragment implements IDashboardFragment, IWe
      * Register a monitor receiver to load monitor data into webview
      */
     public void registerFragmentReceiver() {
-        Log.d(TAG, "registerFragmentReceiver");
+        Log.d(TAG, "initializeSurvey");
 
         if (monitorReceiver == null) {
             monitorReceiver = new MonitorReceiver();

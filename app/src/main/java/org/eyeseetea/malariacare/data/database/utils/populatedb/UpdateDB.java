@@ -17,7 +17,7 @@ import org.eyeseetea.malariacare.data.database.model.Match;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
+import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
@@ -317,17 +317,17 @@ public class UpdateDB {
     public static void updateOrganisations(Context context, boolean updateCSV) throws IOException {
         if (updateCSV) {
             FileCsvs fileCsvs = new FileCsvs();
-            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.ORGANISATIONS_CSV);
+            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.PARTNER_CSV);
         }
-        List<Organisation> organisations = Organisation.getAllOrganisations();
+        List<Partner> partners = Partner.getAllOrganisations();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(context.openFileInput(PopulateDB.ORGANISATIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.PARTNER_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < organisations.size()) {
-                PopulateRow.populateOrganisations(line, organisations.get(i)).save();
+            if (i < partners.size()) {
+                PopulateRow.populateOrganisations(line, partners.get(i)).save();
             } else {
                 PopulateRow.populateOrganisations(line, null).insert();
             }
@@ -347,7 +347,7 @@ public class UpdateDB {
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TREATMENT_CSV);
         }
         List<Treatment> treatments = Treatment.getAllTreatments();
-        HashMap<Long, Organisation> organisationIds =
+        HashMap<Long, Partner> organisationIds =
                 RelationsIdCsvDB.getOrganisationIdRelationCsvDB(context);
         HashMap<Long, StringKey> stringKeyIds = RelationsIdCsvDB.getStringKeyIdRelationCsvDB(
                 context);
@@ -477,52 +477,6 @@ public class UpdateDB {
     }
 
 
-    public static void updateOptions(Context context) throws IOException {
-        List<Option> optionToDelete = Question.getOptions(
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.residenceVillageUID));
-        for (Option option : optionToDelete) {
-            if (!option.getName().equals(PreferencesState.getInstance().getContext().getString(
-                    R.string.patientResidenceVillageOtherCode))) {
-                option.delete();
-            }
-        }
-        FileCsvs fileCsvs = new FileCsvs();
-        fileCsvs.saveCsvFromAssetsToFile(PopulateDB.OPTIONS_CSV);
-        List<Option> options = Option.getAllOptions();
-        HashMap<Long, Answer> answersIds = RelationsIdCsvDB.getAnswerFKRelationCsvDB(context);
-        HashMap<Long, OptionAttribute> optionAttributeIds =
-                RelationsIdCsvDB.getOptionAttributeIdRelationCsvDB(context);
-        CSVReader reader = new CSVReader(
-                new InputStreamReader(context.openFileInput(PopulateDB.OPTIONS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
-        String line[];
-        int i = 0;
-        while ((line = reader.readNext()) != null) {
-            if (i < options.size()) {
-                PopulateRow.populateOption(line, answersIds, optionAttributeIds,
-                        options.get(i)).save();
-            } else {
-                PopulateRow.populateOption(line, answersIds, optionAttributeIds,
-                        null).insert();
-            }
-            i++;
-        }
-
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-        for (OrgUnit orgUnit : orgUnits) {
-            Option option = new Option();
-            option.setName(orgUnit.getName());
-            option.setCode(orgUnit.getUid());
-            option.setFactor((float) 0);
-            option.setId_option((long) 0);
-            option.setAnswer(Question.getAnswer(
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.residenceVillageUID)));
-            option.save();
-        }
-
-    }
 
     public static void insertLastLines(int numeberLines, Context context)
             throws IOException {

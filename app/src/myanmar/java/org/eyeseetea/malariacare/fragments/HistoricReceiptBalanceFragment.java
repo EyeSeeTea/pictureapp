@@ -14,6 +14,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.adapters.HistoricReceiptBalanceAdapter;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class HistoricReceiptBalanceFragment extends Fragment {
     }
 
     private void initData() {
-        mSurveys = Survey.getSurveysWithProgramType(Program.getStockProgram(), type);
+        mSurveys = Survey.getSurveysWithProgramType(Program.findByUID(PreferencesState.getInstance().getContext().getString(R.string.stockProgramUID)), type);
     }
 
 

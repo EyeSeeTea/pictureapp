@@ -8,7 +8,6 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
@@ -70,30 +69,6 @@ public class Drug extends BaseModel {
 
     private Context getContext() {
         return PreferencesState.getInstance().getContext();
-    }
-
-    public boolean isACT24() {
-        return question_code.equals(getContext().getResources().getString(R.string.act24QuestionUID));
-    }
-
-    public boolean isACT18() {
-        return question_code.equals(getContext().getResources().getString(R.string.act18QuestionUID));
-    }
-
-    public boolean isACT12() {
-        return question_code.equals(getContext().getResources().getString(R.string.act12QuestionUID));
-    }
-
-    public boolean isACT6() {
-        return question_code.equals(getContext().getResources().getString(R.string.act6QuestionUID));
-    }
-
-    public boolean isPq() {
-        return question_code.equals(getContext().getResources().getString(R.string.pqQuestionUID));
-    }
-
-    public boolean isCq() {
-        return question_code.equals(getContext().getResources().getString(R.string.cqQuestionUID));
     }
 
 

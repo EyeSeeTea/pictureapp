@@ -59,6 +59,7 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
+import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
@@ -625,6 +626,9 @@ public class Question extends BaseModel {
         this.id_header_fk = (header != null) ? header.getId_header() : null;
     }
 
+    public Long getHeaderForeingKeyId(){
+        return id_header_fk;
+    }
     public Integer getOutput() {
         return output;
     }
@@ -740,7 +744,6 @@ public class Question extends BaseModel {
                             this.getId_question()))
                     .queryList();
         }
-
         return this.questionOptions;
     }
 
@@ -838,8 +841,7 @@ public class Question extends BaseModel {
      * Gets the value of this question in the current survey in session
      */
     public Value getValueBySession() {
-        Survey survey =
-                (!isStockQuestion()) ? Session.getMalariaSurvey() : Session.getStockSurvey();
+        Survey survey = SurveyFragmentStrategy.getSessionSurveyByQuestion(this);
         return this.getValueBySurvey(survey);
     }
 
@@ -891,11 +893,7 @@ public class Question extends BaseModel {
      * Gets the option of this question in the current survey in session
      */
     public Option getOptionBySession() {
-        if (!isStockQuestion()) {
-            return this.getOptionBySurvey(Session.getMalariaSurvey());
-        } else {
-            return this.getOptionBySurvey(Session.getStockSurvey());
-        }
+        return this.getOptionBySurvey(SurveyFragmentStrategy.getSessionSurveyByQuestion(this));
     }
 
     /**
@@ -1040,8 +1038,7 @@ public class Question extends BaseModel {
     }
 
     public Option getAnsweredOption() {
-        Survey survey = (isStockQuestion() ? Session.getStockSurvey()
-                : Session.getMalariaSurvey());
+        Survey survey = SurveyFragmentStrategy.getSessionSurveyByQuestion(this);
 
         Value value = Value.findValue(getId_question(), survey);
         if (value != null) {
@@ -1097,21 +1094,10 @@ public class Question extends BaseModel {
         if (option == null) {
             return;
         }
-        if (value != null && isTreatmentQuestion() && isACT()
-                && !option.getId_option().equals(value.getId_option())) {
-            List<Survey> surveys = new ArrayList<>();
-            surveys.add(Session.getStockSurvey());
-            surveys.add(Session.getMalariaSurvey());
-            for (Survey survey : surveys) {
-                survey.deleteStockValues();
-            }
-        }
+        SurveyFragmentStrategy.saveValueDDlExtraOperations(value, option, getUid());
 
         if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
-            Survey survey =
-                    ((isStockQuestion() || isPq() || isACT())
-                            ? Session.getStockSurvey()
-                            : Session.getMalariaSurvey());
+            Survey survey = SurveyFragmentStrategy.getSaveValuesDDLSurvey(this);
 
             createOrSaveDDLValue(option, value, survey);
             for (Question propagateQuestion : this.getPropagationQuestions()) {
@@ -1126,30 +1112,12 @@ public class Question extends BaseModel {
 
     public void saveValuesText(String answer) {
         Value value = getValueBySession();
-        Survey survey = (isStockQuestion() ? Session.getStockSurvey()
-                : Session.getMalariaSurvey());
-        if ((isTreatmentQuestion() || isPq() || isACT()) && value != null
-                && !value.getValue().equals(answer)) {
-            List<Survey> surveys = new ArrayList<>();
-            surveys.add(Session.getStockSurvey());
-            surveys.add(Session.getMalariaSurvey());
-            for (Survey surveyToClean : surveys) {
-                surveyToClean.deleteStockValues();
-            }
-        }
-        if (isStockQuestion() && value != null && answer.equals("-1")) {
-            deleteValues(value);
-        } else {
-            createOrSaveValue(answer, value, survey);
-            for (Question propagateQuestion : getPropagationQuestions()) {
-                propagateQuestion.createOrSaveValue(answer,
-                        Value.findValueFromDatabase(propagateQuestion.getId_question(),
-                                Session.getMalariaSurvey()), Session.getMalariaSurvey());
-            }
-        }
+        Survey survey = (SurveyFragmentStrategy.getSessionSurveyByQuestion(this));
+        SurveyFragmentStrategy.saveValuesText(value, answer, this, survey);
+
     }
 
-    private void deleteValues(Value value) {
+    public void deleteValues(Value value) {
         if (value != null) {
             for (Question propagateQuestion : this.getPropagationQuestions()) {
                 Value propagateValue = Value.findValueFromDatabase(
@@ -1168,10 +1136,7 @@ public class Question extends BaseModel {
         if (value == null) {
             value = new Value(option, this, survey);
         } else {
-            if (!value.getOption().equals(option) && this.hasChildren()
-                    && !this.isDynamicTreatmentQuestion()) {
-                survey.removeChildrenValuesFromQuestionRecursively(this, false);
-            }
+            SurveyFragmentStrategy.recursiveRemover(value, option, this, survey);
             value.setOption(option);
             value.setValue(option.getName());
         }
@@ -1179,7 +1144,7 @@ public class Question extends BaseModel {
         value.save();
     }
 
-    private void createOrSaveValue(String answer, Value value,
+    public void createOrSaveValue(String answer, Value value,
             Survey survey) {
         // If the value is not found we create one
         if (value == null) {
@@ -1581,29 +1546,11 @@ public class Question extends BaseModel {
         return (this.getValueBySession() != null);
     }
 
-    private boolean isNotAnswered(Question question) {
+    public boolean isNotAnswered(Question question) {
         if (question.getValueBySession() == null
                 || question.getValueBySession().getValue() == null
                 || question.getValueBySession().getValue().length() == 0) {
             return true;
-        }
-        return false;
-    }
-
-    public boolean isStockQuestion() {
-        if (getHeader() == null) {
-            Header header = Header.findById(id_header_fk);
-            setHeader(header);
-        }
-        if (getHeader() != null && getHeader().getName().equals("Stock")) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isDynamicStockQuestion() {
-        if (getUid() != null) {
-            return getUid().equals(getContext().getString(R.string.dynamicStockQuestionUID));
         }
         return false;
     }
@@ -1620,145 +1567,16 @@ public class Question extends BaseModel {
         return questionRelation != null;
     }
 
-    public boolean isTreatmentQuestion() {
-        if (uid_question.equals(getContext().getString(R.string.ageQuestionUID))
-                || uid_question.equals(
-                getContext().getString(R.string.ageQuestionUID)) || uid_question.equals(
-                getContext().getString(R.string.severeSymtomsQuestionUID))
-                || uid_question.equals(getContext().getString(R.string.rdtQuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isOutStockQuestion() {
-        if (uid_question.equals(getContext().getString(R.string.outOfStockQuestionUID))) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isRDT() {
-        return uid_question.equals(getContext().getString(R.string.rdtQuestionUID));
-    }
-
-    public boolean isStockRDT() {
-        return uid_question.equals(getContext().getString(R.string.stockRDTQuestionUID));
-    }
-
-    public boolean isInvalidCounter() {
-        return uid_question.equals(getContext().getString(R.string.confirmInvalidQuestionUID));
-    }
-
-    public boolean isACT6() {
-        return uid_question.equals(getContext().getString(R.string.act6QuestionUID));
-    }
-
-    public boolean isACT12() {
-        return uid_question.equals(getContext().getString(R.string.act12QuestionUID));
-    }
-
-    public boolean isACT18() {
-        return uid_question.equals(getContext().getString(R.string.act18QuestionUID));
-    }
-
-    public boolean isACT24() {
-        return uid_question.equals(getContext().getString(R.string.act24QuestionUID));
-    }
-
-    public boolean isACT() {
-        return isACT6() || isACT12() || isACT18() || isACT24();
-    }
-
-    public boolean isCq() {
-        return uid_question.equals(getContext().getString(R.string.cqQuestionUID));
-    }
-
-    public boolean isPq() {
-        return uid_question.equals(getContext().getString(R.string.pqQuestionUID));
-    }
-
-    public boolean isDynamicTreatmentQuestion() {
-        return uid_question.equals(
-                getContext().getString(R.string.dynamicTreatmentHideQuestionUID));
-    }
-
-    public boolean isInvalidRDTQuestion() {
-        return uid_question.equals(getContext().getString(R.string.confirmInvalidQuestionUID));
-    }
-
-    public static Question getRDTQuestion() {
-        Context context = PreferencesState.getInstance().getContext();
-        return findByUID(context.getString(R.string.rdtQuestionUID));
-    }
-
-    public static Question getStockRDTQuestion() {
-        Context context = PreferencesState.getInstance().getContext();
-        return findByUID(context.getString(R.string.stockRDTQuestionUID));
-    }
-
-    public static Question getInvalidCounterQuestion() {
-        Context context = PreferencesState.getInstance().getContext();
-        return findByUID(context.getString(R.string.confirmInvalidQuestionUID));
-    }
-
-    public static Question getPqQuestion() {
-        Context context = PreferencesState.getInstance().getContext();
-        return findByUID(context.getString(R.string.pqQuestionUID));
-    }
-
-    public static Question getCqQuestion() {
-        Context context = PreferencesState.getInstance().getContext();
-        return findByUID(context.getString(R.string.cqQuestionUID));
-    }
-
-    public static Question getACT6Question() {
-        Context context = PreferencesState.getInstance().getContext();
-        return findByUID(context.getString(R.string.act6QuestionUID));
-    }
-
-    public static Question getACT12Question() {
-        Context context = PreferencesState.getInstance().getContext();
-        return findByUID(context.getString(R.string.act12QuestionUID));
-    }
-
-    public static Question getACT18Question() {
-        Context context = PreferencesState.getInstance().getContext();
-        return findByUID(context.getString(R.string.act18QuestionUID));
-    }
-
-    public static Question getACT24Question() {
-        Context context = PreferencesState.getInstance().getContext();
-        return findByUID(context.getString(R.string.act24QuestionUID));
-    }
-
-    public static Question getOutOfStockQuestion() {
-        Context context = PreferencesState.getInstance().getContext();
-        return findByUID(context.getString(R.string.outOfStockQuestionUID));
-    }
 
     public boolean hasCompulsoryNotAnswered() {
-        List<Question> questions = new ArrayList<>();
         //get all the questions in the same screen page
-        if (getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
-            questions = getQuestionsByTab(getHeader().getTab());
-        } else if (isDynamicStockQuestion()) {
-            List<Option> options = getAnswer().getOptions();
-            for (Option option : options) {
-                Question question = findByID(option.getId_option());
-                if (!isNotAnswered(question)) {
-                    questions.add(question);
-                }
-            }
-        } else {
-            questions.add(this);
-        }
+
+        List<Question> questions = SurveyFragmentStrategy.getCompulsoryNotAnsweredQuestions(this);
         if (questions.size() == 0) {
             return true;
         }
         for (Question question : questions) {
-            Survey survey =
-                    (isStockQuestion()) ? Session.getStockSurvey() : Session.getMalariaSurvey();
+            Survey survey = SurveyFragmentStrategy.getSessionSurveyByQuestion(this);
             if (question.isCompulsory() && !question.isHiddenBySurveyAndHeader(
                     survey) && isNotAnswered(question)) {
                 return true;
@@ -1927,7 +1745,6 @@ public class Question extends BaseModel {
                         id_question)).queryList();
         return propagationQuestion;
     }
-
 
     private static class QuestionOrderComparator implements Comparator {
 

@@ -9,6 +9,8 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
@@ -30,8 +32,11 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Question question = (Question) v.getTag();
-                    DashboardActivity.dashboardActivity.hideReview(question);
+                    if(!DynamicTabAdapter.isClicked) {
+                        DynamicTabAdapter.isClicked = true;
+                        Question question = (Question) v.getTag();
+                        DashboardActivity.dashboardActivity.hideReview(question);
+                    }
                 }
             });
 
@@ -68,4 +73,20 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         }
         return question;
     }
+
+
+    public static boolean isValidValue(Value value) {
+        if (Session.getStockSurvey()==null || value.getQuestion() == null) {
+            return false;
+        }
+        for (Value stockValue : Session.getStockSurvey().getValuesFromDB()) {
+            if (stockValue.getQuestion() != null) {
+                if (stockValue.getQuestion().getUid().equals(value.getQuestion().getUid())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

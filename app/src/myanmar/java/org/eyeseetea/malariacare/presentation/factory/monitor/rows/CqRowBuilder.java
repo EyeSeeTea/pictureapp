@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.presentation.factory.monitor.rows;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.domain.entity.SurveyQuestionValue;
+import org.eyeseetea.malariacare.domain.entity.SurveyQuestionTreatmentValue;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonitor;
 
 /**
@@ -16,6 +16,6 @@ public class CqRowBuilder extends CounterRowBuilder {
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return Math.round(Float.parseFloat(new SurveyQuestionValue(surveyMonitor.getSurvey()).getCqValue()));
+        return Math.round(Float.parseFloat(new SurveyQuestionTreatmentValue(surveyMonitor.getSurvey()).getCqValue()));
     }
 }

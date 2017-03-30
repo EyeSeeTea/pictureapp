@@ -1,0 +1,200 @@
+<!--
+  ~ Copyright (c) 2016.
+  ~
+  ~ This file is part of QIS Surveillance App.
+  ~
+  ~  QIS Surveillance App is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  QIS Surveillance App is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with QIS Surveillance App. If not, see <http://www.gnu.org/licenses/>.
+  -->
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+</head>
+<style>    @font-face {
+		font-family: 'Saysettha OT';
+		src: url('../fonts/saysettha_ot.ttf');
+		font-weight: 300;
+    }
+
+    body {
+		background-color: #ed9c00;
+		font-family: 'saysettha_ot';
+    }
+
+    select{
+        -webkit-appearance: none!important;
+        -moz-appearance: none!important;
+        appearance: none!important;
+        font-size: 13px;
+        padding: 0 0 0 20px;
+        background: url(img/select.png) no-repeat right #c8b8c7!important;
+        color: #4d3a4b!important;
+        width: 50%!important;
+        text-size-adjust: initial;
+        padding-top: 2px!important;
+        padding-bottom: 2px!important;
+    }
+
+    table {
+		width: 100%;
+		border-collapse: collapse;
+    }
+
+    table,
+    td,
+    th {
+		border: 1px solid black;
+		text-align: center;
+    }
+
+    .stats {
+		margin-top: 25px;
+    }
+
+    .line-title {
+		color:#ffffff;
+	}
+
+    .rowMetric {
+		background-color: #ed9c00;
+		text-align: left;
+		width: 20%;
+    }
+
+    tr:first-child td {
+    }
+
+    tr:nth-child(even){background: #ffffff}
+    tr:nth-child(odd){background: #ffffff}
+
+    .rowTimeUnit {
+		font-weight: 700;
+    }
+
+    .rowSummary {
+		//background-color: #c4dfb2 !important;
+    }
+
+    .timeUnitPicker {
+		text-align: right;
+    }
+    #LBL_TIMEUNIT{
+		display:none;
+    }
+
+    .selectParent{
+		width:80px;
+		overflow:hidden;
+    }
+
+    .imageEquals{
+		background-image: url("ic_stock_equals.png") !important;
+		background-repeat: no-repeat !important;
+		background-position: center  !important;
+    }
+    .imageLess{
+		background-image: url("ic_stock_less.png") !important;
+		background-repeat: no-repeat !important;
+		background-position: center  !important;
+
+    }
+.imageMore{
+		background-image: url("ic_stock_more.png") !important;
+		background-repeat: no-repeat !important;
+		background-position: center  !important;
+
+    }
+
+
+
+    #timeUnit{
+		border-radius:4px;border:1px;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		border: none;
+		background: transparent;
+		color: white;
+		margin: auto;
+		padding-top: 15px;
+		padding-bottom: 12px;
+		width: 35%;
+    }
+	.timeUnitPicker{
+	}
+	table:first-child tr:first-child td:first-child {
+        color: #785c77;
+        border: 1px solid transparent;
+        border-bottom: 2px solid #795d77;
+	}
+	table:first-child tr:first-child td:not(:first-child) {
+        background: #c8b8c7;
+        color: #785c77;
+        border: 1px solid transparent;
+        border-bottom: 2px solid #795d77;
+        border-radius: 17px 17px 17px 17px;
+	}
+
+	table:first-child tr:not(:first-child) td:first-child {
+        background: #785c77;
+        color: #c9b8c8;
+        border: 1px solid transparent;
+        border-bottom: 2px solid #795d77;
+        border-radius: 17px 17px 17px 17px;
+        padding-left: 10px;
+    }
+
+	table:first-child tr:not(:first-child) td:not(:first-child) {
+        background: white;
+        color: #785c77;
+        border: 1px solid  transparent;
+        border-bottom: 2px solid #795d77;
+        border-radius: 17px 17px 17px 17px;
+    }
+	table:first-child tr:last-child td {
+	    border-bottom: 2px solid transparent!important;
+	}
+
+
+
+ 
+
+
+
+
+
+</style>
+
+<body>
+
+<div id="statsContainer">
+</div>
+<!-- Table template -->
+<script type="text/html" id="tableTemplate">
+    <div id="stats###" class="stats">
+        <span class="line-title" id="title###"></span>
+        <div>
+            <table>
+                <tbody id="tbody###">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
+<!-- JS to fill table with data -->
+<script type="text/javascript" src="../js/statistics.js">
+</script>
+</body>
+
+</html>

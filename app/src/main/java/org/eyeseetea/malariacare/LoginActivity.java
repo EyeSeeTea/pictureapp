@@ -241,6 +241,7 @@ public class LoginActivity extends AbsLoginActivity {
         usernameEditText.setText(DEFAULT_USER);
         passwordEditText = (EditText) findViewById(R.id.edittext_password);
         passwordEditText.setText(DEFAULT_PASSWORD);
+        mLoginActivityStrategy.initViews();
     }
 
     public class AsyncInit extends AsyncTask<Void, Void, Exception> {

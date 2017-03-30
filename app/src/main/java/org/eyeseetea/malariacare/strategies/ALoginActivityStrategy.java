@@ -15,4 +15,6 @@ public abstract class ALoginActivityStrategy {
     public abstract void finishAndGo();
 
     public abstract void onCreate();
+
+    public abstract void initViews();
 }

@@ -169,4 +169,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public void finishAndGo() {
         finishAndGo(ProgressActivity.class);
     }
+
+
+    @Override
+    public void initViews() {
+
+    }
 }

@@ -43,4 +43,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
         loginActivity.finish();
     }
+
+    @Override
+    public void initViews() {
+
+    }
 }

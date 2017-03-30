@@ -222,6 +222,25 @@ public class Question extends BaseModel {
                 .queryList();
     }
 
+    public static List<Question> getAllQuestionsWithMatch() {
+        return new Select(Question_Table.getAllColumnProperties()).distinct().from(
+                Question.class).as(questionName)
+                .join(QuestionOption.class, Join.JoinType.LEFT_OUTER).as(questionOptionName)
+                .on(Question_Table.id_question.withTable(questionAlias)
+                        .eq(QuestionRelation_Table.id_question_fk.withTable(questionOptionAlias)))
+                .join(Match.class, Join.JoinType.LEFT_OUTER).as(matchName)
+                .on(QuestionOption_Table.id_match_fk.withTable(questionOptionAlias)
+                        .eq(Match_Table.id_match.withTable(matchAlias)))
+                .join(QuestionRelation.class, Join.JoinType.LEFT_OUTER).as(questionRelationName)
+                .on(Match_Table.id_question_relation_fk.withTable(matchAlias)
+                        .eq(QuestionRelation_Table.id_question_relation.withTable(
+                                questionRelationAlias)))
+                .where(QuestionRelation_Table.operation.withTable(questionRelationAlias).eq(
+                        QuestionRelation.MATCH))
+                .queryList();
+    }
+
+
     private static List<Question> getAllQuestionsWithHeader(Header header) {
         return new Select()
                 .from(Question.class)
@@ -727,6 +746,31 @@ public class Question extends BaseModel {
         return this.questionOptions;
     }
 
+    public List<QuestionOption> getQuestionOptionsOfTypeMatch() {
+
+        List<QuestionOption> matchedQuestionOption = null;
+
+        matchedQuestionOption =
+                new Select().from(QuestionOption.class).as(questionOptionName)
+                        .join(Match.class, Join.JoinType.LEFT_OUTER).as(matchName)
+                        .on(QuestionOption_Table.id_match_fk.withTable(
+                                questionOptionAlias)
+                                .eq(Match_Table.id_match.withTable(matchAlias)))
+                        .join(QuestionRelation.class, Join.JoinType.LEFT_OUTER).as(
+                        questionRelationName)
+                        .on(Match_Table.id_question_relation_fk.withTable(matchAlias)
+                                .eq(QuestionRelation_Table.id_question_relation.withTable(
+                                        questionRelationAlias)))
+                        .where(QuestionOption_Table.id_question_fk.withTable(
+                                questionOptionAlias).eq(
+                                this.getId_question()))
+                        .and(QuestionRelation_Table.operation.withTable(questionRelationAlias).eq(
+                                QuestionRelation.MATCH))
+                        .queryList();
+
+        return matchedQuestionOption;
+    }
+
     public List<Match> getMatches() {
         if (matches == null) {
 
@@ -798,6 +842,30 @@ public class Question extends BaseModel {
     public Value getValueBySession() {
         Survey survey = SurveyFragmentStrategy.getSessionSurveyByQuestion(this);
         return this.getValueBySurvey(survey);
+    }
+
+    public Option findOptionByValue(String value) {
+
+        Answer answer = getAnswer();
+        if (answer == null) {
+            return null;
+        }
+
+        List<Option> options = answer.getOptions();
+
+        for (Option option : options) {
+            String optionName = option.getName();
+
+            if (optionName == null) {
+                continue;
+            }
+
+            if (optionName.equals(value)) {
+                return option;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -1051,7 +1119,8 @@ public class Question extends BaseModel {
     public void deleteValues(Value value) {
         if (value != null) {
             for (Question propagateQuestion : this.getPropagationQuestions()) {
-                Value propagateValue = Value.findValueFromDatabase(propagateQuestion.getId_question(),
+                Value propagateValue = Value.findValueFromDatabase(
+                        propagateQuestion.getId_question(),
                         Session.getMalariaSurvey());
                 if (propagateValue != null) {
                     propagateValue.delete();
@@ -1059,7 +1128,7 @@ public class Question extends BaseModel {
             }
             value.delete();
         }
-}
+    }
 
     private void createOrSaveDDLValue(Option option, Value value,
             Survey survey) {

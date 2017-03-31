@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.layout.listeners;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -65,6 +66,12 @@ public class SwipeTouchListener implements View.OnTouchListener {
     public void addClickableView(View view) {
         clickableViews.add(view);
     }
+    /**
+     * Adds a clickable view
+     */
+    public void addTouchableView(View view) {
+        view.setOnTouchListener(this);
+    }
 
     /**
      * Adds a clickable view
@@ -102,15 +109,15 @@ public class SwipeTouchListener implements View.OnTouchListener {
     }
 
     public void onClick(View view) {
-//            Log.e(".DynamicTabAdapter", "empty onclick");
+            Log.e(".DynamicTabAdapter", "empty onclick");
     }
 
     public void onSwipeRight() {
-//            Log.e(TAG, "onSwipeRight(DEFAULT)");
+            Log.e(".DynamicTabAdapter", "onSwipeRight(DEFAULT)");
     }
 
     public void onSwipeLeft() {
-//            Log.e(TAG, "onSwipeLeft(DEFAULT)");
+            Log.e(".DynamicTabAdapter", "onSwipeLeft(DEFAULT)");
     }
 
     /**

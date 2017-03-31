@@ -7,7 +7,7 @@ import org.eyeseetea.malariacare.domain.usecase.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy {
-    public static final String TAG = ".PushServiceStrategy"; 
+    public static final String TAG = ".PushServiceStrategy";
 
     public PushServiceStrategy(PushService pushService) {
         super(pushService);

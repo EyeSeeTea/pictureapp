@@ -30,6 +30,7 @@
     <string name="exception_org_unit_banned">"Outlet is closed or blocked. Contact PSI at xxx xxxx xxxx"</string>
     <string name="dynamic_error_phone_format">"Invalid format for phone number (xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
     <string name="dynamic_error_age">"Invalid age"</string>
+    <string name="dynamic_error_pregnant_month">"Invalid pregnant month"</string>
     <string name="fonts_customise">"Customize font?"</string>
     <string name="font_size">"Font size"</string>
     <string name="server_name">"DHIS Server URL"</string>

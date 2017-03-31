@@ -42,7 +42,7 @@ public class User extends BaseModel {
     @Column
     String name;
     @Column
-    Long organisation_fk;
+    long partner_fk;
     @Column
     long supervisor_fk;
 
@@ -64,7 +64,7 @@ public class User extends BaseModel {
         this.id_user = id_user;
         this.uid_user = uid;
         this.name = name;
-        this.organisation_fk = organisation;
+        this.partner_fk = organisation;
         this.supervisor_fk = supervisor;
         this.surveys = surveys;
     }
@@ -149,23 +149,23 @@ public class User extends BaseModel {
     }
 
     public Long getOrganisationId() {
-        return  organisation_fk;
+        return  partner_fk;
     }
 
-    public Long getOrganisation() {
-        if (organisation_fk == null) {
+    public long getOrganisation() {
+        if (partner_fk == 0) {
             User user = new Select()
                     .from(User.class)
                     .where(User_Table.name.is(name))
                     .querySingle();
-            organisation_fk = user.getOrganisationId();
+            partner_fk = user.getOrganisation();
         }
 
-        return organisation_fk;
+        return partner_fk;
     }
 
     public void setOrganisation(long organisation) {
-        this.organisation_fk = organisation;
+        this.partner_fk = organisation;
     }
 
     public long getSupervisor() {
@@ -184,7 +184,7 @@ public class User extends BaseModel {
         User user = (User) o;
 
         if (id_user != user.id_user) return false;
-        if (organisation_fk != user.organisation_fk) return false;
+        if (partner_fk != user.partner_fk) return false;
         if (supervisor_fk != user.supervisor_fk) return false;
         if (uid_user != null ? !uid_user.equals(user.uid_user) : user.uid_user != null) return false;
         return name != null ? name.equals(user.name) : user.name == null;
@@ -196,7 +196,7 @@ public class User extends BaseModel {
         int result = (int) (id_user ^ (id_user >>> 32));
         result = 31 * result + (uid_user != null ? uid_user.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (int) (organisation_fk ^ (organisation_fk >>> 32));
+        result = 31 * result + (int) (partner_fk ^ (partner_fk >>> 32));
         result = 31 * result + (int) (supervisor_fk ^ (supervisor_fk >>> 32));
         return result;
     }
@@ -207,7 +207,7 @@ public class User extends BaseModel {
                 "id_user_fk=" + id_user +
                 ", uid='" + uid_user + '\'' +
                 ", name='" + name + '\'' +
-                ", organisation=" + organisation_fk +
+                ", mPartner=" + partner_fk +
                 ", supervisor=" + supervisor_fk +
                 ", surveys=" + surveys +
                 '}';

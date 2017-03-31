@@ -33,6 +33,7 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -83,6 +84,7 @@ public class LoginActivity extends AbsLoginActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
     }
@@ -224,6 +226,12 @@ public class LoginActivity extends AbsLoginActivity {
 
     public void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        mLoginActivityStrategy.onOptionsItemSelected(item);
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

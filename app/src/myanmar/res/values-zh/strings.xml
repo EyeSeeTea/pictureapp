@@ -174,6 +174,7 @@
 <string name="exception_org_unit_banned"></string>
 <string name="dynamic_error_phone_format">"电话号码格式无效"</string>
 <string name="dynamic_error_age">"年龄无效"</string>
+<string name="dynamic_error_pregnant_month">"怀孕月份无效"</string>
 <string name="pref_header_general">"一般"</string>
 <string name="font_size_level0">"x小"</string>
 <string name="font_size_level1">"小"</string>
@@ -316,4 +317,10 @@
 <string name="error_no_treatment">"没有对这种组合条目的治疗。 请与管理员联系"</string>
 <string name="true_option_identifier">"是"</string>
 <string name="false_option_identifier">"没有"</string>
+<string name="confirmation_really_exit_title">"真的退出吗？"</string>
+<string name="confirmation_really_exit">"您确定要退出应用程序吗？"</string>
+<string name="survey_first_step">"正在恢复调查问题..."</string>
+<string name="survey_second_step">"建筑调查常见问题..."</string>
+<string name="survey_third_step">"建筑调查处理矩阵"</string>
+<string name="survey_fourth_step">"正在创建调查..."</string>
 </resources>

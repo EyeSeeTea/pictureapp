@@ -29,12 +29,11 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.views.FontUtils;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Singleton that holds info related to preferences
@@ -72,13 +71,7 @@ public class PreferencesState {
      * Specified DHIS2 Server
      */
     private String dhisURL;
-    /**
-     * Map that holds the relationship between a scale and a set of dimensions
-     */
-    private Map<String, Map<String, Float>> scaleDimensionsMap;
-    /**
-     * Flag that determines if the user did accept the announcement
-     */
+
     private boolean userAccept;
 
     private PreferencesState() {
@@ -110,7 +103,6 @@ public class PreferencesState {
 
     public void init(Context context) {
         this.context = context;
-        scaleDimensionsMap = initScaleDimensionsMap();
         reloadPreferences();
     }
 
@@ -119,6 +111,11 @@ public class PreferencesState {
     }
 
     public void reloadPreferences() {
+        if (context == null) {
+            Log.d(TAG, "reloadPreferences: "
+                    + " the context is null");
+            return;
+        }
         scale = initScale();
         showNumDen = initShowNumDen();
         orgUnit = initOrgUnit();
@@ -185,57 +182,10 @@ public class PreferencesState {
                 false);
     }
 
-    /**
-     * Inits maps of dimensions
-     */
-    private Map<String, Map<String, Float>> initScaleDimensionsMap() {
-        Map<String, Float> xsmall = new HashMap<>();
-        String xsmallKey = instance.getContext().getString(R.string.font_size_level0),
-                smallKey = context.getString(R.string.font_size_level1),
-                mediumKey = context.getString(R.string.font_size_level2),
-                largeKey = context.getString(R.string.font_size_level3),
-                xlargeKey = context.getString(R.string.font_size_level4);
-
-        xsmall.put(xsmallKey, context.getResources().getDimension(R.dimen.xsmall_xsmall_text_size));
-        xsmall.put(smallKey, context.getResources().getDimension(R.dimen.xsmall_small_text_size));
-        xsmall.put(mediumKey, context.getResources().getDimension(R.dimen.xsmall_medium_text_size));
-        xsmall.put(largeKey, context.getResources().getDimension(R.dimen.xsmall_large_text_size));
-        xsmall.put(xlargeKey, context.getResources().getDimension(R.dimen.xsmall_xlarge_text_size));
-        Map<String, Float> small = new HashMap<>();
-        small.put(xsmallKey, context.getResources().getDimension(R.dimen.small_xsmall_text_size));
-        small.put(smallKey, context.getResources().getDimension(R.dimen.small_small_text_size));
-        small.put(mediumKey, context.getResources().getDimension(R.dimen.small_medium_text_size));
-        small.put(largeKey, context.getResources().getDimension(R.dimen.small_large_text_size));
-        small.put(xlargeKey, context.getResources().getDimension(R.dimen.small_xlarge_text_size));
-        Map<String, Float> medium = new HashMap<>();
-        medium.put(xsmallKey, context.getResources().getDimension(R.dimen.medium_xsmall_text_size));
-        medium.put(smallKey, context.getResources().getDimension(R.dimen.medium_small_text_size));
-        medium.put(mediumKey, context.getResources().getDimension(R.dimen.medium_medium_text_size));
-        medium.put(largeKey, context.getResources().getDimension(R.dimen.medium_large_text_size));
-        medium.put(xlargeKey, context.getResources().getDimension(R.dimen.medium_xlarge_text_size));
-        Map<String, Float> large = new HashMap<>();
-        large.put(xsmallKey, context.getResources().getDimension(R.dimen.large_xsmall_text_size));
-        large.put(smallKey, context.getResources().getDimension(R.dimen.large_small_text_size));
-        large.put(mediumKey, context.getResources().getDimension(R.dimen.large_medium_text_size));
-        large.put(largeKey, context.getResources().getDimension(R.dimen.large_large_text_size));
-        large.put(xlargeKey, context.getResources().getDimension(R.dimen.large_xlarge_text_size));
-        Map<String, Float> xlarge = new HashMap<>();
-        xlarge.put(xsmallKey, context.getResources().getDimension(R.dimen.extra_xsmall_text_size));
-        xlarge.put(smallKey, context.getResources().getDimension(R.dimen.extra_small_text_size));
-        xlarge.put(mediumKey, context.getResources().getDimension(R.dimen.extra_medium_text_size));
-        xlarge.put(largeKey, context.getResources().getDimension(R.dimen.extra_large_text_size));
-        xlarge.put(xlargeKey, context.getResources().getDimension(R.dimen.extra_xlarge_text_size));
-
-        Map scaleDimensionsMap = new HashMap<>();
-        scaleDimensionsMap.put(xsmallKey, xsmall);
-        scaleDimensionsMap.put(smallKey, small);
-        scaleDimensionsMap.put(mediumKey, medium);
-        scaleDimensionsMap.put(largeKey, large);
-        scaleDimensionsMap.put(xlargeKey, xlarge);
-        return scaleDimensionsMap;
-    }
-
     public String getScale() {
+        if (scale == null) {
+            scale = initScale();
+        }
         return scale;
     }
 
@@ -257,10 +207,6 @@ public class PreferencesState {
 
     public void setIsNewServerUrl(boolean value) {
         this.isNewServerUrl = value;
-    }
-
-    public Float getFontSize(String scale, String dimension) {
-        return scaleDimensionsMap.get(scale).get(dimension);
     }
 
     public String getOrgUnit() {
@@ -311,6 +257,56 @@ public class PreferencesState {
 
     public void setDataLimitedByDate(String value) {
         saveStringPreference(R.string.data_limited_by_date, value);
+    }
+
+    public boolean getMetaDataDownload() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.meta_data_download), true);
+    }
+
+    public void setMetaDataDownload(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.meta_data_download),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+
+    public boolean getPullDataAfterMetadata() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.pull_data_after_metadata), false);
+    }
+
+    public void setPullDataAfterMetadata(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.pull_data_after_metadata),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+    public boolean getDataFilteredByOrgUnit() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.data_filtered_by_preference_org_unit), true);
+    }
+
+    public void setDataFilteredByOrgUnit(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.data_filtered_by_preference_org_unit),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+    public void onCreateActivityPreferences(Resources resources, Resources.Theme theme) {
+        loadsLanguageInActivity();
+        if (theme != null) {
+            FontUtils.applyFontStyleByPreference(resources, theme);
+        }
     }
 
     public void loadsLanguageInActivity() {
@@ -391,5 +387,12 @@ public class PreferencesState {
         editor.putBoolean(context.getResources().getString(R.string.user_accept_key), isAccepted);
         editor.commit();
         return userAccept;
+    }
+    public boolean downloadMetaData () {
+        return getMetaDataDownload();
+    }
+
+    public void setDataLimitedByPreferenceOrgUnit(boolean value) {
+        setDataFilteredByOrgUnit(value);
     }
 }

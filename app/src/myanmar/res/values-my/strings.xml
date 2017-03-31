@@ -180,6 +180,7 @@
 <string name="exception_org_unit_banned">"ဤ Org unit ထည့်၍ မရပါ။"</string>
 <string name="dynamic_error_phone_format">"ဖုန်းနံပါတ်မှားနေသည်။"</string>
 <string name="dynamic_error_age">"အသက် မှားနေသည်။"</string>
+<string name="dynamic_error_pregnant_month">"မှားနေသောကိုယ်ဝန်လ"</string>
 <string name="pref_header_general">"ယေဘုယျ"</string>
 <string name="font_size_level0">"အလွန်သေး"</string>
 <string name="font_size_level1">"သေး"</string>

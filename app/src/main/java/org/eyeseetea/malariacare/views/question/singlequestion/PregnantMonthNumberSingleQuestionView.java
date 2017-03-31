@@ -8,21 +8,21 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.domain.entity.PositiveOrZeroNumber;
+import org.eyeseetea.malariacare.domain.entity.PregnantMonthNumber;
 import org.eyeseetea.malariacare.domain.entity.Validation;
-import org.eyeseetea.malariacare.domain.exception.InvalidPositiveOrZeroNumberException;
+import org.eyeseetea.malariacare.domain.exception.InvalidPregnantMonthNumberException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.sdk.presentation.views.CustomButton;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 
-public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQuestionView implements
+public class PregnantMonthNumberSingleQuestionView extends AKeyboardSingleQuestionView implements
         IQuestionView {
     CustomEditText numberPicker;
     CustomButton sendButton;
-    Boolean isClicked=false;
+    Boolean isClicked = false;
 
-    public PositiveOrZeroNumberSingleQuestionView(Context context) {
+    public PregnantMonthNumberSingleQuestionView(Context context) {
         super(context);
 
         init(context);
@@ -51,7 +51,7 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
     }
 
     private void init(final Context context) {
-        inflate(context, R.layout.dynamic_tab_positiveint_row, this);
+        inflate(context, R.layout.dynamic_tab_pregnant_month_row, this);
 
         numberPicker = (CustomEditText) findViewById(R.id.answer);
         numberPicker.setFocusable(true);
@@ -81,18 +81,18 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
     }
 
     protected void validateAnswer(Context context) {
-        if(!isClicked) {
+        if (!isClicked) {
             isClicked = true;
             try {
-                PositiveOrZeroNumber positiveNumber = PositiveOrZeroNumber.parse(
+                PregnantMonthNumber pregnantMonthNumber = PregnantMonthNumber.parse(
                         numberPicker.getText().toString());
                 Validation.getInstance().removeInputError(numberPicker);
                 hideKeyboard(numberPicker);
-                notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
-            } catch (InvalidPositiveOrZeroNumberException e) {
+                notifyAnswerChanged(String.valueOf(pregnantMonthNumber.getValue()));
+            } catch (InvalidPregnantMonthNumberException e) {
                 Validation.getInstance().addinvalidInput(numberPicker,
                         context.getString(R.string.dynamic_error_age));
-                numberPicker.setError(context.getString(R.string.dynamic_error_age));
+                numberPicker.setError(context.getString(R.string.dynamic_error_pregnant_month));
             }
             isClicked = false;
         }

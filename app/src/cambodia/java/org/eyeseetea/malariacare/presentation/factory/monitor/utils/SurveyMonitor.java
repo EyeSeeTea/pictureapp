@@ -198,7 +198,7 @@ public class SurveyMonitor {
         if (Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_4_5, mSurvey)
                 || Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_6,
                 mSurvey)) {
-            return 3;
+            return 6;
         } else if (Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_9,
                 mSurvey)) {
             return 9;

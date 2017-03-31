@@ -41,6 +41,7 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         PreferencesState.getInstance().saveStringPreference(R.string.org_unit,
                 "");
 
+
         new PopulateDBStrategy().logoutWipe();
 
         deleteOrgUnitQuestionOptions();
@@ -51,7 +52,7 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
     @Override
     public void login(Credentials credentials, IDataSourceCallback<UserAccount> callback) {
 
-        User user = new User(credentials.getUsername(), credentials.getUsername());
+        User user = new User(credentials.getUserUid(), credentials.getUsername());
 
         User.insertLoggedUser(user);
 

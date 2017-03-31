@@ -45,7 +45,7 @@ public class AnnouncementMessageDialog {
     }
 
     public static void checkUserClosed(User user, Context context) {
-        if (user.getClose_date() != null && user.getClose_date().before(new Date())) {
+        if (user.getCloseDate() != null && user.getCloseDate().before(new Date())) {
             closeUser(R.string.admin_announcement,
                     PreferencesState.getInstance().getContext().getString(R.string.user_close),
                     context);

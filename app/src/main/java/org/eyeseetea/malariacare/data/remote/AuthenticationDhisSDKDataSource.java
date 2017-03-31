@@ -80,18 +80,7 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                         @Override
                         public void call(
                                 org.hisp.dhis.client.sdk.models.user.UserAccount dhisUserAccount) {
-                            if (credentials.getUsername().equals(
-                                    PreferencesState.getInstance().getContext().getString(
-                                            R.string.user_push))) {
-                                SharedPreferences sharedPreferences = mContext.getSharedPreferences(
-                                        mContext.getString(R.string.announcement_preferences),
-                                        Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString(mContext.getString(R.string.uid_user_push),
-                                        dhisUserAccount.getUId());
-                                editor.commit();
-                            }
-                            UserAccount userAccount = new UserAccount(credentials.getUsername(),
+                            UserAccount userAccount = new UserAccount(credentials.getUsername(), dhisUserAccount.getUId(),
                                     credentials.isDemoCredentials());
                             callback.onSuccess(userAccount);
                         }

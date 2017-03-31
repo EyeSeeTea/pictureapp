@@ -156,19 +156,19 @@ public class User extends BaseModel {
         this.announcement = announcement;
     }
 
-    public Date getClose_date() {
+    public Date getCloseDate() {
         return close_date;
     }
 
-    public void setClose_date(Date close_date) {
+    public void setCloseDate(Date close_date) {
         this.close_date = close_date;
     }
 
-    public Date getLast_updated() {
+    public Date getLastUpdated() {
         return last_updated;
     }
 
-    public void setLast_updated(Date last_updated) {
+    public void setLastUpdated(Date last_updated) {
         this.last_updated = last_updated;
     }
 

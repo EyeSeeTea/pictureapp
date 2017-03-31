@@ -70,6 +70,7 @@ public class AuthenticationManager implements IAuthenticationManager {
         userAccountRemoteDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount result) {
+                credentials.setUserUid(result.getUserUid());
                 localLogin(credentials, callback);
             }
 

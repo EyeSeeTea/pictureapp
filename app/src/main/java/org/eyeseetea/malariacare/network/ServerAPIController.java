@@ -694,16 +694,10 @@ public class ServerAPIController {
 
     public static User pullUserAttributes(User loggedUser) {
         String lastMessage = loggedUser.getAnnouncement();
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = context.getSharedPreferences(
-                context.getString(R.string.announcement_preferences),
-                Context.MODE_PRIVATE);
-        String uid = sharedPreferences.getString(context.getString(R.string.uid_user_push), "");
-
+        String uid = loggedUser.getUid();
         String url =
                 PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
                         QUERY_USER_ATTRIBUTES, uid);
-
         url = encodeBlanks(url);
         try {
             Response response = ServerAPIController.executeCall(null, url, "GET");
@@ -734,9 +728,9 @@ public class ServerAPIController {
                 PreferencesState.getInstance().setUserAccept(false);
             }
             if (closeDate == null || closeDate.equals("")) {
-                loggedUser.setClose_date(null);
+                loggedUser.setCloseDate(null);
             } else {
-                loggedUser.setClose_date(Utils.parseStringToCalendar(closeDate,
+                loggedUser.setCloseDate(Utils.parseStringToCalendar(closeDate,
                         DHIS2_GMT_NEW_DATE_FORMAT).getTime());
             }
 
@@ -748,21 +742,15 @@ public class ServerAPIController {
         return loggedUser;
     }
 
-    public static boolean isUserClosed(User loggedUser) {
+    public static boolean isUserClosed(String userUid) {
         if (Session.getCredentials().isDemoCredentials()) {
             return false;
         }
 
-        Context context = PreferencesState.getInstance().getContext();
-        SharedPreferences sharedPreferences = context.getSharedPreferences(
-                context.getString(R.string.announcement_preferences),
-                Context.MODE_PRIVATE);
-        String uid = sharedPreferences.getString(context.getString(R.string.uid_user_push), "");
-
         //Lets for a last event with that orgunit/program
         String url =
                 PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
-                        QUERY_USER_ATTRIBUTES, uid);
+                        QUERY_USER_ATTRIBUTES, userUid);
 
         url = encodeBlanks(url);
         Date closedDate = null;

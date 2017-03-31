@@ -54,8 +54,8 @@ import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -121,6 +121,21 @@ public class DashboardActivity extends BaseActivity {
                                 .setMessage(dialogMessage)
                                 .setNeutralButton(android.R.string.ok, null)
                                 .create().show();
+                    }
+                });
+            }
+        }, 1000);
+    }
+    //Show dialog exception from class without activity.
+    public static void closeUserFromService(final int title, final String errorMessage) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Run your task here
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        AnnouncementMessageDialog.closeUser(title, errorMessage, dashboardActivity);
                     }
                 });
             }
@@ -738,7 +753,7 @@ public class DashboardActivity extends BaseActivity {
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-                finishAndGo(LoginActivity.class);
+                DashboardActivityStrategy.onLogoutSuccess();
             }
 
             @Override
@@ -746,6 +761,11 @@ public class DashboardActivity extends BaseActivity {
                 Log.e("." + this.getClass().getSimpleName(), message);
             }
         });
+    }
+
+    public void closeUser() {
+        AnnouncementMessageDialog.closeUser(R.string.admin_announcement,
+                PreferencesState.getInstance().getContext().getString(R.string.user_close), DashboardActivity.dashboardActivity);
     }
 
     public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {
@@ -771,7 +791,6 @@ public class DashboardActivity extends BaseActivity {
                     AnnouncementMessageDialog.showAnnouncement(R.string.admin_announcement,
                             loggedUser.getAnnouncement(),
                             DashboardActivity.this);
-                    //show model dialog
                 } else {
                     AnnouncementMessageDialog.checkUserClosed(loggedUser, DashboardActivity.this);
                 }

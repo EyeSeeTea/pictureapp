@@ -199,6 +199,7 @@ public class LoginActivity extends AbsLoginActivity {
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {
+                PreferencesState.getInstance().setUserAccept(false);
                 AsyncPullAnnouncement asyncPullAnnouncement = new AsyncPullAnnouncement();
                 asyncPullAnnouncement.execute(LoginActivity.this);
             }
@@ -307,7 +308,7 @@ public class LoginActivity extends AbsLoginActivity {
         @Override
         protected Void doInBackground(LoginActivity... params) {
             loginActivity = params[0];
-            isUserClosed = ServerAPIController.isUserClosed(Session.getUser());
+            isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
             return null;
         }
 
@@ -316,7 +317,7 @@ public class LoginActivity extends AbsLoginActivity {
             super.onPostExecute(aVoid);
             hideProgressBar();
             if (isUserClosed) {
-                Log.d("USER CLosed", "user closed");
+                Log.d(TAG, "user closed");
                 AnnouncementMessageDialog.closeUser(R.string.admin_announcement,
                         PreferencesState.getInstance().getContext().getString(R.string.user_close),
                         LoginActivity.this);

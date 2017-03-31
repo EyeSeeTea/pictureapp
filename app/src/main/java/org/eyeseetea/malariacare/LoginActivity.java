@@ -223,6 +223,9 @@ public class LoginActivity extends AbsLoginActivity {
     public void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
+    public void showError(int message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
 
     @Override
     public void onBackPressed() {

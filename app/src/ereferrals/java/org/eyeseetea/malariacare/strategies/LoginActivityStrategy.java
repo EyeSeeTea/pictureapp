@@ -18,6 +18,7 @@ import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.CheckCredentialsWithOrgUnitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
@@ -137,7 +138,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
     @Override
-    public void onLoginSuccess(Credentials credentials) {
+    public void onLoginSuccess(final Credentials credentials) {
         PullController pullController = new PullController(loginActivity);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
@@ -150,11 +151,24 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
-                //TODO check credentials match with a OrgUnit
-                loginActivity.hideProgressBar();
-                finishAndGo(DashboardActivity.class);
-            }
+                CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
+                        new CheckCredentialsWithOrgUnitUseCase();
+                checkCredentialsWithOrgUnitUseCase.execute(credentials,
+                        new CheckCredentialsWithOrgUnitUseCase.Callback() {
+                            @Override
+                            public void onCorrectCredentials() {
+                                loginActivity.hideProgressBar();
+                                finishAndGo(DashboardActivity.class);
+                            }
 
+                            @Override
+                            public void onBadCredentials() {
+                                loginActivity.hideProgressBar();
+                                loginActivity.showError(R.string.login_invalid_credentials);
+                            }
+                        });
+
+            }
             @Override
             public void onStep(PullStep step) {
                 Log.d(this.getClass().getSimpleName(), step.toString());
@@ -164,24 +178,21 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onError(String message) {
                 loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), message);
-                loginActivity.showError("onError");
-                //TODO put message in strings
+                loginActivity.showError(R.string.dialog_title_error);
             }
 
             @Override
             public void onPullConversionError() {
                 loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull conversion error");
-                loginActivity.showError("conversion error");
-                //TODO put message in strings
+                loginActivity.showError(R.string.dialog_pull_error);
             }
 
             @Override
             public void onCancel() {
                 loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull cancel");
-                loginActivity.showError("pull canceled");
-                //TODO put message in strings
+                loginActivity.showError(R.string.cancellingPull);
             }
 
             @Override
@@ -191,7 +202,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 loginActivity.showError(loginActivity.getString(R.string.network_error));
             }
         });
-
-
     }
+
+
 }

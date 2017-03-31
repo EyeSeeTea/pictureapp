@@ -200,4 +200,8 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
         ConvertFromSDKVisitorStrategy.visit(categoryOptionGroupExtended);
     }
+
+    public void setOrgUnits(List<OrgUnit> allOrgUnitsInDB) {
+        orgUnits = allOrgUnitsInDB;
+    }
 }

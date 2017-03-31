@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.domain.entity;
 
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.hisp.dhis.client.sdk.android.api.D2;
 
 public class Credentials {
@@ -59,11 +60,9 @@ public class Credentials {
     }
 
     public boolean isLogged() {
-        //// FIXME: 21/03/2017 It should be review on the lao/cambodia user login
-        try {
-            return D2.me().isSignedIn().toBlocking().first();
-        } catch (UnsupportedOperationException e) {
-            return false;
+        if(!PreferencesState.getInstance().getOrgUnit().isEmpty()) {
+            return true;
         }
+        return false;
     }
 }

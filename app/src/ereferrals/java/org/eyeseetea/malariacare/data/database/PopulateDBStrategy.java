@@ -133,6 +133,7 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
         }
     }
 
+
     @Override
     public void createDummyOrganisationInDB() {
         Partner testOrganisation = new Partner();

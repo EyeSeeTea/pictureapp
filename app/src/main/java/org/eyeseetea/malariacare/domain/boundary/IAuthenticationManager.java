@@ -14,7 +14,7 @@ public interface IAuthenticationManager {
 
     void login(Credentials credentials, Callback<UserAccount> callback);
 
-    void login(String url, Callback<UserAccount> callback);
+    void hardcodedLogin(String url, Callback<UserAccount> callback);
 
     void logout(Callback<Void> callback);
 }

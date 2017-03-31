@@ -271,6 +271,7 @@ public class SettingsActivity extends PreferenceActivity implements
                 mSettingsActivityStrategy.getOnPreferenceClickListener());
         autoCompleteEditTextPreference.pullOrgUnits();
 
+        autoCompleteEditTextPreference.setContext(this);
         serverUrlPreference = (Preference) findPreference(
                 getApplicationContext().getResources().getString(R.string.dhis_url));
         serverUrlPreference.setOnPreferenceClickListener(

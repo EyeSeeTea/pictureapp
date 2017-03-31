@@ -4,8 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.squareup.okhttp.Credentials;
 
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.authentication.ReadConfig;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 
 public class AuthenticationApi {
@@ -25,13 +24,11 @@ public class AuthenticationApi {
 
     @NonNull
     static String getHardcodedApiUser() {
-        return PreferencesState.getInstance().getContext().getResources().getString(
-                R.string.user_push);
+        return ReadConfig.getUser();
     }
 
     @NonNull
     static String getHardcodedApiPass() {
-        return PreferencesState.getInstance().getContext().getResources().getString(
-                R.string.pass_push);
+        return ReadConfig.getPassword();
     }
 }

@@ -82,7 +82,7 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
         });
     }
 
-    private void validateAnswer(Context context) {
+    public void validateAnswer(Context context) {
         if(!isClicked) {
             isClicked = true;
             try {

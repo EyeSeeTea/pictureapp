@@ -10,8 +10,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class PopulateDBStrategy implements IPopulateDBStrategy {
+    @Override
+    public void createDummyOrganisationInDB() {
+    }
 
-    public static void createDummyOrganisationInDB() {
+    @Override
+    public void createDummyOrgUnitsDataInDB(Context context) {
+
     }
 
     public void init() {
@@ -21,5 +26,10 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
             FileNotFoundException {
         AssetManager assetMgr = context.getAssets();
         return assetMgr.open(table);
+    }
+
+    @Override
+    public void logoutWipe() {
+
     }
 }

@@ -128,7 +128,7 @@ public class Treatment {
             if (Session.getCredentials().isDemoCredentials()) {
                 return treatmentMatch.getTreatment();
             }
-            if (treatmentMatch.getTreatment().getOrganisation().getId_organisation() ==
+            if (treatmentMatch.getTreatment().getPartner().getId_partner() ==
                     Session.getUser().getOrganisation()) {
                 Log.d(TAG, "match: " + treatmentMatch.toString());
                 treatment = treatmentMatch.getTreatment();
@@ -300,6 +300,10 @@ public class Treatment {
     }
 
     private void saveTreatmentInTreatmentQuestion(
+            
+            //TODO: set value to hide question is realized without match relation
+            // because is a question of type label. This is unique and isolated case
+            // when exists one more case we should refactor this to more generic code
             org.eyeseetea.malariacare.data.database.model.Treatment treatment) {
         Question treatmentQuestionSend = TreatmentQueries.getDynamicTreatmentQuestion();
         Question treatmentQuestionShow = TreatmentQueries.getTreatmentDiagnosisVisibleQuestion();

@@ -15,10 +15,6 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
-/**
- * Created by idelcano on 09/01/2017.
- */
-
 public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView implements
         IQuestionView,
         IMultiQuestionView {

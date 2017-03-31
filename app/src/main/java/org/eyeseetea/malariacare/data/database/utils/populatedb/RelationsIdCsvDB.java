@@ -11,15 +11,15 @@ import org.eyeseetea.malariacare.data.database.model.Header;
 import org.eyeseetea.malariacare.data.database.model.Match;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
+import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
+import org.eyeseetea.malariacare.data.database.model.StringKey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -231,20 +231,20 @@ public class RelationsIdCsvDB {
         return questionThresholdFK;
     }
 
-    static HashMap<Long, Organisation> getOrganisationIdRelationCsvDB(Context context)
+    static HashMap<Long, Partner> getOrganisationIdRelationCsvDB(Context context)
             throws IOException {
-        HashMap<Long, Organisation> organisationFK = new HashMap<>();
-        List<Organisation> organisations = Organisation.getAllOrganisations();
+        HashMap<Long, Partner> organisationFK = new HashMap<>();
+        List<Partner> partners = Partner.getAllOrganisations();
         List<Long> csvIds = new ArrayList<>();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(context.openFileInput(PopulateDB.ORGANISATIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.PARTNER_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String[] idToAdd;
         while ((idToAdd = reader.readNext()) != null) {
             csvIds.add(Long.parseLong(idToAdd[0]));
         }
-        for (int i = 0; i < organisations.size() && i < csvIds.size(); i++) {
-            organisationFK.put(csvIds.get(i), organisations.get(i));
+        for (int i = 0; i < partners.size() && i < csvIds.size(); i++) {
+            organisationFK.put(csvIds.get(i), partners.get(i));
         }
         return organisationFK;
     }

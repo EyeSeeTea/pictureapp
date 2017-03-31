@@ -257,6 +257,49 @@ public class PreferencesState {
         saveStringPreference(R.string.data_limited_by_date, value);
     }
 
+    public boolean getMetaDataDownload() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.meta_data_download), true);
+    }
+
+    public void setMetaDataDownload(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.meta_data_download),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+
+    public boolean getPullDataAfterMetadata() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.pull_data_after_metadata), false);
+    }
+
+    public void setPullDataAfterMetadata(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.pull_data_after_metadata),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+    public boolean getDataFilteredByOrgUnit() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.data_filtered_by_preference_org_unit), true);
+    }
+
+    public void setDataFilteredByOrgUnit(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.data_filtered_by_preference_org_unit),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
     public void onCreateActivityPreferences(Resources resources, Resources.Theme theme) {
         loadsLanguageInActivity();
         if (theme != null) {
@@ -323,5 +366,12 @@ public class PreferencesState {
             return false;
         }
         return true;
+    }
+    public boolean downloadMetaData () {
+        return getMetaDataDownload();
+    }
+
+    public void setDataLimitedByPreferenceOrgUnit(boolean value) {
+        setDataFilteredByOrgUnit(value);
     }
 }

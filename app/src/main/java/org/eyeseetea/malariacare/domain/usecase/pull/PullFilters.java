@@ -9,6 +9,9 @@ public class PullFilters {
     int maxEvents;
     boolean isDemo;
     boolean downloadData;
+    boolean downloadMetaData;
+    String dataByOrgUnit;
+    boolean pullDataAfterMetadata;
 
     public Date getStartDate() {
         return startDate;
@@ -46,7 +49,30 @@ public class PullFilters {
         return downloadData;
     }
 
-    public void setDownloadData(boolean downloadData) {
+    public void setDownloadDataRequired(boolean downloadData) {
         this.downloadData = downloadData;
+    }
+
+    public void setPullMetaData(boolean downloadMetaData) {
+        this.downloadMetaData = downloadMetaData;
+    }
+    public boolean pullMetaData() {
+        return downloadMetaData;
+    }
+
+    public String getDataByOrgUnit() {
+        return dataByOrgUnit;
+    }
+
+    public void setDataByOrgUnit(String dataByOrgUnit) {
+        this.dataByOrgUnit
+                = dataByOrgUnit;
+    }
+
+    public void setPullDataAfterMetadata(boolean pullDataAfterMetadata) {
+        this.pullDataAfterMetadata = pullDataAfterMetadata;
+    }
+    public boolean pullDataAfterMetadata() {
+        return pullDataAfterMetadata;
     }
 }

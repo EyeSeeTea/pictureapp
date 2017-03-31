@@ -8,10 +8,8 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.domain.entity.PositiveNumber;
 import org.eyeseetea.malariacare.domain.entity.PositiveOrZeroNumber;
 import org.eyeseetea.malariacare.domain.entity.Validation;
-import org.eyeseetea.malariacare.domain.exception.InvalidPositiveNumberException;
 import org.eyeseetea.malariacare.domain.exception.InvalidPositiveOrZeroNumberException;
 import org.eyeseetea.malariacare.views.question.AKeyboardSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -82,7 +80,7 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
         });
     }
 
-    private void validateAnswer(Context context) {
+    protected void validateAnswer(Context context) {
         if(!isClicked) {
             isClicked = true;
             try {

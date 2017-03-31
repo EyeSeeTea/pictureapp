@@ -24,6 +24,7 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
@@ -35,6 +36,7 @@ import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
@@ -92,44 +94,43 @@ public class PullController implements IPullController {
             callback.onCancel();
             return;
         }
-
-        mPullRemoteDataSource.pullMetadata(
-                new IDataSourceCallback<List<OrganisationUnit>>() {
-                    @Override
-                    public void onSuccess(List<OrganisationUnit> organisationUnits) {
-                        if (!pullFilters.downloadData()) {
-                            convertFromSDK(callback, false);
-                        } else {
-                            pullData(pullFilters, organisationUnits, callback);
+        if(pullFilters.pullMetaData()) {
+            mPullRemoteDataSource.pullMetadata(
+                    new IDataSourceCallback<List<OrganisationUnit>>() {
+                        @Override
+                        public void onSuccess(List<OrganisationUnit> organisationUnits) {
+                            if (!pullFilters.downloadData() || pullFilters.pullDataAfterMetadata()) {
+                                convertMetaData(callback);
+                                callback.onComplete();
+                            } else {
+                                convertMetaData(callback);
+                                pullData(pullFilters, organisationUnits, callback);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                });
+                        @Override
+                        public void onError(Throwable throwable) {
+                            callback.onError(throwable);
+                        }
+                    });
+        }
+        else {
+            if (pullFilters.downloadData()) {
+                List<OrganisationUnit> organisationUnitsList = D2.me().organisationUnits().list().toBlocking().first();
+                pullData(pullFilters, organisationUnitsList, callback);
+            }
+            else{
+                callback.onComplete();
+            }
+        }
     }
 
     private void populateMetadataFromCsvs(boolean isDemo) throws IOException {
         PopulateDB.initDataIfRequired(mContext);
 
         if (isDemo) {
-            createDummyOrgUnitsDataInDB();
-            PopulateDBStrategy.createDummyOrganisationInDB();
-        }
-    }
-
-    private void createDummyOrgUnitsDataInDB() {
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-
-        if (orgUnits.size() == 0) {
-            try {
-                PopulateDB.populateDummyData(mContext);
-                OrgUnitToOptionConverter.convert();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            new PopulateDBStrategy().createDummyOrgUnitsDataInDB(mContext);
+            new PopulateDBStrategy().createDummyOrganisationInDB();
         }
     }
 
@@ -145,7 +146,8 @@ public class PullController implements IPullController {
                 new IDataSourceCallback<List<Event>>() {
                     @Override
                     public void onSuccess(List<Event> result) {
-                        convertFromSDK(callback, true);
+                        convertData(callback);
+                        callback.onComplete();
                     }
 
                     @Override
@@ -153,24 +155,6 @@ public class PullController implements IPullController {
                         callback.onError(throwable);
                     }
                 });
-    }
-
-
-    private void convertFromSDK(final Callback callback, boolean convertData) {
-        Log.d(TAG, "Converting SDK into APP data");
-
-        try {
-            convertMetaData(callback);
-
-            if (convertData) {
-                convertData(callback);
-            } else {
-                callback.onComplete();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            callback.onError(new PullConversionException());
-        }
     }
 
     private void convertMetaData(final Callback callback) {
@@ -182,17 +166,20 @@ public class PullController implements IPullController {
 
         callback.onStep(PullStep.CONVERT_METADATA);
         Log.d(TAG, "Converting organisationUnits...");
+        try {
+            List<OrganisationUnitExtended> assignedOrganisationsUnits =
+                    OrganisationUnitExtended.getExtendedList(
+                            (SdkQueries.getAssignedOrganisationUnits()));
+            for (OrganisationUnitExtended assignedOrganisationsUnit : assignedOrganisationsUnits) {
+                assignedOrganisationsUnit.accept(mConverter);
+            }
 
-        List<OrganisationUnitExtended> assignedOrganisationsUnits =
-                OrganisationUnitExtended.getExtendedList(
-                        (SdkQueries.getAssignedOrganisationUnits()));
-
-        for (OrganisationUnitExtended assignedOrganisationsUnit : assignedOrganisationsUnits) {
-            assignedOrganisationsUnit.accept(mConverter);
+            OrgUnitToOptionConverter.convert();
+            mPullControllerStrategy.convertMetadata(mConverter);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            callback.onError(new PullConversionException());
         }
-
-        OrgUnitToOptionConverter.convert();
-        mPullControllerStrategy.convertMetadata(mConverter);
     }
 
     private void convertData(final Callback callback) {
@@ -204,6 +191,12 @@ public class PullController implements IPullController {
 
         callback.onStep(PullStep.CONVERT_DATA);
 
-        mDataConverter.convert(callback, mConverter);
+        try {
+            mConverter.setOrgUnits(OrgUnit.getAllOrgUnit());
+            mDataConverter.convert(callback, mConverter);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            callback.onError(new PullConversionException());
+        }
     }
 }

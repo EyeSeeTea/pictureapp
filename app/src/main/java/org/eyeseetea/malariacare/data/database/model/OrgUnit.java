@@ -23,6 +23,7 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -282,5 +283,8 @@ public class OrgUnit extends BaseModel {
                 .from(OrgUnit.class)
                 .where(OrgUnit_Table.uid_org_unit
                         .is(UID)).querySingle();
+    }
+    public static boolean hasOrgUnits(){
+        return (SQLite.selectCountOf().from(OrgUnit.class).count() == 0);
     }
 }

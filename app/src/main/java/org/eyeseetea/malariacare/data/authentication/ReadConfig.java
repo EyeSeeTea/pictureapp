@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 public class ReadConfig {
     public static JSONObject mJSONObject;
     public static String name;
-    public static String credential;
+    public static String password;
 
 
     public static String getUser() {
@@ -29,16 +29,16 @@ public class ReadConfig {
     }
 
     public static String getPassword() {
-        if (credential != null) {
-            return credential;
+        if (password != null) {
+            return password;
         }
         init();
         try {
-            credential = mJSONObject.getString("credentials");
+            password = mJSONObject.getString("password");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return credential;
+        return password;
     }
 
 

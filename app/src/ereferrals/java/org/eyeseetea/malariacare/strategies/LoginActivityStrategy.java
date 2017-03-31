@@ -6,6 +6,9 @@ import android.support.design.widget.TextInputLayout;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -124,6 +127,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     @Override
     public void finishAndGo() {
         finishAndGo(ProgressActivity.class);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return false;
     }
 
 

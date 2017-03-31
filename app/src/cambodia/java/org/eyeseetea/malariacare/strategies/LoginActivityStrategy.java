@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.content.Intent;
+import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
@@ -16,10 +17,16 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(loginActivity, SettingsActivity.class);
-
-        intent.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
-
         loginActivity.startActivity(intent);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 
     @Override

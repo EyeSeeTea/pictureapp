@@ -33,6 +33,7 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -222,6 +223,12 @@ public class LoginActivity extends AbsLoginActivity {
 
     public void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        mLoginActivityStrategy.onOptionsItemSelected(item);
+
+        return super.onOptionsItemSelected(item);
     }
     public void showError(int message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();

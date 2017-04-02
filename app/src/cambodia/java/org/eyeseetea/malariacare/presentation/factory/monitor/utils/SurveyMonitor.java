@@ -61,6 +61,14 @@ public class SurveyMonitor {
      */
     final static Long ID_QUESTION_TREATMENT = 6l;
     /**
+     * Id of DHA_PIP question
+     */
+    final static Long ID_QUESTION_DHA_PIP_TREATMENT = 7l;
+    /**
+     * Id of ASMQ question
+     */
+    final static Long ID_QUESTION_ASMQ_TREATMENT = 8l;
+    /**
      * Id of referral treatment optionof treatment question
      */
     final static Long ID_OPTION_TREATMENT_REFERRAL = 14l;
@@ -69,13 +77,41 @@ public class SurveyMonitor {
      */
     private final static Long ID_OPTION_RDT_NOT_TESTED = 3l;
     /**
-     * Id of ASMQ treatment optionof treatment question
+     * Id of ASMQ treatment option of treatment question
      */
     private final static Long ID_OPTION_TREATMENT_ASMQ = 13l;
     /**
      * Id of DHA-PIP treatment option of treatment question
      */
     private final static Long ID_OPTION_TREATMENT_DHA_PIP = 12l;
+    /**
+     * Id of ASMQ 1,5 treatment option of treatment question
+     */
+    private final static Long ID_OPTION_TREATMENT_ASMQ_1_5 = 19l;
+    /**
+     * Id of ASMQ 3 treatment option of treatment question
+     */
+    private final static Long ID_OPTION_TREATMENT_ASMQ_3 = 20l;
+    /**
+     * Id of ASMQ 6 treatment option of treatment question
+     */
+    private final static Long ID_OPTION_TREATMENT_ASMQ_6 = 21l;
+    /**
+     * Id of DHA-PIP 4,5 treatment option of treatment question
+     */
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP_4_5 = 15l;
+    /**
+     * Id of DHA-PIP 6 treatment option of treatment question
+     */
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP_6 = 16l;
+    /**
+     * Id of DHA-PIP 9 treatment option of treatment question
+     */
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP_9 = 17l;
+    /**
+     * Id of DHA-PIP 12 treatment option of treatment question
+     */
+    private final static Long ID_OPTION_TREATMENT_DHA_PIP_12 = 18l;
 
     private Survey mSurvey;
 
@@ -156,10 +192,43 @@ public class SurveyMonitor {
     }
 
     /**
+     * Tells the value by event of the DHAPIP treatment
+     */
+    public int DHAPIPcount() {
+        if (Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_4_5, mSurvey)
+                || Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_6,
+                mSurvey)) {
+            return 6;
+        } else if (Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_9,
+                mSurvey)) {
+            return 9;
+        } else if (Option.findOption(ID_QUESTION_DHA_PIP_TREATMENT, ID_OPTION_TREATMENT_DHA_PIP_12,
+                mSurvey)) {
+            return 12;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * Tells if the given survey has Eurartesim treatment
      */
     public boolean isASMQ() {
         return Option.findOption(ID_QUESTION_TREATMENT, ID_OPTION_TREATMENT_ASMQ, mSurvey);
+    }
+
+    /**
+     * Tells the value by event of the ASMQ treatment
+     */
+    public int ASMQcount() {
+        if (Option.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_1_5, mSurvey)
+                || Option.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_3, mSurvey)) {
+            return 3;
+        } else if (Option.findOption(ID_QUESTION_ASMQ_TREATMENT, ID_OPTION_TREATMENT_ASMQ_6, mSurvey)) {
+            return 6;
+        } else {
+            return 0;
+        }
     }
 
     /**

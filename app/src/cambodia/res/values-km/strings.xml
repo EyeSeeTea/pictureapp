@@ -151,4 +151,6 @@
      <string name="survey_second_step">"សំណួរអគារ ..."</string> 
     <string name="survey_third_step">"ដើមឈើសំណួរអគារ ..."</string> 
     <string name="survey_fourth_step">"ការបង្កើតអេក្រង់ ..."</string>
+    <string name="admin_announcement">"Administrator announcement"</string>
+    <string name="user_close">"This user was closed by de administrator."</string>
 </resources>

@@ -72,6 +72,8 @@ public class PreferencesState {
      */
     private String dhisURL;
 
+    private boolean userAccept;
+
     private PreferencesState() {
     }
 
@@ -366,6 +368,25 @@ public class PreferencesState {
             return false;
         }
         return true;
+    }
+
+    public boolean isUserAccept() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        userAccept = sharedPreferences.getBoolean(
+                context.getResources().getString(R.string.user_accept_key),
+                false);
+        return userAccept;
+    }
+
+    public boolean setUserAccept(boolean isAccepted) {
+        this.userAccept = isAccepted;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.user_accept_key), isAccepted);
+        editor.commit();
+        return userAccept;
     }
     public boolean downloadMetaData () {
         return getMetaDataDownload();

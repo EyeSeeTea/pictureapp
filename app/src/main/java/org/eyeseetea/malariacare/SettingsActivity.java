@@ -342,6 +342,7 @@ public class SettingsActivity extends PreferenceActivity implements
         PreferencesState.getInstance().reloadPreferences();
         Class callerActivityClass = getCallerActivity();
         Intent returnIntent = new Intent(this, callerActivityClass);
+        returnIntent.putExtra(getString(R.string.show_announcement_key), SettingsActivityStrategy.showAnnouncementOnBackPressed());
         startActivity(returnIntent);
     }
 

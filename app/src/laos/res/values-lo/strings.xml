@@ -216,4 +216,6 @@
      <string name="survey_second_step">"ຄໍາຖາມກໍ່ສ້າງ ..."</string> 
     <string name="survey_third_step">"ຕົ້ນໄມ້ຖາມກໍ່ສ້າງ ..."</string> 
     <string name="survey_fourth_step">"ສ້າງຫນ້າຈໍ ..."</string>
+    <string name="admin_announcement">"ປະກາດບໍລິຫານ"</string>
+    <string name="user_close">"ຜູ້ໃຊ້ນີ້ໄດ້ປິດລົງໂດຍບໍລິຫານ."</string>
 </resources>

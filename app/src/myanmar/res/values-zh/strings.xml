@@ -176,11 +176,6 @@
 <string name="dynamic_error_age">"年龄无效"</string>
 <string name="dynamic_error_pregnant_month">"怀孕月份无效"</string>
 <string name="pref_header_general">"一般"</string>
-<string name="font_size_level0">"x小"</string>
-<string name="font_size_level1">"小"</string>
-<string name="font_size_level2">"中"</string>
-<string name="font_size_level3">"大"</string>
-<string name="font_size_level4">"x大"</string>
 <string name="dialog_title_push">"推送数据"</string>
 <string name="dialog_title_push_response">"推送响应"</string>
 <string name="dialog_info_push_ok">"调查数据推送到服务器。 结果："</string>

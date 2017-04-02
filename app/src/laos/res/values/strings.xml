@@ -36,11 +36,6 @@
     <string name="server_name">"DHIS Server URL"</string>
     <string name="settings_select_language">"Language"</string>
     <string name="pref_header_general">"General"</string>
-    <string name="font_size_level0">"xsmall"</string>
-    <string name="font_size_level1">"small"</string>
-    <string name="font_size_level2">"medium"</string>
-    <string name="font_size_level3">"large"</string>
-    <string name="font_size_level4">"xlarge"</string>
     <string name="dialog_title_push">"Pushing data"</string>
     <string name="dialog_title_push_response">"Push response"</string>
     <string name="dialog_info_push_ok">"Survey data pushed to server. Results:"</string>

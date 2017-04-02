@@ -28,8 +28,8 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.FontUtils;
+import org.eyeseetea.sdk.presentation.styles.FontStyle;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -54,7 +54,7 @@ public class PreferencesState {
     /**
      * Selected scale, one between [xsmall,small,medium,large,xlarge,system]
      */
-    private String scale;
+    private FontStyle fontStyle;
     /**
      * Flag that determines if numerator/denominator are shown in scores.
      */
@@ -111,12 +111,7 @@ public class PreferencesState {
     }
 
     public void reloadPreferences() {
-        if (context == null) {
-            Log.d(TAG, "reloadPreferences: "
-                    + " the context is null");
-            return;
-        }
-        scale = initScale();
+        fontStyle = initFontStyle();
         showNumDen = initShowNumDen();
         orgUnit = initOrgUnit();
         dhisURL = initDhisURL();
@@ -124,7 +119,7 @@ public class PreferencesState {
         Log.d(TAG, "reloadPreferences: "
                 + " orgUnit:" + orgUnit
                 + " |dhisURL:" + dhisURL
-                + " |scale:" + scale
+                + " |fontStyle:" + fontStyle.getTitle()
                 + " | showNumDen:" + showNumDen);
     }
 
@@ -157,19 +152,22 @@ public class PreferencesState {
                 instance.getContext().getString(R.string.DHIS_DEFAULT_SERVER));
     }
 
-    /**
-     * Inits scale according to preferences
-     */
-    private String initScale() {
+    private FontStyle initFontStyle() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
+
         if (sharedPreferences.getBoolean(instance.getContext().getString(R.string.customize_fonts),
                 false)) {
-            return sharedPreferences.getString(instance.getContext().getString(R.string.font_sizes),
-                    Constants.FONTS_SYSTEM);
+            String fontStyleId = sharedPreferences.getString(instance.getContext().getString(R.string.font_sizes),
+                    String.valueOf(FontStyle.Medium.getResId()));
+
+            for (FontStyle fontStyle:FontStyle.values()) {
+                if (fontStyle.getResId() == Integer.valueOf(fontStyleId))
+                    return fontStyle;
+            }
         }
 
-        return Constants.FONTS_SYSTEM;
+        return FontStyle.Medium;
     }
 
     /**
@@ -182,15 +180,12 @@ public class PreferencesState {
                 false);
     }
 
-    public String getScale() {
-        if (scale == null) {
-            scale = initScale();
-        }
-        return scale;
+    public FontStyle getFontStyle() {
+        return fontStyle;
     }
 
-    public void setScale(String value) {
-        this.scale = value;
+    public void setFontStyle(FontStyle fontStyle) {
+        this.fontStyle = fontStyle;
     }
 
     public boolean isShowNumDen() {

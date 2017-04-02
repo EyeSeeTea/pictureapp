@@ -190,11 +190,6 @@
 <string name="dynamic_error_age">"Invalid age"</string>
 <string name="dynamic_error_pregnant_month">"Invalid pregnant month"</string>
 <string name="pref_header_general">"General"</string>
-<string name="font_size_level0">"X small"</string>
-<string name="font_size_level1">"Small"</string>
-<string name="font_size_level2">"Medium"</string>
-<string name="font_size_level3">"Large"</string>
-<string name="font_size_level4">"X large"</string>
 <string name="dialog_title_push">"Pushing data"</string>
 <string name="dialog_title_push_response">"Push response"</string>
 <string name="dialog_info_push_ok">"Survey data pushed to server. Results:"</string>

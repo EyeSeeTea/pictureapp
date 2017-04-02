@@ -41,11 +41,6 @@
     <string name="server_name">"DHIS Server URL"</string>
     <string name="settings_select_language">"ພາສາ"</string>
     <string name="pref_header_general">"ທົ່ວໄປ"</string>
-    <string name="font_size_level0">"ນ້ອຍສຸດ"</string>
-    <string name="font_size_level1">"ນ້ອຍ"</string>
-    <string name="font_size_level2">"ປານກາງ"</string>
-    <string name="font_size_level3">"ໃຫ່ຍ"</string>
-    <string name="font_size_level4">"ໃຫ່ຍສຸດ"</string>
     <string name="dialog_title_push">"ກຳລັງໂຫຼດຂໍ້ມູນເຂົ້າໃນລະບົບ"</string>
     <string name="dialog_title_push_response">"ການຕອບສະຫນອງ"</string>
     <string name="dialog_info_push_ok">"ຂໍ້ມູນຖືກໂລດເຂົ້າເຊີເວີ"</string>

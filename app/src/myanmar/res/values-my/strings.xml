@@ -182,11 +182,6 @@
 <string name="dynamic_error_age">"အသက် မှားနေသည်။"</string>
 <string name="dynamic_error_pregnant_month">"မှားနေသောကိုယ်ဝန်လ"</string>
 <string name="pref_header_general">"ယေဘုယျ"</string>
-<string name="font_size_level0">"အလွန်သေး"</string>
-<string name="font_size_level1">"သေး"</string>
-<string name="font_size_level2">"အလတ်"</string>
-<string name="font_size_level3">"ကြီး"</string>
-<string name="font_size_level4">"အလွန်ကြီး"</string>
 <string name="dialog_title_push">"အချက်အလက်ပို့နေသည်"</string>
 <string name="dialog_title_push_response">"အချက်အလက်ပို့ပါ"</string>
 <string name="dialog_info_push_ok">"အချက်အလက်များကို ဆာဗာသို့ပို့ပြီးပါပြီ။ ရလဒ်မှာ:"</string>

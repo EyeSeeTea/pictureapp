@@ -17,10 +17,6 @@
 
     <string name="PUSH_PERIOD" translatable="false">10</string>
 
-    <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
-    <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
-    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
-
     <string name="font_size_system" translatable="false">system</string>
 
     <string name="settings_array_values_font_sizes_def" translatable="false">@string/font_size_level2</string>
@@ -80,15 +76,11 @@
     <string name="improve" translatable="false">Improve</string>
     <string name="monitor" translatable="false">Monitor</string>
     <string-array name="settings_array_titles_font_sizes" translatable="false">
-        <item>@string/font_extra_small</item>
-        <item>@string/font_small</item>
         <item>@string/font_medium</item>
         <item>@string/font_large</item>
         <item>@string/font_extra_large</item>
     </string-array>
     <string-array name="settings_array_values_font_sizes" translatable="false">
-        <item>@string/font_size_level0</item>
-        <item>@string/font_size_level1</item>
         <item>@string/font_size_level2</item>
         <item>@string/font_size_level3</item>
         <item>@string/font_size_level4</item>
@@ -98,6 +90,9 @@
 
     <string name="is_pushing_key" translatable="false">ispushing</string>
     <string name="data_limited_by_date" translatable="false">data_limited_by_date</string>
+    <string name="meta_data_download" translatable="false">meta_data_download</string>
+    <string name="pull_data_after_metadata" translatable="false">pull_data_after_metadata</string>
+    <string name="data_filtered_by_preference_org_unit" translatable="false">data_filtered_by_preference_org_unit</string>
 
     <string name="monitor_table_title_suspected_header" translatable="false">@string/monitoring_case_stats</string>
     <string name="monitor_table_title_stock_header" translatable="false">@string/consumption</string>

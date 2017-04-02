@@ -7,8 +7,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.PushController;
-import org.eyeseetea.malariacare.domain.usecase.MockedPushSurveysUseCase;
-import org.eyeseetea.malariacare.domain.usecase.PushUseCase;
+import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.services.PushService;
 
@@ -23,19 +22,6 @@ public abstract class APushServiceStrategy {
     }
 
     public abstract void push();
-
-
-    protected void executeMockedPush() {
-        MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase();
-
-        mockedPushSurveysUseCase.execute(new MockedPushSurveysUseCase.Callback() {
-            @Override
-            public void onPushFinished() {
-                Log.d(TAG, "onPushMockFinished");
-                mPushService.onPushFinished();
-            }
-        });
-    }
 
     protected void executePush() {
         PushController pushController = new PushController(mPushService);

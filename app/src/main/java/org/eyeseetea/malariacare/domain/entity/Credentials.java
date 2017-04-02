@@ -2,6 +2,9 @@ package org.eyeseetea.malariacare.domain.entity;
 
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.hisp.dhis.client.sdk.android.api.D2;
+
 public class Credentials {
     private static final String DEMO_USER = "demo";
     private static final String DEMO_SERVER = "demo.server";
@@ -56,4 +59,10 @@ public class Credentials {
                 password.hashCode();
     }
 
+    public boolean isLogged() {
+        if(!PreferencesState.getInstance().getOrgUnit().isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 }

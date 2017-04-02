@@ -8,10 +8,10 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.DropdownMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.LabelMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.NumberMultiQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.NumberRadioButtonMultiquestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PhoneMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PositiveNumberMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.PositiveOrZeroNumberMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.PregnantMonthNumberMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.RadioButtonMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.SwitchMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.TextMultiQuestionView;
@@ -38,6 +38,8 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
                 return new PositiveNumberMultiQuestionView(context);
             case Constants.POSITIVE_OR_ZERO_INT:
                 return new PositiveOrZeroNumberMultiQuestionView(context);
+            case Constants.PREGNANT_MONTH_INT:
+                return new PregnantMonthNumberMultiQuestionView(context);
             case Constants.RADIO_GROUP_HORIZONTAL:
                 return new RadioButtonMultiQuestionView(context);
             case Constants.QUESTION_LABEL:
@@ -47,10 +49,9 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
                 return new DropdownMultiQuestionView(context);
             case Constants.SWITCH_BUTTON:
                 return new SwitchMultiQuestionView(context);
-            case Constants.DYNAMIC_TREATMENT_SWITCH_NUMBER:
-                return new NumberRadioButtonMultiquestionView(context);
-        }
+            default:
+                return MultiQuestionViewFactoryStrategy.createQuestion(context,typeQuestion);
 
-        return null;
+        }
     }
 }

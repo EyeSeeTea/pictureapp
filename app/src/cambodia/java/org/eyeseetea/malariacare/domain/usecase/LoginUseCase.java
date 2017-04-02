@@ -39,7 +39,7 @@ public class LoginUseCase extends ALoginUseCase {
             @Override
             public void onSuccess(Void result) {
 
-                harcodedLogin(credentials, loginCallback);
+                hardcodedLogin(credentials, loginCallback);
             }
 
             @Override
@@ -49,8 +49,8 @@ public class LoginUseCase extends ALoginUseCase {
         });
     }
 
-    private void harcodedLogin(Credentials credentials, final Callback loginCallback) {
-        mAuthenticationManager.login(credentials.getServerURL(),
+    private void hardcodedLogin(Credentials credentials, final Callback loginCallback) {
+        mAuthenticationManager.hardcodedLogin(credentials.getServerURL(),
                 new IAuthenticationManager.Callback<UserAccount>() {
 
                     @Override

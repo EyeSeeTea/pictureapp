@@ -30,6 +30,7 @@
 ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈ011 771 811"</string>
     <string name="dynamic_error_phone_format">"បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ ( 0NN NNN NNN{N} )"</string>
     <string name="dynamic_error_age">"អាយុមិនត្រឹមត្រូវ"</string>
+    <string name="dynamic_error_pregnant_month">"ខែមិនត្រឹមត្រូវមានផ្ទៃពោះ"</string>
     <string name="app_settings">"ការកំនត់"</string>
     <string name="fonts_customise">"ប្តូរពុម្ពអក្សរ?"</string>
     <string name="font_size">"ទំហំពុម្ពអក្សរ"</string>

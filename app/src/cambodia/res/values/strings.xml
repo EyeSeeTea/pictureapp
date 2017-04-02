@@ -149,6 +149,7 @@
     <string name="error_conflict_title">"Error"</string>
     <string name="confirmation_really_exit_title">"Really Exit?"</string>
     <string name="confirmation_really_exit">"Are you sure you want to exit the app?"</string>
+    <string name="run_in_demo_mode">"Run in demo mode"</string>
     <string name="survey_first_step">"Retrieving questions..."</string>
      <string name="survey_second_step">"Building questions..."</string> 
     <string name="survey_third_step">"Building questions tree..."</string> 

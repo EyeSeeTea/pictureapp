@@ -141,14 +141,14 @@ public class PreferencesState {
     /**
      * Returns 'org_unit' from sharedPreferences
      */
-    private String initOrgUnit() {
+    public String initOrgUnit() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
         return sharedPreferences.getString(instance.getContext().getString(R.string.org_unit), "");
     }
 
     /**
-     * Returns 'org_unit' from sharedPreferences
+     * Returns 'DhisURL' from sharedPreferences
      */
     private String initDhisURL() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(

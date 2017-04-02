@@ -331,4 +331,5 @@
 <string name="survey_fourth_step">"စစ်တမ်းဖန်တီးနေ..."</string>
 <string name="admin_announcement">"အုပ်ချုပ်ရေးမှူးကြေညာချက်"</string>
 <string name="user_close">"ဤအသုံးပြုသူသည်က de စီမံအုပ်ချုပ်သူကပိတ်ထားခဲ့ခြင်းဖြစ်သည်။"</string>
+<string name="run_in_demo_mode">"သရုပ်ပြ mode မှာ Run"</string>
 </resources>

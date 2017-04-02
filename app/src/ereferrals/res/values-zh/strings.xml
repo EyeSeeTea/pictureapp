@@ -321,4 +321,5 @@
 <string name="confirmation_really_exit">"您确定要退出应用程序吗？"</string>
 <string name="admin_announcement">"管理员公告"</string>
 <string name="user_close">"该用户被管理员关闭。"</string>
+<string name="run_in_demo_mode">"在演示模式下运行"</string>
 </resources>

@@ -319,4 +319,6 @@
 <string name="false_option_identifier">"没有"</string>
 <string name="confirmation_really_exit_title">"真的退出吗？"</string>
 <string name="confirmation_really_exit">"您确定要退出应用程序吗？"</string>
+<string name="admin_announcement">"管理员公告"</string>
+<string name="user_close">"该用户被管理员关闭。"</string>
 </resources>

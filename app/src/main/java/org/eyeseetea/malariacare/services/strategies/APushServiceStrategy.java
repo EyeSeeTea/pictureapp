@@ -65,6 +65,11 @@ public abstract class APushServiceStrategy {
             public void onInformativeError(String message) {
                 showInDialog(message);
             }
+
+            @Override
+            public void onClosedUser() {
+                closeUserLogout();
+            }
         });
     }
 
@@ -77,5 +82,10 @@ public abstract class APushServiceStrategy {
         DashboardActivity.dashboardActivity.showException(
                 PreferencesState.getInstance().getContext().getString(
                         R.string.error_conflict_title), message);
+    }
+
+    public void closeUserLogout() {
+        DashboardActivity.dashboardActivity.closeUserFromService(R.string.admin_announcement,
+                PreferencesState.getInstance().getContext().getString(R.string.user_close));
     }
 }

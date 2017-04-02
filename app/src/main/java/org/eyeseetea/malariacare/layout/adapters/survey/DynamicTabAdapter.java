@@ -191,7 +191,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private NavigationController initNavigationController() {
         NavigationController navigationController = Session.getNavigationController();
-        navigationController.next(null);
+        navigationController.first();
         return navigationController;
     }
 

@@ -19,8 +19,6 @@
 
 package org.eyeseetea.malariacare.data.database.utils;
 
-import static java.lang.reflect.Array.getInt;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -30,8 +28,8 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.views.FontUtils;
 import org.eyeseetea.sdk.presentation.styles.FontStyle;
-import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.Calendar;
 import java.util.Date;

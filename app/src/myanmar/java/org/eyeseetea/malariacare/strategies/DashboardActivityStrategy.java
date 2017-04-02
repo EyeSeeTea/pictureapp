@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.DashboardActivity;
+import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -133,15 +135,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
             survey.getValuesFromDB();
             //Exit + InProgress -> delete
             if (isBackPressed && isInProgress) {
-                if (survey.isStockSurvey()) {
-                    Session.setStockSurvey(null);
-                } else {
-                    Session.setMalariaSurvey(null);
-                }
+                new SurveyFragmentStrategy().removeSurveysInSession();
                 survey.delete();
                 isBackPressed = false;
             }
         }
         return isBackPressed;
+    }
+
+    public static void onLogoutSuccess() {
+        DashboardActivity.dashboardActivity.finishAndGo(LoginActivity.class);
     }
 }

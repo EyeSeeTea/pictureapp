@@ -212,7 +212,7 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
      * Register a survey receiver to load surveys into the listadapter
      */
     public void registerFragmentReceiver() {
-        Log.d(TAG, "registerFragmentReceiver");
+        Log.d(TAG, "initializeSurvey");
 
         if (surveyReceiver == null) {
             surveyReceiver = new SurveyReceiver();
@@ -252,11 +252,8 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
         Log.d(TAG, "reloadSurveys (Thread: " + Thread.currentThread().getId() + "): "
                 + newListSurveys.size());
         this.surveys.clear();
-        for (Survey survey : newListSurveys) {
-            if (!survey.isStockSurvey()) {
-                this.surveys.add(survey);
-            }
-        }
+        this.surveys.addAll(newListSurveys);
+
         this.adapter.notifyDataSetChanged();
         if (viewCreated) {
             LayoutUtils.measureListViewHeightBasedOnChildren(getListView());

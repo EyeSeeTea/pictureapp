@@ -31,6 +31,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.sdk.presentation.styles.FontStyle;
+import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -72,6 +73,8 @@ public class PreferencesState {
      * Specified DHIS2 Server
      */
     private String dhisURL;
+
+    private boolean userAccept;
 
     private PreferencesState() {
     }
@@ -135,14 +138,14 @@ public class PreferencesState {
     /**
      * Returns 'org_unit' from sharedPreferences
      */
-    private String initOrgUnit() {
+    public String initOrgUnit() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
         return sharedPreferences.getString(instance.getContext().getString(R.string.org_unit), "");
     }
 
     /**
-     * Returns 'org_unit' from sharedPreferences
+     * Returns 'DhisURL' from sharedPreferences
      */
     private String initDhisURL() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
@@ -253,6 +256,56 @@ public class PreferencesState {
         saveStringPreference(R.string.data_limited_by_date, value);
     }
 
+    public boolean getMetaDataDownload() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.meta_data_download), true);
+    }
+
+    public void setMetaDataDownload(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.meta_data_download),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+
+    public boolean getPullDataAfterMetadata() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.pull_data_after_metadata), false);
+    }
+
+    public void setPullDataAfterMetadata(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.pull_data_after_metadata),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+    public boolean getDataFilteredByOrgUnit() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.data_filtered_by_preference_org_unit), true);
+    }
+
+    public void setDataFilteredByOrgUnit(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.data_filtered_by_preference_org_unit),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+    public void onCreateActivityPreferences(Resources resources, Resources.Theme theme) {
+        loadsLanguageInActivity();
+        if (theme != null) {
+            FontUtils.applyFontStyleByPreference(resources, theme);
+        }
+    }
+
     public void loadsLanguageInActivity() {
         if (languageCode.equals("")) {
             return;
@@ -312,5 +365,31 @@ public class PreferencesState {
             return false;
         }
         return true;
+    }
+
+    public boolean isUserAccept() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        userAccept = sharedPreferences.getBoolean(
+                context.getResources().getString(R.string.user_accept_key),
+                false);
+        return userAccept;
+    }
+
+    public boolean setUserAccept(boolean isAccepted) {
+        this.userAccept = isAccepted;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.user_accept_key), isAccepted);
+        editor.commit();
+        return userAccept;
+    }
+    public boolean downloadMetaData () {
+        return getMetaDataDownload();
+    }
+
+    public void setDataLimitedByPreferenceOrgUnit(boolean value) {
+        setDataFilteredByOrgUnit(value);
     }
 }

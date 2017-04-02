@@ -17,6 +17,7 @@ import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.services.PushService;
+import org.eyeseetea.malariacare.strategies.SurveyCheckerStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
@@ -29,13 +30,6 @@ import java.util.Date;
 import java.util.List;
 
 public class SurveyChecker {
-
-    private static String mCategoryOptionUID;
-
-    private static final String DHIS_CHECK_EVENT_API =
-            "/api/events.json?program=%s&orgUnit=%s&startDate=%s&endDate=%s&attributeCos=%s"
-                    + "&attributeCc=%s&skipPaging=true"
-                    + "&fields=event,orgUnit,program,dataValues";
     private static String TAG = ".CheckSurveys";
 
     /**
@@ -73,12 +67,10 @@ public class SurveyChecker {
             String DHIS_URL = PreferencesState.getInstance().getDhisURL();
             String startDate = EventExtended.format(minDate, EventExtended.AMERICAN_DATE_FORMAT);
             String endDate = EventExtended.format(
-                    new Date(maxDate.getTime() + (8 * 24 * 60 * 60 * 1000)),
+            new Date(maxDate.getTime() + (8 * 24 * 60 * 60 * 1000)),
                     EventExtended.AMERICAN_DATE_FORMAT);
-            String url = String.format(DHIS_URL + DHIS_CHECK_EVENT_API, program, orgUnit, startDate,
-                    endDate, getCategoryOptionUIDByCurrentUser(),
-                    PreferencesState.getInstance().getContext().getString(
-                            R.string.category_combination));
+            String url = SurveyCheckerStrategy.getApiEventUrl(DHIS_URL, program, orgUnit, startDate,
+                    endDate);
             Log.d(TAG, url);
             url = ServerAPIController.encodeBlanks(url);
 
@@ -160,14 +152,6 @@ public class SurveyChecker {
             eventExtendedList.add(eventExtended);
         }
         return eventExtendedList;
-    }
-
-    private static String getCategoryOptionUIDByCurrentUser() {
-        if (mCategoryOptionUID == null) {
-            mCategoryOptionUID = SdkQueries.getCategoryOptionUIDByCurrentUser();
-        }
-
-        return mCategoryOptionUID;
     }
 
     public static void updateQuarantineSurveysStatus(List<EventExtended> events, Survey survey) {

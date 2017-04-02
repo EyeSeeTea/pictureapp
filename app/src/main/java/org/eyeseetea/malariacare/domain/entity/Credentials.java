@@ -2,11 +2,14 @@ package org.eyeseetea.malariacare.domain.entity;
 
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+
 public class Credentials {
     private static final String DEMO_USER = "demo";
     private static final String DEMO_SERVER = "demo.server";
 
     private String username;
+    private String userUid;
     private String password;
     private String serverURL;
 
@@ -34,6 +37,14 @@ public class Credentials {
         return password;
     }
 
+    public String getUserUid() {
+        return userUid;
+    }
+
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
+    }
+
     public boolean isDemoCredentials() {
         return this.equals(Credentials.createDemoCredentials());
     }
@@ -55,5 +66,4 @@ public class Credentials {
                 username.hashCode() *
                 password.hashCode();
     }
-
 }

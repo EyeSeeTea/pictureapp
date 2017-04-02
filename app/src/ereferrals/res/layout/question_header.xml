@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_question_header"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/dashboard_row_padding"
+    android:paddingRight="@dimen/dashboard_row_padding"
+    android:paddingTop="@dimen/dashboard_row_padding">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginLeft="@dimen/top_separator_line"
+        android:layout_marginRight="@dimen/top_separator_line"
+        android:background="@drawable/top_border" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/top_separator_line"
+            android:layout_marginRight="@dimen/top_separator_line"
+            android:gravity="top"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/top_separator_line"
+            android:paddingRight="@dimen/top_separator_line">
+
+            <org.eyeseetea.sdk.presentation.views.CustomTextView
+                android:id="@+id/question_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="@dimen/top_separator_line"
+                android:layout_marginRight="@dimen/top_separator_line"
+                android:gravity="left|top"
+                android:text="@string/new_case_title"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/question_header_title"
+                android:textSize="?attr/font_medium"
+                app:font_name="@string/condensed_font_name" />
+
+            <include layout="@layout/vertical_divisor_view" />
+
+        </LinearLayout>
+
+        <org.eyeseetea.sdk.presentation.views.CustomTextView
+            android:id="@+id/question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="@dimen/top_separator_line"
+            android:gravity="right|top"
+            android:paddingRight="@dimen/top_separator_line"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/question_header_subtitle"
+            android:textSize="?attr/font_small"
+            app:font_name="@string/condensed_font_name" />
+    </LinearLayout>
+</LinearLayout>

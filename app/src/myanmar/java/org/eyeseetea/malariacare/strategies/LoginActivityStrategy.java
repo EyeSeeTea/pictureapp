@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.strategies;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -13,12 +14,16 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.hisp.dhis.client.sdk.ui.views.FontButton;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
@@ -109,7 +114,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private void executePullDemo() {
         PullController pullController = new PullController(loginActivity);
-        PullUseCase pullUseCase = new PullUseCase(pullController);
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+
+        PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
 
         PullFilters pullFilters = new PullFilters();
         pullFilters.setDemo(true);
@@ -162,4 +170,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public void finishAndGo() {
         finishAndGo(ProgressActivity.class);
     }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return false;
+    }
+
 }

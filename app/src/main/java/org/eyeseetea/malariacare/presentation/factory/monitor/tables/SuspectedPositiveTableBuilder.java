@@ -23,13 +23,13 @@ import android.content.Context;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorTableBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.tables.strategies
+        .ISuspectedPositiveTableBuilderStrategy;
+import org.eyeseetea.malariacare.presentation.factory.monitor.tables.strategies
+        .SuspectedPositiveTableBuilderStrategy;
 
 import java.util.List;
 
-/**
- * Defines the structure of the first table in the monitor
- * Created by arrizabalaga on 25/02/16.
- */
 public class SuspectedPositiveTableBuilder extends MonitorTableBuilder {
 
     public SuspectedPositiveTableBuilder(Context context) {
@@ -38,7 +38,9 @@ public class SuspectedPositiveTableBuilder extends MonitorTableBuilder {
 
     @Override
     protected List<MonitorRowBuilder> defineRowBuilders() {
-        MonitorUtils monitorUtils = new MonitorUtils(context);
-        return monitorUtils.defineSuspectedRows();
+        ISuspectedPositiveTableBuilderStrategy suspectedPositiveTableBuilderStrategy =
+                new SuspectedPositiveTableBuilderStrategy(context);
+
+        return suspectedPositiveTableBuilderStrategy.defineSuspectedRows();
     }
 }

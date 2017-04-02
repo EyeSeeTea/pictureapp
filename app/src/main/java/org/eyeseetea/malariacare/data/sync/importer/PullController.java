@@ -20,13 +20,12 @@
 package org.eyeseetea.malariacare.data.sync.importer;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
+import org.eyeseetea.malariacare.data.database.model.Partner;
+import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
@@ -37,6 +36,7 @@ import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.models.event.Event;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 
@@ -66,8 +66,22 @@ public class PullController implements IPullController {
     public void pull(final PullFilters pullFilters, final Callback callback) {
         Log.d(TAG, "Starting PULL process...");
 
-        callback.onStep(PullStep.METADATA);
-        new PopulateDbAsync(pullFilters, callback).execute();
+        try {
+
+            callback.onStep(PullStep.METADATA);
+
+            populateMetadataFromCsvs(pullFilters.isDemo());
+
+            if (pullFilters.isDemo()) {
+                callback.onComplete();
+            } else {
+
+                pullMetada(pullFilters, callback);
+            }
+        } catch (Exception ex) {
+            Log.e(TAG, "pull: " + ex.getLocalizedMessage());
+            callback.onError(ex);
+        }
     }
 
     @Override
@@ -80,52 +94,44 @@ public class PullController implements IPullController {
             callback.onCancel();
             return;
         }
-
-        mPullRemoteDataSource.pullMetadata(
-                new IDataSourceCallback<List<OrganisationUnit>>() {
-                    @Override
-                    public void onSuccess(List<OrganisationUnit> organisationUnits) {
-                        if (!pullFilters.downloadData()) {
-                            convertFromSDK(callback, false);
-                        } else {
-                            pullData(pullFilters, organisationUnits, callback);
+        if(pullFilters.pullMetaData()) {
+            mPullRemoteDataSource.pullMetadata(
+                    new IDataSourceCallback<List<OrganisationUnit>>() {
+                        @Override
+                        public void onSuccess(List<OrganisationUnit> organisationUnits) {
+                            if (!pullFilters.downloadData() || pullFilters.pullDataAfterMetadata()) {
+                                convertMetaData(callback);
+                                callback.onComplete();
+                            } else {
+                                convertMetaData(callback);
+                                pullData(pullFilters, organisationUnits, callback);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                });
+                        @Override
+                        public void onError(Throwable throwable) {
+                            callback.onError(throwable);
+                        }
+                    });
+        }
+        else {
+            if (pullFilters.downloadData()) {
+                List<OrganisationUnit> organisationUnitsList = D2.me().organisationUnits().list().toBlocking().first();
+                pullData(pullFilters, organisationUnitsList, callback);
+            }
+            else{
+                callback.onComplete();
+            }
+        }
     }
 
     private void populateMetadataFromCsvs(boolean isDemo) throws IOException {
         PopulateDB.initDataIfRequired(mContext);
 
         if (isDemo) {
-            createDummyOrgUnitsDataInDB();
-            createDummyOrganisationInDB();
+            new PopulateDBStrategy().createDummyOrgUnitsDataInDB(mContext);
+            new PopulateDBStrategy().createDummyOrganisationInDB();
         }
-    }
-
-    private void createDummyOrgUnitsDataInDB() {
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-
-        if (orgUnits.size() == 0) {
-            try {
-                PopulateDB.populateDummyData(mContext);
-                OrgUnitToOptionConverter.convert();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void createDummyOrganisationInDB() {
-        Organisation testOrganisation = new Organisation();
-        testOrganisation.setName(mContext.getString(R.string.test_organisation_name));
-        testOrganisation.setUid(mContext.getString(R.string.test_organisation_uid));
-        testOrganisation.insert();
     }
 
     private void pullData(PullFilters pullFilters, List<OrganisationUnit> organisationUnits,
@@ -140,7 +146,8 @@ public class PullController implements IPullController {
                 new IDataSourceCallback<List<Event>>() {
                     @Override
                     public void onSuccess(List<Event> result) {
-                        convertFromSDK(callback, true);
+                        convertData(callback);
+                        callback.onComplete();
                     }
 
                     @Override
@@ -148,24 +155,6 @@ public class PullController implements IPullController {
                         callback.onError(throwable);
                     }
                 });
-    }
-
-
-    private void convertFromSDK(final Callback callback, boolean convertData) {
-        Log.d(TAG, "Converting SDK into APP data");
-
-        try {
-            convertMetaData(callback);
-
-            if (convertData) {
-                convertData(callback);
-            } else {
-                callback.onComplete();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            callback.onError(new PullConversionException());
-        }
     }
 
     private void convertMetaData(final Callback callback) {
@@ -177,17 +166,20 @@ public class PullController implements IPullController {
 
         callback.onStep(PullStep.CONVERT_METADATA);
         Log.d(TAG, "Converting organisationUnits...");
+        try {
+            List<OrganisationUnitExtended> assignedOrganisationsUnits =
+                    OrganisationUnitExtended.getExtendedList(
+                            (SdkQueries.getAssignedOrganisationUnits()));
+            for (OrganisationUnitExtended assignedOrganisationsUnit : assignedOrganisationsUnits) {
+                assignedOrganisationsUnit.accept(mConverter);
+            }
 
-        List<OrganisationUnitExtended> assignedOrganisationsUnits =
-                OrganisationUnitExtended.getExtendedList(
-                        (SdkQueries.getAssignedOrganisationUnits()));
-
-        for (OrganisationUnitExtended assignedOrganisationsUnit : assignedOrganisationsUnits) {
-            assignedOrganisationsUnit.accept(mConverter);
+            OrgUnitToOptionConverter.convert();
+            mPullControllerStrategy.convertMetadata(mConverter);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            callback.onError(new PullConversionException());
         }
-
-        OrgUnitToOptionConverter.convert();
-        mPullControllerStrategy.convertMetadata(mConverter);
     }
 
     private void convertData(final Callback callback) {
@@ -199,85 +191,12 @@ public class PullController implements IPullController {
 
         callback.onStep(PullStep.CONVERT_DATA);
 
-        mDataConverter.convert(callback, mConverter);
-    }
-
-    private class PopulateDbAsync extends AsyncTask<Void,Void,Void>
-    {
-        PullFilters mPullFilters;
-        Callback mCallback;
-        Exception mException = null;
-
-        public PopulateDbAsync(PullFilters pullFilters, Callback callback) {
-            mPullFilters = pullFilters;
-            mCallback = callback;
-        }
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                populateMetadataFromCsvs(mPullFilters.isDemo());
-            } catch (IOException e) {
-                Log.e(TAG, "pull: " + e.getLocalizedMessage());
-                mException = e;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (mException != null) {
-                mCallback.onError(mException);
-            } else {
-                if (mPullFilters.isDemo()) {
-                    mCallback.onComplete();
-                } else {
-                    pullMetada(mPullFilters, mCallback);
-                }
-            }
-
+        try {
+            mConverter.setOrgUnits(OrgUnit.getAllOrgUnit());
+            mDataConverter.convert(callback, mConverter);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            callback.onError(new PullConversionException());
         }
     }
-    //TODO jsanchez
-    //public static final int MAX_EVENTS_X_ORGUNIT_PROGRAM = 4800;
-
-    //TODO jsanchez
-    /**
-     * Returns the correct data from the limited date in shared preferences
-     */
-/*    private Date getDateFromString(String selectedDateLimit) {
-        Calendar day = Calendar.getInstance();
-        if (selectedDateLimit.equals(
-                PreferencesState.getInstance().getContext().getString(R.string.last_6_days))) {
-            day.add(Calendar.DAY_OF_YEAR, -6);
-        } else if (selectedDateLimit.equals(
-                PreferencesState.getInstance().getContext().getString(R.string.last_6_weeks))) {
-            day.add(Calendar.WEEK_OF_YEAR, -6);
-        } else if (selectedDateLimit.equals(
-                PreferencesState.getInstance().getContext().getString(R.string.last_6_months))) {
-            day.add(Calendar.MONTH, -6);
-        }
-        return day.getTime();
-    }*/
-
-    //TODO jsanchez
-/*
-            SdkPullController.setMaxEvents(MAX_EVENTS_X_ORGUNIT_PROGRAM);
-            String selectedDateLimit = PreferencesState.getInstance().getDataLimitedByDate();
-
-            //Limit of data by date is selected
-            if (BuildConfig.loginDataDownloadPeriod) {
-                SdkPullController.setStartDate(
-                        EventExtended.format(getDateFromString(selectedDateLimit),
-                                EventExtended.AMERICAN_DATE_FORMAT));
-            }
-
-            if (selectedDateLimit.equals(
-                    PreferencesState.getInstance().getContext().getString(R.string.no_data))) {
-                pullMetaData();
-            } else {
-                pullMetaDataAndData();
-            }*/
 }

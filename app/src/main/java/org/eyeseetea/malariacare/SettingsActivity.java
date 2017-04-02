@@ -211,9 +211,8 @@ public class SettingsActivity extends PreferenceActivity implements
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FontUtils.applyFontStyleByPreference(getResources(), getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
         mSettingsActivityStrategy.onCreate();
-        PreferencesState.getInstance().loadsLanguageInActivity();
     }
 
     private void restartActivity() {
@@ -278,6 +277,7 @@ public class SettingsActivity extends PreferenceActivity implements
                 mSettingsActivityStrategy.getOnPreferenceClickListener());
         autoCompleteEditTextPreference.pullOrgUnits();
 
+        autoCompleteEditTextPreference.setContext(this);
         serverUrlPreference = (Preference) findPreference(
                 getApplicationContext().getResources().getString(R.string.dhis_url));
         serverUrlPreference.setOnPreferenceClickListener(
@@ -365,6 +365,7 @@ public class SettingsActivity extends PreferenceActivity implements
         PreferencesState.getInstance().reloadPreferences();
         Class callerActivityClass = getCallerActivity();
         Intent returnIntent = new Intent(this, callerActivityClass);
+        returnIntent.putExtra(getString(R.string.show_announcement_key), SettingsActivityStrategy.showAnnouncementOnBackPressed());
         startActivity(returnIntent);
     }
 
@@ -392,6 +393,7 @@ public class SettingsActivity extends PreferenceActivity implements
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            PreferencesState.getInstance().onCreateActivityPreferences(getResources(), null);//the theme not exist in a static context
             addPreferencesFromResource(R.xml.pref_general);
 
 

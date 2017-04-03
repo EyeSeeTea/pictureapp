@@ -111,8 +111,8 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     public Credentials getHardcodedServerCredentials(String serverUrl) {
 
-        String username = CredentialsReader.getUser();
-        String password = CredentialsReader.getPassword();
+        String username = CredentialsReader.getInstance().getUser();
+        String password = CredentialsReader.getInstance().getPassword();
 
         Credentials credentials = new Credentials(serverUrl, username, password);
         return credentials;

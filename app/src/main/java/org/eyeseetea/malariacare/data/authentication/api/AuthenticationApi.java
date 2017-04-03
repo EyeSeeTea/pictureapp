@@ -24,11 +24,11 @@ public class AuthenticationApi {
 
     @NonNull
     static String getHardcodedApiUser() {
-        return CredentialsReader.getUser();
+        return CredentialsReader.getInstance().getUser();
     }
 
     @NonNull
     static String getHardcodedApiPass() {
-        return CredentialsReader.getPassword();
+        return CredentialsReader.getInstance().getPassword();
     }
 }

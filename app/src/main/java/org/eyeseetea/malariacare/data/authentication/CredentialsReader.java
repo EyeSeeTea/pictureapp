@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.data.authentication;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonNotPresentException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,41 +18,43 @@ public class CredentialsReader {
     public static String name;
     public static String password;
 
+    private static CredentialsReader credentialsInstance;
 
-    public static String getUser() {
-        if (name != null) {
-            return name;
+    public static CredentialsReader getInstance() {
+        if (credentialsInstance == null) {
+            credentialsInstance = new CredentialsReader();
         }
-        init();
-        try {
-            name = mJSONObject.getString(NAME_KEY);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return name;
+        return credentialsInstance;
     }
 
-    public static String getPassword() {
-        if (password != null) {
-            return password;
-        }
-        init();
+    public CredentialsReader() {
+        readJson();
         try {
+            name = mJSONObject.getString(NAME_KEY);
             password = mJSONObject.getString(PASS_KEY);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getUser() throws ConfigJsonNotPresentException {
+        if (name != null) {
+            readJson();
+        }
+        return name;
+    }
+
+    public String getPassword() throws ConfigJsonNotPresentException {
+        if (password != null) {
+            readJson();
+        }
         return password;
     }
 
-
-    private static void init() {
-        if (mJSONObject == null) {
-            readJson();
+    private void readJson() {
+        if (mJSONObject != null) {
+            return;
         }
-    }
-
-    private static void readJson() {
         InputStream inputStream =
                 PreferencesState.getInstance().getContext().getResources().openRawResource(
                         R.raw.config);
@@ -73,7 +76,7 @@ public class CredentialsReader {
         } finally {
             try {
                 if (inputStream != null) inputStream.close();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

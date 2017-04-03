@@ -222,6 +222,12 @@ public class LoginActivity extends AbsLoginActivity {
                 hideProgressBar();
                 showError(getString(R.string.network_error));
             }
+
+            @Override
+            public void onConfigJsonNotPresent() {
+                hideProgressBar();
+                showError(getString(R.string.login_error_json));
+            }
         });
     }
 

@@ -60,7 +60,7 @@ public class PushController implements IPushController {
         mPushDhisSDKDataSource = new PushDhisSDKDataSource();
         mConvertToSDKVisitor = new ConvertToSDKVisitor(mContext);
     }
-    List<Survey> surveys;
+
     public void push(final IPushControllerCallback callback) {
 
         if (!ServerAPIController.isNetworkAvailable()) {

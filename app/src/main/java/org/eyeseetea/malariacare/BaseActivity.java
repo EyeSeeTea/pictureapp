@@ -264,6 +264,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
      */
     public void onBackPressed() {
+        mBaseActivityStrategy.onBackPressed();
         finishAndGo(DashboardActivity.class);
     }
 
@@ -292,10 +293,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     protected void goSettings() {
-        Intent intentSettings = new Intent(this, SettingsActivity.class);
-        intentSettings.putExtra(SettingsActivity.SETTINGS_CALLER_ACTIVITY, this.getClass());
-        intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
-        startActivity(new Intent(this, SettingsActivity.class));
+        mBaseActivityStrategy.goSettings();
     }
 
     /**
@@ -442,4 +440,17 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onDestroy();
         alarmPush.cancelPushAlarm(this);
     }
+
+    @Override
+    protected void onStart() {
+        mBaseActivityStrategy.onStart();
+        super.onStart();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        mBaseActivityStrategy.onWindowFocusChanged(hasFocus);
+        super.onWindowFocusChanged(hasFocus);
+    }
+
 }

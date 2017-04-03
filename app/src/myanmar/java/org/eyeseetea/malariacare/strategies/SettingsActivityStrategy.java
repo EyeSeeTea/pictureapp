@@ -48,4 +48,19 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public Preference.OnPreferenceChangeListener getOnPreferenceChangeListener() {
         return null;
     }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
+    }
 }

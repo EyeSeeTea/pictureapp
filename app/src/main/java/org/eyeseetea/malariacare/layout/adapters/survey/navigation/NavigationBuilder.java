@@ -66,11 +66,13 @@ public class NavigationBuilder {
     public void buildController(Tab tab) {
 
         if (Session.isIsLoadingNavigationController()) {
+            Log.d(TAG, "Does not load the navigation controller because it is already loading");
             return;
         }
 
         //No tab -> nothing to build
         if (tab == null) {
+            Log.w(TAG, "Does not load the navigation controller because not exist first tab");
             return;
         }
 
@@ -81,6 +83,7 @@ public class NavigationBuilder {
 
         //NO first question -> nothing to build
         if (rootQuestion == null) {
+            Log.w(TAG, "Does not load the navigation controller because not exist root question");
             return;
         }
 

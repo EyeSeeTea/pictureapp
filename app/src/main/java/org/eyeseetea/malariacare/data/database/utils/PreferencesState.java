@@ -31,6 +31,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.DateFilter;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.FontUtils;
+import org.eyeseetea.sdk.presentation.styles.FontStyle;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -55,7 +56,7 @@ public class PreferencesState {
     /**
      * Selected scale, one between [xsmall,small,medium,large,xlarge,system]
      */
-    private String scale;
+    private FontStyle fontStyle;
     /**
      * Flag that determines if numerator/denominator are shown in scores.
      */
@@ -72,6 +73,8 @@ public class PreferencesState {
      * Specified DHIS2 Server
      */
     private String dhisURL;
+
+    private boolean userAccept;
 
     private PreferencesState() {
     }
@@ -110,12 +113,7 @@ public class PreferencesState {
     }
 
     public void reloadPreferences() {
-        if (context == null) {
-            Log.d(TAG, "reloadPreferences: "
-                    + " the context is null");
-            return;
-        }
-        scale = initScale();
+        fontStyle = initFontStyle();
         showNumDen = initShowNumDen();
         orgUnit = initOrgUnit();
         dhisURL = initDhisURL();
@@ -123,7 +121,7 @@ public class PreferencesState {
         Log.d(TAG, "reloadPreferences: "
                 + " orgUnit:" + orgUnit
                 + " |dhisURL:" + dhisURL
-                + " |scale:" + scale
+                + " |fontStyle:" + fontStyle.getTitle()
                 + " | showNumDen:" + showNumDen);
     }
 
@@ -140,14 +138,14 @@ public class PreferencesState {
     /**
      * Returns 'org_unit' from sharedPreferences
      */
-    private String initOrgUnit() {
+    public String initOrgUnit() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
         return sharedPreferences.getString(instance.getContext().getString(R.string.org_unit), "");
     }
 
     /**
-     * Returns 'org_unit' from sharedPreferences
+     * Returns 'DhisURL' from sharedPreferences
      */
     private String initDhisURL() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
@@ -156,19 +154,22 @@ public class PreferencesState {
                 instance.getContext().getString(R.string.DHIS_DEFAULT_SERVER));
     }
 
-    /**
-     * Inits scale according to preferences
-     */
-    private String initScale() {
+    private FontStyle initFontStyle() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
+
         if (sharedPreferences.getBoolean(instance.getContext().getString(R.string.customize_fonts),
                 false)) {
-            return sharedPreferences.getString(instance.getContext().getString(R.string.font_sizes),
-                    Constants.FONTS_SYSTEM);
+            String fontStyleId = sharedPreferences.getString(instance.getContext().getString(R.string.font_sizes),
+                    String.valueOf(FontStyle.Medium.getResId()));
+
+            for (FontStyle fontStyle:FontStyle.values()) {
+                if (fontStyle.getResId() == Integer.valueOf(fontStyleId))
+                    return fontStyle;
+            }
         }
 
-        return Constants.FONTS_SYSTEM;
+        return FontStyle.Medium;
     }
 
     /**
@@ -181,15 +182,12 @@ public class PreferencesState {
                 false);
     }
 
-    public String getScale() {
-        if (scale == null) {
-            scale = initScale();
-        }
-        return scale;
+    public FontStyle getFontStyle() {
+        return fontStyle;
     }
 
-    public void setScale(String value) {
-        this.scale = value;
+    public void setFontStyle(FontStyle fontStyle) {
+        this.fontStyle = fontStyle;
     }
 
     public boolean isShowNumDen() {
@@ -258,6 +256,49 @@ public class PreferencesState {
         saveStringPreference(R.string.data_limited_by_date, value);
     }
 
+    public boolean getMetaDataDownload() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.meta_data_download), true);
+    }
+
+    public void setMetaDataDownload(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.meta_data_download),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+
+    public boolean getPullDataAfterMetadata() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.pull_data_after_metadata), false);
+    }
+
+    public void setPullDataAfterMetadata(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.pull_data_after_metadata),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
+    public boolean getDataFilteredByOrgUnit() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.data_filtered_by_preference_org_unit), true);
+    }
+
+    public void setDataFilteredByOrgUnit(Boolean value) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefEditor = sharedPref.edit(); // Get preference in editor mode
+        prefEditor.putBoolean(instance.getContext().getString(R.string.data_filtered_by_preference_org_unit),
+                value); // set your default value here (could be empty as well)
+        prefEditor.commit(); // finally save changes
+    }
     public void onCreateActivityPreferences(Resources resources, Resources.Theme theme) {
         loadsLanguageInActivity();
         if (theme != null) {
@@ -328,5 +369,31 @@ public class PreferencesState {
             return false;
         }
         return true;
+    }
+
+    public boolean isUserAccept() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        userAccept = sharedPreferences.getBoolean(
+                context.getResources().getString(R.string.user_accept_key),
+                false);
+        return userAccept;
+    }
+
+    public boolean setUserAccept(boolean isAccepted) {
+        this.userAccept = isAccepted;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getResources().getString(R.string.user_accept_key), isAccepted);
+        editor.commit();
+        return userAccept;
+    }
+    public boolean downloadMetaData () {
+        return getMetaDataDownload();
+    }
+
+    public void setDataLimitedByPreferenceOrgUnit(boolean value) {
+        setDataFilteredByOrgUnit(value);
     }
 }

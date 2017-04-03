@@ -76,7 +76,7 @@ android {
             buildConfigField "boolean", "activeButtonNavigator", "false"
             buildConfigField "boolean", "loginDataDownloadPeriod", "true"
             buildConfigField "boolean", "translations", "true"
-            buildConfigField "boolean", "developerOptions", "false"
+            buildConfigField "boolean", "developerOptions", "true"
             buildConfigField "boolean", "multiuser", "false"
             buildConfigField "boolean", "activeStockFragment", "false"
             buildConfigField "boolean", "patientTestedByDefault", "false"
@@ -90,7 +90,7 @@ android {
             buildConfigField "boolean", "activeButtonNavigator", "false"
             buildConfigField "boolean", "loginDataDownloadPeriod", "false"
             buildConfigField "boolean", "translations", "true"
-            buildConfigField "boolean", "developerOptions", "false"
+            buildConfigField "boolean", "developerOptions", "true"
             buildConfigField "boolean", "multiuser", "false"
             buildConfigField "boolean", "activeStockFragment", "false"
             buildConfigField "boolean", "patientTestedByDefault", "false"
@@ -135,7 +135,6 @@ android {
             targetModuleName 'EyeSeeTea'
         }
     }
-    buildToolsVersion '24.0.3'
 }
 
 configurations {

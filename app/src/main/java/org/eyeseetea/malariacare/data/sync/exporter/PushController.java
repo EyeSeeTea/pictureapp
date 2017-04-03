@@ -40,6 +40,7 @@ import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.models.common.importsummary.ImportSummary;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -68,17 +69,8 @@ public class PushController implements IPushController {
             callback.onError(new NetworkException());
         } else {
             Log.d(TAG, "Network connected");
-
-            List<Survey> surveys = Survey.getAllCompletedSurveysNoReceiptReset();
-
-            //Fixme Check if is necessary other conditions
-            if (surveys == null || surveys.size() == 0) {
-                Log.d("DpBlank", "Sets of Surveys to push");
-                callback.onError(new SurveysToPushNotFoundException());
-            } else{
-                AsyncUserPush asyncOpenUserPush = new AsyncUserPush();
-                asyncOpenUserPush.execute(callback);
-            }
+            AsyncUserPush asyncOpenUserPush = new AsyncUserPush();
+            asyncOpenUserPush.execute(callback);
         }
     }
 
@@ -131,10 +123,20 @@ public class PushController implements IPushController {
         boolean isUserClosed = false;
         IPushControllerCallback callback;
 
+        List<Survey> surveys = new ArrayList<>();
         @Override
         protected Void doInBackground(IPushControllerCallback... params) {
             callback = params[0];
-            isUserClosed = ServerAPIController.isUserClosed(User.getLoggedUser().getUid());
+            surveys = Survey.getAllCompletedSurveysNoReceiptReset();
+
+            if (surveys == null || surveys.size() == 0) {
+                Log.d("DpBlank", "Sets of Surveys to push");
+                callback.onError(new SurveysToPushNotFoundException());
+            }
+            User loggedUser = User.getLoggedUser();
+            if (loggedUser != null && loggedUser.getUid() != null) {
+                isUserClosed = ServerAPIController.isUserClosed(User.getLoggedUser().getUid());
+            }
             return null;
         }
 
@@ -142,14 +144,9 @@ public class PushController implements IPushController {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             if (isUserClosed) {
-                if (User.getLoggedUser() != null && ServerAPIController.isUserClosed(
-                        User.getLoggedUser().getUid())) {
-                    Log.d(TAG, "The user is closed, Surveys not sent");
-                    callback.onError(new ClosedUserPushException());
-                }
+                Log.d(TAG, "The user is closed, Surveys not sent");
+                callback.onError(new ClosedUserPushException());
             } else {
-                List<Survey> surveys = Survey.getAllCompletedSurveysNoReceiptReset();
-
                 for (Survey srv : surveys) {
                     Log.d("DpBlank", "Survey to push " + srv.toString());
                     for (Value dv : srv.getValuesFromDB()) {

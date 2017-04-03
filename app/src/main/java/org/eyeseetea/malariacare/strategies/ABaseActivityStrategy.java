@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.strategies;
 
-import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -31,6 +30,4 @@ public abstract class ABaseActivityStrategy {
     public abstract void onWindowFocusChanged(boolean hasFocus);
 
     public abstract void goSettings();
-
-    public abstract  void onActivityResult(int requestCode, int resultCode, Intent data);
 }

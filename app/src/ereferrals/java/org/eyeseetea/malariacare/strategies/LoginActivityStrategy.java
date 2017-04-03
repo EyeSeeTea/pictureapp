@@ -29,6 +29,7 @@ import org.hisp.dhis.client.sdk.ui.views.FontButton;
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private static final String TAG = ".LoginActivityStrategy";
+    public static final String EXIT = "exit";
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -48,6 +49,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onCreate() {
+        if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
+            loginActivity.finish();
+        }
         if (existsLoggedUser() && PopulateDB.hasMandatoryTables()) {
             LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
                     new LoadUserAndCredentialsUseCase(loginActivity);

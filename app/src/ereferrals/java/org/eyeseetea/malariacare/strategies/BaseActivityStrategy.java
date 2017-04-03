@@ -1,9 +1,9 @@
 package org.eyeseetea.malariacare.strategies;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -119,7 +119,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-                mBaseActivity.finish();
+                ActivityCompat.finishAffinity(mBaseActivity);
             }
 
             @Override
@@ -137,13 +137,5 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
         mBaseActivity.startActivityForResult(new Intent(mBaseActivity, SettingsActivity.class),
                 SETTINGS_LOGOUT);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SETTINGS_LOGOUT){
-            mBaseActivity.setResult(Activity.RESULT_OK);
-            mBaseActivity.finish();
-        }
     }
 }

@@ -113,8 +113,4 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         mBaseActivity.startActivity(new Intent(mBaseActivity, SettingsActivity.class));
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-    }
 }

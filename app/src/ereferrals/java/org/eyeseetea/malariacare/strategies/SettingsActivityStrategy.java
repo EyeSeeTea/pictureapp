@@ -4,6 +4,7 @@ package org.eyeseetea.malariacare.strategies;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
@@ -99,7 +100,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-                settingsActivity.finish();
+                ActivityCompat.finishAffinity(settingsActivity);
             }
 
             @Override

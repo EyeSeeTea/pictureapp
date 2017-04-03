@@ -152,7 +152,7 @@
 <string name="survey_fourth_step">"Creating screens..."</string>
 <string name="admin_announcement">"Administrator announcement"</string>
 <string name="user_close">"This user was closed by de administrator."</string>
-<string name="unsent_survey_filter_number_of_cases">"%d cases"</string>
+<string name="unsent_survey_filter_number_of_cases">"%d Cases"</string>
 <string name="unsent_survey_filter_option_this_week">"This week"</string>
 <string name="unsent_survey_filter_option_this_month">"This month"</string>
 <string name="unsent_survey_filter_option_last_week">"Last week"</string>

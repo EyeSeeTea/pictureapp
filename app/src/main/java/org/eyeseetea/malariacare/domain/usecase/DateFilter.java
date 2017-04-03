@@ -105,6 +105,7 @@ public class DateFilter {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.add(Calendar.MONTH, -2);
         }
+        clearTime(calendar);
         return calendar.getTime();
     }
 
@@ -130,6 +131,7 @@ public class DateFilter {
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
             calendar.add(Calendar.DAY_OF_YEAR, 6);
         }
+        completeDayTime(calendar);
         return calendar.getTime();
     }
 
@@ -145,6 +147,30 @@ public class DateFilter {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         String dateAsString = sdf.format(date);
         return dateAsString;
+    }
 
+    /**
+     * Wipes off time info from date
+     *
+     * @return A new date without time data (00:00:00:000)
+     */
+    private Calendar clearTime(Calendar date) {
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.MINUTE, 0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MILLISECOND, 0);
+        return date;
+    }
+    /**
+     * Wipes off time info from date
+     *
+     * @return A new date without time data (00:00:00:000)
+     */
+    private Calendar completeDayTime(Calendar date) {
+        date.set(Calendar.HOUR_OF_DAY, 23);
+        date.set(Calendar.MINUTE, 59);
+        date.set(Calendar.SECOND, 59);
+        date.set(Calendar.MILLISECOND, 999);
+        return date;
     }
 }

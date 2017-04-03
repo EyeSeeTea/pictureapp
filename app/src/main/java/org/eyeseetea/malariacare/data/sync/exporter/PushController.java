@@ -60,7 +60,7 @@ public class PushController implements IPushController {
         mPushDhisSDKDataSource = new PushDhisSDKDataSource();
         mConvertToSDKVisitor = new ConvertToSDKVisitor(mContext);
     }
-
+    List<Survey> surveys;
     public void push(final IPushControllerCallback callback) {
 
         if (!ServerAPIController.isNetworkAvailable()) {
@@ -75,30 +75,39 @@ public class PushController implements IPushController {
             if (surveys == null || surveys.size() == 0) {
                 Log.d("DpBlank", "Sets of Surveys to push");
                 callback.onError(new SurveysToPushNotFoundException());
-            } else
-                if (User.getLoggedUser() != null && ServerAPIController.isUserClosed(
-                        User.getLoggedUser().getUid())) {
-                Log.d(TAG, "The user is closed, Surveys not sent");
-                callback.onError(new ClosedUserPushException());
-            } else {
-                for (Survey srv : surveys) {
-                    Log.d("DpBlank", "Survey to push " + srv.toString());
-                    for (Value dv : srv.getValuesFromDB()) {
-                        Log.d("DpBlank", "Values to push " + dv.toString());
-                    }
-                }
-                mPushDhisSDKDataSource.wipeEvents();
-                try {
-                    convertToSDK(surveys);
-                } catch (Exception ex) {
-                    callback.onError(new ConversionException(ex));
-                }
+            } else{
+                Thread t = new Thread() {
+                    @Override
+                    public void run() {
+                        if (User.getLoggedUser() != null && ServerAPIController.isUserClosed(
+                                User.getLoggedUser().getUid())) {
+                            Log.d(TAG, "The user is closed, Surveys not sent");
+                            callback.onError(new ClosedUserPushException());
+                        }else{
+                            List<Survey> surveys = Survey.getAllCompletedSurveysNoReceiptReset();
 
-                if (EventExtended.getAllEvents().size() == 0) {
-                    callback.onError(new ConversionException());
-                } else {
-                    pushData(callback);
-                }
+                            for (Survey srv : surveys) {
+                                Log.d("DpBlank", "Survey to push " + srv.toString());
+                                for (Value dv : srv.getValuesFromDB()) {
+                                    Log.d("DpBlank", "Values to push " + dv.toString());
+                                }
+                            }
+                            mPushDhisSDKDataSource.wipeEvents();
+                            try {
+                                convertToSDK(surveys);
+                            } catch (Exception ex) {
+                                callback.onError(new ConversionException(ex));
+                            }
+
+                            if (EventExtended.getAllEvents().size() == 0) {
+                                callback.onError(new ConversionException());
+                            } else {
+                                pushData(callback);
+                            }
+                        }
+                    }
+                };
+                t.start();
             }
         }
     }

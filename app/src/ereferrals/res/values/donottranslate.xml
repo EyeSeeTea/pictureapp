@@ -69,7 +69,8 @@
     <string name="test_organisation_uid">9fV2JoHmO94</string>
     <string name="authority">EREFERRALS_DHIS2_DEFAULT_AUTHORITY</string>
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
-    <string name="GPS_LATITUDE_DEFAULT" translatable="false">16.010790</string>
-    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">96.852446</string>
+    <string name="GPS_LATITUDE_DEFAULT" translatable="false">-0.996961</string>
+    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">33.932726</string>
+
 
 </resources>

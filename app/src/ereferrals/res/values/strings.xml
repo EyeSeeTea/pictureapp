@@ -333,4 +333,7 @@
 <string name="false_option_identifier">"No"</string>
 <string name="confirmation_really_exit_title">"Really Exit?"</string>
 <string name="confirmation_really_exit">"Are you sure you want to exit the app?"</string>
+<string name="admin_announcement">"Administrator announcement"</string>
+<string name="user_close">"This user was closed by de administrator."</string>
+<string name="run_in_demo_mode">"Run in demo mode"</string>
 </resources>

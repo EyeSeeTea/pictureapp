@@ -36,11 +36,6 @@
     <string name="server_name">"DHIS Server URL"</string>
     <string name="settings_select_language">"Language"</string>
     <string name="pref_header_general">"General"</string>
-    <string name="font_size_level0">"xsmall"</string>
-    <string name="font_size_level1">"small"</string>
-    <string name="font_size_level2">"medium"</string>
-    <string name="font_size_level3">"large"</string>
-    <string name="font_size_level4">"xlarge"</string>
     <string name="dialog_title_push">"Pushing data"</string>
     <string name="dialog_title_push_response">"Push response"</string>
     <string name="dialog_info_push_ok">"Survey data pushed to server. Results:"</string>
@@ -203,8 +198,11 @@
     <string name="error_conflict_title">"Error"</string>
     <string name="confirmation_really_exit_title">"Really Exit?"</string>
     <string name="confirmation_really_exit">"Are you sure you want to exit the app?"</string>
+    <string name="run_in_demo_mode">"Run in demo mode"</string>
     <string name="survey_first_step">"Retrieving questions..."</string>
      <string name="survey_second_step">"Building questions..."</string> 
     <string name="survey_third_step">"Building questions tree..."</string> 
     <string name="survey_fourth_step">"Creating screens..."</string>
+    <string name="admin_announcement">"Administrator announcement"</string>
+    <string name="user_close">"This user was closed by de administrator."</string>
 </resources>

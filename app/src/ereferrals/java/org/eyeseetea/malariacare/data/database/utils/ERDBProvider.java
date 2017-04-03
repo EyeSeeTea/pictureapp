@@ -21,8 +21,8 @@ package org.eyeseetea.malariacare.data.database.utils;
 
 import android.support.v4.content.FileProvider;
 
-public class SCMMDBProvider extends FileProvider {
-    public SCMMDBProvider() {
+public class ERDBProvider extends FileProvider {
+    public ERDBProvider() {
         super();
     }
 }

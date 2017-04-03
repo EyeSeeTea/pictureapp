@@ -65,6 +65,10 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         return null;
     }
 
+    public static boolean showAnnouncementOnBackPressed() {
+        return false;
+    }
+
     @Override
     public void onStart() {
         applicationWillEnterForeground();

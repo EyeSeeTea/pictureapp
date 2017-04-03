@@ -90,6 +90,12 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     @Override
+    public void hideMenuItems(Menu menu) {
+        MenuItem item = menu.findItem(R.id.demo_mode);
+        item.setVisible(false);
+    }
+
+    @Override
     public void onBackPressed() {
 
     }

@@ -26,10 +26,6 @@ import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorTableBuilde
 
 import java.util.List;
 
-/**
- * Defines the structure of the first table in the monitor
- * Created by arrizabalaga on 25/02/16.
- */
 public class SuspectedPositiveTableBuilder extends MonitorTableBuilder {
 
     public SuspectedPositiveTableBuilder(Context context) {
@@ -38,7 +34,7 @@ public class SuspectedPositiveTableBuilder extends MonitorTableBuilder {
 
     @Override
     protected List<MonitorRowBuilder> defineRowBuilders() {
-        MonitorUtils monitorUtils = new MonitorUtils(context);
-        return monitorUtils.defineSuspectedRows();
+
+        return null;
     }
 }

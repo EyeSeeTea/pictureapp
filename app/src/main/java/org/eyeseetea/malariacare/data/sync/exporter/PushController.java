@@ -24,11 +24,14 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -70,11 +73,14 @@ public class PushController implements IPushController {
 
             //Fixme Check if is necessary other conditions
             if (surveys == null || surveys.size() == 0) {
-
                 Log.d("DpBlank", "Sets of Surveys to push");
                 callback.onError(new SurveysToPushNotFoundException());
+            } else
+                if (User.getLoggedUser() != null && ServerAPIController.isUserClosed(
+                        User.getLoggedUser().getUid())) {
+                Log.d(TAG, "The user is closed, Surveys not sent");
+                callback.onError(new ClosedUserPushException());
             } else {
-
                 for (Survey srv : surveys) {
                     Log.d("DpBlank", "Survey to push " + srv.toString());
                     for (Value dv : srv.getValuesFromDB()) {
@@ -114,7 +120,7 @@ public class PushController implements IPushController {
                     public void onSuccess(
                             Map<String, ImportSummary> mapEventsImportSummary) {
                         mConvertToSDKVisitor.saveSurveyStatus(mapEventsImportSummary, callback);
-                        ServerAPIController.banOrgUnitIfRequired();
+
                         callback.onComplete();
                     }
 
@@ -122,7 +128,6 @@ public class PushController implements IPushController {
                     public void onError(Throwable throwable) {
                         if(throwable instanceof ImportSummaryErrorException) {
                             mConvertToSDKVisitor.setSurveysAsQuarantine();
-                            ServerAPIController.banOrgUnitIfRequired();
                         }
                         callback.onError(throwable);
                     }

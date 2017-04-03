@@ -4,8 +4,11 @@ import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApi;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
+import org.eyeseetea.malariacare.network.ServerAPIController;
 
 public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
@@ -61,5 +64,9 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
 
+    }
+
+    public static boolean showAnnouncementOnBackPressed() {
+        return  true;
     }
 }

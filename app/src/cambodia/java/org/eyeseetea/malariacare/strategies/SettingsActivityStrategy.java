@@ -49,6 +49,9 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         return pullRequiredOnPreferenceChangeListener;
     }
 
+    public static boolean showAnnouncementOnBackPressed() {
+        return true;
+    }
     @Override
     public void onStart() {
 

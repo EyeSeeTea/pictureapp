@@ -83,8 +83,10 @@ public abstract class MonitorTableBuilder {
      */
     public void addDataToView(WebView webView) {
         addTableToView(webView);
+        if (rowBuilders != null) {
         for (MonitorRowBuilder rowBuilder : rowBuilders) {
             addRowToView(webView, rowBuilder);
+        }
         }
     }
 

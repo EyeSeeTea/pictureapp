@@ -135,7 +135,6 @@ android {
             targetModuleName 'EyeSeeTea'
         }
     }
-    buildToolsVersion '24.0.3'
 }
 
 configurations {

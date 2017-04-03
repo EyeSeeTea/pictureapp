@@ -96,6 +96,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     public void onNetworkError() {
                         Log.d(TAG, "onNetworkError");
                     }
+
+                    @Override
+                    public void onConfigJsonNotPresent() {
+                        Log.d(TAG, "onConfigJsonNotPresent");
+                    }
                 }
         );
     }

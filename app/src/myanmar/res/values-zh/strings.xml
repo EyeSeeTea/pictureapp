@@ -294,6 +294,7 @@
 <string name="network_error">"有與網絡問題 請稍後重試"</string>
 <string name="login_invalid_credentials">"無效的憑證"</string>
 <string name="login_invalid_server_url">"無效的服務器"</string>
+<string name="login_error_json">读取json配置文件时出错。 请联系您的管理员。</string>
 <string name="see_resets">"查看之前校正库存登记"</string>
 <string name="new_reset">"校正实际库存登记"</string>
 <string name="previous_resets"></string>

@@ -48,6 +48,7 @@ public abstract class ADashboardActivityStrategy {
         if(locationListener==null)
         {
             saveDefaultLocationIfIsNotAvailable(activity, locationListener);
+            return;
         }
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Log.d(TAG, "requestLocationUpdates via NETWORK");
@@ -58,6 +59,7 @@ public abstract class ADashboardActivityStrategy {
                     android.Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 saveDefaultLocationIfIsNotAvailable(activity, locationListener);
+                return;
             }
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
                     locationListener);

@@ -6,10 +6,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class ReadConfig {
+public class CredentialsReader {
+    public static final String NAME_KEY = "name";
+    public static final String PASS_KEY = "password";
     public static JSONObject mJSONObject;
     public static String name;
     public static String password;
@@ -21,7 +24,7 @@ public class ReadConfig {
         }
         init();
         try {
-            name = mJSONObject.getString("name");
+            name = mJSONObject.getString(NAME_KEY);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -34,7 +37,7 @@ public class ReadConfig {
         }
         init();
         try {
-            password = mJSONObject.getString("password");
+            password = mJSONObject.getString(PASS_KEY);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -63,7 +66,9 @@ public class ReadConfig {
                 sb.append(line + "\n");
             }
             mJSONObject = new JSONObject(sb.toString());
-        } catch (Exception e) {
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {

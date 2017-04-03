@@ -87,12 +87,10 @@
 <string name="monitoring_row_title_week">"Week"</string>
 <string name="monitor_row_title_suspected">"Suspected cases"</string>
 <string name="monitor_row_title_positive">"Positive"</string>
-<string name="negative">"Negative"</string>
 <string name="monitor_row_title_not_tested">"Not tested"</string>
 <string name="monitor_row_title_referral">"Referral"</string>
 <string name="monitor_row_title_asmq">"AS/MQ"</string>
 <string name="RDT">"RDTs"</string>
-<string name="positivity_rate">"Positivity rate"</string>
 <string name="Pf">"Pf"</string>
 <string name="Pv">"Pv"</string>
 <string name="mixed">"Pf/Pv"</string>

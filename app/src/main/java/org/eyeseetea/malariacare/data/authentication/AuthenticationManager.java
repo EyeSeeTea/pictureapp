@@ -34,9 +34,8 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
     @Override
-    public void login(String url, Callback<UserAccount> callback) {
-        remoteLogin(getServerCredentials(url), callback);
-
+    public void hardcodedLogin(String url, Callback<UserAccount> callback) {
+        remoteLogin(getHardcodedServerCredentials(url), callback);
     }
 
     @Override
@@ -71,6 +70,7 @@ public class AuthenticationManager implements IAuthenticationManager {
         userAccountRemoteDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount result) {
+                credentials.setUserUid(result.getUserUid());
                 localLogin(credentials, callback);
             }
 
@@ -111,7 +111,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
 
-    public Credentials getServerCredentials(String serverUrl) {
+    public Credentials getHardcodedServerCredentials(String serverUrl) {
 
         String username = PreferencesState.getInstance().getContext().getString(
                 R.string.user_push);

@@ -34,17 +34,13 @@
 ກະລຸນາຕິດຕໍ່ອົງການ PSI ລາວ*ຜ່ານເບີ*"</string>
     <string name="dynamic_error_phone_format">"ເບີໂທບໍ່ຖືກຕ້ອງ (xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
     <string name="dynamic_error_age">"ອາຍຸບໍ່ຖືກ"</string>
+    <string name="dynamic_error_pregnant_month">"ເດືອນຖືພາບໍ່ຖືກຕ້ອງ"</string>
     <string name="app_settings">"ການຕັ້ງຄ່າ"</string>
     <string name="fonts_customise">"ຂະໜາດຕົວອັກສອນ"</string>
     <string name="font_size">"ຂະໜາດຕົວອັກສອນ"</string>
     <string name="server_name">"DHIS Server URL"</string>
     <string name="settings_select_language">"ພາສາ"</string>
     <string name="pref_header_general">"ທົ່ວໄປ"</string>
-    <string name="font_size_level0">"ນ້ອຍສຸດ"</string>
-    <string name="font_size_level1">"ນ້ອຍ"</string>
-    <string name="font_size_level2">"ປານກາງ"</string>
-    <string name="font_size_level3">"ໃຫ່ຍ"</string>
-    <string name="font_size_level4">"ໃຫ່ຍສຸດ"</string>
     <string name="dialog_title_push">"ກຳລັງໂຫຼດຂໍ້ມູນເຂົ້າໃນລະບົບ"</string>
     <string name="dialog_title_push_response">"ການຕອບສະຫນອງ"</string>
     <string name="dialog_info_push_ok">"ຂໍ້ມູນຖືກໂລດເຂົ້າເຊີເວີ"</string>
@@ -210,8 +206,11 @@
     <string name="error_conflict_title">"Error"</string>
     <string name="confirmation_really_exit_title">"ແທ້ອອກຈາກ?"</string>
     <string name="confirmation_really_exit">"ທ່ານທີ່ທ່ານກໍາລັງໃຫ້ແນ່ໃຈວ່າຕ້ອງການທີ່ຈະອອກຈາກ app ໄດ້?"</string>
+    <string name="run_in_demo_mode">"ດໍາເນີນການໃນຮູບແບບຕົວຢ່າງ"</string>
     <string name="survey_first_step">"ສະແດງຄໍາຖາມ ..."</string>
      <string name="survey_second_step">"ຄໍາຖາມກໍ່ສ້າງ ..."</string> 
     <string name="survey_third_step">"ຕົ້ນໄມ້ຖາມກໍ່ສ້າງ ..."</string> 
     <string name="survey_fourth_step">"ສ້າງຫນ້າຈໍ ..."</string>
+    <string name="admin_announcement">"ປະກາດບໍລິຫານ"</string>
+    <string name="user_close">"ຜູ້ໃຊ້ນີ້ໄດ້ປິດລົງໂດຍບໍລິຫານ."</string>
 </resources>

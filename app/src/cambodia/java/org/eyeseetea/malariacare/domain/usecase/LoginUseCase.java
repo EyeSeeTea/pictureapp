@@ -23,7 +23,11 @@ public class LoginUseCase extends ALoginUseCase {
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
-                        logoutAndHardcodedLogin(credentials, loginCallback);
+                        if (!credentials.isDemoCredentials()) {
+                            logoutAndHardcodedLogin(credentials, loginCallback);
+                        } else {
+                            loginCallback.onLoginSuccess();
+                        }
                     }
 
                     @Override
@@ -39,7 +43,7 @@ public class LoginUseCase extends ALoginUseCase {
             @Override
             public void onSuccess(Void result) {
 
-                harcodedLogin(credentials, loginCallback);
+                hardcodedLogin(credentials, loginCallback);
             }
 
             @Override
@@ -49,8 +53,8 @@ public class LoginUseCase extends ALoginUseCase {
         });
     }
 
-    private void harcodedLogin(Credentials credentials, final Callback loginCallback) {
-        mAuthenticationManager.login(credentials.getServerURL(),
+    private void hardcodedLogin(Credentials credentials, final Callback loginCallback) {
+        mAuthenticationManager.hardcodedLogin(credentials.getServerURL(),
                 new IAuthenticationManager.Callback<UserAccount>() {
 
                     @Override

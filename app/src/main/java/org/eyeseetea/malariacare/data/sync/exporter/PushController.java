@@ -20,6 +20,7 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
@@ -27,7 +28,6 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
@@ -76,38 +76,8 @@ public class PushController implements IPushController {
                 Log.d("DpBlank", "Sets of Surveys to push");
                 callback.onError(new SurveysToPushNotFoundException());
             } else{
-                Thread t = new Thread() {
-                    @Override
-                    public void run() {
-                        if (User.getLoggedUser() != null && ServerAPIController.isUserClosed(
-                                User.getLoggedUser().getUid())) {
-                            Log.d(TAG, "The user is closed, Surveys not sent");
-                            callback.onError(new ClosedUserPushException());
-                        }else{
-                            List<Survey> surveys = Survey.getAllCompletedSurveysNoReceiptReset();
-
-                            for (Survey srv : surveys) {
-                                Log.d("DpBlank", "Survey to push " + srv.toString());
-                                for (Value dv : srv.getValuesFromDB()) {
-                                    Log.d("DpBlank", "Values to push " + dv.toString());
-                                }
-                            }
-                            mPushDhisSDKDataSource.wipeEvents();
-                            try {
-                                convertToSDK(surveys);
-                            } catch (Exception ex) {
-                                callback.onError(new ConversionException(ex));
-                            }
-
-                            if (EventExtended.getAllEvents().size() == 0) {
-                                callback.onError(new ConversionException());
-                            } else {
-                                pushData(callback);
-                            }
-                        }
-                    }
-                };
-                t.start();
+                AsyncUserPush asyncOpenUserPush = new AsyncUserPush();
+                asyncOpenUserPush.execute(callback);
             }
         }
     }
@@ -156,4 +126,49 @@ public class PushController implements IPushController {
         }
     }
 
+    public class AsyncUserPush extends AsyncTask<IPushControllerCallback, Void, Void> {
+        //userCloseChecker is never saved, Only for check if the date is closed.
+        boolean isUserClosed = false;
+        IPushControllerCallback callback;
+
+        @Override
+        protected Void doInBackground(IPushControllerCallback... params) {
+            callback = params[0];
+            isUserClosed = ServerAPIController.isUserClosed(User.getLoggedUser().getUid());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (isUserClosed) {
+                if (User.getLoggedUser() != null && ServerAPIController.isUserClosed(
+                        User.getLoggedUser().getUid())) {
+                    Log.d(TAG, "The user is closed, Surveys not sent");
+                    callback.onError(new ClosedUserPushException());
+                }
+            } else {
+                List<Survey> surveys = Survey.getAllCompletedSurveysNoReceiptReset();
+
+                for (Survey srv : surveys) {
+                    Log.d("DpBlank", "Survey to push " + srv.toString());
+                    for (Value dv : srv.getValuesFromDB()) {
+                        Log.d("DpBlank", "Values to push " + dv.toString());
+                    }
+                }
+                mPushDhisSDKDataSource.wipeEvents();
+                try {
+                    convertToSDK(surveys);
+                } catch (Exception ex) {
+                    callback.onError(new ConversionException(ex));
+                }
+
+                if (EventExtended.getAllEvents().size() == 0) {
+                    callback.onError(new ConversionException());
+                } else {
+                    pushData(callback);
+                }
+            }
+        }
+    }
 }

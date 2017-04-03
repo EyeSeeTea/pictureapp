@@ -340,4 +340,5 @@
 <string name="admin_announcement">"Administrator announcement"</string>
 <string name="user_close">"This user was closed by de administrator."</string>
 <string name="run_in_demo_mode">"Run in demo mode"</string>
+    <string name="login_error_json">"Error reading json config file. Please contact your administrator."</string>
 </resources>

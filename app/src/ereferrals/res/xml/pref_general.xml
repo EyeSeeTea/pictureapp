@@ -83,8 +83,6 @@
         <ListPreference
             android:defaultValue="@string/font_size_level2"
             android:dependency="@string/customize_fonts"
-            android:entries="@array/settings_array_titles_font_sizes"
-            android:entryValues="@array/settings_array_values_font_sizes"
             android:key="@string/font_sizes"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"

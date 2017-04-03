@@ -24,7 +24,6 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
@@ -182,7 +181,7 @@ public class PullController implements IPullController {
         }
     }
 
-    private void convertData(ConversionFilter conversionFilter, final Callback callback) {
+    private void convertData(final Callback callback) {
 
         if (cancelPull) {
             callback.onCancel();
@@ -191,9 +190,12 @@ public class PullController implements IPullController {
 
         callback.onStep(PullStep.CONVERT_DATA);
 
-        if(conversionFilter.getOrgUnitFromDB()){
+        try {
             mConverter.setOrgUnits(OrgUnit.getAllOrgUnit());
+            mDataConverter.convert(callback, mConverter);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            callback.onError(new PullConversionException());
         }
-        mDataConverter.convert(callback, mConverter);
     }
 }

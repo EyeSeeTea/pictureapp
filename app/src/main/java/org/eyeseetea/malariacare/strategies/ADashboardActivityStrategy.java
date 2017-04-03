@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -33,11 +34,21 @@ public abstract class ADashboardActivityStrategy {
     public void prepareLocationListener(Activity activity, Survey survey) {
 
         SurveyLocationListener locationListener = new SurveyLocationListener(survey.getId_survey());
-        LocationManager locationManager =
-                (LocationManager) LocationMemory.getContext().getSystemService(
-                        Context.LOCATION_SERVICE);
 
+        LocationManager locationManager = null;
+        try {
+            locationManager =
+                    (LocationManager) LocationMemory.getContext().getSystemService(
+                            Context.LOCATION_SERVICE);
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
 
+        if(locationListener==null)
+        {
+            saveDefaultLocationIfIsNotAvailable(activity, locationListener);
+        }
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Log.d(TAG, "requestLocationUpdates via NETWORK");
             if (ActivityCompat.checkSelfPermission(activity,
@@ -46,7 +57,7 @@ public abstract class ADashboardActivityStrategy {
                     activity,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
-                return;
+                saveDefaultLocationIfIsNotAvailable(activity, locationListener);
             }
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
                     locationListener);
@@ -62,17 +73,28 @@ public abstract class ADashboardActivityStrategy {
                 Log.d(TAG, "location not available via GPS|NETWORK, last know: " + lastLocation);
                 locationListener.saveLocation(lastLocation);
             } else {
-                String defaultLatitude = activity.getString(
-                        R.string.GPS_LATITUDE_DEFAULT);
-                String defaultLongitude = activity.getString(
-                        R.string.GPS_LONGITUDE_DEFAULT);
-                Location defaultLocation = new Location(
-                        activity.getString(R.string.GPS_PROVIDER_DEFAULT));
-                defaultLocation.setLatitude(Double.parseDouble(defaultLatitude));
-                defaultLocation.setLongitude(Double.parseDouble(defaultLongitude));
-                Log.d(TAG, "location not available via GPS|NETWORK, default: " + defaultLocation);
-                locationListener.saveLocation(defaultLocation);
+                saveDefaultLocationIfIsNotAvailable(activity, locationListener);
             }
         }
+    }
+
+    private void saveDefaultLocationIfIsNotAvailable(Activity activity,
+            SurveyLocationListener locationListener) {
+        Location defaultLocation = createDefaultLocation(activity);
+        locationListener.saveLocation(defaultLocation);
+    }
+
+    @NonNull
+    private Location createDefaultLocation(Activity activity) {
+        String defaultLatitude = activity.getString(
+                R.string.GPS_LATITUDE_DEFAULT);
+        String defaultLongitude = activity.getString(
+                R.string.GPS_LONGITUDE_DEFAULT);
+        Location defaultLocation = new Location(
+                activity.getString(R.string.GPS_PROVIDER_DEFAULT));
+        defaultLocation.setLatitude(Double.parseDouble(defaultLatitude));
+        defaultLocation.setLongitude(Double.parseDouble(defaultLongitude));
+        Log.d(TAG, "location not available via GPS|NETWORK, default: " + defaultLocation);
+        return defaultLocation;
     }
 }

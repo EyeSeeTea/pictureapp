@@ -2,7 +2,6 @@ package org.eyeseetea.malariacare.data.authentication;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonNotPresentException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,14 +36,14 @@ public class CredentialsReader {
         }
     }
 
-    public String getUser() throws ConfigJsonNotPresentException {
+    public String getUser() {
         if (name != null) {
             readJson();
         }
         return name;
     }
 
-    public String getPassword() throws ConfigJsonNotPresentException {
+    public String getPassword() {
         if (password != null) {
             readJson();
         }

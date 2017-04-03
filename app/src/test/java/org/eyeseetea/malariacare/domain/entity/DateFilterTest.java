@@ -15,7 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class SurveyFilterTest {
+public class DateFilterTest {
     DateFilter mSurveyFilter;
     String mockedTodayDate = "2017-12-20";
 
@@ -31,11 +31,11 @@ public class SurveyFilterTest {
     String lastMonthStart = "2017-10-01";
     String lastMonthEnd = "2017-11-30";
 
-    String last6DaysStart = "2017-12-14";
-    String last6DaysEnd = "2017-12-19";
+    String last6DaysStart = "2017-12-15";
+    String last6DaysEnd = "2017-12-20";
 
-    String last6WeeksStart = "2017-11-06";
-    String last6WeeksEnd = "2017-12-17";
+    String last6WeeksStart = "2017-11-13";
+    String last6WeeksEnd = "2017-12-24";
 
     String last6MonthsStart = "2017-05-01";
     String last6MonthsEnd = "2017-11-30";

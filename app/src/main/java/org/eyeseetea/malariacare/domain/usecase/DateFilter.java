@@ -55,6 +55,7 @@ public class DateFilter {
         this.lastMonth = lastMonth;
     }
 
+    //This filter include the current day
     public boolean isLast6Days() {
         return last6Days;
     }
@@ -64,6 +65,7 @@ public class DateFilter {
         this.last6Days = last6Days;
     }
 
+    //This filter include the current week
     public boolean isLast6Weeks() {
         return last6Weeks;
     }
@@ -72,7 +74,7 @@ public class DateFilter {
         all = false;
         this.last6Weeks = last6Weeks;
     }
-
+    //This filter ignore the current month
     public boolean isLast6Month() {
         return last6Month;
     }
@@ -84,10 +86,10 @@ public class DateFilter {
 
     public Date getStartFilterDate(Calendar calendar) {
         if (isLast6Days()) {
-            calendar.add(Calendar.DAY_OF_YEAR, -6);
+            calendar.add(Calendar.DAY_OF_YEAR, -5);
         } else if (isLast6Weeks()) {
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-            calendar.add(Calendar.WEEK_OF_YEAR, -6);
+            calendar.add(Calendar.WEEK_OF_YEAR, -5);
         } else if (isLast6Month()) {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.add(Calendar.MONTH, -7);
@@ -107,9 +109,7 @@ public class DateFilter {
     }
 
     public Date getEndFilterDate(Calendar calendar) {
-        if (isLast6Days()) {
-            calendar.add(Calendar.DAY_OF_YEAR, -1);
-        }else if (isLastWeek()) {
+        if (isLastWeek()) {
             calendar.add(Calendar.WEEK_OF_YEAR, -1);
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
             calendar.add(Calendar.DAY_OF_YEAR, 6);
@@ -128,7 +128,7 @@ public class DateFilter {
             calendar.set(Calendar.DAY_OF_MONTH, -1);
         } else if (isLast6Weeks()) {
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-            calendar.add(Calendar.DAY_OF_YEAR, -1);
+            calendar.add(Calendar.DAY_OF_YEAR, 6);
         }
         return calendar.getTime();
     }

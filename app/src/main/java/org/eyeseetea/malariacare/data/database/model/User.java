@@ -100,10 +100,13 @@ public class User extends BaseModel {
     }
 
     public static User getUserFromDB(User user) {
+        if(user.getUid() == null){
+            return  null;
+        }
         List<User> userdb = new Select().from(User.class).queryList();
         for (int i = userdb.size() - 1; i >= 0; i--) {
-            if ((userdb.get(i).getUid().equals(user.getUid())) && (userdb.get(i).getName().equals(
-                    user.getName()))) {
+            if (userdb.get(i).getUid()!=null && userdb.get(i).getUid().equals(user.getUid()) && userdb.get(i).getName().equals(
+                    user.getName())) {
                 return userdb.get(i);
             }
         }

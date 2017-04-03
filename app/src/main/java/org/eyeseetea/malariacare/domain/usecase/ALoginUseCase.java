@@ -14,6 +14,8 @@ public abstract class ALoginUseCase {
         void onInvalidCredentials();
 
         void onNetworkError();
+
+        void onConfigJsonNotPresent();
     }
 
     public abstract void execute(Credentials credentials, Callback callback);

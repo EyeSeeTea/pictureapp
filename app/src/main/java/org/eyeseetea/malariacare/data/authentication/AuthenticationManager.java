@@ -2,11 +2,9 @@ package org.eyeseetea.malariacare.data.authentication;
 
 import android.content.Context;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.datasources.AuthenticationLocalDataSource;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.AuthenticationDhisSDKDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -70,6 +68,7 @@ public class AuthenticationManager implements IAuthenticationManager {
         userAccountRemoteDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount result) {
+                credentials.setUserUid(result.getUserUid());
                 localLogin(credentials, callback);
             }
 
@@ -112,9 +111,8 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     public Credentials getHardcodedServerCredentials(String serverUrl) {
 
-        String username = PreferencesState.getInstance().getContext().getString(
-                R.string.user_push);
-        String password = PreferencesState.getInstance().getContext().getString(R.string.pass_push);
+        String username = CredentialsReader.getInstance().getUser();
+        String password = CredentialsReader.getInstance().getPassword();
 
         Credentials credentials = new Credentials(serverUrl, username, password);
         return credentials;

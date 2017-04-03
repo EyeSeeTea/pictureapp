@@ -100,8 +100,6 @@ public class PopulateDB {
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
 
-
-
     public static List<Class<? extends BaseModel>> allTables = Arrays.asList(
             CompositeScore.class,
             OrgUnitProgramRelation.class,

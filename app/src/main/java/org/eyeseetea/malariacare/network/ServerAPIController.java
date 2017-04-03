@@ -33,7 +33,6 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -42,7 +41,6 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.ShowException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -151,16 +149,6 @@ public class ServerAPIController {
      */
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    /**
-     * Max surveys that can be sent ...
-     */
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR = 30;
-
-    /**
-     * ... In an hour
-     */
-    private static int DHIS_LIMIT_HOURS = 1;
-
     public static final String ATTRIBUTEVALUES = "attributeValues";
     private static String ATTRIBUTE_VALUES = "attributeValues";
     private static String CODE = "code";
@@ -175,7 +163,6 @@ public class ServerAPIController {
      * Current program UID (once is calculated never changes)
      */
     private static String programUID;
-
 
 
     /**
@@ -398,24 +385,6 @@ public class ServerAPIController {
     }
 
     /**
-     * Closes server if too many surveys have been pushed
-     */
-    public static void banOrgUnitIfRequired() {
-        //// FIXME: 08/02/2017
-        //banOrgUnitIfRequired(getServerUrl(), getOrgUnit());
-    }
-
-    /**
-     * Closes server if too many surveys have been pushed
-     */
-    public static void banOrgUnitIfRequired(String url, String orgUnitNameOrCode) {
-        List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys();
-        if (isSurveyOverLimit(sentSurveys)) {
-            banOrg(url, orgUnitNameOrCode);
-        }
-    }
-
-    /**
      * Returns the orgUnit UID for the current server + orgunit
      */
     public static String getOrgUnitUID() {
@@ -459,9 +428,6 @@ public class ServerAPIController {
                 Log.e(TAG, String.format("banOrg(%s,%s) -> No UID", url, orgUnitNameOrCode));
                 return;
             }
-            //Show informative dialog to the user
-            Context context = PreferencesState.getInstance().getContext();
-            ShowException.showError(context.getString(R.string.exception_org_unit_banned), context);
             //Update date and description in the orgunit
             patchClosedDate(url, orgUnitUID);
             patchDescriptionClosedDate(url, orgUnitUID, orgUnitDescription);
@@ -540,34 +506,6 @@ public class ServerAPIController {
             return value;
         }
 
-    }
-
-    /**
-     * compares the dates of the surveys and checks if the dates are over the limit
-     *
-     * @param surveyList all the sent surveys
-     * @return true if the surveys are over the limit
-     */
-    static boolean isSurveyOverLimit(List<Survey> surveyList) {
-        if (surveyList.size() >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-            for (int i = 0; i < surveyList.size(); i++) {
-                int countDates = 0;
-                Calendar actualSurvey = Utils.DateToCalendar(surveyList.get(i).getEventDate());
-                for (int d = 0; d < surveyList.size(); d++) {
-                    Calendar nextSurvey = Utils.DateToCalendar(surveyList.get(d).getEventDate());
-                    if (actualSurvey.before(nextSurvey)) {
-                        if (!Utils.isDateOverLimit(actualSurvey, nextSurvey, DHIS_LIMIT_HOURS)) {
-                            countDates++;
-                            Log.d(TAG, "Surveys sents in one hour:" + countDates);
-                            if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     /**

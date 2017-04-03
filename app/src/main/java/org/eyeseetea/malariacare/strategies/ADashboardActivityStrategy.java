@@ -45,7 +45,7 @@ public abstract class ADashboardActivityStrategy {
             e.printStackTrace();
         }
 
-        if(locationListener==null)
+        if (locationManager == null)
         {
             saveDefaultLocationIfIsNotAvailable(activity, locationListener);
             return;

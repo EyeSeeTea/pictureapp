@@ -4,8 +4,12 @@ import android.app.Activity;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.DashboardActivity;
+import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 
 /**
@@ -29,7 +33,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void newSurvey(Activity activity) {
         Program program = new Select().from(Program.class).querySingle();
         // Put new survey in session
-        Survey survey = new Survey(null, program, Session.getUser());
+        String orgUnitUid = OrgUnit.findUIDByName(PreferencesState.getInstance().getOrgUnit());
+        OrgUnit orgUnit = OrgUnit.findByUID(orgUnitUid);
+        Survey survey = new Survey(orgUnit, program, Session.getUser());
         survey.save();
         Session.setMalariaSurvey(survey);
         //Look for coordinates
@@ -67,5 +73,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
         return false;
+    }
+
+    public static void onLogoutSuccess() {
+        DashboardActivity.dashboardActivity.finishAndGo(SettingsActivity.class);
     }
 }

@@ -71,12 +71,12 @@ android {
         cambodia {
             applicationId 'org.eyeseetea.surveillance_kh_bb'
             versionName "1.2.11"
-            buildConfigField "boolean", "reviewScreen", "false"
+            buildConfigField "boolean", "reviewScreen", "true"
             buildConfigField "boolean", "activeSwipeNavigator", "true"
             buildConfigField "boolean", "activeButtonNavigator", "false"
             buildConfigField "boolean", "loginDataDownloadPeriod", "true"
             buildConfigField "boolean", "translations", "true"
-            buildConfigField "boolean", "developerOptions", "false"
+            buildConfigField "boolean", "developerOptions", "true"
             buildConfigField "boolean", "multiuser", "false"
             buildConfigField "boolean", "activeStockFragment", "false"
             buildConfigField "boolean", "patientTestedByDefault", "false"
@@ -90,7 +90,7 @@ android {
             buildConfigField "boolean", "activeButtonNavigator", "false"
             buildConfigField "boolean", "loginDataDownloadPeriod", "false"
             buildConfigField "boolean", "translations", "true"
-            buildConfigField "boolean", "developerOptions", "false"
+            buildConfigField "boolean", "developerOptions", "true"
             buildConfigField "boolean", "multiuser", "false"
             buildConfigField "boolean", "activeStockFragment", "false"
             buildConfigField "boolean", "patientTestedByDefault", "false"
@@ -135,7 +135,6 @@ android {
             targetModuleName 'EyeSeeTea'
         }
     }
-    buildToolsVersion '24.0.3'
 }
 
 configurations {

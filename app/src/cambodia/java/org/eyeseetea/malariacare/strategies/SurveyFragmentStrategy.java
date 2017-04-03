@@ -22,6 +22,10 @@ public class SurveyFragmentStrategy {
     }
 
     public String getMalariaProgram() {
+        Program program = Program.getFirstProgram();
+        if(program==null) {
+            return "";
+        }
         return Program.getFirstProgram().getUid();
     }
     public static Survey getSessionSurveyByQuestion(Question question) {

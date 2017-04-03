@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="specific_language_font" translatable="false">saysettha_ot.ttf</string>
-    <string name="user_push" translatable="false"></string>
-    <string name="pass_push" translatable="false"></string>
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
@@ -69,6 +67,7 @@
     <string name="category_option_group_set_uid" translatable="false">yVH67wmhryq</string>
     <string name="test_organisation_name">test_organisation</string>
     <string name="test_organisation_uid">9fV2JoHmO94</string>
+    <string name="authority">EREFERRALS_DHIS2_DEFAULT_AUTHORITY</string>
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">16.010790</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">96.852446</string>

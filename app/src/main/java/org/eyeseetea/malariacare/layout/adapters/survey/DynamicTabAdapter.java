@@ -193,7 +193,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private NavigationController initNavigationController() {
         NavigationController navigationController = Session.getNavigationController();
-        navigationController.next(null);
+        navigationController.first();
         return navigationController;
     }
 
@@ -837,6 +837,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
             case Constants.POSITIVE_OR_ZERO_INT:
+            case Constants.PREGNANT_MONTH_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
@@ -865,6 +866,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
             case Constants.POSITIVE_OR_ZERO_INT:
+            case Constants.PREGNANT_MONTH_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:

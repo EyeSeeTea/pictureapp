@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="specific_language_font" translatable="false">KhmerOS.ttf</string>
-    <string name="user_push" translatable="false">KHMCS</string>
-    <string name="pass_push" translatable="false">KHMCSadmin1</string>
     <string name="rdtPositive" translatable="false">Positive</string>
     <string name="rdtNegative" translatable="false">Negative</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
-    <string name="review_title" translatable="false">សូមធ្វើការពិនិត្យឡើងវិញមុននឹង</string>
-    <string name="review_subtitle" translatable="false">ធ្វើការបញ្ជូន</string>
     <string name="DHIS_DEFAULT_SERVER" translatable="false">https://www.psi-mis.org</string>
     <string name="work_in_progress" translatable="false">Work in progress</string>
 
@@ -34,9 +30,8 @@
     <string name="control_data_element_datetime_capture" translatable="false">qWMb2UM2ikL</string>
     <string name="control_data_element_datetime_sent" translatable="false">aBahytzj2u0</string>
 
-    <string name="category_option_group_matrix_uid" translatable="false"></string>
-
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
+    <string name="authority">CAMBODIA_DHIS2_DEFAULT_AUTHORITY</string>
 </resources>

@@ -4,6 +4,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -28,6 +29,8 @@ public class PushUseCase {
         void onNetworkError();
 
         void onInformativeError(String message);
+
+        void onClosedUser();
 
         void onBannedOrgUnitError();
     }
@@ -104,6 +107,8 @@ public class PushUseCase {
                 } else if (throwable instanceof ImportSummaryErrorException) {
                     callback.onInformativeError(throwable.getMessage());
                     banOrgUnitIfRequired(callback);
+                }else if (throwable instanceof ClosedUserPushException){
+                    callback.onClosedUser();
                 } else {
                     callback.onPushError();
                 }

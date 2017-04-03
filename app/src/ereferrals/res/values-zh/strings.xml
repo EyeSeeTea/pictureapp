@@ -174,6 +174,7 @@
 <string name="exception_org_unit_banned"></string>
 <string name="dynamic_error_phone_format">"电话号码格式无效"</string>
 <string name="dynamic_error_age">"年龄无效"</string>
+<string name="dynamic_error_pregnant_month">"怀孕月份无效"</string>
 <string name="pref_header_general">"一般"</string>
 <string name="font_size_level0">"x小"</string>
 <string name="font_size_level1">"小"</string>
@@ -318,4 +319,7 @@
 <string name="false_option_identifier">"没有"</string>
 <string name="confirmation_really_exit_title">"真的退出吗？"</string>
 <string name="confirmation_really_exit">"您确定要退出应用程序吗？"</string>
+<string name="admin_announcement">"管理员公告"</string>
+<string name="user_close">"该用户被管理员关闭。"</string>
+<string name="run_in_demo_mode">"在演示模式下运行"</string>
 </resources>

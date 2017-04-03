@@ -19,10 +19,13 @@
 package org.eyeseetea.malariacare.network;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -32,7 +35,10 @@ import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.Program;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -42,6 +48,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.Proxy;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Utility class that shows specific operations to check server status with the given config
@@ -140,6 +148,16 @@ public class ServerAPIController {
      * MediaType always json + utf8
      */
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    public static final String ATTRIBUTEVALUES = "attributeValues";
+    private static String ATTRIBUTE_VALUES = "attributeValues";
+    private static String CODE = "code";
+    private static String ATTRIBUTE = "attribute";
+    private static String VALUE = "value";
+    private static String DHIS2_GMT_NEW_DATE_FORMAT = "yyyy-MM-dd";
+    private static String TAG_USER = "users";
+    private static String QUERY_USER_ATTRIBUTES =
+            "/%s?fields=attributeValues[value,attribute[code]]id&paging=false";
 
     /**
      * Current program UID (once is calculated never changes)
@@ -610,6 +628,99 @@ public class ServerAPIController {
             return null;
         }
 
+    }
+
+    public static User pullUserAttributes(User loggedUser) {
+        String lastMessage = loggedUser.getAnnouncement();
+        String uid = loggedUser.getUid();
+        String url =
+                PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
+                        QUERY_USER_ATTRIBUTES, uid);
+        url = encodeBlanks(url);
+        try {
+            Response response = ServerAPIController.executeCall(null, url, "GET");
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+            JSONObject body = new JSONObject(response.body().string());
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.convertValue(mapper.readTree(body.toString()),
+                    JsonNode.class);
+            JsonNode jsonNodeArray = jsonNode.get(ATTRIBUTE_VALUES);
+            String newMessage = "";
+            String closeDate = "";
+            for (int i = 0; i < jsonNodeArray.size(); i++) {
+                if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
+                        User.ATTRIBUTE_USER_ANNOUNCEMENT)) {
+                    newMessage = jsonNodeArray.get(i).get(VALUE).textValue();
+                }
+                if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
+                        User.ATTRIBUTE_USER_CLOSE_DATE)) {
+                    closeDate = jsonNodeArray.get(i).get(VALUE).textValue();
+                }
+            }
+            if ((lastMessage == null && newMessage != null) || (newMessage != null
+                    && !newMessage.equals("") && !lastMessage.equals(newMessage))) {
+                loggedUser.setAnnouncement(newMessage);
+                PreferencesState.getInstance().setUserAccept(false);
+            }
+            if (closeDate == null || closeDate.equals("")) {
+                loggedUser.setCloseDate(null);
+            } else {
+                loggedUser.setCloseDate(Utils.parseStringToCalendar(closeDate,
+                        DHIS2_GMT_NEW_DATE_FORMAT).getTime());
+            }
+
+        } catch (Exception ex) {
+            Log.e(TAG, "Cannot read user last updated from server with");
+            ex.printStackTrace();
+        }
+        loggedUser.save();
+        return loggedUser;
+    }
+
+    public static boolean isUserClosed(String userUid) {
+        if (Session.getCredentials().isDemoCredentials()) {
+            return false;
+        }
+
+        //Lets for a last event with that orgunit/program
+        String url =
+                PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
+                        QUERY_USER_ATTRIBUTES, userUid);
+
+        url = encodeBlanks(url);
+        Date closedDate = null;
+        try {
+            Response response = ServerAPIController.executeCall(null, url, "GET");
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+            JSONObject body = new JSONObject(response.body().string());
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.convertValue(mapper.readTree(body.toString()),
+                    JsonNode.class);
+            JsonNode jsonNodeArray = jsonNode.get(ATTRIBUTEVALUES);
+            String closeDateAsString = "";
+            for (int i = 0; i < jsonNodeArray.size(); i++) {
+                if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
+                        User.ATTRIBUTE_USER_CLOSE_DATE)) {
+                    closeDateAsString = jsonNodeArray.get(i).get(VALUE).textValue();
+                }
+            }
+            if (closeDateAsString == null || closeDateAsString.equals("")) {
+                return false;
+            }
+            closedDate = Utils.parseStringToCalendar(closeDateAsString,
+                    DHIS2_GMT_NEW_DATE_FORMAT).getTime();
+        } catch (Exception ex) {
+            Log.e(TAG, "Cannot read user last updated from server with");
+            ex.printStackTrace();
+            return false;
+        }
+        return closedDate.before(new Date());
     }
 
     /**

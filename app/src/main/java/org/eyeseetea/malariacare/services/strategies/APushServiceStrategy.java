@@ -72,6 +72,11 @@ public abstract class APushServiceStrategy {
                 showInDialog("", PreferencesState.getInstance().getContext().getString(
                         R.string.exception_org_unit_banned));
             }
+
+            @Override
+            public void onClosedUser() {
+                closeUserLogout();
+            }
         });
     }
 
@@ -82,5 +87,10 @@ public abstract class APushServiceStrategy {
 
     public void showInDialog(String title, String message) {
         DashboardActivity.dashboardActivity.showException(title, message);
+    }
+
+    public void closeUserLogout() {
+        DashboardActivity.dashboardActivity.closeUserFromService(R.string.admin_announcement,
+                PreferencesState.getInstance().getContext().getString(R.string.user_close));
     }
 }

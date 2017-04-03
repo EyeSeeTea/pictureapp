@@ -24,8 +24,8 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.remote.PullDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
@@ -34,7 +34,6 @@ import org.eyeseetea.malariacare.data.sync.importer.strategies.APullControllerSt
 import org.eyeseetea.malariacare.data.sync.importer.strategies.PullControllerStrategy;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
-import org.eyeseetea.malariacare.domain.usecase.pull.ConversionFilter;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.android.api.D2;
@@ -100,14 +99,12 @@ public class PullController implements IPullController {
                     new IDataSourceCallback<List<OrganisationUnit>>() {
                         @Override
                         public void onSuccess(List<OrganisationUnit> organisationUnits) {
-                            ConversionFilter conversionFilter = new ConversionFilter();
-                            conversionFilter.setConvertMetaData(true);
                             if (!pullFilters.downloadData() || pullFilters.pullDataAfterMetadata()) {
-                                conversionFilter.setConvertData(false);
-                                convertFromSDK(callback, conversionFilter);
+                                convertMetaData(callback);
+                                callback.onComplete();
                             } else {
-                                conversionFilter.setConvertData(true);
-                                pullData(pullFilters, organisationUnits, callback, conversionFilter);
+                                convertMetaData(callback);
+                                pullData(pullFilters, organisationUnits, callback);
                             }
                         }
 
@@ -118,13 +115,9 @@ public class PullController implements IPullController {
                     });
         }
         else {
-            if(pullFilters.downloadData()) {
-                ConversionFilter conversionFilter = new ConversionFilter();
-                conversionFilter.setConvertMetaData(false);
-                conversionFilter.setConvertData(true);
-                conversionFilter.setOrgUnitFromDB(true);
+            if (pullFilters.downloadData()) {
                 List<OrganisationUnit> organisationUnitsList = D2.me().organisationUnits().list().toBlocking().first();
-                pullData(pullFilters, organisationUnitsList, callback, conversionFilter);
+                pullData(pullFilters, organisationUnitsList, callback);
             }
             else{
                 callback.onComplete();
@@ -142,7 +135,7 @@ public class PullController implements IPullController {
     }
 
     private void pullData(PullFilters pullFilters, List<OrganisationUnit> organisationUnits,
-            final Callback callback, final ConversionFilter conversionFilter) {
+            final Callback callback) {
 
         if (cancelPull) {
             callback.onCancel();
@@ -153,7 +146,8 @@ public class PullController implements IPullController {
                 new IDataSourceCallback<List<Event>>() {
                     @Override
                     public void onSuccess(List<Event> result) {
-                        convertFromSDK(callback, conversionFilter);
+                        convertData(callback);
+                        callback.onComplete();
                     }
 
                     @Override
@@ -161,26 +155,6 @@ public class PullController implements IPullController {
                         callback.onError(throwable);
                     }
                 });
-    }
-
-
-    private void convertFromSDK(final Callback callback, ConversionFilter conversionFilter) {
-        Log.d(TAG, "Converting SDK into APP data");
-
-        try {
-            if(conversionFilter.metadataConversion()) {
-                convertMetaData(callback);
-            }
-
-            if (conversionFilter.dataConversion()) {
-                convertData(conversionFilter, callback);
-            } else {
-                callback.onComplete();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            callback.onError(new PullConversionException());
-        }
     }
 
     private void convertMetaData(final Callback callback) {
@@ -192,17 +166,20 @@ public class PullController implements IPullController {
 
         callback.onStep(PullStep.CONVERT_METADATA);
         Log.d(TAG, "Converting organisationUnits...");
+        try {
+            List<OrganisationUnitExtended> assignedOrganisationsUnits =
+                    OrganisationUnitExtended.getExtendedList(
+                            (SdkQueries.getAssignedOrganisationUnits()));
+            for (OrganisationUnitExtended assignedOrganisationsUnit : assignedOrganisationsUnits) {
+                assignedOrganisationsUnit.accept(mConverter);
+            }
 
-        List<OrganisationUnitExtended> assignedOrganisationsUnits =
-                OrganisationUnitExtended.getExtendedList(
-                        (SdkQueries.getAssignedOrganisationUnits()));
-
-        for (OrganisationUnitExtended assignedOrganisationsUnit : assignedOrganisationsUnits) {
-            assignedOrganisationsUnit.accept(mConverter);
+            OrgUnitToOptionConverter.convert();
+            mPullControllerStrategy.convertMetadata(mConverter);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            callback.onError(new PullConversionException());
         }
-
-        OrgUnitToOptionConverter.convert();
-        mPullControllerStrategy.convertMetadata(mConverter);
     }
 
     private void convertData(ConversionFilter conversionFilter, final Callback callback) {

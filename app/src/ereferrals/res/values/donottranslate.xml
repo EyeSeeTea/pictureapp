@@ -71,6 +71,8 @@
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">-0.996961</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">33.932726</string>
+    <string name="logged_user_username">logged_user_username</string>
+    <string name="logged_user_pin">logged_user_pin</string>
 
 
 </resources>

@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.services.strategies;
 
 import android.util.Log;
 
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.services.PushService;
@@ -18,7 +19,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
         if (Session.getCredentials().isDemoCredentials()) {
             Log.d(TAG, "execute mocked push");
             executeMockedPush();
-        } else {
+        } else if (isLogged()) {
             Log.d(TAG, "execute push");
             executePush();
         }
@@ -34,5 +35,12 @@ public class PushServiceStrategy extends APushServiceStrategy {
                 mPushService.onPushFinished();
             }
         });
+    }
+
+    public boolean isLogged() {
+        if (!PreferencesState.getInstance().getOrgUnit().isEmpty()) {
+            return true;
+        }
+        return false;
     }
 }

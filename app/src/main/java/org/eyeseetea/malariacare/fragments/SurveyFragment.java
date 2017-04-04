@@ -71,15 +71,17 @@ public class SurveyFragment extends Fragment {
     private LinearLayout content;
 
     public static void nextProgressMessage() {
-        DashboardActivity.dashboardActivity.runOnUiThread(new Runnable() {
-            public void run() {
-                if (messageIterator != null) {
-                    if (messageIterator.hasNext()) {
-                        progressText.setText(messageIterator.next());
+        if (DashboardActivity.dashboardActivity != null) {
+            DashboardActivity.dashboardActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    if (messageIterator != null) {
+                        if (messageIterator.hasNext()) {
+                            progressText.setText(messageIterator.next());
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     public static int progressMessagesCount() {

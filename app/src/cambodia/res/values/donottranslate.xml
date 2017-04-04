@@ -33,5 +33,5 @@
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">10.0</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">103.0</string>
-    <string name="authority">CAMBODIA_DHIS2_DEFAULT_AUTHORITY</string>
+    <string name="authority" translatable="false">CAMBODIA_DHIS2_DEFAULT_AUTHORITY</string>
 </resources>

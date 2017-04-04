@@ -32,6 +32,7 @@
 ກະລຸນາຕິດຕໍ່ອົງການ PSI ລາວ*ຜ່ານເບີ*"</string>
 <string name="exception_org_unit_banned">"ຮ້ານປິດ.
 ກະລຸນາຕິດຕໍ່ອົງການ PSI ລາວ*ຜ່ານເບີ*"</string>
+<string name="dialog_reopen_org_unit">"ຮ້ານປິດ %s ແມ່ນເປີດ."</string>
 <string name="dynamic_error_phone_format">"ເບີໂທບໍ່ຖືກຕ້ອງ (xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
 <string name="dynamic_error_age">"ອາຍຸບໍ່ຖືກ"</string>
 <string name="dynamic_error_pregnant_month">"ເດືອນຖືພາບໍ່ຖືກຕ້ອງ"</string>

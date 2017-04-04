@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2015.
+  ~
+  ~ This file is part of QIS Surveillance App.
+  ~
+  ~  QIS Surveillance App is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  QIS Surveillance App is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="@dimen/dashboard_row_padding">
+
+    <org.eyeseetea.sdk.presentation.views.CustomSpinner
+        android:id="@+id/filter_surveys"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_weight="0.6"
+        android:background="@android:drawable/btn_dropdown"
+        android:dropDownWidth="fill_parent"
+        android:paddingBottom="5dip"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dip"
+        android:spinnerMode="dropdown"
+        android:textColor="@color/black"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="?attr/font_small"
+        app:font_name="@string/condensed_font_name" >
+
+    </org.eyeseetea.sdk.presentation.views.CustomSpinner>
+
+    <org.eyeseetea.sdk.presentation.views.CustomTextView
+        android:id="@+id/survey_cases"
+        android:layout_width="0dip"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.4"
+        android:autoText="false"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:padding="5dip"
+        android:text="@string/unsent_survey_filter_number_of_cases"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="@color/black"
+        android:textSize="?attr/font_small"
+        app:font_name="@string/condensed_font_name" />
+
+</TableRow>

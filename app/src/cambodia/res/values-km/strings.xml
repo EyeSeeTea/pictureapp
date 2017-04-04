@@ -127,6 +127,9 @@
 <string name="font_medium">"មធ្យម"</string>
 <string name="font_large">"ធំ"</string>
 <string name="font_extra_large">"ធំបំផុត"</string>
+<string name="Pf">"Pf"</string>
+<string name="Pv">"Pv"</string>
+<string name="mixed">"Pf/Pv"</string>
 <string name="dynamic_error_number">"លេខមិនត្រឹមត្រូវ"</string>
 <string name="settings_menu_logout_message">"ការផ្លាស់ប្តូរម៉ាស៊ីនបម្រើឬ orgunit ត្រូវការដើម្បីឡើងវិញការចូល។ រាល់ការស្ទង់មតិមិនត្រូវបានផ្ញើនឹងត្រូវបានលុប។ តើអ្នកពិតជាចង់បន្តឬ?"</string>
 <string name="app_logout">"ចាកចេញ"</string>

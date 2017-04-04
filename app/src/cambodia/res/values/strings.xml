@@ -148,6 +148,11 @@
  <string name="survey_second_step">"Building questions..."</string> 
 <string name="survey_third_step">"Building questions tree..."</string> 
 <string name="survey_fourth_step">"Creating screens..."</string>
+<string name="unsent_survey_filter_number_of_cases">"%d Cases"</string>
+<string name="unsent_survey_filter_option_this_week">"This week"</string>
+<string name="unsent_survey_filter_option_this_month">"This month"</string>
+<string name="unsent_survey_filter_option_last_week">"Last week"</string>
+<string name="unsent_survey_filter_option_last_month">"Last month"</string>
 <string name="admin_announcement">"Administrator announcement"</string>
 <string name="user_close">"This user was closed by de administrator."</string>
 <string name="Option_Text_Test_Positive">"Positive"</string>

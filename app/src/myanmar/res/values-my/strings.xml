@@ -102,9 +102,9 @@
 <string name="survey_review">"ဆန်းစစ်ခြင်း"</string>
 <string name="survey_send">"စေလွှတ်မည်"</string>
 <string name="app_settings">"ဆက်တင်ပြောင်းရန်"</string>
-<string name="server">"Server: "</string>
-<string name="server_name">"DHIS Server URL"</string>
-<string name="app_visual">"Visual:"</string>
+    <string name="server">"ဆာဗာက"</string>
+    <string name="server_name">"DHIS URL ဆာဗာက"</string>
+    <string name="app_visual">"မြင်သာသော"</string>
 <string name="fonts_customise">"စာလုံးအကြီးအသေးပြောင်းရန်"</string>
 <string name="font_size">"စာလုံးအကြီးအသေး "</string>
 <string name="font_extra_small">"အလွန်သေး"</string>
@@ -171,7 +171,7 @@
 <string name="dialog_info_delete_survey">"ဤမှတ်တမ်းကိုဖျက်ရန် သေချာပါသလား"</string>
 <string name="dialog_title_error">"အမှား"</string>
 <string name="toast_push_is_pushing">"setting များကိုဝင်ရောက်မီကစစ်တမ်းများပေးပို့ခြင်း။"</string>
-<string name="create_info_organization_unit">"Organization Unit"</string>
+<string name="create_info_organization_unit">"အဖွဲ့အစည်းကယူနစ်"</string>
 <string name="assessment_sent_date">"နေ့စွဲ"</string>
 <string name="assessment_title_info">"အချက်အလက်"</string>
 <string name="survey_info_exit">"ပြန်ထွက်ရန်သေချာသလား"</string>

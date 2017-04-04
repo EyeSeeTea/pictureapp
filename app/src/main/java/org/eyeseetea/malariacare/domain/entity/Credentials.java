@@ -2,8 +2,6 @@ package org.eyeseetea.malariacare.domain.entity;
 
 import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
 
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-
 public class Credentials {
     private static final String DEMO_USER = "demo";
     private static final String DEMO_SERVER = "demo.server";
@@ -47,6 +45,10 @@ public class Credentials {
 
     public boolean isDemoCredentials() {
         return this.equals(Credentials.createDemoCredentials());
+    }
+
+    public boolean isEmpty() {
+        return username.isEmpty() && password.isEmpty();
     }
 
     public boolean equals(Object o) {

@@ -42,7 +42,7 @@ public class AuthenticationManager implements IAuthenticationManager {
         //TODO: jsanchez fix find out IsDemo from current UserAccount getting from DataSource
         Credentials credentials = Session.getCredentials();
 
-        if (credentials.isDemoCredentials()) {
+        if (credentials.isDemoCredentials() || credentials.isEmpty()) {
             localLogout(callback);
         } else {
             remoteLogout(callback);

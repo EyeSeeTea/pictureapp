@@ -81,8 +81,6 @@ import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.PhoneSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
@@ -208,7 +206,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 Log.d(TAG, "onSwipeRight(previous)");
                 //Hide keypad
-                hideKeyboard(listView.getContext(), listView);
+                if (!readOnly)
+                    hideKeyboard(listView.getContext(), listView);
                 previous();
             }
 
@@ -220,8 +219,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     return;
                 }
                 Log.d(TAG, "onSwipeLeft(next)");
-                if (readOnly || navigationController.isNextAllowed()) {
-                    //Hide keypad
+                if (readOnly)
+                    next();
+                else if (navigationController.isNextAllowed()) {
                     hideKeyboard(listView.getContext(), listView);
                     next();
                 }

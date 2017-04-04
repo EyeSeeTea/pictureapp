@@ -740,7 +740,9 @@ public class DashboardActivity extends BaseActivity {
 
         getSurveysFromService();
 
-        initNavigationController();
+        if (BuildConfig.multiuser) {
+            initNavigationController();
+        }
     }
 
     private void initNavigationController() {

@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.data.remote.AuthenticationDhisSDKDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonInvalidException;
 
 public class AuthenticationManager implements IAuthenticationManager {
     IAuthenticationDataSource userAccountLocalDataSource;
@@ -33,7 +34,13 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     @Override
     public void hardcodedLogin(String url, Callback<UserAccount> callback) {
-        remoteLogin(getHardcodedServerCredentials(url), callback);
+        Credentials credentials = null;
+        try {
+            credentials = getHardcodedServerCredentials(url);
+        } catch (Exception e) {
+            callback.onError(new ConfigJsonInvalidException(e.getMessage()));
+        }
+        remoteLogin(credentials, callback);
     }
 
     @Override
@@ -109,11 +116,10 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
 
-    public Credentials getHardcodedServerCredentials(String serverUrl) {
-
-        String username = CredentialsReader.getInstance().getUser();
+    public Credentials getHardcodedServerCredentials(String serverUrl) throws ConfigJsonInvalidException {
+        String username = null;
+        username = CredentialsReader.getInstance().getUser();
         String password = CredentialsReader.getInstance().getPassword();
-
         Credentials credentials = new Credentials(serverUrl, username, password);
         return credentials;
     }

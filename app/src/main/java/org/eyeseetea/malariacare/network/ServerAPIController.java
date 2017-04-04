@@ -19,7 +19,6 @@
 package org.eyeseetea.malariacare.network;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -35,10 +34,10 @@ import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonInvalidException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -49,7 +48,6 @@ import java.io.IOException;
 import java.net.Proxy;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Utility class that shows specific operations to check server status with the given config
@@ -831,12 +829,13 @@ public class ServerAPIController {
     /**
      * Call to DHIS Server
      */
-    static Response executeCall(JSONObject data, String url, String method) throws IOException {
+    static Response executeCall(JSONObject data, String url, String method) throws IOException,
+            ConfigJsonInvalidException {
         final String DHIS_URL = url;
 
         OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
-
         BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
+
         client.setAuthenticator(basicAuthenticator);
 
         Request.Builder builder = new Request.Builder()
@@ -891,7 +890,7 @@ class BasicAuthenticator implements Authenticator {
     public final String AUTHORIZATION_HEADER = "Authorization";
     private String credentials;
 
-    BasicAuthenticator() {
+    BasicAuthenticator() throws ConfigJsonInvalidException {
         credentials =  AuthenticationApiStrategy.getApiCredentials();
     }
 

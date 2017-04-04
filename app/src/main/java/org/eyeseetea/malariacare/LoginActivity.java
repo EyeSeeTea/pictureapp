@@ -224,7 +224,7 @@ public class LoginActivity extends AbsLoginActivity {
             }
 
             @Override
-            public void onConfigJsonNotPresent() {
+            public void onConfigJsonInvalid() {
                 hideProgressBar();
                 showError(getString(R.string.login_error_json));
             }

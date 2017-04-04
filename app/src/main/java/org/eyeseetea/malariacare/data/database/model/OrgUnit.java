@@ -127,6 +127,15 @@ public class OrgUnit extends BaseModel {
         return orgUnit.getUid();
     }
 
+    /**
+     * Returns the Orgunit of an orgUnit with the given name
+     *
+     * @param name Name of the orgunit
+     */
+    public static OrgUnit findByName(String name) {
+        return new Select().from(OrgUnit.class)
+                .where(OrgUnit_Table.name.eq(name)).querySingle();
+    }
     public Long getId_org_unit() {
         return id_org_unit;
     }
@@ -194,12 +203,15 @@ public class OrgUnit extends BaseModel {
         this.orgUnitLevel = null;
     }
 
-    public Boolean getIs_banned() {
+    public boolean isBanned() {
+        if (is_banned == null) {
+            return false;
+        }
         return is_banned;
     }
 
-    public void setIs_banned(Boolean is_banned) {
-        this.is_banned = is_banned;
+    public void setBan(boolean isBanned) {
+        this.is_banned = isBanned;
     }
 
     public List<OrgUnit> getChildren() {

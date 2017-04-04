@@ -44,9 +44,11 @@ public class OrgUnit extends BaseModel {
     String name;
     @Column
     Long id_org_unit_parent;
+    @Column
+    Boolean is_banned;
 
     /**
-     * Refernce to parent orgUnit (loaded lazily)
+     * Reference to parent orgUnit (loaded lazily)
      */
     OrgUnit orgUnit;
 
@@ -192,6 +194,14 @@ public class OrgUnit extends BaseModel {
         this.orgUnitLevel = null;
     }
 
+    public Boolean getIs_banned() {
+        return is_banned;
+    }
+
+    public void setIs_banned(Boolean is_banned) {
+        this.is_banned = is_banned;
+    }
+
     public List<OrgUnit> getChildren() {
         if (this.children == null) {
             this.children = new Select().from(OrgUnit.class)
@@ -247,6 +257,7 @@ public class OrgUnit extends BaseModel {
         OrgUnit orgUnit = (OrgUnit) o;
 
         if (id_org_unit != orgUnit.id_org_unit) return false;
+        if (is_banned != orgUnit.is_banned) return false;
         if (uid_org_unit != null ? !uid_org_unit.equals(orgUnit.uid_org_unit) : orgUnit.uid_org_unit != null) return false;
         if (name != null ? !name.equals(orgUnit.name) : orgUnit.name != null) return false;
         if (id_org_unit_parent != null ? !id_org_unit_parent.equals(orgUnit.id_org_unit_parent) : orgUnit.id_org_unit_parent != null) {
@@ -261,6 +272,7 @@ public class OrgUnit extends BaseModel {
     public int hashCode() {
         int result = (int) (id_org_unit ^ (id_org_unit >>> 32));
         result = 31 * result + (uid_org_unit != null ? uid_org_unit.hashCode() : 0);
+        result = 31 * result + (is_banned != null ? is_banned.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (id_org_unit_parent != null ? id_org_unit_parent.hashCode() : 0);
         result = 31 * result + (id_org_unit_level != null ? id_org_unit_level.hashCode() : 0);
@@ -272,6 +284,7 @@ public class OrgUnit extends BaseModel {
         return "OrgUnit{" +
                 "id_org_unit_fk=" + id_org_unit +
                 ", uid_org_unit='" + uid_org_unit + '\'' +
+                ", is_banned='" + is_banned + '\'' +
                 ", name='" + name + '\'' +
                 ", id_org_unit_parent=" + id_org_unit_parent +
                 ", id_org_unit_level=" + id_org_unit_level +

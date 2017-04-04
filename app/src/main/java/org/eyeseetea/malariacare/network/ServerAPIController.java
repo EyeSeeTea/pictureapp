@@ -720,6 +720,9 @@ public class ServerAPIController {
             ex.printStackTrace();
             return false;
         }
+        if(closedDate == null) {
+            return false;
+        }
         return closedDate.before(new Date());
     }
 

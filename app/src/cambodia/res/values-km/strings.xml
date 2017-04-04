@@ -148,9 +148,14 @@
      <string name="survey_second_step">"សំណួរអគារ ..."</string> 
     <string name="survey_third_step">"ដើមឈើសំណួរអគារ ..."</string> 
     <string name="survey_fourth_step">"ការបង្កើតអេក្រង់ ..."</string>
-    <string name="admin_announcement">"Administrator announcement"</string>
-    <string name="user_close">"This user was closed by de administrator."</string>
-    <string name="Option_Text_Test_Positive">"វិជ្ជមាន"</string>
+    <string name="admin_announcement">"សេចក្តីប្រកាសអ្នកគ្រប់គ្រង"</string>
+    <string name="user_close">"អ្នកប្រើនេះត្រូវបានបិទដោយអ្នកគ្រប់គ្រងដឺ។"</string>
+    <string name="unsent_survey_filter_number_of_cases">"%d ករណី"</string>
+    <string name="unsent_survey_filter_option_this_week">"ស​ប្តា​ហ៍​នេះ"</string>
+    <string name="unsent_survey_filter_option_this_month">"ខែ​នេះ"</string>
+    <string name="unsent_survey_filter_option_last_week">"សប្ដាហ៍​មុន"</string>
+    <string name="unsent_survey_filter_option_last_month">"ខែមុន"</string>
+     <string name="Option_Text_Test_Positive">"វិជ្ជមាន"</string>
     <string name="Option_Text_Test_Negative">"អវិជ្ជមាន"</string>
     <string name="Option_Text_Test_Not_Tested">"មិនបានធ្វើតេស្តឈាម"</string>
     <string name="Option_Text_Test_Reason_Refused">"អ្នកជំងឺបដិសេធ"</string>

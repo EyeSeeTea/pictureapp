@@ -41,7 +41,6 @@ public class NavigationBuilder {
     /**
      * Questions ordered by id
      */
-    private List<Question> questionsOrderedById;
     private int step = 0;
 
     private IAsyncExecutor mAsyncExecutor;
@@ -113,6 +112,7 @@ public class NavigationBuilder {
                 notifyLoadFinished();
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             Session.setIsLoadingNavigationController(false);
             Log.d(TAG, "Error loading navigation controller: " + ex.getMessage());
         }

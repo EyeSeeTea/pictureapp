@@ -178,6 +178,7 @@
 <string name="survey_info_exit_delete">"ဤမှတ်တမ်းကိုဖျက်မည်"</string>
 <string name="exception_org_unit_not_valid">"Org unit မှားနေသည်"</string>
 <string name="exception_org_unit_banned">"ဤ Org unit ထည့်၍ မရပါ။"</string>
+<string name="dialog_reopen_org_unit">"ထွက်ပေါက်ကို %s ပြန်ဖွင့်သည်။"</string>
 <string name="dynamic_error_phone_format">"ဖုန်းနံပါတ်မှားနေသည်။"</string>
 <string name="dynamic_error_age">"အသက် မှားနေသည်။"</string>
 <string name="dynamic_error_pregnant_month">"မှားနေသောကိုယ်ဝန်လ"</string>

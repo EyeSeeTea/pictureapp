@@ -18,6 +18,7 @@
 <string name="survey_info_exit_delete">"The survey in progress will be deleted"</string>
 <string name="exception_org_unit_not_valid">"Outlet Code is not valid. Contact PSK at 011 771 811"</string>
 <string name="exception_org_unit_banned">"Outlet is closed or blocked. Contact PSI at 011 771 811"</string>
+<string name="dialog_reopen_org_unit">"Outlet %s is reopen."</string>
 <string name="dynamic_error_phone_format">"Invalid format for phone number ( 0NN NNN NNN{N} )"</string>
 <string name="dynamic_error_age">"Invalid age"</string>
 <string name="pref_header_general">"General"</string>

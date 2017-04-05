@@ -244,7 +244,7 @@ public abstract class BaseLayoutUtils {
         }
     }
 
-    public static void putImageInImageViewDensityHight(String path, ImageView imageView) {
+    public static void putImageInImageViewDensityHigh(String path, ImageView imageView) {
         if (path == null || path.equals("")) {
             return;
         }

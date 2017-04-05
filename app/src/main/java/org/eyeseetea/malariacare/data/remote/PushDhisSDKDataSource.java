@@ -26,6 +26,8 @@ import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.domain.exception.ConvertedEventsToPushNotFoundException;
+import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.StateFlow;
@@ -54,7 +56,7 @@ public class PushDhisSDKDataSource {
         final Set<String> eventUids = getEventUidToBePushed();
 
         if (eventUids.isEmpty() || eventUids.size() == 0) {
-            callback.onError(new Exception("Empty events"));
+            callback.onError(new ConvertedEventsToPushNotFoundException());
             return;
         }
         Observable<Map<String, ImportSummary>> eventObserver =

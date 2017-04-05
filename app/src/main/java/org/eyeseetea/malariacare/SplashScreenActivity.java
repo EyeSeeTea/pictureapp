@@ -13,6 +13,7 @@ import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -64,7 +65,11 @@ public class SplashScreenActivity extends Activity {
                 @Override
                 public void onComplete() {
                     Log.d(this.getClass().getSimpleName(), "pull complete");
-                    NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
+                    try {
+                        NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
+                    }catch (LoadingNavigationControllerException ex){
+                        onError(ex.getMessage());
+                    }
                 }
 
                 @Override
@@ -96,7 +101,7 @@ public class SplashScreenActivity extends Activity {
 
     }
 
-    public class AsyncInitApplication extends AsyncTask<Void, Void, Exception> {
+    public class AsyncInitApplication extends AsyncTask<Void, Void, Void> {
         Activity activity;
 
         AsyncInitApplication(Activity activity) {
@@ -109,14 +114,13 @@ public class SplashScreenActivity extends Activity {
         }
 
         @Override
-        protected Exception doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
             init();
             return null;
         }
 
         @Override
-        protected void onPostExecute(final Exception exception) {
-            //Error
+        protected void onPostExecute(Void aVoid) {
             SplashActivityStrategy splashActivityStrategy = new SplashActivityStrategy(activity);
             splashActivityStrategy.finishAndGo();
         }

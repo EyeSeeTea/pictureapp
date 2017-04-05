@@ -208,7 +208,7 @@ public class ServerAPIController {
      * Null if something went wrong
      */
     public static String getServerVersion(String url) {
-        String serverVersion;
+        String serverVersion = "";
         try {
             String urlServerInfo = url + DHIS_SERVER_INFO;
             Response response = executeCall(null, urlServerInfo, "GET");
@@ -221,9 +221,13 @@ public class ServerAPIController {
             }
             JSONObject data = parseResponse(response.body().string());
             serverVersion = data.getString(TAG_VERSION);
-        } catch (Exception ex) {
-            Log.e(TAG, "getServerVersion: " + ex.toString());
-            serverVersion = "";
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "getServerVersion: " + e.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (ConfigJsonIOException e) {
+            e.printStackTrace();
         }
         Log.i(TAG, String.format("getServerVersion(%s) -> %s", url, serverVersion));
         return serverVersion;
@@ -345,8 +349,14 @@ public class ServerAPIController {
 
             JSONObject data = parseResponse(response.body().string());
             programUIDInServer = String.valueOf(data.get(TAG_ID));
-        } catch (Exception ex) {
-            Log.e(TAG, "isValidProgram: " + ex.toString());
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+            return false;
+        } catch (ConfigJsonIOException ex) {
+            ex.printStackTrace();
+            return false;
+        } catch (IOException ex) {
+            ex.printStackTrace();
             return false;
         }
         boolean valid = getProgramUID() != null && getProgramUID().equals(programUIDInServer);
@@ -414,13 +424,8 @@ public class ServerAPIController {
         try {
             JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
             String orgUnitUID = orgUnitJSON.getString(TAG_ID);
-            String orgUnitDescription;
-            //Fixme: refactor try catch{ Exception }
-            try {
-                orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
-            } catch (Exception e) {
-                orgUnitDescription = "";
-            }
+            String orgUnitDescription = "";
+            orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
             //NO OrgUnitUID -> Non blocking error, go on
             if (orgUnitUID == null) {
                 Log.e(TAG, String.format("banOrg(%s,%s) -> No UID", url, orgUnitNameOrCode));
@@ -429,7 +434,7 @@ public class ServerAPIController {
             //Update date and description in the orgunit
             patchClosedDate(url, orgUnitUID);
             patchDescriptionClosedDate(url, orgUnitUID, orgUnitDescription);
-        } catch (Exception ex) {
+        } catch (JSONException ex) {
             Log.e(TAG, String.format("banOrg(%s,%s): %s", url, orgUnitNameOrCode, ex.getMessage()));
         }
     }
@@ -604,8 +609,9 @@ public class ServerAPIController {
 
             //Error -> null
             if (!response.isSuccessful()) {
-                Log.e(TAG, "getOrgUnitData (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
+                Log.e(TAG, "getOrgUnitData (" + response.code() + "): " + response.body().string()
+                        + "error:" + response.message());
+                return null;
             }
 
             //{"organisationUnits":[{}]}
@@ -619,13 +625,16 @@ public class ServerAPIController {
                 return null;
             }
             return (JSONObject) orgUnitsArray.get(0);
-
-        } catch (Exception ex) {
-            Log.e(TAG, String.format("getOrgUnitData(%s,%s): %s", url, orgUnitNameOrCode,
-                    ex.toString()));
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        } catch (ConfigJsonIOException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            Log.e(TAG, String.format("getOrgUnitData(%s,%s)", url, orgUnitNameOrCode));
             return null;
         }
-
     }
 
     public static User pullUserAttributes(User loggedUser) {
@@ -669,13 +678,18 @@ public class ServerAPIController {
                 loggedUser.setCloseDate(Utils.parseStringToCalendar(closeDate,
                         DHIS2_GMT_NEW_DATE_FORMAT).getTime());
             }
-
-        } catch (Exception ex) {
-            Log.e(TAG, "Cannot read user last updated from server with");
+            loggedUser.save();
+            return loggedUser;
+        } catch (JSONException ex) {
             ex.printStackTrace();
+        } catch (ConfigJsonIOException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            Log.e(TAG, "Cannot read user last updated from server with");
+            return null;
         }
-        loggedUser.save();
-        return loggedUser;
     }
 
     public static boolean isUserClosed(String userUid) {
@@ -713,15 +727,20 @@ public class ServerAPIController {
             }
             closedDate = Utils.parseStringToCalendar(closeDateAsString,
                     DHIS2_GMT_NEW_DATE_FORMAT).getTime();
-        } catch (Exception ex) {
-            Log.e(TAG, "Cannot read user last updated from server with");
+            if(closedDate == null) {
+                return false;
+            }
+            return closedDate.before(new Date());
+        } catch (JSONException ex) {
             ex.printStackTrace();
+        } catch (ConfigJsonIOException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            Log.e(TAG, "Cannot read user last updated from server with");
             return false;
         }
-        if(closedDate == null) {
-            return false;
-        }
-        return closedDate.before(new Date());
     }
 
     /**
@@ -750,7 +769,7 @@ public class ServerAPIController {
             //If closeddate>today -> Closed
             return !Utils.isDateOverSystemDate(calendarClosedDate);
 
-        } catch (Exception ex) {
+        } catch (NullPointerException ex) {
             Log.e(TAG, String.format("isBanned(%s) ->%s", orgUnitJSON.toString(), ex.getMessage()));
             return true;
         }
@@ -763,7 +782,7 @@ public class ServerAPIController {
     static String getClosedDate(JSONObject orgUnitJSON) {
         try {
             return orgUnitJSON.getString(TAG_CLOSEDDATE);
-        } catch (Exception ex) {
+        } catch (JSONException ex) {
             return null;
         }
     }

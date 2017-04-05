@@ -158,26 +158,20 @@ public class SwipeTouchListener implements View.OnTouchListener {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            try {
-                int dx = (int) (e2.getX() - ((e1 == null) ? lastX : e1.getX()));
+            int dx = (int) (e2.getX() - ((e1 == null) ? lastX : e1.getX()));
 
-                // don't accept the fling if it's too short
-                // as it may conflict with a button push
-                if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(velocityX) > Math.abs(velocityY)) {
-                    if (velocityX > 0) {
-                        onSwipeRight();
-                    } else {
-                        onSwipeLeft();
-                    }
-                    return true;
+            // don't accept the fling if it's too short
+            // as it may conflict with a button push
+            if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(velocityX) > Math.abs(velocityY)) {
+                if (velocityX > 0) {
+                    onSwipeRight();
                 } else {
-                    return false;
+                    onSwipeLeft();
                 }
-
-            } catch (Exception exception) {
-                exception.printStackTrace();
+                return true;
+            } else {
+                return false;
             }
-            return false;
         }
     }
 

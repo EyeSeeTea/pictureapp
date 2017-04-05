@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public interface IPopulateDBStrategy {
-    void init();
+    void init() throws IOException;
 
     InputStream openFile(Context context, String table)
             throws IOException, FileNotFoundException;

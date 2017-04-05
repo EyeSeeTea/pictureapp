@@ -206,7 +206,7 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
             if (table != null) {
                 table.stopLoading();
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
         }
     }

@@ -48,6 +48,7 @@ import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
@@ -741,11 +742,15 @@ public class DashboardActivity extends BaseActivity {
         getSurveysFromService();
 
         if (BuildConfig.multiuser) {
-            initNavigationController();
+            try {
+                initNavigationController();
+            }catch (LoadingNavigationControllerException ex){
+                ex.printStackTrace();
+            }
         }
     }
 
-    private void initNavigationController() {
+    private void initNavigationController() throws LoadingNavigationControllerException{
         NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
     }
 

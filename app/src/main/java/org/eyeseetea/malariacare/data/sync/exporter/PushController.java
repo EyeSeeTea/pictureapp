@@ -33,6 +33,7 @@ import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
+import org.eyeseetea.malariacare.domain.exception.ConvertedEventsToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
@@ -108,7 +109,7 @@ public class PushController implements IPushController {
     /**
      * Launches visitor that turns an APP survey into a SDK event
      */
-    private void convertToSDK(List<Survey> surveys) throws Exception {
+    private void convertToSDK(List<Survey> surveys) throws ConversionException {
         Log.d(TAG, "Converting APP survey into a SDK event");
         for (Survey survey : surveys) {
             survey.setStatus(Constants.SURVEY_SENDING);
@@ -156,12 +157,12 @@ public class PushController implements IPushController {
                 mPushDhisSDKDataSource.wipeEvents();
                 try {
                     convertToSDK(surveys);
-                } catch (Exception ex) {
-                    callback.onError(new ConversionException(ex));
+                } catch (ConversionException ex) {
+                    callback.onError(ex);
                 }
 
                 if (EventExtended.getAllEvents().size() == 0) {
-                    callback.onError(new ConversionException());
+                    callback.onError(new ConvertedEventsToPushNotFoundException());
                 } else {
                     pushData(callback);
                 }

@@ -11,5 +11,5 @@ sh ${gitPath}/generate_last_commit.sh
 cd sdk
 git checkout 2.25_EyeSeeTea
 cd -
-mkdir app/src/cambodia/res/raw
-cp ${BUDDYBUILD_SECURE_FILES}/config.json app/src/cambodia/res/raw/config.json
+mkdir app/src/${BUDDYBUILD_VARIANTS}/res/raw
+cp ${BUDDYBUILD_SECURE_FILES}/config.json app/src/${BUDDYBUILD_VARIANTS}/res/raw/config.json

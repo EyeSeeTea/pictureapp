@@ -19,7 +19,7 @@ public class LoginUseCase extends ALoginUseCase {
 
     @Override
     public void execute(Credentials credentials, final Callback callback) {
-        mAuthenticationManager.login(ServerAPIController.getServerUrl(),
+        mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {

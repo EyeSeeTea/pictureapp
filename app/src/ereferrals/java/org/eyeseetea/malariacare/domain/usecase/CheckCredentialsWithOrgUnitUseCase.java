@@ -1,9 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-
-import java.util.List;
 
 public class CheckCredentialsWithOrgUnitUseCase implements UseCase {
     public interface Callback {
@@ -23,15 +21,12 @@ public class CheckCredentialsWithOrgUnitUseCase implements UseCase {
 
     @Override
     public void run() {
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-
-        for (OrgUnit orgUnit : orgUnits) {
-            if (mCredentials.getUsername().equals(orgUnit.getUid())) {
-                //TODO check if attribute corresponds with password
-                mCallback.onCorrectCredentials();
-                return;
-            }
+        Credentials savedCredentials = PreferencesEReferral.getUserCredentialsFromPreferences();
+        if (savedCredentials.getUsername().equals(mCredentials.getUsername())
+                && savedCredentials.getPassword().equals(mCredentials.getPassword())) {
+            mCallback.onCorrectCredentials();
+        } else {
+            mCallback.onBadCredentials();
         }
-        mCallback.onBadCredentials();
     }
 }

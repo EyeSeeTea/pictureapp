@@ -675,6 +675,45 @@ public class ServerAPIController {
 
     }
 
+    public static JSONObject getOrganisationUnitsByCode(String code) {
+        //Version is required to choose which field to match
+        String serverVersion = getServerVersion(PreferencesState.getInstance().getDhisURL());
+
+        //No version -> No data
+        if (serverVersion == null) {
+            return null;
+        }
+
+        try {
+            String urlOrgUnitData = getOrganisationUnitsCredentialsUrl(code);
+            Response response = executeCall(null, urlOrgUnitData, "GET");
+
+            //Error -> null
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "getOrgUnitData (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+
+            //{"organisationUnits":[{}]}
+            JSONObject jsonResponse = parseResponse(response.body().string());
+            JSONArray orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATIONUNITS);
+
+            //0| >1 matches -> Error
+            if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
+                Log.e(TAG, String.format("getOrgUnitData(%s) -> Found %d matches", code,
+                        orgUnitsArray.length()));
+                return null;
+            }
+            return (JSONObject) orgUnitsArray.get(0);
+
+        } catch (Exception ex) {
+            Log.e(TAG, String.format("getOrgUnitData(%s): %s", code,
+                    ex.toString()));
+            return null;
+        }
+
+    }
+
     /**
      * Checks if the orgunit is closed (due to too much surveys being pushed)
      */
@@ -748,6 +787,14 @@ public class ServerAPIController {
         Log.d(TAG, String.format("getOrgUnitDataUrl(%s,%s,%s) -> %s", url, serverVersion,
                 orgUnitNameOrCode, endpoint));
         return endpoint;
+    }
+
+    static String getOrganisationUnitsCredentialsUrl(String code) {
+        String url = PreferencesState.getInstance().getDhisURL()
+                + "/api/organisationUnits?filter=code:eq:%s&fields=id,code,ancestors,"
+                + "attributeValues[value,attribute[code]]";
+        url = String.format(url, code);
+        return url;
     }
 
     /**

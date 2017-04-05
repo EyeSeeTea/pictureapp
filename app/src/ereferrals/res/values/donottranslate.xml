@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="specific_language_font" translatable="false">saysettha_ot.ttf</string>
-    <string name="user_push" translatable="false"></string>
-    <string name="pass_push" translatable="false"></string>
+    <string name="user_push" translatable="false">Android_eRef</string>
+    <string name="pass_push" translatable="false">DduPx352i9BRRGpa</string>
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
-    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://android.psi-mis.org</string>
+    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://sandbox.psi-mis.org</string>
     <string name="url_server_demo_login" translatable="false">demo.server</string>
     <string name="monitor_row_title" translatable="false"><![CDATA[%1$s]]></string>
     <string name="monitor_row_title_space" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
@@ -72,6 +72,9 @@
     <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">-0.996961</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">33.932726</string>
+    <string name="logged_user_username">logged_user_username</string>
+    <string name="logged_user_pin">logged_user_pin</string>
+    <string name="attribute_pin_code">OU_PIN</string>
 
 
 </resources>

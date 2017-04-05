@@ -37,7 +37,7 @@ import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonInvalidException;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -833,7 +833,7 @@ public class ServerAPIController {
      * Call to DHIS Server
      */
     static Response executeCall(JSONObject data, String url, String method) throws IOException,
-            ConfigJsonInvalidException {
+            ConfigJsonIOException {
         final String DHIS_URL = url;
 
         OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
@@ -893,7 +893,7 @@ class BasicAuthenticator implements Authenticator {
     public final String AUTHORIZATION_HEADER = "Authorization";
     private String credentials;
 
-    BasicAuthenticator() throws ConfigJsonInvalidException {
+    BasicAuthenticator() throws ConfigJsonIOException {
         credentials = AuthenticationApiStrategy.getApiCredentials();
     }
 

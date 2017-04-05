@@ -3,7 +3,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonInvalidException;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
@@ -78,7 +78,7 @@ public class LoginUseCase extends ALoginUseCase {
             callback.onInvalidCredentials();
         } else if (throwable instanceof NetworkException) {
             callback.onNetworkError();
-        } else if (throwable instanceof ConfigJsonInvalidException) {
+        } else if (throwable instanceof ConfigJsonIOException) {
             callback.onConfigJsonInvalid();
         }
     }

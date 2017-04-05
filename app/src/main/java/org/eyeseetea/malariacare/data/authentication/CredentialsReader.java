@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.data.authentication;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonInvalidException;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,40 +26,40 @@ public class CredentialsReader {
                 credentialsInstance = new CredentialsReader();
             }
         } catch (JSONException e) {
-            new ConfigJsonInvalidException(e.getMessage());
-        } catch (ConfigJsonInvalidException e) {
-            new ConfigJsonInvalidException(e.getMessage());
+            new ConfigJsonIOException(e.getMessage());
+        } catch (ConfigJsonIOException e) {
+            new ConfigJsonIOException(e.getMessage());
         }
         return credentialsInstance;
     }
 
-    public CredentialsReader() throws JSONException, ConfigJsonInvalidException {
+    public CredentialsReader() throws JSONException, ConfigJsonIOException {
         readJson();
         name = mJSONObject.getString(NAME_KEY);
         password = mJSONObject.getString(PASS_KEY);
     }
 
-    public String getUser() throws ConfigJsonInvalidException {
+    public String getUser() throws ConfigJsonIOException {
         if (name == null) {
             readJson();
         }
         if (name == null) {
-            new ConfigJsonInvalidException("name not valid");
+            new ConfigJsonIOException("name not valid");
         }
         return name;
     }
 
-    public String getPassword() throws ConfigJsonInvalidException {
+    public String getPassword() throws ConfigJsonIOException {
         if (password == null) {
             readJson();
         }
         if (password == null) {
-            new ConfigJsonInvalidException("password not valid");
+            new ConfigJsonIOException("password not valid");
         }
         return password;
     }
 
-    private void readJson() throws ConfigJsonInvalidException {
+    private void readJson() throws ConfigJsonIOException {
         if (mJSONObject != null) {
             return;
         }
@@ -80,15 +80,15 @@ public class CredentialsReader {
             }
             mJSONObject = new JSONObject(sb.toString());
         } catch (IOException e) {
-            new ConfigJsonInvalidException(e.getMessage());
+            new ConfigJsonIOException(e.getMessage());
         } catch (JSONException e) {
-            new ConfigJsonInvalidException(e.getMessage());
+            new ConfigJsonIOException(e.getMessage());
         } finally {
             try {
                 if (inputStream != null) inputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                new ConfigJsonInvalidException(e.getMessage());
+                new ConfigJsonIOException(e.getMessage());
             }
         }
     }

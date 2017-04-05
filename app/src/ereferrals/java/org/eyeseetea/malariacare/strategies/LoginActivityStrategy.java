@@ -149,6 +149,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Network Error");
             }
+
+            @Override
+            public void onConfigJsonInvalid() {
+                Log.d(TAG, "onConfigJsonInvalid");
+            }
         });
     }
 

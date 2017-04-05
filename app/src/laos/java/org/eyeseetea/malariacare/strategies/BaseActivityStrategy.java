@@ -98,8 +98,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     }
 
                     @Override
-                    public void onConfigJsonNotPresent() {
-                        Log.d(TAG, "onConfigJsonNotPresent");
+                    public void onConfigJsonInvalid() {
+                        Log.d(TAG, "onConfigJsonInvalid");
                     }
                 }
         );

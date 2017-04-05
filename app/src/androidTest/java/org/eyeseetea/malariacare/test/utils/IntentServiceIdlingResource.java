@@ -42,8 +42,8 @@ public class IntentServiceIdlingResource implements IdlingResource {
     }
 
     @Override
-    public String getName() {
-        return IntentServiceIdlingResource.class.getName();
+    public String getCode() {
+        return IntentServiceIdlingResource.class.getCode();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class IntentServiceIdlingResource implements IdlingResource {
                 Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo info : manager.getRunningServices(
                 Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(info.service.getClassName())) {
+            if (serviceClass.getCode().equals(info.service.getClassName())) {
                 return true;
             }
         }

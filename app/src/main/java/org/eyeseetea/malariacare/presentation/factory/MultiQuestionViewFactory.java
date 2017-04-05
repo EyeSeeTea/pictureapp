@@ -50,7 +50,7 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
             case Constants.SWITCH_BUTTON:
                 return new SwitchMultiQuestionView(context);
             default:
-                return MultiQuestionViewFactoryStrategy.createQuestion(context,typeQuestion);
+                return MultiQuestionViewFactoryStrategy.createQuestion(context, typeQuestion);
 
         }
     }

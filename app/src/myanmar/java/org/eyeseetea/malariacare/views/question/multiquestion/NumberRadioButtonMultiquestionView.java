@@ -117,7 +117,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                     (CustomRadioButton) lInflater.inflate(
                             R.layout.uncheckeable_radiobutton, null);
             radioButton.setTag(option);
-            radioButton.setText(option.getInternationalizedCode());
+            radioButton.setText(option.getInternationalizedName());
             fixRadioButtonWidth(radioButton);
 
             radioButton.setEnabled(radioGroup.isEnabled());
@@ -171,7 +171,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                     && checkedId == customRadioButton.getId()) {
                 value = (int) dose;
             }
-            Question question =(Question) this.getTag();
+            Question question = (Question) this.getTag();
             if (checkedId == customRadioButton.getId()
                     && !TreatmentQueries.isCq(question.getUid())) {
                 notifyAnswerOptionChange(this.getTag(), ((Option) customRadioButton.getTag()));
@@ -212,7 +212,8 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
      */
     private void changeTotalQuestions() {
         Question pqQuestion = TreatmentQueries.getPqQuestion();
-        Question actQuestion = TreatmentQueries.getAlternativePqQuestion();//// FIXME: 14/03/2017 is it correct?
+        Question actQuestion =
+                TreatmentQueries.getAlternativePqQuestion();//// FIXME: 14/03/2017 is it correct?
         Question alternativePqQuestion = TreatmentQueries.getAlternativePqQuestion();
         Value actValue = null;
         Value pqValue = null;
@@ -230,7 +231,7 @@ public class NumberRadioButtonMultiquestionView extends LinearLayout implements 
                 break;
             }
         }
-        if ((actValue == null || actValue.getOption().getName().equals(yesOptionIdentifier))
+        if ((actValue == null || actValue.getOption().getCode().equals(yesOptionIdentifier))
                 || (pqValue == null || Float.parseFloat(pqValue.getValue()) > 0)) {
             alternativePqQuestion.setTotalQuestions(8);
         } else {

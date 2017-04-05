@@ -27,7 +27,7 @@ public class UpdateDBStrategy {
                 PreferencesState.getInstance().getContext().getString(
                         R.string.residenceVillageUID));
         for (Option option : optionToDelete) {
-            if (!option.getCode().equals(PreferencesState.getInstance().getContext().getString(
+            if (!option.getName().equals(PreferencesState.getInstance().getContext().getString(
                     R.string.patientResidenceVillageOtherCode))) {
                 option.delete();
             }
@@ -57,8 +57,8 @@ public class UpdateDBStrategy {
         List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
         for (OrgUnit orgUnit : orgUnits) {
             Option option = new Option();
-            option.setCode(orgUnit.getName());
-            option.setName(orgUnit.getUid());
+            option.setName(orgUnit.getName());
+            option.setCode(orgUnit.getUid());
             option.setFactor((float) 0);
             option.setId_option((long) 0);
             option.setAnswer(Question.getAnswer(

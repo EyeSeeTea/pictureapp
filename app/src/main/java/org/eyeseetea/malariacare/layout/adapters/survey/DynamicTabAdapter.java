@@ -182,9 +182,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     public static Boolean findSwitchBoolean(Question question) {
         Value value = question.getValueBySession();
-        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getName())) {
+        if (value.getValue().equals(question.getAnswer().getOptions().get(0).getCode())) {
             return true;
-        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getName())) {
+        } else if (value.getValue().equals(question.getAnswer().getOptions().get(1).getCode())) {
             return false;
         }
         return false;

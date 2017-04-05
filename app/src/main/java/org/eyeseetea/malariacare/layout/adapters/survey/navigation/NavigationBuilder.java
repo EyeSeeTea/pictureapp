@@ -41,7 +41,6 @@ public class NavigationBuilder {
     /**
      * Questions ordered by id
      */
-    private List<Question> questionsOrderedById;
     private int step = 0;
 
     private IAsyncExecutor mAsyncExecutor;
@@ -66,11 +65,13 @@ public class NavigationBuilder {
     public void buildController(Tab tab) {
 
         if (Session.isIsLoadingNavigationController()) {
+            Log.d(TAG, "Navigation controller cannot load because it is already loading");
             return;
         }
 
         //No tab -> nothing to build
         if (tab == null) {
+            Log.w(TAG, "Navigation controller cannot load because first tab doesn't exist");
             return;
         }
 
@@ -81,6 +82,7 @@ public class NavigationBuilder {
 
         //NO first question -> nothing to build
         if (rootQuestion == null) {
+            Log.w(TAG, "Navigation controller cannot load because root question doesn't exist");
             return;
         }
 
@@ -110,6 +112,7 @@ public class NavigationBuilder {
                 notifyLoadFinished();
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             Session.setIsLoadingNavigationController(false);
             Log.d(TAG, "Error loading navigation controller: " + ex.getMessage());
         }

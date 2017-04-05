@@ -192,7 +192,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private NavigationController initNavigationController() {
         NavigationController navigationController = Session.getNavigationController();
-        navigationController.next(null);
+        navigationController.first();
         return navigationController;
     }
 
@@ -207,7 +207,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 Log.d(TAG, "onSwipeRight(previous)");
                 //Hide keypad
-                hideKeyboard(listView.getContext(), listView);
+                if (!readOnly)
+                    hideKeyboard(listView.getContext(), listView);
                 previous();
             }
 
@@ -219,8 +220,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     return;
                 }
                 Log.d(TAG, "onSwipeLeft(next)");
-                if (readOnly || navigationController.isNextAllowed()) {
-                    //Hide keypad
+                if (readOnly)
+                    next();
+                else if (navigationController.isNextAllowed()) {
                     hideKeyboard(listView.getContext(), listView);
                     next();
                 }
@@ -841,6 +843,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
             case Constants.POSITIVE_OR_ZERO_INT:
+            case Constants.PREGNANT_MONTH_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
@@ -869,6 +872,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
             case Constants.POSITIVE_OR_ZERO_INT:
+            case Constants.PREGNANT_MONTH_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:

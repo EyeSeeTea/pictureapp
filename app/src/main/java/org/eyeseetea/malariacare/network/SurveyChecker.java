@@ -30,8 +30,6 @@ import java.util.Date;
 import java.util.List;
 
 public class SurveyChecker {
-
-    private static String mCategoryOptionUID;
     private static String TAG = ".CheckSurveys";
 
     /**
@@ -154,14 +152,6 @@ public class SurveyChecker {
             eventExtendedList.add(eventExtended);
         }
         return eventExtendedList;
-    }
-
-    private static String getCategoryOptionUIDByCurrentUser() {
-        if (mCategoryOptionUID == null) {
-            mCategoryOptionUID = SdkQueries.getCategoryOptionUIDByCurrentUser();
-        }
-
-        return mCategoryOptionUID;
     }
 
     public static void updateQuarantineSurveysStatus(List<EventExtended> events, Survey survey) {

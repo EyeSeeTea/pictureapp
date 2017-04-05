@@ -12,8 +12,8 @@
         tools:replace="android:allowBackup, android:icon, android:theme">
 
         <provider
-            android:name=".data.database.utils.SCMMDBProvider"
-            android:authorities="org.eyeseetea.malariacare.data.database.utils.SCMMDBProvider"
+            android:name=".data.database.utils.ERDBProvider"
+            android:authorities="org.eyeseetea.malariacare.data.database.utils.ERDBProvider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:node="merge">

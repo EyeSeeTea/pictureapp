@@ -548,9 +548,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     // Returns all the surveys with status put to "Hide"
-    public static List<Survey> getAllHideAndSentSurveys() {
+    public static List<Survey> getAllHideAndSentSurveys(int limit) {
         return new Select().from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_SENT))
+                .limit(limit)
                 .or(Survey_Table.status.eq(Constants.SURVEY_HIDE))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date))
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit_fk)).queryList();

@@ -5,11 +5,14 @@ import android.content.Context;
 
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
-import org.eyeseetea.malariacare.views.question.multiquestion.PositiveOrZeroNumberMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageOptionSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PhoneSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.PositiveNumberSingleQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.PositiveOrZeroNumberSingleQuestionView;
+
+import org.eyeseetea.malariacare.views.question.singlequestion
+        .PregnantMonthNumberSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ReminderSingleQuestionView;
 
 
@@ -21,7 +24,9 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
             case Constants.POSITIVE_INT:
                 return new PositiveNumberSingleQuestionView(context);
             case Constants.POSITIVE_OR_ZERO_INT:
-                return new PositiveOrZeroNumberMultiQuestionView(context);
+                return new PositiveOrZeroNumberSingleQuestionView(context);
+            case Constants.PREGNANT_MONTH_INT:
+                return new PregnantMonthNumberSingleQuestionView(context);
             case Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT:
                 return new ImageRadioButtonSingleQuestionView(context);
             case Constants.IMAGE_RADIO_GROUP:

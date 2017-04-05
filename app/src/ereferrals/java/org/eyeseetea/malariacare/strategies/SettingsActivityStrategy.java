@@ -48,4 +48,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public Preference.OnPreferenceChangeListener getOnPreferenceChangeListener() {
         return null;
     }
+
+    public static boolean showAnnouncementOnBackPressed() {
+        return false;
+    }
 }

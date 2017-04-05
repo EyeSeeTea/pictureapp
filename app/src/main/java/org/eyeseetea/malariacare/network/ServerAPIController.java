@@ -19,10 +19,13 @@
 package org.eyeseetea.malariacare.network;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -30,14 +33,14 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.eyeseetea.malariacare.views.ShowException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +48,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.Proxy;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -145,15 +149,15 @@ public class ServerAPIController {
      */
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    /**
-     * Max surveys that can be sent ...
-     */
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR = 30;
-
-    /**
-     * ... In an hour
-     */
-    private static int DHIS_LIMIT_HOURS = 1;
+    public static final String ATTRIBUTEVALUES = "attributeValues";
+    private static String ATTRIBUTE_VALUES = "attributeValues";
+    private static String CODE = "code";
+    private static String ATTRIBUTE = "attribute";
+    private static String VALUE = "value";
+    private static String DHIS2_GMT_NEW_DATE_FORMAT = "yyyy-MM-dd";
+    private static String TAG_USER = "users";
+    private static String QUERY_USER_ATTRIBUTES =
+            "/%s?fields=attributeValues[value,attribute[code]]id&paging=false";
 
     /**
      * Current program UID (once is calculated never changes)
@@ -381,24 +385,6 @@ public class ServerAPIController {
     }
 
     /**
-     * Closes server if too many surveys have been pushed
-     */
-    public static void banOrgUnitIfRequired() {
-        //// FIXME: 08/02/2017
-        //banOrgUnitIfRequired(getServerUrl(), getOrgUnit());
-    }
-
-    /**
-     * Closes server if too many surveys have been pushed
-     */
-    public static void banOrgUnitIfRequired(String url, String orgUnitNameOrCode) {
-        List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys();
-        if (isSurveyOverLimit(sentSurveys)) {
-            banOrg(url, orgUnitNameOrCode);
-        }
-    }
-
-    /**
      * Returns the orgUnit UID for the current server + orgunit
      */
     public static String getOrgUnitUID() {
@@ -442,9 +428,6 @@ public class ServerAPIController {
                 Log.e(TAG, String.format("banOrg(%s,%s) -> No UID", url, orgUnitNameOrCode));
                 return;
             }
-            //Show informative dialog to the user
-            Context context = PreferencesState.getInstance().getContext();
-            ShowException.showError(context.getString(R.string.exception_org_unit_banned), context);
             //Update date and description in the orgunit
             patchClosedDate(url, orgUnitUID);
             patchDescriptionClosedDate(url, orgUnitUID, orgUnitDescription);
@@ -523,34 +506,6 @@ public class ServerAPIController {
             return value;
         }
 
-    }
-
-    /**
-     * compares the dates of the surveys and checks if the dates are over the limit
-     *
-     * @param surveyList all the sent surveys
-     * @return true if the surveys are over the limit
-     */
-    static boolean isSurveyOverLimit(List<Survey> surveyList) {
-        if (surveyList.size() >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-            for (int i = 0; i < surveyList.size(); i++) {
-                int countDates = 0;
-                Calendar actualSurvey = Utils.DateToCalendar(surveyList.get(i).getEventDate());
-                for (int d = 0; d < surveyList.size(); d++) {
-                    Calendar nextSurvey = Utils.DateToCalendar(surveyList.get(d).getEventDate());
-                    if (actualSurvey.before(nextSurvey)) {
-                        if (!Utils.isDateOverLimit(actualSurvey, nextSurvey, DHIS_LIMIT_HOURS)) {
-                            countDates++;
-                            Log.d(TAG, "Surveys sents in one hour:" + countDates);
-                            if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     /**
@@ -673,6 +628,102 @@ public class ServerAPIController {
             return null;
         }
 
+    }
+
+    public static User pullUserAttributes(User loggedUser) {
+        String lastMessage = loggedUser.getAnnouncement();
+        String uid = loggedUser.getUid();
+        String url =
+                PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
+                        QUERY_USER_ATTRIBUTES, uid);
+        url = encodeBlanks(url);
+        try {
+            Response response = ServerAPIController.executeCall(null, url, "GET");
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+            JSONObject body = new JSONObject(response.body().string());
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.convertValue(mapper.readTree(body.toString()),
+                    JsonNode.class);
+            JsonNode jsonNodeArray = jsonNode.get(ATTRIBUTE_VALUES);
+            String newMessage = "";
+            String closeDate = "";
+            for (int i = 0; i < jsonNodeArray.size(); i++) {
+                if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
+                        User.ATTRIBUTE_USER_ANNOUNCEMENT)) {
+                    newMessage = jsonNodeArray.get(i).get(VALUE).textValue();
+                }
+                if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
+                        User.ATTRIBUTE_USER_CLOSE_DATE)) {
+                    closeDate = jsonNodeArray.get(i).get(VALUE).textValue();
+                }
+            }
+            if ((lastMessage == null && newMessage != null) || (newMessage != null
+                    && !newMessage.equals("") && !lastMessage.equals(newMessage))) {
+                loggedUser.setAnnouncement(newMessage);
+                PreferencesState.getInstance().setUserAccept(false);
+            }
+            if (closeDate == null || closeDate.equals("")) {
+                loggedUser.setCloseDate(null);
+            } else {
+                loggedUser.setCloseDate(Utils.parseStringToCalendar(closeDate,
+                        DHIS2_GMT_NEW_DATE_FORMAT).getTime());
+            }
+
+        } catch (Exception ex) {
+            Log.e(TAG, "Cannot read user last updated from server with");
+            ex.printStackTrace();
+        }
+        loggedUser.save();
+        return loggedUser;
+    }
+
+    public static boolean isUserClosed(String userUid) {
+        if (Session.getCredentials().isDemoCredentials()) {
+            return false;
+        }
+
+        //Lets for a last event with that orgunit/program
+        String url =
+                PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
+                        QUERY_USER_ATTRIBUTES, userUid);
+
+        url = encodeBlanks(url);
+        Date closedDate = null;
+        try {
+            Response response = ServerAPIController.executeCall(null, url, "GET");
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+            JSONObject body = new JSONObject(response.body().string());
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.convertValue(mapper.readTree(body.toString()),
+                    JsonNode.class);
+            JsonNode jsonNodeArray = jsonNode.get(ATTRIBUTEVALUES);
+            String closeDateAsString = "";
+            for (int i = 0; i < jsonNodeArray.size(); i++) {
+                if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
+                        User.ATTRIBUTE_USER_CLOSE_DATE)) {
+                    closeDateAsString = jsonNodeArray.get(i).get(VALUE).textValue();
+                }
+            }
+            if (closeDateAsString == null || closeDateAsString.equals("")) {
+                return false;
+            }
+            closedDate = Utils.parseStringToCalendar(closeDateAsString,
+                    DHIS2_GMT_NEW_DATE_FORMAT).getTime();
+        } catch (Exception ex) {
+            Log.e(TAG, "Cannot read user last updated from server with");
+            ex.printStackTrace();
+            return false;
+        }
+        if(closedDate == null) {
+            return false;
+        }
+        return closedDate.before(new Date());
     }
 
     /**

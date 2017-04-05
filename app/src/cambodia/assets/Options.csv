@@ -1,31 +1,32 @@
-1;'វិជ្ជមាន';'Positive';0;1;1
-2;'អវិជ្ជមាន';'Negative';0;1;2
-3;'មិនបានធ្វើតេស្តឈាម';'Not Tested';0;1;3
-4;'អ្នកជំងឺបដិសេធ';'Patient Refused';0;2;4
-5;'សញ្ញាគ្រោះថ្នាក់';'Danger Signs';0;2;5
-6;'ឧបករណ៏ RDT មិនមាននៅក្នុងស្តុក';'RDT Stock Out';0;2;6
-7;'ប្រុស';'Male';0;3;7
-8;'ស្រី';'Female';0;3;8
-9;'ផ្លាស្មូដ្យូម ហ្វាល់ស៊ីប៉ារ៉ូម(Pf)';'Pf';0;5;9
-10;'ផ្លាស្មូដ្យូម វីវ៉ាក់(Pv)';'Pv';0;5;10
-11;'ចំរុះ(Mixed)';'Mixed';0;5;11
-12;'អឺរ៉ាតេស៊ីម';'DHA-PIP';0;6;12
-13;'អាតេស៊ុយណាត ម៉េហ្លូគីន';'AS/MQ';0;6;13
-14;'ធ្វើកាបេញ្ជូន';'Referral';0;6;14
-15;'អាយុ ៥ - ១០ ឆ្នាំ\nទម្ងន់ ១៩ - ៣០ គីឡូ';'4.5 Pills';0;7;15
-16;'អាយុ ១០ - ១៥ ឆ្នាំ\nទម្ងន់ ៣០ - ៤០ គីឡូ';'6 Pills';0;7;16
-17;'អាយុ >១៥ ឆ្នាំ\nទម្ងន់ ៤០ - ៦០ គីឡូ';'9 Pills';0;7;17
-18;'អាយុ >១៥ ឆ្នាំ\nទម្ងន់ >៦០ គីឡូ';'12 Pills';0;7;18
-19;'អាយុ ៥ - ៦ ឆ្នាំ\nទម្ងន់ ៩ - ១៧ គីឡូ';'1.5 Pills';0;8;19
-20;'អាយុ ៧ - ១២ ឆ្នាំ\nទម្ងន់ ១៨ - ២៩ គីឡូ';'3 Pills';0;8;20
-21;'អាយុ >១៣ ឆ្នាំ\nទម្ងន់ >៣០ គីឡូ';'6 Pills';0;8;21
-22;'កុមារអាយុក្រោម ៥ឆ្នាំ';'Child Under 5';0;9;22
-23;'ស្រី្តមានផ្ទៃពោះ';'Pregnancy';0;9;23
-24;'ឱសថ ACT មិនមាននៅក្នុងស្តុក';'ACT Stock Out';0;9;24
-25;'បាទ / ចា៎';'Yes';0;10;25
-26;'អត់ទេ';'No';0;10;26
-27;'កម្មករតាមចំការ';'Plantation Worker';0;11;27
-28;'កម្្មករសំណង់ ឬកម្មកររ៉ែ';'Construction/Mine Worker';0;11;28
-29;'អ្នកធ្វើការក្នុងព្រៃ';'Forest Worker';0;11;29
-30;'សន្តិសុខ';'Security Personnel';0;11;30
-31;'ផ្សេងៗ';'Other';0;11;31
+1;'Option_Text_Test_Positive';'Positive';0;1;1
+2;'Option_Text_Test_Negative';'Negative';0;1;2
+3;'Option_Text_Test_Not_Tested';'Not Tested';0;1;3
+4;'Option_Text_Test_Reason_Refused';'Patient Refused';0;2;4
+5;'Option_Text_Test_Reason_Danger_Sings';'Danger Signs';0;2;5
+6;'Option_Text_Test_Reason_Stock_Out';'RDT Stock Out';0;2;6
+7;'Option_Text_Test_Sex_Male';'Male';0;3;7
+8;'Option_Text_Test_Sex_Female';'Female';0;3;8
+9;'Option_Text_Test_Result_Pf';'Pf';0;5;9
+10;'Option_Text_Test_Result_Pv';'Pv';0;5;10
+11;'Option_Text_Test_Result_Mixed';'Mixed';0;5;11
+12;'Option_Text_Test_Treatment_DHAPIP';'DHA-PIP';0;6;12
+13;'Option_Text_Test_Treatment_ASMQ';'AS/MQ';0;6;13
+14;'Option_Text_Test_Treatment_Referral';'Referral';0;6;14
+15;'Option_Text_Test_Treatment_DHAPIP_4_5_Pills';'4.5 Pills';0;7;15
+16;'Option_Text_Test_Treatment_DHAPIP_6_Pills';'6 Pills';0;7;16
+17;'Option_Text_Test_Treatment_DHAPIP_9_Pills';'9 Pills';0;7;17
+18;'Option_Text_Test_Treatment_DHAPIP_12_Pills';'12 Pills';0;7;18
+19;'Option_Text_Test_Treatment_ASMQ_1_5_Pills';'1.5 Pills';0;8;19
+20;'Option_Text_Test_Treatment_ASMQ_3_Pills';'3 Pills';0;8;20
+21;'Option_Text_Test_Treatment_ASMQ_6_Pills';'6 Pills';0;8;21
+22;'Option_Text_Test_Referral_Reason_Child';'Child Under 5';0;9;22
+23;'Option_Text_Test_Referral_Reason_Pregnancy';'Pregnancy';0;9;23
+24;'Option_Text_Test_Referral_Reason_Suspected_Failure';'Suspected Treatment Failure';0;9;32
+25;'Option_Text_Test_Classification_Yes';'Yes';0;10;25
+26;'Option_Text_Test_Classification_No';'No';0;10;26
+27;'Option_Text_Test_Occupation_Plantation';'Plantation Worker';0;11;27
+28;'Option_Text_Test_Occupation_Construction_Mine';'Construction/Mine Worker';0;11;28
+29;'Option_Text_Test_Occupation_Forest';'Forest Worker';0;11;29
+30;'Option_Text_Test_Occupation_Security';'Security Personnel';0;11;30
+31;'Option_Text_Test_Occupation_Other';'Other';0;11;31
+32;'Option_Text_Test_Referral_Reason_Stock_out';'ACT Stock Out';0;9;24

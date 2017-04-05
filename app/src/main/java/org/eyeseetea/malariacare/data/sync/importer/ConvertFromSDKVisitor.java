@@ -121,6 +121,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         User appUser = new User();
         appUser.setUid(sdkUserAccountExtended.getUid());
         appUser.setName(sdkUserAccountExtended.getName());
+        appUser.setLastUpdated(null);
         appUser.save();
     }
 
@@ -198,5 +199,9 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
     @Override
     public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
         ConvertFromSDKVisitorStrategy.visit(categoryOptionGroupExtended);
+    }
+
+    public void setOrgUnits(List<OrgUnit> allOrgUnitsInDB) {
+        orgUnits = allOrgUnitsInDB;
     }
 }

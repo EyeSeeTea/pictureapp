@@ -529,7 +529,7 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the exit Review button
      */
     public void exitReview(View view) {
-        if(!DynamicTabAdapter.isClicked) {
+        if (!DynamicTabAdapter.isClicked) {
             DynamicTabAdapter.isClicked = true;
             reviewShowDone();
         }
@@ -579,14 +579,14 @@ public class DashboardActivity extends BaseActivity {
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         sendSurvey();
-                        DynamicTabAdapter.isClicked=false;
+                        DynamicTabAdapter.isClicked = false;
                     }
                 });
         msgConfirmation.setNegativeButton(R.string.survey_review,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         reviewSurvey();
-                        DynamicTabAdapter.isClicked=false;
+                        DynamicTabAdapter.isClicked = false;
                     }
                 });
 

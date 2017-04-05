@@ -894,7 +894,7 @@ class BasicAuthenticator implements Authenticator {
     private String credentials;
 
     BasicAuthenticator() throws ConfigJsonInvalidException {
-        credentials =  AuthenticationApiStrategy.getApiCredentials();
+        credentials = AuthenticationApiStrategy.getApiCredentials();
     }
 
     @Override

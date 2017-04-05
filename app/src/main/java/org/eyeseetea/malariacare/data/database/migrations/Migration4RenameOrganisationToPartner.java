@@ -7,7 +7,6 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvs;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 
@@ -18,7 +17,6 @@ public class Migration4RenameOrganisationToPartner extends BaseMigration {
     private static String TAG = ".Migration4";
 
     Migration4RenameOrganisationToPartner instance;
-
 
 
     public Migration4RenameOrganisationToPartner() {
@@ -66,7 +64,7 @@ public class Migration4RenameOrganisationToPartner extends BaseMigration {
 
         FileCsvs fileCsvs = new FileCsvs();
         try {
-            fileCsvs.copyCsvFile("Organisations.csv",PopulateDB.PARTNER_CSV);
+            fileCsvs.copyCsvFile("Organisations.csv", PopulateDB.PARTNER_CSV);
         } catch (IOException e) {
             Log.e(TAG, "Error copying csv\n" + e.getMessage());
             e.printStackTrace();

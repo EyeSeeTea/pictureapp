@@ -22,7 +22,7 @@ public class ReminderSingleQuestionViewHelper {
 
     public static void setWarningText(View rootView, Option option) {
         TextView okText = (TextView) rootView.findViewById(R.id.questionTextRow);
-        okText.setText(option.getInternationalizedCode());
+        okText.setText(option.getInternationalizedName());
         DynamicTabAdapter.swipeTouchListener.addTouchableView(okText);
     }
 
@@ -34,7 +34,7 @@ public class ReminderSingleQuestionViewHelper {
         imageOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!DynamicTabAdapter.isClicked){
+                if (!DynamicTabAdapter.isClicked) {
                     DynamicTabAdapter.isClicked = true;
                     reminderSingleQuestionView.notifyAnswerChanged(option);
                 }
@@ -42,6 +42,6 @@ public class ReminderSingleQuestionViewHelper {
         });
 
         TextView okText = (TextView) rootView.findViewById(R.id.textcard_confirm_yes);
-        okText.setText(option.getInternationalizedCode());
+        okText.setText(option.getInternationalizedName());
     }
 }

@@ -74,6 +74,12 @@ public abstract class APushServiceStrategy {
             }
 
             @Override
+            public void onReOpenOrgUnit() {
+                showInDialog("", String.format(PreferencesState.getInstance().getContext().getString(
+                        R.string.dialog_reopen_org_unit),PreferencesState.getInstance().getOrgUnit()));
+            }
+
+            @Override
             public void onClosedUser() {
                 closeUserLogout();
             }

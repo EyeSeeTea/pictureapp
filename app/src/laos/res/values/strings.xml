@@ -28,6 +28,7 @@
 <string name="survey_completed_text">"The survey has been successfully completed"</string>
 <string name="exception_org_unit_not_valid">"Outlet Code is not valid. Contact PSI at xxx xxxx xxxx"</string>
 <string name="exception_org_unit_banned">"Outlet is closed or blocked. Contact PSI at xxx xxxx xxxx"</string>
+<string name="dialog_reopen_org_unit">"Outlet %s is reopen."</string>
 <string name="dynamic_error_phone_format">"Invalid format for phone number (xxx) xxx-xxx, (020) xxxx-xxxx, (030) xxx-xxxx)"</string>
 <string name="dynamic_error_age">"Invalid age"</string>
 <string name="dynamic_error_pregnant_month">"Invalid pregnant month"</string>

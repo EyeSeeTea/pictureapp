@@ -21,6 +21,7 @@ public class ConvertToSdkVisitorStrategy {
     }
 
     public static void setAttributeCategoryOptionsInEvent(EventExtended event) {
-        event.getEvent().setAttributeCategoryOptions(ConvertToSdkVisitorStrategy.getAttributeCategoryOptions());
+        event.getEvent().setAttributeCategoryOptions(
+                ConvertToSdkVisitorStrategy.getAttributeCategoryOptions());
     }
 }

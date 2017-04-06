@@ -75,6 +75,8 @@
     <string name="logged_user_username">logged_user_username</string>
     <string name="logged_user_pin">logged_user_pin</string>
     <string name="attribute_pin_code">OU_PIN</string>
+    <string name="logged_user_program">logged_user_program</string>
+    <string name="ancestor_level">3</string>
 
 
 </resources>

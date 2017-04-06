@@ -791,8 +791,8 @@ public class ServerAPIController {
 
     static String getOrganisationUnitsCredentialsUrl(String code) {
         String url = PreferencesState.getInstance().getDhisURL()
-                + "/api/organisationUnits?filter=code:eq:%s&fields=id,code,ancestors,"
-                + "attributeValues[value,attribute[code]]";
+                + "/api/organisationUnits.json?filter=code:eq:%s&fields=id,code,ancestors[id,"
+                + "code,level],attributeValues[value,attribute[code]";
         url = String.format(url, code);
         return url;
     }

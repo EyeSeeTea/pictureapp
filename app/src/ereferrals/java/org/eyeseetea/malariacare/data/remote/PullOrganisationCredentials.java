@@ -3,12 +3,12 @@ package org.eyeseetea.malariacare.data.remote;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -16,6 +16,8 @@ import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.hisp.dhis.client.sdk.models.attribute.AttributeValue;
 import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -40,18 +42,28 @@ public class PullOrganisationCredentials {
         }
     }
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager cm =
-                (ConnectivityManager) PreferencesState.getInstance().getContext().getSystemService(
-                        Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
+    public void pullOrganisationCredentialsProgram(Credentials credentials,
+            final IDataSourceCallback<Program> callback) {
+        boolean isNetworkAvailable = isNetworkAvailable();
+        if (!isNetworkAvailable) {
+            callback.onError(new NetworkException());
+        } else {
+            JSONObject jsonObject = ServerAPIController.getOrganisationUnitsByCode(
+                    credentials.getUsername());
 
+            Program program = null;
+            try {
+                program = parseOrganisationUnitToCorrectProgram(jsonObject);
+            } catch (PullConversionException e) {
+                e.printStackTrace();
+                callback.onError(e);
+            }
+            callback.onSuccess(program);
+        }
+    }
 
     private Credentials parseOrganisationUnitToCredentials(JSONObject organisationUnits)
             throws PullConversionException {
-
 
         if (organisationUnits != null) {
             ObjectMapper mapper = new ObjectMapper();
@@ -77,5 +89,32 @@ public class PullOrganisationCredentials {
         }
         return null;
     }
+
+    private Program parseOrganisationUnitToCorrectProgram(JSONObject organisationUnit)
+            throws PullConversionException {
+        try {
+            JSONArray ancestors = organisationUnit.getJSONArray("ancestors");
+            for (int i = 0; i < ancestors.length(); i++) {
+                if (ancestors.getJSONObject(i).getInt("level") == Integer.parseInt(
+                        PreferencesState.getInstance().getContext().getString(
+                                R.string.ancestor_level))) {
+                    return Program.findByName(ancestors.getJSONObject(i).getString("code"));
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new PullConversionException();
+        }
+        return null;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager cm =
+                (ConnectivityManager) PreferencesState.getInstance().getContext().getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
 
 }

@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.data.sync.importer;
 import android.content.Context;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.remote.PullOrganisationCredentials;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -28,7 +29,7 @@ public class PullOrganisationCredentialsController {
         mContext = context;
     }
 
-    public void pull(final Callback callback) {
+    public void pullOrganisationCredentials(final Callback callback) {
         mPullOrganisationCredentials.pullOrganisationCredentials(mCredentials,
                 new IDataSourceCallback<Credentials>() {
                     @Override
@@ -43,6 +44,28 @@ public class PullOrganisationCredentialsController {
                     }
                 });
     }
+
+    public void pullUserProgram(final Callback callback) {
+        mPullOrganisationCredentials.pullOrganisationCredentialsProgram(
+                PreferencesEReferral.getUserCredentialsFromPreferences(),
+                new IDataSourceCallback<Program>() {
+                    @Override
+                    public void onSuccess(Program result) {
+                        saveUserProgram(result);
+                        callback.onComplete();
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        callback.onError(throwable);
+                    }
+                });
+    }
+
+    private void saveUserProgram(Program program) {
+        PreferencesEReferral.saveUserProgramId(program.getId_program());
+    }
+
 
     private void saveOrganisationCredentials(Credentials credentials) {
         PreferencesEReferral.saveLoggedUserCredentials(credentials);

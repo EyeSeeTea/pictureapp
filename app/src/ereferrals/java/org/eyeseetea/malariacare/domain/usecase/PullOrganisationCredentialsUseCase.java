@@ -40,7 +40,7 @@ public class PullOrganisationCredentialsUseCase implements UseCase {
 
     @Override
     public void run() {
-        mPullOrganisationCredentialsController.pull(
+        mPullOrganisationCredentialsController.pullOrganisationCredentials(
                 new PullOrganisationCredentialsController.Callback() {
                     @Override
                     public void onComplete() {

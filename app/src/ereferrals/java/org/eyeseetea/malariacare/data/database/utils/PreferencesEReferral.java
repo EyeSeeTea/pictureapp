@@ -16,10 +16,10 @@ public class PreferencesEReferral {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
-        String url = sharedPreferences.getString(context.getString(R.string.dhis_url), "");
+        String url = sharedPreferences.getString(context.getString(R.string.dhis_url), null);
 
         String username = sharedPreferences.getString(
-                context.getString(R.string.logged_user_username), "");
+                context.getString(R.string.logged_user_username), null);
         String password = sharedPreferences.getString(context.getString(R.string.logged_user_pin),
                 "");
         Credentials credentials = new Credentials(url, username, password);
@@ -39,4 +39,18 @@ public class PreferencesEReferral {
         editor.commit();
     }
 
+    public static void saveUserProgramId(Long id_program) {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong("logged_user_program", id_program);
+    }
+
+    public static long getUserProgramId() {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getLong("logged_user_program", -1);
+    }
 }

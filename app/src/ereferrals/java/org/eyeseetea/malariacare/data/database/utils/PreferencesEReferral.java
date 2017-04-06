@@ -21,7 +21,7 @@ public class PreferencesEReferral {
         String username = sharedPreferences.getString(
                 context.getString(R.string.logged_user_username), null);
         String password = sharedPreferences.getString(context.getString(R.string.logged_user_pin),
-                "");
+                null);
         Credentials credentials = new Credentials(url, username, password);
 
         return credentials;

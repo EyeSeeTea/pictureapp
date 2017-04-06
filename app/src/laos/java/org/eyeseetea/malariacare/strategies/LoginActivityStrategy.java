@@ -52,8 +52,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onLoginSuccess(Credentials credentials) {
-        loginActivity.hideProgressBar();
-        finishAndGo();
+        loginActivity.checkAnnouncement();
     }
 
 

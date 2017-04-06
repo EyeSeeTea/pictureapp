@@ -199,9 +199,6 @@ public class LoginActivity extends AbsLoginActivity {
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {
-                PreferencesState.getInstance().setUserAccept(false);
-                AsyncPullAnnouncement asyncPullAnnouncement = new AsyncPullAnnouncement();
-                asyncPullAnnouncement.execute(LoginActivity.this);
                 mLoginActivityStrategy.onLoginSuccess(credentials);
             }
 
@@ -336,6 +333,12 @@ public class LoginActivity extends AbsLoginActivity {
                 mLoginActivityStrategy.finishAndGo();
             }
         }
+    }
+
+    public void checkAnnouncement() {
+        PreferencesState.getInstance().setUserAccept(false);
+        AsyncPullAnnouncement asyncPullAnnouncement = new AsyncPullAnnouncement();
+        asyncPullAnnouncement.execute(LoginActivity.this);
     }
 
 }

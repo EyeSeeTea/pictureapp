@@ -190,8 +190,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
 
     @Override
     public void onCorrectCredentials() {
-        loginActivity.hideProgressBar();
-        finishAndGo(ProgressActivity.class);
+        loginActivity.checkAnnouncement();
     }
 
     @Override

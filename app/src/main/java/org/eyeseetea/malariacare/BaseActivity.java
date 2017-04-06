@@ -48,6 +48,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.exception.ExportDataException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
@@ -231,7 +232,12 @@ public abstract class BaseActivity extends ActionBarActivity {
                 break;
             case R.id.export_db:
                 debugMessage("Export db");
-                Intent emailIntent = ExportData.dumpAndSendToAIntent(this);
+                Intent emailIntent = null;
+                try {
+                    emailIntent = ExportData.dumpAndSendToAIntent(this);
+                }catch (ExportDataException e){
+                    e.printStackTrace();
+                }
                 if (emailIntent != null) {
                     startActivityForResult(emailIntent, DUMP_REQUEST_CODE);
                 }

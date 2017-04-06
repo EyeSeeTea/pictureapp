@@ -133,7 +133,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         } catch (NullPointerException e) {
             //If the conversion fails the survey is wrong and will be delete.
             removeSurveyAndEvent(survey, event);
-            new ConversionException(e);
+            throw new ConversionException(e);
         }
     }
 

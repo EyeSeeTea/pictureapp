@@ -20,15 +20,13 @@ public class CredentialsReader {
 
     private static CredentialsReader credentialsInstance;
 
-    public static CredentialsReader getInstance() {
+    public static CredentialsReader getInstance() throws ConfigJsonIOException{
         try {
             if (credentialsInstance == null) {
                 credentialsInstance = new CredentialsReader();
             }
         } catch (JSONException e) {
-            new ConfigJsonIOException(e);
-        } catch (ConfigJsonIOException e) {
-            new ConfigJsonIOException(e);
+            throw new ConfigJsonIOException(e);
         }
         return credentialsInstance;
     }
@@ -44,7 +42,7 @@ public class CredentialsReader {
             readJson();
         }
         if (name == null) {
-            new ConfigJsonIOException("name not valid");
+            throw new ConfigJsonIOException("name not valid");
         }
         return name;
     }
@@ -54,7 +52,7 @@ public class CredentialsReader {
             readJson();
         }
         if (password == null) {
-            new ConfigJsonIOException("password not valid");
+            throw new ConfigJsonIOException("password not valid");
         }
         return password;
     }
@@ -80,15 +78,15 @@ public class CredentialsReader {
             }
             mJSONObject = new JSONObject(sb.toString());
         } catch (IOException e) {
-            new ConfigJsonIOException(e);
+            throw new ConfigJsonIOException(e);
         } catch (JSONException e) {
-            new ConfigJsonIOException(e);
+            throw new ConfigJsonIOException(e);
         } finally {
             try {
                 if (inputStream != null) inputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                new ConfigJsonIOException(e);
+                throw new ConfigJsonIOException(e);
             }
         }
     }

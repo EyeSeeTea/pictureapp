@@ -40,17 +40,11 @@ public class SurveyChecker {
         Thread t = new Thread() {
             @Override
             public void run() {
-                try {
-                    int quarantineSurveysSize = Survey.countQuarantineSurveys();
-                    Log.d(TAG, "Quarantine size: " + quarantineSurveysSize);
-                    if (quarantineSurveysSize > 0) {
-                        checkAllQuarantineSurveys();
-                        PushService.reloadDashboard();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    Log.d(TAG, "Quarantine thread finished");
+                int quarantineSurveysSize = Survey.countQuarantineSurveys();
+                Log.d(TAG, "Quarantine size: " + quarantineSurveysSize);
+                if (quarantineSurveysSize > 0) {
+                    checkAllQuarantineSurveys();
+                    PushService.reloadDashboard();
                 }
             }
         };

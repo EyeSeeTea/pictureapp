@@ -166,7 +166,7 @@ public class ServerAPIController {
             return data.getString(TAG_VERSION);
         } catch (JSONException e) {
             throw new ApiCallException(e);
-            }
+        }
     }
 
     /**
@@ -221,7 +221,7 @@ public class ServerAPIController {
         try {
             return orgUnitJSON.getString(TAG_ID);
         } catch (JSONException ex) {
-            return null;
+            throw new ApiCallException(ex);
         }
     }
 
@@ -373,40 +373,35 @@ public class ServerAPIController {
                 PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
                         QUERY_USER_ATTRIBUTES, uid);
         url = ServerApiUtils.encodeBlanks(url);
-        try {
-            Response response = ServerApiCallExecution.executeCall(null, url, "GET");
-            JSONObject body = ServerApiUtils.getApiResponseAsJSONObject(response);
-            JsonNode jsonNode = ServerApiUtils.getJsonNodeMappedResponse(body);
-            JsonNode jsonNodeArray = jsonNode.get(ATTRIBUTE_VALUES);
-            String newMessage = "";
-            String closeDate = "";
-            for (int i = 0; i < jsonNodeArray.size(); i++) {
-                if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
-                        User.ATTRIBUTE_USER_ANNOUNCEMENT)) {
-                    newMessage = jsonNodeArray.get(i).get(VALUE).textValue();
-                }
-                if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
-                        User.ATTRIBUTE_USER_CLOSE_DATE)) {
-                    closeDate = jsonNodeArray.get(i).get(VALUE).textValue();
-                }
+        Response response = ServerApiCallExecution.executeCall(null, url, "GET");
+        JSONObject body = ServerApiUtils.getApiResponseAsJSONObject(response);
+        JsonNode jsonNode = ServerApiUtils.getJsonNodeMappedResponse(body);
+        JsonNode jsonNodeArray = jsonNode.get(ATTRIBUTE_VALUES);
+        String newMessage = "";
+        String closeDate = "";
+        for (int i = 0; i < jsonNodeArray.size(); i++) {
+            if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
+                    User.ATTRIBUTE_USER_ANNOUNCEMENT)) {
+                newMessage = jsonNodeArray.get(i).get(VALUE).textValue();
             }
-            if ((lastMessage == null && newMessage != null) || (newMessage != null
-                    && !newMessage.equals("") && !lastMessage.equals(newMessage))) {
-                loggedUser.setAnnouncement(newMessage);
-                PreferencesState.getInstance().setUserAccept(false);
+            if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
+                    User.ATTRIBUTE_USER_CLOSE_DATE)) {
+                closeDate = jsonNodeArray.get(i).get(VALUE).textValue();
             }
-            if (closeDate == null || closeDate.equals("")) {
-                loggedUser.setCloseDate(null);
-            } else {
-                loggedUser.setCloseDate(Utils.parseStringToCalendar(closeDate,
-                        DHIS2_GMT_NEW_DATE_FORMAT).getTime());
-            }
-            loggedUser.save();
-            return loggedUser;
-        } catch (ApiCallException ex) {
-            Log.e(TAG, "Cannot read user last updated from server with");
-            return null;
         }
+        if ((lastMessage == null && newMessage != null) || (newMessage != null
+                && !newMessage.equals("") && !lastMessage.equals(newMessage))) {
+            loggedUser.setAnnouncement(newMessage);
+            PreferencesState.getInstance().setUserAccept(false);
+        }
+        if (closeDate == null || closeDate.equals("")) {
+            loggedUser.setCloseDate(null);
+        } else {
+            loggedUser.setCloseDate(Utils.parseStringToCalendar(closeDate,
+                    DHIS2_GMT_NEW_DATE_FORMAT).getTime());
+        }
+        loggedUser.save();
+        return loggedUser;
     }
 
     public static boolean isUserClosed(String userUid) throws ApiCallException {
@@ -470,8 +465,7 @@ public class ServerAPIController {
             return !Utils.isDateOverSystemDate(calendarClosedDate);
 
         } catch (NullPointerException ex) {
-            new ApiCallException(ex);
-            return false;
+            throw new ApiCallException(ex);
         }
     }
 

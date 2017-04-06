@@ -220,8 +220,6 @@ public class TimePeriodCalculator {
      */
     private void calculateWeekPeriods(Calendar date) {
         weekPeriodDates = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
-        date.set(Calendar.DAY_OF_WEEK, date.getFirstDayOfWeek());
-        date.add(Calendar.WEEK_OF_YEAR, -1);
         weekPeriodsKeys = calculatePeriods(date.getTime(), Calendar.WEEK_OF_YEAR, KEY_WEEK_FORMATTER,
                 weekPeriodDates);
     }
@@ -234,7 +232,6 @@ public class TimePeriodCalculator {
      */
     private void calculateDayPeriods(Calendar date) {
         dayPeriodDates = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
-        date.add(Calendar.DAY_OF_YEAR, -1);
         dayPeriodsKeys = calculatePeriods(date.getTime(), Calendar.DATE, KEY_DAY_FORMATTER, dayPeriodDates);
     }
 

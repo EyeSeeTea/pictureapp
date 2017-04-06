@@ -237,6 +237,7 @@ public abstract class BaseActivity extends ActionBarActivity {
                     emailIntent = ExportData.dumpAndSendToAIntent(this);
                 }catch (ExportDataException e){
                     e.printStackTrace();
+                    Toast.makeText(this, R.string.error_exporting_data, Toast.LENGTH_LONG).show();
                 }
                 if (emailIntent != null) {
                     startActivityForResult(emailIntent, DUMP_REQUEST_CODE);
@@ -248,12 +249,6 @@ public abstract class BaseActivity extends ActionBarActivity {
                 }
         }
         return true;
-    }
-
-    private void runInDemoMode() {
-        //logout
-        //login as demo mode
-
     }
 
     @Override

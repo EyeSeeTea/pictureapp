@@ -34,13 +34,11 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     @Override
     public void hardcodedLogin(String url, Callback<UserAccount> callback) {
-        Credentials credentials = null;
         try {
-            credentials = getHardcodedServerCredentials(url);
+            remoteLogin(getHardcodedServerCredentials(url), callback);
         } catch (ConfigJsonIOException e) {
-            callback.onError(new ConfigJsonIOException(e));
+            callback.onError(e);
         }
-        remoteLogin(credentials, callback);
     }
 
     @Override
@@ -118,8 +116,7 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     public Credentials getHardcodedServerCredentials(String serverUrl) throws
             ConfigJsonIOException {
-        String username = null;
-        username = CredentialsReader.getInstance().getUser();
+        String username = CredentialsReader.getInstance().getUser();
         String password = CredentialsReader.getInstance().getPassword();
         Credentials credentials = new Credentials(serverUrl, username, password);
         return credentials;

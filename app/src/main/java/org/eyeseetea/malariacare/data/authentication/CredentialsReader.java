@@ -21,20 +21,20 @@ public class CredentialsReader {
     private static CredentialsReader credentialsInstance;
 
     public static CredentialsReader getInstance() throws ConfigJsonIOException{
-        try {
-            if (credentialsInstance == null) {
-                credentialsInstance = new CredentialsReader();
-            }
-        } catch (JSONException e) {
-            throw new ConfigJsonIOException(e);
+        if (credentialsInstance == null) {
+            credentialsInstance = new CredentialsReader();
         }
         return credentialsInstance;
     }
 
-    public CredentialsReader() throws JSONException, ConfigJsonIOException {
+    public CredentialsReader() throws ConfigJsonIOException {
         readJson();
-        name = mJSONObject.getString(NAME_KEY);
-        password = mJSONObject.getString(PASS_KEY);
+        try {
+            name = mJSONObject.getString(NAME_KEY);
+            password = mJSONObject.getString(PASS_KEY);
+        }catch (JSONException e){
+            throw new ConfigJsonIOException(e);
+        }
     }
 
     public String getUser() throws ConfigJsonIOException {

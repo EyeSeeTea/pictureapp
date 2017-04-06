@@ -101,4 +101,5 @@
 
     <string name="api_call_error">"Server communications error, please contact with the administrator."</string>
     <string name="db_migration_error">"Database migration error. The application must be reinstalled"</string>
+    <string name="error_exporting_data">"Error recovering metadata."</string>
 </resources>

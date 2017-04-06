@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.domain.exception;
 
 public class ImportSummaryErrorException extends Exception {
-    public static String ERROR_MESSAGE = "Exception: ImportSummary Exception: ";
+    public static String ERROR_MESSAGE = "Exception info: ImportSummary Exception: ";
     String message;
 
     public ImportSummaryErrorException(String message) {

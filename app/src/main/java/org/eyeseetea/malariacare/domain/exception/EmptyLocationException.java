@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.domain.exception;
 
 public class EmptyLocationException extends Exception{
-    public static final String ERROR_MESSAGE = "Validation: Location is null. ";
+    public static final String ERROR_MESSAGE = "Validation info: Location is null. ";
 
 
     public EmptyLocationException(String message) {

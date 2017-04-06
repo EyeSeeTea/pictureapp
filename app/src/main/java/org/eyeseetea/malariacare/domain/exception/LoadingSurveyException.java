@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.domain.exception;
 
 public class LoadingSurveyException extends Exception {
     public static final String ERROR_MESSAGE =
-            "Exception: Error loading new survey, null navigation controller";
+            "Exception info: Error loading new survey, null navigation controller";
 
     public LoadingSurveyException(Exception e) {
         super(ERROR_MESSAGE);

@@ -76,19 +76,9 @@ public class SurveyChecker {
             url = ServerApiUtils.encodeBlanks(url);
 
             response = ServerApiCallExecution.executeCall(null, url, "GET");
-            String readableBodyResponse = "";
-            try {
-                readableBodyResponse = response.body().string();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            if (!response.isSuccessful()) {
-                throw new ApiCallException(
-                        "pushData (" + response.code() + "): " + readableBodyResponse);
-            }
             JSONObject events = null;
             try {
-                events = new JSONObject(readableBodyResponse);
+                events = new JSONObject(ServerApiUtils.getReadableBodyResponse(response));
             } catch (JSONException ex) {
                 throw new ApiCallException(ex);
             }

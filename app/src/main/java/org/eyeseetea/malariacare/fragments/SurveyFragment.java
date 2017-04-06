@@ -211,24 +211,25 @@ public class SurveyFragment extends Fragment {
     }
 
     private void showSurvey() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
-try {
-    dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode);
+        try {
+            LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
 
-    View viewContent = inflater.inflate(dynamicTabAdapter.getLayout(), content, false);
+            dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode);
 
-    content.removeAllViews();
-    content.addView(viewContent);
+            View viewContent = inflater.inflate(dynamicTabAdapter.getLayout(), content, false);
 
-    ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
+            content.removeAllViews();
+            content.addView(viewContent);
 
-    dynamicTabAdapter.addOnSwipeListener(listViewTab);
+            ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
 
-    listViewTab.setAdapter(dynamicTabAdapter);
-}catch (NullPointerException e){
-    new LoadingSurveyException(e);
-}
+            dynamicTabAdapter.addOnSwipeListener(listViewTab);
 
-        hideProgress();
+            listViewTab.setAdapter(dynamicTabAdapter);
+
+            hideProgress();
+        }catch (NullPointerException e){
+            new LoadingSurveyException(e);
+        }
     }
 }

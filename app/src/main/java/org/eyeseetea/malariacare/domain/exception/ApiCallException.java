@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.domain.exception;
 
 public class ApiCallException extends Exception {
-    public static final String ERROR_MESSAGE = "Exception: Error during a api call. ";
+    public static final String ERROR_MESSAGE = "Exception info: Error during a api call. ";
 
     public ApiCallException(Throwable e) {
         super(ERROR_MESSAGE);

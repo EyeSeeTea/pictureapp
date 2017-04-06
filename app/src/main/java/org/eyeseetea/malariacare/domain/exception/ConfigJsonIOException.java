@@ -1,7 +1,7 @@
 package org.eyeseetea.malariacare.domain.exception;
 
 public class ConfigJsonIOException extends Exception {
-    public static final String ERROR_MESSAGE = "Exception: Config Json IO exception: ";
+    public static final String ERROR_MESSAGE = "Exception info: Config Json IO exception: ";
     public ConfigJsonIOException(String message) {
         super( ERROR_MESSAGE + message);
         System.out.println(ERROR_MESSAGE + message);

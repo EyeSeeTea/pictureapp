@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.network;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class ServerApiUtils {
+    public static final String TAG = ".ServerApiUtils";
 
     static String encodeBlanks(String endpoint) {
         return endpoint.replace(" ", "%20");
@@ -21,16 +23,12 @@ public class ServerApiUtils {
 
     public static JsonNode getJsonNodeMappedResponse(JSONObject body) throws ApiCallException {
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = null;
         try {
-            jsonNode = mapper.convertValue(mapper.readTree(body.toString()),
+            return mapper.convertValue(mapper.readTree(body.toString()),
                     JsonNode.class);
         } catch (IOException e) {
             throw new ApiCallException(e);
-        } catch (IllegalArgumentException e) {
-            throw new ApiCallException(e);
         }
-        return jsonNode;
     }
 
 
@@ -45,7 +43,9 @@ public class ServerApiUtils {
     protected static JSONObject getJSONObjectFromString(String readableBodyResponse)
             throws ApiCallException {
         try {
-            return new JSONObject(readableBodyResponse);
+            JSONObject jsonResponse = new JSONObject(readableBodyResponse);
+            Log.i(TAG, "parseResponse: " + jsonResponse);
+            return jsonResponse;
         }catch (JSONException e){
             throw  new ApiCallException(e);
         }

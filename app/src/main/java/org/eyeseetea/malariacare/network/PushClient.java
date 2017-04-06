@@ -184,17 +184,7 @@ public class PushClient {
         } catch (IOException e) {
             throw new ApiCallException(e);
         }
-        String readableBodyResponse = "";
-        try {
-            readableBodyResponse = response.body().string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (!response.isSuccessful()) {
-            throw new ApiCallException(
-                    "pushData (" + response.code() + "): " + readableBodyResponse);
-        }
-        return parseResponse(readableBodyResponse);
+        return ServerApiUtils.getApiResponseAsJSONObject(response);
     }
 
     public void updateSurveyState() {
@@ -342,18 +332,7 @@ public class PushClient {
      */
     private String getDhisURL() {
         String url = DHIS_SERVER + DHIS_PUSH_API;
-        return ServerAPIController.encodeBlanks(url);
-    }
-
-    private JSONObject parseResponse(String responseData) throws ApiCallException {
-        try {
-            JSONObject jsonResponse = new JSONObject(responseData);
-            Log.i(TAG, "parseResponse: " + jsonResponse);
-            return jsonResponse;
-        } catch (JSONException ex) {
-            throw new ApiCallException(ex,
-                    activity.getString(R.string.dialog_info_push_bad_credentials));
-        }
+        return ServerApiUtils.encodeBlanks(url);
     }
 
 }

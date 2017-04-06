@@ -132,35 +132,6 @@ public class EventExtended implements VisitableFromSDK {
         return (event != null) ? event.getDueDate().toDate() : null;
     }
 
-    public static Date parseDate(String dateAsString, String format) throws ParseException {
-        return (dateAsString != null) ? new SimpleDateFormat(format).parse(dateAsString) : null;
-    }
-
-    public static Date parseShortDate(String dateAsString) {
-        try {
-            return parseDate(dateAsString, AMERICAN_DATE_FORMAT);
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
-    public static Date parseLongDate(String dateAsString) {
-        try {
-            return parseDate(dateAsString, DHIS2_GMT_DATE_FORMAT);
-        } catch (ParseException ex) {
-            return parseShortDate(dateAsString);
-        }
-    }
-
-    public static String formatLong(Date date) {
-        return format(date, DHIS2_GMT_DATE_FORMAT);
-    }
-
-    public static String formatShort(Date date) {
-        return format(date, AMERICAN_DATE_FORMAT);
-    }
-
     /**
      * Turns a given date into a parseable String according to sdk date format
      */
@@ -251,25 +222,6 @@ public class EventExtended implements VisitableFromSDK {
 
     public String getOrganisationUnitId() {
         return event.getOrgUnit();
-    }
-
-    public String getProgramStageId() {
-        return event.getProgramStage();
-    }
-
-    public List<DataValueExtended> getDataValues() {
-        Event eventModel = SdkQueries.getEvent(event.getUId());
-        List<TrackedEntityDataValue> trackedEntityDataValues = eventModel.getDataValues();
-        List<DataValueExtended> dataValueExtendeds = new ArrayList<>();
-        for (TrackedEntityDataValue trackedEntityDataValue : trackedEntityDataValues) {
-            dataValueExtendeds.add(new DataValueExtended(
-                    TrackedEntityDataValueFlow.MAPPER.mapToDatabaseEntity(trackedEntityDataValue)));
-        }
-        return dataValueExtendeds;
-    }
-
-    public String getProgramId() {
-        return event.getProgram();
     }
 
     public void setLatitude(double latitude) {

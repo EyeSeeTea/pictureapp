@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.services.strategies;
 
 import android.util.Log;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -10,6 +11,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.PushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
+import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
 import org.eyeseetea.malariacare.network.SurveyChecker;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -32,7 +34,12 @@ public abstract class APushServiceStrategy {
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
 
-        PushUseCase pushUseCase = new PushUseCase(pushController, asyncExecutor, mainExecutor);
+        SurveysThresholds surveysThresholds =
+                new SurveysThresholds(BuildConfig.LimitSurveysCount,
+                        BuildConfig.LimitSurveysTimeHours);
+
+        PushUseCase pushUseCase =
+                new PushUseCase(pushController, asyncExecutor, mainExecutor, surveysThresholds);
 
         SurveyChecker.launchQuarantineChecker();
 
@@ -82,8 +89,10 @@ public abstract class APushServiceStrategy {
 
             @Override
             public void onReOpenOrgUnit() {
-                showInDialog("", String.format(PreferencesState.getInstance().getContext().getString(
-                        R.string.dialog_reopen_org_unit),PreferencesState.getInstance().getOrgUnit()));
+                showInDialog("",
+                        String.format(PreferencesState.getInstance().getContext().getString(
+                                R.string.dialog_reopen_org_unit),
+                                PreferencesState.getInstance().getOrgUnit()));
             }
 
             @Override

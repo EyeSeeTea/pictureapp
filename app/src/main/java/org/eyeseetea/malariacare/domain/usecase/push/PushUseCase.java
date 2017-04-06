@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.domain.usecase.push;
 
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -11,9 +10,11 @@ import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
+import org.eyeseetea.malariacare.domain.service.OverLimitSurveysService;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PushUseCase implements UseCase {
@@ -40,10 +41,6 @@ public class PushUseCase implements UseCase {
         void onReOpenOrgUnit();
     }
 
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR = 30;
-
-    private static int DHIS_LIMIT_HOURS = 1;
-
     private IPushController mPushController;
 
     private IAsyncExecutor mAsyncExecutor;
@@ -51,11 +48,14 @@ public class PushUseCase implements UseCase {
 
     private Callback mCallback;
 
+    private SurveysThresholds mSurveysThresholds;
+
     public PushUseCase(IPushController pushController, IAsyncExecutor asyncExecutor,
-            IMainExecutor mainExecutor) {
+            IMainExecutor mainExecutor, SurveysThresholds surveysThresholds) {
         mPushController = pushController;
         mAsyncExecutor = asyncExecutor;
         mMainExecutor = mainExecutor;
+        mSurveysThresholds = surveysThresholds;
     }
 
     public void execute(final Callback callback) {
@@ -144,10 +144,10 @@ public class PushUseCase implements UseCase {
 
     private void banOrgUnitIfRequired() {
         //TODO: use case should not invoke directly Survey because belongs to the outer layer
-        List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys(
-                DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR);
+        List<org.eyeseetea.malariacare.domain.entity.Survey> sentSurveys = new ArrayList<>();
+        //Survey.getAllHideAndSentSurveys(mSurveysThresholds.getCount());
 
-        if (isSurveysOverLimit(sentSurveys)) {
+        if (OverLimitSurveysService.isSurveysOverLimit(sentSurveys, mSurveysThresholds)) {
             banOrgUnit();
         }
     }
@@ -161,37 +161,6 @@ public class PushUseCase implements UseCase {
             System.out.println("OrgUnit banned successfully");
         }
     }
-
-    private boolean isSurveysOverLimit(List<Survey> surveyList) {
-        //TODO: For Cambodia the surveys are never above the limit, we may need it for laos,
-        // it is commented for this moment necessary.
-        // Surely it would have to create a strategy in that case
-        return false;
-
-
-/*        //TODO: simplify this method
-        int countDates = 0;
-
-        if (surveyList.size() >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-            for (int i = 0; i < surveyList.size(); i++) {
-                Calendar actualSurvey = Utils.DateToCalendar(surveyList.get(i).getEventDate());
-                for (int d = 0; d < surveyList.size(); d++) {
-                    Calendar nextSurvey = Utils.DateToCalendar(surveyList.get(d).getEventDate());
-                    if (actualSurvey.before(nextSurvey)) {
-                        if (!Utils.isDateOverLimit(actualSurvey, nextSurvey, DHIS_LIMIT_HOURS)) {
-                            countDates++;
-                            Log.d(TAG, "Surveys sents in one hour:" + countDates);
-                            if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;*/
-    }
-
 
     private void notifyComplete() {
         mMainExecutor.run(new Runnable() {

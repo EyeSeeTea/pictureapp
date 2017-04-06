@@ -82,11 +82,17 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         for (Value stockValue : Session.getStockSurvey().getValuesFromDB()) {
             if (stockValue.getQuestion() != null) {
                 if (stockValue.getQuestion().getUid().equals(value.getQuestion().getUid())) {
-                    return true;
+                    return false;
+                }
+                for(Question question:stockValue.getQuestion().getPropagationQuestions())
+                {
+                    if(value.getQuestion().getUid().equals(question.getUid())){
+                        return false;
+                    }
                 }
             }
         }
-        return false;
+        return true;
     }
 
 }

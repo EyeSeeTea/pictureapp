@@ -21,33 +21,22 @@ package org.eyeseetea.malariacare.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.okhttp.Authenticator;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.Proxy;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -84,11 +73,6 @@ public class ServerAPIController {
     private static final String TAG_ORGANISATIONUNITS = "organisationUnits";
 
     /**
-     * Tag for code attribute in orgUnits (json)
-     */
-    private static final String TAG_CODE = "code";
-
-    /**
      * Date format to the closedDate attribute
      */
     private static final String DATE_CLOSED_DATE_FORMAT = "yyyy-MM-dd";
@@ -97,16 +81,6 @@ public class ServerAPIController {
      * Endpoint to retrieve server info (including version)
      */
     private static final String DHIS_SERVER_INFO = "/api/system/info";
-
-    /**
-     * Endpoint to retrieve program info
-     */
-    private static final String DHIS_PULL_PROGRAM = "/api/programs/";
-
-    /**
-     * Endpoint suffix to retrieve program info
-     */
-    private static final String DHIS_EXIST_PROGRAM = ".json?fields=id";
 
     /**
      * Endpoint to retrieve orgUnits info filtering by CODE (API)
@@ -122,10 +96,6 @@ public class ServerAPIController {
             "/api/organisationUnits.json?paging=false&fields=id,closedDate,"
                     + "description&filter=name:eq:%s&filter:programs:id:eq:%s";
 
-    /**
-     * Endpoint suffix to retrieve orgUnits
-     */
-    private static final String DHIS_PULL_ORG_UNITS_API = ".json?fields=organisationUnits[*]";
     /**
      * Endpoint to patch closeDate to an OrgUnit
      */
@@ -184,22 +154,6 @@ public class ServerAPIController {
         return programUID;
     }
 
-    //TODO jsanchez necessary for lao and cambodia
-    /**
-     * Returns hardcoded credentials for its use in sdk
-     */
- /*   public static UserCredentials getSDKCredentials() {
-        return SdkLoginController.getCredentials(getUserPush(), getPassPush());
-    }*/
-
-    /**
-     * Returns the version of the default server
-     * Null if something went wrong
-     */
-    public static String getServerVersion() throws ApiCallException {
-        return getServerVersion(PreferencesState.getInstance().getDhisURL());
-    }
-
     /**
      * Returns the version of the given server.
      * Null if something went wrong
@@ -216,28 +170,6 @@ public class ServerAPIController {
     }
 
     /**
-     * Checks if the given url corresponds to a 2.20 server (uses API for some ops)
-     */
-    public static boolean isAPIServer() throws ApiCallException {
-        return isAPIServer(getServerUrl());
-    }
-
-    /**
-     * Checks if the given url corresponds to a 2.20 server (uses API for some ops)
-     */
-    public static boolean isAPIServer(String url) throws ApiCallException {
-        String serverVersion = getServerVersion(url);
-        return isAPIVersion(serverVersion);
-    }
-
-    /**
-     * Checks if the given version corresponds to 2.20
-     */
-    public static boolean isAPIVersion(String serverVersion) {
-        return Constants.DHIS_API_SERVER.equals(serverVersion);
-    }
-
-    /**
      * Returns true|false depending of the network connectivity.
      */
     public static boolean isNetworkAvailable() {
@@ -250,104 +182,6 @@ public class ServerAPIController {
             return false;
         }
         return activeNetwork.isConnectedOrConnecting();
-    }
-
-    /**
-     * Checks if data can be pushed into the server
-     */
-    public static boolean isReadyForPush() throws ApiCallException {
-        String serverUrl = getServerUrl();
-        String orgUnit = getOrgUnit();
-        return isReadyForPush(serverUrl, orgUnit);
-    }
-
-    /**
-     * Checks if data can be pushed into the server
-     */
-    public static boolean isReadyForPush(String url, String orgUnitCodeOrName)
-            throws ApiCallException {
-        if (checkIfNetworkIsAvailable(url, orgUnitCodeOrName)) return false;
-
-        if (checkIfIsValidProgram(url, orgUnitCodeOrName)) return false;
-
-        if (checkifOrgUnitExists(url, orgUnitCodeOrName)) return false;
-
-        if (checkIfOrgUnitIsOpen(url, orgUnitCodeOrName)) return false;
-
-        return true;
-    }
-
-    public static boolean checkIfNetworkIsAvailable(String url, String orgUnitCodeOrName) {
-        if (!isNetworkAvailable()) {
-            Log.w(TAG, String.format("isReadyForPush(%s,%s) -> Network not available", url,
-                    orgUnitCodeOrName));
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean checkIfIsValidProgram(String url, String orgUnitCodeOrName)
-            throws ApiCallException {
-        if (!isValidProgram(url)) {
-            Log.w(TAG, String.format("isReadyForPush(%s,%s) -> Program not found in server", url,
-                    orgUnitCodeOrName));
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean checkifOrgUnitExists(String url, String orgUnitCodeOrName)
-            throws ApiCallException {
-        if (orgUnitCodeOrName == null || orgUnitCodeOrName.equals("") || !isValidOrgUnit(url,
-                orgUnitCodeOrName)) {
-            Log.w(TAG, String.format("isReadyForPush(%s,%s) -> OrgUnit not found in server", url,
-                    orgUnitCodeOrName));
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean checkIfOrgUnitIsOpen(String url, String orgUnitCodeOrName)
-            throws ApiCallException {
-        if (!isOrgUnitOpen(url, orgUnitCodeOrName)) {
-            Log.w(TAG, String.format("isOrgUnitOpen(%s,%s) -> OrgUnit closed, push is not enabled",
-                    url, orgUnitCodeOrName));
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Returns if the given url contains the current program
-     */
-    public static boolean isValidProgram(String url) throws ApiCallException {
-        Log.d(TAG, String.format("isValidProgram(%s) ...", url));
-        String programUIDInServer;
-        try {
-            String urlValidProgram = getIsValidProgramUrl(url);
-            Response response = ServerApiCallExecution.executeCall(null, urlValidProgram, "GET");
-            JSONObject data = ServerApiUtils.getApiResponseAsJSONObject(response);
-            programUIDInServer = String.valueOf(data.get(TAG_ID));
-        } catch (JSONException ex) {
-            throw new ApiCallException(ex);
-        }
-        boolean valid = getProgramUID() != null && getProgramUID().equals(programUIDInServer);
-        Log.d(TAG, String.format("isValidProgram(%s) -> %b (Thread: %d)", url, valid,
-                Thread.currentThread().getId()));
-        return valid;
-    }
-
-    /**
-     * Checks if the given orgUnit is present in the server.
-     * XXX The endpoint changes from using code|name field in API|SDK servers.
-     *
-     * @param orgUnitNameOrCode OrgUnit code if server is 2.20, OrgUnit name if server is 2.21,2.22
-     * @return true|false
-     */
-    public static boolean isValidOrgUnit(String url, String orgUnitNameOrCode)
-            throws ApiCallException {
-        JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
-        return orgUnitJSON != null;
     }
 
     /**
@@ -420,64 +254,6 @@ public class ServerAPIController {
         } catch (ApiCallException ex) {
             return false;
         }
-    }
-
-
-    /**
-     * This method returns a String[] whit the Organitation codes
-     */
-    public static String[] pullOrgUnitsCodes(String url) {
-
-        try {
-            String orgUnitsURL = getDhisOrgUnitsURL(url);
-            Response response = ServerApiCallExecution.executeCall(null, orgUnitsURL, "GET");
-
-            //{"organisationUnits":[{}]}
-            JSONArray orgUnitsArray = ServerApiUtils.getApiResponseAsJSONObject(response).getJSONArray(
-                    TAG_ORGANISATIONUNITS);
-
-            //0 matches -> Error
-            if (orgUnitsArray.length() == 0) {
-                throw new Exception("Found 0 matches");
-            }
-            return Utils.jsonArrayToStringArray(orgUnitsArray, TAG_CODE);
-
-        } catch (Exception ex) {
-            Log.e(TAG, String.format("pullOrgUnitsCodes(%url): %s", url, ex.getMessage()));
-            String[] value = new String[1];
-            value[0] = "";
-            return value;
-        }
-
-    }
-
-    /**
-     * This method returns a String[] whit the Organitation codes
-     */
-    public static String[] pullOrgUnitsNotBannedCodes(String url) {
-
-        try {
-            String orgUnitsURL = getDhisOrgUnitsURL(url);
-            Response response = ServerApiCallExecution.executeCall(null, orgUnitsURL, "GET");
-
-            //{"organisationUnits":[{}]}
-            JSONArray orgUnitsArray = ServerApiUtils.getApiResponseAsJSONObject(response).getJSONArray(
-                    TAG_ORGANISATIONUNITS);
-            //fixme loop removing the orgunits banned (orgUnitsArray)
-            //mehtod isBanned()
-            //0 matches -> Error
-            if (orgUnitsArray.length() == 0) {
-                throw new Exception("Found 0 matches");
-            }
-            return Utils.jsonArrayToStringArray(orgUnitsArray, TAG_ID);
-
-        } catch (Exception ex) {
-            Log.e(TAG, String.format("pullOrgUnitsCodes(%url): %s", url, ex.getMessage()));
-            String[] value = new String[1];
-            value[0] = "";
-            return value;
-        }
-
     }
 
     /**
@@ -712,18 +488,6 @@ public class ServerAPIController {
     }
 
     /**
-     * This method returns the valid url for check the program
-     *
-     * @return url for ask if the program uid exist with the UID_PROGRAM value.
-     */
-    static String getIsValidProgramUrl(String url) {
-        String endpoint = url + DHIS_PULL_PROGRAM + getProgramUID() + DHIS_EXIST_PROGRAM;
-        endpoint = ServerApiUtils.encodeBlanks(endpoint);
-        Log.d(TAG, String.format("getIsValidProgramUrl(%s)->%s", url, endpoint));
-        return endpoint;
-    }
-
-    /**
      * Returns the right endpoint depending on the server version
      */
     static String getOrgUnitDataUrl(String url, String serverVersion, String orgUnitNameOrCode) {
@@ -757,14 +521,6 @@ public class ServerAPIController {
      */
     static String getPatchClosedDescriptionUrl(String url, String orguid) {
         String endpoint = url + String.format(DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE, orguid);
-        return ServerApiUtils.encodeBlanks(endpoint);
-    }
-
-    /**
-     * Returns the URL that points to the DHIS server (Pull) API according to preferences.
-     */
-    static String getDhisOrgUnitsURL(String url) {
-        String endpoint = url + DHIS_PULL_PROGRAM + getProgramUID() + DHIS_PULL_ORG_UNITS_API;
         return ServerApiUtils.encodeBlanks(endpoint);
     }
 }

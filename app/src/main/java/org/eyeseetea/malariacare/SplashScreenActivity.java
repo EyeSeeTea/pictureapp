@@ -53,6 +53,7 @@ public class SplashScreenActivity extends Activity {
         }catch (PostMigrationException e){
             new AlertDialog.Builder(this)
                     .setTitle(getApplicationContext().getString(R.string.error_message))
+                    .setCancelable(false)
                     .setMessage(getApplicationContext().getString(R.string.db_migration_error))
                     .setNeutralButton(android.R.string.ok, null).create().show();
         }

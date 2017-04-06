@@ -104,7 +104,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             imageRadioButtonOption.setImageDrawable(drawable);
             ims.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            new ImageNotShowException(e, "Image path:" + path);
         }
     }
 

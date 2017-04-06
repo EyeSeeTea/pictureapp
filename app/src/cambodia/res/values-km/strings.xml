@@ -209,4 +209,6 @@
 <string name="unsent_survey_filter_option_this_month">"ខែ​នេះ"</string>
 <string name="unsent_survey_filter_option_last_week">"សប្ដាហ៍​មុន"</string>
 <string name="unsent_survey_filter_option_last_month">"ខែមុន"</string>
+<string name="db_migration_error">"សូមជូនដំណឹងអ្នកគ្រប់គ្រងកម្មវិធីនេះអាចត្រូវការដើម្បីត្រូវបានដំឡើងឡើងវិញ"</string>
+<string name="error_exporting_data">"កំហុសក្នុងទិន្នន័យមេតាមិនអាចនាំចេញ»។"</string>
 </resources>

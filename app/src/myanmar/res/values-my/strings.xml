@@ -329,4 +329,6 @@
 <string name="admin_announcement">"အုပ်ချုပ်ရေးမှူးကြေညာချက်"</string>
 <string name="user_close">"ဤအသုံးပြုသူသည်က de စီမံအုပ်ချုပ်သူကပိတ်ထားခဲ့ခြင်းဖြစ်သည်။"</string>
 <string name="run_in_demo_mode">"သရုပ်ပြ mode မှာ Run"</string>
+<string name="db_migration_error">"ဟုအဆိုပါစီမံအုပ်ချုပ်သူကိုအကြောင်းကြားပေးပါ, လျှောက်လွှာ-install ခံရဖို့လိုအပ်နိုင်ပါသည်"</string>
+<string name="error_exporting_data">"မှားယွင်းနေသည် metadata ကိုတင်ပို့လို့မရပါ။ "</string>
 </resources>

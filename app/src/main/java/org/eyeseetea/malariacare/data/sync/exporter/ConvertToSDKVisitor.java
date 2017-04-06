@@ -131,7 +131,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             //Annotate both objects to update its state once the process is over
             annotateSurveyAndEvent(survey, event);
         } catch (NullPointerException e) {
-            e.printStackTrace();
             //If the conversion fails the survey is wrong and will be delete.
             removeSurveyAndEvent(survey, event);
             new ConversionException(e);

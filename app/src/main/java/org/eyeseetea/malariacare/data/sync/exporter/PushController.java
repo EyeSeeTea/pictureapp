@@ -31,6 +31,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ConvertedEventsToPushNotFoundException;
@@ -121,7 +122,7 @@ public class PushController implements IPushController {
 
     public class AsyncUserPush extends AsyncTask<IPushControllerCallback, Void, Void> {
         //userCloseChecker is never saved, Only for check if the date is closed.
-        boolean isUserClosed = false;
+        Boolean isUserClosed = false;
         IPushControllerCallback callback;
 
         List<Survey> surveys = new ArrayList<>();
@@ -131,12 +132,15 @@ public class PushController implements IPushController {
             surveys = Survey.getAllCompletedSurveysNoReceiptReset();
 
             if (surveys == null || surveys.size() == 0) {
-                Log.d("DpBlank", "Sets of Surveys to push");
                 callback.onError(new SurveysToPushNotFoundException());
             }
             User loggedUser = User.getLoggedUser();
             if (loggedUser != null && loggedUser.getUid() != null) {
-                isUserClosed = ServerAPIController.isUserClosed(User.getLoggedUser().getUid());
+                try {
+                    isUserClosed = ServerAPIController.isUserClosed(User.getLoggedUser().getUid());
+                } catch (ApiCallException e) {
+                    isUserClosed = null;
+                }
             }
             return null;
         }
@@ -144,8 +148,10 @@ public class PushController implements IPushController {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (isUserClosed == null) {
+                return;
+            }
             if (isUserClosed) {
-                Log.d(TAG, "The user is closed, Surveys not sent");
                 callback.onError(new ClosedUserPushException());
             } else {
                 for (Survey srv : surveys) {

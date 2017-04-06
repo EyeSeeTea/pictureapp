@@ -83,6 +83,12 @@ public abstract class APushServiceStrategy {
             public void onClosedUser() {
                 closeUserLogout();
             }
+
+            @Override
+            public void onApiCallError() {
+                showInDialog(PreferencesState.getInstance().getContext().getString(R.string.error_message),
+                        PreferencesState.getInstance().getContext().getString(R.string.api_call_error));
+            }
         });
     }
 

@@ -26,9 +26,9 @@ public class CredentialsReader {
                 credentialsInstance = new CredentialsReader();
             }
         } catch (JSONException e) {
-            new ConfigJsonIOException(e.getMessage());
+            new ConfigJsonIOException(e);
         } catch (ConfigJsonIOException e) {
-            new ConfigJsonIOException(e.getMessage());
+            new ConfigJsonIOException(e);
         }
         return credentialsInstance;
     }
@@ -80,15 +80,15 @@ public class CredentialsReader {
             }
             mJSONObject = new JSONObject(sb.toString());
         } catch (IOException e) {
-            new ConfigJsonIOException(e.getMessage());
+            new ConfigJsonIOException(e);
         } catch (JSONException e) {
-            new ConfigJsonIOException(e.getMessage());
+            new ConfigJsonIOException(e);
         } finally {
             try {
                 if (inputStream != null) inputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                new ConfigJsonIOException(e.getMessage());
+                new ConfigJsonIOException(e);
             }
         }
     }

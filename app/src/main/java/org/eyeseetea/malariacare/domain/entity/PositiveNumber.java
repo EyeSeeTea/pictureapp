@@ -8,7 +8,7 @@ public class PositiveNumber {
 
     public PositiveNumber(int value) throws InvalidPositiveNumberException {
         if (!isValid(value)) {
-            throw new InvalidPositiveNumberException("Invalid positive number");
+            throw new InvalidPositiveNumberException();
         }
 
         this.value = value;
@@ -21,7 +21,7 @@ public class PositiveNumber {
         try {
             numericValue = Integer.parseInt(positiveNumber);
         } catch (NumberFormatException e) {
-            throw new InvalidPositiveNumberException("Invalid positive Number");
+            throw new InvalidPositiveNumberException();
         }
 
         return new PositiveNumber(numericValue);

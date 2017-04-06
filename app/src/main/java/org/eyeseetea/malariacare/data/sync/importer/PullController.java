@@ -69,7 +69,7 @@ public class PullController implements IPullController {
         try {
             populateMetadataFromCsvs(pullFilters.isDemo());
         } catch (IOException e) {
-            callback.onError(new PopulateCsvException(e.getMessage()));
+            callback.onError(new PopulateCsvException(e));
             return;
         }
         if (pullFilters.isDemo()) {
@@ -172,8 +172,7 @@ public class PullController implements IPullController {
             OrgUnitToOptionConverter.convert();
             mPullControllerStrategy.convertMetadata(mConverter);
         } catch (NullPointerException ex) {
-            ex.printStackTrace();
-            callback.onError(new PullConversionException());
+            callback.onError(new PullConversionException(ex));
         }
     }
 
@@ -190,7 +189,7 @@ public class PullController implements IPullController {
             mConverter.setOrgUnits(OrgUnit.getAllOrgUnit());
             mDataConverter.convert(callback, mConverter);
         } catch (NullPointerException ex) {
-            callback.onError(new PullConversionException());
+            callback.onError(new PullConversionException(ex));
         }
     }
 }

@@ -2,6 +2,8 @@ package org.eyeseetea.malariacare.network;
 
 import android.os.AsyncTask;
 
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+
 public class BanOrgUnitExecutor {
     //TODO: this class exists just for realize network operations
     //about ban org units out of ui thread, when we refactor threads this class
@@ -14,7 +16,7 @@ public class BanOrgUnitExecutor {
     }
 
     public interface isOrgUnitBannedCallback {
-        void onSuccess(boolean isBanned);
+        void onSuccess(Boolean isBanned);
 
         void onError();
     }
@@ -43,20 +45,15 @@ class BanOrgUnitAsync extends AsyncTask<Void, Void, Boolean> {
         String url = ServerAPIController.getServerUrl();
         String orgUnitNameOrCode = ServerAPIController.getOrgUnit();
 
-        try {
-            if (!orgUnitNameOrCode.isEmpty()) {
-                ServerAPIController.banOrg(url, orgUnitNameOrCode);
-            }
-
-            return true;
-        } catch (Exception ex) {
-            return false;
+        if (!orgUnitNameOrCode.isEmpty()) {
+            return ServerAPIController.banOrg(url, orgUnitNameOrCode);
         }
+        return false;
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
-        if (result) {
+        if (result != null && result) {
             mBanOrgUnitCallback.onSuccess();
         } else {
             mBanOrgUnitCallback.onError();
@@ -79,8 +76,13 @@ class CheckBanOrgUnitAsync extends AsyncTask<Void, Void, Boolean> {
         if (orgUnitNameOrCode.isEmpty()) {
             return false;
         }
-
-        return !ServerAPIController.isOrgUnitOpen(url, orgUnitNameOrCode);
+        Boolean isBanned;
+        try {
+            isBanned = !ServerAPIController.isOrgUnitOpen(url, orgUnitNameOrCode);
+        } catch (ApiCallException e) {
+            isBanned = null;
+        }
+        return isBanned;
     }
 
     @Override

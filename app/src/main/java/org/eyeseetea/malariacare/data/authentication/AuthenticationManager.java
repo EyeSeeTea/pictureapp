@@ -38,7 +38,7 @@ public class AuthenticationManager implements IAuthenticationManager {
         try {
             credentials = getHardcodedServerCredentials(url);
         } catch (Exception e) {
-            callback.onError(new ConfigJsonIOException(e.getMessage()));
+            callback.onError(new ConfigJsonIOException(e));
         }
         remoteLogin(credentials, callback);
     }

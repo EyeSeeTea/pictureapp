@@ -21,6 +21,7 @@ package org.eyeseetea.malariacare.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,6 +38,7 @@ import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -142,11 +144,6 @@ public class ServerAPIController {
             "[%s] - Android Surveillance App set the closing date to %s because over 30 surveys "
                     + "were pushed within 1 hour.";
 
-    /**
-     * MediaType always json + utf8
-     */
-    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
     public static final String ATTRIBUTEVALUES = "attributeValues";
     private static String ATTRIBUTE_VALUES = "attributeValues";
     private static String CODE = "code";
@@ -199,7 +196,7 @@ public class ServerAPIController {
      * Returns the version of the default server
      * Null if something went wrong
      */
-    public static String getServerVersion() {
+    public static String getServerVersion() throws ApiCallException {
         return getServerVersion(PreferencesState.getInstance().getDhisURL());
     }
 
@@ -207,43 +204,28 @@ public class ServerAPIController {
      * Returns the version of the given server.
      * Null if something went wrong
      */
-    public static String getServerVersion(String url) {
-        String serverVersion = "";
+    public static String getServerVersion(String url) throws ApiCallException {
+        String urlServerInfo = url + DHIS_SERVER_INFO;
+        Response response = ServerApiCallExecution.executeCall(null, urlServerInfo, "GET");
+        JSONObject data = ServerApiUtils.getApiResponseAsJSONObject(response);
         try {
-            String urlServerInfo = url + DHIS_SERVER_INFO;
-            Response response = executeCall(null, urlServerInfo, "GET");
-
-            //Error -> null
-            if (!response.isSuccessful()) {
-                Log.e(TAG,
-                        "getServerVersion (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
-            }
-            JSONObject data = parseResponse(response.body().string());
-            serverVersion = data.getString(TAG_VERSION);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e(TAG, "getServerVersion: " + e.toString());
+            return data.getString(TAG_VERSION);
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ConfigJsonIOException e) {
-            e.printStackTrace();
-        }
-        Log.i(TAG, String.format("getServerVersion(%s) -> %s", url, serverVersion));
-        return serverVersion;
+            throw new ApiCallException(e);
+            }
     }
 
     /**
      * Checks if the given url corresponds to a 2.20 server (uses API for some ops)
      */
-    public static boolean isAPIServer() {
+    public static boolean isAPIServer() throws ApiCallException {
         return isAPIServer(getServerUrl());
     }
 
     /**
      * Checks if the given url corresponds to a 2.20 server (uses API for some ops)
      */
-    public static boolean isAPIServer(String url) {
+    public static boolean isAPIServer(String url) throws ApiCallException {
         String serverVersion = getServerVersion(url);
         return isAPIVersion(serverVersion);
     }
@@ -273,7 +255,7 @@ public class ServerAPIController {
     /**
      * Checks if data can be pushed into the server
      */
-    public static boolean isReadyForPush() {
+    public static boolean isReadyForPush() throws ApiCallException {
         String serverUrl = getServerUrl();
         String orgUnit = getOrgUnit();
         return isReadyForPush(serverUrl, orgUnit);
@@ -282,7 +264,8 @@ public class ServerAPIController {
     /**
      * Checks if data can be pushed into the server
      */
-    public static boolean isReadyForPush(String url, String orgUnitCodeOrName) {
+    public static boolean isReadyForPush(String url, String orgUnitCodeOrName)
+            throws ApiCallException {
         if (checkIfNetworkIsAvailable(url, orgUnitCodeOrName)) return false;
 
         if (checkIfIsValidProgram(url, orgUnitCodeOrName)) return false;
@@ -303,7 +286,8 @@ public class ServerAPIController {
         return false;
     }
 
-    public static boolean checkIfIsValidProgram(String url, String orgUnitCodeOrName) {
+    public static boolean checkIfIsValidProgram(String url, String orgUnitCodeOrName)
+            throws ApiCallException {
         if (!isValidProgram(url)) {
             Log.w(TAG, String.format("isReadyForPush(%s,%s) -> Program not found in server", url,
                     orgUnitCodeOrName));
@@ -312,7 +296,8 @@ public class ServerAPIController {
         return false;
     }
 
-    public static boolean checkifOrgUnitExists(String url, String orgUnitCodeOrName) {
+    public static boolean checkifOrgUnitExists(String url, String orgUnitCodeOrName)
+            throws ApiCallException {
         if (orgUnitCodeOrName == null || orgUnitCodeOrName.equals("") || !isValidOrgUnit(url,
                 orgUnitCodeOrName)) {
             Log.w(TAG, String.format("isReadyForPush(%s,%s) -> OrgUnit not found in server", url,
@@ -322,7 +307,8 @@ public class ServerAPIController {
         return false;
     }
 
-    public static boolean checkIfOrgUnitIsOpen(String url, String orgUnitCodeOrName) {
+    public static boolean checkIfOrgUnitIsOpen(String url, String orgUnitCodeOrName)
+            throws ApiCallException {
         if (!isOrgUnitOpen(url, orgUnitCodeOrName)) {
             Log.w(TAG, String.format("isOrgUnitOpen(%s,%s) -> OrgUnit closed, push is not enabled",
                     url, orgUnitCodeOrName));
@@ -334,30 +320,16 @@ public class ServerAPIController {
     /**
      * Returns if the given url contains the current program
      */
-    public static boolean isValidProgram(String url) {
+    public static boolean isValidProgram(String url) throws ApiCallException {
         Log.d(TAG, String.format("isValidProgram(%s) ...", url));
         String programUIDInServer;
         try {
             String urlValidProgram = getIsValidProgramUrl(url);
-            Response response = executeCall(null, urlValidProgram, "GET");
-
-            //Error -> null
-            if (!response.isSuccessful()) {
-                Log.e(TAG, "isValidProgram (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
-            }
-
-            JSONObject data = parseResponse(response.body().string());
+            Response response = ServerApiCallExecution.executeCall(null, urlValidProgram, "GET");
+            JSONObject data = ServerApiUtils.getApiResponseAsJSONObject(response);
             programUIDInServer = String.valueOf(data.get(TAG_ID));
         } catch (JSONException ex) {
-            ex.printStackTrace();
-            return false;
-        } catch (ConfigJsonIOException ex) {
-            ex.printStackTrace();
-            return false;
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return false;
+            throw new ApiCallException(ex);
         }
         boolean valid = getProgramUID() != null && getProgramUID().equals(programUIDInServer);
         Log.d(TAG, String.format("isValidProgram(%s) -> %b (Thread: %d)", url, valid,
@@ -372,7 +344,8 @@ public class ServerAPIController {
      * @param orgUnitNameOrCode OrgUnit code if server is 2.20, OrgUnit name if server is 2.21,2.22
      * @return true|false
      */
-    public static boolean isValidOrgUnit(String url, String orgUnitNameOrCode) {
+    public static boolean isValidOrgUnit(String url, String orgUnitNameOrCode)
+            throws ApiCallException {
         JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
         return orgUnitJSON != null;
     }
@@ -383,7 +356,8 @@ public class ServerAPIController {
      * @param orgUnitNameOrCode OrgUnit code if server is 2.20, OrgUnit name if server is 2.21,2.22
      * @return true|false
      */
-    public static boolean isOrgUnitOpen(String url, String orgUnitNameOrCode) {
+    public static boolean isOrgUnitOpen(String url, String orgUnitNameOrCode)
+            throws ApiCallException {
         JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
         if (orgUnitJSON == null) {
             return false;
@@ -395,7 +369,7 @@ public class ServerAPIController {
     /**
      * Returns the orgUnit UID for the current server + orgunit
      */
-    public static String getOrgUnitUID() {
+    public static String getOrgUnitUID() throws ApiCallException {
         String serverUrl = getServerUrl();
         String orgUnit = getOrgUnit();
         return getOrgUnitUID(serverUrl, orgUnit);
@@ -404,7 +378,8 @@ public class ServerAPIController {
     /**
      * Returns the orgUnit UID for the given url and orgUnit (code or name)
      */
-    public static String getOrgUnitUID(String url, String orgUnitNameOrCode) {
+    public static String getOrgUnitUID(String url, String orgUnitNameOrCode)
+            throws ApiCallException {
         JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
         if (orgUnitJSON == null) {
             return null;
@@ -419,23 +394,31 @@ public class ServerAPIController {
     /**
      * Bans the orgUnit for future pushes (too many too quick)
      */
-    public static void banOrg(String url, String orgUnitNameOrCode) {
+    public static boolean banOrg(String url, String orgUnitNameOrCode) {
         Log.i(TAG, String.format("banOrg(%s,%s)", url, orgUnitNameOrCode));
         try {
             JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
-            String orgUnitUID = orgUnitJSON.getString(TAG_ID);
+            String orgUnitUID = "";
             String orgUnitDescription = "";
-            orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
+            try {
+                orgUnitUID = orgUnitJSON.getString(TAG_ID);
+                orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
+            } catch (JSONException e) {
+                new ApiCallException(e);
+                return false;
+            }
             //NO OrgUnitUID -> Non blocking error, go on
             if (orgUnitUID == null) {
-                Log.e(TAG, String.format("banOrg(%s,%s) -> No UID", url, orgUnitNameOrCode));
-                return;
+                new ApiCallException(
+                        String.format("banOrg(%s,%s) -> No UID", url, orgUnitNameOrCode));
+                return false;
             }
             //Update date and description in the orgunit
             patchClosedDate(url, orgUnitUID);
             patchDescriptionClosedDate(url, orgUnitUID, orgUnitDescription);
-        } catch (JSONException ex) {
-            Log.e(TAG, String.format("banOrg(%s,%s): %s", url, orgUnitNameOrCode, ex.getMessage()));
+            return true;
+        } catch (ApiCallException ex) {
+            return false;
         }
     }
 
@@ -447,17 +430,10 @@ public class ServerAPIController {
 
         try {
             String orgUnitsURL = getDhisOrgUnitsURL(url);
-            Response response = executeCall(null, orgUnitsURL, "GET");
-
-            //Error -> null
-            if (!response.isSuccessful()) {
-                Log.e(TAG,
-                        "pullOrgUnitsCodes (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
-            }
+            Response response = ServerApiCallExecution.executeCall(null, orgUnitsURL, "GET");
 
             //{"organisationUnits":[{}]}
-            JSONArray orgUnitsArray = parseResponse(response.body().string()).getJSONArray(
+            JSONArray orgUnitsArray = ServerApiUtils.getApiResponseAsJSONObject(response).getJSONArray(
                     TAG_ORGANISATIONUNITS);
 
             //0 matches -> Error
@@ -482,17 +458,10 @@ public class ServerAPIController {
 
         try {
             String orgUnitsURL = getDhisOrgUnitsURL(url);
-            Response response = executeCall(null, orgUnitsURL, "GET");
-
-            //Error -> null
-            if (!response.isSuccessful()) {
-                Log.e(TAG,
-                        "pullOrgUnitsCodes (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
-            }
+            Response response = ServerApiCallExecution.executeCall(null, orgUnitsURL, "GET");
 
             //{"organisationUnits":[{}]}
-            JSONArray orgUnitsArray = parseResponse(response.body().string()).getJSONArray(
+            JSONArray orgUnitsArray = ServerApiUtils.getApiResponseAsJSONObject(response).getJSONArray(
                     TAG_ORGANISATIONUNITS);
             //fixme loop removing the orgunits banned (orgUnitsArray)
             //mehtod isBanned()
@@ -514,21 +483,17 @@ public class ServerAPIController {
     /**
      * Updates the orgUnit adding a closedDate
      */
-    static void patchClosedDate(String url, String orgUnitUID) {
+    static void patchClosedDate(String url, String orgUnitUID) throws ApiCallException {
         //https://malariacare.psi.org/api/organisationUnits/u5jlxuod8xQ/closedDate
         try {
             String urlPathClosedDate = getPatchClosedDateUrl(url, orgUnitUID);
             JSONObject data = prepareTodayDateValue();
-            Response response = executeCall(data, urlPathClosedDate, "PATCH");
-            if (!response.isSuccessful()) {
-                Log.e(TAG,
-                        "closingDatePatch (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
-            }
-        } catch (Exception e) {
-            Log.e(TAG,
-                    String.format("patchClosedDate(%s,%s): %s", url, orgUnitUID, e.getMessage()));
+            Response response = ServerApiCallExecution.executeCall(data, urlPathClosedDate, "PATCH");
+            ServerApiUtils.checkResponse(response, null);
+        } catch (JSONException e) {
+            throw new ApiCallException(e);
         }
+
     }
 
     /**
@@ -536,7 +501,7 @@ public class ServerAPIController {
      *
      * @return Closing value as Json.
      */
-    static JSONObject prepareTodayDateValue() throws Exception {
+    static JSONObject prepareTodayDateValue() throws JSONException {
         String dateFormatted = Utils.geTodayDataString(DATE_CLOSED_DATE_FORMAT);
         JSONObject elementObject = new JSONObject();
         elementObject.put(TAG_CLOSEDDATE, dateFormatted);
@@ -544,20 +509,15 @@ public class ServerAPIController {
     }
 
     static void patchDescriptionClosedDate(String url, String orgUnitUID,
-            String orgUnitDescription) {
+            String orgUnitDescription) throws ApiCallException {
         //https://malariacare.psi.org/api/organisationUnits/u5jlxuod8xQ/closedDate
         try {
             String urlPathClosedDescription = getPatchClosedDescriptionUrl(url, orgUnitUID);
             JSONObject data = prepareClosingDescriptionValue(orgUnitDescription);
-            Response response = executeCall(data, urlPathClosedDescription, "PATCH");
-            if (!response.isSuccessful()) {
-                Log.e(TAG, "patchDescriptionClosedDate (" + response.code() + "): "
-                        + response.body().string());
-                throw new IOException(response.message());
-            }
-        } catch (Exception e) {
-            Log.e(TAG, String.format("patchDescriptionClosedDate(%s,%s): %s", url, orgUnitUID,
-                    e.getMessage()));
+            Response response = ServerApiCallExecution.executeCall(data, urlPathClosedDescription, "PATCH");
+            ServerApiUtils.checkResponse(response,null);
+        } catch (JSONException e) {
+            throw new ApiCallException(e);
         }
     }
 
@@ -567,8 +527,11 @@ public class ServerAPIController {
      * @return new description.
      * @url url for pull the current description
      */
-    static JSONObject prepareClosingDescriptionValue(String orgUnitDescription) throws Exception {
-
+    static JSONObject prepareClosingDescriptionValue(String orgUnitDescription)
+            throws JSONException {
+        if (orgUnitDescription == null) {
+            orgUnitDescription = "";
+        }
         //New line to description
         String dateFormatted = Utils.getClosingDateString("dd-MM-yyyy");
         String dateTimestamp = Utils.getClosingDateTimestamp(
@@ -594,7 +557,7 @@ public class ServerAPIController {
     /**
      * Returns the orgunit data from the given server according to its current version
      */
-    static JSONObject getOrgUnitData(String url, String orgUnitNameOrCode) {
+    static JSONObject getOrgUnitData(String url, String orgUnitNameOrCode) throws ApiCallException {
         //Version is required to choose which field to match
         String serverVersion = getServerVersion(url);
 
@@ -603,57 +566,41 @@ public class ServerAPIController {
             return null;
         }
 
+        String urlOrgUnitData = getOrgUnitDataUrl(url, serverVersion, orgUnitNameOrCode);
+        Response response = ServerApiCallExecution.executeCall(null, urlOrgUnitData, "GET");
+        //{"organisationUnits":[{}]}
+        JSONObject jsonResponse = ServerApiUtils.getApiResponseAsJSONObject(response);
+        JSONArray orgUnitsArray = null;
         try {
-            String urlOrgUnitData = getOrgUnitDataUrl(url, serverVersion, orgUnitNameOrCode);
-            Response response = executeCall(null, urlOrgUnitData, "GET");
+            orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATIONUNITS);
+        } catch (JSONException e) {
+            throw new ApiCallException(e);
+        }
 
-            //Error -> null
-            if (!response.isSuccessful()) {
-                Log.e(TAG, "getOrgUnitData (" + response.code() + "): " + response.body().string()
-                        + "error:" + response.message());
-                return null;
-            }
-
-            //{"organisationUnits":[{}]}
-            JSONObject jsonResponse = parseResponse(response.body().string());
-            JSONArray orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATIONUNITS);
-
-            //0| >1 matches -> Error
-            if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
-                Log.e(TAG, String.format("getOrgUnitData(%s,%s) -> Found %d matches", url,
-                        orgUnitNameOrCode, orgUnitsArray.length()));
-                return null;
-            }
-            return (JSONObject) orgUnitsArray.get(0);
-        } catch (JSONException ex) {
-            ex.printStackTrace();
-        } catch (ConfigJsonIOException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            Log.e(TAG, String.format("getOrgUnitData(%s,%s)", url, orgUnitNameOrCode));
+        //0| >1 matches -> Error
+        if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
+            Log.e(TAG, String.format("getOrgUnitData(%s,%s) -> Found %d matches", url,
+                    orgUnitNameOrCode, orgUnitsArray.length()));
             return null;
+        }
+        try {
+            return (JSONObject) orgUnitsArray.get(0);
+        } catch (JSONException e) {
+            throw new ApiCallException(e);
         }
     }
 
-    public static User pullUserAttributes(User loggedUser) {
+    public static User pullUserAttributes(User loggedUser) throws ApiCallException {
         String lastMessage = loggedUser.getAnnouncement();
         String uid = loggedUser.getUid();
         String url =
                 PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
                         QUERY_USER_ATTRIBUTES, uid);
-        url = encodeBlanks(url);
+        url = ServerApiUtils.encodeBlanks(url);
         try {
-            Response response = ServerAPIController.executeCall(null, url, "GET");
-            if (!response.isSuccessful()) {
-                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
-            }
-            JSONObject body = new JSONObject(response.body().string());
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode = mapper.convertValue(mapper.readTree(body.toString()),
-                    JsonNode.class);
+            Response response = ServerApiCallExecution.executeCall(null, url, "GET");
+            JSONObject body = ServerApiUtils.getApiResponseAsJSONObject(response);
+            JsonNode jsonNode = ServerApiUtils.getJsonNodeMappedResponse(body);
             JsonNode jsonNodeArray = jsonNode.get(ATTRIBUTE_VALUES);
             String newMessage = "";
             String closeDate = "";
@@ -680,19 +627,13 @@ public class ServerAPIController {
             }
             loggedUser.save();
             return loggedUser;
-        } catch (JSONException ex) {
-            ex.printStackTrace();
-        } catch (ConfigJsonIOException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
+        } catch (ApiCallException ex) {
             Log.e(TAG, "Cannot read user last updated from server with");
             return null;
         }
     }
 
-    public static boolean isUserClosed(String userUid) {
+    public static boolean isUserClosed(String userUid) throws ApiCallException {
         if (Session.getCredentials().isDemoCredentials()) {
             return false;
         }
@@ -702,51 +643,34 @@ public class ServerAPIController {
                 PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
                         QUERY_USER_ATTRIBUTES, userUid);
 
-        url = encodeBlanks(url);
+        url = ServerApiUtils.encodeBlanks(url);
         Date closedDate = null;
-        try {
-            Response response = ServerAPIController.executeCall(null, url, "GET");
-            if (!response.isSuccessful()) {
-                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
+        Response response = ServerApiCallExecution.executeCall(null, url, "GET");
+        JsonNode jsonNode = ServerApiUtils.getJsonNodeMappedResponse(ServerApiUtils.getApiResponseAsJSONObject(response));
+
+        JsonNode jsonNodeArray = jsonNode.get(ATTRIBUTEVALUES);
+        String closeDateAsString = "";
+        for (int i = 0; i < jsonNodeArray.size(); i++) {
+            if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
+                    User.ATTRIBUTE_USER_CLOSE_DATE)) {
+                closeDateAsString = jsonNodeArray.get(i).get(VALUE).textValue();
             }
-            JSONObject body = new JSONObject(response.body().string());
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode = mapper.convertValue(mapper.readTree(body.toString()),
-                    JsonNode.class);
-            JsonNode jsonNodeArray = jsonNode.get(ATTRIBUTEVALUES);
-            String closeDateAsString = "";
-            for (int i = 0; i < jsonNodeArray.size(); i++) {
-                if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
-                        User.ATTRIBUTE_USER_CLOSE_DATE)) {
-                    closeDateAsString = jsonNodeArray.get(i).get(VALUE).textValue();
-                }
-            }
-            if (closeDateAsString == null || closeDateAsString.equals("")) {
-                return false;
-            }
-            closedDate = Utils.parseStringToCalendar(closeDateAsString,
-                    DHIS2_GMT_NEW_DATE_FORMAT).getTime();
-            if(closedDate == null) {
-                return false;
-            }
-            return closedDate.before(new Date());
-        } catch (JSONException ex) {
-            ex.printStackTrace();
-        } catch (ConfigJsonIOException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            Log.e(TAG, "Cannot read user last updated from server with");
+        }
+        if (closeDateAsString == null || closeDateAsString.equals("")) {
             return false;
         }
+        closedDate = Utils.parseStringToCalendar(closeDateAsString,
+                DHIS2_GMT_NEW_DATE_FORMAT).getTime();
+        if(closedDate == null) {
+            return false;
+        }
+        return closedDate.before(new Date());
     }
 
     /**
      * Checks if the orgunit is closed (due to too much surveys being pushed)
      */
-    static boolean isBanned(JSONObject orgUnitJSON) {
+    static boolean isBanned(JSONObject orgUnitJSON) throws ApiCallException {
         if (orgUnitJSON == null) {
             return true;
         }
@@ -770,8 +694,8 @@ public class ServerAPIController {
             return !Utils.isDateOverSystemDate(calendarClosedDate);
 
         } catch (NullPointerException ex) {
-            Log.e(TAG, String.format("isBanned(%s) ->%s", orgUnitJSON.toString(), ex.getMessage()));
-            return true;
+            new ApiCallException(ex);
+            return false;
         }
     }
 
@@ -794,7 +718,7 @@ public class ServerAPIController {
      */
     static String getIsValidProgramUrl(String url) {
         String endpoint = url + DHIS_PULL_PROGRAM + getProgramUID() + DHIS_EXIST_PROGRAM;
-        endpoint = encodeBlanks(endpoint);
+        endpoint = ServerApiUtils.encodeBlanks(endpoint);
         Log.d(TAG, String.format("getIsValidProgramUrl(%s)->%s", url, endpoint));
         return endpoint;
     }
@@ -812,7 +736,7 @@ public class ServerAPIController {
                     programUID);
         }
 
-        endpoint = encodeBlanks(endpoint);
+        endpoint = ServerApiUtils.encodeBlanks(endpoint);
         Log.d(TAG, String.format("getOrgUnitDataUrl(%s,%s,%s) -> %s", url, serverVersion,
                 orgUnitNameOrCode, endpoint));
         return endpoint;
@@ -824,7 +748,7 @@ public class ServerAPIController {
     static String getPatchClosedDateUrl(String url, String orguid) {
         //Get the org_ID
         String endpoint = url + String.format(DHIS_PATCH_URL_CLOSED_DATE, orguid);
-        return encodeBlanks(endpoint);
+        return ServerApiUtils.encodeBlanks(endpoint);
     }
 
     /**
@@ -833,7 +757,7 @@ public class ServerAPIController {
      */
     static String getPatchClosedDescriptionUrl(String url, String orguid) {
         String endpoint = url + String.format(DHIS_PATCH_URL_DESCRIPTIONCLOSED_DATE, orguid);
-        return encodeBlanks(endpoint);
+        return ServerApiUtils.encodeBlanks(endpoint);
     }
 
     /**
@@ -841,92 +765,7 @@ public class ServerAPIController {
      */
     static String getDhisOrgUnitsURL(String url) {
         String endpoint = url + DHIS_PULL_PROGRAM + getProgramUID() + DHIS_PULL_ORG_UNITS_API;
-        return encodeBlanks(endpoint);
-    }
-
-    static String encodeBlanks(String endpoint) {
-        return endpoint.replace(" ", "%20");
-    }
-
-    /**
-     * Call to DHIS Server
-     */
-    static Response executeCall(JSONObject data, String url, String method) throws IOException,
-            ConfigJsonIOException {
-        final String DHIS_URL = url;
-
-        OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
-        BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
-
-        client.setAuthenticator(basicAuthenticator);
-
-        Request.Builder builder = new Request.Builder()
-                .header(basicAuthenticator.AUTHORIZATION_HEADER,
-                        basicAuthenticator.getCredentials())
-                .url(DHIS_URL);
-
-        switch (method) {
-            case "POST":
-                RequestBody postBody = RequestBody.create(JSON, data.toString());
-                builder.post(postBody);
-                break;
-            case "PUT":
-                RequestBody putBody = RequestBody.create(JSON, data.toString());
-                builder.put(putBody);
-                break;
-            case "PATCH":
-                RequestBody patchBody = RequestBody.create(JSON, data.toString());
-                builder.patch(patchBody);
-                break;
-            case "GET":
-                builder.get();
-                break;
-        }
-
-        Request request = builder.build();
-        return client.newCall(request).execute();
-    }
-
-    /**
-     * Turns a string response into a handy JSONObject.
-     * Returns null if its possible
-     */
-    static JSONObject parseResponse(String responseData) {
-        try {
-            JSONObject jsonResponse = new JSONObject(responseData);
-            Log.d(TAG, "parseResponse: " + jsonResponse);
-            return jsonResponse;
-        } catch (Exception ex) {
-            return null;
-        }
-    }
-
-
-}
-
-/**
- * Basic authenticator required for calls
- */
-class BasicAuthenticator implements Authenticator {
-
-    public final String AUTHORIZATION_HEADER = "Authorization";
-    private String credentials;
-
-    BasicAuthenticator() throws ConfigJsonIOException {
-        credentials = AuthenticationApiStrategy.getApiCredentials();
-    }
-
-    @Override
-    public Request authenticate(Proxy proxy, Response response) throws IOException {
-        return response.request().newBuilder().header(AUTHORIZATION_HEADER, credentials).build();
-    }
-
-    @Override
-    public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-        return null;
-    }
-
-    public String getCredentials() {
-        return credentials;
+        return ServerApiUtils.encodeBlanks(endpoint);
     }
 }
+

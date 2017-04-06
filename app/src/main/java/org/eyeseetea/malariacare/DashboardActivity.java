@@ -48,6 +48,7 @@ import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
@@ -782,7 +783,11 @@ public class DashboardActivity extends BaseActivity {
         protected Void doInBackground(Void... params) {
             loggedUser = User.getLoggedUser();
             if (loggedUser != null) {
-                loggedUser = ServerAPIController.pullUserAttributes(loggedUser);
+                try {
+                    loggedUser = ServerAPIController.pullUserAttributes(loggedUser);
+                }catch (ApiCallException e){
+                    return null;
+                }
             }
             return null;
         }

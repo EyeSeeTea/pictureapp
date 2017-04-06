@@ -3,7 +3,12 @@ package org.eyeseetea.malariacare.domain.exception;
 import java.io.IOException;
 
 public class PopulateCsvException extends IOException {
-    public PopulateCsvException(String message) {
-        super("Populate csv IO exception: " + message);
+
+    public static final String ERROR_MESSAGE =
+            "Exception: Populating csv";
+    public PopulateCsvException(Exception ex) {
+        super(ERROR_MESSAGE);
+        System.out.println(ERROR_MESSAGE);
+        ex.printStackTrace();
     }
 }

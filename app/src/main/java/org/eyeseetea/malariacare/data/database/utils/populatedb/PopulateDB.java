@@ -100,8 +100,6 @@ public class PopulateDB {
     public static final char SEPARATOR = ';';
     public static final char QUOTECHAR = '\'';
 
-
-
     public static List<Class<? extends BaseModel>> allTables = Arrays.asList(
             CompositeScore.class,
             OrgUnitProgramRelation.class,
@@ -183,7 +181,7 @@ public class PopulateDB {
     static HashMap<Long, StringKey> stringKeyList = new HashMap<>();
 
     public static void initDataIfRequired(Context context) throws IOException {
-        if(PopulateDB.hasMandatoryTables()) {
+        if (PopulateDB.hasMandatoryTables()) {
             Log.i(TAG, "Your DB is already populated");
             return;
         }
@@ -203,7 +201,7 @@ public class PopulateDB {
     public static boolean hasMandatoryTables() {
         for (Class table : PopulateDBStrategy.getAllMandatoryTables()) {
             if (SQLite.selectCountOf().from(table).count() == 0) {
-                Log.d(TAG, "Mandatory table is empty"+ table);
+                Log.d(TAG, "Mandatory table is empty" + table);
                 return false;
             }
         }
@@ -220,10 +218,10 @@ public class PopulateDB {
                 reader = new CSVReader(
                         new InputStreamReader(new PopulateDBStrategy().openFile(context, table)),
                         SEPARATOR, QUOTECHAR);
-            } catch (FileNotFoundException e ) {
+            } catch (FileNotFoundException e) {
                 tableNotExistLog(e, table);
             } catch (IOException e) {
-                tableNotExistLog(e,table);
+                tableNotExistLog(e, table);
             }
             if (reader == null) {
                 continue;
@@ -297,8 +295,8 @@ public class PopulateDB {
                         break;
                     case OPTIONS_CSV:
                         Option option = new Option();
-                        option.setCode(line[1]);
-                        option.setName(line[2]);
+                        option.setName(line[1]);
+                        option.setCode(line[2]);
                         option.setFactor(Float.valueOf(line[3]));
                         option.setAnswer(answerList.get(Integer.valueOf(line[4])));
                         if (line[5] != null && !line[5].isEmpty()) {
@@ -717,8 +715,8 @@ public class PopulateDB {
         while ((line = reader.readNext()) != null) {
             for (Option option : options) {
                 if (String.valueOf(option.getId_option()).equals(line[0])) {
-                    option.setCode(line[1]);
-                    option.setName(line[2]);
+                    option.setName(line[1]);
+                    option.setCode(line[2]);
                     option.save();
                     break;
                 }
@@ -835,8 +833,8 @@ public class PopulateDB {
                         Option option;
                         if (isNew) {
                             option = new Option();
-                            option.setCode(line[1]);
-                            option.setName(line[2]);
+                            option.setName(line[1]);
+                            option.setCode(line[2]);
                             option.setFactor(Float.valueOf(line[3]));
                             option.setAnswer(Answer.findById(Long.valueOf(line[4])));
                             if (line[5] != null && !line[5].isEmpty()) {

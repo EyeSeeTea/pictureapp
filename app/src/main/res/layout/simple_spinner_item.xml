@@ -10,5 +10,7 @@
     android:gravity="center"
     android:singleLine="true"
     android:textAlignment="gravity"
-    android:textSize="?attr/font_medium"
-    app:font_name="@string/medium_font_name" />
+    android:textColor="@color/black"
+    android:textAppearance="?android:attr/textAppearanceSmall"
+    android:textSize="?attr/font_small"
+    app:font_name="@string/condensed_font_name" />

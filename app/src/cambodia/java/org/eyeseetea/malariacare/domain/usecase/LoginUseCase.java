@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonNotPresentException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 
@@ -23,7 +24,11 @@ public class LoginUseCase extends ALoginUseCase {
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
-                        logoutAndHardcodedLogin(credentials, loginCallback);
+                        if (!credentials.isDemoCredentials()) {
+                            logoutAndHardcodedLogin(credentials, loginCallback);
+                        } else {
+                            loginCallback.onLoginSuccess();
+                        }
                     }
 
                     @Override
@@ -73,6 +78,8 @@ public class LoginUseCase extends ALoginUseCase {
             callback.onInvalidCredentials();
         } else if (throwable instanceof NetworkException) {
             callback.onNetworkError();
+        } else if (throwable instanceof ConfigJsonNotPresentException) {
+            callback.onConfigJsonNotPresent();
         }
     }
 }

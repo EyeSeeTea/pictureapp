@@ -16,6 +16,6 @@ public class ASMQRowBuilder extends CounterRowBuilder {
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isASMQ()) ? 1 : 0;
+        return (surveyMonitor.isASMQ()) ? surveyMonitor.ASMQcount() : 0;
     }
 }

@@ -5,15 +5,15 @@ import android.content.Context;
 public abstract class AKeyboardSingleQuestionView extends AKeyboardQuestionView {
 
     Boolean isClicked = false;
-    String lastValue=null;
+    String lastValue = null;
     public AKeyboardSingleQuestionView(Context context) {
         super(context);
     }
 
     protected void notifyAnswerChanged(String newValue) {
-        if(lastValue==null || !newValue.equals(lastValue)) {
+        if (lastValue == null || !newValue.equals(lastValue)) {
             super.notifyAnswerChanged(newValue);
-            lastValue=newValue;
+            lastValue = newValue;
         }
     }
 

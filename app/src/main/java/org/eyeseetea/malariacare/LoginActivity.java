@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
@@ -53,6 +54,7 @@ import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
 import org.hisp.dhis.client.sdk.ui.activities.AbsLoginActivity;
 
 import java.io.InputStream;
@@ -82,7 +84,7 @@ public class LoginActivity extends AbsLoginActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
-        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
     }
@@ -197,6 +199,9 @@ public class LoginActivity extends AbsLoginActivity {
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {
+                PreferencesState.getInstance().setUserAccept(false);
+                AsyncPullAnnouncement asyncPullAnnouncement = new AsyncPullAnnouncement();
+                asyncPullAnnouncement.execute(LoginActivity.this);
                 mLoginActivityStrategy.onLoginSuccess(credentials);
             }
 
@@ -217,6 +222,12 @@ public class LoginActivity extends AbsLoginActivity {
             public void onNetworkError() {
                 hideProgressBar();
                 showError(getString(R.string.network_error));
+            }
+
+            @Override
+            public void onConfigJsonNotPresent() {
+                hideProgressBar();
+                showError(getString(R.string.login_error_json));
             }
         });
     }
@@ -298,6 +309,35 @@ public class LoginActivity extends AbsLoginActivity {
         bar.setVisibility(View.GONE);
         findViewById(R.id.layout_login_views).setVisibility(View.VISIBLE);
     }
+
+
+    public class AsyncPullAnnouncement extends AsyncTask<LoginActivity, Void, Void> {
+        //userCloseChecker is never saved, Only for check if the date is closed.
+        LoginActivity loginActivity;
+        boolean isUserClosed = false;
+
+        @Override
+        protected Void doInBackground(LoginActivity... params) {
+            loginActivity = params[0];
+            isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            hideProgressBar();
+            if (isUserClosed) {
+                Log.d(TAG, "user closed");
+                AnnouncementMessageDialog.closeUser(R.string.admin_announcement,
+                        PreferencesState.getInstance().getContext().getString(R.string.user_close),
+                        LoginActivity.this);
+            } else {
+                mLoginActivityStrategy.finishAndGo();
+            }
+        }
+    }
+
 }
 
 

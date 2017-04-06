@@ -33,12 +33,16 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
 import org.eyeseetea.malariacare.views.FontUtils;
+import org.eyeseetea.sdk.presentation.styles.FontStyle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -207,7 +211,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         mSettingsActivityStrategy.onCreate();
     }
 
@@ -265,6 +269,8 @@ public class SettingsActivity extends PreferenceActivity implements
         bindPreferenceSummaryToValue(
                 findPreference(getApplicationContext().getString(R.string.org_unit)));
 
+        loadFontStyleListPreference();
+
         autoCompleteEditTextPreference = (AutoCompleteEditTextPreference) findPreference(
                 getApplicationContext().getString(R.string.org_unit));
         autoCompleteEditTextPreference.setOnPreferenceClickListener(
@@ -286,6 +292,23 @@ public class SettingsActivity extends PreferenceActivity implements
             autoCompleteEditTextPreference.setOnPreferenceChangeListener(
                     mSettingsActivityStrategy.getOnPreferenceChangeListener());
         }
+    }
+
+    private void loadFontStyleListPreference() {
+        ListPreference listPreference = (ListPreference) findPreference(
+                getApplicationContext().getString(R.string.font_sizes));
+
+        List<String> entries = new ArrayList<>();
+        List<String> entryValues = new ArrayList<>();
+
+        for (FontStyle fontStyle:FontStyle.values()) {
+            entries.add(Utils.getInternationalizedString(fontStyle.getTitle()));
+            entryValues.add(String.valueOf(fontStyle.getResId()));
+        }
+
+        listPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
+        listPreference.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
+        listPreference.setDefaultValue(String.valueOf(FontStyle.Medium.getResId()));
     }
 
     /**
@@ -342,6 +365,7 @@ public class SettingsActivity extends PreferenceActivity implements
         PreferencesState.getInstance().reloadPreferences();
         Class callerActivityClass = getCallerActivity();
         Intent returnIntent = new Intent(this, callerActivityClass);
+        returnIntent.putExtra(getString(R.string.show_announcement_key), SettingsActivityStrategy.showAnnouncementOnBackPressed());
         startActivity(returnIntent);
     }
 
@@ -369,7 +393,8 @@ public class SettingsActivity extends PreferenceActivity implements
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            PreferencesState.getInstance().onCreateActivityPreferences(getResources(), null);//the theme not exist in a static context
+            PreferencesState.getInstance().onCreateActivityPreferences(getResources(),
+                    null);//the theme not exist in a static context
             addPreferencesFromResource(R.xml.pref_general);
 
 
@@ -400,6 +425,8 @@ public class SettingsActivity extends PreferenceActivity implements
                     (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
             settingsActivity.serverUrlPreference = (Preference) findPreference(
                     getResources().getString(R.string.dhis_url));
+
+            settingsActivity.loadFontStyleListPreference();
 
             settingsActivity.autoCompleteEditTextPreference.pullOrgUnits();
 

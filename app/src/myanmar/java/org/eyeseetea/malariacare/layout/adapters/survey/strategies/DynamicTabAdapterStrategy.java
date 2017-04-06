@@ -7,7 +7,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -15,7 +14,6 @@ import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
-import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -50,7 +48,8 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
     public void initSurveys(boolean readOnly) {
         if (readOnly) {
             Survey malariaSurvey = Session.getMalariaSurvey();
-            Session.setStockSurvey(TreatmentQueries.getStockSurveyWithEventDate(malariaSurvey.getEventDate()));
+            Session.setStockSurvey(
+                    TreatmentQueries.getStockSurveyWithEventDate(malariaSurvey.getEventDate()));
         }
     }
 
@@ -96,8 +95,10 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
                     screenQuestion.getAnswer().getOptions());
         }
     }
+
     @Override
-    public void renderParticularSurvey(Question screenQuestion, Survey survey, IQuestionView questionView) {
+    public void renderParticularSurvey(Question screenQuestion, Survey survey,
+            IQuestionView questionView) {
 
         if (isDynamicStockQuestion(screenQuestion)) {
             Treatment treatment = new Treatment(getMalariaSurvey(),
@@ -138,13 +139,15 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
         }
         return false;
     }
+
     @Override
     public boolean isMultiQuestionByVariant(int tabType) {
         return tabType == Constants.TAB_DYNAMIC_TREATMENT;
     }
 
     @Override
-    public void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter, IQuestionView questionView) {
+    public void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter,
+            IQuestionView questionView) {
         if (questionView instanceof DynamicStockImageRadioButtonSingleQuestionView) {
             ((DynamicStockImageRadioButtonSingleQuestionView) questionView)
                     .setOnAnswerChangedListener(
@@ -154,7 +157,7 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
                     .setOnAnswerOptionChangedListener(
                             new QuestionAnswerChangedListener(dynamicTabAdapter,
                                     !GradleVariantConfig.isButtonNavigationActive()));
-        }else if (questionView instanceof NumberRadioButtonMultiquestionView) {
+        } else if (questionView instanceof NumberRadioButtonMultiquestionView) {
             ((NumberRadioButtonMultiquestionView) questionView).setOnAnswerChangedListener(
                     new QuestionAnswerChangedListener(dynamicTabAdapter,
                             !GradleVariantConfig.isButtonNavigationActive()));

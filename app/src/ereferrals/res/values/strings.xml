@@ -184,8 +184,9 @@
 <string name="assessment_title_info">"Info"</string>
 <string name="survey_info_exit">"Are you sure you want to exit?"</string>
 <string name="survey_info_exit_delete">"The survey in progress will be deleted."</string>
-<string name="exception_org_unit_not_valid"></string>
-<string name="exception_org_unit_banned"></string>
+<string name="exception_org_unit_not_valid">"Outlet Code is not valid. Contact at xxx xxxx xxxx"</string>
+<string name="exception_org_unit_banned">"Outlet is closed or blocked. Contact at xxx xxxx xxxx"</string>
+<string name="dialog_reopen_org_unit">"Outlet %s is reopen."</string>
 <string name="dynamic_error_phone_format">"Invalid format for phone number"</string>
 <string name="dynamic_error_age">"Invalid age"</string>
 <string name="pref_header_general">"General"</string>
@@ -332,6 +333,9 @@
 <string name="false_option_identifier">"No"</string>
 <string name="confirmation_really_exit_title">"Really Exit?"</string>
 <string name="confirmation_really_exit">"Are you sure you want to exit the app?"</string>
+<string name="admin_announcement">"Administrator announcement"</string>
+<string name="user_close">"This user was closed by de administrator."</string>
+<string name="run_in_demo_mode">"Run in demo mode"</string>
     <string name="survey_first_step"></string>
     <string name="survey_second_step"></string>
     <string name="survey_third_step"></string>

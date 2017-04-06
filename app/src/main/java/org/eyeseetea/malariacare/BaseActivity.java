@@ -46,6 +46,9 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.ExportData;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -77,7 +80,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);
-        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
 
         if (EyeSeeTeaApplication.permissions == null) {
             EyeSeeTeaApplication.permissions = Permissions.getInstance(this);
@@ -241,9 +244,16 @@ public abstract class BaseActivity extends ActionBarActivity {
         return true;
     }
 
+    private void runInDemoMode() {
+        //logout
+        //login as demo mode
+
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        mBaseActivityStrategy.hideMenuItems(menu);
         if (!PreferencesState.getInstance().isDevelopOptionActive()
                 || !BuildConfig.developerOptions) {
             MenuItem item = menu.findItem(R.id.export_db);

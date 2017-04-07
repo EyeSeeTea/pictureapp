@@ -5,7 +5,9 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
@@ -44,6 +46,7 @@ public class PushUseCase implements UseCase {
 
     private IPushController mPushController;
     private ISurveyRepository mSurveyRepository;
+    private IOrganisationUnitRepository mOrganisationUnitRepository;
 
     private IAsyncExecutor mAsyncExecutor;
     private IMainExecutor mMainExecutor;
@@ -54,12 +57,14 @@ public class PushUseCase implements UseCase {
 
     public PushUseCase(IPushController pushController, IAsyncExecutor asyncExecutor,
             IMainExecutor mainExecutor, SurveysThresholds surveysThresholds,
-            ISurveyRepository surveyRepository) {
+            ISurveyRepository surveyRepository,
+            IOrganisationUnitRepository organisationUnitRepository) {
         mPushController = pushController;
         mAsyncExecutor = asyncExecutor;
         mMainExecutor = mainExecutor;
         mSurveysThresholds = surveysThresholds;
         mSurveyRepository = surveyRepository;
+        mOrganisationUnitRepository = organisationUnitRepository;
     }
 
     public void execute(final Callback callback) {
@@ -101,14 +106,9 @@ public class PushUseCase implements UseCase {
     }
 
     private boolean isOrgUnitBanned() {
-        String url = ServerAPIController.getServerUrl();
-        String orgUnitNameOrCode = ServerAPIController.getOrgUnit();
+        OrganisationUnit orgUnit = mOrganisationUnitRepository.getCurrentOrganisationUnit();
 
-        if (orgUnitNameOrCode.isEmpty()) {
-            return false;
-        }
-
-        return !ServerAPIController.isOrgUnitOpen(url, orgUnitNameOrCode);
+        return orgUnit.isBanned();
     }
 
     private void runPush() {

@@ -19,7 +19,6 @@
 package org.eyeseetea.malariacare.network;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -35,10 +34,10 @@ import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -49,7 +48,6 @@ import java.io.IOException;
 import java.net.Proxy;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Utility class that shows specific operations to check server status with the given config
@@ -726,7 +724,8 @@ public class ServerAPIController {
         return closedDate.before(new Date());
     }
 
-    public static JSONObject getOrganisationUnitsByCode(String code) {
+    public static JSONObject getOrganisationUnitsByCode(String code)
+            throws PullConversionException {
         //Version is required to choose which field to match
         String serverVersion = getServerVersion(PreferencesState.getInstance().getDhisURL());
 
@@ -760,7 +759,8 @@ public class ServerAPIController {
         } catch (Exception ex) {
             Log.e(TAG, String.format("getOrgUnitData(%s): %s", code,
                     ex.toString()));
-            return null;
+            ex.printStackTrace();
+            throw new PullConversionException();
         }
 
     }

@@ -31,9 +31,10 @@ public class PullOrganisationCredentials {
         if (!isNetworkAvailable) {
             callback.onError(new NetworkException());
         } else {
+            try {
             JSONObject jsonObject = ServerAPIController.getOrganisationUnitsByCode(
                     credentials.getUsername());
-            try {
+
                 Credentials OUCredentials = parseOrganisationUnitToCredentials(jsonObject);
                 callback.onSuccess(OUCredentials);
             } catch (PullConversionException e) {
@@ -48,17 +49,19 @@ public class PullOrganisationCredentials {
         if (!isNetworkAvailable) {
             callback.onError(new NetworkException());
         } else {
+            try {
             JSONObject jsonObject = ServerAPIController.getOrganisationUnitsByCode(
                     credentials.getUsername());
 
             Program program = null;
-            try {
+
                 program = parseOrganisationUnitToCorrectProgram(jsonObject);
+                callback.onSuccess(program);
             } catch (PullConversionException e) {
                 e.printStackTrace();
                 callback.onError(e);
             }
-            callback.onSuccess(program);
+
         }
     }
 

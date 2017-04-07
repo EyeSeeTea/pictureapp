@@ -5,6 +5,8 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
@@ -14,7 +16,6 @@ import org.eyeseetea.malariacare.domain.service.OverLimitSurveysService;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PushUseCase implements UseCase {
@@ -42,6 +43,7 @@ public class PushUseCase implements UseCase {
     }
 
     private IPushController mPushController;
+    private ISurveyRepository mSurveyRepository;
 
     private IAsyncExecutor mAsyncExecutor;
     private IMainExecutor mMainExecutor;
@@ -51,11 +53,13 @@ public class PushUseCase implements UseCase {
     private SurveysThresholds mSurveysThresholds;
 
     public PushUseCase(IPushController pushController, IAsyncExecutor asyncExecutor,
-            IMainExecutor mainExecutor, SurveysThresholds surveysThresholds) {
+            IMainExecutor mainExecutor, SurveysThresholds surveysThresholds,
+            ISurveyRepository surveyRepository) {
         mPushController = pushController;
         mAsyncExecutor = asyncExecutor;
         mMainExecutor = mainExecutor;
         mSurveysThresholds = surveysThresholds;
+        mSurveyRepository = surveyRepository;
     }
 
     public void execute(final Callback callback) {
@@ -143,12 +147,13 @@ public class PushUseCase implements UseCase {
     }
 
     private void banOrgUnitIfRequired() {
-        //TODO: use case should not invoke directly Survey because belongs to the outer layer
-        List<org.eyeseetea.malariacare.domain.entity.Survey> sentSurveys = new ArrayList<>();
-        //Survey.getAllHideAndSentSurveys(mSurveysThresholds.getCount());
+        if (mSurveysThresholds.getCount() > 0 && mSurveysThresholds.getTimeHours() > 0) {
+            List<Survey> sentSurveys = mSurveyRepository.getLastSentSurveys(
+                    mSurveysThresholds.getCount());
 
-        if (OverLimitSurveysService.isSurveysOverLimit(sentSurveys, mSurveysThresholds)) {
-            banOrgUnit();
+            if (OverLimitSurveysService.isSurveysOverLimit(sentSurveys, mSurveysThresholds)) {
+                banOrgUnit();
+            }
         }
     }
 

@@ -8,7 +8,7 @@ import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
 
 public class PostMigration {
 
-    public static void launchPostMigration() throws PostMigrationException{
+    public static void launchPostMigration() throws PostMigrationException {
         Migration2ChangeTravelQuestionIcon.postMigrate();
         Migration2ChangeOptionPfPv.postMigrate();
         Migration3RefactorHelptext.postMigrate();

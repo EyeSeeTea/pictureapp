@@ -31,8 +31,10 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
+import org.eyeseetea.malariacare.domain.exception.ConvertedEventsToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
@@ -108,7 +110,7 @@ public class PushController implements IPushController {
     /**
      * Launches visitor that turns an APP survey into a SDK event
      */
-    private void convertToSDK(List<Survey> surveys) throws Exception {
+    private void convertToSDK(List<Survey> surveys) throws ConversionException {
         Log.d(TAG, "Converting APP survey into a SDK event");
         for (Survey survey : surveys) {
             survey.setStatus(Constants.SURVEY_SENDING);
@@ -120,7 +122,7 @@ public class PushController implements IPushController {
 
     public class AsyncUserPush extends AsyncTask<IPushControllerCallback, Void, Void> {
         //userCloseChecker is never saved, Only for check if the date is closed.
-        boolean isUserClosed = false;
+        Boolean isUserClosed = false;
         IPushControllerCallback callback;
 
         List<Survey> surveys = new ArrayList<>();
@@ -130,12 +132,15 @@ public class PushController implements IPushController {
             surveys = Survey.getAllCompletedSurveysNoReceiptReset();
 
             if (surveys == null || surveys.size() == 0) {
-                Log.d("DpBlank", "Sets of Surveys to push");
                 callback.onError(new SurveysToPushNotFoundException());
             }
             User loggedUser = User.getLoggedUser();
             if (loggedUser != null && loggedUser.getUid() != null) {
-                isUserClosed = ServerAPIController.isUserClosed(User.getLoggedUser().getUid());
+                try {
+                    isUserClosed = ServerAPIController.isUserClosed(User.getLoggedUser().getUid());
+                } catch (ApiCallException e) {
+                    isUserClosed = null;
+                }
             }
             return null;
         }
@@ -143,8 +148,10 @@ public class PushController implements IPushController {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (isUserClosed == null) {
+                return;
+            }
             if (isUserClosed) {
-                Log.d(TAG, "The user is closed, Surveys not sent");
                 callback.onError(new ClosedUserPushException());
             } else {
                 for (Survey srv : surveys) {
@@ -156,12 +163,12 @@ public class PushController implements IPushController {
                 mPushDhisSDKDataSource.wipeEvents();
                 try {
                     convertToSDK(surveys);
-                } catch (Exception ex) {
-                    callback.onError(new ConversionException(ex));
+                } catch (ConversionException ex) {
+                    callback.onError(ex);
                 }
 
                 if (EventExtended.getAllEvents().size() == 0) {
-                    callback.onError(new ConversionException());
+                    callback.onError(new ConvertedEventsToPushNotFoundException());
                 } else {
                     pushData(callback);
                 }

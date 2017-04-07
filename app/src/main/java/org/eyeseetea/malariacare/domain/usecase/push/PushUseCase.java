@@ -5,6 +5,7 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
@@ -36,6 +37,8 @@ public class PushUseCase {
         void onBannedOrgUnitError();
 
         void onReOpenOrgUnit();
+
+        void onApiCallError();
     }
 
     private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR = 30;
@@ -58,7 +61,11 @@ public class PushUseCase {
 
         mBanOrgUnitExecutor.isOrgUnitBanned(new BanOrgUnitExecutor.isOrgUnitBannedCallback() {
             @Override
-            public void onSuccess(boolean isBanned) {
+            public void onSuccess(Boolean isBanned) {
+                if(isBanned == null){
+                    callback.onApiCallError();
+                    return;
+                }
                 OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
                 if (isBanned)
                 {
@@ -122,6 +129,8 @@ public class PushUseCase {
                     banOrgUnitIfRequired(callback);
                 }else if (throwable instanceof ClosedUserPushException){
                     callback.onClosedUser();
+                }else if (throwable instanceof ApiCallException){
+                    callback.onApiCallError();
                 } else {
                     callback.onPushError();
                 }

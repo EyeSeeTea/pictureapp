@@ -200,4 +200,6 @@
 <string name="unsent_survey_filter_option_this_month">"This month"</string>
 <string name="unsent_survey_filter_option_last_week">"Last week"</string>
 <string name="unsent_survey_filter_option_last_month">"Last month"</string>
+<string name="db_migration_error">"Please inform the administrator, the application may need to be reinstalled"</string>
+<string name="error_exporting_data">"Error metadata could not be exported."</string>
 </resources>

@@ -35,6 +35,8 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.domain.exception.LoadingSurveyException;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
@@ -209,21 +211,25 @@ public class SurveyFragment extends Fragment {
     }
 
     private void showSurvey() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
+        try {
+            LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
 
-        dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode);
+            dynamicTabAdapter = new DynamicTabAdapter(getActivity(), mReviewMode);
 
-        View viewContent = inflater.inflate(dynamicTabAdapter.getLayout(), content, false);
+            View viewContent = inflater.inflate(dynamicTabAdapter.getLayout(), content, false);
 
-        content.removeAllViews();
-        content.addView(viewContent);
+            content.removeAllViews();
+            content.addView(viewContent);
 
-        ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
+            ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
 
-        dynamicTabAdapter.addOnSwipeListener(listViewTab);
+            dynamicTabAdapter.addOnSwipeListener(listViewTab);
 
-        listViewTab.setAdapter(dynamicTabAdapter);
+            listViewTab.setAdapter(dynamicTabAdapter);
 
-        hideProgress();
+            hideProgress();
+        }catch (NullPointerException e){
+            new LoadingSurveyException(e);
+        }
     }
 }

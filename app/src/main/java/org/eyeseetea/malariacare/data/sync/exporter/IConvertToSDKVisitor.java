@@ -20,7 +20,8 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.domain.exception.ConversionException;
 
 public interface IConvertToSDKVisitor {
-    void visit(Survey survey) throws Exception;
+    void visit(Survey survey) throws ConversionException;
 }

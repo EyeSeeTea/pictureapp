@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.UpdateDB;
+import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
 
 import java.io.IOException;
 
@@ -25,7 +26,7 @@ public class Migration2ChangeTravelQuestionIcon extends BaseMigration {
         postMigrationRequired = false;
     }
 
-    public static void postMigrate() {
+    public static void postMigrate() throws PostMigrationException {
         //Migration NOT required -> done
         Log.d(TAG, "Post migrate");
         if (instance == null || !instance.postMigrationRequired) {
@@ -36,7 +37,7 @@ public class Migration2ChangeTravelQuestionIcon extends BaseMigration {
             try {
                 UpdateDB.updateAndAddQuestions(PreferencesState.getInstance().getContext());
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new PostMigrationException(e);
             }
         }
 

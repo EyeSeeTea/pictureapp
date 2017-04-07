@@ -83,6 +83,11 @@ public abstract class APushServiceStrategy {
             public void onClosedUser() {
                 closeUserLogout();
             }
+
+            @Override
+            public void onApiCallError() {
+                onError("onApiCallError");
+            }
         });
     }
 

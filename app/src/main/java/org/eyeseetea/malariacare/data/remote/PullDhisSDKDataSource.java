@@ -43,10 +43,9 @@ public class PullDhisSDKDataSource {
         if (!isNetworkAvailable) {
             callback.onError(new NetworkException());
         } else {
-            try {
-                List<Event> events = new ArrayList<>();
+            List<Event> events = new ArrayList<>();
 
-                for (OrganisationUnit organisationUnit : organisationUnits) {
+            for (OrganisationUnit organisationUnit : organisationUnits) {
                     if(pullFilters.getDataByOrgUnit() != null && !pullFilters.getDataByOrgUnit().equals("")){
                         if(!pullFilters.getDataByOrgUnit().equals(organisationUnit.getName())){
                             continue;
@@ -72,11 +71,7 @@ public class PullDhisSDKDataSource {
 
                     events.addAll(eventsByOrgUnit);
                 }
-
                 callback.onSuccess(events);
-            } catch (Exception e) {
-                callback.onError(e);
-            }
         }
     }
 

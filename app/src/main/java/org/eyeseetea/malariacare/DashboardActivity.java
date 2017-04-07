@@ -48,6 +48,8 @@ import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
@@ -741,11 +743,15 @@ public class DashboardActivity extends BaseActivity {
         getSurveysFromService();
 
         if (BuildConfig.multiuser) {
-            initNavigationController();
+            try {
+                initNavigationController();
+            }catch (LoadingNavigationControllerException ex){
+                ex.printStackTrace();
+            }
         }
     }
 
-    private void initNavigationController() {
+    private void initNavigationController() throws LoadingNavigationControllerException{
         NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
     }
 
@@ -777,7 +783,11 @@ public class DashboardActivity extends BaseActivity {
         protected Void doInBackground(Void... params) {
             loggedUser = User.getLoggedUser();
             if (loggedUser != null) {
-                loggedUser = ServerAPIController.pullUserAttributes(loggedUser);
+                try {
+                    loggedUser = ServerAPIController.pullUserAttributes(loggedUser);
+                }catch (ApiCallException e){
+                    return null;
+                }
             }
             return null;
         }

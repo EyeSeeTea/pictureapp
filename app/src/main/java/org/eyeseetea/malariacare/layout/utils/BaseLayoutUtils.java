@@ -48,6 +48,7 @@ import org.eyeseetea.malariacare.data.database.model.Header;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.exception.ImageNotShowException;
 import org.eyeseetea.malariacare.utils.Utils;
 
 import java.io.IOException;
@@ -240,11 +241,11 @@ public abstract class BaseLayoutUtils {
                     new BitmapDrawable(PreferencesState.getInstance().getContext().getResources(),
                             bmp));
         } catch (IOException e) {
-            e.printStackTrace();
+            new ImageNotShowException(e, Utils.getInternationalizedString(path));
         }
     }
 
-    public static void putImageInImageViewDensityHight(String path, ImageView imageView) {
+    public static void putImageInImageViewDensityHigh(String path, ImageView imageView) {
         if (path == null || path.equals("")) {
             return;
         }
@@ -260,7 +261,7 @@ public abstract class BaseLayoutUtils {
             imageView.setImageDrawable(drawable);
             ims.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            new ImageNotShowException(e, path);
         }
     }
 

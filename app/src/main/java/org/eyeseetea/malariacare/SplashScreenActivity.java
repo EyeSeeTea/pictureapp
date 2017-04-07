@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,8 @@ import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -20,6 +23,7 @@ import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBui
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.strategies.SplashActivityStrategy;
+import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.client.sdk.android.api.D2;
 
 public class SplashScreenActivity extends Activity {
@@ -44,8 +48,15 @@ public class SplashScreenActivity extends Activity {
         //Added to execute a query in DB, because DBFLow doesn't do any migration until a query
         // is executed
         PopulateDB.initDBQuery();
-        PostMigration.launchPostMigration();
-
+        try {
+            PostMigration.launchPostMigration();
+        }catch (PostMigrationException e){
+            new AlertDialog.Builder(this)
+                    .setTitle(getApplicationContext().getString(R.string.error_message))
+                    .setCancelable(false)
+                    .setMessage(getApplicationContext().getString(R.string.db_migration_error))
+                    .setNeutralButton(android.R.string.ok, null).create().show();
+        }
 
         if (!BuildConfig.multiuser) {
             Log.i(TAG, "Pull on SplashScreen ...");
@@ -64,7 +75,11 @@ public class SplashScreenActivity extends Activity {
                 @Override
                 public void onComplete() {
                     Log.d(this.getClass().getSimpleName(), "pull complete");
-                    NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
+                    try {
+                        NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
+                    }catch (LoadingNavigationControllerException ex){
+                        onError(ex.getMessage());
+                    }
                 }
 
                 @Override
@@ -96,7 +111,7 @@ public class SplashScreenActivity extends Activity {
 
     }
 
-    public class AsyncInitApplication extends AsyncTask<Void, Void, Exception> {
+    public class AsyncInitApplication extends AsyncTask<Void, Void, Void> {
         Activity activity;
 
         AsyncInitApplication(Activity activity) {
@@ -109,14 +124,13 @@ public class SplashScreenActivity extends Activity {
         }
 
         @Override
-        protected Exception doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
             init();
             return null;
         }
 
         @Override
-        protected void onPostExecute(final Exception exception) {
-            //Error
+        protected void onPostExecute(Void aVoid) {
             SplashActivityStrategy splashActivityStrategy = new SplashActivityStrategy(activity);
             splashActivityStrategy.finishAndGo();
         }

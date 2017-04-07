@@ -215,4 +215,6 @@
 <string name="survey_fourth_step">"ສ້າງຫນ້າຈໍ ..."</string>
 <string name="admin_announcement">"ປະກາດບໍລິຫານ"</string>
 <string name="user_close">"ຜູ້ໃຊ້ນີ້ໄດ້ປິດລົງໂດຍບໍລິຫານ."</string>
+<string name="db_migration_error">"ກະລຸນາແຈ້ງໃຫ້ຜູ້ບໍລິຫານ, ຄໍາຮ້ອງສະຫມັກອາດຈໍາເປັນຕ້ອງໄດ້ຮັບການຕິດຕັ້ງ"</string>
+<string name="error_exporting_data">"metadata Error ບໍ່ສາມາດໄດ້ຮັບການສົ່ງອອກ."</string>
 </resources>

@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.WarningStatusChecker;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
@@ -62,7 +63,7 @@ public class NavigationBuilder {
     /**
      * Returns a navigation controller so you can navigate through questions according to answers
      */
-    public void buildController(Tab tab) {
+    public void buildController(Tab tab) throws LoadingNavigationControllerException{
 
         if (Session.isIsLoadingNavigationController()) {
             Log.d(TAG, "Navigation controller cannot load because it is already loading");
@@ -95,7 +96,7 @@ public class NavigationBuilder {
 
     }
 
-    private void buildNavigationController(Question rootQuestion) {
+    private void buildNavigationController(Question rootQuestion){
         Log.d(TAG, "Begin loading navigation controller");
 
         try {
@@ -111,10 +112,9 @@ public class NavigationBuilder {
             if (mLoadBuildControllerListener != null) {
                 notifyLoadFinished();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (NullPointerException ex) {
             Session.setIsLoadingNavigationController(false);
-            Log.d(TAG, "Error loading navigation controller: " + ex.getMessage());
+            new LoadingNavigationControllerException(ex);
         }
 
         Log.d(TAG, "End loading navigation controller");

@@ -13,15 +13,16 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.strategies.SurveyCheckerStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
 import org.hisp.dhis.client.sdk.models.event.Event;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -39,17 +40,11 @@ public class SurveyChecker {
         Thread t = new Thread() {
             @Override
             public void run() {
-                try {
-                    int quarantineSurveysSize = Survey.countQuarantineSurveys();
-                    Log.d(TAG, "Quarantine size: " + quarantineSurveysSize);
-                    if (quarantineSurveysSize > 0) {
-                        checkAllQuarantineSurveys();
-                        PushService.reloadDashboard();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    Log.d(TAG, "Quarantine thread finished");
+                int quarantineSurveysSize = Survey.countQuarantineSurveys();
+                Log.d(TAG, "Quarantine size: " + quarantineSurveysSize);
+                if (quarantineSurveysSize > 0) {
+                    checkAllQuarantineSurveys();
+                    PushService.reloadDashboard();
                 }
             }
         };
@@ -72,22 +67,20 @@ public class SurveyChecker {
             String url = SurveyCheckerStrategy.getApiEventUrl(DHIS_URL, program, orgUnit, startDate,
                     endDate);
             Log.d(TAG, url);
-            url = ServerAPIController.encodeBlanks(url);
+            url = ServerApiUtils.encodeBlanks(url);
 
-            response = ServerAPIController.executeCall(null, url, "GET");
-            if (!response.isSuccessful()) {
-                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
+            response = ServerApiCallExecution.executeCall(null, url, "GET");
+            JSONObject events = null;
+            try {
+                events = new JSONObject(ServerApiUtils.getReadableBodyResponse(response));
+            } catch (JSONException ex) {
+                throw new ApiCallException(ex);
             }
-            JSONObject events = new JSONObject(response.body().string());
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode = mapper.convertValue(mapper.readTree(events.toString()),
-                    JsonNode.class);
+            JsonNode jsonNode = ServerApiUtils.getJsonNodeMappedResponse(events);
 
             return getEvents(jsonNode);
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (ApiCallException ex) {
             return null;
         }
     }

@@ -12,6 +12,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 
 public abstract class ADashboardActivityStrategy {
@@ -42,7 +43,7 @@ public abstract class ADashboardActivityStrategy {
                             Context.LOCATION_SERVICE);
         }
         catch (NullPointerException e){
-            e.printStackTrace();
+            new EmptyLocationException(e);
         }
 
         if (locationManager == null)

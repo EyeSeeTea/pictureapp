@@ -68,15 +68,11 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
     );
 
     @Override
-    public void init() {
-        try {
-            FileCsvs fileCsvs = new FileCsvs();
-            fileCsvs.saveCsvsInFileIfNeeded();
-            TreatmentTableOperations treatmentTable = new TreatmentTableOperations();
-            treatmentTable.generateTreatmentMatrixIFNeeded();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void init() throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvsInFileIfNeeded();
+        TreatmentTableOperations treatmentTable = new TreatmentTableOperations();
+        treatmentTable.generateTreatmentMatrixIFNeeded();
     }
 
     @Override
@@ -84,7 +80,6 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
             throws IOException, FileNotFoundException {
         return context.openFileInput(table);
     }
-
 
 
     public static void updateOptions(Context context) throws IOException {
@@ -133,7 +128,6 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
         }
     }
 
-
     @Override
     public void createDummyOrganisationInDB() {
         Partner testOrganisation = new Partner();
@@ -147,7 +141,7 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
 
 
     @Override
-    public void createDummyOrgUnitsDataInDB(Context context) {
+    public void createDummyOrgUnitsDataInDB(Context context) throws IOException{
         List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
 
         if (orgUnits.size() == 0) {

@@ -32,6 +32,7 @@ import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExten
 import org.eyeseetea.malariacare.data.sync.importer.strategies.APullControllerStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.PullControllerStrategy;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.exception.PopulateCsvException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
@@ -64,22 +65,17 @@ public class PullController implements IPullController {
     @Override
     public void pull(final PullFilters pullFilters, final Callback callback) {
         Log.d(TAG, "Starting PULL process...");
-
+        callback.onStep(PullStep.METADATA);
         try {
-
-            callback.onStep(PullStep.METADATA);
-
             populateMetadataFromCsvs(pullFilters.isDemo());
-
-            if (pullFilters.isDemo()) {
-                callback.onComplete();
-            } else {
-
-                pullMetada(pullFilters, callback);
-            }
-        } catch (Exception ex) {
-            Log.e(TAG, "pull: " + ex.getLocalizedMessage());
-            callback.onError(ex);
+        } catch (IOException e) {
+            callback.onError(new PopulateCsvException(e));
+            return;
+        }
+        if (pullFilters.isDemo()) {
+            callback.onComplete();
+        } else {
+            pullMetada(pullFilters, callback);
         }
     }
 
@@ -175,9 +171,8 @@ public class PullController implements IPullController {
 
             OrgUnitToOptionConverter.convert();
             mPullControllerStrategy.convertMetadata(mConverter);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            callback.onError(new PullConversionException());
+        } catch (NullPointerException ex) {
+            callback.onError(new PullConversionException(ex));
         }
     }
 
@@ -193,9 +188,8 @@ public class PullController implements IPullController {
         try {
             mConverter.setOrgUnits(OrgUnit.getAllOrgUnit());
             mDataConverter.convert(callback, mConverter);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            callback.onError(new PullConversionException());
+        } catch (NullPointerException ex) {
+            callback.onError(new PullConversionException(ex));
         }
     }
 }

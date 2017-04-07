@@ -49,6 +49,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -224,7 +225,7 @@ public class LoginActivity extends AbsLoginActivity {
             }
 
             @Override
-            public void onConfigJsonNotPresent() {
+            public void onConfigJsonInvalid() {
                 hideProgressBar();
                 showError(getString(R.string.login_error_json));
             }
@@ -309,12 +310,16 @@ public class LoginActivity extends AbsLoginActivity {
     public class AsyncPullAnnouncement extends AsyncTask<LoginActivity, Void, Void> {
         //userCloseChecker is never saved, Only for check if the date is closed.
         LoginActivity loginActivity;
-        boolean isUserClosed = false;
+        Boolean isUserClosed = false;
 
         @Override
         protected Void doInBackground(LoginActivity... params) {
             loginActivity = params[0];
-            isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+            try {
+                isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+            }catch (ApiCallException e){
+                isUserClosed = null;
+            }
             return null;
         }
 
@@ -322,8 +327,10 @@ public class LoginActivity extends AbsLoginActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             hideProgressBar();
+            if(isUserClosed == null){
+                return;
+            }
             if (isUserClosed) {
-                Log.d(TAG, "user closed");
                 AnnouncementMessageDialog.closeUser(R.string.admin_announcement,
                         PreferencesState.getInstance().getContext().getString(R.string.user_close),
                         LoginActivity.this);

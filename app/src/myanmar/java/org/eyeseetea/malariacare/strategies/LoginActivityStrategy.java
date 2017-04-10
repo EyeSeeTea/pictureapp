@@ -180,4 +180,15 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         return false;
     }
 
+
+
+    @Override
+    public void initViews() {
+
+    }
+
+    @Override
+    public void onLoginSuccess(Credentials credentials) {
+        loginActivity.checkAnnouncement();
+    }
 }

@@ -2,16 +2,7 @@ package org.eyeseetea.malariacare.presentation.factory.monitor.tables;
 
 import android.content.Context;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.NegativeRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PeriodRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PfPvRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PfRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PositivityRateRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PvRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.ReferralOptionRowBuilder;
-import org.eyeseetea.malariacare.presentation.factory.monitor.rows.TestedRowBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +10,9 @@ import java.util.List;
 /**
  * Created by idelcano on 21/07/2016.
  */
-public class MonitorUtils{
+public class MonitorUtils {
 
     public MonitorUtils(Context context) {
-//        super(context);
     }
 
     public List<MonitorRowBuilder> defineRows() {

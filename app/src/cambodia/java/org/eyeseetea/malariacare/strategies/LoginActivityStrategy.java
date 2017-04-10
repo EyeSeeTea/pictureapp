@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
@@ -50,4 +51,16 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
         loginActivity.finish();
     }
+
+    @Override
+    public void initViews() {
+
+    }
+
+
+    @Override
+    public void onLoginSuccess(Credentials credentials) {
+        loginActivity.checkAnnouncement();
+    }
+
 }

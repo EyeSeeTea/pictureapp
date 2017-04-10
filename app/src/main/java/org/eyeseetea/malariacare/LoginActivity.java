@@ -84,7 +84,7 @@ public class LoginActivity extends AbsLoginActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
-        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
     }
@@ -193,15 +193,13 @@ public class LoginActivity extends AbsLoginActivity {
     }
 
     public void login(String serverUrl, String username, String password) {
-        Credentials credentials = new Credentials(serverUrl, username, password);
+        final Credentials credentials = new Credentials(serverUrl, username, password);
         showProgressBar();
 
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {
-                PreferencesState.getInstance().setUserAccept(false);
-                AsyncPullAnnouncement asyncPullAnnouncement = new AsyncPullAnnouncement();
-                asyncPullAnnouncement.execute(LoginActivity.this);
+                mLoginActivityStrategy.onLoginSuccess(credentials);
             }
 
             @Override
@@ -240,6 +238,9 @@ public class LoginActivity extends AbsLoginActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    public void showError(int message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
 
     @Override
     public void onBackPressed() {
@@ -257,6 +258,7 @@ public class LoginActivity extends AbsLoginActivity {
         usernameEditText.setText(DEFAULT_USER);
         passwordEditText = (EditText) findViewById(R.id.edittext_password);
         passwordEditText.setText(DEFAULT_PASSWORD);
+        mLoginActivityStrategy.initViews();
     }
 
     public class AsyncInit extends AsyncTask<Void, Void, Exception> {
@@ -314,7 +316,9 @@ public class LoginActivity extends AbsLoginActivity {
         @Override
         protected Void doInBackground(LoginActivity... params) {
             loginActivity = params[0];
-            isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+            if (Session.getUser() != null) {
+                isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+            }
             return null;
         }
 
@@ -331,6 +335,12 @@ public class LoginActivity extends AbsLoginActivity {
                 mLoginActivityStrategy.finishAndGo();
             }
         }
+    }
+
+    public void checkAnnouncement() {
+        PreferencesState.getInstance().setUserAccept(false);
+        AsyncPullAnnouncement asyncPullAnnouncement = new AsyncPullAnnouncement();
+        asyncPullAnnouncement.execute(LoginActivity.this);
     }
 
 }

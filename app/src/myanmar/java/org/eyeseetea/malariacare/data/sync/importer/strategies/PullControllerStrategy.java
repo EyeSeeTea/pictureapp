@@ -6,6 +6,9 @@ import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupEx
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.CategoryOptionGroupFlow;
 
 public class PullControllerStrategy extends APullControllerStrategy {
+    public PullControllerStrategy(PullController pullController) {
+        super(pullController);
+    }
     @Override
     public void convertMetadata(ConvertFromSDKVisitor converter) {
         for (CategoryOptionGroupFlow categoryOptionGroupFlow : SdkQueries.getCategoryOptionGroups

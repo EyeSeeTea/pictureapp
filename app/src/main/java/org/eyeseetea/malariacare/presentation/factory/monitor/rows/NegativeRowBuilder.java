@@ -20,7 +20,6 @@ package org.eyeseetea.malariacare.presentation.factory.monitor.rows;
 
 import android.content.Context;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonitor;
 
 /**
@@ -29,7 +28,7 @@ import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonito
 public class NegativeRowBuilder extends CounterRowBuilder {
 
     public NegativeRowBuilder(Context context) {
-        super(context, context.getString(R.string.negative));
+        super(context, "");
     }
 
     @Override

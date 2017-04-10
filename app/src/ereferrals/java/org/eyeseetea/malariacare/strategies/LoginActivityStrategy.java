@@ -2,10 +2,12 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.design.widget.TextInputLayout;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.EditText;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
@@ -14,19 +16,21 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.data.sync.importer.PullOrganisationCredentialsController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.CheckCredentialsWithOrgUnitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.PullOrganisationCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
-import org.hisp.dhis.client.sdk.ui.views.FontButton;
 
-public class LoginActivityStrategy extends ALoginActivityStrategy {
+public class LoginActivityStrategy extends ALoginActivityStrategy implements
+        CheckCredentialsWithOrgUnitUseCase.Callback {
 
     private static final String TAG = ".LoginActivityStrategy";
     public static final String EXIT = "exit";
@@ -63,11 +67,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             //TODO jsanchez, this is necessary because oncreate is called from
             //AsyncTask review Why is invoked from AsyncTask, It's not very correct
             PopulateDB.wipeDataBase();
-            loginActivity.runOnUiThread(new Runnable() {
-                public void run() {
-                    addDemoButton();
-                }
-            });
         }
     }
 
@@ -75,51 +74,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         return User.getLoggedUser() != null;
     }
 
-    private void addDemoButton() {
-        final ViewGroup loginViewsContainer = (ViewGroup) loginActivity.findViewById(
-                R.id.login_dynamic_views_container);
-
-        loginActivity.getLayoutInflater().inflate(R.layout.demo_login_button, loginViewsContainer,
-                true);
-
-        FontButton demoButton = (FontButton) loginActivity.findViewById(R.id.demo_login_button);
-
-        demoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Credentials demoCrededentials = Credentials.createDemoCredentials();
-                loginActivity.showProgressBar();
-                loginActivity.mLoginUseCase.execute(demoCrededentials,
-                        new ALoginUseCase.Callback() {
-                            @Override
-                            public void onLoginSuccess() {
-                                executePullDemo();
-                            }
-
-                            @Override
-                            public void onServerURLNotValid() {
-                                Log.e(this.getClass().getSimpleName(), "Server url not valid");
-                            }
-
-                            @Override
-                            public void onInvalidCredentials() {
-                                Log.e(this.getClass().getSimpleName(), "Invalid credentials");
-                            }
-
-                            @Override
-                            public void onNetworkError() {
-                                Log.e(this.getClass().getSimpleName(), "Network Error");
-                            }
-
-                            @Override
-                            public void onConfigJsonNotPresent() {
-
-                            }
-                        });
-            }
-        });
-    }
 
     private void executePullDemo() {
         PullController pullController = new PullController(loginActivity);
@@ -182,5 +136,70 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         return false;
+    }
+
+
+    @Override
+    public void initViews() {
+        EditText passwordEditText = (EditText) loginActivity.findViewById(R.id.edittext_password);
+        passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        TextInputLayout passwordHint =
+                (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
+        passwordHint.setHint("Pin");
+    }
+
+    @Override
+    public void onLoginSuccess(final Credentials credentials) {
+        PullOrganisationCredentialsController pullOrganisationCredentialsController =
+                new PullOrganisationCredentialsController(credentials, loginActivity);
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+
+        PullOrganisationCredentialsUseCase pullOrganisationCredentialsUseCase =
+                new PullOrganisationCredentialsUseCase(asyncExecutor, mainExecutor,
+                        pullOrganisationCredentialsController);
+        pullOrganisationCredentialsUseCase.execute(
+                new PullOrganisationCredentialsUseCase.Callback() {
+                    @Override
+                    public void onComplete() {
+                        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
+                                new CheckCredentialsWithOrgUnitUseCase();
+                        checkCredentialsWithOrgUnitUseCase.execute(credentials,LoginActivityStrategy.this);
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        loginActivity.hideProgressBar();
+                        Log.e(this.getClass().getSimpleName(), message);
+                        loginActivity.showError(R.string.dialog_title_error);
+                    }
+
+                    @Override
+                    public void onNetworkError() {
+                        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
+                                new CheckCredentialsWithOrgUnitUseCase();
+                        checkCredentialsWithOrgUnitUseCase.execute(credentials,LoginActivityStrategy.this);
+                    }
+
+                    @Override
+                    public void onPullConversionError() {
+                        loginActivity.hideProgressBar();
+                        Log.e(this.getClass().getSimpleName(), "Pull conversion error");
+                        loginActivity.showError(R.string.dialog_pull_error);
+                    }
+                });
+    }
+
+
+    @Override
+    public void onCorrectCredentials() {
+        loginActivity.checkAnnouncement();
+    }
+
+    @Override
+    public void onBadCredentials() {
+        loginActivity.hideProgressBar();
+        loginActivity.showError(R.string.login_invalid_credentials);
     }
 }

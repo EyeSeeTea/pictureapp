@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -47,6 +48,7 @@
             android:textColor="@color/dark_purple"
             android:textSize="?attr/font_xsmall"
             app:font_name="@string/specific_language_font" />
+
         <org.eyeseetea.sdk.presentation.views.CustomTextView
             android:id="@+id/historic_receipt_balance_row_x12"
             android:layout_width="0dp"

@@ -94,16 +94,19 @@ public class User extends BaseModel {
 
         if (userDB == null) {
             user.save();
-        }else{
-            System.out.println("User already saved"+user.toString());
+        } else {
+            System.out.println("User already saved" + user.toString());
         }
     }
 
     public static User getUserFromDB(User user) {
+        if(user.getUid() == null){
+            return  null;
+        }
         List<User> userdb = new Select().from(User.class).queryList();
         for (int i = userdb.size() - 1; i >= 0; i--) {
-            if ((userdb.get(i).getUid().equals(user.getUid())) && (userdb.get(i).getName().equals(
-                    user.getName()))) {
+            if (userdb.get(i).getUid()!=null && userdb.get(i).getUid().equals(user.getUid()) && userdb.get(i).getName().equals(
+                    user.getName())) {
                 return userdb.get(i);
             }
         }
@@ -183,7 +186,7 @@ public class User extends BaseModel {
     }
 
     public Long getOrganisationId() {
-        return  partner_fk;
+        return partner_fk;
     }
 
     public long getOrganisation() {

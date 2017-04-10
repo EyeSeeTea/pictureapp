@@ -57,11 +57,11 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
 
     private void setupTextOption(Option option) {
         TextView title = (TextView) findViewById(R.id.questionTextRow);
-        title.setText(option.getInternationalizedCode());
+        title.setText(option.getInternationalizedName());
         title.setTextSize(option.getOptionAttribute().getText_size());
 
         TextView subTitle = (TextView) findViewById(R.id.questionSubText);
-        subTitle.setText(option.getInternationalizedName());
+        subTitle.setText(option.getInternationalizedCode());
         subTitle.setTextSize(option.getOptionAttribute().getText_size());
     }
 
@@ -71,7 +71,7 @@ public class ReminderSingleQuestionView extends AOptionQuestionView implements I
             return "";
         }
 
-        return navigationOption.getInternationalizedCode();
+        return navigationOption.getInternationalizedName();
     }
 
     @Override

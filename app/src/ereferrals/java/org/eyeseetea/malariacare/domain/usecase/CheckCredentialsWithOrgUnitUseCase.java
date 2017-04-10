@@ -19,31 +19,19 @@ public class CheckCredentialsWithOrgUnitUseCase implements UseCase {
     private Callback mCallback;
 
     public void execute(@Nullable Credentials credentials, Callback callback) {
-        if (credentials != null) {
-            mCredentials = credentials;
-        } else {
-            mCredentials = getSavedCredentials();
-        }
+        mCredentials = credentials;
         mCallback = callback;
         run();
     }
 
-    private Credentials getSavedCredentials() {
-        return null;
-    }
-
     @Override
     public void run() {
-        List<OrgUnit> orgUnits = OrgUnit.getAllOrgUnit();
-
-        for (OrgUnit orgUnit : orgUnits) {
-            if (mCredentials.getUsername().equals(orgUnit.getUid())) {
-                //TODO check if attribute corresponds with password
-                PreferencesEReferral.saveLoggedUserCredentials(mCredentials);
-                mCallback.onCorrectCredentials();
-                return;
-            }
+        Credentials savedCredentials = PreferencesEReferral.getUserCredentialsFromPreferences();
+        if (savedCredentials.getUsername().equals(mCredentials.getUsername())
+                && savedCredentials.getPassword().equals(mCredentials.getPassword())) {
+            mCallback.onCorrectCredentials();
+        } else {
+            mCallback.onBadCredentials();
         }
-        mCallback.onBadCredentials();
     }
 }

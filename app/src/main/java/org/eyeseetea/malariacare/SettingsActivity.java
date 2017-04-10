@@ -211,7 +211,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         mSettingsActivityStrategy.onCreate();
     }
 
@@ -394,7 +394,8 @@ public class SettingsActivity extends PreferenceActivity implements
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            PreferencesState.getInstance().onCreateActivityPreferences(getResources(), null);//the theme not exist in a static context
+            PreferencesState.getInstance().onCreateActivityPreferences(getResources(),
+                    null);//the theme not exist in a static context
             addPreferencesFromResource(R.xml.pref_general);
 
 

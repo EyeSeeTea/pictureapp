@@ -80,7 +80,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         ImageRadioButtonOption imageRadioButtonOption = new ImageRadioButtonOption(
                 getContext(), true);
 
-        imageRadioButtonOption.setText(option.getInternationalizedCode());
+        imageRadioButtonOption.setText(option.getInternationalizedName());
         putImageInImageRadioButton(option.getInternationalizedPath(), imageRadioButtonOption);
         imageRadioButtonOption.setOnCheckedChangeListener(this);
         imageRadioButtonOption.setOption(option, mQuestion);
@@ -128,7 +128,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
                 } else {
                     List<Option> options = question.getAnswer().getOptions();
                     for (Option option : options) {
-                        if (option.getCode().equals(
+                        if (option.getName().equals(
                                 PreferencesState.getInstance().getContext().getString(
                                         R.string.false_option_id))) {
                             notifyAnsweOptionChange(optionView, option);
@@ -145,7 +145,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
         } else {
             List<Option> options = question.getAnswer().getOptions();
             for (Option option : options) {
-                if (option.getCode().equals(
+                if (option.getName().equals(
                         PreferencesState.getInstance().getContext().getString(
                                 R.string.true_option_id))) {
                     notifyAnsweOptionChange(imageRadioButton, option);
@@ -193,7 +193,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             } else if (question.getId_question().equals(value.getQuestion().getId_question())) {
                 List<Option> options = question.getAnswer().getOptions();
                 for (Option option : options) {
-                    if ((option.getCode().equals(
+                    if ((option.getName().equals(
                             PreferencesState.getInstance().getContext().getString(
                                     R.string.true_option_id)))
                             && option.getId_option().equals(

@@ -68,19 +68,21 @@ public class SurveyFragmentStrategy {
     }
 
     public static Survey getValueBySessionWithConditions(Question question) {
-        if(isStockQuestion(question) || TreatmentQueries.isPq(question.getUid()) || TreatmentQueries.isACT(question.getUid()))
-        {
+        if (isStockQuestion(question) || TreatmentQueries.isPq(question.getUid())
+                || TreatmentQueries.isACT(question.getUid())) {
             return Session.getStockSurvey();
         }
-        return  Session.getMalariaSurvey();
+        return Session.getMalariaSurvey();
     }
+
     public static Survey getSessionSurveyByStock(Question question) {
         return (TreatmentQueries.isStockQuestion(question) ? Session.getStockSurvey()
                 : Session.getMalariaSurvey());
     }
 
     public static void saveValueDDlExtraOperations(Value value, Option option, String uid) {
-        if (value != null && TreatmentQueries.isTreatmentQuestion(uid) && TreatmentQueries.isACT(uid)
+        if (value != null && TreatmentQueries.isTreatmentQuestion(uid) && TreatmentQueries.isACT(
+                uid)
                 && !option.getId_option().equals(value.getId_option())) {
             List<Survey> surveys = new ArrayList<>();
             surveys.add(Session.getStockSurvey());
@@ -90,14 +92,18 @@ public class SurveyFragmentStrategy {
             }
         }
     }
+
     public static Survey getSaveValuesDDLSurvey(Question question) {
-        return((isStockQuestion(question) || TreatmentQueries.isPq(question.getUid()) || TreatmentQueries.isACT(question.getUid()))
+        return ((isStockQuestion(question) || TreatmentQueries.isPq(question.getUid())
+                || TreatmentQueries.isACT(question.getUid()))
                 ? Session.getStockSurvey()
                 : Session.getMalariaSurvey());
     }
 
-    public static void saveValuesText(Value value, String answer, Question question, Survey survey) {
-        if ((TreatmentQueries.isTreatmentQuestion(question.getUid()) || TreatmentQueries.isPq(question.getUid())
+    public static void saveValuesText(Value value, String answer, Question question,
+            Survey survey) {
+        if ((TreatmentQueries.isTreatmentQuestion(question.getUid()) || TreatmentQueries.isPq(
+                question.getUid())
                 || TreatmentQueries.isACT(question.getUid())) && value != null
                 && !value.getValue().equals(answer)) {
             List<Survey> surveys = new ArrayList<>();
@@ -118,12 +124,15 @@ public class SurveyFragmentStrategy {
             }
         }
     }
-    public static void recursiveRemover(Value value, Option option, Question question, Survey survey) {
+
+    public static void recursiveRemover(Value value, Option option, Question question,
+            Survey survey) {
         if (!value.getOption().equals(option) && question.hasChildren()
                 && !TreatmentQueries.isDynamicTreatmentQuestion(question.getUid())) {
             survey.removeChildrenValuesFromQuestionRecursively(question, false);
         }
     }
+
     public static List<Question> getCompulsoryNotAnsweredQuestions(Question question) {
         List<Question> questions = new ArrayList<>();
         if (question.getHeader().getTab().getType().equals(Constants.TAB_MULTI_QUESTION)) {
@@ -156,16 +165,18 @@ public class SurveyFragmentStrategy {
 
     }
 
-    public static void deleteStockValues(Survey survey){
+    public static void deleteStockValues(Survey survey) {
         List<Value> values = survey.getValuesFromDB();
         for (Value value : values) {
-            if(value.getQuestion() == null){
+            if (value.getQuestion() == null) {
                 continue;
             }
-            if ((TreatmentQueries.isACT(value.getQuestion().getUid()) && !value.getValue().equals("0"))
+            if ((TreatmentQueries.isACT(value.getQuestion().getUid()) && !value.getValue().equals(
+                    "0"))
                     || TreatmentQueries.isOutStockQuestion(value.getQuestion().getUid())) {
-                for(Question questionPropagated:value.getQuestion().getPropagationQuestions()){
-                    survey.removeValue(questionPropagated.getValueBySurvey(Session.getMalariaSurvey()));
+                for (Question questionPropagated : value.getQuestion().getPropagationQuestions()) {
+                    survey.removeValue(
+                            questionPropagated.getValueBySurvey(Session.getMalariaSurvey()));
                 }
                 value.delete();
             }
@@ -173,7 +184,7 @@ public class SurveyFragmentStrategy {
     }
 
     public static Survey getSessionSurveyByQuestion(Question question) {
-        return  (TreatmentQueries.isStockQuestion(question)) ? Session.getStockSurvey()
-            : Session.getMalariaSurvey();
+        return (TreatmentQueries.isStockQuestion(question)) ? Session.getStockSurvey()
+                : Session.getMalariaSurvey();
     }
 }

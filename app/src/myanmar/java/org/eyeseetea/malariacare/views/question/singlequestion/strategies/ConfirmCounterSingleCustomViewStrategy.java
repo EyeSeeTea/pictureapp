@@ -100,7 +100,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
 
         if (questionOptions.get(2) != null) {
             CustomTextView textNextButton = (CustomTextView) rootView.findViewById(R.id.next_txt);
-            textNextButton.setText(getInternationalizedName(questionOptions.get(2).getCode()));
+            textNextButton.setText(getInternationalizedName(questionOptions.get(2).getName()));
             textNextButton.setTextSize(questionOptions.get(2).getOptionAttribute().getText_size());
         }
     }
@@ -124,11 +124,11 @@ public class ConfirmCounterSingleCustomViewStrategy implements
         List<Option> questionOptions = questionCounter.getAnswer().getOptions();
         if (questionOptions.get(0) != null) {
             CustomTextView textCard = (CustomTextView) rootView.findViewById(R.id.questionTextRow);
-            textCard.setText(getInternationalizedName(questionOptions.get(0).getCode()));
+            textCard.setText(getInternationalizedName(questionOptions.get(0).getName()));
             textCard.setTextSize(questionOptions.get(0).getOptionAttribute().getText_size());
 
             TextView subTitle = (TextView) rootView.findViewById(R.id.questionSubText);
-            subTitle.setText(getInternationalizedName(questionOptions.get(0).getName()));
+            subTitle.setText(getInternationalizedName(questionOptions.get(0).getCode()));
             subTitle.setTextSize(questionOptions.get(0).getOptionAttribute().getText_size());
         }
     }

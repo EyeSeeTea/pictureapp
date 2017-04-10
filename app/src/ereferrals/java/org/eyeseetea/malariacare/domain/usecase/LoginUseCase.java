@@ -1,10 +1,12 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.network.ServerAPIController;
 
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
@@ -18,7 +20,7 @@ public class LoginUseCase extends ALoginUseCase {
 
     @Override
     public void execute(Credentials credentials, final Callback callback) {
-        mAuthenticationManager.login(credentials,
+        mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
@@ -33,7 +35,21 @@ public class LoginUseCase extends ALoginUseCase {
                         } else if (throwable instanceof InvalidCredentialsException) {
                             callback.onInvalidCredentials();
                         } else if (throwable instanceof NetworkException) {
-                            callback.onNetworkError();
+                            CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
+                                    new CheckCredentialsWithOrgUnitUseCase();
+                            checkCredentialsWithOrgUnitUseCase.execute(
+                                    PreferencesEReferral.getUserCredentialsFromPreferences(),
+                                    new CheckCredentialsWithOrgUnitUseCase.Callback() {
+                                        @Override
+                                        public void onCorrectCredentials() {
+                                            callback.onLoginSuccess();
+                                        }
+
+                                        @Override
+                                        public void onBadCredentials() {
+                                            callback.onNetworkError();
+                                        }
+                                    });
                         }
                     }
                 });

@@ -19,7 +19,6 @@
 package org.eyeseetea.malariacare.network;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -35,10 +34,10 @@ import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -49,7 +48,6 @@ import java.io.IOException;
 import java.net.Proxy;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Utility class that shows specific operations to check server status with the given config
@@ -720,7 +718,51 @@ public class ServerAPIController {
             ex.printStackTrace();
             return false;
         }
+        if(closedDate == null) {
+            return false;
+        }
         return closedDate.before(new Date());
+    }
+
+    public static JSONObject getOrganisationUnitsByCode(String code)
+            throws PullConversionException {
+        //Version is required to choose which field to match
+        String serverVersion = getServerVersion(PreferencesState.getInstance().getDhisURL());
+
+        //No version -> No data
+        if (serverVersion == null) {
+            return null;
+        }
+
+        try {
+            String urlOrgUnitData = getOrganisationUnitsCredentialsUrl(code);
+            Response response = executeCall(null, urlOrgUnitData, "GET");
+
+            //Error -> null
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "getOrgUnitData (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+
+            //{"organisationUnits":[{}]}
+            JSONObject jsonResponse = parseResponse(response.body().string());
+            JSONArray orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATIONUNITS);
+
+            //0| >1 matches -> Error
+            if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
+                Log.e(TAG, String.format("getOrgUnitData(%s) -> Found %d matches", code,
+                        orgUnitsArray.length()));
+                return null;
+            }
+            return (JSONObject) orgUnitsArray.get(0);
+
+        } catch (Exception ex) {
+            Log.e(TAG, String.format("getOrgUnitData(%s): %s", code,
+                    ex.toString()));
+            ex.printStackTrace();
+            throw new PullConversionException();
+        }
+
     }
 
     /**
@@ -796,6 +838,14 @@ public class ServerAPIController {
         Log.d(TAG, String.format("getOrgUnitDataUrl(%s,%s,%s) -> %s", url, serverVersion,
                 orgUnitNameOrCode, endpoint));
         return endpoint;
+    }
+
+    static String getOrganisationUnitsCredentialsUrl(String code) {
+        String url = PreferencesState.getInstance().getDhisURL()
+                + "/api/organisationUnits.json?filter=code:eq:%s&fields=id,code,ancestors[id,"
+                + "code,level],attributeValues[value,attribute[code]";
+        url = String.format(url, code);
+        return url;
     }
 
     /**
@@ -892,7 +942,7 @@ class BasicAuthenticator implements Authenticator {
     private String credentials;
 
     BasicAuthenticator() {
-        credentials =  AuthenticationApiStrategy.getApiCredentials();
+        credentials = AuthenticationApiStrategy.getApiCredentials();
     }
 
     @Override

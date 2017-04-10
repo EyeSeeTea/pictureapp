@@ -30,7 +30,6 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
@@ -209,6 +208,13 @@ public class Program extends BaseModel {
                 .from(Program.class)
                 .where(Program_Table.uid_program
                         .is(UID)).querySingle();
+    }
+
+    public static Program findByName(String name) {
+        return new Select()
+                .from(Program.class)
+                .where(Program_Table.name
+                        .is(name)).querySingle();
     }
 
     @Override

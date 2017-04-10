@@ -3,9 +3,13 @@ package org.eyeseetea.malariacare.strategies;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ListView;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
+import java.util.List;
 
 public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
 
@@ -79,5 +83,14 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
             return null;
         }
         return headerView;
+    }
+
+    public View loadFilter(LayoutInflater inflater) {
+        return null;
+    }
+
+    public void initFilters(DashboardSentFragment dashboardSentFragment, ListView listView,
+            List<Survey> surveysFromService) {
+        return;
     }
 }

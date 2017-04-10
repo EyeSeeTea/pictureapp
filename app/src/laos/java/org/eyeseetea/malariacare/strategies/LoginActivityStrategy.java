@@ -45,6 +45,16 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         loginActivity.finish();
     }
 
+    @Override
+    public void initViews() {
+
+    }
+
+    @Override
+    public void onLoginSuccess(Credentials credentials) {
+        loginActivity.checkAnnouncement();
+    }
+
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

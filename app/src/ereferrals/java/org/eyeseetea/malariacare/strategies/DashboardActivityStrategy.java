@@ -2,8 +2,10 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 
+<<<<<<< Temporary merge branch 1
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+=======
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
@@ -75,4 +77,5 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
         return false;
     }
+
 }

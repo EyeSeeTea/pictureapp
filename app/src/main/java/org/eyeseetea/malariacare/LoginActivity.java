@@ -316,7 +316,9 @@ public class LoginActivity extends AbsLoginActivity {
         @Override
         protected Void doInBackground(LoginActivity... params) {
             loginActivity = params[0];
-            isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+            if (Session.getUser() != null) {
+                isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+            }
             return null;
         }
 

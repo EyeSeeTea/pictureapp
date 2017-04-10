@@ -45,6 +45,7 @@ public class PreferencesEReferral {
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putLong("logged_user_program", id_program);
+        editor.commit();
     }
 
     public static long getUserProgramId() {

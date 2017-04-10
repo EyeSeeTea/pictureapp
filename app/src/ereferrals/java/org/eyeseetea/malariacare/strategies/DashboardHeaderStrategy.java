@@ -26,36 +26,20 @@ public class DashboardHeaderStrategy extends ADashboardHeaderStrategy {
         int titleResource = 0, subtitleResource = 0;
         switch (tabTag) {
             case R.string.tab_tag_assess:
-                titleResource = R.string.new_case_title;
+                titleResource = R.string.open_tab_title;
                 subtitleResource = R.string.unsent_data;
                 break;
             case R.string.tab_tag_improve:
-                titleResource = R.string.past_cases;
+                titleResource = R.string.closed_tab_title;
                 subtitleResource = R.string.sent_data;
                 break;
             case R.string.tab_tag_stock:
-                titleResource = R.string.stock_control;
-                subtitleResource = R.string.receipts_balances;
+                titleResource = R.string.tab_tag_stock;
+                subtitleResource = R.string.status_subtitle;
                 break;
             case R.string.tab_tag_monitor:
-                titleResource = R.string.monitoring_title;
-                subtitleResource = R.string.monitoring_time_period;
-                break;
-            case R.string.fragment_new_receipt:
-                titleResource = R.string.stock_control;
-                subtitleResource=R.string.new_receipt;
-                break;
-            case R.string.fragment_new_reset:
-                titleResource = R.string.stock_control;
-                subtitleResource=R.string.new_reset;
-                break;
-            case R.string.fragment_historic_receipt_balance:
-                titleResource = R.string.stock_control;
-                subtitleResource=R.string.previous_distributions;
-                break;
-            case R.string.fragment_historic_reset:
-                titleResource = R.string.stock_control;
-                subtitleResource=R.string.previous_resets;
+                titleResource = R.string.status_tab_title;
+                subtitleResource = R.string.status_subtitle;
                 break;
         }
         setTitle(headerView, R.id.header_title, titleResource);

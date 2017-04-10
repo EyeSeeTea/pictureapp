@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ipc_issueEntry_q_firstName">"Jina la kwanza"</string>
+    <string name="ipc_issueEntry_q_lastName">"Jina la ukoo"</string>
+    <string name="ipc_issueEntry_q_gender">"Jinsia"</string>
+    <string name="ipc_issueEntry_q_motherName">"Jina la mama"</string>
+    <string name="ipc_issueEntry_q_birthDistrict">"Wilaya uliyozaliwa"</string>
+    <string name="ipc_issueEntry_q_yearOfBirth">"Mwaka wa kuzaliwa"</string>
+    <string name="ipc_issueEntry_q_numberOfChildren">"# Idadi ya Watoto"</string>
+    <string name="ipc_issueEntry_q_currentMethod">"Njia anayotumia sasa"</string>
+    <string name="ipc_issueEntry_q_channelOfReferral">"Rufaa ilitolewa wapi"</string>
+    <string name="ipc_issueEntry_q_civilStatus">"Hali ya ndoa"</string>
+    <string name="ipc_issueEntry_q_ownershipOfPhone">"Umiliki wa simu"</string>
+    <string name="ipc_issueEntry_q_phoneNumber">"Nambari ya simu"</string>
+    <string name="ipc_issueEntry_q_program">"Programu"</string>
+    <string name="common_option_method_none">"Hatumii"</string>
+    <string name="common_option_method_other">"nyingine"</string>
+    <string name="common_option_method_iud">"Kitanzi/IUD"</string>
+    <string name="common_option_method_condom">"Kondomu"</string>
+    <string name="common_option_method_pills">"Vidonge vya kumeza"</string>
+    <string name="common_option_method_implant">"Implant/ vipandizi"</string>
+    <string name="common_option_method_injection">"Sindano"</string>
+    <string name="common_option_channelOfReferral_healthFacility">"Kituo cha Afya"</string>
+    <string name="common_option_channelOfReferral_groupSession">"Mkutano wa kikundi"</string>
+    <string name="common_option_channelOfReferral_doorToDoor">"Nyumba kwa Nyumba"</string>
+    <string name="common_option_civilStatus_unmarried">"Hajaolewa"</string>
+    <string name="common_option_civilStatus_married">"Ndoa"</string>
+    <string name="common_option_civilStatus_divorced">"Talaka"</string>
+    <string name="common_option_civilStatus_widowed">"mjane"</string>
+    <string name="common_option_ownershipOfPhone_noMobile">"Hana Simu"</string>
+    <string name="common_option_ownershipOfPhone_herNumber">"Ana Simu"</string>
+    <string name="common_option_ownershipOfPhone_husbandPartner">"Mume / Rafiki"</string>
+    <string name="common_option_ownershipOfPhone_shared">"Simu ya kushea"</string>
+    <string name="common_option_program_familyPlanning">"Uzazi wa mpango"</string>
+    <string name="common_option_program_cervicalCancer">"Saratani ya  mlango wa Kizazi"</string>
+    <string name="common_option_program_antinatalCare">"Uangalizi wa wajawazito "</string>
+</resources>

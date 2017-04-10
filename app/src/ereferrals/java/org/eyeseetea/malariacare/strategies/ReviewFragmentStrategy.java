@@ -52,21 +52,6 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
 
     private Question getCorrectQuestion(Question question) {
-        if (question.getUid().equals(PreferencesState.getInstance().getContext().getString(
-                R.string.dynamicTreatmentQuestionUID)) || question.getUid().equals(
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.referralQuestionUID))
-                || question.getUid().equals(
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.treatmentDiagnosisVisibleQuestion))) {
-            return Question.findByUID(PreferencesState.getInstance().getContext().getString(
-                    R.string.dynamicTreatmentHideQuestionUID));
-        }
-        if (question.getUid().equals(PreferencesState.getInstance().getContext().getString(
-                R.string.outOfStockQuestionUID))) {
-            return Question.findByUID(PreferencesState.getInstance().getContext().getString(
-                    R.string.dynamicStockQuestionUID));
-        }
         return question;
     }
 

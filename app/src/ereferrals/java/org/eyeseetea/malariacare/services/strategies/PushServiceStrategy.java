@@ -6,6 +6,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.sync.importer.PullOrganisationCredentialsController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -30,7 +31,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
     @Override
     public void push() {
-        final Credentials oldCredentials = new Credentials("", "manu", "78");
+        final Credentials oldCredentials = PreferencesEReferral.getUserCredentialsFromPreferences();
         PullOrganisationCredentialsController pullOrganisationCredentialsController =
                 new PullOrganisationCredentialsController(oldCredentials, mPushService);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();

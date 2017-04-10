@@ -78,6 +78,5 @@
     <string name="attribute_pin_code">OU_PIN</string>
     <string name="logged_user_program">logged_user_program</string>
     <string name="ancestor_level">3</string>
-    <string name="authority">EREFERRALS_DHIS2_DEFAULT_AUTHORITY</string>
 
 </resources>

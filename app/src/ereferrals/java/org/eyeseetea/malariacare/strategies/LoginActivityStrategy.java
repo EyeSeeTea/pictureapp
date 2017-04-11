@@ -184,6 +184,13 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
                         Log.e(this.getClass().getSimpleName(), "Pull conversion error");
                         loginActivity.showError(R.string.dialog_pull_error);
                     }
+
+                    @Override
+                    public void onInvalidCredentials() {
+                        loginActivity.hideProgressBar();
+                        Log.e(this.getClass().getSimpleName(), "Invalid credentials");
+                        loginActivity.showError(R.string.login_invalid_credentials);
+                    }
                 });
     }
 

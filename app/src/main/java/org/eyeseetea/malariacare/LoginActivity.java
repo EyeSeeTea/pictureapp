@@ -342,6 +342,10 @@ public class LoginActivity extends AbsLoginActivity {
         asyncPullAnnouncement.execute(LoginActivity.this);
     }
 
+    public void enableLogin(boolean enable) {
+        getLoginButton().setEnabled(enable);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();

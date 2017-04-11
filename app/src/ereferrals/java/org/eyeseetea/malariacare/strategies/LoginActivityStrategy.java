@@ -209,7 +209,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
     public void onBadCredentials(boolean disableLogin) {
         loginActivity.hideProgressBar();
         loginActivity.showError(R.string.login_invalid_credentials);
-        loginActivity.enbleLogin(!disableLogin);
+        loginActivity.enableLogin(!disableLogin);
         if (disableLogin) {
             PreferencesEReferral.setTimeLoginEnables();
             checkEnableLogin();
@@ -220,7 +220,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
         final long timeEnabled = PreferencesEReferral.getTimeLoginEnables();
         long currentTime = new Date().getTime();
         if (currentTime < timeEnabled) {
-            loginActivity.enbleLogin(false);
+            loginActivity.enableLogin(false);
             final Handler h = new Handler();
             final int delay = 1000; //milliseconds
             h.postDelayed(new Runnable() {
@@ -230,7 +230,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
                         if (currentTime < timeEnabled) {
                             h.postDelayed(this, delay);
                         } else {
-                            loginActivity.enbleLogin(true);
+                            loginActivity.enableLogin(true);
                         }
                     }
                 }

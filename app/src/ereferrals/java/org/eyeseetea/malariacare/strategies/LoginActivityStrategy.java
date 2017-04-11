@@ -196,9 +196,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
                         loginActivity.hideProgressBar();
                         Log.e(this.getClass().getSimpleName(), "Invalid credentials");
                         loginActivity.showError(R.string.login_invalid_credentials);
+                        onBadCredentials();
                     }
                 });
     }
+
 
     @Override
     public void onLoginNetworkError(Credentials credentials) {
@@ -248,5 +250,21 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
     @Override
     public void onStart() {
         checkEnableLogin();
+    }
+
+
+    private void onBadCredentials() {
+        if (PreferencesEReferral.addBadLogin() >= 3) {
+            PreferencesEReferral.setTimeLoginEnables();
+            checkEnableLogin();
+            PreferencesEReferral.resetBadLogin();
+        }
+    }
+
+    @Override
+    public boolean canEnableLoginButtonOnTextChange() {
+        long timeEnabled = PreferencesEReferral.getTimeLoginEnables();
+        long currentTime = new Date().getTime();
+        return currentTime > timeEnabled;
     }
 }

@@ -73,6 +73,13 @@ public class PushServiceStrategy extends APushServiceStrategy {
                     public void onPullConversionError() {
                         Log.e(TAG, "Error getting user credentials: PullConversionError");
                     }
+
+                    @Override
+                    public void onInvalidCredentials() {
+                        Log.e(TAG,
+                                "Error getting user credentials: Invalid credentials wrong username");
+                    }
+
                 });
 
     }

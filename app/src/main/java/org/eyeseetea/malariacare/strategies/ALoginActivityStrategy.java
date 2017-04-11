@@ -29,4 +29,8 @@ public abstract class ALoginActivityStrategy {
 
     public void onStart() {
     }
+
+    public boolean canEnableLoginButtonOnTextChange() {
+        return true;
+    }
 }

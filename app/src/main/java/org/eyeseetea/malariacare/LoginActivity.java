@@ -351,6 +351,11 @@ public class LoginActivity extends AbsLoginActivity {
         super.onStart();
         mLoginActivityStrategy.onStart();
     }
+
+    @Override
+    protected boolean canEnableLoginButtonOnTextChange() {
+        return mLoginActivityStrategy.canEnableLoginButtonOnTextChange();
+    }
 }
 
 

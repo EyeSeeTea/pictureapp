@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
@@ -35,21 +34,7 @@ public class LoginUseCase extends ALoginUseCase {
                         } else if (throwable instanceof InvalidCredentialsException) {
                             callback.onInvalidCredentials();
                         } else if (throwable instanceof NetworkException) {
-                            CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                                    new CheckCredentialsWithOrgUnitUseCase();
-                            checkCredentialsWithOrgUnitUseCase.execute(
-                                    PreferencesEReferral.getUserCredentialsFromPreferences(),
-                                    new CheckCredentialsWithOrgUnitUseCase.Callback() {
-                                        @Override
-                                        public void onCorrectCredentials() {
-                                            callback.onLoginSuccess();
-                                        }
-
-                                        @Override
-                                        public void onBadCredentials() {
-                                            callback.onNetworkError();
-                                        }
-                                    });
+                            callback.onNetworkError();
                         }
                     }
                 });

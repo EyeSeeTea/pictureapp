@@ -217,8 +217,7 @@ public class LoginActivity extends AbsLoginActivity {
 
             @Override
             public void onNetworkError() {
-                hideProgressBar();
-                showError(getString(R.string.network_error));
+                mLoginActivityStrategy.onLoginNetworkError(credentials);
             }
 
             @Override
@@ -343,6 +342,11 @@ public class LoginActivity extends AbsLoginActivity {
         asyncPullAnnouncement.execute(LoginActivity.this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mLoginActivityStrategy.onStart();
+    }
 }
 
 

@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
@@ -14,20 +15,21 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.PullOrganisationCredentialsController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.CheckCredentialsWithOrgUnitUseCase;
-import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.PullOrganisationCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+
+import java.util.Date;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy implements
         CheckCredentialsWithOrgUnitUseCase.Callback {
@@ -56,18 +58,18 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
         if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
             loginActivity.finish();
         }
-        if (existsLoggedUser() && PopulateDB.hasMandatoryTables()) {
-            LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
-                    new LoadUserAndCredentialsUseCase(loginActivity);
-
-            loadUserAndCredentialsUseCase.execute();
-
-            finishAndGo(DashboardActivity.class);
-        } else {
-            //TODO jsanchez, this is necessary because oncreate is called from
-            //AsyncTask review Why is invoked from AsyncTask, It's not very correct
-            PopulateDB.wipeDataBase();
-        }
+//        if (existsLoggedUser() && PopulateDB.hasMandatoryTables()) {
+//            LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
+//                    new LoadUserAndCredentialsUseCase(loginActivity);
+//
+//            loadUserAndCredentialsUseCase.execute();
+//
+//            finishAndGo(DashboardActivity.class);
+//        } else {
+//            //TODO jsanchez, this is necessary because oncreate is called from
+//            //AsyncTask review Why is invoked from AsyncTask, It's not very correct
+//            PopulateDB.wipeDataBase();
+//        }
     }
 
     private boolean existsLoggedUser() {
@@ -191,6 +193,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
                 });
     }
 
+    @Override
+    public void onLoginNetworkError(Credentials credentials) {
+        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
+                new CheckCredentialsWithOrgUnitUseCase();
+        checkCredentialsWithOrgUnitUseCase.execute(credentials, LoginActivityStrategy.this);
+    }
 
     @Override
     public void onCorrectCredentials() {
@@ -198,8 +206,40 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
     }
 
     @Override
-    public void onBadCredentials() {
+    public void onBadCredentials(boolean disableLogin) {
         loginActivity.hideProgressBar();
         loginActivity.showError(R.string.login_invalid_credentials);
+        loginActivity.enbleLogin(!disableLogin);
+        if (disableLogin) {
+            PreferencesEReferral.setTimeLoginEnables();
+            checkEnableLogin();
+        }
+    }
+
+    private void checkEnableLogin() {
+        final long timeEnabled = PreferencesEReferral.getTimeLoginEnables();
+        long currentTime = new Date().getTime();
+        if (currentTime < timeEnabled) {
+            loginActivity.enbleLogin(false);
+            final Handler h = new Handler();
+            final int delay = 1000; //milliseconds
+            h.postDelayed(new Runnable() {
+                public void run() {
+                    if (!loginActivity.isFinishing()) {
+                        long currentTime = new Date().getTime();
+                        if (currentTime < timeEnabled) {
+                            h.postDelayed(this, delay);
+                        } else {
+                            loginActivity.enbleLogin(true);
+                        }
+                    }
+                }
+            }, delay);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        checkEnableLogin();
     }
 }

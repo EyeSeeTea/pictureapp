@@ -53,7 +53,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
                                     }
 
                                     @Override
-                                    public void onBadCredentials() {
+                                    public void onBadCredentials(boolean b) {
                                         logout();
                                     }
                                 });

@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -34,9 +35,12 @@ public class PullOrganisationCredentials {
             try {
             JSONObject jsonObject = ServerAPIController.getOrganisationUnitsByCode(
                     credentials.getUsername());
-
-                Credentials OUCredentials = parseOrganisationUnitToCredentials(jsonObject);
-                callback.onSuccess(OUCredentials);
+                if (jsonObject == null) {
+                    callback.onError(new InvalidCredentialsException());
+                } else {
+                    Credentials OUCredentials = parseOrganisationUnitToCredentials(jsonObject);
+                    callback.onSuccess(OUCredentials);
+                }
             } catch (PullConversionException e) {
                 callback.onError(e);
             }

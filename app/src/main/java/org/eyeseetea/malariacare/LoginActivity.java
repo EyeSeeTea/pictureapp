@@ -92,8 +92,7 @@ public class LoginActivity extends Activity {
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_login);
         PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
-        AsyncInit asyncPopulateDB = new AsyncInit(this);
-        asyncPopulateDB.execute((Void) null);
+        init();
     }
 
     private void initDataDownloadPeriodDropdown() {
@@ -277,54 +276,18 @@ public class LoginActivity extends Activity {
                         passwordEditText.getText());
             }
         });
-        bar = (CircularProgressBar) findViewById(
-                org.hisp.dhis.client.sdk.ui.R.id.progress_bar_circular);
+        bar = (CircularProgressBar) findViewById(R.id.progress_bar_circular);
         float progressBarStrokeWidth = getResources()
-                .getDimensionPixelSize(
-                        org.hisp.dhis.client.sdk.ui.R.dimen.progressbar_stroke_width);
+                .getDimensionPixelSize(R.dimen.progressbar_stroke_width);
         bar.setIndeterminateDrawable(new CircularProgressDrawable.Builder(this)
-                .color(ContextCompat.getColor(this,
-                        org.hisp.dhis.client.sdk.ui.R.color.color_primary_default))
+                .color(ContextCompat.getColor(this, R.color.color_primary_default))
                 .style(CircularProgressDrawable.STYLE_ROUNDED)
                 .strokeWidth(progressBarStrokeWidth)
                 .rotationSpeed(1f)
                 .sweepSpeed(1f)
                 .build());
+        bar.setVisibility(View.GONE);
         mLoginActivityStrategy.initViews();
-    }
-
-    public class AsyncInit extends AsyncTask<Void, Void, Exception> {
-        Activity activity;
-
-        AsyncInit(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            //// FIXME: 30/12/16  Fix mising progressbar
-            //bar = (ProgressBar) activity.findViewById(R.id.progress_bar_circular);
-            bar = (ProgressBar) activity.findViewById(R.id.progress_bar_circular);
-            bar.setVisibility(View.VISIBLE);
-            activity.findViewById(R.id.layout_login_views).setVisibility(View.GONE);
-        }
-
-        @Override
-        protected Exception doInBackground(Void... params) {
-            //TODO jsanchez, Why is called from AsyncTask?, It's not very correct and force
-            //run explicitly in main thread accions over views in LoginActivityStrategy
-            mLoginActivityStrategy.onCreate();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(final Exception exception) {
-            //Error
-            bar.setVisibility(View.GONE);
-            activity.findViewById(R.id.layout_login_views).setVisibility(View.VISIBLE);
-
-            init();
-        }
     }
 
     public void showProgressBar() {

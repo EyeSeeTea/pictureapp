@@ -2,12 +2,11 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
-
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 
 /**
@@ -29,7 +28,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void newSurvey(Activity activity) {
-        Program program = new Select().from(Program.class).querySingle();
+        Program program = Program.findById(PreferencesEReferral.getUserProgramId());
         // Put new survey in session
         Survey survey = new Survey(null, program, Session.getUser());
         survey.save();

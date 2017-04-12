@@ -92,7 +92,8 @@ public class LoginActivity extends Activity {
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_login);
         PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
-        init();
+        AsyncInit asyncPopulateDB = new AsyncInit(this);
+        asyncPopulateDB.execute((Void) null);
     }
 
     private void initDataDownloadPeriodDropdown() {
@@ -276,6 +277,41 @@ public class LoginActivity extends Activity {
                         passwordEditText.getText());
             }
         });
+
+        mLoginActivityStrategy.initViews();
+    }
+
+    public class AsyncInit extends AsyncTask<Void, Void, Exception> {
+        Activity activity;
+
+        AsyncInit(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //// FIXME: 30/12/16  Fix mising progressbar
+            initProgressBar();
+            showProgressBar();
+        }
+
+        @Override
+        protected Exception doInBackground(Void... params) {
+            //TODO jsanchez, Why is called from AsyncTask?, It's not very correct and force
+            //run explicitly in main thread accions over views in LoginActivityStrategy
+            mLoginActivityStrategy.onCreate();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final Exception exception) {
+            //Error
+            hideProgressBar();
+            init();
+        }
+    }
+
+    private void initProgressBar() {
         bar = (CircularProgressBar) findViewById(R.id.progress_bar_circular);
         float progressBarStrokeWidth = getResources()
                 .getDimensionPixelSize(R.dimen.progressbar_stroke_width);
@@ -286,8 +322,6 @@ public class LoginActivity extends Activity {
                 .rotationSpeed(1f)
                 .sweepSpeed(1f)
                 .build());
-        bar.setVisibility(View.GONE);
-        mLoginActivityStrategy.initViews();
     }
 
     public void showProgressBar() {

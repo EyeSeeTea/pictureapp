@@ -90,7 +90,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
         pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
-                loginActivity.hideProgressBar();
+                loginActivity.onFinishLoading(null);
                 finishAndGo(DashboardActivity.class);
             }
 
@@ -101,25 +101,25 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
 
             @Override
             public void onError(String message) {
-                loginActivity.hideProgressBar();
+                loginActivity.onFinishLoading(null);
                 Log.e(this.getClass().getSimpleName(), message);
             }
 
             @Override
             public void onPullConversionError() {
-                loginActivity.hideProgressBar();
+                loginActivity.onFinishLoading(null);
                 Log.e(this.getClass().getSimpleName(), "Pull conversion error");
             }
 
             @Override
             public void onCancel() {
-                loginActivity.hideProgressBar();
+                loginActivity.onFinishLoading(null);
                 Log.e(this.getClass().getSimpleName(), "Pull cancel");
             }
 
             @Override
             public void onNetworkError() {
-                loginActivity.hideProgressBar();
+                loginActivity.onFinishLoading(null);
                 Log.e(this.getClass().getSimpleName(), "Network Error");
             }
         });
@@ -172,7 +172,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
 
                     @Override
                     public void onError(String message) {
-                        loginActivity.hideProgressBar();
+                        loginActivity.onFinishLoading(null);
                         Log.e(this.getClass().getSimpleName(), message);
                         loginActivity.showError(R.string.dialog_title_error);
                     }
@@ -186,14 +186,14 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
 
                     @Override
                     public void onPullConversionError() {
-                        loginActivity.hideProgressBar();
+                        loginActivity.onFinishLoading(null);
                         Log.e(this.getClass().getSimpleName(), "Pull conversion error");
                         loginActivity.showError(R.string.dialog_pull_error);
                     }
 
                     @Override
                     public void onInvalidCredentials() {
-                        loginActivity.hideProgressBar();
+                        loginActivity.onFinishLoading(null);
                         Log.e(this.getClass().getSimpleName(), "Invalid credentials");
                         loginActivity.showError(R.string.login_invalid_credentials);
                         onBadCredentials();
@@ -216,7 +216,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
 
     @Override
     public void onBadCredentials(boolean disableLogin) {
-        loginActivity.hideProgressBar();
+        loginActivity.onFinishLoading(null);
         loginActivity.showError(R.string.login_invalid_credentials);
         loginActivity.enableLogin(!disableLogin);
         if (disableLogin) {

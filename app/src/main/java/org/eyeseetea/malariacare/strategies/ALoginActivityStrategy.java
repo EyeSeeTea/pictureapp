@@ -23,7 +23,8 @@ public abstract class ALoginActivityStrategy {
     public abstract void onLoginSuccess(Credentials credentials);
 
     public void onLoginNetworkError(Credentials credentials) {
-        loginActivity.hideProgressBar();
+        loginActivity.onFinishLoading(null);
+        ;
         loginActivity.showError(loginActivity.getString(R.string.network_error));
     }
 

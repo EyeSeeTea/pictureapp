@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -65,14 +66,6 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         return true;
     }
 
-    public void runDemoMode() {
-        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
-            @Override
-            public void onLogoutSuccess() {
-                PreferencesState.getInstance().reloadPreferences();
-                updateActionBarTitleAfterLogout();
-                loginDemoMode();
-            }
     @Override
     public void onBackPressed() {
 
@@ -91,12 +84,14 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         mBaseActivity.startActivity(new Intent(mBaseActivity, SettingsActivity.class));
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-    }
-
-}
+    public void runDemoMode() {
+        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                PreferencesState.getInstance().reloadPreferences();
+                updateActionBarTitleAfterLogout();
+                loginDemoMode();
+            }
 
             @Override
             public void onLogoutError(String message) {

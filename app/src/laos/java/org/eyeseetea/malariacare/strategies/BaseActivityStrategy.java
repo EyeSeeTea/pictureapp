@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
@@ -94,13 +95,6 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
         mBaseActivity.startActivity(new Intent(mBaseActivity, SettingsActivity.class));
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-    }
-
-}
 
     private void loginDemoMode() {
         mLoginUseCase.execute(Credentials.createDemoCredentials(),

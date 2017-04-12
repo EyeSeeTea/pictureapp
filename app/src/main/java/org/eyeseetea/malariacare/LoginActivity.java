@@ -27,6 +27,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableString;
@@ -38,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -55,16 +57,19 @@ import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
-import org.hisp.dhis.client.sdk.ui.activities.AbsLoginActivity;
+import org.hisp.dhis.client.sdk.ui.views.AbsTextWatcher;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
 
 /**
  * Login Screen.
  * It shows only when the user has an open session.
  */
-public class LoginActivity extends AbsLoginActivity {
+public class LoginActivity extends Activity {
 
     public static final String PULL_REQUIRED = "PULL_REQUIRED";
     public static final String DEFAULT_USER = "";
@@ -76,6 +81,7 @@ public class LoginActivity extends AbsLoginActivity {
     EditText serverText;
     EditText usernameEditText;
     EditText passwordEditText;
+    private Button loginButton;
 
 
     private ProgressBar bar;
@@ -84,6 +90,7 @@ public class LoginActivity extends AbsLoginActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
+        setContentView(R.layout.activity_login);
         PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
@@ -139,7 +146,6 @@ public class LoginActivity extends AbsLoginActivity {
         }
     }
 
-    @Override
     protected void onLoginButtonClicked(Editable server, Editable username, Editable password) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
@@ -247,16 +253,43 @@ public class LoginActivity extends AbsLoginActivity {
     }
 
     private void init() {
+        FieldTextWatcher watcher = new FieldTextWatcher();
         initDataDownloadPeriodDropdown();
         //Populate server with the current value
         serverText = (EditText) findViewById(R.id.edittext_server_url);
         serverText.setText(ServerAPIController.getServerUrl());
+        serverText.addTextChangedListener(watcher);
 
         //Username, Password blanks to force real login
         usernameEditText = (EditText) findViewById(R.id.edittext_username);
         usernameEditText.setText(DEFAULT_USER);
+        usernameEditText.addTextChangedListener(watcher);
         passwordEditText = (EditText) findViewById(R.id.edittext_password);
         passwordEditText.setText(DEFAULT_PASSWORD);
+        passwordEditText.addTextChangedListener(watcher);
+        findViewById(R.id.button_log_out).setVisibility(View.GONE);
+        loginButton = (Button) findViewById(R.id.button_log_in);
+        loginButton.setEnabled(false);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLoginButtonClicked(serverText.getText(), usernameEditText.getText(),
+                        passwordEditText.getText());
+            }
+        });
+        bar = (CircularProgressBar) findViewById(
+                org.hisp.dhis.client.sdk.ui.R.id.progress_bar_circular);
+        float progressBarStrokeWidth = getResources()
+                .getDimensionPixelSize(
+                        org.hisp.dhis.client.sdk.ui.R.dimen.progressbar_stroke_width);
+        bar.setIndeterminateDrawable(new CircularProgressDrawable.Builder(this)
+                .color(ContextCompat.getColor(this,
+                        org.hisp.dhis.client.sdk.ui.R.color.color_primary_default))
+                .style(CircularProgressDrawable.STYLE_ROUNDED)
+                .strokeWidth(progressBarStrokeWidth)
+                .rotationSpeed(1f)
+                .sweepSpeed(1f)
+                .build());
         mLoginActivityStrategy.initViews();
     }
 
@@ -295,13 +328,11 @@ public class LoginActivity extends AbsLoginActivity {
     }
 
     public void showProgressBar() {
-        bar = (ProgressBar) findViewById(R.id.progress_bar_circular);
         bar.setVisibility(View.VISIBLE);
         findViewById(R.id.layout_login_views).setVisibility(View.GONE);
     }
 
     public void hideProgressBar() {
-        bar = (ProgressBar) findViewById(R.id.progress_bar_circular);
         bar.setVisibility(View.GONE);
         findViewById(R.id.layout_login_views).setVisibility(View.VISIBLE);
     }
@@ -343,7 +374,7 @@ public class LoginActivity extends AbsLoginActivity {
     }
 
     public void enableLogin(boolean enable) {
-        getLoginButton().setEnabled(enable);
+        loginButton.setEnabled(enable);
     }
 
     @Override
@@ -352,9 +383,32 @@ public class LoginActivity extends AbsLoginActivity {
         mLoginActivityStrategy.onStart();
     }
 
-    @Override
-    protected boolean canEnableLoginButtonOnTextChange() {
-        return mLoginActivityStrategy.canEnableLoginButtonOnTextChange();
+    private void onTextChanged() {
+        mLoginActivityStrategy.onTextChange();
+    }
+
+    public EditText getServerText() {
+        return serverText;
+    }
+
+    public EditText getUsernameEditText() {
+        return usernameEditText;
+    }
+
+    public EditText getPasswordEditText() {
+        return passwordEditText;
+    }
+
+    public Button getLoginButton() {
+        return loginButton;
+    }
+
+    private class FieldTextWatcher extends AbsTextWatcher {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            LoginActivity.this.onTextChanged();
+        }
     }
 }
 

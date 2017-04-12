@@ -261,10 +261,16 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
         }
     }
 
-    @Override
     public boolean canEnableLoginButtonOnTextChange() {
         long timeEnabled = PreferencesEReferral.getTimeLoginEnables();
         long currentTime = new Date().getTime();
         return currentTime > timeEnabled;
+    }
+
+    @Override
+    public void onTextChange() {
+        if (canEnableLoginButtonOnTextChange()) {
+            super.onTextChange();
+        }
     }
 }

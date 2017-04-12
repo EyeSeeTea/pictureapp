@@ -30,7 +30,10 @@ public abstract class ALoginActivityStrategy {
     public void onStart() {
     }
 
-    public boolean canEnableLoginButtonOnTextChange() {
-        return true;
+    public void onTextChange() {
+        loginActivity.getLoginButton().setEnabled(
+                !(loginActivity.getServerText().getText().toString().isEmpty()) &&
+                        !(loginActivity.getUsernameEditText().getText().toString().isEmpty()) &&
+                        !(loginActivity.getPasswordEditText().getText().toString().isEmpty()));
     }
 }

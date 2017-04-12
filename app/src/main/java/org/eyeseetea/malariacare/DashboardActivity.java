@@ -44,7 +44,6 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -56,7 +55,6 @@ import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -749,7 +747,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void initNavigationController() {
-        NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
+        mDashboardActivityStrategy.initNavigationController();
     }
 
     public void executeLogout() {

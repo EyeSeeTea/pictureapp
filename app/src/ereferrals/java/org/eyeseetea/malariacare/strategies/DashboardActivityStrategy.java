@@ -6,8 +6,10 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 
 /**
  * Created by manuel on 28/12/16.
@@ -74,4 +76,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         return false;
     }
 
+    @Override
+    public void initNavigationController() {
+        NavigationBuilder.getInstance().buildController(
+                Tab.getFirstTabWithProgram(PreferencesEReferral.getUserProgramId()));
+    }
 }

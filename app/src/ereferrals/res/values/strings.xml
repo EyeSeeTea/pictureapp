@@ -182,4 +182,7 @@
 <string name="user_close">"This user was closed by de administrator."</string>
 <string name="run_in_demo_mode">"Run in demo mode"</string>
     <string name="login_error_json">"Error reading json config file. Please contact your administrator."</string>
+    <string name="online_status">App is online</string>
+    <string name="offline_status_online_tab">The app is offline, this information may be deprecated</string>
+    <string name="offline_status">App is offline, please go online to see this information</string>
 </resources>

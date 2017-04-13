@@ -25,4 +25,6 @@ public interface IDynamicTabAdapterStrategy {
 
     void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter,
             IQuestionView questionView);
+
+    void finishOrNext();
 }

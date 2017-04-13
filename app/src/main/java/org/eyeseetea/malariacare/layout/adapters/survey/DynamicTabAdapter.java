@@ -28,7 +28,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -752,16 +751,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    /**
-     * hide keyboard using a keyboardView variable view
-     */
-    private void hideKeyboard(Context c) {
-        Log.d(TAG, "KEYBOARD HIDE ");
-        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        if (keyboardView != null) {
-            keyboard.hideSoftInputFromWindow(keyboardView.getWindowToken(), 0);
-        }
+    public static void setIsClicked(boolean isClicked) {
+        DynamicTabAdapter.isClicked = isClicked;
     }
 
     /**
@@ -905,45 +896,15 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
-     * Advance to the next question with delay applied or finish survey according to question and
-     * value.
+     * hide keyboard using a keyboardView variable view
      */
-    public void finishOrNext() {
-        try{
-            System.out.println(Session.getMalariaSurvey().getValuesFromDB().toString());
-            System.out.println(Session.getStockSurvey().getValuesFromDB().toString());
-        }catch (Exception e){}
-        if (Validation.hasErrors()) {
-            Validation.showErrors();
-            isClicked = false;
-            return;
+    public void hideKeyboard(Context c) {
+        Log.d(TAG, "KEYBOARD HIDE ");
+        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        if (keyboardView != null) {
+            keyboard.hideSoftInputFromWindow(keyboardView.getWindowToken(), 0);
         }
-        if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
-
-            UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();
-            isClicked = false;
-            return;
-        }
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Question question = navigationController.getCurrentQuestion();
-                Value value = question.getValueBySession();
-                if (isDone(value)) {
-                    navigationController.isMovingToForward = false;
-                    if (!wasPatientTested() || !BuildConfig.reviewScreen) {
-                        surveyShowDone();
-                    } else {
-                        DashboardActivity.dashboardActivity.showReviewFragment();
-                        hideKeyboard(PreferencesState.getInstance().getContext());
-                        isClicked = false;
-                    }
-                    return;
-                }
-                next();
-            }
-        }, 750);
     }
 
     public boolean wasPatientTested() {
@@ -951,9 +912,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
+     * Advance to the next question with delay applied or finish survey according to question and
+     * value.
+     */
+    public void finishOrNext() {
+        mDynamicTabAdapterStrategy.finishOrNext();
+    }
+
+    /**
      * Show a final dialog to announce the survey is over without reviewfragment.
      */
-    private void surveyShowDone() {
+    public void surveyShowDone() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
                 .setTitle(R.string.survey_completed)
                 .setMessage(R.string.survey_completed_text)
@@ -980,35 +949,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     /**
      * Checks if there are more questions to answer according to the given value + current status.
      */
-    private boolean isDone(Value value) {
+    public boolean isDone(Value value) {
         return !navigationController.hasNext(value != null ? value.getOption() : null);
-    }
-
-    /**
-     * Changes the current question moving forward
-     */
-    private void next() {
-        Question question = navigationController.getCurrentQuestion();
-
-        Value value = question.getValueBySession();
-
-        if (isDone(value)) {
-            navigationController.isMovingToForward = false;
-            return;
-        }
-        navigationController.next(value != null ? value.getOption() : null);
-
-        notifyDataSetChanged();
-        hideKeyboard(PreferencesState.getInstance().getContext());
-
-        question = navigationController.getCurrentQuestion();
-
-        if (value != null && !readOnly
-                && navigationController.getCurrentTotalPages() < question.getTotalQuestions()) {
-            navigationController.setTotalPages(question.getTotalQuestions());
-        }
-        navigationController.isMovingToForward = false;
-        isClicked = false;
     }
 
     /**
@@ -1098,6 +1040,33 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 next();
             }
         }
+    }
+
+    /**
+     * Changes the current question moving forward
+     */
+    public void next() {
+        Question question = navigationController.getCurrentQuestion();
+
+        Value value = question.getValueBySession();
+
+        if (isDone(value)) {
+            navigationController.isMovingToForward = false;
+            return;
+        }
+        navigationController.next(value != null ? value.getOption() : null);
+
+        notifyDataSetChanged();
+        hideKeyboard(PreferencesState.getInstance().getContext());
+
+        question = navigationController.getCurrentQuestion();
+
+        if (value != null && !readOnly
+                && navigationController.getCurrentTotalPages() < question.getTotalQuestions()) {
+            navigationController.setTotalPages(question.getTotalQuestions());
+        }
+        navigationController.isMovingToForward = false;
+        isClicked = false;
     }
 
     private void saveSwitchOption(Question question, boolean isChecked) {

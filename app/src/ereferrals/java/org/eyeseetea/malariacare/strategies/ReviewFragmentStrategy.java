@@ -8,8 +8,7 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
@@ -17,8 +16,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
     final String TITLE_SEPARATOR = ": ";
 
     public TableRow createViewRow(TableRow rowView, Value value) {
-
-        rowView.setTag(getCorrectQuestion(value.getQuestion()));
+        rowView.setTag(value.getQuestion());
 
         //Sets the value text in the row and add the question as tag.
         CustomTextView questionTextView = (CustomTextView) rowView.findViewById(
@@ -31,13 +29,16 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Question question = (Question) v.getTag();
-                    DashboardActivity.dashboardActivity.hideReview(question);
+                    if (!DynamicTabAdapter.isClicked) {
+                        DynamicTabAdapter.isClicked = true;
+                        Question question = (Question) v.getTag();
+                        DashboardActivity.dashboardActivity.hideReview(question);
+                    }
                 }
             });
 
             questionTextView.setText(questionTextView.getText().toString() +
-                    ((value.getOption() != null) ? value.getOption().getInternationalizedCode()
+                    ((value.getOption() != null) ? value.getOption().getInternationalizedName()
                             : value.getValue()));
 
             if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
@@ -50,22 +51,10 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         return rowView;
     }
 
-
-    private Question getCorrectQuestion(Question question) {
-        return question;
-    }
-
     public static boolean isValidValue(Value value) {
-        if (Session.getStockSurvey()==null || value.getQuestion() == null) {
+        if (value.getQuestion() == null) {
             return false;
         }
-        for (Value stockValue : Session.getStockSurvey().getValuesFromDB()) {
-            if (stockValue.getQuestion() != null) {
-                if (stockValue.getQuestion().getUid().equals(value.getQuestion().getUid())) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return true;
     }
 }

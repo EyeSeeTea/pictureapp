@@ -31,4 +31,7 @@ public abstract class ASettingsActivityStrategy {
     public abstract void onBackPressed();
 
     public abstract void onWindowFocusChanged(boolean hasFocus);
+
+    public void addExtraPreferences() {
+    }
 }

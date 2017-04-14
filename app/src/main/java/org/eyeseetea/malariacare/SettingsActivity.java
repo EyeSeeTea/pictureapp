@@ -33,13 +33,11 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.strategies.SettingsActivityStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.AutoCompleteEditTextPreference;
-import org.eyeseetea.malariacare.views.FontUtils;
 import org.eyeseetea.sdk.presentation.styles.FontStyle;
 
 import java.util.ArrayList;
@@ -141,7 +139,7 @@ public class SettingsActivity extends PreferenceActivity implements
      *
      * @see #sBindPreferenceSummaryToValueListener
      */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
+    public static void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -292,6 +290,8 @@ public class SettingsActivity extends PreferenceActivity implements
             autoCompleteEditTextPreference.setOnPreferenceChangeListener(
                     mSettingsActivityStrategy.getOnPreferenceChangeListener());
         }
+
+        mSettingsActivityStrategy.addExtraPreferences();
     }
 
     private void loadFontStyleListPreference() {

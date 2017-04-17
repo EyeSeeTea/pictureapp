@@ -1,16 +1,19 @@
 package org.eyeseetea.malariacare.data.sync.exporter.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class SurveyWS {
+    @JsonProperty("UID")
     private String UID;
-    private List<Object> values;
+    private List<ValueWS> values;
 
     public SurveyWS(String UID) {
         this.UID = UID;
     }
 
-    public SurveyWS(String UID, List<Object> values) {
+    public SurveyWS(String UID, List<ValueWS> values) {
         this.UID = UID;
         this.values = values;
     }
@@ -23,11 +26,11 @@ public class SurveyWS {
         this.UID = UID;
     }
 
-    public List<Object> getValues() {
+    public List<ValueWS> getValues() {
         return values;
     }
 
-    public void setValues(List<Object> values) {
+    public void setValues(List<ValueWS> values) {
         this.values = values;
     }
 }

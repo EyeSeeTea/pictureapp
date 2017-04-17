@@ -8,6 +8,7 @@ import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.sync.exporter.model.EReferralWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWS;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponse;
+import org.eyeseetea.malariacare.data.sync.exporter.model.ValueWS;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,25 +23,32 @@ public class SurveyWSParser {
         ObjectMapper mapper = new ObjectMapper();
         EReferralWSObject eReferralWSObject = new EReferralWSObject();
         eReferralWSObject.getReferrals().addAll(getWSConvertedSurveysList(surveys));
-        JSONObject resultObject = new JSONObject(mapper.writeValueAsString(eReferralWSObject));
-
-        JSONArray surveysJA = resultObject.getJSONArray("referral");
-        for (int i = 0; i < surveysJA.length(); i++) {
-            JSONArray values = new JSONArray();
-            values.put(convertSurveyValuesToWS(surveys.get(i)));
-            surveysJA.getJSONObject(i).put("values", values);
-        }
-
-        return resultObject;
+        return new JSONObject(mapper.writeValueAsString(eReferralWSObject));
     }
 
     private static List<SurveyWS> getWSConvertedSurveysList(List<Survey> surveys) {
         List<SurveyWS> surveyWSes = new ArrayList<>();
         for (Survey survey : surveys) {
             SurveyWS surveyWS = new SurveyWS(survey.getEventUid());
+            surveyWS.setValues(getValuesWSFromSurvey(survey));
             surveyWSes.add(surveyWS);
         }
         return surveyWSes;
+    }
+
+    private static List<ValueWS> getValuesWSFromSurvey(Survey survey) {
+        List<ValueWS> valueWSes = new ArrayList<>();
+        for (Value value : survey.getValuesFromDB()) {
+            if (value.getQuestion() != null) {
+                if (value.getOption() == null) {
+                    valueWSes.add(new ValueWS(value.getQuestion().getCode(), value.getValue()));
+                } else {
+                    valueWSes.add(new ValueWS(value.getQuestion().getCode(),
+                            value.getOption().getCode()));
+                }
+            }
+        }
+        return valueWSes;
     }
 
     private static JSONObject convertSurveyValuesToWS(Survey survey) throws JSONException {
@@ -57,7 +65,8 @@ public class SurveyWSParser {
         return surveyValues;
     }
 
-    public EReferralWSObject parseSendSurveysAnswer(String json) throws IOException, JSONException {
+    public static EReferralWSObject parseSendSurveysAnswer(String json)
+            throws IOException, JSONException {
         ObjectMapper mapper = new ObjectMapper();
         EReferralWSObject eReferralWSObject = mapper.readValue(json, EReferralWSObject.class);
         JSONObject wsObject = new JSONObject(json);
@@ -67,7 +76,7 @@ public class SurveyWSParser {
         return eReferralWSObject;
     }
 
-    private List<SurveyWSResponse> getSurveyWSResponses(JSONArray referrals)
+    private static List<SurveyWSResponse> getSurveyWSResponses(JSONArray referrals)
             throws JSONException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         List<SurveyWSResponse> surveyWSResponses = new ArrayList<>();

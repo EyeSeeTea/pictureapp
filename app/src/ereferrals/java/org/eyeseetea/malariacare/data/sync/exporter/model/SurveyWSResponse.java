@@ -1,9 +1,15 @@
 package org.eyeseetea.malariacare.data.sync.exporter.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SurveyWSResponse {
+    @JsonProperty("UID")
     private String UID;
     private String status;
     private String message;
+
+    public SurveyWSResponse() {
+    }
 
     public SurveyWSResponse(String UID, String status, String message) {
         this.UID = UID;

@@ -81,4 +81,6 @@
     <string name="number_bad_login">number_bad_login</string>
     <string name="time_enable_login">time_enable_login</string>
 
+    <string name="ws_version">1.0</string>
+
 </resources>

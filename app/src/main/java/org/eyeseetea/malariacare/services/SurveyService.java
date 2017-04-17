@@ -30,6 +30,7 @@ import org.eyeseetea.malariacare.data.database.model.CompositeScore;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.usecase.GetSurveyAnsweredRatioUseCase;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -177,7 +178,9 @@ public class SurveyService extends IntentService {
         //Load %completion in every survey (it takes a while so it can NOT be done in UI Thread)
         for (Survey survey : surveys) {
             if (!survey.isSent() && !survey.isHide() && !survey.isConflict()) {
-                survey.getAnsweredQuestionRatio();
+                GetSurveyAnsweredRatioUseCase getSurveyAnsweredRatioUseCase =
+                        new GetSurveyAnsweredRatioUseCase(survey);
+                getSurveyAnsweredRatioUseCase.execute();
                 unsentSurveys.add(survey);
             }
         }
@@ -237,7 +240,9 @@ public class SurveyService extends IntentService {
 
         //Load %completion in every survey (it takes a while so it can NOT be done in UI Thread)
         for (Survey survey : surveys) {
-            survey.getAnsweredQuestionRatio();
+            GetSurveyAnsweredRatioUseCase getSurveyAnsweredRatioUseCase =
+                    new GetSurveyAnsweredRatioUseCase(survey);
+            getSurveyAnsweredRatioUseCase.execute();
         }
 
         //Since intents does NOT admit NON serializable as values we use Session instead
@@ -256,7 +261,9 @@ public class SurveyService extends IntentService {
 
         //Load %completion in every survey (it takes a while so it can NOT be done in UI Thread)
         for (Survey survey : surveys) {
-            survey.getAnsweredQuestionRatio();
+            GetSurveyAnsweredRatioUseCase getSurveyAnsweredRatioUseCase =
+                    new GetSurveyAnsweredRatioUseCase(survey);
+            getSurveyAnsweredRatioUseCase.execute();
         }
 
         //Since intents does NOT admit NON serializable as values we use Session instead

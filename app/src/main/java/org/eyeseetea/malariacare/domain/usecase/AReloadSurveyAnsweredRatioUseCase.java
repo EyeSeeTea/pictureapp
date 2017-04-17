@@ -53,7 +53,6 @@ public abstract class AReloadSurveyAnsweredRatioUseCase {
         surveyAnsweredRatio = new SurveyAnsweredRatio(numRequired, numAnswered);
 
         SurveyAnsweredRatioCache.put(survey.getId_survey(), surveyAnsweredRatio);
-        survey.setAnsweredQuestionRatio(surveyAnsweredRatio);
     }
 
 }

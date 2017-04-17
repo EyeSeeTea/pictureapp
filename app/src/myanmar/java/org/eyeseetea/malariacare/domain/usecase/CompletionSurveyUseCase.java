@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -44,7 +45,7 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
         AReloadSurveyAnsweredRatioUseCase
                 reloadSurveyUseCase = new ReloadSurveyAnsweredRatioUseCase(surveyDB);
         reloadSurveyUseCase.execute();
-        survey.setSurveyAnsweredRatio(surveyDB.getAnsweredQuestionRatio());
+        survey.setSurveyAnsweredRatio(SurveyAnsweredRatioCache.get(survey.getId()));
         surveyDB.updateSurveyStatus();
         survey.setStatus(surveyDB.getStatus());
         return survey;

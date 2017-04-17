@@ -60,7 +60,6 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
-import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.domain.usecase.AReloadSurveyAnsweredRatioUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ReloadSurveyAnsweredRatioUseCase;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -134,10 +133,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
      */
     List<SurveySchedule> surveySchedules;
 
-    /**
-     * Calculated answered ratio for this survey according to its values
-     */
-    SurveyAnsweredRatio answeredQuestionRatio;
 
     /**
      * Calculated main Score for this survey, is not persisted, just calculated on runtime
@@ -308,21 +303,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
     public void setEventUid(String eventuid) {
         this.uid_event_fk = eventuid;
-    }
-
-    /**
-     * Ratio of completion is cached into answeredQuestionRatio in order to speed up loading
-     */
-    public SurveyAnsweredRatio getAnsweredQuestionRatio() {
-        if (answeredQuestionRatio == null) {
-            answeredQuestionRatio = SurveyAnsweredRatioCache.get(this.getId_survey());
-            if (answeredQuestionRatio == null) {
-                AReloadSurveyAnsweredRatioUseCase
-                        reloadSurveyUseCase = new ReloadSurveyAnsweredRatioUseCase(this);
-                reloadSurveyUseCase.execute();
-            }
-        }
-        return answeredQuestionRatio;
     }
 
     /**
@@ -936,10 +916,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return values;
     }
 
-    public void setAnsweredQuestionRatio(
-            SurveyAnsweredRatio answeredQuestionRatio) {
-        this.answeredQuestionRatio = answeredQuestionRatio;
-    }
 
     public static int countCompulsoryBySurvey(Survey survey) {
         List<Question> questions = survey.getQuestionsFromValues();
@@ -997,7 +973,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         reloadSurveyUseCase.execute();
 
         //Update status & completionDate
-        if (answeredQuestionRatio.isCompleted()) {
+        if (SurveyAnsweredRatioCache.get(this.getId_survey()).isCompleted()) {
             complete();
         } else {
             setStatus(Constants.SURVEY_IN_PROGRESS);

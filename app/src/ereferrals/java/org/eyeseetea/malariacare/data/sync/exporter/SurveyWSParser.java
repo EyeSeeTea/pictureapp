@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.EReferralWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWS;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponse;
 import org.eyeseetea.malariacare.data.sync.exporter.model.ValueWS;
+import org.hisp.dhis.client.sdk.core.common.utils.CodeGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +30,7 @@ public class SurveyWSParser {
     private static List<SurveyWS> getWSConvertedSurveysList(List<Survey> surveys) {
         List<SurveyWS> surveyWSes = new ArrayList<>();
         for (Survey survey : surveys) {
-            SurveyWS surveyWS = new SurveyWS(survey.getEventUid());
+            SurveyWS surveyWS = new SurveyWS(CodeGenerator.generateCode());
             surveyWS.setValues(getValuesWSFromSurvey(survey));
             surveyWSes.add(surveyWS);
         }

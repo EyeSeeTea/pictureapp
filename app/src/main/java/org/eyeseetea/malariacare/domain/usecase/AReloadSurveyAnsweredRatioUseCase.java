@@ -9,7 +9,6 @@ import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
-import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 
 public abstract class AReloadSurveyAnsweredRatioUseCase {
 
@@ -33,12 +32,12 @@ public abstract class AReloadSurveyAnsweredRatioUseCase {
         Question rootQuestion = Question.findRootQuestion(tab);
         Question localQuestion = rootQuestion;
         while (localQuestion.getSibling() != null) {
-            if (localQuestion.isCompulsory() && !TreatmentQueries.isStockQuestion(localQuestion)) {
+            if (localQuestion.isCompulsory()) {
                 numRequired++;
             }
             localQuestion = localQuestion.getSibling();
         }
-        if (TreatmentQueries.isStockQuestion(localQuestion) || !localQuestion.isCompulsory()) {
+        if (!localQuestion.isCompulsory()) {
             numRequired--;
         }
 

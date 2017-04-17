@@ -2,8 +2,8 @@ package org.eyeseetea.malariacare.domain.usecase;
 
 import org.eyeseetea.malariacare.data.database.model.Survey;
 
-public class ReloadSurveyAnsweredRatioUseCase extends AReloadSurveyUseCase {
-    public ReloadSurveyUseCase(Survey survey) {
+public class ReloadSurveyAnsweredRatioUseCase extends AReloadSurveyAnsweredRatioUseCase {
+    public ReloadSurveyAnsweredRatioUseCase(Survey survey) {
         super(survey);
     }
 

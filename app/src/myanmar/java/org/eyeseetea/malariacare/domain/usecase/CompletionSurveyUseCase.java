@@ -30,7 +30,7 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
         Survey survey = getSurveyWithStatusAndAnsweredRatio(idSurvey);
         updateRDTStockQuestion(survey);
         org.eyeseetea.malariacare.data.database.model.Survey stockSurvey =
-                org.eyeseetea.malariacare.data.database.model.Survey.getStockSurveyWithEventDate(
+                TreatmentQueries.getStockSurveyWithEventDate(
                         survey.getEventDate());
         getSurveyWithStatusAndAnsweredRatio(stockSurvey.getId_survey());
     }

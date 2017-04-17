@@ -37,7 +37,6 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueName;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -62,10 +61,8 @@ import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
-import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.domain.usecase.AReloadSurveyAnsweredRatioUseCase;
 import org.eyeseetea.malariacare.domain.usecase.ReloadSurveyAnsweredRatioUseCase;
-import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
@@ -458,20 +455,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Survey_Table.status.eq(Constants.SURVEY_COMPLETED))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date))
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit_fk)).queryList();
-    }
-
-    public static Survey getStockSurveyWithEventDate(Date event_date) {
-        Context context = PreferencesState.getInstance().getContext();
-
-        return new Select().from(Survey.class).as(surveyName)
-                .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
-                .on(Survey_Table.id_program_fk.withTable(surveyAlias)
-                        .eq(Program_Table.id_program.withTable(programAlias)))
-                .where(Survey_Table.event_date.withTable(surveyAlias)
-                        .eq(event_date))
-                .and(Program_Table.uid_program.withTable(programAlias).is(
-                        context.getString(R.string.stockProgramUID))).querySingle();
-
     }
 
     public static Survey getSurveyWithEventDateProgram(Date event_date, String programUID) {

@@ -70,7 +70,7 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    validateAnswer(context);
+                    action(context);
                     return true;
                 }
 
@@ -79,14 +79,17 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         });
     }
 
-    private void validateAnswer(Context context) {
+    @Override
+    public void validateAnswer(Context context) {
         try {
-            PositiveNumber positiveNumber = PositiveNumber.parse(numberPicker.getText().toString());
+            PositiveNumber positiveNumber = PositiveNumber.parse(
+                    numberPicker.getText().toString());
+            Validation.getInstance().removeInputError(numberPicker);
             hideKeyboard(numberPicker);
             notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
-            Validation.getInstance().removeInputError(numberPicker);
         } catch (InvalidPositiveNumberException e) {
-            Validation.getInstance().addinvalidInput(numberPicker, context.getString(R.string.dynamic_error_age));
+            Validation.getInstance().addinvalidInput(numberPicker,
+                    context.getString(R.string.dynamic_error_age));
             numberPicker.setError(context.getString(R.string.dynamic_error_age));
         }
     }

@@ -19,6 +19,8 @@ import java.util.Map;
  * Created by arrizabalaga on 2/06/16.
  */
 public class NavigationController {
+    //TODO: Refactor to clean architecture
+
     private static final int FIRST_MOVE_IDX = -1;
     private static final String TAG = "NavigationController";
     /**
@@ -125,12 +127,12 @@ public class NavigationController {
     }
 
     public Question next(Option option) {
-        Log.d(TAG, String.format("next(%s)...", option == null ? "" : option.getName()));
+        Log.d(TAG, String.format("next(%s)...", option == null ? "" : option.getCode()));
         QuestionNode nextNode;
 
         //Trigger counters -> no movement
         if (!isInitialMove() && existsPendingCounter(option)) {
-            Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getName(),
+            Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getCode(),
                     getCurrentQuestion().getCode()));
             return getCurrentQuestion();
         }
@@ -160,7 +162,7 @@ public class NavigationController {
 
 
         //Return next question
-        Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getName(),
+        Log.d(TAG, String.format("next(%s)->%s", option == null ? "" : option.getCode(),
                 nextQuestion.getCode()));
         return nextNode.getQuestion();
     }
@@ -297,12 +299,12 @@ public class NavigationController {
 
     private QuestionNode findNext(Option option) {
         Log.d(TAG, String.format("findNext(%s)...",
-                option == null ? "" : option.getInternationalizedCode()));
+                option == null ? "" : option.getInternationalizedName()));
 
         //First movement (entering survey)
         if (isInitialMove()) {
             Log.d(TAG, String.format("findNext(%s)-> Initial movement",
-                    option == null ? "" : option.getInternationalizedCode()));
+                    option == null ? "" : option.getInternationalizedName()));
             return this.rootNode;
         }
         Question actualQuestion = getCurrentNode().getQuestion();
@@ -326,14 +328,14 @@ public class NavigationController {
             Map<Long, QuestionCounter> counters = getCurrentNode().getCountersMap();
             if (counters == null || counters.size() == 0) {
                 Log.d(TAG, String.format("findNext(%s)-> Survey finished",
-                        option == null ? "" : option.getInternationalizedCode()));
+                        option == null ? "" : option.getInternationalizedName()));
                 return null;
             }
             if (option != null && counters.containsKey(option.getId_option())) {
                 QuestionCounter questionCounter = counters.get(option.getId_option());
                 Integer limit = (int) Math.floor(option.getFactor());
                 Log.d(TAG, String.format("findNext(%s)-> Survey(%s)finished",
-                        option == null ? "" : option.getInternationalizedCode(),
+                        option == null ? "" : option.getInternationalizedName(),
                         (questionCounter.isMaxCounterLimit(limit)) ? " " : " not "));
                 return (questionCounter.isMaxCounterLimit(limit)) ? null
                         : getCurrentNode().getPreviousSibling();
@@ -343,7 +345,7 @@ public class NavigationController {
         //Return next question
         if (nextNode != null && nextNode.getQuestion() != null) {
             Log.d(TAG, String.format("findNext(%s)->%s",
-                    option == null ? "" : option.getInternationalizedCode(),
+                    option == null ? "" : option.getInternationalizedName(),
                     nextNode.getQuestion().getCode() + ""));
         }
         return nextNode;

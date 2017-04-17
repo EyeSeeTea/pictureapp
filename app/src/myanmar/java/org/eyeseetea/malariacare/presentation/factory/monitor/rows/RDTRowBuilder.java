@@ -35,6 +35,7 @@ public class RDTRowBuilder extends CounterRowBuilder {
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return Integer.parseInt(new SurveyQuestionTreatmentValue(surveyMonitor.getSurvey()).getRDTValue());
+        return Integer.parseInt(
+                new SurveyQuestionTreatmentValue(surveyMonitor.getSurvey()).getRDTValue());
     }
 }

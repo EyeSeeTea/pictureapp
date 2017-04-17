@@ -8,7 +8,6 @@ import android.content.Context;
 
 import com.opencsv.CSVReader;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Drug;
 import org.eyeseetea.malariacare.data.database.model.DrugCombination;
@@ -16,8 +15,7 @@ import org.eyeseetea.malariacare.data.database.model.Header;
 import org.eyeseetea.malariacare.data.database.model.Match;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
+import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
@@ -28,7 +26,6 @@ import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -317,17 +314,17 @@ public class UpdateDB {
     public static void updateOrganisations(Context context, boolean updateCSV) throws IOException {
         if (updateCSV) {
             FileCsvs fileCsvs = new FileCsvs();
-            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.ORGANISATIONS_CSV);
+            fileCsvs.saveCsvFromAssetsToFile(PopulateDB.PARTNER_CSV);
         }
-        List<Organisation> organisations = Organisation.getAllOrganisations();
+        List<Partner> partners = Partner.getAllOrganisations();
         CSVReader reader = new CSVReader(
-                new InputStreamReader(context.openFileInput(PopulateDB.ORGANISATIONS_CSV)),
+                new InputStreamReader(context.openFileInput(PopulateDB.PARTNER_CSV)),
                 PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            if (i < organisations.size()) {
-                PopulateRow.populateOrganisations(line, organisations.get(i)).save();
+            if (i < partners.size()) {
+                PopulateRow.populateOrganisations(line, partners.get(i)).save();
             } else {
                 PopulateRow.populateOrganisations(line, null).insert();
             }
@@ -347,7 +344,7 @@ public class UpdateDB {
             fileCsvs.saveCsvFromAssetsToFile(PopulateDB.TREATMENT_CSV);
         }
         List<Treatment> treatments = Treatment.getAllTreatments();
-        HashMap<Long, Organisation> organisationIds =
+        HashMap<Long, Partner> organisationIds =
                 RelationsIdCsvDB.getOrganisationIdRelationCsvDB(context);
         HashMap<Long, StringKey> stringKeyIds = RelationsIdCsvDB.getStringKeyIdRelationCsvDB(
                 context);

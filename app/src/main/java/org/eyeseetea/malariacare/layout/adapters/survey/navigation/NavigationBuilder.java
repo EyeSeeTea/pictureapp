@@ -6,7 +6,13 @@ import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.status.WarningStatusChecker;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -14,22 +20,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by arrizabalaga on 2/06/16.
- */
 public class NavigationBuilder {
+    //TODO: Refactor to clean architecture
+
+
+    public interface LoadBuildControllerListener {
+        void onLoadFinished();
+    }
+
+    private LoadBuildControllerListener mLoadBuildControllerListener;
 
     private static String TAG = "NavigationBuilder";
 
     private static NavigationBuilder instance;
-
+    private static int MAX_STEPS = 67;
     /**
      * Maps that holds the relationships between a Question and the warnings that it might trigger
      */
     private Map<Long, List<QuestionNode>> warningsXQuestion;
+    /**
+     * Questions ordered by id
+     */
+    private int step = 0;
+
+    private IAsyncExecutor mAsyncExecutor;
+    private IMainExecutor mMainExecutor;
 
     private NavigationBuilder() {
         warningsXQuestion = new HashMap<>();
+        mMainExecutor = new UIThreadExecutor();
+        mAsyncExecutor = new AsyncExecutor();
     }
 
     public static NavigationBuilder getInstance() {
@@ -42,23 +62,71 @@ public class NavigationBuilder {
     /**
      * Returns a navigation controller so you can navigate through questions according to answers
      */
-    public NavigationController buildController(Tab tab) {
+    public void buildController(Tab tab) {
+
+        if (Session.isIsLoadingNavigationController()) {
+            Log.d(TAG, "Navigation controller cannot load because it is already loading");
+            return;
+        }
+
         //No tab -> nothing to build
         if (tab == null) {
-            return null;
+            Log.w(TAG, "Navigation controller cannot load because first tab doesn't exist");
+            return;
         }
 
         warningsXQuestion.clear();
 
         Log.d(TAG, String.format("build(%s)", tab.getName()));
-        Question rootQuestion = Question.findRootQuestion(tab);
+        final Question rootQuestion = Question.findRootQuestion(tab);
 
         //NO first question -> nothing to build
         if (rootQuestion == null) {
-            return null;
+            Log.w(TAG, "Navigation controller cannot load because root question doesn't exist");
+            return;
         }
-        QuestionNode rootNode = buildNode(rootQuestion);
-        return new NavigationController(rootNode);
+
+        mAsyncExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                buildNavigationController(rootQuestion);
+            }
+        });
+
+    }
+
+    private void buildNavigationController(Question rootQuestion) {
+        Log.d(TAG, "Begin loading navigation controller");
+
+        try {
+            Session.setIsLoadingNavigationController(true);
+            //init steps counter
+            step = 0;
+            QuestionNode rootNode = buildNode(rootQuestion);
+
+            Session.setNavigationController(new NavigationController(rootNode));
+
+            Session.setIsLoadingNavigationController(false);
+
+            if (mLoadBuildControllerListener != null) {
+                notifyLoadFinished();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Session.setIsLoadingNavigationController(false);
+            Log.d(TAG, "Error loading navigation controller: " + ex.getMessage());
+        }
+
+        Log.d(TAG, "End loading navigation controller");
+    }
+
+    private void notifyLoadFinished() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mLoadBuildControllerListener.onLoadFinished();
+            }
+        });
     }
 
     /**
@@ -69,6 +137,7 @@ public class NavigationBuilder {
         if (currentQuestion == null) {
             return null;
         }
+
         QuestionNode currentNode = new QuestionNode(currentQuestion);
 
         //A warning is added to the map
@@ -76,6 +145,7 @@ public class NavigationBuilder {
         //A normal node subscribes to its warnings
         subscribeWarnings(currentNode);
 
+        nextStepMessage();
         //Add children navigation
         buildChildren(currentNode);
         //Add sibling navigation
@@ -84,6 +154,15 @@ public class NavigationBuilder {
         buildCounters(currentNode);
 
         return currentNode;
+    }
+
+    private void nextStepMessage() {
+        step++;
+        int totalSteps = SurveyFragment.progressMessagesCount();
+        int messageStep = Math.round(MAX_STEPS / totalSteps);
+        if (step % messageStep == 1) {
+            SurveyFragment.nextProgressMessage();
+        }
     }
 
     /**
@@ -107,7 +186,7 @@ public class NavigationBuilder {
             }
 
             Log.d(TAG, String.format("'%s' + '%s' --> '%s'", currentQuestion.getCode(),
-                    option.getName(), firstChildrenQuestion.getCode()));
+                    option.getCode(), firstChildrenQuestion.getCode()));
             //Build navigation from there
             QuestionNode childNode;
             //Option that references self
@@ -223,4 +302,7 @@ public class NavigationBuilder {
         }
     }
 
+    public void setLoadBuildControllerListener(LoadBuildControllerListener listener) {
+        mLoadBuildControllerListener = listener;
+    }
 }

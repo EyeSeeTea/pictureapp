@@ -25,8 +25,8 @@ public class OrgUnitToOptionConverter {
             if (!existsOrgUnitAsOptionInQuestion(orgUnit, question)) {
                 Option option = new Option();
                 option.setAnswer(question.getAnswer());
-                option.setName(orgUnit.getUid());
-                option.setCode(orgUnit.getName());
+                option.setCode(orgUnit.getUid());
+                option.setName(orgUnit.getName());
                 option.save();
             }
         }
@@ -36,7 +36,7 @@ public class OrgUnitToOptionConverter {
         List<Option> options = question.getAnswer().getOptions();
 
         for (Option option : options) {
-            if (option.getName().equals(orgUnit.getUid())) {
+            if (option.getCode().equals(orgUnit.getUid())) {
                 return true;
             }
         }

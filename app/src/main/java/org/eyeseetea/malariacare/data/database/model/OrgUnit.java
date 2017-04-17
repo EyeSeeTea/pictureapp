@@ -23,6 +23,7 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
@@ -43,9 +44,11 @@ public class OrgUnit extends BaseModel {
     String name;
     @Column
     Long id_org_unit_parent;
+    @Column
+    Boolean is_banned;
 
     /**
-     * Refernce to parent orgUnit (loaded lazily)
+     * Reference to parent orgUnit (loaded lazily)
      */
     OrgUnit orgUnit;
 
@@ -124,6 +127,15 @@ public class OrgUnit extends BaseModel {
         return orgUnit.getUid();
     }
 
+    /**
+     * Returns the Orgunit of an orgUnit with the given name
+     *
+     * @param name Name of the orgunit
+     */
+    public static OrgUnit findByName(String name) {
+        return new Select().from(OrgUnit.class)
+                .where(OrgUnit_Table.name.eq(name)).querySingle();
+    }
     public Long getId_org_unit() {
         return id_org_unit;
     }
@@ -191,6 +203,17 @@ public class OrgUnit extends BaseModel {
         this.orgUnitLevel = null;
     }
 
+    public boolean isBanned() {
+        if (is_banned == null) {
+            return false;
+        }
+        return is_banned;
+    }
+
+    public void setBan(boolean isBanned) {
+        this.is_banned = isBanned;
+    }
+
     public List<OrgUnit> getChildren() {
         if (this.children == null) {
             this.children = new Select().from(OrgUnit.class)
@@ -246,6 +269,7 @@ public class OrgUnit extends BaseModel {
         OrgUnit orgUnit = (OrgUnit) o;
 
         if (id_org_unit != orgUnit.id_org_unit) return false;
+        if (is_banned != orgUnit.is_banned) return false;
         if (uid_org_unit != null ? !uid_org_unit.equals(orgUnit.uid_org_unit) : orgUnit.uid_org_unit != null) return false;
         if (name != null ? !name.equals(orgUnit.name) : orgUnit.name != null) return false;
         if (id_org_unit_parent != null ? !id_org_unit_parent.equals(orgUnit.id_org_unit_parent) : orgUnit.id_org_unit_parent != null) {
@@ -260,6 +284,7 @@ public class OrgUnit extends BaseModel {
     public int hashCode() {
         int result = (int) (id_org_unit ^ (id_org_unit >>> 32));
         result = 31 * result + (uid_org_unit != null ? uid_org_unit.hashCode() : 0);
+        result = 31 * result + (is_banned != null ? is_banned.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (id_org_unit_parent != null ? id_org_unit_parent.hashCode() : 0);
         result = 31 * result + (id_org_unit_level != null ? id_org_unit_level.hashCode() : 0);
@@ -271,6 +296,7 @@ public class OrgUnit extends BaseModel {
         return "OrgUnit{" +
                 "id_org_unit_fk=" + id_org_unit +
                 ", uid_org_unit='" + uid_org_unit + '\'' +
+                ", is_banned='" + is_banned + '\'' +
                 ", name='" + name + '\'' +
                 ", id_org_unit_parent=" + id_org_unit_parent +
                 ", id_org_unit_level=" + id_org_unit_level +
@@ -282,5 +308,8 @@ public class OrgUnit extends BaseModel {
                 .from(OrgUnit.class)
                 .where(OrgUnit_Table.uid_org_unit
                         .is(UID)).querySingle();
+    }
+    public static boolean hasOrgUnits(){
+        return (SQLite.selectCountOf().from(OrgUnit.class).count() == 0);
     }
 }

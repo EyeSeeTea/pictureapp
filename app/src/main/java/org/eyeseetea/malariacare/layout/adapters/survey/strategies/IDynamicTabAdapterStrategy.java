@@ -13,7 +13,7 @@ public interface IDynamicTabAdapterStrategy {
 
     void initSurveys(boolean readOnly);
 
-    List<Question>  addAdditionalQuestions(int tabType, List<Question> screenQuestions);
+    List<Question> addAdditionalQuestions(int tabType, List<Question> screenQuestions);
 
     void instanceOfSingleQuestion(IQuestionView questionView, Question screenQuestion);
 
@@ -23,5 +23,6 @@ public interface IDynamicTabAdapterStrategy {
 
     boolean isMultiQuestionByVariant(int tabType);
 
-    void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter, IQuestionView questionView);
+    void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter,
+            IQuestionView questionView);
 }

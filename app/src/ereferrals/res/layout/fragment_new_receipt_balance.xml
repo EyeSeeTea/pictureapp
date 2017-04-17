@@ -441,22 +441,25 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
+
         <ImageView
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:padding="15dp"
             android:src="@drawable/stockselected"
             android:background="@color/myanmar_orange"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
 
     </LinearLayout>

@@ -7,6 +7,7 @@ public class Credentials {
     private static final String DEMO_SERVER = "demo.server";
 
     private String username;
+    private String userUid;
     private String password;
     private String serverURL;
 
@@ -34,8 +35,20 @@ public class Credentials {
         return password;
     }
 
+    public String getUserUid() {
+        return userUid;
+    }
+
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
+    }
+
     public boolean isDemoCredentials() {
         return this.equals(Credentials.createDemoCredentials());
+    }
+
+    public boolean isEmpty() {
+        return username.isEmpty() && password.isEmpty();
     }
 
     public boolean equals(Object o) {
@@ -55,5 +68,4 @@ public class Credentials {
                 username.hashCode() *
                 password.hashCode();
     }
-
 }

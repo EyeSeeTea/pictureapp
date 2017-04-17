@@ -169,11 +169,13 @@
 <string name="assessment_sent_date">"日期"</string>
 <string name="assessment_title_info">"信息"</string>
 <string name="survey_info_exit">"年龄无效"</string>
-<string name="survey_info_exit_delete"></string>
-<string name="exception_org_unit_not_valid"></string>
-<string name="exception_org_unit_banned"></string>
+<string name="survey_info_exit_delete">"正在进行的调查将被删除。"</string>
+<string name="exception_org_unit_not_valid">出口代码无效。 联系xxx xxxx xxxx</string>
+<string name="exception_org_unit_banned">出口关闭或堵塞。 联系xxx xxxx xxxx</string>
+<string name="dialog_reopen_org_unit">"出口 %s 重新开放。"</string>
 <string name="dynamic_error_phone_format">"电话号码格式无效"</string>
 <string name="dynamic_error_age">"年龄无效"</string>
+<string name="dynamic_error_pregnant_month">"怀孕月份无效"</string>
 <string name="pref_header_general">"一般"</string>
 <string name="font_size_level0">"x小"</string>
 <string name="font_size_level1">"小"</string>
@@ -316,4 +318,9 @@
 <string name="error_no_treatment">"没有对这种组合条目的治疗。 请与管理员联系"</string>
 <string name="true_option_identifier">"是"</string>
 <string name="false_option_identifier">"没有"</string>
+<string name="confirmation_really_exit_title">"真的退出吗？"</string>
+<string name="confirmation_really_exit">"您确定要退出应用程序吗？"</string>
+<string name="admin_announcement">"管理员公告"</string>
+<string name="user_close">"该用户被管理员关闭。"</string>
+<string name="run_in_demo_mode">"在演示模式下运行"</string>
 </resources>

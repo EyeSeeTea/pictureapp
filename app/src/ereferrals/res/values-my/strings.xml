@@ -102,9 +102,9 @@
 <string name="survey_review">"ဆန်းစစ်ခြင်း"</string>
 <string name="survey_send">"စေလွှတ်မည်"</string>
 <string name="app_settings">"ဆက်တင်ပြောင်းရန်"</string>
-<string name="server">"Server: "</string>
-<string name="server_name">"DHIS Server URL"</string>
-<string name="app_visual">"Visual:"</string>
+<string name="server">"ဆာဗာက"</string>
+<string name="server_name">"DHIS URL ဆာဗာက"</string>
+<string name="app_visual">"မြင်သာသော"</string>
 <string name="fonts_customise">"စာလုံးအကြီးအသေးပြောင်းရန်"</string>
 <string name="font_size">"စာလုံးအကြီးအသေး "</string>
 <string name="font_extra_small">"အလွန်သေး"</string>
@@ -171,15 +171,17 @@
 <string name="dialog_info_delete_survey">"ဤမှတ်တမ်းကိုဖျက်ရန် သေချာပါသလား"</string>
 <string name="dialog_title_error">"အမှား"</string>
 <string name="toast_push_is_pushing">"setting များကိုဝင်ရောက်မီကစစ်တမ်းများပေးပို့ခြင်း။"</string>
-<string name="create_info_organization_unit">"Organization Unit"</string>
+<string name="create_info_organization_unit">"အဖွဲ့အစည်းကယူနစ်"</string>
 <string name="assessment_sent_date">"နေ့စွဲ"</string>
 <string name="assessment_title_info">"အချက်အလက်"</string>
 <string name="survey_info_exit">"ပြန်ထွက်ရန်သေချာသလား"</string>
 <string name="survey_info_exit_delete">"ဤမှတ်တမ်းကိုဖျက်မည်"</string>
 <string name="exception_org_unit_not_valid">"Org unit မှားနေသည်"</string>
 <string name="exception_org_unit_banned">"ဤ Org unit ထည့်၍ မရပါ။"</string>
+<string name="dialog_reopen_org_unit">"ထွက်ပေါက်ကို %s ပြန်ဖွင့်သည်။"</string>
 <string name="dynamic_error_phone_format">"ဖုန်းနံပါတ်မှားနေသည်။"</string>
 <string name="dynamic_error_age">"အသက် မှားနေသည်။"</string>
+<string name="dynamic_error_pregnant_month">"မှားနေသောကိုယ်ဝန်လ"</string>
 <string name="pref_header_general">"ယေဘုယျ"</string>
 <string name="font_size_level0">"အလွန်သေး"</string>
 <string name="font_size_level1">"သေး"</string>
@@ -322,4 +324,9 @@
 <string name="error_no_treatment">"posts များ၏ဤပေါင်းစပ်ကုသရှိပါတယ်မဟုတ်ပါဘူး။ ထိုအုပ်ချုပ်ရေးမှူးစကားပြော ကျေးဇူးပြု."</string>
 <string name="true_option_identifier">"ဟုတ်ကဲ့"</string>
 <string name="false_option_identifier">"အဘယ်သူမျှမ"</string>
+<string name="confirmation_really_exit_title">"တကယ်ပဲ Exit?"</string>
+<string name="confirmation_really_exit">"သင် app ကိုမှထွက်ရန်ချင်သင်သေချာပါသလား?"</string>
+<string name="admin_announcement">"အုပ်ချုပ်ရေးမှူးကြေညာချက်"</string>
+<string name="user_close">"ဤအသုံးပြုသူသည်က de စီမံအုပ်ချုပ်သူကပိတ်ထားခဲ့ခြင်းဖြစ်သည်။"</string>
+<string name="run_in_demo_mode">"သရုပ်ပြ mode မှာ Run"</string>
 </resources>

@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.layout.listeners;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -69,6 +70,13 @@ public class SwipeTouchListener implements View.OnTouchListener {
     /**
      * Adds a clickable view
      */
+    public void addTouchableView(View view) {
+        view.setOnTouchListener(this);
+    }
+
+    /**
+     * Adds a clickable view
+     */
     public void addScrollView(ScrollView view) {
         scrollView = view;
     }
@@ -102,15 +110,15 @@ public class SwipeTouchListener implements View.OnTouchListener {
     }
 
     public void onClick(View view) {
-//            Log.e(".DynamicTabAdapter", "empty onclick");
+        Log.e(".DynamicTabAdapter", "empty onclick");
     }
 
     public void onSwipeRight() {
-//            Log.e(TAG, "onSwipeRight(DEFAULT)");
+        Log.e(".DynamicTabAdapter", "onSwipeRight(DEFAULT)");
     }
 
     public void onSwipeLeft() {
-//            Log.e(TAG, "onSwipeLeft(DEFAULT)");
+        Log.e(".DynamicTabAdapter", "onSwipeLeft(DEFAULT)");
     }
 
     /**
@@ -119,7 +127,6 @@ public class SwipeTouchListener implements View.OnTouchListener {
     private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
         private static final int SWIPE_THRESHOLD = 50;
-        private static final int SWIPE_VELOCITY_THRESHOLD = 50;
 
         private float lastX;
 
@@ -152,18 +159,21 @@ public class SwipeTouchListener implements View.OnTouchListener {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             try {
-                float diffX = e2.getX() - ((e1 == null) ? lastX : e1.getX());
-//                    Log.d(TAG, String.format("onFling (%f): diffX: %f, velocityX: %f",lastX,
-// diffX, velocityX));
-                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX)
-                        > SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffX > 0) {
+                int dx = (int) (e2.getX() - ((e1 == null) ? lastX : e1.getX()));
+
+                // don't accept the fling if it's too short
+                // as it may conflict with a button push
+                if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(velocityX) > Math.abs(velocityY)) {
+                    if (velocityX > 0) {
                         onSwipeRight();
                     } else {
                         onSwipeLeft();
                     }
+                    return true;
+                } else {
+                    return false;
                 }
-                return true;
+
             } catch (Exception exception) {
                 exception.printStackTrace();
             }

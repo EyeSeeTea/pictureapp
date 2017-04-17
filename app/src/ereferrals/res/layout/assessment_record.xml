@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <include layout="@layout/record_first_row"/>
+            <include layout="@layout/record_first_row" />
 
         </LinearLayout>
 
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <include layout="@layout/record_second_row"/>
+            <include layout="@layout/record_second_row" />
 
         </LinearLayout>
     </LinearLayout>

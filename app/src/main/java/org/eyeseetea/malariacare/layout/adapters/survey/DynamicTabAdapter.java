@@ -59,7 +59,6 @@ import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.IDynamicTabAdapterStrategy;
@@ -82,7 +81,8 @@ import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
-import org.eyeseetea.malariacare.views.question.singlequestion.strategies.ConfirmCounterSingleCustomViewStrategy;
+import org.eyeseetea.malariacare.views.question.singlequestion.strategies
+        .ConfirmCounterSingleCustomViewStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomEditText;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
@@ -129,17 +129,17 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * tabs
      * Listener that detects taps on buttons & swipe
      */
-    private SwipeTouchListener swipeTouchListener;
+    public static SwipeTouchListener swipeTouchListener;
     private boolean mReviewMode = false;
     private boolean isBackward = true;
 
-    public DynamicTabAdapter(Tab tab, Context context, boolean reviewMode) {
+    public DynamicTabAdapter(Context context, boolean reviewMode) {
         mReviewMode = reviewMode;
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
         this.id_layout = R.layout.form_without_score;
 
-        this.navigationController = initNavigationController(tab);
+        this.navigationController = initNavigationController();
         this.readOnly = getMalariaSurvey() != null && !getMalariaSurvey().isInProgress();
 
             Question question = navigationController.getCurrentQuestion();
@@ -190,10 +190,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return false;
     }
 
-    private NavigationController initNavigationController(Tab tab) {
-        NavigationController navigationController = NavigationBuilder.getInstance().buildController(
-                tab);
-        navigationController.next(null);
+    private NavigationController initNavigationController() {
+        NavigationController navigationController = Session.getNavigationController();
+        navigationController.first();
         return navigationController;
     }
 
@@ -208,7 +207,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 }
                 Log.d(TAG, "onSwipeRight(previous)");
                 //Hide keypad
-                hideKeyboard(listView.getContext(), listView);
+                if (!readOnly)
+                    hideKeyboard(listView.getContext(), listView);
                 previous();
             }
 
@@ -220,8 +220,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                     return;
                 }
                 Log.d(TAG, "onSwipeLeft(next)");
-                if (readOnly || navigationController.isNextAllowed()) {
-                    //Hide keypad
+                if (readOnly)
+                    next();
+                else if (navigationController.isNextAllowed()) {
                     hideKeyboard(listView.getContext(), listView);
                     next();
                 }
@@ -247,9 +248,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         Question question = (Question) view.getTag();
 
-        if (!selectedOption.getName().isEmpty()
+        if (!selectedOption.getCode().isEmpty()
                 && question.getOutput() == Constants.DROPDOWN_OU_LIST) {
-            OrgUnit orgUnit = OrgUnit.findByUID(selectedOption.getName());
+            OrgUnit orgUnit = OrgUnit.findByUID(selectedOption.getCode());
 
             assignOrgUnitToSurvey(Session.getMalariaSurvey(), orgUnit);
             assignOrgUnitToSurvey(Session.getStockSurvey(), orgUnit);
@@ -351,7 +352,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private void switchHiddenMatch(Question question, Option option, Question matchQuestion,
             Option matchOption) {
-        int optionPosition = (option.getCode().equals(matchOption.getCode())) ? MATCH_POSITION
+        int optionPosition = (option.getName().equals(matchOption.getName())) ? MATCH_POSITION
                 : DOESNT_MATCH_POSITION;
 
         matchQuestion.saveValuesDDL(
@@ -432,7 +433,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 "fonts/" + context.getString(R.string.specific_language_font));
         headerView.setTypeface(tf);
         int tabType = questionItem.getHeader().getTab().getType();
-        if (Tab.isMultiQuestionTab(tabType) || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(tabType)) {
+        if (Tab.isMultiQuestionTab(tabType) || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(
+                tabType)) {
             headerView.setText(questionItem.getHeader().getTab().getInternationalizedName());
         } else {
             headerView.setText(questionItem.getInternationalizedForm_name());
@@ -459,11 +461,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             (rowView.findViewById(R.id.scrolled_table)).setVisibility(View.VISIBLE);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.GONE);
 
-            screenQuestions = mDynamicTabAdapterStrategy.addAdditionalQuestions(tabType, screenQuestions);
+            screenQuestions = mDynamicTabAdapterStrategy.addAdditionalQuestions(tabType,
+                    screenQuestions);
 
             if (Tab.isMultiQuestionTab(tabType)) {
                 screenQuestions = questionItem.getQuestionsByTab(questionItem.getHeader().getTab());
-            } else if(screenQuestions.size()==0){
+            } else if (screenQuestions.size() == 0) {
                 //not have additionalQuestions(variant dependent) and is not multi question tab
                 screenQuestions.add(questionItem);
             }
@@ -493,15 +496,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         rowView.requestLayout();
         reloadingQuestionFromInvalidOption = false;
 
-        //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close surveys crash
-        Session.setIsLoadingSurvey(false);
-        if(Session.shouldPressBackOnLoadSurvey()) {
-            DashboardActivity.dashboardActivity.runOnUiThread(new Runnable() {
-                public void run() {
-                    DashboardActivity.dashboardActivity.onBackPressed();
-                }
-            });
-        }
         return rowView;
     }
 
@@ -509,7 +503,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         TableRow tableRow;
         IQuestionViewFactory questionViewFactory;
 
-        questionViewFactory = (Tab.isMultiQuestionTab(tabType) || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(tabType)) ?
+        questionViewFactory = (Tab.isMultiQuestionTab(tabType)
+                || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(tabType)) ?
                 new MultiQuestionViewFactory() : new SingleQuestionViewFactory();
 
         // Se get the value from Session
@@ -549,7 +544,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 ((IImageQuestionView) questionView).setImage(
                         screenQuestion.getInternationalizedPath());
             }
-
             mDynamicTabAdapterStrategy.renderParticularSurvey(screenQuestion, survey, questionView);
 
             if (questionView instanceof AOptionQuestionView) {
@@ -575,7 +569,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             tableRow.addView((View) questionView);
 
-            swipeTouchListener.addClickableView(tableRow);
+            swipeTouchListener.addTouchableView(rowView);
+            swipeTouchListener.addTouchableView(tableRow);
+            swipeTouchListener.addTouchableView((View) questionView);
+            swipeTouchListener.addClickableView((View) questionView);
 
             setVisibilityAndAddRow(tableRow, screenQuestion, visibility);
         }
@@ -609,7 +606,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private boolean isTabScrollable(Question questionItem, int tabType) {
-        return Tab.isMultiQuestionTab(tabType) || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(tabType)
+        return Tab.isMultiQuestionTab(tabType)
+                || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(tabType)
                 || questionItem.getOutput() == Constants.IMAGE_RADIO_GROUP
                 || questionItem.getOutput() == Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT
                 || questionItem.getOutput() == Constants.DYNAMIC_STOCK_IMAGE_RADIO_BUTTON;
@@ -629,7 +627,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     private void configureLayoutParams(int tabType, TableRow tableRow, LinearLayout questionView) {
-        if (Tab.isMultiQuestionTab(tabType) || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(tabType)) {
+        if (Tab.isMultiQuestionTab(tabType) || mDynamicTabAdapterStrategy.isMultiQuestionByVariant(
+                tabType)) {
 
             tableRow.setLayoutParams(
                     new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -735,7 +734,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
     private boolean isCounterValueEqualToMax(Question question, Option selectedOption) {
 
-        Survey survey =  SurveyFragmentStrategy.getSessionSurveyByQuestion(question);
+        Survey survey = SurveyFragmentStrategy.getSessionSurveyByQuestion(question);
 
         Float counterValue = survey.getCounterValue(question, selectedOption);
 
@@ -820,7 +819,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     private boolean toggleChild(TableRow row, Question rowQuestion, Question childQuestion) {
         if (childQuestion.getId_question().equals(rowQuestion.getId_question())) {
-            Survey survey =   SurveyFragmentStrategy.getSessionSurveyByQuestion(rowQuestion);
+            Survey survey = SurveyFragmentStrategy.getSessionSurveyByQuestion(rowQuestion);
 
             if (rowQuestion.isHiddenBySurveyAndHeader(survey)) {
                 row.setVisibility(View.GONE);
@@ -844,6 +843,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
             case Constants.POSITIVE_OR_ZERO_INT:
+            case Constants.PREGNANT_MONTH_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:
@@ -872,6 +872,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             case Constants.PHONE:
             case Constants.POSITIVE_INT:
             case Constants.POSITIVE_OR_ZERO_INT:
+            case Constants.PREGNANT_MONTH_INT:
             case Constants.INT:
             case Constants.LONG_TEXT:
             case Constants.SHORT_TEXT:

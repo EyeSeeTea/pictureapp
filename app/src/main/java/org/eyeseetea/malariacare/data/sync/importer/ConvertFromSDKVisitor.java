@@ -26,7 +26,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Organisation;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -122,6 +121,7 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         User appUser = new User();
         appUser.setUid(sdkUserAccountExtended.getUid());
         appUser.setName(sdkUserAccountExtended.getName());
+        appUser.setLastUpdated(null);
         appUser.save();
     }
 
@@ -196,21 +196,12 @@ public class ConvertFromSDKVisitor implements IConvertFromSDKVisitor {
         }
         values.add(value);
     }
-
     @Override
     public void visit(CategoryOptionGroupExtended categoryOptionGroupExtended) {
-        Organisation organisationUser = null;
-        List<Organisation> organisations = Organisation.getAllOrganisations();
-        for (Organisation organisation : organisations) {
-            if (organisation.getName().equals(categoryOptionGroupExtended.getName())) {
-                organisationUser = organisation;
-                organisationUser.setUid(categoryOptionGroupExtended.getUid());
-                organisationUser.save();
-                User me = User.getLoggedUser();
-                me.setOrganisation(organisationUser.getId_organisation());
-                me.save();
-                break;
-            }
-        }
+        ConvertFromSDKVisitorStrategy.visit(categoryOptionGroupExtended);
+    }
+
+    public void setOrgUnits(List<OrgUnit> allOrgUnitsInDB) {
+        orgUnits = allOrgUnitsInDB;
     }
 }

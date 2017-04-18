@@ -84,7 +84,9 @@ public class ReloadSurveyAnsweredRatioUseCase extends AReloadSurveyAnsweredRatio
         surveyAnsweredRatio = new SurveyAnsweredRatio(numRequired, numAnswered);
 
         SurveyAnsweredRatioCache.put(survey.getId_survey(), surveyAnsweredRatio);
-
+        if (mCallback != null) {
+            mCallback.onComplete(surveyAnsweredRatio);
+        }
     }
 
     private int checkACTAlternatives(Treatment treatment, List<Value> stockValues,
@@ -158,5 +160,8 @@ public class ReloadSurveyAnsweredRatioUseCase extends AReloadSurveyAnsweredRatio
         surveyAnsweredRatio = new SurveyAnsweredRatio(numRequired, numAnswered);
 
         SurveyAnsweredRatioCache.put(survey.getId_survey(), surveyAnsweredRatio);
+        if (mCallback != null) {
+            mCallback.onComplete(surveyAnsweredRatio);
+        }
     }
 }

@@ -57,11 +57,9 @@ import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
-import org.eyeseetea.malariacare.domain.usecase.AReloadSurveyAnsweredRatioUseCase;
-import org.eyeseetea.malariacare.domain.usecase.ReloadSurveyAnsweredRatioUseCase;
+import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
@@ -962,18 +960,14 @@ public class Survey extends BaseModel implements VisitableToSDK {
     /**
      * Updates ratios, status and completion date depending on the question and answer (text)
      */
-    public void updateSurveyStatus() {
+    public void updateSurveyStatus(SurveyAnsweredRatio surveyAnsweredRatio) {
         //Sent surveys are not updated
         if (this.isSent() || this.isHide() || this.isConflict()) {
             return;
         }
 
-        AReloadSurveyAnsweredRatioUseCase reloadSurveyUseCase =
-                new ReloadSurveyAnsweredRatioUseCase(this);
-        reloadSurveyUseCase.execute();
-
         //Update status & completionDate
-        if (SurveyAnsweredRatioCache.get(this.getId_survey()).isCompleted()) {
+        if (surveyAnsweredRatio.isCompleted()) {
             complete();
         } else {
             setStatus(Constants.SURVEY_IN_PROGRESS);

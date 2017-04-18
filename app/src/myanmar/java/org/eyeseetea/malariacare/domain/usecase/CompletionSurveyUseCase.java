@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -37,7 +38,7 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
     }
 
     private Survey getSurveyWithStatusAndAnsweredRatio(long idSurvey) {
-        org.eyeseetea.malariacare.data.database.model.Survey surveyDB =
+        final org.eyeseetea.malariacare.data.database.model.Survey surveyDB =
                 org.eyeseetea.malariacare.data
                         .database.model.Survey.findById(idSurvey);
         Survey survey = new Survey(idSurvey);
@@ -46,7 +47,14 @@ public class CompletionSurveyUseCase extends ACompletionSurveyUseCase {
                 reloadSurveyUseCase = new ReloadSurveyAnsweredRatioUseCase(surveyDB);
         reloadSurveyUseCase.execute();
         survey.setSurveyAnsweredRatio(SurveyAnsweredRatioCache.get(survey.getId()));
-        surveyDB.updateSurveyStatus();
+        GetSurveyAnsweredRatioUseCase getSurveyAnsweredRatioUseCase =
+                new GetSurveyAnsweredRatioUseCase(surveyDB);
+        getSurveyAnsweredRatioUseCase.execute(new GetSurveyAnsweredRatioUseCase.Callback() {
+            @Override
+            public void onComplete(SurveyAnsweredRatio surveyAnsweredRatio) {
+                surveyDB.updateSurveyStatus(surveyAnsweredRatio);
+            }
+        });
         survey.setStatus(surveyDB.getStatus());
         return survey;
     }

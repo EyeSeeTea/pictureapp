@@ -12,13 +12,23 @@ import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 
 public abstract class AReloadSurveyAnsweredRatioUseCase {
 
+    public interface Callback {
+        void onComplete(SurveyAnsweredRatio surveyAnsweredRatio);
+    }
+
     protected Survey survey;
+    protected Callback mCallback;
 
     public AReloadSurveyAnsweredRatioUseCase(Survey survey) {
         this.survey = survey;
     }
 
     public abstract void execute();
+
+    public void execute(Callback callback) {
+        mCallback = callback;
+        execute();
+    }
 
 
     protected void reloadMalariaSurveyAnsweredRatio() {
@@ -53,6 +63,9 @@ public abstract class AReloadSurveyAnsweredRatioUseCase {
         surveyAnsweredRatio = new SurveyAnsweredRatio(numRequired, numAnswered);
 
         SurveyAnsweredRatioCache.put(survey.getId_survey(), surveyAnsweredRatio);
+        if (mCallback != null) {
+            mCallback.onComplete(surveyAnsweredRatio);
+        }
     }
 
 }

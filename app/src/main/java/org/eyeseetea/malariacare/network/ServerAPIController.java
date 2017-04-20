@@ -33,6 +33,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -659,6 +660,19 @@ public class ServerAPIController {
         }
 
     }
+
+    public static OrganisationUnit getCurrentLocalOrganisationUnit() {
+        OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
+        return new OrganisationUnit(orgUnit.getUid(),
+                orgUnit.getName(), orgUnit.isBanned());
+    }
+
+    public static void banOrgUnit(boolean ban) {
+        OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
+        orgUnit.setBan(ban);
+        orgUnit.save();
+    }
+
 
     public static User pullUserAttributes(User loggedUser) {
         String lastMessage = loggedUser.getAnnouncement();

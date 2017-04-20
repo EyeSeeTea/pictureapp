@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase.push;
 
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -83,19 +81,16 @@ public class PushUseCase implements UseCase {
 
         try {
             boolean isBanned = isOrgUnitBanned();
-
-            OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
+            OrganisationUnit localOrgUnit =
+                    mOrganisationUnitRepository.getCurrentLocalOrganisationUnit();
             if (isBanned) {
-                if (orgUnit != null && !orgUnit.isBanned()) {
-                    orgUnit.setBan(true);
-                    orgUnit.save();
+                if (localOrgUnit != null && !localOrgUnit.isBanned()) {
+                    mOrganisationUnitRepository.banLocalOrganisationUnit(isBanned);
                     notifyBannedOrgUnitError();
-
                 }
             } else {
-                if (orgUnit != null && orgUnit.isBanned()) {
-                    orgUnit.setBan(false);
-                    orgUnit.save();
+                if (localOrgUnit != null && localOrgUnit.isBanned()) {
+                    mOrganisationUnitRepository.banLocalOrganisationUnit(isBanned);
                     notifyReOpenOrgUnit();
                 }
                 runPush();

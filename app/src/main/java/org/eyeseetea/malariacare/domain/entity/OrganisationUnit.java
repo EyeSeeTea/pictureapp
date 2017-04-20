@@ -7,12 +7,19 @@ public class OrganisationUnit {
     private String name;
     private String description;
     private Date closedDate;
+    private boolean banned;
 
     public OrganisationUnit(String uid, String name, String description, Date closedDate) {
         this.uid = uid;
         this.name = name;
         this.description = description;
         this.closedDate = closedDate;
+    }
+
+    public OrganisationUnit(String uid, String name, boolean banned) {
+        this.uid = uid;
+        this.name = name;
+        this.banned = banned;
     }
 
     public String getUid() {
@@ -32,6 +39,6 @@ public class OrganisationUnit {
     }
 
     public boolean isBanned() {
-        return closedDate != null && closedDate.before(new Date());
+        return banned || (closedDate != null && closedDate.before(new Date()));
     }
 }

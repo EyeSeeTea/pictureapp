@@ -409,6 +409,11 @@ public class ServerAPIController {
         }
     }
 
+    public static void saveOrganisationUnit(OrganisationUnit organisationUnit) {
+        patchClosedDate(organisationUnit);
+        patchDescription(organisationUnit);
+    }
+
     /**
      * Bans the orgUnit for future pushes (too many too quick)
      */
@@ -423,6 +428,7 @@ public class ServerAPIController {
                 orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
             } catch (Exception e) {
                 orgUnitDescription = "";
+                e.printStackTrace();
             }
             //NO OrgUnitUID -> Non blocking error, go on
             if (orgUnitUID == null) {
@@ -530,6 +536,35 @@ public class ServerAPIController {
     }
 
     /**
+     * Updates the orgUnit adding a closedDate
+     */
+    static void patchClosedDate(OrganisationUnit organisationUnit) {
+        String url = ServerAPIController.getServerUrl();
+        try {
+            String urlPathClosedDate = getPatchClosedDateUrl(url, organisationUnit.getUid());
+            JSONObject data = prepareCloseDateValue(organisationUnit);
+            Response response = executeCall(data, urlPathClosedDate, "PATCH");
+            if (!response.isSuccessful()) {
+                Log.e(TAG,
+                        "closingDatePatch (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+        } catch (Exception e) {
+            Log.e(TAG,
+                    String.format("patchClosedDate(%s,%s): %s", url, organisationUnit.getUid(),
+                            e.getMessage()));
+        }
+    }
+
+    static JSONObject prepareCloseDateValue(OrganisationUnit organisationUnit) throws Exception {
+        String dateFormatted = Utils.parseDateToString(organisationUnit.getClosedDate(),
+                DATE_CLOSED_DATE_FORMAT);
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_CLOSEDDATE, dateFormatted);
+        return elementObject;
+    }
+
+    /**
      * Prepare the closing value.
      *
      * @return Closing value as Json.
@@ -555,6 +590,25 @@ public class ServerAPIController {
             }
         } catch (Exception e) {
             Log.e(TAG, String.format("patchDescriptionClosedDate(%s,%s): %s", url, orgUnitUID,
+                    e.getMessage()));
+        }
+    }
+
+    static void patchDescription(OrganisationUnit organisationUnit) {
+        String url = ServerAPIController.getServerUrl();
+        try {
+            String urlPathClosedDescription = getPatchClosedDescriptionUrl(url,
+                    organisationUnit.getUid());
+            JSONObject data = prepareClosingDescriptionValue(organisationUnit.getDescription());
+            Response response = executeCall(data, urlPathClosedDescription, "PATCH");
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "patchDescriptionClosedDate (" + response.code() + "): "
+                        + response.body().string());
+                throw new IOException(response.message());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, String.format("patchDescriptionClosedDate(%s,%s): %s", url,
+                    organisationUnit.getUid(),
                     e.getMessage()));
         }
     }

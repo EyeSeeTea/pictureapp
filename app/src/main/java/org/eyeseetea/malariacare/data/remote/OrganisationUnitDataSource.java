@@ -21,4 +21,11 @@ public class OrganisationUnitDataSource implements IOrganisationUnitRepository {
     public void banLocalOrganisationUnit(boolean ban) {
         ServerAPIController.banOrgUnit(ban);
     }
+
+    @Override
+    public void saveOrganisationUnit(OrganisationUnit organisationUnit) {
+        ServerAPIController.saveOrganisationUnit(organisationUnit);
+    }
+
+
 }

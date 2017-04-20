@@ -14,7 +14,6 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.service.OverLimitSurveysService;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
-import org.eyeseetea.malariacare.network.ServerAPIController;
 
 import java.util.List;
 
@@ -153,11 +152,11 @@ public class PushUseCase implements UseCase {
     }
 
     private void banOrgUnit() {
-        String url = ServerAPIController.getServerUrl();
-        String orgUnitNameOrCode = ServerAPIController.getOrgUnit();
-
-        if (!orgUnitNameOrCode.isEmpty()) {
-            ServerAPIController.banOrg(url, orgUnitNameOrCode);
+        OrganisationUnit organisationUnit =
+                mOrganisationUnitRepository.getCurrentOrganisationUnit();
+        if (organisationUnit != null) {
+            organisationUnit.ban();
+            mOrganisationUnitRepository.saveOrganisationUnit(organisationUnit);
             System.out.println("OrgUnit banned successfully");
         }
     }

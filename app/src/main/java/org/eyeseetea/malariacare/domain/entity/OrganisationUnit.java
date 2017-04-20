@@ -9,7 +9,7 @@ public class OrganisationUnit {
     private static final String CLOSE_DATE_DESCRIPTION =
             "[%s] - Android Surveillance App set the closing date to %s because over 30 surveys "
                     + "were pushed within 1 hour.";
-    private static final String CLOSE_DATE_FORMAT = "";
+    private static final String CLOSE_DATE_FORMAT = "dd-MM-yyyy";
     private String uid;
     private String name;
     private String description;

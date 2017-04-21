@@ -599,7 +599,8 @@ public class ServerAPIController {
         try {
             String urlPathClosedDescription = getPatchClosedDescriptionUrl(url,
                     organisationUnit.getUid());
-            JSONObject data = prepareClosingDescriptionValue(organisationUnit.getDescription());
+            JSONObject data = parseOrganisationUnitDescriptionToJson(
+                    organisationUnit.getDescription());
             Response response = executeCall(data, urlPathClosedDescription, "PATCH");
             if (!response.isSuccessful()) {
                 Log.e(TAG, "patchDescriptionClosedDate (" + response.code() + "): "
@@ -613,6 +614,19 @@ public class ServerAPIController {
         }
     }
 
+    /**
+     * Pull the current description.
+     *
+     * @return new description.
+     * @url url for pull the current description
+     */
+    static JSONObject parseOrganisationUnitDescriptionToJson(String orgUnitDescription)
+            throws Exception {
+        //As a JSON
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_DESCRIPTIONCLOSEDATE, orgUnitDescription);
+        return elementObject;
+    }
     /**
      * Pull the current description and adds new closed organization description.
      *
@@ -710,6 +724,7 @@ public class ServerAPIController {
         } catch (Exception ex) {
             Log.e(TAG, String.format("getOrgUnitData(%s,%s): %s", url, orgUnitNameOrCode,
                     ex.toString()));
+            ex.printStackTrace();
             return null;
         }
 

@@ -141,7 +141,8 @@ public class PushUseCase implements UseCase {
     }
 
     private void banOrgUnitIfRequired() {
-        if (mSurveysThresholds.getCount() > 0 && mSurveysThresholds.getTimeHours() > 0) {
+        if (!isOrgUnitBanned() && mSurveysThresholds.getCount() > 0
+                && mSurveysThresholds.getTimeHours() > 0) {
             List<Survey> sentSurveys = mSurveyRepository.getLastSentSurveys(
                     mSurveysThresholds.getCount());
 

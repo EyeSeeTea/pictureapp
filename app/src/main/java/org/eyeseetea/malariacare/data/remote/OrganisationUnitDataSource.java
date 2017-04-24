@@ -11,4 +11,21 @@ public class OrganisationUnitDataSource implements IOrganisationUnitRepository {
 
         return organisationUnit;
     }
+
+    @Override
+    public OrganisationUnit getCurrentLocalOrganisationUnit() {
+        return ServerAPIController.getCurrentLocalOrganisationUnit();
+    }
+
+    @Override
+    public void banLocalOrganisationUnit(boolean ban) {
+        ServerAPIController.banOrgUnit(ban);
+    }
+
+    @Override
+    public void saveOrganisationUnit(OrganisationUnit organisationUnit) {
+        ServerAPIController.saveOrganisationUnit(organisationUnit);
+    }
+
+
 }

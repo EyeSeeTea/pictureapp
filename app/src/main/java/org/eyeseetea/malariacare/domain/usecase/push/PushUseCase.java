@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase.push;
 
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -16,7 +14,6 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.service.OverLimitSurveysService;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
-import org.eyeseetea.malariacare.network.ServerAPIController;
 
 import java.util.List;
 
@@ -83,19 +80,16 @@ public class PushUseCase implements UseCase {
 
         try {
             boolean isBanned = isOrgUnitBanned();
-
-            OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
+            OrganisationUnit localOrgUnit =
+                    mOrganisationUnitRepository.getCurrentLocalOrganisationUnit();
             if (isBanned) {
-                if (orgUnit != null && !orgUnit.isBanned()) {
-                    orgUnit.setBan(true);
-                    orgUnit.save();
+                if (localOrgUnit != null && !localOrgUnit.isBanned()) {
+                    mOrganisationUnitRepository.banLocalOrganisationUnit(isBanned);
                     notifyBannedOrgUnitError();
-
                 }
             } else {
-                if (orgUnit != null && orgUnit.isBanned()) {
-                    orgUnit.setBan(false);
-                    orgUnit.save();
+                if (localOrgUnit != null && localOrgUnit.isBanned()) {
+                    mOrganisationUnitRepository.banLocalOrganisationUnit(isBanned);
                     notifyReOpenOrgUnit();
                 }
                 runPush();
@@ -147,7 +141,8 @@ public class PushUseCase implements UseCase {
     }
 
     private void banOrgUnitIfRequired() {
-        if (mSurveysThresholds.getCount() > 0 && mSurveysThresholds.getTimeHours() > 0) {
+        if (!isOrgUnitBanned() && mSurveysThresholds.getCount() > 0
+                && mSurveysThresholds.getTimeHours() > 0) {
             List<Survey> sentSurveys = mSurveyRepository.getLastSentSurveys(
                     mSurveysThresholds.getCount());
 
@@ -158,11 +153,11 @@ public class PushUseCase implements UseCase {
     }
 
     private void banOrgUnit() {
-        String url = ServerAPIController.getServerUrl();
-        String orgUnitNameOrCode = ServerAPIController.getOrgUnit();
-
-        if (!orgUnitNameOrCode.isEmpty()) {
-            ServerAPIController.banOrg(url, orgUnitNameOrCode);
+        OrganisationUnit organisationUnit =
+                mOrganisationUnitRepository.getCurrentOrganisationUnit();
+        if (organisationUnit != null) {
+            organisationUnit.ban();
+            mOrganisationUnitRepository.saveOrganisationUnit(organisationUnit);
             System.out.println("OrgUnit banned successfully");
         }
     }

@@ -33,6 +33,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -409,6 +410,11 @@ public class ServerAPIController {
         }
     }
 
+    public static void saveOrganisationUnit(OrganisationUnit organisationUnit) {
+        patchClosedDate(organisationUnit);
+        patchDescription(organisationUnit);
+    }
+
     /**
      * Bans the orgUnit for future pushes (too many too quick)
      */
@@ -423,6 +429,7 @@ public class ServerAPIController {
                 orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
             } catch (Exception e) {
                 orgUnitDescription = "";
+                e.printStackTrace();
             }
             //NO OrgUnitUID -> Non blocking error, go on
             if (orgUnitUID == null) {
@@ -530,6 +537,35 @@ public class ServerAPIController {
     }
 
     /**
+     * Updates the orgUnit adding a closedDate
+     */
+    static void patchClosedDate(OrganisationUnit organisationUnit) {
+        String url = ServerAPIController.getServerUrl();
+        try {
+            String urlPathClosedDate = getPatchClosedDateUrl(url, organisationUnit.getUid());
+            JSONObject data = prepareCloseDateValue(organisationUnit);
+            Response response = executeCall(data, urlPathClosedDate, "PATCH");
+            if (!response.isSuccessful()) {
+                Log.e(TAG,
+                        "closingDatePatch (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+        } catch (Exception e) {
+            Log.e(TAG,
+                    String.format("patchClosedDate(%s,%s): %s", url, organisationUnit.getUid(),
+                            e.getMessage()));
+        }
+    }
+
+    static JSONObject prepareCloseDateValue(OrganisationUnit organisationUnit) throws Exception {
+        String dateFormatted = Utils.parseDateToString(organisationUnit.getClosedDate(),
+                DATE_CLOSED_DATE_FORMAT);
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_CLOSEDDATE, dateFormatted);
+        return elementObject;
+    }
+
+    /**
      * Prepare the closing value.
      *
      * @return Closing value as Json.
@@ -559,6 +595,39 @@ public class ServerAPIController {
         }
     }
 
+    static void patchDescription(OrganisationUnit organisationUnit) {
+        String url = ServerAPIController.getServerUrl();
+        try {
+            String urlPathClosedDescription = getPatchClosedDescriptionUrl(url,
+                    organisationUnit.getUid());
+            JSONObject data = parseOrganisationUnitDescriptionToJson(
+                    organisationUnit.getDescription());
+            Response response = executeCall(data, urlPathClosedDescription, "PATCH");
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "patchDescriptionClosedDate (" + response.code() + "): "
+                        + response.body().string());
+                throw new IOException(response.message());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, String.format("patchDescriptionClosedDate(%s,%s): %s", url,
+                    organisationUnit.getUid(),
+                    e.getMessage()));
+        }
+    }
+
+    /**
+     * Pull the current description.
+     *
+     * @return new description.
+     * @url url for pull the current description
+     */
+    static JSONObject parseOrganisationUnitDescriptionToJson(String orgUnitDescription)
+            throws Exception {
+        //As a JSON
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_DESCRIPTIONCLOSEDATE, orgUnitDescription);
+        return elementObject;
+    }
     /**
      * Pull the current description and adds new closed organization description.
      *
@@ -656,10 +725,24 @@ public class ServerAPIController {
         } catch (Exception ex) {
             Log.e(TAG, String.format("getOrgUnitData(%s,%s): %s", url, orgUnitNameOrCode,
                     ex.toString()));
+            ex.printStackTrace();
             return null;
         }
 
     }
+
+    public static OrganisationUnit getCurrentLocalOrganisationUnit() {
+        OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
+        return new OrganisationUnit(orgUnit.getUid(),
+                orgUnit.getName(), orgUnit.isBanned());
+    }
+
+    public static void banOrgUnit(boolean ban) {
+        OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
+        orgUnit.setBan(ban);
+        orgUnit.save();
+    }
+
 
     public static User pullUserAttributes(User loggedUser) {
         String lastMessage = loggedUser.getAnnouncement();

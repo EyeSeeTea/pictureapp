@@ -89,9 +89,17 @@ public class PushController implements IPushController {
                 new IDataSourceCallback<Map<String, PushReport>>() {
                     @Override
                     public void onSuccess(
-                            Map<String, PushReport> mapEventsImportSummary) {
-                        mConvertToSDKVisitor.saveSurveyStatus(mapEventsImportSummary, callback);
-                        callback.onComplete();
+                            Map<String, PushReport> mapEventsReports) {
+                        if(mapEventsReports==null || mapEventsReports.size()==0){
+                            onError(new PushReportException("EventReport is null or empty"));
+                            return;
+                        }
+                        try {
+                            mConvertToSDKVisitor.saveSurveyStatus(mapEventsReports, callback);
+                            callback.onComplete();
+                        }catch (Exception e){
+                            onError(new PushReportException(e));
+                        }
                     }
 
                     @Override

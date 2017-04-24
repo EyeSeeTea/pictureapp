@@ -215,4 +215,5 @@
 <string name="survey_fourth_step">"ສ້າງຫນ້າຈໍ ..."</string>
 <string name="admin_announcement">"ປະກາດບໍລິຫານ"</string>
 <string name="user_close">"ຜູ້ໃຊ້ນີ້ໄດ້ປິດລົງໂດຍບໍລິຫານ."</string>
+<string name="error_message_push">"ໃນກໍລະນີທີ່ມີ UID: %s . ໄດ້ອັບໂດຍບໍ່ມີວັນທີ. ກະລຸນາຕິດຕໍ່ຫາບໍລິຫານ."</string>
 </resources>

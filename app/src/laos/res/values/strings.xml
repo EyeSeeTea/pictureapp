@@ -207,4 +207,5 @@
 <string name="survey_fourth_step">"Creating screens..."</string>
 <string name="admin_announcement">"Administrator announcement"</string>
 <string name="user_close">"This user was closed by de administrator."</string>
+<string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator. "</string>
 </resources>

@@ -92,11 +92,19 @@ public class PushUseCase implements UseCase {
                     mOrganisationUnitRepository.banLocalOrganisationUnit(isBanned);
                     notifyReOpenOrgUnit();
                 }
-                runPush();
+                if(!isUserClosed()) {
+                    runPush();
+                }else {
+                    notifyClosedUser();
+                }
             }
         } catch (Exception ex) {
             notifyPushError();
         }
+    }
+
+    private boolean isUserClosed() {
+        return false;
     }
 
     private boolean isOrgUnitBanned() {

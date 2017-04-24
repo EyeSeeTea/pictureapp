@@ -47,4 +47,8 @@ public class UserAccount {
     public void setCloseDate(Date closeDate) {
         this.closeDate = closeDate;
     }
+
+    public boolean isClosed() {
+        return closeDate != null && closeDate.before(new Date());
+    }
 }

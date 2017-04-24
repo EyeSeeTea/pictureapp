@@ -38,6 +38,7 @@ import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -710,6 +711,55 @@ public class ServerAPIController {
         return loggedUser;
     }
 
+    public static UserAccount getUser(UserAccount loggedUser) {
+        String lastMessage = loggedUser.getAnnouncement();
+        String uid = loggedUser.getUserUid();
+        String url =
+                PreferencesState.getInstance().getDhisURL() + "/api/" + TAG_USER + String.format(
+                        QUERY_USER_ATTRIBUTES, uid);
+        url = encodeBlanks(url);
+        try {
+            Response response = ServerAPIController.executeCall(null, url, "GET");
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+            JSONObject body = new JSONObject(response.body().string());
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.convertValue(mapper.readTree(body.toString()),
+                    JsonNode.class);
+            JsonNode jsonNodeArray = jsonNode.get(ATTRIBUTE_VALUES);
+            String newMessage = "";
+            String closeDate = "";
+            for (int i = 0; i < jsonNodeArray.size(); i++) {
+                if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
+                        User.ATTRIBUTE_USER_ANNOUNCEMENT)) {
+                    newMessage = jsonNodeArray.get(i).get(VALUE).textValue();
+                }
+                if (jsonNodeArray.get(i).get(ATTRIBUTE).get(CODE).textValue().equals(
+                        User.ATTRIBUTE_USER_CLOSE_DATE)) {
+                    closeDate = jsonNodeArray.get(i).get(VALUE).textValue();
+                }
+            }
+            if ((lastMessage == null && newMessage != null) || (newMessage != null
+                    && !newMessage.equals("") && !lastMessage.equals(newMessage))) {
+                loggedUser.setAnnouncement(newMessage);
+                PreferencesState.getInstance().setUserAccept(false);
+            }
+            if (closeDate == null || closeDate.equals("")) {
+                loggedUser.setCloseDate(null);
+            } else {
+                loggedUser.setCloseDate(Utils.parseStringToCalendar(closeDate,
+                        DHIS2_GMT_NEW_DATE_FORMAT).getTime());
+            }
+
+        } catch (Exception ex) {
+            Log.e(TAG, "Cannot read user last updated from server with");
+            ex.printStackTrace();
+        }
+        return loggedUser;
+    }
+
     public static boolean isUserClosed(String userUid) {
         if (Session.getCredentials().isDemoCredentials()) {
             return false;
@@ -755,6 +805,7 @@ public class ServerAPIController {
         }
         return closedDate.before(new Date());
     }
+
 
     /**
      * Checks if the orgunit is closed (due to too much surveys being pushed)

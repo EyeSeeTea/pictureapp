@@ -315,8 +315,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             PushReport pushReport = pushReportMap.get(iEvent.getEvent().getUId());
             if (pushReport == null) {
                 //the survey was saved as quarantine.
-                callback.onError(new PushReportException(
-                        "saveSurveyStatus: report null " + iSurvey.getId_survey()));
+                new PushReportException(
+                        "saveSurveyStatus: report is null in this survey: " + iSurvey.getId_survey());
+                //The loop should continue without throw the Exception.
                 continue;
             }
             List<SurveyConflict> surveyConflicts = pushReport.getSurveyConflicts();
@@ -349,14 +350,13 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 Log.d(TAG, "saveSurveyStatus: report without errors and status ok "
                         + iSurvey.getId_survey());
                 if (iEvent.getEventDate() == null || iEvent.getEventDate().equals("")) {
-                    //If eventdate is null the event is invalid. The event is sent but we need
+                    //If eventDate is null the event is invalid. The event is sent but we need
                     // inform to the user.
                     DashboardActivity.showException(context.getString(R.string.error_message),
                             String.format(context.getString(R.string.error_message_push),
                                     iEvent.getEvent()));
                 }
                 saveSurveyFromImportSummary(iSurvey);
-                continue;
             }
         }
     }

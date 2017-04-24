@@ -5,8 +5,10 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
@@ -44,6 +46,7 @@ public class PushUseCase implements UseCase {
     private IPushController mPushController;
     private ISurveyRepository mSurveyRepository;
     private IOrganisationUnitRepository mOrganisationUnitRepository;
+    private IUserRepository mUserRepository;
 
     private IAsyncExecutor mAsyncExecutor;
     private IMainExecutor mMainExecutor;
@@ -55,13 +58,15 @@ public class PushUseCase implements UseCase {
     public PushUseCase(IPushController pushController, IAsyncExecutor asyncExecutor,
             IMainExecutor mainExecutor, SurveysThresholds surveysThresholds,
             ISurveyRepository surveyRepository,
-            IOrganisationUnitRepository organisationUnitRepository) {
+            IOrganisationUnitRepository organisationUnitRepository,
+            IUserRepository userRepository) {
         mPushController = pushController;
         mAsyncExecutor = asyncExecutor;
         mMainExecutor = mainExecutor;
         mSurveysThresholds = surveysThresholds;
         mSurveyRepository = surveyRepository;
         mOrganisationUnitRepository = organisationUnitRepository;
+        mUserRepository = userRepository;
     }
 
     public void execute(final Callback callback) {
@@ -104,7 +109,8 @@ public class PushUseCase implements UseCase {
     }
 
     private boolean isUserClosed() {
-        return false;
+        UserAccount userAccount = mUserRepository.getLoggedUser();
+        return userAccount.isClosed();
     }
 
     private boolean isOrgUnitBanned() {

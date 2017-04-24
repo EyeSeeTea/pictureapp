@@ -5,7 +5,7 @@ import android.content.Context;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.datasources.AuthenticationLocalDataSource;
-import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.AuthenticationDhisSDKDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -22,7 +22,7 @@ public class AuthenticationManager implements IAuthenticationManager {
 
         userAccountLocalDataSource = new AuthenticationLocalDataSource(context);
         userAccountRemoteDataSource = new AuthenticationDhisSDKDataSource(context);
-        mUserRepository = new UserAccountDataSource();
+        mUserRepository = new UserAccountLocalDataSource();
     }
 
     @Override

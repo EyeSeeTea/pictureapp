@@ -26,7 +26,6 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -40,6 +39,7 @@ import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.entity.PushReport;
 import org.eyeseetea.malariacare.domain.entity.SurveyConflict;
+import org.eyeseetea.malariacare.domain.exception.NullEventDateException;
 import org.eyeseetea.malariacare.domain.exception.PushReportException;
 import org.eyeseetea.malariacare.domain.exception.PushValueException;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
@@ -352,9 +352,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 if (iEvent.getEventDate() == null || iEvent.getEventDate().equals("")) {
                     //If eventDate is null the event is invalid. The event is sent but we need
                     // inform to the user.
-                    DashboardActivity.showException(context.getString(R.string.error_message),
+                    callback.onError(new NullEventDateException(
                             String.format(context.getString(R.string.error_message_push),
-                                    iEvent.getEvent()));
+                                    iEvent.getEvent())));
                 }
                 saveSurveyFromImportSummary(iSurvey);
             }

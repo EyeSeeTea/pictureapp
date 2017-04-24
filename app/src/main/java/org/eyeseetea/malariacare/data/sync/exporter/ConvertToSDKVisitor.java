@@ -26,6 +26,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -304,19 +305,21 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         for (int i = 0; i < surveys.size(); i++) {
             Survey iSurvey = surveys.get(i);
             //Sets the survey status as quarantine to prevent wrong reports on unexpected exception.
-            //F.E. if the app crash unexpected this survey will be checked again in the future
-            // push to prevent the duplicates
+            //F.E. if the app crash unexpected this survey will be checked again in the future push to prevent the duplicates
             // in the server.
             iSurvey.setStatus(Constants.SURVEY_QUARANTINE);
             iSurvey.save();
             Log.d(TAG, "saveSurveyStatus: Starting saving survey Set Survey status as QUARANTINE"
                     + iSurvey.getId_survey() + " eventuid: " + iSurvey.getEventUid());
             EventExtended iEvent = new EventExtended(events.get(iSurvey.getId_survey()));
-            PushReport pushReportmap = pushReportMap.get(iEvent.getEvent().getUId());
-            if (pushReportMap == null) {
+            PushReport pushReport = pushReportMap.get(iEvent.getEvent().getUId());
+            if (pushReport == null) {
+                //the survey was saved as quarantine.
+                callback.onError(new PushReportException(
+                        "saveSurveyStatus: report null " + iSurvey.getId_survey()));
                 continue;
             }
-            List<SurveyConflict> surveyConflicts = pushReportmap.getSurveyConflicts();
+            List<SurveyConflict> surveyConflicts = pushReport.getSurveyConflicts();
 
             //If the pushResult has some conflict the survey was saved in the server but
             // never resend, the survey is saved as survey in conflict.
@@ -339,36 +342,22 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                     }
                 }
                 continue;
-            } else if (pushReportmap != null
-                    && pushReportmap.getStatus() == PushReport.Status.ERROR) {
-                Log.d(TAG, "saveSurveyStatus: PUSH error process..."
-                        + pushReportmap.getDescription()
-                        + " dataElement pushing survey: "
-                        + iSurvey.getId_survey());
-                callback.onError(new PushReportException(
-                        pushReportmap.getDescription() + ""));
-                iSurvey.setStatus(Constants.SURVEY_CONFLICT);
-                iSurvey.save();
-            }
-
-            if (pushReportmap == null) {
-                Log.d(TAG, "saveSurveyStatus: pushResult null " + iSurvey.getId_survey());
-                //Saved as quarantine
-                continue;
-            } else {
-                Log.d(TAG, "saveSurveyStatus: " + pushReportmap.toString());
             }
 
             //No errors -> Save and next
-            if (!hasPushResultErrors(pushReportmap)) {
-                Log.d(TAG, "saveSurveyStatus: pushResult without errors and status ok "
+            if (!hasPushReportErrors(pushReport)) {
+                Log.d(TAG, "saveSurveyStatus: report without errors and status ok "
                         + iSurvey.getId_survey());
+                if (iEvent.getEventDate() == null || iEvent.getEventDate().equals("")) {
+                    //If eventdate is null the event is invalid. The event is sent but we need
+                    // inform to the user.
+                    DashboardActivity.showException(context.getString(R.string.error_message),
+                            String.format(context.getString(R.string.error_message_push),
+                                    iEvent.getEvent()));
+                }
                 saveSurveyFromImportSummary(iSurvey);
                 continue;
             }
-
-            //Generated event must be remove too
-            iEvent.delete();
         }
     }
 
@@ -385,7 +374,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      * Checks whether the given importSummary contains errors or has been successful.
      * An import with 0 importedItems is an error too.
      */
-    private boolean hasPushResultErrors(PushReport pushReport) {
+    private boolean hasPushReportErrors(PushReport pushReport) {
         if (pushReport == null) {
             return true;
         }

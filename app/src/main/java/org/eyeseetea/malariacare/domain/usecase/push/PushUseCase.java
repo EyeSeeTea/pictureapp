@@ -7,8 +7,9 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
-import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.PushReportException;
+import org.eyeseetea.malariacare.domain.exception.PushValueException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.network.BanOrgUnitExecutor;
 
@@ -117,10 +118,13 @@ public class PushUseCase {
                     callback.onConversionError();
                 } else if (throwable instanceof SurveysToPushNotFoundException) {
                     callback.onSurveysNotFoundError();
-                } else if (throwable instanceof ImportSummaryErrorException) {
+                } else if (throwable instanceof PushValueException) {
                     callback.onInformativeError(throwable.getMessage());
                     banOrgUnitIfRequired(callback);
-                }else if (throwable instanceof ClosedUserPushException){
+                } else if (throwable instanceof PushReportException) {
+                    callback.onInformativeError(throwable.getMessage());
+                    banOrgUnitIfRequired(callback);
+                } else if (throwable instanceof ClosedUserPushException) {
                     callback.onClosedUser();
                 } else {
                     callback.onPushError();

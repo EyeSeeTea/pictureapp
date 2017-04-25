@@ -7,10 +7,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TableRow;
 
+import com.google.common.collect.Iterables;
+
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapter {
@@ -19,10 +23,11 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
     private LayoutInflater lInflater;
     private Context context;
     private Integer headerLayout;
-    private Integer subHeaderLayout;
     private Integer footerLayout;
+    public static Iterator<String> colorIterator;
     private Integer recordLayout;
     private String title;
+    private Integer subHeaderLayout;
 
     public ReviewScreenAdapter(List<Value> items, LayoutInflater inflater, Context context) {
         this.items = items;
@@ -31,6 +36,16 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
         this.headerLayout = R.layout.review_header;
         this.subHeaderLayout = R.layout.review_sub_header;
         this.recordLayout = R.layout.review_item_row;
+        List<String> colorsList = new ArrayList<>();
+        for (Value value : items) {
+            if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
+                String color = "#" + value.getOption().getBackground_colour();
+                if (!colorsList.contains(color)) {
+                    colorsList.add(color);
+                }
+            }
+        }
+        colorIterator = Iterables.cycle(colorsList).iterator();
     }
 
     @Override

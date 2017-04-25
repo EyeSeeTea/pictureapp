@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
+import static org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter.colorIterator;
+
 import android.graphics.Color;
 import android.view.View;
 import android.widget.TableRow;
@@ -10,6 +12,8 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
+
+import java.util.Iterator;
 
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
@@ -34,8 +38,10 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
             });
 
             if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
-                textCard.setBackgroundColor(
-                        Color.parseColor("#" + value.getOption().getBackground_colour()));
+                if(colorIterator.hasNext()) {
+                    textCard.setBackgroundColor(
+                            Color.parseColor(colorIterator.next()));
+                }
             }
 
         }

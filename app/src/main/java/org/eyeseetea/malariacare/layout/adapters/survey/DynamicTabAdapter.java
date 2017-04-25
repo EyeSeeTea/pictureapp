@@ -926,7 +926,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Value value = question.getValueBySession();
                 if (isDone(value)) {
                     navigationController.isMovingToForward = false;
-                    if (!wasPatientTested() || !BuildConfig.reviewScreen) {
+                    if ( !BuildConfig.reviewScreen) {
                         surveyShowDone();
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();

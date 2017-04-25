@@ -46,11 +46,11 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
             }
         }
         //Hardcoded colors for a colorList without colors.
-        if (colorsList.size() <= 1) {
+        if (colorsList.size() == 0) {
             colorsList.add("#4d3a4b");
-            if (colorsList.size() == 1) {
-                colorsList.add("#9c7f9b");
-            }
+        }
+        if (colorsList.size() == 1 && items.size() > 1) {
+            colorsList.add("#9c7f9b");
         }
         colorIterator = Iterables.cycle(colorsList).iterator();
     }

@@ -100,7 +100,6 @@ public class DateFilter {
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
         } else if (isThisMonth()) {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.add(Calendar.MONTH, -1);
         } else if (isLastMonth()) {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.add(Calendar.MONTH, -2);

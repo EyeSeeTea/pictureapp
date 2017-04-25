@@ -4,17 +4,12 @@ package org.eyeseetea.malariacare.domain.entity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 import org.eyeseetea.malariacare.data.sync.mappers.PushReportMapper;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
 import org.hisp.dhis.client.sdk.core.common.network.ApiMessage;
 import org.hisp.dhis.client.sdk.models.common.importsummary.ImportSummary;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -48,7 +43,7 @@ public class PushReportTest {
     @Test
     public void test_import_summary_conversion_on_success_json() {
         ImportSummary importSummary = getImportSummary(SUCCESS_IMPORT_SUMMARY_JSON);
-        PushReport pushReport = PushReportMapper.convertImportSummaryToPushReport(importSummary,
+        PushReport pushReport = PushReportMapper.convertFromImportSummaryToPushReport(importSummary,
                 COMPLETE_IMPORT_SUMMARY_KEY);
 
         assertThat(pushReport.getDescription().equals(importSummary.getDescription()), is(true));
@@ -80,8 +75,8 @@ public class PushReportTest {
 
     @Test
     public void test_import_summary_conversion_on_success_with_conflicts_from_Api_message() {
-        ImportSummary importSummary = getImportSummary(API_MESSAGE_WITH_CONFLICTS_JSON);  
-        PushReport pushReport = PushReportMapper.convertImportSummaryToPushReport(importSummary,
+        ImportSummary importSummary = getImportSummary(API_MESSAGE_WITH_CONFLICTS_JSON);
+        PushReport pushReport = PushReportMapper.convertFromImportSummaryToPushReport(importSummary,
                 API_MESSAGE_WITH_CONFLICTS_JSON_KEY);
 
         assertThat(pushReport.getEventUid().equals(importSummary.getReference()), is(true));

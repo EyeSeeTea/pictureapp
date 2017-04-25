@@ -46,9 +46,7 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.ExportData;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.CopyRightDialogUseCase;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -215,15 +213,15 @@ public abstract class BaseActivity extends ActionBarActivity {
                 break;
             case R.id.action_copyright:
                 debugMessage("User asked for copyright");
-                showAlertWithMessage(R.string.app_copyright, R.raw.copyright);
+                CopyRightDialogUseCase.showCopyRight(this, R.string.app_copyright, R.raw.copyright);
                 break;
             case R.id.action_licenses:
                 debugMessage("User asked for software licenses");
-                showAlertWithHtmlMessage(R.string.app_software_licenses, R.raw.licenses);
+                showAlertWithHtmlMessage(this, R.string.app_software_licenses, R.raw.licenses);
                 break;
             case R.id.action_eula:
                 debugMessage("User asked for EULA");
-                showAlertWithHtmlMessage(R.string.app_EULA, R.raw.eula);
+                showAlertWithHtmlMessage(this, R.string.app_EULA, R.raw.eula);
                 break;
             case android.R.id.home:
                 debugMessage("Go back");
@@ -332,13 +330,14 @@ public abstract class BaseActivity extends ActionBarActivity {
     /**
      * Shows an alert dialog with a big message inside based on a raw resource
      *
+     * @param baseActivity
      * @param titleId Id of the title resource
      * @param rawId   Id of the raw text resource
      */
-    private void showAlertWithMessage(int titleId, int rawId) {
-        InputStream message = getApplicationContext().getResources().openRawResource(rawId);
-        new AlertDialog.Builder(this)
-                .setTitle(getApplicationContext().getString(titleId))
+    public static void showAlertWithMessage(BaseActivity baseActivity, int titleId, int rawId) {
+        InputStream message = baseActivity.getResources().openRawResource(rawId);
+        new AlertDialog.Builder(baseActivity)
+                .setTitle(baseActivity.getString(titleId))
                 .setMessage(Utils.convertFromInputStreamToString(message))
                 .setNeutralButton(android.R.string.ok, null).create().show();
     }
@@ -349,12 +348,12 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param titleId Id of the title resource
      * @param rawId   Id of the raw text resource in HTML format
      */
-    private void showAlertWithHtmlMessage(int titleId, int rawId) {
-        InputStream message = getApplicationContext().getResources().openRawResource(rawId);
+    public static  void showAlertWithHtmlMessage(BaseActivity baseActivity, int titleId, int rawId) {
+        InputStream message = baseActivity.getResources().openRawResource(rawId);
         final SpannableString linkedMessage = new SpannableString(
                 Html.fromHtml(Utils.convertFromInputStreamToString(message).toString()));
         Linkify.addLinks(linkedMessage, Linkify.ALL);
-        showAlert(titleId, linkedMessage);
+        showAlert(baseActivity, titleId, linkedMessage);
     }
 
     /**
@@ -429,9 +428,9 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param titleId Id of the title resource
      * @param text    String of the message
      */
-    private void showAlert(int titleId, CharSequence text) {
-        final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(getApplicationContext().getString(titleId))
+    private static  void showAlert(BaseActivity baseActivity, int titleId, CharSequence text) {
+        final AlertDialog dialog = new AlertDialog.Builder(baseActivity)
+                .setTitle(baseActivity.getString(titleId))
                 .setMessage(text)
                 .setNeutralButton(android.R.string.ok, null).create();
         dialog.show();

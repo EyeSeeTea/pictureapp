@@ -16,6 +16,8 @@ public abstract class ALoginUseCase {
         void onNetworkError();
 
         void onConfigJsonNotPresent();
+
+        void onUnexpectedError();
     }
 
     public abstract void execute(Credentials credentials, Callback callback);

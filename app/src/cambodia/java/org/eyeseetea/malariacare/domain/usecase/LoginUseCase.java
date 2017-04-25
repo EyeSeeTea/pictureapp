@@ -80,6 +80,10 @@ public class LoginUseCase extends ALoginUseCase {
             callback.onNetworkError();
         } else if (throwable instanceof ConfigJsonNotPresentException) {
             callback.onConfigJsonNotPresent();
+        } else {
+            throwable.printStackTrace();
+            callback.onUnexpectedError();
         }
+
     }
 }

@@ -14,11 +14,16 @@ import org.eyeseetea.malariacare.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SurveyFragmentStrategy {
+public class SurveyFragmentStrategy extends ASurveyFragmentStrategy {
 
 
-    public static Survey getRenderSurvey(Question screenQuestion) {
+    public Survey getRenderSurvey(Question screenQuestion) {
         return Session.getMalariaSurvey();
+    }
+
+    @Override
+    boolean isStockSurvey(Survey survey) {
+        return false;
     }
 
     public String getMalariaProgram() {

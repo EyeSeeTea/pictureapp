@@ -1,10 +1,16 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
+import android.view.View;
+
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 
 import java.util.List;
 
@@ -86,6 +92,6 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
 
     @Override
     public void initSurveyValues() {
-        getMalariaSurvey().getValuesFromDB();
+        Session.getMalariaSurvey().getValuesFromDB();
     }
 }

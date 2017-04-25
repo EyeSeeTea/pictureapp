@@ -58,4 +58,34 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
             IQuestionView questionView) {
         return;
     }
+
+
+    @Override
+    public void OnOptionAnswered(View view, Option selectedOption, boolean moveToNextQuestion) {
+        if (moveToNextQuestion) {
+            mDynamicTabAdapter.navigationController.isMovingToForward = true;
+        }
+
+        Question question = (Question) view.getTag();
+
+        if (!selectedOption.getCode().isEmpty()
+                && question.getOutput() == Constants.DROPDOWN_OU_LIST) {
+            OrgUnit orgUnit = OrgUnit.findByUID(selectedOption.getCode());
+
+            mDynamicTabAdapter.assignOrgUnitToSurvey(Session.getMalariaSurvey(), orgUnit);
+        }
+
+
+        Question counterQuestion = question.findCounterByOption(selectedOption);
+        if (counterQuestion == null) {
+            mDynamicTabAdapter.saveOptionValue(view, selectedOption, question, moveToNextQuestion);
+        } else if (!(view instanceof ImageRadioButtonSingleQuestionView)) {
+            mDynamicTabAdapter.showConfirmCounter(view, selectedOption, question, counterQuestion);
+        }
+    }
+
+    @Override
+    public void initSurveyValues() {
+        getMalariaSurvey().getValuesFromDB();
+    }
 }

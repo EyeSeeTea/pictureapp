@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.domain.entity;
+package org.eyeseetea.malariacare.data.sync.mappers;
 
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -6,7 +6,6 @@ import static org.hamcrest.core.Is.is;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.eyeseetea.malariacare.data.sync.mappers.PushReportMapper;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
 import org.hisp.dhis.client.sdk.core.common.network.ApiMessage;
 import org.hisp.dhis.client.sdk.models.common.importsummary.ImportSummary;
@@ -14,7 +13,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class PushReportTest {
+public class PushReportMapperTest {
 
     public final String SUCCESS_IMPORT_SUMMARY_JSON =
             "{\"httpStatus\":\"OK\", \"httpStatusCode\":\"200\", \"message\":\"Import was successful.\", "

@@ -80,7 +80,7 @@ public class PushDhisSDKDataSource {
                                         + mapEventsImportSummary.size());
                         try {
                             callback.onSuccess(
-                                    PushReportMapper.convertFromImportSummariesToPushReports(
+                                    PushReportMapper.mapFromImportSummariesToPushReports(
                                             mapEventsImportSummary));
                         } catch (NullPointerException e) {
                             callback.onError(new PushReportException(e));

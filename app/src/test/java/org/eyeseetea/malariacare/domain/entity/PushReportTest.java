@@ -43,7 +43,7 @@ public class PushReportTest {
     @Test
     public void test_import_summary_conversion_on_success_json() {
         ImportSummary importSummary = getImportSummary(SUCCESS_IMPORT_SUMMARY_JSON);
-        PushReport pushReport = PushReportMapper.convertFromImportSummaryToPushReport(importSummary,
+        PushReport pushReport = PushReportMapper.mapFromImportSummaryToPushReport(importSummary,
                 COMPLETE_IMPORT_SUMMARY_KEY);
 
         assertThat(pushReport.getDescription().equals(importSummary.getDescription()), is(true));
@@ -76,7 +76,7 @@ public class PushReportTest {
     @Test
     public void test_import_summary_conversion_on_success_with_conflicts_from_Api_message() {
         ImportSummary importSummary = getImportSummary(API_MESSAGE_WITH_CONFLICTS_JSON);
-        PushReport pushReport = PushReportMapper.convertFromImportSummaryToPushReport(importSummary,
+        PushReport pushReport = PushReportMapper.mapFromImportSummaryToPushReport(importSummary,
                 API_MESSAGE_WITH_CONFLICTS_JSON_KEY);
 
         assertThat(pushReport.getEventUid().equals(importSummary.getReference()), is(true));

@@ -14,18 +14,18 @@ import java.util.Map;
 
 public class PushReportMapper {
 
-    public static Map<String, PushReport> convertFromImportSummariesToPushReports(
+    public static Map<String, PushReport> mapFromImportSummariesToPushReports(
             Map<java.lang.String, ImportSummary> mapEventsImportSummary) {
         Map<String, PushReport> pushReportMap = new HashMap<String, PushReport>();
         for (Map.Entry<String, ImportSummary> importSummary : mapEventsImportSummary.entrySet()) {
             pushReportMap.put(importSummary.getKey(),
-                    convertFromImportSummaryToPushReport(importSummary.getValue(),
+                    mapFromImportSummaryToPushReport(importSummary.getValue(),
                             importSummary.getKey()));
         }
         return pushReportMap;
     }
 
-    public static PushReport convertFromImportSummaryToPushReport(ImportSummary importSummary,
+    public static PushReport mapFromImportSummaryToPushReport(ImportSummary importSummary,
             String importSummaryKey) {
         PushReport pushReport = new PushReport();
         List<PushConflict> conflictList = new ArrayList<>();

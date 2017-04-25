@@ -102,6 +102,16 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             public void onNetworkError() {
                                 Log.e(this.getClass().getSimpleName(), "Network Error");
                             }
+
+                            @Override
+                            public void onConfigJsonNotPresent() {
+                                Log.e(this.getClass().getSimpleName(), "onConfigJsonNotPresent");
+                            }
+
+                            @Override
+                            public void onUnexpectedError() {
+                                Log.e(this.getClass().getSimpleName(), "Unexpected Error");
+                            }
                         });
             }
         });

@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.strategies;
 
+
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
 import org.eyeseetea.malariacare.data.database.model.Option;
@@ -15,18 +16,7 @@ import java.util.List;
 
 public class SurveyFragmentStrategy extends ASurveyFragmentStrategy {
 
-    public Survey getRenderSurvey(Question screenQuestion) {
-        return Session.getMalariaSurvey();
-    }
 
-    @Override
-    boolean isStockSurvey(Survey survey) {
-        return false;
-    }
-
-    public String getMalariaProgram() {
-        return Program.getFirstProgram().getUid();
-    }
     public static Survey getSessionSurveyByQuestion(Question question) {
         return Session.getMalariaSurvey();
     }
@@ -79,10 +69,28 @@ public class SurveyFragmentStrategy extends ASurveyFragmentStrategy {
         return numRequired;
 
     }
+
     public static void setSurveyAsSent(Survey survey) {
         //Check surveys not in progress
         survey.setStatus(SURVEY_SENT);
         survey.save();
+    }
+
+    public Survey getRenderSurvey(Question screenQuestion) {
+        return Session.getMalariaSurvey();
+    }
+
+    @Override
+    boolean isStockSurvey(Survey survey) {
+        return false;
+    }
+
+    public String getMalariaProgram() {
+        Program program = Program.getFirstProgram();
+        if (program == null) {
+            return "";
+        }
+        return Program.getFirstProgram().getUid();
     }
 
     public void removeSurveysInSession() {

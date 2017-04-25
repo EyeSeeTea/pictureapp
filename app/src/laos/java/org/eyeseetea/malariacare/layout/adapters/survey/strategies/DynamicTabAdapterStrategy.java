@@ -1,10 +1,16 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
+import android.view.View;
+
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 
 import java.util.List;
 
@@ -57,5 +63,35 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
     public void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter,
             IQuestionView questionView) {
         return;
+    }
+
+
+    @Override
+    public void OnOptionAnswered(View view, Option selectedOption, boolean moveToNextQuestion) {
+        if (moveToNextQuestion) {
+            mDynamicTabAdapter.navigationController.isMovingToForward = true;
+        }
+
+        Question question = (Question) view.getTag();
+
+        if (!selectedOption.getCode().isEmpty()
+                && question.getOutput() == Constants.DROPDOWN_OU_LIST) {
+            OrgUnit orgUnit = OrgUnit.findByUID(selectedOption.getCode());
+
+            mDynamicTabAdapter.assignOrgUnitToSurvey(Session.getMalariaSurvey(), orgUnit);
+        }
+
+
+        Question counterQuestion = question.findCounterByOption(selectedOption);
+        if (counterQuestion == null) {
+            mDynamicTabAdapter.saveOptionValue(view, selectedOption, question, moveToNextQuestion);
+        } else if (!(view instanceof ImageRadioButtonSingleQuestionView)) {
+            mDynamicTabAdapter.showConfirmCounter(view, selectedOption, question, counterQuestion);
+        }
+    }
+
+    @Override
+    public void initSurveyValues() {
+        Session.getMalariaSurvey().getValuesFromDB();
     }
 }

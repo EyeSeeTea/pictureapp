@@ -4,11 +4,12 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.MyanmarSession;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
 import org.eyeseetea.malariacare.fragments.HistoricReceiptBalanceFragment;
@@ -80,19 +81,19 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         stockSurvey.setEventDate(
                 survey.getEventDate());//asociate the malaria survey to the stock survey
         stockSurvey.save();
-        Session.setStockSurvey(stockSurvey);
+        MyanmarSession.setStockSurvey(stockSurvey);
         prepareLocationListener(activity, survey);
     }
 
     @Override
     public void sendSurvey() {
         Session.getMalariaSurvey().updateSurveyStatus();
-        Survey stockSurvey = Session.getStockSurvey();
+        Survey stockSurvey = MyanmarSession.getStockSurvey();
         if (stockSurvey != null) {
-            Session.getStockSurvey().complete();
+            MyanmarSession.getStockSurvey().complete();
             Date eventDate = new Date();
             saveEventDate(Session.getMalariaSurvey(), eventDate);
-            saveEventDate(Session.getStockSurvey(), eventDate);
+            saveEventDate(MyanmarSession.getStockSurvey(), eventDate);
             new CompletionSurveyUseCase().execute(Session.getMalariaSurvey().getId_survey());
         }
     }
@@ -105,7 +106,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         saveEventDate(survey, eventDate);
         survey.updateSurveyStatus();
         //Complete stockSurvey
-        survey = Session.getStockSurvey();
+        survey = MyanmarSession.getStockSurvey();
         saveEventDate(survey, eventDate);
         survey.complete();
     }
@@ -121,7 +122,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public boolean beforeExit(boolean isBackPressed) {
         Survey malariaSurvey = Session.getMalariaSurvey();
         boolean isMalariaBackPressed = beforeExitSurvey(isBackPressed, malariaSurvey);
-        Survey stockSurvey = Session.getStockSurvey();
+        Survey stockSurvey = MyanmarSession.getStockSurvey();
         boolean isStockBackPressed = beforeExitSurvey(isBackPressed, stockSurvey);
         if (!isMalariaBackPressed || !isStockBackPressed) {
             return false;

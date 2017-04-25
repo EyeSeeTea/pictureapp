@@ -54,10 +54,6 @@ public class Session {
      */
     private static Survey malariaSurvey;
     /**
-     * The current stock malariaSurvey
-     */
-    private static Survey stockSurvey;
-    /**
      * The current user
      */
     private static User user;
@@ -98,14 +94,6 @@ public class Session {
 
     public static synchronized void setMalariaSurvey(Survey malariaSurvey) {
         Session.malariaSurvey = malariaSurvey;
-    }
-
-    public static Survey getStockSurvey() {
-        return stockSurvey;
-    }
-
-    public static synchronized void setStockSurvey(Survey stockSurvey) {
-        Session.stockSurvey = stockSurvey;
     }
 
     public static Credentials getCredentials() {

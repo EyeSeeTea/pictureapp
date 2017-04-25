@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.MyanmarSession;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
@@ -18,13 +19,14 @@ import org.eyeseetea.malariacare.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SurveyFragmentStrategy {
+public class SurveyFragmentStrategy extends ASurveyFragmentStrategy {
 
-    public Survey getRenderSurvey(Question screenQuestion) {
-        return (isStockQuestion(screenQuestion) || TreatmentQueries.isDynamicStockQuestion(
-                screenQuestion.getUid()))
-                ? Session.getStockSurvey()
-                : getMalariaSurvey();
+    public static Survey getValueBySessionWithConditions(Question question) {
+        if (isStockQuestion(question) || TreatmentQueries.isPq(question.getUid())
+                || TreatmentQueries.isACT(question.getUid())) {
+            return MyanmarSession.getStockSurvey();
+        }
+        return Session.getMalariaSurvey();
     }
 
 
@@ -56,10 +58,9 @@ public class SurveyFragmentStrategy {
         }
     }
 
-
-    public void removeSurveysInSession() {
-        Session.setMalariaSurvey(null);
-        Session.setStockSurvey(null);
+    public static Survey getSessionSurveyByStock(Question question) {
+        return (TreatmentQueries.isStockQuestion(question) ? MyanmarSession.getStockSurvey()
+                : Session.getMalariaSurvey());
     }
 
     public static Survey getValueBySession() {
@@ -67,25 +68,12 @@ public class SurveyFragmentStrategy {
         return null;
     }
 
-    public static Survey getValueBySessionWithConditions(Question question) {
-        if (isStockQuestion(question) || TreatmentQueries.isPq(question.getUid())
-                || TreatmentQueries.isACT(question.getUid())) {
-            return Session.getStockSurvey();
-        }
-        return Session.getMalariaSurvey();
-    }
-
-    public static Survey getSessionSurveyByStock(Question question) {
-        return (TreatmentQueries.isStockQuestion(question) ? Session.getStockSurvey()
-                : Session.getMalariaSurvey());
-    }
-
     public static void saveValueDDlExtraOperations(Value value, Option option, String uid) {
         if (value != null && TreatmentQueries.isTreatmentQuestion(uid) && TreatmentQueries.isACT(
                 uid)
                 && !option.getId_option().equals(value.getId_option())) {
             List<Survey> surveys = new ArrayList<>();
-            surveys.add(Session.getStockSurvey());
+            surveys.add(MyanmarSession.getStockSurvey());
             surveys.add(Session.getMalariaSurvey());
             for (Survey survey : surveys) {
                 deleteStockValues(survey);
@@ -96,7 +84,7 @@ public class SurveyFragmentStrategy {
     public static Survey getSaveValuesDDLSurvey(Question question) {
         return ((isStockQuestion(question) || TreatmentQueries.isPq(question.getUid())
                 || TreatmentQueries.isACT(question.getUid()))
-                ? Session.getStockSurvey()
+                ? MyanmarSession.getStockSurvey()
                 : Session.getMalariaSurvey());
     }
 
@@ -107,7 +95,7 @@ public class SurveyFragmentStrategy {
                 || TreatmentQueries.isACT(question.getUid())) && value != null
                 && !value.getValue().equals(answer)) {
             List<Survey> surveys = new ArrayList<>();
-            surveys.add(Session.getStockSurvey());
+            surveys.add(MyanmarSession.getStockSurvey());
             surveys.add(Session.getMalariaSurvey());
             for (Survey surveyToClean : surveys) {
                 deleteStockValues(surveyToClean);
@@ -123,6 +111,18 @@ public class SurveyFragmentStrategy {
                                 Session.getMalariaSurvey()), Session.getMalariaSurvey());
             }
         }
+    }
+
+    public static Survey getSessionSurveyByQuestion(Question question) {
+        return (TreatmentQueries.isStockQuestion(question)) ? MyanmarSession.getStockSurvey()
+                : Session.getMalariaSurvey();
+    }
+
+    public Survey getRenderSurvey(Question screenQuestion) {
+        return (isStockQuestion(screenQuestion) || TreatmentQueries.isDynamicStockQuestion(
+                screenQuestion.getUid()))
+                ? MyanmarSession.getStockSurvey()
+                : getMalariaSurvey();
     }
 
     public static void recursiveRemover(Value value, Option option, Question question,
@@ -183,8 +183,29 @@ public class SurveyFragmentStrategy {
         }
     }
 
-    public static Survey getSessionSurveyByQuestion(Question question) {
-        return (TreatmentQueries.isStockQuestion(question)) ? Session.getStockSurvey()
-                : Session.getMalariaSurvey();
+    public void removeSurveysInSession() {
+        Session.setMalariaSurvey(null);
+        MyanmarSession.setStockSurvey(null);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (MyanmarSession.getStockSurvey() != null) {
+            MyanmarSession.getStockSurvey().getValuesFromDB();
+        }
+    }
+
+    @Override
+    public boolean areActiveSurveysInQuarantine() {
+        if (super.areActiveSurveysInQuarantine()) {
+            return true;
+        } else {
+            Survey survey = MyanmarSession.getStockSurvey();
+            if (survey != null && survey.isQuarantine()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

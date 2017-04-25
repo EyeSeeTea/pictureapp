@@ -6,8 +6,8 @@ import android.widget.Toast;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.utils.MyanmarSession;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.AssessmentAdapter;
 
@@ -33,7 +33,7 @@ public class DashboardAdapterStrategy implements IAssessmentAdapterStrategy {
         Survey stockSurvey = TreatmentQueries.getStockSurveyWithEventDate(
                 malariaSurvey.getEventDate());
         if (stockSurvey != null) {
-            Session.setStockSurvey(stockSurvey);
+            MyanmarSession.setStockSurvey(stockSurvey);
             return true;
         } else {
             Toast.makeText(mContext,

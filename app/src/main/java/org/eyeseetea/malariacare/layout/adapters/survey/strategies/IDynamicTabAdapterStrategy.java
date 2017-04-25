@@ -1,6 +1,9 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
 
+import android.view.View;
+
+import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
@@ -25,4 +28,8 @@ public interface IDynamicTabAdapterStrategy {
 
     void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter,
             IQuestionView questionView);
+
+    void OnOptionAnswered(View view, Option selectedOption, boolean moveToNextQuestion);
+
+    void initSurveyValues();
 }

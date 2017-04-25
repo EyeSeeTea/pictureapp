@@ -242,30 +242,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     public void OnOptionAnswered(View view, Option selectedOption, boolean moveToNextQuestion) {
-        if (moveToNextQuestion) {
-            navigationController.isMovingToForward = true;
-        }
-
-        Question question = (Question) view.getTag();
-
-        if (!selectedOption.getCode().isEmpty()
-                && question.getOutput() == Constants.DROPDOWN_OU_LIST) {
-            OrgUnit orgUnit = OrgUnit.findByUID(selectedOption.getCode());
-
-            assignOrgUnitToSurvey(Session.getMalariaSurvey(), orgUnit);
-            assignOrgUnitToSurvey(Session.getStockSurvey(), orgUnit);
-        }
-
-
-        Question counterQuestion = question.findCounterByOption(selectedOption);
-        if (counterQuestion == null) {
-            saveOptionValue(view, selectedOption, question, moveToNextQuestion);
-        } else if (!(view instanceof ImageRadioButtonSingleQuestionView)) {
-            showConfirmCounter(view, selectedOption, question, counterQuestion);
-        }
+        mDynamicTabAdapterStrategy.OnOptionAnswered(view, selectedOption, moveToNextQuestion);
     }
 
-    private void assignOrgUnitToSurvey(Survey survey, OrgUnit orgUnit) {
+    public void assignOrgUnitToSurvey(Survey survey, OrgUnit orgUnit) {
         if (survey != null) {
             survey.setOrgUnit(orgUnit);
             survey.save();
@@ -315,7 +295,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 || !answeredOption.getId_option().equals(selectedOption.getId_option()));
     }
 
-    private void showConfirmCounter(final View view, final Option selectedOption,
+    public void showConfirmCounter(final View view, final Option selectedOption,
             final Question question, Question questionCounter) {
 
         ConfirmCounterSingleCustomViewStrategy confirmCounterStrategy =
@@ -415,10 +395,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         // We get values from DB and put them in Session
         if (getMalariaSurvey() != null) {
-            if (Session.getStockSurvey() != null) {
-                Session.getStockSurvey().getValuesFromDB();
-            }
-            getMalariaSurvey().getValuesFromDB();
+            mDynamicTabAdapterStrategy.initSurveyValues();
         } else {
             //The survey in session is null when the user closes the surveyFragment, but the
             // getView is called.
@@ -911,7 +888,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     public void finishOrNext() {
         try{
             System.out.println(Session.getMalariaSurvey().getValuesFromDB().toString());
-            System.out.println(Session.getStockSurvey().getValuesFromDB().toString());
         }catch (Exception e){}
         if (Validation.hasErrors()) {
             Validation.showErrors();
@@ -1017,7 +993,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private void previous() {
         try{
             System.out.println(Session.getMalariaSurvey().getValuesFromDB().toString());
-            System.out.println(Session.getStockSurvey().getValuesFromDB().toString());
         }catch (Exception e){}
         if (!navigationController.hasPrevious()) {
             return;

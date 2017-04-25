@@ -32,12 +32,13 @@ import android.widget.RelativeLayout;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import org.eyeseetea.malariacare.strategies.ASurveyFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
@@ -70,6 +71,8 @@ public class SurveyFragment extends Fragment {
      */
     private LinearLayout content;
 
+    private ASurveyFragmentStrategy mSurveyFragmentStrategy;
+
     public static void nextProgressMessage() {
         if (DashboardActivity.dashboardActivity != null) {
             DashboardActivity.dashboardActivity.runOnUiThread(new Runnable() {
@@ -93,6 +96,8 @@ public class SurveyFragment extends Fragment {
             Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
 
+        mSurveyFragmentStrategy = new SurveyFragmentStrategy();
+
         if (container == null) {
             return null;
         }
@@ -108,12 +113,7 @@ public class SurveyFragment extends Fragment {
     public void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
-        if (Session.getMalariaSurvey() != null) {
-            Session.getMalariaSurvey().getValuesFromDB();
-        }
-        if (Session.getStockSurvey() != null) {
-            Session.getStockSurvey().getValuesFromDB();
-        }
+        mSurveyFragmentStrategy.onResume();
     }
 
     @Override
@@ -127,16 +127,7 @@ public class SurveyFragment extends Fragment {
     }
 
     private boolean areActiveSurveysInQuarantine() {
-        Survey survey = Session.getMalariaSurvey();
-        if (survey != null && survey.isQuarantine()) {
-            return true;
-        }
-        survey = Session.getStockSurvey();
-        if (survey != null && survey.isQuarantine()) {
-            return true;
-        }
-
-        return false;
+        return mSurveyFragmentStrategy.areActiveSurveysInQuarantine();
     }
 
     private void beforeExit() {

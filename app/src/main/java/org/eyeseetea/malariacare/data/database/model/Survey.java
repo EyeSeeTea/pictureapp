@@ -37,7 +37,6 @@ import static org.eyeseetea.malariacare.data.database.AppDatabase.valueAlias;
 import static org.eyeseetea.malariacare.data.database.AppDatabase.valueName;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -58,11 +57,9 @@ import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
-import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 
@@ -134,10 +131,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
      */
     List<SurveySchedule> surveySchedules;
 
-    /**
-     * Calculated answered ratio for this survey according to its values
-     */
-    SurveyAnsweredRatio answeredQuestionRatio;
 
     /**
      * Calculated main Score for this survey, is not persisted, just calculated on runtime
@@ -440,6 +433,17 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 .where(Survey_Table.status.eq(Constants.SURVEY_COMPLETED))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date))
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit_fk)).queryList();
+    }
+
+    public static Survey getSurveyWithEventDateProgram(Date event_date, String programUID) {
+
+        return new Select().from(Survey.class).as(surveyName)
+                .join(Program.class, Join.JoinType.LEFT_OUTER).as(programName)
+                .on(Survey_Table.id_program_fk.withTable(surveyAlias)
+                        .eq(Program_Table.id_program.withTable(programAlias)))
+                .where(Survey_Table.event_date.withTable(surveyAlias).eq(event_date))
+                .and(Program_Table.uid_program.withTable(programAlias).is(programUID))
+                .querySingle();
     }
 
     /**
@@ -910,51 +914,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
         return values;
     }
 
-    /**
-     * Ratio of completion is cached into answeredQuestionRatio in order to speed up loading
-     */
-    public SurveyAnsweredRatio getAnsweredQuestionRatio() {
-        if (answeredQuestionRatio == null) {
-            answeredQuestionRatio = SurveyAnsweredRatioCache.get(this.getId_survey());
-            if (answeredQuestionRatio == null) {
-                answeredQuestionRatio = reloadSurveyAnsweredRatio();
-            }
-        }
-        return answeredQuestionRatio;
-    }
-
-    /**
-     * Calculates the current ratio of completion for this survey
-     *
-     * @return SurveyAnsweredRatio that hold the total & answered questions.
-     */
-    public SurveyAnsweredRatio reloadSurveyAnsweredRatio() {
-        SurveyAnsweredRatio surveyAnsweredRatio;
-        //First parent is always required and not calculated.
-        int numRequired = 1;
-        int numAnswered = 0;
-
-        Program program = Program.getFirstProgram();
-        Tab tab = program.getTabs().get(0);
-        Question rootQuestion = Question.findRootQuestion(tab);
-        Question localQuestion = rootQuestion;
-        numRequired = SurveyFragmentStrategy.getNumRequired(numRequired, localQuestion);
-
-        //Add children required by each parent (value+question)
-        Survey survey = Survey.findById(id_survey);
-        for (Value value : survey.getValuesFromDB()) {
-            if (value.getQuestion().isCompulsory() && value.getId_option() != null) {
-                numRequired += Question.countChildrenByOptionValue(value.getId_option());
-            }
-        }
-        numAnswered += countCompulsoryBySurvey(this);
-        Log.d("survey answered", "num required: " + numRequired + " num answered: " + numAnswered);
-        surveyAnsweredRatio = new SurveyAnsweredRatio(numRequired, numAnswered);
-
-        SurveyAnsweredRatioCache.put(this.id_survey, surveyAnsweredRatio);
-        return surveyAnsweredRatio;
-    }
-
 
     public static int countCompulsoryBySurvey(Survey survey) {
         List<Question> questions = survey.getQuestionsFromValues();
@@ -1001,16 +960,14 @@ public class Survey extends BaseModel implements VisitableToSDK {
     /**
      * Updates ratios, status and completion date depending on the question and answer (text)
      */
-    public void updateSurveyStatus() {
+    public void updateSurveyStatus(SurveyAnsweredRatio surveyAnsweredRatio) {
         //Sent surveys are not updated
         if (this.isSent() || this.isHide() || this.isConflict()) {
             return;
         }
 
-        SurveyAnsweredRatio answeredRatio = this.reloadSurveyAnsweredRatio();
-
         //Update status & completionDate
-        if (answeredRatio.isCompleted()) {
+        if (surveyAnsweredRatio.isCompleted()) {
             complete();
         } else {
             setStatus(Constants.SURVEY_IN_PROGRESS);

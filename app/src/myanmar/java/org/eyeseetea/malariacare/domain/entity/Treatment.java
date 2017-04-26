@@ -283,6 +283,17 @@ public class Treatment {
         return answer;
     }
 
+    public List<Question> getACTAlternativeStockQuestions() {
+        List<org.eyeseetea.malariacare.data.database.model.Treatment> alternativeTreatments =
+                mTreatment.getAlternativeTreatments();
+        List<Question> alternativeQuestions = new ArrayList<>();
+        for (org.eyeseetea.malariacare.data.database.model.Treatment alternativeTreatment :
+                alternativeTreatments) {
+            alternativeQuestions.addAll(getQuestionsForTreatment(alternativeTreatment));
+        }
+        return alternativeQuestions;
+    }
+
     private List<Drug> getAlternativeDrugsForTreatment(
             org.eyeseetea.malariacare.data.database.model.Treatment mainTreatment) {
         List<org.eyeseetea.malariacare.data.database.model.Treatment> alternativeTreatments =

@@ -4,13 +4,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
 import org.eyeseetea.malariacare.domain.usecase.CompletionSurveyUseCase;
+import org.eyeseetea.malariacare.domain.usecase.GetSurveyAnsweredRatioUseCase;
 import org.eyeseetea.malariacare.fragments.HistoricReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.NewReceiptBalanceFragment;
 import org.eyeseetea.malariacare.fragments.StockFragment;
@@ -86,10 +88,17 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void sendSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
+        final Survey survey = Session.getMalariaSurvey();
+        GetSurveyAnsweredRatioUseCase getSurveyAnsweredRatioUseCase =
+                new GetSurveyAnsweredRatioUseCase(survey);
+        getSurveyAnsweredRatioUseCase.execute(new GetSurveyAnsweredRatioUseCase.Callback() {
+            @Override
+            public void onComplete(SurveyAnsweredRatio surveyAnsweredRatio) {
+                survey.updateSurveyStatus(surveyAnsweredRatio);
+            }
+        });
         Survey stockSurvey = Session.getStockSurvey();
         if (stockSurvey != null) {
-            Session.getStockSurvey().complete();
             Date eventDate = new Date();
             saveEventDate(Session.getMalariaSurvey(), eventDate);
             saveEventDate(Session.getStockSurvey(), eventDate);
@@ -101,13 +110,27 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void completeSurvey() {
         Date eventDate = new Date();
         //Complete malariaSurvey
-        Survey survey = Session.getMalariaSurvey();
+        final Survey survey = Session.getMalariaSurvey();
         saveEventDate(survey, eventDate);
-        survey.updateSurveyStatus();
+        GetSurveyAnsweredRatioUseCase getSurveyAnsweredRatioUseCase =
+                new GetSurveyAnsweredRatioUseCase(survey);
+        getSurveyAnsweredRatioUseCase.execute(new GetSurveyAnsweredRatioUseCase.Callback() {
+            @Override
+            public void onComplete(SurveyAnsweredRatio surveyAnsweredRatio) {
+                survey.updateSurveyStatus(surveyAnsweredRatio);
+            }
+        });
         //Complete stockSurvey
-        survey = Session.getStockSurvey();
+        final Survey stockSurvey = Session.getStockSurvey();
         saveEventDate(survey, eventDate);
-        survey.complete();
+        getSurveyAnsweredRatioUseCase =
+                new GetSurveyAnsweredRatioUseCase(survey);
+        getSurveyAnsweredRatioUseCase.execute(new GetSurveyAnsweredRatioUseCase.Callback() {
+            @Override
+            public void onComplete(SurveyAnsweredRatio surveyAnsweredRatio) {
+                stockSurvey.updateSurveyStatus(surveyAnsweredRatio);
+            }
+        });
     }
 
     //The eventDate is used to identify the stock survey for each malaria survey

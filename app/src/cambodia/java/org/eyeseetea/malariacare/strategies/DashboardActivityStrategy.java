@@ -11,6 +11,8 @@ import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
+import org.eyeseetea.malariacare.domain.usecase.GetSurveyAnsweredRatioUseCase;
 
 /**
  * Created by manuel on 28/12/16.
@@ -44,7 +46,16 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void sendSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
+        final Survey survey= Session.getMalariaSurvey();
+        GetSurveyAnsweredRatioUseCase getSurveyAnsweredRatioUseCase =
+                new GetSurveyAnsweredRatioUseCase(survey);
+        getSurveyAnsweredRatioUseCase.execute(new GetSurveyAnsweredRatioUseCase.Callback() {
+            @Override
+            public void onComplete(SurveyAnsweredRatio surveyAnsweredRatio) {
+                survey.updateSurveyStatus(surveyAnsweredRatio);
+            }
+        });
+
     }
 
     @Override
@@ -67,7 +78,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void completeSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
+        final Survey survey= Session.getMalariaSurvey();
+        GetSurveyAnsweredRatioUseCase getSurveyAnsweredRatioUseCase =
+                new GetSurveyAnsweredRatioUseCase(survey);
+        getSurveyAnsweredRatioUseCase.execute(new GetSurveyAnsweredRatioUseCase.Callback() {
+            @Override
+            public void onComplete(SurveyAnsweredRatio surveyAnsweredRatio) {
+                survey.updateSurveyStatus(surveyAnsweredRatio);
+            }
+        });
     }
 
     @Override

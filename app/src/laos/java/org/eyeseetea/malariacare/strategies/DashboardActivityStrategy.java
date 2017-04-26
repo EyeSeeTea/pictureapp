@@ -5,11 +5,13 @@ import android.app.Activity;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.DashboardActivity;
-import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
+import org.eyeseetea.malariacare.domain.usecase.GetSurveyAnsweredRatioUseCase;
+
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
@@ -41,12 +43,28 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void sendSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
+        final Survey survey = Session.getMalariaSurvey();
+        GetSurveyAnsweredRatioUseCase getSurveyAnsweredRatioUseCase =
+                new GetSurveyAnsweredRatioUseCase(survey);
+        getSurveyAnsweredRatioUseCase.execute(new GetSurveyAnsweredRatioUseCase.Callback() {
+            @Override
+            public void onComplete(SurveyAnsweredRatio surveyAnsweredRatio) {
+                survey.updateSurveyStatus(surveyAnsweredRatio);
+            }
+        });
     }
 
     @Override
     public void completeSurvey() {
-        Session.getMalariaSurvey().updateSurveyStatus();
+        final Survey survey = Session.getMalariaSurvey();
+        GetSurveyAnsweredRatioUseCase getSurveyAnsweredRatioUseCase =
+                new GetSurveyAnsweredRatioUseCase(survey);
+        getSurveyAnsweredRatioUseCase.execute(new GetSurveyAnsweredRatioUseCase.Callback() {
+            @Override
+            public void onComplete(SurveyAnsweredRatio surveyAnsweredRatio) {
+                survey.updateSurveyStatus(surveyAnsweredRatio);
+            }
+        });
     }
 
     @Override

@@ -32,7 +32,7 @@
         android:layout_marginRight="16dp"
         android:layout_weight="0.6"
         android:background="@android:drawable/btn_dropdown"
-        android:dropDownWidth="fill_parent"
+        android:dropDownWidth="wrap_content"
         android:paddingBottom="5dip"
         android:paddingLeft="10dp"
         android:paddingTop="5dip"

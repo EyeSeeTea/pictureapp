@@ -22,7 +22,7 @@ public class DateFilterTest {
     String thisWeekStart = "2017-12-18";
     String thisWeekEnd = "2017-12-24";
 
-    String thisMonthStart = "2017-11-01";
+    String thisMonthStart = "2017-12-01";
     String thisMonthEnd = "2017-12-30";
 
     String lastWeekStart = "2017-12-11";

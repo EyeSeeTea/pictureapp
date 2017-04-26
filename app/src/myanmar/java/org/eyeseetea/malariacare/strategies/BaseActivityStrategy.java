@@ -89,4 +89,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         MenuItem item = menu.findItem(R.id.demo_mode);
         item.setVisible(false);
     }
+
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithMessage(app_copyright, copyright);
+    }
 }

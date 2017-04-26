@@ -325,9 +325,9 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             //If the pushResult has some conflict the survey was saved in the server but
             // never resend, the survey is saved as survey in conflict.
             if (pushConflicts != null && pushConflicts.size() > 0) {
+                Log.d(TAG, "saveSurveyStatus: survey conflicts not null "
+                        + iSurvey.getId_survey());
                 for (PushConflict pushConflict : pushConflicts) {
-                    Log.d(TAG, "saveSurveyStatus: survey conflicts not null "
-                            + iSurvey.getId_survey());
                     iSurvey.setStatus(Constants.SURVEY_CONFLICT);
                     iSurvey.save();
                     if (pushConflict.getUid() != null) {
@@ -385,7 +385,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         if (pushReport.getStatus() == null) {
             return true;
         }
-        if (!pushReport.getStatus().equals(ImportSummary.Status.SUCCESS)) {
+        if (!pushReport.getStatus().equals(PushReport.Status.SUCCESS)) {
             return true;
         }
         return pushReport.getPushedValues().getImported() == 0;

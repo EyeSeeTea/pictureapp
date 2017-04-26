@@ -154,35 +154,6 @@ public class SettingsActivity extends PreferenceActivity implements
     /**
      * Sets the application languages and populate the language in the preference
      */
-    private static void setFontSizesLanguage(Preference preference) {
-        ListPreference listPreference = (ListPreference) preference;
-
-        CharSequence[] newEntries = new CharSequence[5];
-
-
-        newEntries[0] = getLocateString(PreferencesState.getInstance().getLanguageCode(), R.string.font_extra_small);
-        newEntries[1] = getLocateString(PreferencesState.getInstance().getLanguageCode(), R.string.font_small);
-        newEntries[2] = getLocateString(PreferencesState.getInstance().getLanguageCode(), R.string.font_medium);
-        newEntries[3] = getLocateString(PreferencesState.getInstance().getLanguageCode(), R.string.font_large);
-        newEntries[4] = getLocateString(PreferencesState.getInstance().getLanguageCode(), R.string.font_extra_large);
-
-        listPreference.setEntries(newEntries);
-    }
-
-    private static String getLocateString(String locate, int stringId) {
-        Context context = PreferencesState.getInstance().getContext();
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        Resources r = context.getResources();
-        Configuration c = r.getConfiguration();
-        String[] loc = r.getAssets().getLocales();
-        c.locale = new Locale(locate);
-        Resources res = new Resources(context.getAssets(), metrics, c);
-        return res.getString(stringId);
-    }
-
-    /**
-     * Sets the application languages and populate the language in the preference
-     */
     private static void setLanguageOptions(Preference preference) {
         ListPreference listPreference = (ListPreference) preference;
 
@@ -279,8 +250,6 @@ public class SettingsActivity extends PreferenceActivity implements
         if (BuildConfig.translations) {
             setLanguageOptions(
                     findPreference(getApplicationContext().getString(R.string.language_code)));
-            setFontSizesLanguage(
-                    findPreference(getApplicationContext().getString(R.string.font_sizes)));
         }
 
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
@@ -430,10 +399,6 @@ public class SettingsActivity extends PreferenceActivity implements
                 setLanguageOptions(findPreference(
                         PreferencesState.getInstance().getContext().getString(
                                 R.string.language_code)));
-                setFontSizesLanguage(
-                        findPreference(
-                                PreferencesState.getInstance().getContext().getString(
-                                        R.string.font_sizes)));
             }
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences

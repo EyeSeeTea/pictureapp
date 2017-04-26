@@ -82,4 +82,22 @@ public class PushReport {
     public enum Status {
         SUCCESS, OK, ERROR
     }
+
+    /**
+     * Checks whether the PushReport contains errors or has been successful.
+     * An import with 0 importedItems is an error too.
+     */
+    public boolean hasPushErrors() {
+
+        if (this.getPushedValues() == null) {
+            return true;
+        }
+        if (this.getStatus() == null) {
+            return true;
+        }
+        if (!this.getStatus().equals(PushReport.Status.SUCCESS)) {
+            return true;
+        }
+        return this.getPushedValues().getImported() == 0;
+    }
 }

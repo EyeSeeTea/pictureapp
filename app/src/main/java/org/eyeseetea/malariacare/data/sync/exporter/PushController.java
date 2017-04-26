@@ -35,8 +35,9 @@ import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
+import org.eyeseetea.malariacare.domain.exception.push.PushDhisException;
+import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -104,7 +105,8 @@ public class PushController implements IPushController {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        if (throwable instanceof PushReportException) {
+                        if (throwable instanceof PushReportException
+                                || throwable instanceof PushDhisException) {
                             mConvertToSDKVisitor.setSurveysAsQuarantine();
                         }
                         callback.onError(throwable);

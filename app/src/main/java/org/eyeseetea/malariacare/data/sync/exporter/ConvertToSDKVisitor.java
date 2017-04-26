@@ -44,7 +44,6 @@ import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
 import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.utils.Constants;
-import org.hisp.dhis.client.sdk.models.common.importsummary.ImportSummary;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -346,7 +345,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             }
 
             //No errors -> Save and next
-            if (!hasPushReportErrors(pushReport)) {
+            if (pushReport!=null && !pushReport.hasPushErrors()) {
                 Log.d(TAG, "saveSurveyStatus: report without errors and status ok "
                         + iSurvey.getId_survey());
                 if (iEvent.getEventDate() == null || iEvent.getEventDate().equals("")) {
@@ -368,27 +367,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         Log.d("DpBlank", "ImportSummary Saving survey as completed " + iSurvey + " event "
                 + iSurvey.getEventUid());
         Log.d(TAG, "PUSH process...OK. Survey saved");
-    }
-
-    /**
-     * Checks whether the given importSummary contains errors or has been successful.
-     * An import with 0 importedItems is an error too.
-     */
-    private boolean hasPushReportErrors(PushReport pushReport) {
-        if (pushReport == null) {
-            return true;
-        }
-
-        if (pushReport.getPushedValues() == null) {
-            return true;
-        }
-        if (pushReport.getStatus() == null) {
-            return true;
-        }
-        if (!pushReport.getStatus().equals(PushReport.Status.SUCCESS)) {
-            return true;
-        }
-        return pushReport.getPushedValues().getImported() == 0;
     }
 
     public void setSurveysAsQuarantine() {

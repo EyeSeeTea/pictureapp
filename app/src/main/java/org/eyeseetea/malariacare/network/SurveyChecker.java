@@ -22,6 +22,7 @@ import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.TrackedEntityDataValueFlow;
 import org.hisp.dhis.client.sdk.models.event.Event;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -60,8 +61,7 @@ public class SurveyChecker {
      * Get events filtered by program orgUnit and between dates.
      */
     public static List<EventExtended> getEvents(String program, String orgUnit, Date minDate,
-            Date maxDate) {
-        try {
+            Date maxDate) throws IOException, JSONException {
             Response response;
 
             String DHIS_URL = PreferencesState.getInstance().getDhisURL();
@@ -79,17 +79,18 @@ public class SurveyChecker {
                 Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
                 throw new IOException(response.message());
             }
-            JSONObject events = new JSONObject(response.body().string());
-            ObjectMapper mapper = new ObjectMapper();
+        JSONObject events = null;
+        try {
+            events = new JSONObject(response.body().string());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new JSONException(response.message());
+        }
+        ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.convertValue(mapper.readTree(events.toString()),
                     JsonNode.class);
 
             return getEvents(jsonNode);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
     }
 
     /**
@@ -110,10 +111,23 @@ public class SurveyChecker {
                         orgUnit);
                 Date maxDate = Survey.getMaxQuarantineEventDateByProgramAndOrgUnit(program,
                         orgUnit);
-                List<EventExtended> events = getEvents(program.getUid(), orgUnit.getUid(), minDate,
-                        maxDate);
+                List<EventExtended> events;
+                try {
+                    events = getEvents(program.getUid(), orgUnit.getUid(),
+                            minDate,
+                            maxDate);
+                }catch (IOException e){
+                    e.printStackTrace();
+                    return;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                if(events==null){
+                    return;
+                }
                 for (Survey survey : quarantineSurveys) {
-                    if (events != null && events.size() > 0) {
+                    if (events.size() > 0) {
                         updateQuarantineSurveysStatus(events, survey);
                     } else {
                         changeSurveyStatusFromQuarantineTo(survey, Constants.SURVEY_COMPLETED);

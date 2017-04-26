@@ -105,7 +105,12 @@ public class Utils {
         //if the id is 0 it not exist.
         if (identifier != 0) {
             try {
-                name = getLocateString(PreferencesState.getInstance().getLanguageCode(), identifier);
+                String activeLocale = PreferencesState.getInstance().getLanguageCode();
+                if(activeLocale.equals("")){
+                    Locale locale = Resources.getSystem().getConfiguration().locale;
+                    activeLocale = locale.getLanguage();
+                }
+                name = getLocateString(activeLocale, identifier);
             } catch (Resources.NotFoundException notFoundException) {
                 if (StringUtils.isNumeric(name)) {
                     name = Translation.getLocalizedString(Long.valueOf(name),

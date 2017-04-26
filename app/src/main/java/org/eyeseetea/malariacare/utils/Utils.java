@@ -117,7 +117,6 @@ public class Utils {
         return name;
     }
 
-
     private static String getLocateString(String locate, int stringId) {
         Context context = PreferencesState.getInstance().getContext();
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
@@ -127,6 +126,7 @@ public class Utils {
         Resources res = new Resources(context.getAssets(), metrics, c);
         return res.getString(stringId);
     }
+    
     public static String getCommitHash(Context context) {
         String stringCommit;
         //Check if lastcommit.txt file exist, and if not exist show as unavailable.

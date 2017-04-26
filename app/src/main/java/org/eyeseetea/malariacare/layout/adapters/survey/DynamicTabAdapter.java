@@ -293,8 +293,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             navigationController.setTotalPages(question.getTotalQuestions());
             isBackward = false;
         }
-
-        question.saveValuesDDL(selectedOption, value);
+        if (question.getOutput() != Constants.WARNING) {
+            question.saveValuesDDL(selectedOption, value);
+        }
 
         if (question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
                 question.getOutput().equals(Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT)) {

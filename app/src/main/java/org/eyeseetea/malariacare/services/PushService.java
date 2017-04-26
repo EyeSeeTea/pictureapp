@@ -21,7 +21,10 @@
 package org.eyeseetea.malariacare.services;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -87,8 +90,7 @@ public class PushService extends IntentService {
         if (!PENDING_SURVEYS_ACTION.equals(intent.getStringExtra(SERVICE_METHOD))) {
             return;
         }
-
-        mPushServiceStrategy.push();
+        if (isNetworkAvailable()) mPushServiceStrategy.push();
     }
 
     public void onPushFinished() {
@@ -97,5 +99,13 @@ public class PushService extends IntentService {
 
     public void onPushError(String message) {
         Log.w(TAG, "onPushFinished error: " + message);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

@@ -20,7 +20,9 @@
 package org.eyeseetea.malariacare.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.util.DisplayMetrics;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eyeseetea.malariacare.R;
@@ -103,7 +105,12 @@ public class Utils {
         //if the id is 0 it not exist.
         if (identifier != 0) {
             try {
-                name = context.getString(identifier);
+                String activeLocale = PreferencesState.getInstance().getLanguageCode();
+                if(activeLocale.equals("")){
+                    Locale locale = Resources.getSystem().getConfiguration().locale;
+                    activeLocale = locale.getLanguage();
+                }
+                name = getLocateString(activeLocale, identifier);
             } catch (Resources.NotFoundException notFoundException) {
                 if (StringUtils.isNumeric(name)) {
                     name = Translation.getLocalizedString(Long.valueOf(name),
@@ -115,6 +122,16 @@ public class Utils {
         return name;
     }
 
+    private static String getLocateString(String locate, int stringId) {
+        Context context = PreferencesState.getInstance().getContext();
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        Resources r = context.getResources();
+        Configuration c = r.getConfiguration();
+        c.locale = new Locale(locate);
+        Resources res = new Resources(context.getAssets(), metrics, c);
+        return res.getString(stringId);
+    }
+    
     public static String getCommitHash(Context context) {
         String stringCommit;
         //Check if lastcommit.txt file exist, and if not exist show as unavailable.

@@ -59,7 +59,7 @@ public class PushDhisSDKDataSource {
         final Set<String> eventUids = getEventUidToBePushed();
 
         if (eventUids.isEmpty() || eventUids.size() == 0) {
-            callback.onError(new SurveysToPushNotFoundException());
+            callback.onError(new SurveysToPushNotFoundException("Null events"));
             return;
         }
         Observable<Map<String, ImportSummary>> eventObserver =

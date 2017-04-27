@@ -300,7 +300,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
      */
     public void saveSurveyStatus(Map<String, PushReport> pushReportMap, final
     IPushController.IPushControllerCallback callback) {
-        Log.d(TAG, String.format("ImportSummary %d surveys savedSurveyStatus", surveys.size()));
+        Log.d(TAG, String.format("pushReportMap %d surveys savedSurveyStatus", surveys.size()));
         for (int i = 0; i < surveys.size(); i++) {
             Survey iSurvey = surveys.get(i);
             //Sets the survey status as quarantine to prevent wrong reports on unexpected exception.
@@ -315,7 +315,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
             if (pushReport == null) {
                 //the survey was saved as quarantine.
                 new PushReportException(
-                        "saveSurveyStatus: report is null in this survey: " + iSurvey.getId_survey());
+                        "Error saving survey: report is null for this survey: " + iSurvey.getId_survey());
                 //The loop should continue without throw the Exception.
                 continue;
             }
@@ -335,7 +335,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                                 " with error " + pushConflict.getValue()
                                 + " dataElement pushing survey: "
                                 + iSurvey.getId_survey());
-                        callback.onError(new PushValueException(
+                        callback.onInformativeError(new PushValueException(
                                 String.format(context.getString(R.string.error_conflict_message),
                                         iEvent.getEvent().getUId(), pushConflict.getUid(),
                                         pushConflict.getValue()) + ""));
@@ -351,7 +351,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 if (iEvent.getEventDate() == null || iEvent.getEventDate().equals("")) {
                     //If eventDate is null the event is invalid. The event is sent but we need
                     // inform to the user.
-                    callback.onError(new NullEventDateException(
+                    callback.onInformativeError(new NullEventDateException(
                             String.format(context.getString(R.string.error_message_push),
                                     iEvent.getEvent())));
                 }

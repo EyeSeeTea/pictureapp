@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
+import org.eyeseetea.malariacare.domain.exception.push.CheckBanOrgUnitException;
 import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
 import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
 import org.eyeseetea.malariacare.network.BanOrgUnitExecutor;
@@ -56,7 +57,7 @@ public class PushUseCase {
             callback.onPushInProgressError();
             return;
         }
-            mBanOrgUnitExecutor.isOrgUnitBanned(new BanOrgUnitExecutor.isOrgUnitBannedCallback() {
+        mBanOrgUnitExecutor.isOrgUnitBanned(new BanOrgUnitExecutor.isOrgUnitBannedCallback() {
                 @Override
                 public void onSuccess(boolean isBanned) {
                     OrgUnit orgUnit = OrgUnit.findByName(
@@ -98,7 +99,6 @@ public class PushUseCase {
     }
 
     private void runPush(final Callback callback) {
-        mPushController.changePushInProgress(true);
 
         mPushController.push(new IPushController.IPushControllerCallback() {
             @Override
@@ -111,25 +111,24 @@ public class PushUseCase {
             }
 
             @Override
+            public void onInformativeError(Throwable throwable) {
+                callback.onInformativeError(throwable.getMessage());
+            }
+
+            @Override
             public void onError(Throwable throwable) {
                 mPushController.changePushInProgress(false);
-
                 if (throwable instanceof NetworkException) {
                     callback.onNetworkError();
                 } else if (throwable instanceof ConversionException) {
                     callback.onConversionError();
                 } else if (throwable instanceof SurveysToPushNotFoundException) {
                     callback.onSurveysNotFoundError();
-                } else if (throwable instanceof PushValueException) {
-                    callback.onInformativeError(throwable.getMessage());
-                    banOrgUnitIfRequired(callback);
-                } else if (throwable instanceof PushReportException) {
-                    callback.onInformativeError(throwable.getMessage());
-                    banOrgUnitIfRequired(callback);
                 } else if (throwable instanceof ClosedUserPushException) {
                     callback.onClosedUser();
                 } else {
                     callback.onPushError();
+                    banOrgUnitIfRequired(callback);
                 }
             }
         });
@@ -140,6 +139,7 @@ public class PushUseCase {
         List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys(
                 DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR);
 
+        System.out.println("Banning org unit if is required");
         if (isSurveysOverLimit(sentSurveys)) {
             mBanOrgUnitExecutor.banOrgUnit(new BanOrgUnitExecutor.banOrgUnitCallback() {
                 @Override
@@ -150,7 +150,8 @@ public class PushUseCase {
 
                 @Override
                 public void onError() {
-                    callback.onPushError();
+                    System.out.println("OrgUnit banned error");
+                    callback.onBannedOrgUnitError();
                 }
             });
         }

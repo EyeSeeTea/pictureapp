@@ -98,11 +98,7 @@ class CheckBanOrgUnitAsync extends AsyncTask<Void, Void, Boolean> {
             return false;
         }
 
-        try {
             return !ServerAPIController.isOrgUnitOpen(url, orgUnitNameOrCode);
-        } catch (Exception ex) {
-            return false;
-        }
     }
 
     @Override

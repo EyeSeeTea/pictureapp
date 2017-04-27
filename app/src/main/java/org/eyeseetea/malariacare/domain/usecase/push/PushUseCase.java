@@ -1,9 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase.push;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -60,10 +56,6 @@ public class PushUseCase {
             callback.onPushInProgressError();
             return;
         }
-
-        if (!isNetworkAvailable()) {
-            callback.onNetworkError();
-        } else {
             mBanOrgUnitExecutor.isOrgUnitBanned(new BanOrgUnitExecutor.isOrgUnitBannedCallback() {
                 @Override
                 public void onSuccess(boolean isBanned) {
@@ -91,16 +83,6 @@ public class PushUseCase {
                     callback.onPushError();
                 }
             });
-        }
-
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager cm =
-                (ConnectivityManager) PreferencesState.getInstance().getContext().getSystemService(
-                        Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     private void resetOrgUnit() {

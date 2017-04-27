@@ -32,39 +32,37 @@ public abstract class APushServiceStrategy {
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override
             public void onComplete() {
-                Log.d(TAG, "push complete");
+                Log.d(TAG, "PUSHUSECASE ERRORO push complete" + PreferencesState.getInstance().isPushInProgress());
                 mPushService.onPushFinished();
             }
 
             @Override
             public void onPushInProgressError() {
-                onError("Push stopped, There is already a push in progress");
+                onError("PUSHUSECASE ERRORO Push stopped, There is already a push in progress" + PreferencesState.getInstance().isPushInProgress());
             }
 
             @Override
             public void onPushError() {
-                onError("Unexpected error has occurred in push process");
+                onError("PUSHUSECASE ERRORO "+"Unexpected error has occurred in push process" + PreferencesState.getInstance().isPushInProgress());
             }
 
             @Override
             public void onSurveysNotFoundError() {
-                onError("Pending surveys not found");
-            }
+                onError("PUSHUSECASE ERRORO "+"Pending surveys not found" + PreferencesState.getInstance().isPushInProgress());}
 
             @Override
             public void onConversionError() {
-                onError("An error has occurred to the conversion in push process");
+                onError("PUSHUSECASE ERRORO "+"An error has occurred to the conversion in push process" + PreferencesState.getInstance().isPushInProgress());
             }
 
             @Override
             public void onNetworkError() {
-                onError("Network not available");
-            }
+                onError("\"PUSHUSECASE ERRORO \"+Network not available" + PreferencesState.getInstance().isPushInProgress());}
 
             @Override
             public void onInformativeError(String message) {
                 showInDialog(PreferencesState.getInstance().getContext().getString(
-                        R.string.error_conflict_title), message);
+                        R.string.error_conflict_title), "PUSHUSECASE ERRORO "+message + PreferencesState.getInstance().isPushInProgress());
             }
 
             @Override
@@ -81,6 +79,7 @@ public abstract class APushServiceStrategy {
 
             @Override
             public void onClosedUser() {
+                System.out.println("PUSHUSECASE ERRORO "+PreferencesState.getInstance().isPushInProgress());
                 closeUserLogout();
             }
         });

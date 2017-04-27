@@ -60,7 +60,8 @@ public class Constants {
             IMAGE_RADIO_GROUP_NO_DATAELEMENT,
             REMINDER,
             QUESTION_LABEL,
-            DYNAMIC_STOCK_IMAGE_RADIO_BUTTON
+            DYNAMIC_STOCK_IMAGE_RADIO_BUTTON,
+            WARNING
     );
 
 

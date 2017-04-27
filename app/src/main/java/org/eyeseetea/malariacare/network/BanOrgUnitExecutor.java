@@ -19,7 +19,7 @@ public class BanOrgUnitExecutor {
     }
 
     public interface isOrgUnitBannedCallback {
-        void onSuccess(boolean isBanned);
+        void onSuccess(Boolean isBanned);
 
         void onError();
 
@@ -103,7 +103,7 @@ class CheckBanOrgUnitAsync extends AsyncTask<Void, Void, Boolean> {
             return !ServerAPIController.isOrgUnitOpen(url, orgUnitNameOrCode);
         } catch (Exception ex) {
             ex.printStackTrace();
-            return false;
+            return null;
         }
     }
 

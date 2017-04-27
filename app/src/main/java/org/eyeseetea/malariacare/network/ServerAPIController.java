@@ -39,6 +39,7 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -198,20 +199,11 @@ public class ServerAPIController {
     }*/
 
     /**
-     * Returns the version of the default server
-     * Null if something went wrong
-     */
-    public static String getServerVersion() {
-        return getServerVersion(PreferencesState.getInstance().getDhisURL());
-    }
-
-    /**
      * Returns the version of the given server.
      * Null if something went wrong
      */
-    public static String getServerVersion(String url) {
+    public static String getServerVersion(String url) throws IOException, JSONException {
         String serverVersion;
-        try {
             String urlServerInfo = url + DHIS_SERVER_INFO;
             Response response = executeCall(null, urlServerInfo, "GET");
 
@@ -223,34 +215,8 @@ public class ServerAPIController {
             }
             JSONObject data = parseResponse(response.body().string());
             serverVersion = data.getString(TAG_VERSION);
-        } catch (Exception ex) {
-            Log.e(TAG, "getServerVersion: " + ex.toString());
-            serverVersion = "";
-        }
         Log.i(TAG, String.format("getServerVersion(%s) -> %s", url, serverVersion));
         return serverVersion;
-    }
-
-    /**
-     * Checks if the given url corresponds to a 2.20 server (uses API for some ops)
-     */
-    public static boolean isAPIServer() {
-        return isAPIServer(getServerUrl());
-    }
-
-    /**
-     * Checks if the given url corresponds to a 2.20 server (uses API for some ops)
-     */
-    public static boolean isAPIServer(String url) {
-        String serverVersion = getServerVersion(url);
-        return isAPIVersion(serverVersion);
-    }
-
-    /**
-     * Checks if the given version corresponds to 2.20
-     */
-    public static boolean isAPIVersion(String serverVersion) {
-        return Constants.DHIS_API_SERVER.equals(serverVersion);
     }
 
     /**
@@ -269,113 +235,13 @@ public class ServerAPIController {
     }
 
     /**
-     * Checks if data can be pushed into the server
-     */
-    public static boolean isReadyForPush() {
-        String serverUrl = getServerUrl();
-        String orgUnit = getOrgUnit();
-        return isReadyForPush(serverUrl, orgUnit);
-    }
-
-    /**
-     * Checks if data can be pushed into the server
-     */
-    public static boolean isReadyForPush(String url, String orgUnitCodeOrName) {
-        if (checkIfNetworkIsAvailable(url, orgUnitCodeOrName)) return false;
-
-        if (checkIfIsValidProgram(url, orgUnitCodeOrName)) return false;
-
-        if (checkifOrgUnitExists(url, orgUnitCodeOrName)) return false;
-
-        if (checkIfOrgUnitIsOpen(url, orgUnitCodeOrName)) return false;
-
-        return true;
-    }
-
-    public static boolean checkIfNetworkIsAvailable(String url, String orgUnitCodeOrName) {
-        if (!isNetworkAvailable()) {
-            Log.w(TAG, String.format("isReadyForPush(%s,%s) -> Network not available", url,
-                    orgUnitCodeOrName));
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean checkIfIsValidProgram(String url, String orgUnitCodeOrName) {
-        if (!isValidProgram(url)) {
-            Log.w(TAG, String.format("isReadyForPush(%s,%s) -> Program not found in server", url,
-                    orgUnitCodeOrName));
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean checkifOrgUnitExists(String url, String orgUnitCodeOrName) {
-        if (orgUnitCodeOrName == null || orgUnitCodeOrName.equals("") || !isValidOrgUnit(url,
-                orgUnitCodeOrName)) {
-            Log.w(TAG, String.format("isReadyForPush(%s,%s) -> OrgUnit not found in server", url,
-                    orgUnitCodeOrName));
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean checkIfOrgUnitIsOpen(String url, String orgUnitCodeOrName) {
-        if (!isOrgUnitOpen(url, orgUnitCodeOrName)) {
-            Log.w(TAG, String.format("isOrgUnitOpen(%s,%s) -> OrgUnit closed, push is not enabled",
-                    url, orgUnitCodeOrName));
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Returns if the given url contains the current program
-     */
-    public static boolean isValidProgram(String url) {
-        Log.d(TAG, String.format("isValidProgram(%s) ...", url));
-        String programUIDInServer;
-        try {
-            String urlValidProgram = getIsValidProgramUrl(url);
-            Response response = executeCall(null, urlValidProgram, "GET");
-
-            //Error -> null
-            if (!response.isSuccessful()) {
-                Log.e(TAG, "isValidProgram (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
-            }
-
-            JSONObject data = parseResponse(response.body().string());
-            programUIDInServer = String.valueOf(data.get(TAG_ID));
-        } catch (Exception ex) {
-            Log.e(TAG, "isValidProgram: " + ex.toString());
-            return false;
-        }
-        boolean valid = getProgramUID() != null && getProgramUID().equals(programUIDInServer);
-        Log.d(TAG, String.format("isValidProgram(%s) -> %b (Thread: %d)", url, valid,
-                Thread.currentThread().getId()));
-        return valid;
-    }
-
-    /**
-     * Checks if the given orgUnit is present in the server.
-     * XXX The endpoint changes from using code|name field in API|SDK servers.
-     *
-     * @param orgUnitNameOrCode OrgUnit code if server is 2.20, OrgUnit name if server is 2.21,2.22
-     * @return true|false
-     */
-    public static boolean isValidOrgUnit(String url, String orgUnitNameOrCode) {
-        JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
-        return orgUnitJSON != null;
-    }
-
-    /**
      * Checks if the given orgUnit is open in the server.
      *
      * @param orgUnitNameOrCode OrgUnit code if server is 2.20, OrgUnit name if server is 2.21,2.22
      * @return true|false
      */
-    public static boolean isOrgUnitOpen(String url, String orgUnitNameOrCode) {
+    public static boolean isOrgUnitOpen(String url, String orgUnitNameOrCode)
+            throws IOException, JSONException {
         JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
         if (orgUnitJSON == null) {
             return false;
@@ -387,7 +253,7 @@ public class ServerAPIController {
     /**
      * Returns the orgUnit UID for the current server + orgunit
      */
-    public static String getOrgUnitUID() {
+    public static String getOrgUnitUID() throws IOException, JSONException {
         String serverUrl = getServerUrl();
         String orgUnit = getOrgUnit();
         return getOrgUnitUID(serverUrl, orgUnit);
@@ -396,7 +262,8 @@ public class ServerAPIController {
     /**
      * Returns the orgUnit UID for the given url and orgUnit (code or name)
      */
-    public static String getOrgUnitUID(String url, String orgUnitNameOrCode) {
+    public static String getOrgUnitUID(String url, String orgUnitNameOrCode)
+            throws IOException, JSONException {
         JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
         if (orgUnitJSON == null) {
             return null;
@@ -411,7 +278,7 @@ public class ServerAPIController {
     /**
      * Bans the orgUnit for future pushes (too many too quick)
      */
-    public static void banOrg(String url, String orgUnitNameOrCode) {
+    public static void banOrg(String url, String orgUnitNameOrCode) throws ApiCallException {
         Log.i(TAG, String.format("banOrg(%s,%s)", url, orgUnitNameOrCode));
         try {
             JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
@@ -432,7 +299,7 @@ public class ServerAPIController {
             patchClosedDate(url, orgUnitUID);
             patchDescriptionClosedDate(url, orgUnitUID, orgUnitDescription);
         } catch (Exception ex) {
-            Log.e(TAG, String.format("banOrg(%s,%s): %s", url, orgUnitNameOrCode, ex.getMessage()));
+            throw new ApiCallException(String.format("banOrg(%s,%s): %s", url, orgUnitNameOrCode, ex.getMessage()));
         }
     }
 
@@ -591,7 +458,8 @@ public class ServerAPIController {
     /**
      * Returns the orgunit data from the given server according to its current version
      */
-    static JSONObject getOrgUnitData(String url, String orgUnitNameOrCode) {
+    static JSONObject getOrgUnitData(String url, String orgUnitNameOrCode)
+            throws IOException, JSONException {
         //Version is required to choose which field to match
         String serverVersion = getServerVersion(url);
 
@@ -599,8 +467,6 @@ public class ServerAPIController {
         if (serverVersion == null) {
             return null;
         }
-
-        try {
             String urlOrgUnitData = getOrgUnitDataUrl(url, serverVersion, orgUnitNameOrCode);
             Response response = executeCall(null, urlOrgUnitData, "GET");
 
@@ -621,13 +487,6 @@ public class ServerAPIController {
                 return null;
             }
             return (JSONObject) orgUnitsArray.get(0);
-
-        } catch (Exception ex) {
-            Log.e(TAG, String.format("getOrgUnitData(%s,%s): %s", url, orgUnitNameOrCode,
-                    ex.toString()));
-            return null;
-        }
-
     }
 
     public static User pullUserAttributes(User loggedUser) {
@@ -680,7 +539,7 @@ public class ServerAPIController {
         return loggedUser;
     }
 
-    public static boolean isUserClosed(String userUid) {
+    public static Boolean isUserClosed(String userUid) {
         if (Session.getCredentials().isDemoCredentials()) {
             return false;
         }
@@ -696,7 +555,7 @@ public class ServerAPIController {
             Response response = ServerAPIController.executeCall(null, url, "GET");
             if (!response.isSuccessful()) {
                 Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
+                return null;
             }
             JSONObject body = new JSONObject(response.body().string());
             ObjectMapper mapper = new ObjectMapper();
@@ -718,7 +577,7 @@ public class ServerAPIController {
         } catch (Exception ex) {
             Log.e(TAG, "Cannot read user last updated from server with");
             ex.printStackTrace();
-            return false;
+            return null;
         }
         if(closedDate == null) {
             return false;

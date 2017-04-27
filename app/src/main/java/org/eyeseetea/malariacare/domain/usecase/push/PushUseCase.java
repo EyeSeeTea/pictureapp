@@ -53,13 +53,14 @@ public class PushUseCase {
     }
 
     public void execute(final Callback callback) {
-        if (mPushController.isPushInProgress()) {
-            callback.onPushInProgressError();
-            return;
-        }
         mBanOrgUnitExecutor.isOrgUnitBanned(new BanOrgUnitExecutor.isOrgUnitBannedCallback() {
                 @Override
-                public void onSuccess(boolean isBanned) {
+                public void onSuccess(Boolean isBanned) {
+                    if(isBanned==null){
+                        System.out.println("PUSHUSECASE ERRORO ERROR IN IS BANNED CHECKING");
+                        PreferencesState.getInstance().setPushInProgress(false);
+                        return;
+                    }
                     OrgUnit orgUnit = OrgUnit.findByName(
                             PreferencesState.getInstance().getOrgUnit());
                     if (isBanned) {
@@ -67,7 +68,6 @@ public class PushUseCase {
                             orgUnit.setBan(true);
                             orgUnit.save();
                             callback.onBannedOrgUnitError();
-
                         }
                     } else {
                         if (orgUnit != null && orgUnit.isBanned()) {
@@ -103,6 +103,7 @@ public class PushUseCase {
         mPushController.push(new IPushController.IPushControllerCallback() {
             @Override
             public void onComplete() {
+                System.out.println("PusUseCase Complete");
                 mPushController.changePushInProgress(false);
 
                 callback.onComplete();
@@ -117,6 +118,7 @@ public class PushUseCase {
 
             @Override
             public void onError(Throwable throwable) {
+                System.out.println("PusUseCase error");
                 mPushController.changePushInProgress(false);
                 if (throwable instanceof NetworkException) {
                     callback.onNetworkError();

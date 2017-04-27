@@ -22,8 +22,6 @@ package org.eyeseetea.malariacare.domain.boundary;
 public interface IPushController {
     void push(IPushControllerCallback callback);
 
-    boolean isPushInProgress();
-
     void changePushInProgress(boolean inProgress);
 
     interface IPushControllerCallback {

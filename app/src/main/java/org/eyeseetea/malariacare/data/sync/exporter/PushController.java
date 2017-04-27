@@ -122,8 +122,6 @@ public class PushController implements IPushController {
         for (Survey survey : surveys) {
             survey.setStatus(Constants.SURVEY_SENDING);
             survey.save();
-        }
-        for (Survey survey : surveys) {
             Log.d(TAG, "Status of survey to be push is = " + survey.getStatus());
             survey.accept(mConvertToSDKVisitor);
         }

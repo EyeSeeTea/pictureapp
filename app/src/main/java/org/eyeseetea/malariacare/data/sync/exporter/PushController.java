@@ -26,8 +26,6 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
@@ -74,11 +72,6 @@ public class PushController implements IPushController {
             AsyncUserPush asyncOpenUserPush = new AsyncUserPush();
             asyncOpenUserPush.execute(callback);
         }
-    }
-
-    @Override
-    public void changePushInProgress(boolean inProgress) {
-        PreferencesState.getInstance().setPushInProgress(inProgress);
     }
 
     private void pushData(final IPushControllerCallback callback) {

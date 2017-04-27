@@ -5,60 +5,23 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
-import org.eyeseetea.malariacare.domain.exception.push.CheckBanOrgUnitException;
-import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
-import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
 import org.eyeseetea.malariacare.network.BanOrgUnitExecutor;
 
 import java.util.List;
 
 public class PushUseCase {
 
-    public interface Callback {
-        void onComplete();
-
-        void onPushError();
-
-        void onPushInProgressError();
-
-        void onSurveysNotFoundError();
-
-        void onConversionError();
-
-        void onNetworkError();
-
-        void onInformativeError(String message);
-
-        void onClosedUser();
-
-        void onBannedOrgUnitError();
-
-        void onReOpenOrgUnit();
-    }
-
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR = 30;
-
-    private static int DHIS_LIMIT_HOURS = 1;
-
-    private IPushController mPushController;
-    private BanOrgUnitExecutor mBanOrgUnitExecutor;
-
-    public PushUseCase(IPushController pushController) {
-        mPushController = pushController;
-        mBanOrgUnitExecutor = new BanOrgUnitExecutor();
-    }
-
     public void execute(final Callback callback) {
         mBanOrgUnitExecutor.isOrgUnitBanned(new BanOrgUnitExecutor.isOrgUnitBannedCallback() {
                 @Override
                 public void onSuccess(Boolean isBanned) {
                     if(isBanned==null){
-                        System.out.println("PUSHUSECASE ERRORO ERROR IN IS BANNED CHECKING");
-                        PreferencesState.getInstance().setPushInProgress(false);
+                        callback.onApiCallError(new ApiCallException("Error checking banned call"));
                         return;
                     }
                     OrgUnit orgUnit = OrgUnit.findByName(
@@ -69,6 +32,7 @@ public class PushUseCase {
                             orgUnit.save();
                             callback.onBannedOrgUnitError();
                         }
+                        callback.onComplete();
                     } else {
                         if (orgUnit != null && orgUnit.isBanned()) {
                             orgUnit.setBan(false);
@@ -91,6 +55,42 @@ public class PushUseCase {
             });
     }
 
+    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR = 30;
+
+    private static int DHIS_LIMIT_HOURS = 1;
+
+    private IPushController mPushController;
+    private BanOrgUnitExecutor mBanOrgUnitExecutor;
+
+    public PushUseCase(IPushController pushController) {
+        mPushController = pushController;
+        mBanOrgUnitExecutor = new BanOrgUnitExecutor();
+    }
+
+    public interface Callback {
+        void onComplete();
+
+        void onPushError();
+
+        void onPushInProgressError();
+
+        void onSurveysNotFoundError();
+
+        void onConversionError();
+
+        void onNetworkError();
+
+        void onInformativeError(String message);
+
+        void onClosedUser();
+
+        void onBannedOrgUnitError();
+
+        void onReOpenOrgUnit();
+
+        void onApiCallError(ApiCallException e);
+    }
+
     private void resetOrgUnit() {
         //TODO: use case should not invoke directly PreferenceState because belongs to the outer
         // layer
@@ -104,7 +104,6 @@ public class PushUseCase {
             @Override
             public void onComplete() {
                 System.out.println("PusUseCase Complete");
-                mPushController.changePushInProgress(false);
 
                 callback.onComplete();
 
@@ -119,7 +118,6 @@ public class PushUseCase {
             @Override
             public void onError(Throwable throwable) {
                 System.out.println("PusUseCase error");
-                mPushController.changePushInProgress(false);
                 if (throwable instanceof NetworkException) {
                     callback.onNetworkError();
                 } else if (throwable instanceof ConversionException) {

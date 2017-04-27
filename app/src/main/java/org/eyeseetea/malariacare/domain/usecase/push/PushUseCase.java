@@ -82,6 +82,11 @@ public class PushUseCase {
                 public void onError() {
                     callback.onPushError();
                 }
+
+                @Override
+                public void onNetworkError() {
+                    callback.onNetworkError();
+                }
             });
     }
 

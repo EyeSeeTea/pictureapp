@@ -1,6 +1,11 @@
 package org.eyeseetea.malariacare.network;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
+
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 public class BanOrgUnitExecutor {
     //TODO: this class exists just for realize network operations
@@ -17,6 +22,8 @@ public class BanOrgUnitExecutor {
         void onSuccess(boolean isBanned);
 
         void onError();
+
+        void onNetworkError();
     }
 
     public void banOrgUnit(banOrgUnitCallback banOrgUnitCallback) {
@@ -25,8 +32,19 @@ public class BanOrgUnitExecutor {
 
     public void isOrgUnitBanned(isOrgUnitBannedCallback isOrgUnitBannedCallback) {
         //Check orgUnit state in server
+        if (isNetworkAvailable()) {
+            new CheckBanOrgUnitAsync(isOrgUnitBannedCallback).execute();
+        } else {
+            isOrgUnitBannedCallback.onNetworkError();
+        }
+    }
 
-        new CheckBanOrgUnitAsync(isOrgUnitBannedCallback).execute();
+    private boolean isNetworkAvailable() {
+        ConnectivityManager cm =
+                (ConnectivityManager) PreferencesState.getInstance().getContext().getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }
 
@@ -91,4 +109,6 @@ class CheckBanOrgUnitAsync extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         mBanOrgUnitCallback.onSuccess(result);
     }
+
+
 }

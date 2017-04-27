@@ -8,9 +8,9 @@ import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
 import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
-import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.network.BanOrgUnitExecutor;
 
 import java.util.List;
@@ -56,36 +56,38 @@ public class PushUseCase {
             callback.onPushInProgressError();
             return;
         }
+            mBanOrgUnitExecutor.isOrgUnitBanned(new BanOrgUnitExecutor.isOrgUnitBannedCallback() {
+                @Override
+                public void onSuccess(boolean isBanned) {
+                    OrgUnit orgUnit = OrgUnit.findByName(
+                            PreferencesState.getInstance().getOrgUnit());
+                    if (isBanned) {
+                        if (orgUnit != null && !orgUnit.isBanned()) {
+                            orgUnit.setBan(true);
+                            orgUnit.save();
+                            callback.onBannedOrgUnitError();
 
-        mBanOrgUnitExecutor.isOrgUnitBanned(new BanOrgUnitExecutor.isOrgUnitBannedCallback() {
-            @Override
-            public void onSuccess(boolean isBanned) {
-                OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
-                if (isBanned)
-                {
-                    if (orgUnit!=null && !orgUnit.isBanned()) {
-                        orgUnit.setBan(true);
-                        orgUnit.save();
-                        callback.onBannedOrgUnitError();
-
+                        }
+                    } else {
+                        if (orgUnit != null && orgUnit.isBanned()) {
+                            orgUnit.setBan(false);
+                            orgUnit.save();
+                            callback.onReOpenOrgUnit();
+                        }
+                        runPush(callback);
                     }
-                } else {
-                    if (orgUnit!=null && orgUnit.isBanned()) {
-                        orgUnit.setBan(false);
-                        orgUnit.save();
-                        callback.onReOpenOrgUnit();
-                    }
-                    runPush(callback);
                 }
-            }
 
-            @Override
-            public void onError() {
-                callback.onPushError();
-            }
-        });
+                @Override
+                public void onError() {
+                    callback.onPushError();
+                }
 
-
+                @Override
+                public void onNetworkError() {
+                    callback.onNetworkError();
+                }
+            });
     }
 
     private void resetOrgUnit() {

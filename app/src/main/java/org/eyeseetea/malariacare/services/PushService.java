@@ -87,7 +87,6 @@ public class PushService extends IntentService {
         if (!PENDING_SURVEYS_ACTION.equals(intent.getStringExtra(SERVICE_METHOD))) {
             return;
         }
-
         mPushServiceStrategy.push();
     }
 
@@ -98,4 +97,5 @@ public class PushService extends IntentService {
     public void onPushError(String message) {
         Log.w(TAG, "onPushFinished error: " + message);
     }
+
 }

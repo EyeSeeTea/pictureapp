@@ -68,6 +68,7 @@ class BanOrgUnitAsync extends AsyncTask<Void, Void, Boolean> {
 
             return true;
         } catch (Exception ex) {
+            ex.printStackTrace();
             return false;
         }
     }
@@ -98,7 +99,12 @@ class CheckBanOrgUnitAsync extends AsyncTask<Void, Void, Boolean> {
             return false;
         }
 
+        try {
             return !ServerAPIController.isOrgUnitOpen(url, orgUnitNameOrCode);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
     }
 
     @Override

@@ -68,6 +68,7 @@ import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.presentation.factory.IQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.MultiQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.SingleQuestionViewFactory;
+import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -926,7 +927,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 Value value = question.getValueBySession();
                 if (isDone(value)) {
                     navigationController.isMovingToForward = false;
-                    if ( !BuildConfig.reviewScreen) {
+                    if (!ReviewFragmentStrategy.shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
                         surveyShowDone();
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();
@@ -938,10 +939,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 next();
             }
         }, 750);
-    }
-
-    public boolean wasPatientTested() {
-        return getMalariaSurvey().isRDT() || BuildConfig.patientTestedByDefault;
     }
 
     /**

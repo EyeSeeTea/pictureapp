@@ -54,4 +54,8 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         }
         return true;
     }
+
+    public static boolean shouldShowReviewScreen(){
+        return true;
+    }
 }

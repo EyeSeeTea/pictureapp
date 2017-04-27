@@ -83,4 +83,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             }
         });
     }
+
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithMessage(app_copyright, copyright);
+    }
 }

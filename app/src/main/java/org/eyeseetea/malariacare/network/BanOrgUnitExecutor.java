@@ -4,8 +4,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.json.JSONException;
+
+import java.io.IOException;
 
 public class BanOrgUnitExecutor {
     //TODO: this class exists just for realize network operations
@@ -19,7 +24,7 @@ public class BanOrgUnitExecutor {
     }
 
     public interface isOrgUnitBannedCallback {
-        void onSuccess(boolean isBanned);
+        void onSuccess(Boolean isBanned);
 
         void onError();
 
@@ -61,15 +66,14 @@ class BanOrgUnitAsync extends AsyncTask<Void, Void, Boolean> {
         String url = ServerAPIController.getServerUrl();
         String orgUnitNameOrCode = ServerAPIController.getOrgUnit();
 
-        try {
             if (!orgUnitNameOrCode.isEmpty()) {
-                ServerAPIController.banOrg(url, orgUnitNameOrCode);
+                try {
+                    ServerAPIController.banOrg(url, orgUnitNameOrCode);
+                } catch (ApiCallException e) {
+                    return false;
+                }
             }
-
             return true;
-        } catch (Exception ex) {
-            return false;
-        }
     }
 
     @Override
@@ -99,14 +103,20 @@ class CheckBanOrgUnitAsync extends AsyncTask<Void, Void, Boolean> {
         }
 
         try {
+            Log.d(BanOrgUnitExecutor.class.getName(), "calling isOrgUnitOpen");
             return !ServerAPIController.isOrgUnitOpen(url, orgUnitNameOrCode);
-        } catch (Exception ex) {
-            return false;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
+        Log.d(BanOrgUnitExecutor.class.getName(), "result"+result);
         mBanOrgUnitCallback.onSuccess(result);
     }
 

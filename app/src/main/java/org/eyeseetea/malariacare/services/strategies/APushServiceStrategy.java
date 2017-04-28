@@ -38,7 +38,7 @@ public abstract class APushServiceStrategy {
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override
             public void onComplete() {
-                Log.d(TAG, "PUSHUSECASE ERROR push complete");
+                Log.d(TAG, "PUSHUSECASE WITHOUT ERROR push complete");
                 mPushService.onPushFinished();
                 PreferencesState.getInstance().setPushInProgress(false);
             }

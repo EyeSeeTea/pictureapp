@@ -201,4 +201,5 @@
 <string name="unsent_survey_filter_option_this_month">"This month"</string>
 <string name="unsent_survey_filter_option_last_week">"Last week"</string>
 <string name="unsent_survey_filter_option_last_month">"Last month"</string>
+<string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator. "</string>
 </resources>

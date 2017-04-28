@@ -207,7 +207,6 @@ public class TimePeriodCalculator {
     private void calculateMonthPeriods(Calendar date) {
         monthPeriodDates = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
         date.set(Calendar.DAY_OF_MONTH, 1);
-        date.add(Calendar.MONTH, -1);
         monthPeriodsKeys = calculatePeriods(date.getTime(), Calendar.MONTH, KEY_MONTH_FORMATTER,
                 monthPeriodDates);
     }

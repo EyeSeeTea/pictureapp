@@ -26,12 +26,11 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.PushDhisSDKDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -73,16 +72,6 @@ public class PushController implements IPushController {
             AsyncUserPush asyncOpenUserPush = new AsyncUserPush();
             asyncOpenUserPush.execute(callback);
         }
-    }
-
-    @Override
-    public boolean isPushInProgress() {
-        return PreferencesState.getInstance().isPushInProgress();
-    }
-
-    @Override
-    public void changePushInProgress(boolean inProgress) {
-        PreferencesState.getInstance().setPushInProgress(inProgress);
     }
 
     private void pushData(final IPushControllerCallback callback) {
@@ -129,19 +118,16 @@ public class PushController implements IPushController {
 
     public class AsyncUserPush extends AsyncTask<IPushControllerCallback, Void, Void> {
         //userCloseChecker is never saved, Only for check if the date is closed.
-        boolean isUserClosed = false;
+        Boolean isUserClosed = false;
         IPushControllerCallback callback;
 
         List<Survey> surveys = new ArrayList<>();
         @Override
         protected Void doInBackground(IPushControllerCallback... params) {
+            Log.d(TAG, "Async user push running");
             callback = params[0];
             surveys = Survey.getAllCompletedSurveysNoReceiptReset();
 
-            if (surveys == null || surveys.size() == 0) {
-                Log.d("DpBlank", "Sets of Surveys to push");
-                callback.onError(new SurveysToPushNotFoundException());
-            }
             User loggedUser = User.getLoggedUser();
             if (loggedUser != null && loggedUser.getUid() != null) {
                 isUserClosed = ServerAPIController.isUserClosed(User.getLoggedUser().getUid());
@@ -152,26 +138,35 @@ public class PushController implements IPushController {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            Log.d(TAG, "Async user push finish");
+            if(isUserClosed==null){
+                callback.onError(new ApiCallException("The user api call returns a exception"));
+                return;
+            }
             if (isUserClosed) {
                 Log.d(TAG, "The user is closed, Surveys not sent");
                 callback.onError(new ClosedUserPushException());
             } else {
-                for (Survey srv : surveys) {
-                    Log.d("DpBlank", "Survey to push " + srv.toString());
-                    for (Value dv : srv.getValuesFromDB()) {
-                        Log.d("DpBlank", "Values to push " + dv.toString());
-                    }
+                if (surveys == null || surveys.size() == 0) {
+                    callback.onError(new SurveysToPushNotFoundException("Null surveys"));
+                    return;
                 }
+
+                Log.d(TAG, "wipe events");
                 mPushDhisSDKDataSource.wipeEvents();
                 try {
+                    Log.d(TAG, "convert surveys to sdk");
                     convertToSDK(surveys);
                 } catch (Exception ex) {
                     callback.onError(new ConversionException(ex));
+                    return;
                 }
 
                 if (EventExtended.getAllEvents().size() == 0) {
                     callback.onError(new ConversionException());
+                    return;
                 } else {
+                    Log.d(TAG, "push data");
                     pushData(callback);
                 }
             }

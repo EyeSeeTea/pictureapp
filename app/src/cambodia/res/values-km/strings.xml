@@ -83,9 +83,9 @@
 <string name="option_confirm">"អះអាងជម្រើស"</string>
 <string name="dhis_url_error_generic">"កំហុសម៉ាស៊ីនបម្រើនេះ។ ម៉ាស៊ីនបម្រើមិនឆ្លើយតបឱ្យបានត្រឹមត្រូវ"</string>
 <string name="no_data">"គ្មាន​ទិន្នន័យ"</string>
-<string name="last_6_days">" ចុងក្រោយ 6 ថ្ងៃ"</string>
-<string name="last_6_weeks">"ចុងក្រោយ 6 សប្តាហ៍"</string>
-<string name="last_6_months">" 6 ខែចុង"</string>
+<string name="last_6_days">" ថ្មីបំផុត ៦ ថ្ងៃ"</string>
+<string name="last_6_weeks">"ថ្មីបំផុត ៦ សប្តាហ៍"</string>
+<string name="last_6_months">"ថ្មីបំផុត ៦ ខែ"</string>
 <string name="download">" ទាញយក:"</string>
 <string name="settings_select_language">"ភាសា"</string>
 <string name="system_defined">"ដែលបានកំណត់ប្រព័ន្ធ"</string>
@@ -106,9 +106,9 @@
 <string name="app_visual">"ដែលមើលឃើញ"</string>
 <string name="monitoring_title_dropdown">"សូមធ្វើការជ្រើសរើសរយៈពេលមួយ៖"</string>
 <string name="monitoring_title">"ការតាមដាន"</string>
-<string name="monitoring_label_option_months">"៦ ខែមុន"</string>
-<string name="monitoring_label_option_days">"៦ ថ្ងៃមុន"</string>
-<string name="monitoring_label_option_weeks">"៦ សប្តាហ៍មុន"</string>
+<string name="monitoring_label_option_months">"ថ្មីបំផុត ៦ ខែ"</string>
+<string name="monitoring_label_option_days">"ថ្មីបំផុត ៦ ថ្ងៃ"</string>
+<string name="monitoring_label_option_weeks">"ថ្មីបំផុត ៦ សប្តាហ៍"</string>
 <string name="monitoring_case_stats">"ករណីីសង្ស័យ និងករណីវិជ្ជមាន"</string>
 <string name="consumption">"ស្តុកនៃការប្រើប្រាស់"</string>
 <string name="monitoring_row_title_week">"សប្តាហ៍"</string>
@@ -209,5 +209,6 @@
 <string name="unsent_survey_filter_option_this_month">"ខែ​នេះ"</string>
 <string name="unsent_survey_filter_option_last_week">"សប្ដាហ៍​មុន"</string>
 <string name="unsent_survey_filter_option_last_month">"ខែមុន"</string>
+<string name="unsent_survey_filter_option_today">"ថ្ងៃនេះ"</string>
 <string name="error_message_push">"ព្រឹត្តិការណ៍នេះជាមួយនឹងលេខសម្គាល់អ្នកប្រើ %s ។ ត្រូវបានផ្ទុកឡើងដោយគ្មានកាលបរិច្ឆេទ។ សូមទាក់ទងអ្នកគ្រប់គ្រង។"</string>
 </resources>

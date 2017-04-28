@@ -81,9 +81,9 @@
 <string name="option_confirm">"Confirm option"</string>
 <string name="dhis_url_error_generic">"Dhis server error. The server not responding properly"</string>
 <string name="no_data">"no data"</string>
-<string name="last_6_days">"last 6 days"</string>
-<string name="last_6_weeks">"last 6 weeks"</string>
-<string name="last_6_months">"last 6 months"</string>
+<string name="last_6_days">"lastest 6 days"</string>
+<string name="last_6_weeks">"lastest 6 weeks"</string>
+<string name="last_6_months">"lastest 6 months"</string>
 <string name="download">"Download:"</string>
 <string name="settings_select_language">"Language"</string>
 <string name="system_defined">"System defined"</string>
@@ -104,9 +104,9 @@
 <string name="app_visual">"Visual"</string>
 <string name="monitoring_title_dropdown">"Please, select a time period"</string>
 <string name="monitoring_title">"MONITORING"</string>
-<string name="monitoring_label_option_months">"Last 6 months"</string>
-<string name="monitoring_label_option_days">"Last 6 days"</string>
-<string name="monitoring_label_option_weeks">"Last 6 weeks"</string>
+<string name="monitoring_label_option_months">"Lastest 6 months"</string>
+<string name="monitoring_label_option_days">"Lastest 6 days"</string>
+<string name="monitoring_label_option_weeks">"Lastest 6 weeks"</string>
 <string name="monitoring_case_stats">"Suspected and Positive cases"</string>
 <string name="consumption">"Stock Consumption"</string>
 <string name="monitoring_row_title_week">"Week"</string>
@@ -196,6 +196,7 @@
 <string name="review_title">"Please check before"</string>
 <string name="review_subtitle">"transmission"</string>
 <string name="unsent_survey_filter_number_of_cases">"%d Cases"</string>
+<string name="unsent_survey_filter_option_today">"Today"</string>
 <string name="unsent_survey_filter_option_this_week">"This week"</string>
 <string name="unsent_survey_filter_option_this_month">"This month"</string>
 <string name="unsent_survey_filter_option_last_week">"Last week"</string>

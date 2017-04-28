@@ -30,7 +30,7 @@ public class PushUseCase {
                         if (orgUnit != null && !orgUnit.isBanned()) {
                             orgUnit.setBan(true);
                             orgUnit.save();
-                            callback.onBannedOrgUnitError();
+                            callback.onBannedOrgUnit();
                         }
                         callback.onComplete();
                     } else {
@@ -84,7 +84,7 @@ public class PushUseCase {
 
         void onClosedUser();
 
-        void onBannedOrgUnitError();
+        void onBannedOrgUnit();
 
         void onReOpenOrgUnit();
 
@@ -107,7 +107,7 @@ public class PushUseCase {
 
                 callback.onComplete();
 
-                banOrgUnitIfRequired(callback);
+                banOrgUnitIfRequired();
             }
 
             @Override
@@ -128,13 +128,13 @@ public class PushUseCase {
                     callback.onClosedUser();
                 } else {
                     callback.onPushError();
-                    banOrgUnitIfRequired(callback);
+                    banOrgUnitIfRequired();
                 }
             }
         });
     }
 
-    private void banOrgUnitIfRequired(final Callback callback) {
+    private void banOrgUnitIfRequired() {
         //TODO: use case should not invoke directly Survey because belongs to the outer layer
         List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys(
                 DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR);
@@ -151,7 +151,6 @@ public class PushUseCase {
                 @Override
                 public void onError() {
                     System.out.println("OrgUnit banned error");
-                    callback.onBannedOrgUnitError();
                 }
             });
         }

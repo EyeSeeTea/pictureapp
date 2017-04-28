@@ -20,11 +20,6 @@ public class PushServiceStrategy extends APushServiceStrategy {
             Log.d(TAG, "execute mocked push");
             executeMockedPush();
         } else if (isLogged()) {
-            if(PreferencesState.getInstance().isPushInProgress()){
-                Log.d(TAG, "push is in progress");
-                return;
-            }
-            PreferencesState.getInstance().setPushInProgress(true);
             Log.d(TAG, "execute push");
             executePush();
         }

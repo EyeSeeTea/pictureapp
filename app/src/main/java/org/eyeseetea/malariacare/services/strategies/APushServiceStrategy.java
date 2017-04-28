@@ -25,6 +25,11 @@ public abstract class APushServiceStrategy {
     public abstract void push();
 
     protected void executePush() {
+        if(PreferencesState.getInstance().isPushInProgress()){
+            Log.d(TAG, "push is in progress");
+            return;
+        }
+        PreferencesState.getInstance().setPushInProgress(true);
         PushController pushController = new PushController(mPushService);
         PushUseCase pushUseCase = new PushUseCase(pushController);
 
@@ -33,7 +38,7 @@ public abstract class APushServiceStrategy {
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override
             public void onComplete() {
-                Log.d(TAG, "PUSHUSECASE ERROR push complete" + PreferencesState.getInstance().isPushInProgress());
+                Log.d(TAG, "PUSHUSECASE ERROR push complete");
                 mPushService.onPushFinished();
                 PreferencesState.getInstance().setPushInProgress(false);
             }
@@ -45,16 +50,16 @@ public abstract class APushServiceStrategy {
 
             @Override
             public void onPushError() {
-                onError("PUSHUSECASE ERROR "+"Unexpected error has occurred in push process");
+                onError("PUSHUSECASE ERROR Unexpected error has occurred in push process");
             }
 
             @Override
             public void onSurveysNotFoundError() {
-                onError("PUSHUSECASE ERROR "+"Pending surveys not found");}
+                onError("PUSHUSECASE ERROR Pending surveys not found");}
 
             @Override
             public void onConversionError() {
-                onError("PUSHUSECASE ERROR "+"An error has occurred to the conversion in push process");
+                onError("PUSHUSECASE ERROR An error has occurred to the conversion in push process");
             }
 
             @Override
@@ -68,7 +73,7 @@ public abstract class APushServiceStrategy {
             }
 
             @Override
-            public void onBannedOrgUnitError() {
+            public void onBannedOrgUnit() {
                 showInDialog("", PreferencesState.getInstance().getContext().getString(
                         R.string.exception_org_unit_banned));
             }
@@ -81,12 +86,12 @@ public abstract class APushServiceStrategy {
 
             @Override
             public void onApiCallError(ApiCallException e) {
-                onError(e.getMessage());
+                onError("PUSHUSECASE ERROR "+e.getMessage());
             }
 
             @Override
             public void onClosedUser() {
-                System.out.println("PUSHUSECASE ERROR "+PreferencesState.getInstance().isPushInProgress());
+                onError("PUSHUSECASE ERROR on closedUser "+PreferencesState.getInstance().isPushInProgress());
                 closeUserLogout();
             }
         });

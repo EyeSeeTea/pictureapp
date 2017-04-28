@@ -535,7 +535,12 @@ public class ServerAPIController {
      * (which is fine too)
      */
     static String getClosedDate(JSONObject orgUnitJSON) throws JSONException {
-        return orgUnitJSON.getString(TAG_CLOSEDDATE);
+            if(orgUnitJSON.has(TAG_CLOSEDDATE)) {
+                return orgUnitJSON.getString(TAG_CLOSEDDATE);
+            }
+            else{
+                return null;
+            }
     }
 
     /**

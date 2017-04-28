@@ -107,9 +107,9 @@ class CheckBanOrgUnitAsync extends AsyncTask<Void, Void, Boolean> {
             return !ServerAPIController.isOrgUnitOpen(url, orgUnitNameOrCode);
         } catch (IOException ex) {
             ex.printStackTrace();
+            return null;
         } catch (JSONException e) {
             e.printStackTrace();
-        }finally {
             return null;
         }
     }

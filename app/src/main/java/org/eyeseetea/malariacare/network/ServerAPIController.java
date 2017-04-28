@@ -280,9 +280,14 @@ public class ServerAPIController {
         try {
             Log.i(TAG, String.format("banOrg(%s,%s)", url, orgUnitNameOrCode));
             JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
-            String orgUnitUID = orgUnitJSON.getString(TAG_ID);
-            String orgUnitDescription;
-            orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
+            String orgUnitUID = null;
+            if(orgUnitJSON.has(TAG_ID)) {
+                orgUnitUID = orgUnitJSON.getString(TAG_ID);
+            }
+            String orgUnitDescription = "";
+            if(orgUnitJSON.has(TAG_DESCRIPTIONCLOSEDATE)) {
+                orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
+            }
             //NO OrgUnitUID -> Non blocking error, go on
             if (orgUnitUID == null) {
                 Log.e(TAG, String.format("banOrg(%s,%s) -> No UID", url, orgUnitNameOrCode));
@@ -397,8 +402,10 @@ public class ServerAPIController {
         }
         //{"organisationUnits":[{}]}
         JSONObject jsonResponse = parseResponse(response.body().string());
-        JSONArray orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATIONUNITS);
-
+        JSONArray orgUnitsArray = new JSONArray();
+        if(jsonResponse.has(TAG_ORGANISATIONUNITS)) {
+             orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATIONUNITS);
+        }
         //0| >1 matches -> Error
         if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
             Log.e(TAG, String.format("getOrgUnitData(%s,%s) -> Found %d matches", url,

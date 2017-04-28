@@ -296,6 +296,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         question.saveValuesDDL(selectedOption, value);
 
+
         if (question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
                 question.getOutput().equals(Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT)) {
             switchHiddenMatches(question, selectedOption);

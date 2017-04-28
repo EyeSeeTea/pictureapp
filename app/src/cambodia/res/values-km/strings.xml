@@ -202,4 +202,6 @@
 <string name="unsent_survey_filter_option_last_week">"សប្តាហ៍ចុងក្រោយ"</string>
 <string name="unsent_survey_filter_option_last_month">"ខែចុងក្រោយ"</string>
 <string name="dialog_reopen_org_unit">"ហាង %s គឺបើក។"</string>
+<string name="unsent_survey_filter_option_today">"ថ្ងៃនេះ"</string>
+<string name="error_message_push">"ព្រឹត្តិការណ៍នេះជាមួយនឹងលេខសម្គាល់អ្នកប្រើ %s ។ ត្រូវបានផ្ទុកឡើងដោយគ្មានកាលបរិច្ឆេទ។ សូមទាក់ទងអ្នកគ្រប់គ្រង។"</string>
 </resources>

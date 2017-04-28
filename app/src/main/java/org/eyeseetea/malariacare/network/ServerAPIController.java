@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.net.Proxy;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Utility class that shows specific operations to check server status with the given config
@@ -598,6 +599,11 @@ public class ServerAPIController {
         final String DHIS_URL = url;
 
         OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
+
+        client.setConnectTimeout(30, TimeUnit.SECONDS); // connect timeout
+        client.setReadTimeout(30, TimeUnit.SECONDS);    // socket timeout
+        client.setWriteTimeout(30, TimeUnit.SECONDS);    // write timeout
+        client.setRetryOnConnectionFailure(false);    // Cancel retry on failure
 
         BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
         client.setAuthenticator(basicAuthenticator);

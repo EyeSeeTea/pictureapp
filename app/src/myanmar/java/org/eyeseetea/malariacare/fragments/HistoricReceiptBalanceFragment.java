@@ -51,7 +51,9 @@ public class HistoricReceiptBalanceFragment extends Fragment {
     }
 
     private void initData() {
-        mSurveys = Survey.getSurveysWithProgramType(Program.findByUID(PreferencesState.getInstance().getContext().getString(R.string.stockProgramUID)), type);
+        mSurveys = Survey.getSurveysWithProgramType(Program.findByUID(
+                PreferencesState.getInstance().getContext().getString(R.string.stockProgramUID)),
+                type);
     }
 
 

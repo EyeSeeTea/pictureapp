@@ -8,7 +8,8 @@ import java.util.List;
 
 public class MockedPushSurveysUseCase {
     public void execute(Callback callback) {
-        List<Survey> surveys = Survey.getAllMalariaSurveysToBeSent(new SurveyFragmentStrategy().getMalariaProgram());
+        List<Survey> surveys = Survey.getAllMalariaSurveysToBeSent(
+                new SurveyFragmentStrategy().getMalariaProgram());
 
         for (Survey survey : surveys) {
             SurveyFragmentStrategy.setSurveyAsSent(survey);

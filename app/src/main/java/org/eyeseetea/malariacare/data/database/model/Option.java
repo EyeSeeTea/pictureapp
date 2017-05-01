@@ -75,13 +75,13 @@ public class Option extends BaseModel {
     public Option() {
     }
 
-    public Option(String name, Float factor, Answer answer) {
-        this.name = name;
+    public Option(String code, Float factor, Answer answer) {
+        this.code = code;
         this.factor = factor;
         this.setAnswer(answer);
     }
 
-    public Option(String code, String name, Float factor, Answer answer) {
+    public Option(String name, String code, Float factor, Answer answer) {
         this.name = name;
         this.factor = factor;
         this.code = code;
@@ -89,8 +89,8 @@ public class Option extends BaseModel {
     }
 
 
-    public Option(String name) {
-        this.name = name;
+    public Option(String code) {
+        this.code = code;
     }
 
     public static List<Option> getAllOptions() {
@@ -103,10 +103,10 @@ public class Option extends BaseModel {
                 .where(Option_Table.id_option.eq(id)).querySingle();
     }
 
-    public static Option findByCode(String code) {
+    public static Option findByName(String name) {
         return new Select()
                 .from(Option.class)
-                .where(Option_Table.code.eq(code)).querySingle();
+                .where(Option_Table.name.eq(name)).querySingle();
     }
 
     public Long getId_option() {
@@ -117,28 +117,28 @@ public class Option extends BaseModel {
         this.id_option = id_option;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getInternationalizedCode() {
-        return Utils.getInternationalizedString(code);
-    }
-
-    public String getInternationalizedName() {
-        return Utils.getInternationalizedString(name);
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getInternationalizedName() {
+        return Utils.getInternationalizedString(name);
+    }
+
+    public String getInternationalizedCode() {
+        return Utils.getInternationalizedString(code);
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Float getFactor() {

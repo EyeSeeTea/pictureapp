@@ -94,7 +94,7 @@ public class ReviewFragment extends Fragment {
                 isReviewValue = false;
             }
             if (isReviewValue) {
-                if (!ReviewFragmentStrategy.isValidValue(value)) {
+                if (ReviewFragmentStrategy.isValidValue(value)) {
                     reviewValues.add(value);
                 }
             }

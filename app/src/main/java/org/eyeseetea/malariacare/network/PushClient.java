@@ -141,7 +141,7 @@ public class PushClient {
                 this.survey.save();
 
                 //check if the user was sent more than the limit
-                ServerAPIController.banOrgUnitIfRequired();
+                //ServerAPIController.banOrgUnitIfRequired();
             }
             return result;
         } catch (Exception ex) {

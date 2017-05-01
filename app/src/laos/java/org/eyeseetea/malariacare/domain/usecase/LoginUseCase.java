@@ -22,7 +22,11 @@ public class LoginUseCase extends ALoginUseCase {
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
-                        logoutAndHardcodedLogin(credentials, loginCallback);
+                        if (!credentials.isDemoCredentials()) {
+                            logoutAndHardcodedLogin(credentials, loginCallback);
+                        } else {
+                            loginCallback.onLoginSuccess();
+                        }
                     }
 
                     @Override
@@ -32,7 +36,8 @@ public class LoginUseCase extends ALoginUseCase {
                 });
     }
 
-    private void logoutAndHardcodedLogin(final Credentials credentials, final Callback loginCallback) {
+    private void logoutAndHardcodedLogin(final Credentials credentials,
+            final Callback loginCallback) {
         mAuthenticationManager.logout(new IAuthenticationManager.Callback<Void>() {
             @Override
             public void onSuccess(Void result) {
@@ -48,7 +53,7 @@ public class LoginUseCase extends ALoginUseCase {
     }
 
     private void harcodedLogin(Credentials credentials, final Callback loginCallback) {
-        mAuthenticationManager.login(credentials.getServerURL(),
+        mAuthenticationManager.hardcodedLogin(credentials.getServerURL(),
                 new IAuthenticationManager.Callback<UserAccount>() {
 
                     @Override
@@ -71,6 +76,9 @@ public class LoginUseCase extends ALoginUseCase {
             callback.onInvalidCredentials();
         } else if (throwable instanceof NetworkException) {
             callback.onNetworkError();
+        } else {
+            throwable.printStackTrace();
+            callback.onUnexpectedError();
         }
     }
 }

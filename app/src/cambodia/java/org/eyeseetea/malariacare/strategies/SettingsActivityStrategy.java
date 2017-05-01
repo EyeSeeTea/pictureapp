@@ -4,6 +4,7 @@ import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
 import org.eyeseetea.malariacare.SettingsActivity;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.layout.listeners.LoginRequiredOnPreferenceClickListener;
 import org.eyeseetea.malariacare.layout.listeners.PullRequiredOnPreferenceChangeListener;
 
@@ -48,4 +49,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         return pullRequiredOnPreferenceChangeListener;
     }
 
+    public static boolean showAnnouncementOnBackPressed() {
+        return true;
+    }
 }

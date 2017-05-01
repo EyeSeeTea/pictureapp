@@ -180,7 +180,7 @@ public class Migration2Database extends BaseMigration {
                 PreferencesState.getInstance().getContext().getAssets());
         List<Question> questions = new Select().from(Question.class).queryList();
         for (Question question : questions) {
-            question.setOutput(mapQuestionOutputs.get(question.getCode()));
+            question.setOutput(mapQuestionOutputs.get(question.getName()));
             question.save();
         }
     }

@@ -56,8 +56,11 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
     protected AssessmentAdapter adapter;
     private SurveyReceiver surveyReceiver;
     private List<Survey> surveys;
+    private ListView mListView;
+    DashboardSentFragment mDashboardSentFragment;
 
     public DashboardSentFragment() {
+        mDashboardSentFragment = this;
         this.surveys = new ArrayList();
     }
 
@@ -131,16 +134,20 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
                     inflater);
             View footer = inflater.inflate(this.adapter.getFooterLayout(), null, false);
 
-            ListView listView = getListView();
+            mListView = getListView();
+            View viewFilter = DashboardHeaderStrategy.getInstance().loadFilter(inflater);
+            if (viewFilter != null) {
+                mListView.addHeaderView(viewFilter);
+            }
             if (header != null) {
-                listView.addHeaderView(header);
+                mListView.addHeaderView(header);
             }
             View button = footer.findViewById(R.id.plusButton);
             if (button != null) {
                 button.setVisibility(View.GONE);
             }
-            listView.addFooterView(footer);
-            LayoutUtils.setRowDivider(listView);
+            mListView.addFooterView(footer);
+            LayoutUtils.setRowDivider(mListView);
             setListAdapter((BaseAdapter) adapter);
             setListShown(false);
         }
@@ -217,6 +224,7 @@ public class DashboardSentFragment extends ListFragment implements IDashboardFra
                     Session.valuesLock.readLock().unlock();
                 }
                 reloadSurveys(surveysFromService);
+                new DashboardHeaderStrategy().initFilters(mDashboardSentFragment, mListView, surveysFromService);
             }
         }
     }

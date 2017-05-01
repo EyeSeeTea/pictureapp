@@ -9,3 +9,4 @@ class SingleQuestionViewFactoryStrategy {
         return null;
     }
 }
+

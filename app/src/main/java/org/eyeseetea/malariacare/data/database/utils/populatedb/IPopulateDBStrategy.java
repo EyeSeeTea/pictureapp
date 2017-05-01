@@ -11,4 +11,7 @@ public interface IPopulateDBStrategy {
 
     InputStream openFile(Context context, String table)
             throws IOException, FileNotFoundException;
+    void logoutWipe();
+    void createDummyOrganisationInDB();
+    void createDummyOrgUnitsDataInDB(Context context);
 }

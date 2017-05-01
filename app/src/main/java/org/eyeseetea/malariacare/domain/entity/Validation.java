@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by idelcano on 09/01/2017.
- */
-
 public class Validation {
     private static Validation instance;
     private static List<Object> activeInputs;

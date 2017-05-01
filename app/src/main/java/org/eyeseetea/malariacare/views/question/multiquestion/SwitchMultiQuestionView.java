@@ -49,8 +49,8 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
         trueOption = options.get(0);
         falseOption = options.get(1);
 
-        switchTrueTextView.setText(Utils.getInternationalizedString(trueOption.getCode()));
-        switchFalseTextView.setText(Utils.getInternationalizedString(falseOption.getCode()));
+        switchTrueTextView.setText(Utils.getInternationalizedString(trueOption.getName()));
+        switchFalseTextView.setText(Utils.getInternationalizedString(falseOption.getName()));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class SwitchMultiQuestionView extends AOptionQuestionView implements IQue
         if (value == null || value.getValue() == null) {
             setDefaultValue();
         } else {
-            switchView.setChecked(value.getValue().equals(trueOption.getName()));
+            switchView.setChecked(value.getValue().equals(trueOption.getCode()));
         }
     }
 

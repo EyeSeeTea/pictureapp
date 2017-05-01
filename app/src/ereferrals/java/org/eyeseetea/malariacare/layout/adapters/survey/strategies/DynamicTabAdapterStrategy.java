@@ -23,9 +23,9 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
                 && output != Constants.RADIO_GROUP_HORIZONTAL && output != Constants.REMINDER
                 && output != Constants.WARNING;
     }
-
     @Override
     public void initSurveys(boolean readOnly) {
+        return;
     }
 
     @Override
@@ -33,20 +33,21 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
         return null;
     }
 
+
     @Override
     public void instanceOfSingleQuestion(IQuestionView questionView, Question screenQuestion) {
-
+        return;
     }
 
     @Override
     public void instanceOfMultiQuestion(IQuestionView questionView, Question screenQuestion) {
-
+        return;
     }
 
     @Override
     public void renderParticularSurvey(Question screenQuestion, Survey survey,
             IQuestionView questionView) {
-
+        return;
     }
 
     @Override
@@ -57,6 +58,6 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
     @Override
     public void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter,
             IQuestionView questionView) {
-
+        return;
     }
 }

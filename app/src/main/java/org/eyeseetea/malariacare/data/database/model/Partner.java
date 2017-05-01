@@ -20,7 +20,9 @@ public class Partner extends BaseModel {
     @Column
     String name;
 
-    public Partner() {}
+    public Partner() {
+    }
+
     static final String DEFAULT_PARTNER = "MATRIX";
 
 

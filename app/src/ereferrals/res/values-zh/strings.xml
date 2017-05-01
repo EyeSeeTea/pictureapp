@@ -216,10 +216,12 @@
 <string name="option_counter">"重复："</string>
 <string name="option_confirm">"确认选项"</string>
 <string name="monitor_row_title_positive">"阳性病例"</string>
+<string name="monitor_row_title_negative">负</string>
 <string name="monitor_row_title_referral">"推荐"</string>
 <string name="monitor_row_title_act_stockout">"未处理数量（ACT库存"</string>
 <string name="monitor_row_title_denied">"否认患者"</string>
 <string name="monitor_row_title_rdt_stockout">"未测试数（Rdt缺货)"</string>
+<string name="monitor_row_title_positivity_rate">"积极率"</string>
 <string name="review_title">"请检查之前"</string>
 <string name="review_subtitle">"传输"</string>
 <string name="not_tested">"未测试"</string>
@@ -299,8 +301,9 @@
 <string name="previous_distributions">"先前分配"</string>
 <string name="network_error">"有與網絡問題 請稍後重試"</string>
 <string name="login_invalid_credentials">"無效的憑證"</string>
-    <string name="login_unexpected_error">"发生错误，请稍后再试"</string>
+<string name="login_unexpected_error">"发生错误，请稍后再试"</string>
 <string name="login_invalid_server_url">"無效的服務器"</string>
+<string name="login_error_json">读取json配置文件时出错。 请联系您的管理员。</string>
 <string name="see_resets">"查看之前校正库存登记"</string>
 <string name="new_reset">"校正实际库存登记"</string>
 <string name="previous_resets"></string>

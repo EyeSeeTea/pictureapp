@@ -31,6 +31,12 @@ public class PullDhisSDKDataSourceStrategy implements IPullDhisSDKDataSourceStra
     }
 
     @Override
+    public void pullMetadata(IPullDhisSDKDataSourceStrategy mPullDhisSDKDataSourceStrategy,
+            IDataSourceCallback<List<OrganisationUnit>> callback) {
+
+    }
+
+    @Override
     public void onMetadataSucceed(final IDataSourceCallback callback,
             final List<OrganisationUnit> organisationUnits) {
         CategoryOptionGroupFilters categoryOptionGroupFilters = new CategoryOptionGroupFilters();

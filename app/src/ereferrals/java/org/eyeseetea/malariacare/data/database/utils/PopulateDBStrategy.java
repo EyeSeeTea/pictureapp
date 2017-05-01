@@ -6,25 +6,15 @@ import android.content.res.AssetManager;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.model.Answer;
-import org.eyeseetea.malariacare.data.database.model.Drug;
-import org.eyeseetea.malariacare.data.database.model.DrugCombination;
 import org.eyeseetea.malariacare.data.database.model.Header;
 import org.eyeseetea.malariacare.data.database.model.Match;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.Translation;
-import org.eyeseetea.malariacare.data.database.model.Treatment;
-import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
-import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.IPopulateDBStrategy;
 
 import java.io.FileNotFoundException;
@@ -35,9 +25,6 @@ import java.util.List;
 
 public class PopulateDBStrategy implements IPopulateDBStrategy {
     public static List<Class<? extends BaseModel>> allMandatoryTables = Arrays.asList(
-            User.class,
-            StringKey.class,
-            Translation.class,
             Program.class,
             Tab.class,
             Header.class,
@@ -47,18 +34,13 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
             Question.class,
             QuestionRelation.class,
             Match.class,
-            QuestionOption.class,
-            QuestionThreshold.class,
-            Drug.class,
-            Partner.class,
-            Treatment.class,
-            DrugCombination.class,
-            TreatmentMatch.class,
-            OrgUnit.class
+            QuestionOption.class
     );
 
-    public static List<Class<? extends BaseModel>> getAllMandatoryTables() {
-        return allMandatoryTables;
+
+
+    @Override
+    public void createDummyOrganisationInDB() {
     }
 
     @Override
@@ -80,8 +62,8 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
 
     }
 
-    @Override
-    public void createDummyOrganisationInDB() {
 
+    public static List<Class<? extends BaseModel>> getAllMandatoryTables() {
+        return allMandatoryTables;
     }
 }

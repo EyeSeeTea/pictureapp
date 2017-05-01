@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
+import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
+
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
@@ -73,12 +75,12 @@ public class SurveyFragmentStrategy {
 
     public static void setSurveyAsSent(Survey survey) {
         //Check surveys not in progress
-        survey.setStatus(Constants.SURVEY_SENT);
+        survey.setStatus(SURVEY_SENT);
         survey.save();
     }
 
     public String getMalariaProgram() {
-        return Program.getFirstProgram() != null ? Program.getFirstProgram().getUid() : null;
+        return Program.getFirstProgram().getUid();
     }
 
     public void removeSurveysInSession() {

@@ -35,8 +35,7 @@ public class Constants {
             POSITIVE_OR_ZERO_INT = 26,
             DYNAMIC_TREATMENT_SWITCH_NUMBER = 27,
             DYNAMIC_STOCK_IMAGE_RADIO_BUTTON = 28,
-            PREGNANT_MONTH_INT = 29;
-            DYNAMIC_STOCK_IMAGE_RADIO_BUTTON = 28,
+            PREGNANT_MONTH_INT = 29,
             YEAR = 30;
 
 

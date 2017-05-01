@@ -84,7 +84,7 @@ public class LoginActivity extends AbsLoginActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
-        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
     }
@@ -227,6 +227,12 @@ public class LoginActivity extends AbsLoginActivity {
             public void onConfigJsonNotPresent() {
                 hideProgressBar();
                 showError(getString(R.string.login_error_json));
+            }
+
+            @Override
+            public void onUnexpectedError() {
+                hideProgressBar();
+                showError(getString(R.string.login_unexpected_error));
             }
         });
     }

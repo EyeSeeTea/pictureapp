@@ -178,6 +178,7 @@
 <string name="survey_info_exit_delete">"ဤမှတ်တမ်းကိုဖျက်မည်"</string>
 <string name="exception_org_unit_not_valid">"Org unit မှားနေသည်"</string>
 <string name="exception_org_unit_banned">"ဤ Org unit ထည့်၍ မရပါ။"</string>
+<string name="dialog_reopen_org_unit">"ထွက်ပေါက်ကို %s ပြန်ဖွင့်သည်။"</string>
 <string name="dynamic_error_phone_format">"ဖုန်းနံပါတ်မှားနေသည်။"</string>
 <string name="dynamic_error_age">"အသက် မှားနေသည်။"</string>
 <string name="dynamic_error_pregnant_month">"မှားနေသောကိုယ်ဝန်လ"</string>
@@ -299,6 +300,7 @@
 <string name="previous_distributions">"ယခင်ဖြန့်ဖြူး"</string>
 <string name="network_error">"ကွန်ယက်နှင့်အတူပြဿနာရှိပါတယ်, နောက်တခါထပ်ကြိုးစားကြည့်ပါ။"</string>
 <string name="login_invalid_credentials">"မှားနေသောအထောက်အထားများ"</string>
+    <string name="login_unexpected_error">"အမှားတစ်ခုတွေ့ရပါတယ်။ ကျေးဇူးပြု။ နောက်တစ်ကြိမ်ကြိုးစားပါ"</string>
 <string name="login_invalid_server_url">"မှားနေသော Server ကို URL ကို"</string>
 <string name="login_error_json">မှားယွင်းနေသည် JSON config ကိုဖိုင်ကိုဖတ်နေ။ သင်၏စီမံအုပ်ချုပ်သူကိုဆက်သွယ်ပါ။</string>
 <string name="see_resets">"ယခင်စာရင်းပြင်ဆင်ထားမှုများ ကြည့်ရန်"</string>

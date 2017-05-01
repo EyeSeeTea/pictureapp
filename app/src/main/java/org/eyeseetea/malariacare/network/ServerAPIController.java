@@ -720,6 +720,9 @@ public class ServerAPIController {
             ex.printStackTrace();
             return false;
         }
+        if(closedDate == null) {
+            return false;
+        }
         return closedDate.before(new Date());
     }
 
@@ -892,7 +895,7 @@ class BasicAuthenticator implements Authenticator {
     private String credentials;
 
     BasicAuthenticator() {
-        credentials =  AuthenticationApiStrategy.getApiCredentials();
+        credentials = AuthenticationApiStrategy.getApiCredentials();
     }
 
     @Override

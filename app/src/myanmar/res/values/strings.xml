@@ -184,8 +184,9 @@
 <string name="assessment_title_info">"Info"</string>
 <string name="survey_info_exit">"Are you sure you want to exit?"</string>
 <string name="survey_info_exit_delete">"The survey in progress will be deleted."</string>
-<string name="exception_org_unit_not_valid"></string>
-<string name="exception_org_unit_banned"></string>
+<string name="exception_org_unit_not_valid">"Outlet Code is not valid. Contact at xxx xxxx xxxx"</string>
+<string name="exception_org_unit_banned">"Outlet is closed or blocked. Contact at xxx xxxx xxxx"</string>
+<string name="dialog_reopen_org_unit">"Outlet %s is reopen."</string>
 <string name="dynamic_error_phone_format">"Invalid format for phone number"</string>
 <string name="dynamic_error_age">"Invalid age"</string>
 <string name="dynamic_error_pregnant_month">"Invalid pregnant month"</string>
@@ -307,6 +308,7 @@
 <string name="previous_distributions">"Previous distributions"</string>
 <string name="network_error">"There is a problem with the network, please try again later."</string>
 <string name="login_invalid_credentials">"Invalid credentials"</string>
+    <string name="login_unexpected_error">"An error has occurred, please try again later"</string>
 <string name="login_invalid_server_url">"Invalid Server URL"</string>
 <string name="login_error_json">Error reading json config file. Please contact your administrator.</string>
 <string name="see_resets">"See Resets"</string>

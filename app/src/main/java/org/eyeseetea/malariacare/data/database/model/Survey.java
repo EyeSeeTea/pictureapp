@@ -548,9 +548,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     // Returns all the surveys with status put to "Hide"
-    public static List<Survey> getAllHideAndSentSurveys() {
+    public static List<Survey> getAllHideAndSentSurveys(int limit) {
         return new Select().from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_SENT))
+                .limit(limit)
                 .or(Survey_Table.status.eq(Constants.SURVEY_HIDE))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date))
                 .orderBy(OrderBy.fromProperty(Survey_Table.id_org_unit_fk)).queryList();
@@ -1061,7 +1062,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                 if (value.getOption() != null && value.getQuestion() != null
                         && value.getQuestion().getCode().equals(
                         PreferencesState.getInstance().getContext().getString(R.string.RDT_code))) {
-                    rdtValue = value.getOption().getName();
+                    rdtValue = value.getOption().getCode();
                 }
             }
 
@@ -1088,7 +1089,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
                         && value.getQuestion().getCode().equals(
                         PreferencesState.getInstance().getContext().getString(
                                 R.string.Result_code))) {
-                    rdtValue = value.getOption().getInternationalizedCode();
+                    rdtValue = value.getOption().getInternationalizedName();
                 }
             }
 
@@ -1131,7 +1132,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
 
             if (codeQuestionFilter.contains(qCode)) {
                 String val =
-                        (value.getOption() != null) ? value.getOption().getInternationalizedCode()
+                        (value.getOption() != null) ? value.getOption().getInternationalizedName()
                                 : value.getValue();
                 if (val != null) {
                     map.put(qCode, val);
@@ -1159,7 +1160,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
             for (Value value : values) {
                 valuesString += "Value: " + value.getValue();
                 if (value.getOption() != null) {
-                    valuesString += " Option: " + value.getOption().getInternationalizedName();
+                    valuesString += " Option: " + value.getOption().getInternationalizedCode();
                 }
                 if (value.getQuestion() != null) {
                     valuesString += " Question: " + value.getQuestion().getDe_name() + "\n";

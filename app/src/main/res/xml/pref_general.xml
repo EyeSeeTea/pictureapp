@@ -81,13 +81,16 @@
         <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
         <!-- NOTE: RingtonePreference's summary should be set to its value by the activity code. -->
         <ListPreference
-            android:defaultValue="@string/font_size_level2"
             android:dependency="@string/customize_fonts"
-            android:entries="@array/settings_array_titles_font_sizes"
-            android:entryValues="@array/settings_array_values_font_sizes"
             android:key="@string/font_sizes"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/font_size" />
+        <ListPreference
+            android:defaultValue=""
+            android:key="@string/language_code"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/settings_select_language" />
     </PreferenceCategory>
 </PreferenceScreen>

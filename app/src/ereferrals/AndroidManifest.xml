@@ -12,8 +12,8 @@
         tools:replace="android:allowBackup, android:icon, android:theme">
 
         <provider
-            android:name=".data.database.utils.SCMMDBProvider"
-            android:authorities="org.eyeseetea.malariacare.data.database.utils.SCMMDBProvider"
+            android:name=".data.database.utils.ERDBProvider"
+            android:authorities="org.eyeseetea.malariacare.data.database.utils.ERDBProvider"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:node="merge">
@@ -26,8 +26,7 @@
             android:name=".LoginActivity"
             android:finishOnTaskLaunch="true"
             android:label="@string/malaria_case_based_reporting"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-        </activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
 
     </application>
 </manifest>

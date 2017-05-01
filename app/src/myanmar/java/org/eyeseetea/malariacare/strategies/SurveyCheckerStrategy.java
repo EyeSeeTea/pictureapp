@@ -13,10 +13,10 @@ public class SurveyCheckerStrategy {
                     + "&fields=event,orgUnit,program,dataValues";
 
     public static String getApiEventUrl(String DHIS_URL, String program, String orgUnit,
-            String startDate, String endDate){
-     return String.format(DHIS_URL + DHIS_CHECK_EVENT_API, program, orgUnit, startDate,
-    endDate, getCategoryOptionUIDByCurrentUser(),
-                    PreferencesState.getInstance().getContext().getString(
-            R.string.category_combination));
+            String startDate, String endDate) {
+        return String.format(DHIS_URL + DHIS_CHECK_EVENT_API, program, orgUnit, startDate,
+                endDate, getCategoryOptionUIDByCurrentUser(),
+                PreferencesState.getInstance().getContext().getString(
+                        R.string.category_combination));
     }
 }

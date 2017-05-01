@@ -169,17 +169,14 @@
 <string name="assessment_sent_date">"日期"</string>
 <string name="assessment_title_info">"信息"</string>
 <string name="survey_info_exit">"年龄无效"</string>
-<string name="survey_info_exit_delete"></string>
-<string name="exception_org_unit_not_valid"></string>
-<string name="exception_org_unit_banned"></string>
+<string name="survey_info_exit_delete">"正在进行的调查将被删除。"</string>
+<string name="exception_org_unit_not_valid">出口代码无效。 联系xxx xxxx xxxx</string>
+<string name="exception_org_unit_banned">出口关闭或堵塞。 联系xxx xxxx xxxx</string>
+<string name="dialog_reopen_org_unit">"出口 %s 重新开放。"</string>
 <string name="dynamic_error_phone_format">"电话号码格式无效"</string>
 <string name="dynamic_error_age">"年龄无效"</string>
+<string name="dynamic_error_pregnant_month">"怀孕月份无效"</string>
 <string name="pref_header_general">"一般"</string>
-<string name="font_size_level0">"x小"</string>
-<string name="font_size_level1">"小"</string>
-<string name="font_size_level2">"中"</string>
-<string name="font_size_level3">"大"</string>
-<string name="font_size_level4">"x大"</string>
 <string name="dialog_title_push">"推送数据"</string>
 <string name="dialog_title_push_response">"推送响应"</string>
 <string name="dialog_info_push_ok">"调查数据推送到服务器。 结果："</string>
@@ -297,7 +294,9 @@
 <string name="previous_distributions">"先前分配"</string>
 <string name="network_error">"有與網絡問題 請稍後重試"</string>
 <string name="login_invalid_credentials">"無效的憑證"</string>
+    <string name="login_unexpected_error">"发生错误，请稍后再试"</string>
 <string name="login_invalid_server_url">"無效的服務器"</string>
+<string name="login_error_json">读取json配置文件时出错。 请联系您的管理员。</string>
 <string name="see_resets">"查看之前校正库存登记"</string>
 <string name="new_reset">"校正实际库存登记"</string>
 <string name="previous_resets"></string>
@@ -322,4 +321,7 @@
 <string name="survey_second_step">"建筑调查常见问题..."</string>
 <string name="survey_third_step">"建筑调查处理矩阵"</string>
 <string name="survey_fourth_step">"正在创建调查..."</string>
+<string name="admin_announcement">"管理员公告"</string>
+<string name="user_close">"该用户被管理员关闭。"</string>
+<string name="run_in_demo_mode">"在演示模式下运行"</string>
 </resources>

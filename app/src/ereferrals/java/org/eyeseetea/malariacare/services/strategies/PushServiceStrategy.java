@@ -8,6 +8,8 @@ import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy {
 
+    public static final String TAG = ".PushServiceStrategy";
+
     public PushServiceStrategy(PushService pushService) {
         super(pushService);
     }
@@ -15,11 +17,10 @@ public class PushServiceStrategy extends APushServiceStrategy {
     @Override
     public void push() {
         if (Session.getCredentials().isDemoCredentials()) {
-            Log.d(TAG, "execute mocked push");
+            Log.d(TAG, "execute push");
             executeMockedPush();
         } else {
-            Log.d(TAG, "execute push");
-            executePush();
+            Log.d(TAG, "execute push fails, not logged");
         }
     }
 

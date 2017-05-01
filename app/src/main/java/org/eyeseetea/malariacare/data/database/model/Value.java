@@ -83,7 +83,7 @@ public class Value extends BaseModel {
     }
 
     public Value(Option option, Question question, Survey survey) {
-        this.value = (option != null) ? option.getName() : null;
+        this.value = (option != null) ? option.getCode() : null;
         this.setOption(option);
         this.setQuestion(question);
         this.setSurvey(survey);
@@ -243,7 +243,7 @@ public class Value extends BaseModel {
      * @return true|false
      */
     public boolean isAPositive() {
-        return getOption() != null && getOption().getName().equals("Positive");
+        return getOption() != null && getOption().getCode().equals("Positive");
     }
 
     /**
@@ -268,7 +268,7 @@ public class Value extends BaseModel {
      * @return true|false
      */
     public boolean isAYes() {
-        return getOption() != null && getOption().getName().equals("Yes");
+        return getOption() != null && getOption().getCode().equals("Yes");
     }
 
     /**

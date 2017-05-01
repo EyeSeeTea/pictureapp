@@ -24,6 +24,7 @@ public class ImageOptionView extends LinearLayout {
     Option mOption;
     OnOptionSelectedListener mOnOptionSelectedListener;
     private Boolean mSelectedOption;
+    boolean isClicked = false;
 
     public ImageOptionView(Context context) {
         super(context);
@@ -52,7 +53,7 @@ public class ImageOptionView extends LinearLayout {
 
         if (option.getOptionAttribute().hasHorizontalAlignment()
                 && option.getOptionAttribute().hasVerticalAlignment()) {
-            mOptionTextView.setText(Utils.getInternationalizedString(option.getCode()));
+            mOptionTextView.setText(Utils.getInternationalizedString(option.getName()));
             mOptionTextView.setGravity(option.getOptionAttribute().getGravity());
         } else {
             mOptionTextView.setVisibility(View.GONE);
@@ -105,9 +106,12 @@ public class ImageOptionView extends LinearLayout {
         mOptionImageView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mOnOptionSelectedListener != null && isEnabled()) {
-                    mSelectedOption = true;
-                    mOnOptionSelectedListener.onOptionSelected(v, mOption);
+                if (!isClicked) {
+                    isClicked = true;
+                    if (mOnOptionSelectedListener != null && isEnabled()) {
+                        mSelectedOption = true;
+                        mOnOptionSelectedListener.onOptionSelected(v, mOption);
+                    }
                 }
             }
         });

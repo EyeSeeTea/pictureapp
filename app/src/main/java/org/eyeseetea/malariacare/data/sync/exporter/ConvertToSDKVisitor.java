@@ -33,7 +33,7 @@ import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.remote.SdkQueries;
+import org.eyeseetea.malariacare.data.sync.exporter.strategies.ConvertToSdkVisitorStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
@@ -56,8 +56,6 @@ import java.util.Map;
 public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
     private final static String TAG = ".ConvertToSDKVisitor";
-
-    private String mCategoryOptionUID;
     /**
      * Context required to recover magic UID for mainScore dataElements
      */
@@ -226,7 +224,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     private EventExtended buildEvent(Survey survey) throws Exception {
         EventExtended event = new EventExtended();
 
-        event.getEvent().setAttributeCategoryOptions(getCategoryOptionUIDByCurrentUser());
+        ConvertToSdkVisitorStrategy.setAttributeCategoryOptionsInEvent(event);
+
         event.setProgramId(survey.getProgram().getUid());
         event.setOrganisationUnitId(survey.getOrgUnit().getUid());
         event.setStatus(EventExtended.STATUS_COMPLETED);
@@ -238,14 +237,6 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
         Log.d(TAG, "Saving event " + event.toString());
         event.save();
         return event;
-    }
-
-    private String getCategoryOptionUIDByCurrentUser() {
-        if (mCategoryOptionUID == null) {
-            mCategoryOptionUID = SdkQueries.getCategoryOptionUIDByCurrentUser();
-        }
-
-        return mCategoryOptionUID;
     }
 
     private String getSafeOrgUnitUID(Survey survey) {
@@ -344,8 +335,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 }
                 iSurvey.save();
                 continue;
-            }
-            else if(importSummary !=null && importSummary.getStatus()== ImportSummary.Status.ERROR){
+            } else if (importSummary != null
+                    && importSummary.getStatus() == ImportSummary.Status.ERROR) {
                 Log.d(TAG, "saveSurveyStatus: PUSH error process..."
                         + importSummary.getDescription()
                         + " dataelement pushing survey: "

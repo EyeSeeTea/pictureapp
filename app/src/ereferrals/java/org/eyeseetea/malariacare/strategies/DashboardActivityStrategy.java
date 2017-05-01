@@ -4,6 +4,8 @@ import android.app.Activity;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.DashboardActivity;
+import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -66,5 +68,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
         return false;
+    }
+
+    public static void onLogoutSuccess() {
+        DashboardActivity.dashboardActivity.finishAndGo(LoginActivity.class);
     }
 }

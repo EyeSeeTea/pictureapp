@@ -84,9 +84,8 @@ public class TimePeriodCalculator {
      */
     private SimpleDateFormat KEY_DAY_FORMATTER = new SimpleDateFormat("yyyyMMdd");
 
-    TimePeriodCalculator(Date todayDate) {
-        this.todayDate = todayDate;
-        init(todayDate);
+    TimePeriodCalculator() {
+        init();
     }
 
     /**
@@ -94,7 +93,7 @@ public class TimePeriodCalculator {
      */
     public static TimePeriodCalculator getInstance() {
         if (instance == null) {
-            instance = new TimePeriodCalculator(new Date());
+            instance = new TimePeriodCalculator();
         }
         return instance;
     }
@@ -103,11 +102,11 @@ public class TimePeriodCalculator {
     /**
      * Calculates periods according to the given date (supposedly 'today')
      */
-    public void init(Date today) {
-        todayDate = clearTime(today);
-        calculateMonthPeriods(todayDate);
-        calculateWeekPeriods(todayDate);
-        calculateDayPeriods(todayDate);
+    public void init() {
+        todayDate = clearTime().getTime();
+        calculateMonthPeriods(clearTime());
+        calculateWeekPeriods(clearTime());
+        calculateDayPeriods(clearTime());
     }
 
     /**
@@ -203,11 +202,13 @@ public class TimePeriodCalculator {
      * Calculates a list of keys for the last 6 months [201509, 2001510,201511, 2001512, 201601,
      * 201602]
      *
-     * @param today The reference date to build the periods of time
+     * @param date The reference date to build the periods of time
      */
-    private void calculateMonthPeriods(Date today) {
+    private void calculateMonthPeriods(Calendar date) {
         monthPeriodDates = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
-        monthPeriodsKeys = calculatePeriods(today, Calendar.MONTH, KEY_MONTH_FORMATTER,
+        date.set(Calendar.DAY_OF_MONTH, 1);
+        date.add(Calendar.MONTH, -1);
+        monthPeriodsKeys = calculatePeriods(date.getTime(), Calendar.MONTH, KEY_MONTH_FORMATTER,
                 monthPeriodDates);
     }
 
@@ -215,11 +216,13 @@ public class TimePeriodCalculator {
      * Calculates a list of keys for the last 6 weeks [201604, 201605, 201606, 201607, 201608,
      * 201609]
      *
-     * @param today The reference date to build the periods of time
+     * @param date The reference date to build the periods of time
      */
-    private void calculateWeekPeriods(Date today) {
+    private void calculateWeekPeriods(Calendar date) {
         weekPeriodDates = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
-        weekPeriodsKeys = calculatePeriods(today, Calendar.WEEK_OF_YEAR, KEY_WEEK_FORMATTER,
+        date.set(Calendar.DAY_OF_WEEK, date.getFirstDayOfWeek());
+        date.add(Calendar.WEEK_OF_YEAR, -1);
+        weekPeriodsKeys = calculatePeriods(date.getTime(), Calendar.WEEK_OF_YEAR, KEY_WEEK_FORMATTER,
                 weekPeriodDates);
     }
 
@@ -227,11 +230,12 @@ public class TimePeriodCalculator {
      * Calculates a list of keys for the last 6 weeks [201604, 201605, 201606, 201607, 201608,
      * 201609]
      *
-     * @param today The reference date to build the periods of time
+     * @param date The reference date to build the periods of time
      */
-    private void calculateDayPeriods(Date today) {
+    private void calculateDayPeriods(Calendar date) {
         dayPeriodDates = new ArrayList<>(Constants.MONITOR_HISTORY_SIZE);
-        dayPeriodsKeys = calculatePeriods(today, Calendar.DATE, KEY_DAY_FORMATTER, dayPeriodDates);
+        date.add(Calendar.DAY_OF_YEAR, -1);
+        dayPeriodsKeys = calculatePeriods(date.getTime(), Calendar.DATE, KEY_DAY_FORMATTER, dayPeriodDates);
     }
 
     /**
@@ -300,13 +304,13 @@ public class TimePeriodCalculator {
      *
      * @return A new date without time data (00:00:00:000)
      */
-    private Date clearTime(Date date) {
+    private Calendar clearTime() {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
+        cal.setTime(new Date());
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
+        return cal;
     }
 }

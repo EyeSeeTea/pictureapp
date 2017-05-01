@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -40,22 +41,29 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
+import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
+import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -92,83 +100,25 @@ public class DashboardActivity extends BaseActivity {
      */
     private boolean isReadOnly = false;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
-        super.onCreate(savedInstanceState);
-        handler = new Handler(Looper.getMainLooper());
-        mDashboardActivityStrategy = new DashboardActivityStrategy();
-        dashboardActivity = this;
-        setContentView(R.layout.tab_dashboard);
-        Survey.removeInProgress();
-        if (savedInstanceState == null) {
-            initImprove();
-            initMonitor();
-            if (GradleVariantConfig.isStockFragmentActive()) {
-                initStock();
-            }
-            initAssess();
+    //Show dialog exception from class without activity.
+    public static void showException(final String title, final String errorMessage) {
+        String dialogTitle = "", dialogMessage = "";
+        if (title != null) {
+            dialogTitle = title;
         }
-        initTabHost(savedInstanceState);
-        /* set tabs in order */
-        LayoutUtils.setTabHosts(this);
-        LayoutUtils.setTabDivider(this);
-        //set the tabs background as transparent
-        setTabsBackgroundColor(R.color.tab_unpressed_background);
-
-        //set first tab as selected:
-        tabHost.getTabWidget().getChildAt(0).setBackgroundColor(
-                getResources().getColor(R.color.tab_pressed_background));
-
-        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-
-            @Override
-            public void onTabChanged(String tabId) {
-                /** If current tab is android */
-
-                //set the tabs background as transparent
-                setTabsBackgroundColor(R.color.tab_unpressed_background);
-
-                //If change of tab from surveyFragment or FeedbackFragment they could be closed.
-                if (isSurveyFragmentActive()) {
-                    onSurveyBackPressed();
-                }
-                if (isReviewFragmentActive()) {
-                    exitReviewOnChangeTab(null);
-                }
-                if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
-                    if (!isReadOnly) {
-                        unsentFragment.reloadData();
-                    }
-                    unsentFragment.reloadHeader(dashboardActivity);
-                } else if (tabId.equalsIgnoreCase(
-                        getResources().getString(R.string.tab_tag_improve))) {
-                    sentFragment.reloadData();
-                    sentFragment.reloadHeader(dashboardActivity);
-                } else if (tabId.equalsIgnoreCase(
-                        getResources().getString(R.string.tab_tag_stock))) {
-                    mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
-                } else if (tabId.equalsIgnoreCase(
-                        getResources().getString(R.string.tab_tag_monitor))) {
-                    monitorFragment.reloadData();
-                    monitorFragment.reloadHeader(dashboardActivity);
-                }
-                tabHost.getCurrentTabView().setBackgroundColor(
-                        getResources().getColor(R.color.tab_pressed_background));
-            }
-        });
-        // init tabHost
-        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
-            tabHost.getTabWidget().getChildAt(i).setFocusable(false);
+        if (errorMessage != null) {
+            dialogMessage = errorMessage;
         }
-
-        getSurveysFromService();
-
-        initNavigationController();
+        new AlertDialog.Builder(dashboardActivity)
+                .setCancelable(false)
+                .setTitle(dialogTitle)
+                .setMessage(dialogMessage)
+                .setNeutralButton(android.R.string.ok, null)
+                .create().show();
     }
-
-    private void initNavigationController() {
-        NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
+    //Show dialog exception from class without activity.
+    public static void closeUserFromService(final int title, final String errorMessage) {
+        AnnouncementMessageDialog.closeUser(title, errorMessage, dashboardActivity);
     }
 
     public void setTabHostsWithText() {
@@ -560,7 +510,10 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the exit Review button
      */
     public void exitReview(View view) {
-        reviewShowDone();
+        if (!DynamicTabAdapter.isClicked) {
+            DynamicTabAdapter.isClicked = true;
+            reviewShowDone();
+        }
     }
 
     public void sendSurvey(View view) {
@@ -607,12 +560,14 @@ public class DashboardActivity extends BaseActivity {
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         sendSurvey();
+                        DynamicTabAdapter.isClicked = false;
                     }
                 });
         msgConfirmation.setNegativeButton(R.string.survey_review,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         reviewSurvey();
+                        DynamicTabAdapter.isClicked = false;
                     }
                 });
 
@@ -690,31 +645,141 @@ public class DashboardActivity extends BaseActivity {
         closeSurveyFragment();
     }
 
-    //Show dialog exception from class without activity.
-    public static void showException(final String title, final String errorMessage) {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Run your task here
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        String dialogTitle = "", dialogMessage = "";
-                        if (title != null) {
-                            dialogTitle = title;
-                        }
-                        if (errorMessage != null) {
-                            dialogMessage = errorMessage;
-                        }
-                        new AlertDialog.Builder(dashboardActivity)
-                                .setCancelable(false)
-                                .setTitle(dialogTitle)
-                                .setMessage(dialogMessage)
-                                .setNeutralButton(android.R.string.ok, null)
-                                .create().show();
-                    }
-                });
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
+        super.onCreate(savedInstanceState);
+        if (getIntent().getBooleanExtra(getString(R.string.show_announcement_key), true)
+                && !Session.getCredentials().isDemoCredentials()) {
+            new AsyncAnnouncement().execute();
+        }
+        handler = new Handler(Looper.getMainLooper());
+        mDashboardActivityStrategy = new DashboardActivityStrategy();
+        dashboardActivity = this;
+        setContentView(R.layout.tab_dashboard);
+        Survey.removeInProgress();
+        if (savedInstanceState == null) {
+            initImprove();
+            initMonitor();
+            if (GradleVariantConfig.isStockFragmentActive()) {
+                initStock();
             }
-        }, 1000);
+            initAssess();
+        }
+        initTabHost(savedInstanceState);
+        /* set tabs in order */
+        LayoutUtils.setTabHosts(this);
+        LayoutUtils.setTabDivider(this);
+        //set the tabs background as transparent
+        setTabsBackgroundColor(R.color.tab_unpressed_background);
+
+        //set first tab as selected:
+        tabHost.getTabWidget().getChildAt(0).setBackgroundColor(
+                getResources().getColor(R.color.tab_pressed_background));
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+
+            @Override
+            public void onTabChanged(String tabId) {
+                /** If current tab is android */
+
+                //set the tabs background as transparent
+                setTabsBackgroundColor(R.color.tab_unpressed_background);
+
+                //If change of tab from surveyFragment or FeedbackFragment they could be closed.
+                if (isSurveyFragmentActive()) {
+                    onSurveyBackPressed();
+                }
+                if (isReviewFragmentActive()) {
+                    exitReviewOnChangeTab(null);
+                }
+                if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
+                    if (!isReadOnly) {
+                        unsentFragment.reloadData();
+                    }
+                    unsentFragment.reloadHeader(dashboardActivity);
+                } else if (tabId.equalsIgnoreCase(
+                        getResources().getString(R.string.tab_tag_improve))) {
+                    sentFragment.reloadData();
+                    sentFragment.reloadHeader(dashboardActivity);
+                } else if (tabId.equalsIgnoreCase(
+                        getResources().getString(R.string.tab_tag_stock))) {
+                    mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
+                } else if (tabId.equalsIgnoreCase(
+                        getResources().getString(R.string.tab_tag_monitor))) {
+                    monitorFragment.reloadData();
+                    monitorFragment.reloadHeader(dashboardActivity);
+                }
+                tabHost.getCurrentTabView().setBackgroundColor(
+                        getResources().getColor(R.color.tab_pressed_background));
+            }
+        });
+        // init tabHost
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+            tabHost.getTabWidget().getChildAt(i).setFocusable(false);
+        }
+
+        getSurveysFromService();
+
+        if (BuildConfig.multiuser) {
+            initNavigationController();
+        }
     }
+
+    private void initNavigationController() {
+        NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
+    }
+
+    public void executeLogout() {
+        IAuthenticationManager iAuthenticationManager = new AuthenticationManager(this);
+        LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+        logoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                DashboardActivityStrategy.onLogoutSuccess();
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.e("." + this.getClass().getSimpleName(), message);
+            }
+        });
+    }
+
+    public void closeUser() {
+        AnnouncementMessageDialog.closeUser(R.string.admin_announcement,
+                PreferencesState.getInstance().getContext().getString(R.string.user_close), DashboardActivity.dashboardActivity);
+    }
+
+    public class AsyncAnnouncement extends AsyncTask<Void, Void, Void> {
+        User loggedUser;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            loggedUser = User.getLoggedUser();
+            if (loggedUser != null) {
+                loggedUser = ServerAPIController.pullUserAttributes(loggedUser);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (loggedUser != null) {
+                if (loggedUser.getAnnouncement() != null
+                        && !loggedUser.getAnnouncement().equals("")
+                        && !PreferencesState.getInstance().isUserAccept()) {
+                    Log.d(TAG, "show logged announcement");
+                    AnnouncementMessageDialog.showAnnouncement(R.string.admin_announcement,
+                            loggedUser.getAnnouncement(),
+                            DashboardActivity.this);
+                } else {
+                    AnnouncementMessageDialog.checkUserClosed(loggedUser, DashboardActivity.this);
+                }
+            }
+        }
+    }
+
+
 }

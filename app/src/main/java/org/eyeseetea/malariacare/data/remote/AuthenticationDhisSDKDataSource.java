@@ -31,20 +31,25 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
 
     @Override
     public void logout(final IDataSourceCallback<Void> callback) {
-        D2.me().signOut()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Boolean>() {
-                    @Override
-                    public void call(Boolean result) {
-                        callback.onSuccess(null);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                });
+        if (D2.isConfigured()) {
+            D2.me().signOut()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean result) {
+                            callback.onSuccess(null);
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            callback.onError(throwable);
+                        }
+                    });
+        } else {
+            //The user is never logged
+            callback.onSuccess(null);
+        }
     }
 
     @Override
@@ -77,7 +82,7 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                         @Override
                         public void call(
                                 org.hisp.dhis.client.sdk.models.user.UserAccount dhisUserAccount) {
-                            UserAccount userAccount = new UserAccount(credentials.getUsername(),
+                            UserAccount userAccount = new UserAccount(credentials.getUsername(), dhisUserAccount.getUId(),
                                     credentials.isDemoCredentials());
                             callback.onSuccess(userAccount);
                         }

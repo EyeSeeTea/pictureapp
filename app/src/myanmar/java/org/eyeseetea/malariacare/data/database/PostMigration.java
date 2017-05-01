@@ -1,8 +1,8 @@
 package org.eyeseetea.malariacare.data.database;
 
 import org.eyeseetea.malariacare.data.database.migrations.Migration2ChangeOptionPfPv;
-import org.eyeseetea.malariacare.data.database.migrations.Migration3RefactorHelptext;
 import org.eyeseetea.malariacare.data.database.migrations.Migration2ChangeTravelQuestionIcon;
+import org.eyeseetea.malariacare.data.database.migrations.Migration3RefactorHelptext;
 
 
 public class PostMigration {

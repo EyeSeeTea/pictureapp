@@ -142,7 +142,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
         passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
         TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
-        passwordHint.setHint("Pin");
+        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_pin));
     }
 
     @Override

@@ -7,6 +7,9 @@ import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.widget.EditText;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
@@ -139,5 +142,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
         passwordHint.setHint("Pin");
+    }
+}
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return false;
     }
 }

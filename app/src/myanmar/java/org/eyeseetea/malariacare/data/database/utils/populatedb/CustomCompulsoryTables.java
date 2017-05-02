@@ -3,8 +3,6 @@ package org.eyeseetea.malariacare.data.database.utils.populatedb;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.model.Answer;
-import org.eyeseetea.malariacare.data.database.model.Drug;
-import org.eyeseetea.malariacare.data.database.model.DrugCombination;
 import org.eyeseetea.malariacare.data.database.model.Header;
 import org.eyeseetea.malariacare.data.database.model.Match;
 import org.eyeseetea.malariacare.data.database.model.Option;
@@ -16,11 +14,7 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.QuestionThreshold;
-import org.eyeseetea.malariacare.data.database.model.StringKey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
-import org.eyeseetea.malariacare.data.database.model.Translation;
-import org.eyeseetea.malariacare.data.database.model.Treatment;
-import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
 import org.eyeseetea.malariacare.data.database.model.User;
 
 import java.util.Arrays;
@@ -28,7 +22,7 @@ import java.util.List;
 
 public class CustomCompulsoryTables {
 
-    public static List<Class<? extends BaseModel>> allMandatoryTables= Arrays.asList(
+    public static List<Class<? extends BaseModel>> allMandatoryTables = Arrays.asList(
             User.class,
             Program.class,
             Tab.class,

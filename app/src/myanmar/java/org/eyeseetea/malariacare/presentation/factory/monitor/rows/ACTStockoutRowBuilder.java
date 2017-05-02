@@ -16,6 +16,7 @@ public class ACTStockoutRowBuilder extends CounterRowBuilder {
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return Integer.parseInt(new SurveyQuestionTreatmentValue(surveyMonitor.getSurvey()).getOutStockValue());
+        return Integer.parseInt(
+                new SurveyQuestionTreatmentValue(surveyMonitor.getSurvey()).getOutStockValue());
     }
 }

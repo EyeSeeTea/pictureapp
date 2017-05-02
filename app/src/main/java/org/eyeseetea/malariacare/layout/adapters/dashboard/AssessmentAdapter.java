@@ -60,7 +60,6 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
         this.headerLayout = R.layout.assessment_header;
         this.recordLayout = R.layout.assessment_record;
         this.footerLayout = R.layout.assessment_footer;
-        this.lInflater = LayoutInflater.from(context);
         this.title = title;
 
         mDashboardAdapterStrategy = new DashboardAdapterStrategy(context, this);
@@ -186,7 +185,11 @@ public class AssessmentAdapter extends BaseAdapter implements IDashboardAdapter 
         //fixed the position in the list if the adapter have a header.
         int fixedPosition = getFixedPosition(l);
         //Put selected survey in session
-        Survey malariaSurvey = surveys.get(position - fixedPosition);
+        position = position - fixedPosition;
+        if(position < 0 || position >= surveys.size()) {
+            return;
+        }
+        Survey malariaSurvey = surveys.get(position);
         Session.setMalariaSurvey(malariaSurvey);
         if (mDashboardAdapterStrategy.hasAllComplementarySurveys(malariaSurvey)) {
             // Go to SurveyActivity

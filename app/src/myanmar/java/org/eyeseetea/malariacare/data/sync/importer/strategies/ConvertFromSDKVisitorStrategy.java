@@ -44,9 +44,10 @@ public class ConvertFromSDKVisitorStrategy implements IConvertFromSDKVisitorStra
                 break;
             }
         }
-        if(me.getOrganisation()== 0){
+        if (me.getOrganisation() == 0) {
             organisationUser = Partner.getDefaultOrganization();
-            organisationUser.setUid(PreferencesState.getInstance().getContext().getString(R.string.category_option_group_matrix_uid));
+            organisationUser.setUid(PreferencesState.getInstance().getContext().getString(
+                    R.string.category_option_group_matrix_uid));
             organisationUser.save();
             me.setOrganisation(organisationUser.getId_partner());
             me.save();

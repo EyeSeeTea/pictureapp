@@ -4,24 +4,29 @@ import android.app.Activity;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.DashboardActivity;
+import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 
-/**
- * Created by manuel on 28/12/16.
- */
+import java.util.Date;
+import org.eyeseetea.malariacare.fragments.OfflineFragment;
+
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
+    private OfflineFragment mOfflineFragment;
 
     @Override
     public void reloadStockFragment(Activity activity) {
 
+        mOfflineFragment.reloadHeader(activity);
     }
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
+        mOfflineFragment = new OfflineFragment();
         return false;
     }
 
@@ -67,5 +72,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public boolean isHistoricNewReceiptBalanceFragment(Activity activity) {
         return false;
+    }
+
+    public static void onLogoutSuccess() {
+        DashboardActivity.dashboardActivity.finishAndGo(LoginActivity.class);
     }
 }

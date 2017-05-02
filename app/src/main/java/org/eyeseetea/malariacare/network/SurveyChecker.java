@@ -30,8 +30,6 @@ import java.util.Date;
 import java.util.List;
 
 public class SurveyChecker {
-
-    private static String mCategoryOptionUID;
     private static String TAG = ".CheckSurveys";
 
     /**
@@ -69,7 +67,7 @@ public class SurveyChecker {
             String DHIS_URL = PreferencesState.getInstance().getDhisURL();
             String startDate = EventExtended.format(minDate, EventExtended.AMERICAN_DATE_FORMAT);
             String endDate = EventExtended.format(
-            new Date(maxDate.getTime() + (8 * 24 * 60 * 60 * 1000)),
+                    new Date(maxDate.getTime() + (8 * 24 * 60 * 60 * 1000)),
                     EventExtended.AMERICAN_DATE_FORMAT);
             String url = SurveyCheckerStrategy.getApiEventUrl(DHIS_URL, program, orgUnit, startDate,
                     endDate);
@@ -154,14 +152,6 @@ public class SurveyChecker {
             eventExtendedList.add(eventExtended);
         }
         return eventExtendedList;
-    }
-
-    private static String getCategoryOptionUIDByCurrentUser() {
-        if (mCategoryOptionUID == null) {
-            mCategoryOptionUID = SdkQueries.getCategoryOptionUIDByCurrentUser();
-        }
-
-        return mCategoryOptionUID;
     }
 
     public static void updateQuarantineSurveysStatus(List<EventExtended> events, Survey survey) {

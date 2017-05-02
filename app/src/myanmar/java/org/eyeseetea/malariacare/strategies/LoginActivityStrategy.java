@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.strategies;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -106,6 +107,17 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             public void onNetworkError() {
                                 Log.e(this.getClass().getSimpleName(), "Network Error");
                             }
+
+                            @Override
+                            public void onConfigJsonNotPresent() {
+                                Log.e(this.getClass().getSimpleName(), "Config Json file not found");
+                            }
+
+                            @Override
+                            public void onUnexpectedError() {
+                                Log.e(this.getClass().getSimpleName(),
+                                        "Config Json file not found");
+                            }
                         });
             }
         });
@@ -169,6 +181,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public void finishAndGo() {
         finishAndGo(ProgressActivity.class);
     }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return false;
+    }
+
 
 
     @Override

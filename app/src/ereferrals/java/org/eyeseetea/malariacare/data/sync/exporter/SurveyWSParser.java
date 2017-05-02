@@ -5,10 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.sync.exporter.model.Action;
+import org.eyeseetea.malariacare.data.sync.exporter.model.AttributeValueWS;
 import org.eyeseetea.malariacare.data.sync.exporter.model.EReferralWSObject;
-import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWS;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponse;
-import org.eyeseetea.malariacare.data.sync.exporter.model.ValueWS;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.hisp.dhis.client.sdk.core.common.utils.CodeGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,32 +20,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SurveyWSParser {
-    public static JSONObject convertSurveysToJson(List<Survey> surveys)
+
+    private static final String SURVEY_ACTION_ID = "issueReferral";
+
+    public static JSONObject convertSurveysToJson(String version, String source,
+            Credentials credentials, List<Survey> surveys)
             throws JsonProcessingException, JSONException {
         ObjectMapper mapper = new ObjectMapper();
         EReferralWSObject eReferralWSObject = new EReferralWSObject();
-        eReferralWSObject.getReferrals().addAll(getWSConvertedSurveysList(surveys));
+        eReferralWSObject.setVersion(version);
+        eReferralWSObject.setSource(source);
+        eReferralWSObject.setUserName(credentials.getUsername());
+        eReferralWSObject.setPassword(credentials.getPassword());
+        eReferralWSObject.setActions(getWSConvertedSurveysList(surveys));
         return new JSONObject(mapper.writeValueAsString(eReferralWSObject));
     }
 
-    private static List<SurveyWS> getWSConvertedSurveysList(List<Survey> surveys) {
-        List<SurveyWS> surveyWSes = new ArrayList<>();
+    private static List<Action> getWSConvertedSurveysList(List<Survey> surveys) {
+        List<Action> actions = new ArrayList<>();
         for (Survey survey : surveys) {
-            SurveyWS surveyWS = new SurveyWS(CodeGenerator.generateCode());
-            surveyWS.setValues(getValuesWSFromSurvey(survey));
-            surveyWSes.add(surveyWS);
+
+            Action action = new Action();
+            action.setActionId(CodeGenerator.generateCode());
+            action.setType(SURVEY_ACTION_ID);
+            action.setAttributeValues(getValuesWSFromSurvey(survey));
+            actions.add(action);
         }
-        return surveyWSes;
+        return actions;
     }
 
-    private static List<ValueWS> getValuesWSFromSurvey(Survey survey) {
-        List<ValueWS> valueWSes = new ArrayList<>();
+    private static List<AttributeValueWS> getValuesWSFromSurvey(Survey survey) {
+        List<AttributeValueWS> valueWSes = new ArrayList<>();
         for (Value value : survey.getValuesFromDB()) {
             if (value.getQuestion() != null) {
                 if (value.getOption() == null) {
-                    valueWSes.add(new ValueWS(value.getQuestion().getCode(), value.getValue()));
+                    valueWSes.add(
+                            new AttributeValueWS(value.getQuestion().getCode(), value.getValue()));
                 } else {
-                    valueWSes.add(new ValueWS(value.getQuestion().getCode(),
+                    valueWSes.add(new AttributeValueWS(value.getQuestion().getCode(),
                             value.getOption().getCode()));
                 }
             }
@@ -71,8 +84,8 @@ public class SurveyWSParser {
         ObjectMapper mapper = new ObjectMapper();
         EReferralWSObject eReferralWSObject = mapper.readValue(json, EReferralWSObject.class);
         JSONObject wsObject = new JSONObject(json);
-        eReferralWSObject.getReferrals().addAll(
-                getSurveyWSResponses(wsObject.getJSONArray("referrals")));
+//        eReferralWSObject.getReferrals().addAll(
+//                getSurveyWSResponses(wsObject.getJSONArray("referrals")));
 
         return eReferralWSObject;
     }

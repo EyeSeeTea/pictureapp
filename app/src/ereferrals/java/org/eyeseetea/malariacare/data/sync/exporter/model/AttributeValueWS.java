@@ -1,11 +1,11 @@
 package org.eyeseetea.malariacare.data.sync.exporter.model;
 
-public class ValueWS {
+public class AttributeValueWS {
     private String name;
     private String value;
 
 
-    public ValueWS(String name, String value) {
+    public AttributeValueWS(String name, String value) {
         this.name = name;
         this.value = value;
     }

@@ -1,3 +1,4 @@
+
 package org.eyeseetea.malariacare.strategies;
 
 import android.graphics.Color;
@@ -55,17 +56,24 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         return question;
     }
 
+
     public static boolean isValidValue(Value value) {
-        if (Session.getStockSurvey()==null || value.getQuestion() == null) {
+        if (Session.getStockSurvey() == null || value.getQuestion() == null) {
             return false;
         }
         for (Value stockValue : Session.getStockSurvey().getValuesFromDB()) {
             if (stockValue.getQuestion() != null) {
                 if (stockValue.getQuestion().getUid().equals(value.getQuestion().getUid())) {
-                    return true;
+                    return false;
+                }
+                for(Question question:stockValue.getQuestion().getPropagationQuestions())
+                {
+                    if(value.getQuestion().getUid().equals(question.getUid())){
+                        return false;
+                    }
                 }
             }
         }
-        return false;
+        return true;
     }
 }

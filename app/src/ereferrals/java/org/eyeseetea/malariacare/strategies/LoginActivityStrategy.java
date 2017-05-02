@@ -6,10 +6,8 @@ import android.support.design.widget.TextInputLayout;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
-import android.widget.EditText;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.EditText;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
@@ -60,19 +58,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             //TODO jsanchez, this is necessary because oncreate is called from
             //AsyncTask review Why is invoked from AsyncTask, It's not very correct
             PopulateDB.wipeDataBase();
-            loginActivity.runOnUiThread(new Runnable() {
-                public void run() {
-                    addDemoButton();
-                }
-            });
         }
     }
 
     private boolean existsLoggedUser() {
         return User.getLoggedUser() != null;
-    }
-
-    private void addDemoButton() {
     }
 
     private void executePullDemo() {
@@ -141,9 +131,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
         TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
-        passwordHint.setHint("Pin");
+        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_pin));
     }
-}
 
     public boolean onOptionsItemSelected(MenuItem item) {
         return false;

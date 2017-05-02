@@ -18,4 +18,6 @@ public abstract class ALoginActivityStrategy {
 
     public abstract void onCreate();
 
+
+    public abstract void initViews();
 }

@@ -213,6 +213,7 @@
     <string name="positive_hint">"名称，详细信息"</string>
     <string name="export_data_option_title">"导出数据库"</string>
     <string name="demo_login">"示范"</string>
+    <string name="login_pin">"销"</string>
     <string name="option_counter">"重复："</string>
     <string name="option_confirm">"确认选项"</string>
     <string name="monitor_row_title_positive">"阳性病例"</string>

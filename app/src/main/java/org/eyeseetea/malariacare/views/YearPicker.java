@@ -3,6 +3,7 @@ package org.eyeseetea.malariacare.views;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,10 +20,12 @@ public class YearPicker extends DialogFragment {
     private NumberPicker mNumberPicker;
     private Button ok, cancel;
     private int maxYear, minYear;
+    private Context mContext;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Context context = getActivity();
+        mContext = context;
         Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.fragment_year_picker);
         setMaxMinYears();
@@ -69,4 +72,15 @@ public class YearPicker extends DialogFragment {
     public interface OnYearSelectedListener {
         void onYearSelected(int year);
     }
+
+    public void setButtonFont(int font, int textSize) {
+        Typeface type = Typeface.createFromAsset(mContext.getAssets(), mContext.getString(font));
+        int realTextSize= mContext.getResources().getDimensionPixelSize(textSize);
+
+        ok.setTypeface(type);
+        ok.setTextSize(realTextSize);
+        cancel.setTypeface(type);
+        cancel.setTextSize(realTextSize);
+    }
+
 }

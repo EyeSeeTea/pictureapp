@@ -357,7 +357,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                                 .is(malariaProgramUid))
                         .and(ConditionGroup.clause()
                                 .and(Survey_Table.status.withTable(surveyAlias)
-                                        .is(Constants.SURVEY_SENT))))
+                                        .is(Constants.SURVEY_SENT)))
+                .or(Survey_Table.status.eq(Constants.SURVEY_CONFLICT)))
                 .orderBy(Survey_Table.event_date, false).queryList();
     }
 
@@ -566,6 +567,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     public static List<Survey> findSentSurveysAfterDate(Date minDateForMonitor) {
         return new Select().from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_SENT))
+                .or(Survey_Table.status.eq(Constants.SURVEY_CONFLICT))
                 .and(Survey_Table.event_date.greaterThanOrEq(
                         minDateForMonitor)).queryList();
     }

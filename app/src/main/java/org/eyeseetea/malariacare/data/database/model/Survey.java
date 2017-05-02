@@ -568,6 +568,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     public static List<Survey> findSentSurveysAfterDate(Date minDateForMonitor) {
         return new Select().from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_SENT))
+                .or(Survey_Table.status.eq(Constants.SURVEY_CONFLICT))
                 .and(Survey_Table.event_date.greaterThanOrEq(
                         minDateForMonitor)).queryList();
     }

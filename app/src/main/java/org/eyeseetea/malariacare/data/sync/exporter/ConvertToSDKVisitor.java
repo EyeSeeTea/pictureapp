@@ -335,8 +335,8 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
                 }
                 iSurvey.save();
                 continue;
-            }
-            else if(importSummary !=null && importSummary.getStatus()== ImportSummary.Status.ERROR){
+            } else if (importSummary != null
+                    && importSummary.getStatus() == ImportSummary.Status.ERROR) {
                 Log.d(TAG, "saveSurveyStatus: PUSH error process..."
                         + importSummary.getDescription()
                         + " dataelement pushing survey: "

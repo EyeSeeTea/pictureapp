@@ -76,6 +76,9 @@ public class LoginUseCase extends ALoginUseCase {
             callback.onInvalidCredentials();
         } else if (throwable instanceof NetworkException) {
             callback.onNetworkError();
+        } else {
+            throwable.printStackTrace();
+            callback.onUnexpectedError();
         }
     }
 }

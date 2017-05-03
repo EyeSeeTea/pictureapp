@@ -9,9 +9,9 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
-import org.eyeseetea.malariacare.views.YearPicker;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.sdk.presentation.views.dialogs.YearPicker;
 
 public class YearSelectorQuestionView extends LinearLayout implements IQuestionView,
         IMultiQuestionView {

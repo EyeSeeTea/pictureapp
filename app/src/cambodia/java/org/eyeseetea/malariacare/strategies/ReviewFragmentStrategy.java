@@ -6,6 +6,7 @@ import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
@@ -17,6 +18,10 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         CustomTextView textCard = (CustomTextView) rowView.findViewById(R.id.review_content_text);
         textCard.setText((value.getInternationalizedCode() != null) ? value.getInternationalizedCode()
                 : value.getValue());
+        if (textCard.getText().equals("")) {
+            textCard.setText(PreferencesState.getInstance().getContext().getString(
+                    R.string.empty_phone_value));
+        }
         if ((value.getQuestionUId() != null)) {
             textCard.setTag(value.getQuestionUId());
 

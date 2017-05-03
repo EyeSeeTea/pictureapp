@@ -29,22 +29,6 @@ public class PullOrganisationCredentialsController {
         mContext = context;
     }
 
-    public void pullOrganisationCredentials(final Callback callback) {
-        mPullOrganisationCredentials.pullOrganisationCredentials(mCredentials,
-                new IDataSourceCallback<Credentials>() {
-                    @Override
-                    public void onSuccess(Credentials credentials) {
-                        saveOrganisationCredentials(credentials);
-                        callback.onComplete();
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                });
-    }
-
     public void pullUserProgram(final Callback callback) {
         mPullOrganisationCredentials.pullOrganisationCredentialsProgram(
                 PreferencesEReferral.getUserCredentialsFromPreferences(),
@@ -64,11 +48,6 @@ public class PullOrganisationCredentialsController {
 
     private void saveUserProgram(Program program) {
         PreferencesEReferral.saveUserProgramId(program.getId_program());
-    }
-
-
-    private void saveOrganisationCredentials(Credentials credentials) {
-        PreferencesEReferral.saveLoggedUserCredentials(credentials);
     }
 
 }

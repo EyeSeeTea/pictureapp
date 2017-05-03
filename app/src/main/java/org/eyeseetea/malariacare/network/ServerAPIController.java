@@ -32,14 +32,19 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
+import org.hisp.dhis.client.sdk.models.attribute.AttributeValue;
+import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -765,6 +770,16 @@ public class ServerAPIController {
 
     }
 
+    public static Credentials getOrgUnitCredentials(Credentials credentials)
+            throws PullConversionException, NetworkException {
+        if (isNetworkAvailable()) {
+            return parseOrganisationUnitToCredentials(
+                    getOrganisationUnitsByCode(credentials.getUsername()));
+        } else {
+            throw new NetworkException();
+        }
+    }
+
     /**
      * Checks if the orgunit is closed (due to too much surveys being pushed)
      */
@@ -928,6 +943,34 @@ public class ServerAPIController {
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    private static Credentials parseOrganisationUnitToCredentials(JSONObject organisationUnits)
+            throws PullConversionException {
+
+        if (organisationUnits != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                OrganisationUnit organisationUnit = mapper.readValue(organisationUnits.toString(),
+                        OrganisationUnit.class);
+                organisationUnit.toString();
+                String username = organisationUnit.getCode();
+                String password = null;
+                for (AttributeValue attributeValue : organisationUnit.getAttributeValues()) {
+                    if (attributeValue.getAttribute().getCode().equals(
+                            PreferencesState.getInstance().getContext().getString(
+                                    R.string.attribute_pin_code))) {
+                        password = attributeValue.getValue();
+                    }
+                }
+                return new Credentials("", username, password);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new PullConversionException();
+            }
+        }
+        return null;
     }
 
 

@@ -16,13 +16,11 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
-import org.eyeseetea.malariacare.data.sync.importer.PullOrganisationCredentialsController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.CheckCredentialsWithOrgUnitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
-import org.eyeseetea.malariacare.domain.usecase.PullOrganisationCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -147,51 +145,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
 
     @Override
     public void onLoginSuccess(final Credentials credentials) {
-        PullOrganisationCredentialsController pullOrganisationCredentialsController =
-                new PullOrganisationCredentialsController(credentials, loginActivity);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-
-        PullOrganisationCredentialsUseCase pullOrganisationCredentialsUseCase =
-                new PullOrganisationCredentialsUseCase(asyncExecutor, mainExecutor,
-                        pullOrganisationCredentialsController);
-        pullOrganisationCredentialsUseCase.execute(
-                new PullOrganisationCredentialsUseCase.Callback() {
-                    @Override
-                    public void onComplete() {
-                        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                                new CheckCredentialsWithOrgUnitUseCase();
-                        checkCredentialsWithOrgUnitUseCase.execute(credentials,LoginActivityStrategy.this);
-                    }
-
-                    @Override
-                    public void onError(String message) {
-                        loginActivity.hideProgressBar();
-                        Log.e(this.getClass().getSimpleName(), message);
-                        loginActivity.showError(R.string.dialog_title_error);
-                    }
-
-                    @Override
-                    public void onNetworkError() {
-                        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                                new CheckCredentialsWithOrgUnitUseCase();
-                        checkCredentialsWithOrgUnitUseCase.execute(credentials,LoginActivityStrategy.this);
-                    }
-
-                    @Override
-                    public void onPullConversionError() {
-                        loginActivity.hideProgressBar();
-                        Log.e(this.getClass().getSimpleName(), "Pull conversion error");
-                        loginActivity.showError(R.string.dialog_pull_error);
-                    }
-
-                    @Override
-                    public void onInvalidCredentials() {
-                        loginActivity.hideProgressBar();
-                        Log.e(this.getClass().getSimpleName(), "Invalid credentials");
-                        loginActivity.showError(R.string.login_invalid_credentials);
-                    }
-                });
+        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
+                new CheckCredentialsWithOrgUnitUseCase();
+        checkCredentialsWithOrgUnitUseCase.execute(credentials, LoginActivityStrategy.this);
     }
 
 

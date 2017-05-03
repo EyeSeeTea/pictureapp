@@ -1,11 +1,15 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
+import org.eyeseetea.malariacare.data.remote.CredentilasDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 
 import java.net.MalformedURLException;
@@ -19,12 +23,12 @@ public class LoginUseCase extends ALoginUseCase {
     }
 
     @Override
-    public void execute(Credentials credentials, final Callback callback) {
+    public void execute(final Credentials credentials, final Callback callback) {
         mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
-                        callback.onLoginSuccess();
+                        pullOrganisationCredentials(credentials, callback);
                     }
 
                     @Override
@@ -54,5 +58,25 @@ public class LoginUseCase extends ALoginUseCase {
                     }
                 });
 
+    }
+
+
+    private void pullOrganisationCredentials(Credentials credentials, final Callback callback) {
+        ICredentialsRepository credentialDataSource = new CredentilasDataSource();
+        Credentials orgUnitCredentials = null;
+        try {
+            orgUnitCredentials = credentialDataSource.getOrganisationCredentials(credentials);
+        } catch (PullConversionException e) {
+            e.printStackTrace();
+            callback.onConfigJsonNotPresent();
+        } catch (NetworkException e) {
+            e.printStackTrace();
+            callback.onNetworkError();
+            //TODO check credentials in local
+        }
+        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
+        credentialsLocalDataSource.saveOrganisationCredentials(orgUnitCredentials);
+
+        callback.onLoginSuccess();
     }
 }

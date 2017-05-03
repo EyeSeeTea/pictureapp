@@ -124,6 +124,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     public void onConfigJsonNotPresent() {
                         Log.d(TAG, "onConfigJsonNotPresent");
                     }
+
+                    @Override
+                    public void onUnexpectedError() {
+                        Log.d(TAG, "onUnexpectedError");
+                    }
                 }
         );
     }

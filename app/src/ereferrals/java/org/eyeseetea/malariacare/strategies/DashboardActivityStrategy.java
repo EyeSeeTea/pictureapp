@@ -10,9 +10,6 @@ import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 
-/**
- * Created by manuel on 28/12/16.
- */
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 

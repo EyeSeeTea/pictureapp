@@ -102,45 +102,23 @@ public class DashboardActivity extends BaseActivity {
 
     //Show dialog exception from class without activity.
     public static void showException(final String title, final String errorMessage) {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Run your task here
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        String dialogTitle = "", dialogMessage = "";
-                        if (title != null) {
-                            dialogTitle = title;
-                        }
-                        if (errorMessage != null) {
-                            dialogMessage = errorMessage;
-                        }
-                        new AlertDialog.Builder(dashboardActivity)
-                                .setCancelable(false)
-                                .setTitle(dialogTitle)
-                                .setMessage(dialogMessage)
-                                .setNeutralButton(android.R.string.ok, null)
-                                .create().show();
-                    }
-                });
-            }
-        }, 1000);
+        String dialogTitle = "", dialogMessage = "";
+        if (title != null) {
+            dialogTitle = title;
+        }
+        if (errorMessage != null) {
+            dialogMessage = errorMessage;
+        }
+        new AlertDialog.Builder(dashboardActivity)
+                .setCancelable(false)
+                .setTitle(dialogTitle)
+                .setMessage(dialogMessage)
+                .setNeutralButton(android.R.string.ok, null)
+                .create().show();
     }
     //Show dialog exception from class without activity.
     public static void closeUserFromService(final int title, final String errorMessage) {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Run your task here
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        AnnouncementMessageDialog.closeUser(title, errorMessage, dashboardActivity);
-                    }
-                });
-            }
-        }, 1000);
+        AnnouncementMessageDialog.closeUser(title, errorMessage, dashboardActivity);
     }
 
     public void setTabHostsWithText() {

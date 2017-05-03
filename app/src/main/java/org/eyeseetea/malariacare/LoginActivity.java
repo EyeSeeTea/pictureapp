@@ -299,6 +299,12 @@ public class LoginActivity extends Activity {
                 onFinishLoading(null);
                 showError(getString(R.string.login_error_json));
             }
+
+            @Override
+            public void onUnexpectedError() {
+                hideProgressBar();
+                showError(getString(R.string.login_unexpected_error));
+            }
         });
     }
 

@@ -11,7 +11,7 @@ public class EReferralWSObject {
     private String source;
     private String userName;
     private String password;
-    private List<Action> actions;
+    private List<SurveySendAction> actions;
 
     public EReferralWSObject() {
         version = PreferencesState.getInstance().getContext().getString(R.string.ws_version);
@@ -51,11 +51,11 @@ public class EReferralWSObject {
         this.password = password;
     }
 
-    public List<Action> getActions() {
+    public List<SurveySendAction> getActions() {
         return actions;
     }
 
-    public void setActions(List<Action> actions) {
+    public void setActions(List<SurveySendAction> actions) {
         this.actions = actions;
     }
 }

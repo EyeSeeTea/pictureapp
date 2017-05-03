@@ -3,12 +3,12 @@ package org.eyeseetea.malariacare.data.sync.exporter.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Action {
+public class SurveySendAction {
     private String type;
     private String actionId;
     private List<AttributeValueWS> attributeValues;
 
-    public Action() {
+    public SurveySendAction() {
         attributeValues = new ArrayList<>();
     }
 

@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class OverLimitSurveysServiceTest {
+public class OverLimitSurveysDomainServiceTest {
     @Test
     public void should_return_false_if_count_threshold_is_equal_to_0() {
         List<Survey> surveys = givenThereAre30SurveysIn2Hours();
@@ -23,7 +23,8 @@ public class OverLimitSurveysServiceTest {
                         .withTimeHour(1)
                         .build();
 
-        boolean isOverLimit = OverLimitSurveysService.isSurveysOverLimit(surveys, surveyThreshold);
+        boolean isOverLimit = OverLimitSurveysDomainService.isSurveysOverLimit(surveys,
+                surveyThreshold);
 
         assertThat(isOverLimit, is(false));
     }
@@ -38,7 +39,8 @@ public class OverLimitSurveysServiceTest {
                         .withTimeHour(0)
                         .build();
 
-        boolean isOverLimit = OverLimitSurveysService.isSurveysOverLimit(surveys, surveyThreshold);
+        boolean isOverLimit = OverLimitSurveysDomainService.isSurveysOverLimit(surveys,
+                surveyThreshold);
 
         assertThat(isOverLimit, is(false));
     }
@@ -54,7 +56,8 @@ public class OverLimitSurveysServiceTest {
                         .withTimeHour(1)
                         .build();
 
-        boolean isOverLimit = OverLimitSurveysService.isSurveysOverLimit(surveys, surveyThreshold);
+        boolean isOverLimit = OverLimitSurveysDomainService.isSurveysOverLimit(surveys,
+                surveyThreshold);
 
         assertThat(isOverLimit, is(false));
     }
@@ -71,7 +74,8 @@ public class OverLimitSurveysServiceTest {
                         .withTimeHour(1)
                         .build();
 
-        boolean isOverLimit = OverLimitSurveysService.isSurveysOverLimit(surveys, surveyThreshold);
+        boolean isOverLimit = OverLimitSurveysDomainService.isSurveysOverLimit(surveys,
+                surveyThreshold);
 
         assertThat(isOverLimit, is(false));
     }
@@ -87,7 +91,8 @@ public class OverLimitSurveysServiceTest {
                         .withTimeHour(2)
                         .build();
 
-        boolean isOverLimit = OverLimitSurveysService.isSurveysOverLimit(surveys, surveyThreshold);
+        boolean isOverLimit = OverLimitSurveysDomainService.isSurveysOverLimit(surveys,
+                surveyThreshold);
 
         assertThat(isOverLimit, is(true));
     }
@@ -103,7 +108,8 @@ public class OverLimitSurveysServiceTest {
                         .withTimeHour(3)
                         .build();
 
-        boolean isOverLimit = OverLimitSurveysService.isSurveysOverLimit(surveys, surveyThreshold);
+        boolean isOverLimit = OverLimitSurveysDomainService.isSurveysOverLimit(surveys,
+                surveyThreshold);
 
         assertThat(isOverLimit, is(true));
     }

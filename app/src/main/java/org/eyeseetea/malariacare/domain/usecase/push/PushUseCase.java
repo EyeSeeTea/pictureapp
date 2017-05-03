@@ -14,7 +14,7 @@ import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
-import org.eyeseetea.malariacare.domain.service.OverLimitSurveysService;
+import org.eyeseetea.malariacare.domain.service.OverLimitSurveysDomainService;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 
@@ -151,7 +151,7 @@ public class PushUseCase implements UseCase {
             List<Survey> sentSurveys = mSurveyRepository.getLastSentSurveys(
                     mSurveysThresholds.getCount());
 
-            if (OverLimitSurveysService.isSurveysOverLimit(sentSurveys, mSurveysThresholds)) {
+            if (OverLimitSurveysDomainService.isSurveysOverLimit(sentSurveys, mSurveysThresholds)) {
                 banOrgUnit();
             }
         }

@@ -19,7 +19,6 @@ import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.CheckCredentialsWithOrgUnitUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
@@ -27,8 +26,7 @@ import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
-public class LoginActivityStrategy extends ALoginActivityStrategy implements
-        CheckCredentialsWithOrgUnitUseCase.Callback {
+public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private static final String TAG = ".LoginActivityStrategy";
 
@@ -145,20 +143,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
 
     @Override
     public void onLoginSuccess(final Credentials credentials) {
-        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                new CheckCredentialsWithOrgUnitUseCase();
-        checkCredentialsWithOrgUnitUseCase.execute(credentials, LoginActivityStrategy.this);
-    }
-
-
-    @Override
-    public void onCorrectCredentials() {
         loginActivity.checkAnnouncement();
     }
 
-    @Override
-    public void onBadCredentials() {
-        loginActivity.hideProgressBar();
-        loginActivity.showError(R.string.login_invalid_credentials);
-    }
 }

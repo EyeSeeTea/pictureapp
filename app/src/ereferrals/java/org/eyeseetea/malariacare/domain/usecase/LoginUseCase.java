@@ -1,7 +1,6 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.remote.CredentialsDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
@@ -17,6 +16,7 @@ import java.net.UnknownHostException;
 
 public class LoginUseCase extends ALoginUseCase {
     private IAuthenticationManager mAuthenticationManager;
+    private Credentials insertedCredentials;
 
     public LoginUseCase(IAuthenticationManager authenticationManager) {
         mAuthenticationManager = authenticationManager;
@@ -24,6 +24,7 @@ public class LoginUseCase extends ALoginUseCase {
 
     @Override
     public void execute(final Credentials credentials, final Callback callback) {
+        insertedCredentials = credentials;
         mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
@@ -39,21 +40,10 @@ public class LoginUseCase extends ALoginUseCase {
                         } else if (throwable instanceof InvalidCredentialsException) {
                             callback.onInvalidCredentials();
                         } else if (throwable instanceof NetworkException) {
-                            CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                                    new CheckCredentialsWithOrgUnitUseCase();
-                            checkCredentialsWithOrgUnitUseCase.execute(
-                                    PreferencesEReferral.getUserCredentialsFromPreferences(),
-                                    new CheckCredentialsWithOrgUnitUseCase.Callback() {
-                                        @Override
-                                        public void onCorrectCredentials() {
-                                            callback.onLoginSuccess();
-                                        }
-
-                                        @Override
-                                        public void onBadCredentials() {
-                                            callback.onNetworkError();
-                                        }
-                                    });
+                            ICredentialsRepository
+                                    credentialsLocalDataSource = new CredentialsLocalDataSource();
+                            checkUserCredentialsWithOrgUnit(
+                                    credentialsLocalDataSource.getCredentials(), callback);
                         }
                     }
                 });
@@ -63,6 +53,8 @@ public class LoginUseCase extends ALoginUseCase {
 
     private void pullOrganisationCredentials(Credentials credentials, final Callback callback) {
         ICredentialsRepository credentialDataSource = new CredentialsDataSource();
+        ICredentialsRepository
+                credentialsLocalDataSource = new CredentialsLocalDataSource();
         Credentials orgUnitCredentials = null;
         try {
             orgUnitCredentials = credentialDataSource.getOrganisationCredentials(credentials);
@@ -72,12 +64,23 @@ public class LoginUseCase extends ALoginUseCase {
         } catch (NetworkException e) {
             e.printStackTrace();
             callback.onNetworkError();
-            //TODO check credentials in local
+            checkUserCredentialsWithOrgUnit(credentialsLocalDataSource.getCredentials(), callback);
         }
-        ICredentialsRepository
-                credentialsLocalDataSource = new CredentialsLocalDataSource();
+
         credentialsLocalDataSource.saveOrganisationCredentials(orgUnitCredentials);
 
-        callback.onLoginSuccess();
+        checkUserCredentialsWithOrgUnit(credentials, callback);
     }
+
+
+    private void checkUserCredentialsWithOrgUnit(Credentials credentials, Callback callback) {
+        if (insertedCredentials.getUsername().equals(credentials.getUsername())
+                && insertedCredentials.getPassword().equals(credentials.getPassword())) {
+            callback.onLoginSuccess();
+        } else {
+            callback.onInvalidCredentials();
+        }
+    }
+
+
 }

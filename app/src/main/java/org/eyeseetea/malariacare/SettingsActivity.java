@@ -423,7 +423,7 @@ public class SettingsActivity extends PreferenceActivity implements
             settingsActivity.serverUrlPreference = (Preference) findPreference(
                     getResources().getString(R.string.dhis_url));
 
-            settingsActivity.loadFontStyleListPreference();
+            //settingsActivity.loadFontStyleListPreference();
 
             settingsActivity.autoCompleteEditTextPreference.pullOrgUnits();
 

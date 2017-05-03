@@ -226,6 +226,12 @@ public class LoginActivity extends AbsLoginActivity {
                 hideProgressBar();
                 showError(getString(R.string.login_error_json));
             }
+
+            @Override
+            public void onUnexpectedError() {
+                hideProgressBar();
+                showError(getString(R.string.login_unexpected_error));
+            }
         });
     }
 

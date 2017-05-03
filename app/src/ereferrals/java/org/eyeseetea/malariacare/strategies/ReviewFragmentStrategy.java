@@ -1,3 +1,4 @@
+
 package org.eyeseetea.malariacare.strategies;
 
 import android.graphics.Color;
@@ -52,35 +53,27 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
 
     private Question getCorrectQuestion(Question question) {
-        if (question.getUid().equals(PreferencesState.getInstance().getContext().getString(
-                R.string.dynamicTreatmentQuestionUID)) || question.getUid().equals(
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.referralQuestionUID))
-                || question.getUid().equals(
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.treatmentDiagnosisVisibleQuestion))) {
-            return Question.findByUID(PreferencesState.getInstance().getContext().getString(
-                    R.string.dynamicTreatmentHideQuestionUID));
-        }
-        if (question.getUid().equals(PreferencesState.getInstance().getContext().getString(
-                R.string.outOfStockQuestionUID))) {
-            return Question.findByUID(PreferencesState.getInstance().getContext().getString(
-                    R.string.dynamicStockQuestionUID));
-        }
         return question;
     }
 
+
     public static boolean isValidValue(Value value) {
-        if (Session.getStockSurvey()==null || value.getQuestion() == null) {
+        if (Session.getStockSurvey() == null || value.getQuestion() == null) {
             return false;
         }
         for (Value stockValue : Session.getStockSurvey().getValuesFromDB()) {
             if (stockValue.getQuestion() != null) {
                 if (stockValue.getQuestion().getUid().equals(value.getQuestion().getUid())) {
-                    return true;
+                    return false;
+                }
+                for(Question question:stockValue.getQuestion().getPropagationQuestions())
+                {
+                    if(value.getQuestion().getUid().equals(question.getUid())){
+                        return false;
+                    }
                 }
             }
         }
-        return false;
+        return true;
     }
 }

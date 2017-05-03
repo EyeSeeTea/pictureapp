@@ -2,7 +2,7 @@ package org.eyeseetea.malariacare.domain.usecase;
 
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
-import org.eyeseetea.malariacare.data.remote.CredentilasDataSource;
+import org.eyeseetea.malariacare.data.remote.CredentialsDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -62,7 +62,7 @@ public class LoginUseCase extends ALoginUseCase {
 
 
     private void pullOrganisationCredentials(Credentials credentials, final Callback callback) {
-        ICredentialsRepository credentialDataSource = new CredentilasDataSource();
+        ICredentialsRepository credentialDataSource = new CredentialsDataSource();
         Credentials orgUnitCredentials = null;
         try {
             orgUnitCredentials = credentialDataSource.getOrganisationCredentials(credentials);
@@ -74,7 +74,8 @@ public class LoginUseCase extends ALoginUseCase {
             callback.onNetworkError();
             //TODO check credentials in local
         }
-        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
+        ICredentialsRepository
+                credentialsLocalDataSource = new CredentialsLocalDataSource();
         credentialsLocalDataSource.saveOrganisationCredentials(orgUnitCredentials);
 
         callback.onLoginSuccess();

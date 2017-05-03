@@ -7,7 +7,7 @@ import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 
 
-public class CredentilasDataSource implements ICredentialsRepository {
+public class CredentialsDataSource implements ICredentialsRepository {
 
 
     @Override
@@ -19,5 +19,10 @@ public class CredentilasDataSource implements ICredentialsRepository {
     @Override
     public void saveOrganisationCredentials(Credentials credentials) {
 
+    }
+
+    @Override
+    public Credentials getCredentials() {
+        return null;
     }
 }

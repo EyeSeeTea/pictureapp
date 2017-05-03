@@ -780,6 +780,34 @@ public class ServerAPIController {
         }
     }
 
+    public static Program getUserProgram(Credentials credentials)
+            throws PullConversionException, NetworkException {
+        if (isNetworkAvailable()) {
+            return parseOrganisationUnitToCorrectProgram(
+                    getOrganisationUnitsByCode(credentials.getUsername()));
+        } else {
+            throw new NetworkException();
+        }
+    }
+
+    private static Program parseOrganisationUnitToCorrectProgram(JSONObject organisationUnit)
+            throws PullConversionException {
+        try {
+            JSONArray ancestors = organisationUnit.getJSONArray("ancestors");
+            for (int i = 0; i < ancestors.length(); i++) {
+                if (ancestors.getJSONObject(i).getInt("level") == Integer.parseInt(
+                        PreferencesState.getInstance().getContext().getString(
+                                R.string.ancestor_level))) {
+                    return Program.findByName(ancestors.getJSONObject(i).getString("code"));
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new PullConversionException();
+        }
+        return null;
+    }
+
     /**
      * Checks if the orgunit is closed (due to too much surveys being pushed)
      */

@@ -197,15 +197,10 @@ public class SettingsActivity extends PreferenceActivity implements
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        setupSimplePreferencesScreen();
+        setupPreferencesScreen();
     }
 
-    /**
-     * Shows the simplified settings UI if the device configuration if the
-     * device configuration dictates that a simplified, single-pane UI should be
-     * shown.
-     */
-    private void setupSimplePreferencesScreen() {
+    private void setupPreferencesScreen() {
 
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
@@ -271,14 +266,6 @@ public class SettingsActivity extends PreferenceActivity implements
         listPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
         listPreference.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
         listPreference.setDefaultValue(String.valueOf(FontStyle.Medium.getResId()));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onIsMultiPane() {
-        return false;
     }
 
     @Override

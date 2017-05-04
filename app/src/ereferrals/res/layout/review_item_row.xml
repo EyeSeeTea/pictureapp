@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/empty_string"
-        android:lineSpacingMultiplier="2"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
         android:textColor="@color/white"

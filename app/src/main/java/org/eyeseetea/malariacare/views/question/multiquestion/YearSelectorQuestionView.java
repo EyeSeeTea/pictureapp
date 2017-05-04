@@ -21,10 +21,12 @@ public class YearSelectorQuestionView extends LinearLayout implements IQuestionV
     private QuestionAnswerChangedListener mOnAnswerChangedListener;
     private Activity mActivity;
     private String TAG = "YearPicker";
+    private boolean enabled;
 
     public YearSelectorQuestionView(Context context) {
         super(context);
         mActivity = (Activity) context;
+        enabled = true;
         init(context);
     }
 
@@ -63,15 +65,17 @@ public class YearSelectorQuestionView extends LinearLayout implements IQuestionV
         yearText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                YearPicker yearPicker = new YearPicker();
-                yearPicker.setOnYearSelectedListener(new YearPicker.OnYearSelectedListener() {
-                    @Override
-                    public void onYearSelected(int year) {
-                        yearText.setText(String.valueOf(year));
-                        notifyAnswerChanged(String.valueOf(year));
-                    }
-                });
-                yearPicker.show(mActivity.getFragmentManager(), TAG);
+                if (enabled) {
+                    YearPicker yearPicker = new YearPicker();
+                    yearPicker.setOnYearSelectedListener(new YearPicker.OnYearSelectedListener() {
+                        @Override
+                        public void onYearSelected(int year) {
+                            yearText.setText(String.valueOf(year));
+                            notifyAnswerChanged(String.valueOf(year));
+                        }
+                    });
+                    yearPicker.show(mActivity.getFragmentManager(), TAG);
+                }
             }
         });
 
@@ -87,4 +91,9 @@ public class YearSelectorQuestionView extends LinearLayout implements IQuestionV
         void onAnswerChanged(View view, String newValue);
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        this.enabled = enabled;
+    }
 }

@@ -10,7 +10,8 @@ import android.widget.TableRow;
 import com.google.common.collect.Iterables;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
+import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
     private Context context;
     private Integer headerLayout;
     private Integer footerLayout;
-    public static Iterator<String> colorIterator;
     private Integer recordLayout;
     private String title;
     private Integer subHeaderLayout;
@@ -36,23 +36,6 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
         this.headerLayout = R.layout.review_header;
         this.subHeaderLayout = R.layout.review_sub_header;
         this.recordLayout = R.layout.review_item_row;
-        List<String> colorsList = new ArrayList<>();
-        for (Value value : items) {
-            if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
-                String color = "#" + value.getOption().getBackground_colour();
-                if (!colorsList.contains(color)) {
-                    colorsList.add(color);
-                }
-            }
-        }
-        //Hardcoded colors for a colorList without colors.
-        if (colorsList.size() == 0) {
-            colorsList.add("#4d3a4b");
-        }
-        if (colorsList.size() == 1 && items.size() > 1) {
-            colorsList.add("#9c7f9b");
-        }
-        colorIterator = Iterables.cycle(colorsList).iterator();
     }
 
     @Override

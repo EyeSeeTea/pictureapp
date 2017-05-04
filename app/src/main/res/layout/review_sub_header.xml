@@ -13,7 +13,6 @@
         android:background="@color/questionHeaderColor"
         android:gravity="center"
         android:paddingLeft="10dip"
-        android:lineSpacingMultiplier="2"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
         android:text="@string/review_subtitle"

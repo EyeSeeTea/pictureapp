@@ -144,11 +144,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             Question question = navigationController.getCurrentQuestion();
             if (question.getValueBySession() != null) {
-                if (DashboardActivity.moveToQuestion != null) {
-                    goToQuestion(DashboardActivity.moveToQuestion);
-                    DashboardActivity.moveToQuestion = null;
+                if (DashboardActivity.moveToThisUId != null) {
+                    goToQuestion(DashboardActivity.moveToThisUId);
+                    DashboardActivity.moveToThisUId = null;
                 } else {
-                    goToQuestion(question);
+                    goToQuestion(question.getUid());
                 }
             }
 
@@ -1033,7 +1033,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * When the user click in a value in the review fragment the navigationController should go to
      * related question
      */
-    private void goToQuestion(Question isMoveToQuestion) {
+    private void goToQuestion(String questionUid) {
         navigationController.first();
 
         Question currentQuestion;
@@ -1051,12 +1051,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         currentQuestion.getHeader().getTab());
 
                 for (Question question : screenQuestions) {
-                    if (isMoveToQuestion.getUid().equals(question.getUid())) {
+                    if (questionUid.equals(question.getUid())) {
                         isQuestionFound = true;
                     }
                 }
             } else {
-                if (isMoveToQuestion.getUid().equals(currentQuestion.getUid())) {
+                if (questionUid.equals(currentQuestion.getUid())) {
                     isQuestionFound = true;
                 }
             }

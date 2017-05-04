@@ -5,7 +5,7 @@ import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSu
 import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.BuildConfig;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.domain.entity.Value;
 
 public abstract class AReviewFragmentStrategy {
 

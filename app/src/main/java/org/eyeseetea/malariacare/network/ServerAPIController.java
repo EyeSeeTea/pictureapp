@@ -38,7 +38,7 @@ import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.OrgUnit;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -729,8 +729,9 @@ public class ServerAPIController {
         return closedDate.before(new Date());
     }
 
-    public static JSONObject getOrganisationUnitsByCode(String code)
-            throws PullConversionException {
+    public static org.eyeseetea.malariacare.domain.entity.OrgUnit getOrganisationUnitsByCode(
+            String code)
+            throws PullConversionException, NetworkException {
         //Version is required to choose which field to match
         String serverVersion = getServerVersion(PreferencesState.getInstance().getDhisURL());
 
@@ -741,6 +742,9 @@ public class ServerAPIController {
 
         try {
             String urlOrgUnitData = getOrganisationUnitsCredentialsUrl(code);
+            if (!isNetworkAvailable()) {
+                throw new NetworkException();
+            }
             Response response = executeCall(null, urlOrgUnitData, "GET");
 
             //Error -> null
@@ -759,8 +763,11 @@ public class ServerAPIController {
                         orgUnitsArray.length()));
                 return null;
             }
-            return (JSONObject) orgUnitsArray.get(0);
 
+            JSONObject orgUnitJO = (JSONObject) orgUnitsArray.get(0);
+            return parseOrgUnit(orgUnitJO);
+        } catch (NetworkException e) {
+            throw e;
         } catch (Exception ex) {
             Log.e(TAG, String.format("getOrgUnitData(%s): %s", code,
                     ex.toString()));
@@ -770,42 +777,48 @@ public class ServerAPIController {
 
     }
 
-    public static Credentials getOrgUnitCredentials(Credentials credentials)
-            throws PullConversionException, NetworkException {
-        if (isNetworkAvailable()) {
-            return parseOrganisationUnitToCredentials(
-                    getOrganisationUnitsByCode(credentials.getUsername()));
-        } else {
-            throw new NetworkException();
-        }
-    }
+    private static OrgUnit parseOrgUnit(JSONObject orgUnitJO) throws IOException, JSONException {
+        if (orgUnitJO != null) {
+            ObjectMapper mapper = new ObjectMapper();
 
-    public static Program getUserProgram(Credentials credentials)
-            throws PullConversionException, NetworkException {
-        if (isNetworkAvailable()) {
-            return parseOrganisationUnitToCorrectProgram(
-                    getOrganisationUnitsByCode(credentials.getUsername()));
-        } else {
-            throw new NetworkException();
-        }
-    }
+            OrganisationUnit organisationUnit = mapper.readValue(
+                    orgUnitJO.toString(),
+                    OrganisationUnit.class);
+            organisationUnit.toString();
 
-    private static Program parseOrganisationUnitToCorrectProgram(JSONObject organisationUnit)
-            throws PullConversionException {
-        try {
-            JSONArray ancestors = organisationUnit.getJSONArray("ancestors");
+            org.eyeseetea.malariacare.domain.entity.OrgUnit orgUnit =
+                    new org.eyeseetea.malariacare.domain.entity.OrgUnit();
+            orgUnit.setCode(organisationUnit.getCode());
+            orgUnit.setId(organisationUnit.getUId());
+            String pin = "";
+            for (AttributeValue attributeValue : organisationUnit.getAttributeValues()) {
+                if (attributeValue.getAttribute().getCode().equals(
+                        PreferencesState.getInstance().getContext().getString(
+                                R.string.attribute_pin_code))) {
+                    pin = attributeValue.getValue();
+                }
+            }
+            orgUnit.setPin(pin);
+
+            org.eyeseetea.malariacare.domain.entity.Program program = new org.eyeseetea
+                    .malariacare.domain.entity.Program();
+
+            JSONArray ancestors = orgUnitJO.getJSONArray("ancestors");
             for (int i = 0; i < ancestors.length(); i++) {
                 if (ancestors.getJSONObject(i).getInt("level") == Integer.parseInt(
                         PreferencesState.getInstance().getContext().getString(
                                 R.string.ancestor_level))) {
-                    return Program.findByName(ancestors.getJSONObject(i).getString("code"));
+                    program.setId(ancestors.getJSONObject(i).getString("id"));
+                    program.setCode(ancestors.getJSONObject(i).getString("code"));
                 }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            throw new PullConversionException();
+            orgUnit.setProgram(program);
+
+            return orgUnit;
+
+        } else {
+            return null;
         }
-        return null;
     }
 
     /**
@@ -972,36 +985,6 @@ public class ServerAPIController {
             return null;
         }
     }
-
-    private static Credentials parseOrganisationUnitToCredentials(JSONObject organisationUnits)
-            throws PullConversionException {
-
-        if (organisationUnits != null) {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                OrganisationUnit organisationUnit = mapper.readValue(organisationUnits.toString(),
-                        OrganisationUnit.class);
-                organisationUnit.toString();
-                String username = organisationUnit.getCode();
-                String password = null;
-                for (AttributeValue attributeValue : organisationUnit.getAttributeValues()) {
-                    if (attributeValue.getAttribute().getCode().equals(
-                            PreferencesState.getInstance().getContext().getString(
-                                    R.string.attribute_pin_code))) {
-                        password = attributeValue.getValue();
-                    }
-                }
-                return new Credentials("", username, password);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new PullConversionException();
-            }
-        }
-        return null;
-    }
-
-
 }
 
 /**

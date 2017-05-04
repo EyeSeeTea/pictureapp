@@ -5,14 +5,16 @@ import android.util.Log;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.Program;
-import org.eyeseetea.malariacare.data.remote.ProgramDataSource;
+import org.eyeseetea.malariacare.data.remote.OrgUnitDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrgUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.entity.OrgUnit;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
@@ -55,11 +57,11 @@ public class PullControllerStrategy extends APullControllerStrategy {
     public void onPullDataComplete(final IPullController.Callback callback) {
         mPullController.convertData(callback);
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
-        IProgramRepository programDataSource = new ProgramDataSource();
+        IOrgUnitRepository orgUnitDataSource = new OrgUnitDataSource();
         IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
         try {
-            Program program = programDataSource.getUserProgram(
-                    credentialsLocalDataSource.getCredentials());
+            OrgUnit orgUnit=orgUnitDataSource.getUserOrgUnit(credentialsLocalDataSource.getOrganisationCredentials());
+            org.eyeseetea.malariacare.domain.entity.Program program = orgUnit.getProgram();
             programLocalDataSource.saveUserProgramId(program);
         } catch (PullConversionException e) {
             e.printStackTrace();

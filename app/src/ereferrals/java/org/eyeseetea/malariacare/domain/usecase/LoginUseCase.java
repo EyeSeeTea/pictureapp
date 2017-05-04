@@ -1,12 +1,14 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.remote.CredentialsDataSource;
+import org.eyeseetea.malariacare.data.remote.OrgUnitDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrgUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.OrgUnit;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -59,7 +61,7 @@ public class LoginUseCase extends ALoginUseCase {
                             ICredentialsRepository
                                     credentialsLocalDataSource = new CredentialsLocalDataSource();
                             checkUserCredentialsWithOrgUnit(
-                                    credentialsLocalDataSource.getCredentials(), false);
+                                    credentialsLocalDataSource.getOrganisationCredentials(), false);
                         }
                     }
                 });
@@ -68,22 +70,25 @@ public class LoginUseCase extends ALoginUseCase {
 
 
     private void pullOrganisationCredentials(Credentials credentials, final Callback callback) {
-        ICredentialsRepository credentialDataSource = new CredentialsDataSource();
+        IOrgUnitRepository orgUnitDataSource = new OrgUnitDataSource();
         ICredentialsRepository
                 credentialsLocalDataSource = new CredentialsLocalDataSource();
         Credentials orgUnitCredentials = null;
         try {
-            orgUnitCredentials = credentialDataSource.getOrganisationCredentials(credentials);
-            if (orgUnitCredentials == null) {
+            OrgUnit orgUnit = orgUnitDataSource.getUserOrgUnit(credentials);
+            if (orgUnit == null) {
                 notifyInvalidCredentials();
                 return;
             }
+            orgUnitCredentials = new Credentials("", orgUnit.getCode(), orgUnit.getPin());
+
         } catch (PullConversionException e) {
             e.printStackTrace();
             notifyConfigJsonNotPresent();
         } catch (NetworkException e) {
             e.printStackTrace();
-            checkUserCredentialsWithOrgUnit(credentialsLocalDataSource.getCredentials(), true);
+            checkUserCredentialsWithOrgUnit(credentialsLocalDataSource.getOrganisationCredentials(),
+                    true);
         }
 
         credentialsLocalDataSource.saveOrganisationCredentials(orgUnitCredentials);

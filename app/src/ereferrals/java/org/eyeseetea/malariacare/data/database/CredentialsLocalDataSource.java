@@ -9,8 +9,7 @@ import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 
 public class CredentialsLocalDataSource implements ICredentialsRepository {
     @Override
-    public Credentials getOrganisationCredentials(Credentials credentials)
-            throws PullConversionException {
+    public Credentials getOrganisationCredentials() {
         return PreferencesEReferral.getUserCredentialsFromPreferences();
     }
 

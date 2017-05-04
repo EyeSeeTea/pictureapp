@@ -42,7 +42,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onCreateOptionsMenu(Menu menu) {
-
+        menu.removeItem(R.id.demo_mode);
     }
 
 

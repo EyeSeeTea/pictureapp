@@ -1,29 +1,29 @@
 package org.eyeseetea.malariacare.strategies;
 
-import static org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter.colorIterator;
-
 import android.graphics.Color;
 import android.view.View;
 import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Question;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
-
-import java.util.Iterator;
 
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
     public TableRow createViewRow(TableRow rowView, Value value) {
         //Sets the value text in the row and add the question as tag.
         CustomTextView textCard = (CustomTextView) rowView.findViewById(R.id.review_content_text);
-        textCard.setText((value.getOption() != null) ? value.getOption().getInternationalizedCode()
+        textCard.setText((value.getInternationalizedCode() != null) ? value.getInternationalizedCode()
                 : value.getValue());
-        if ((value.getQuestion() != null)) {
-            textCard.setTag(value.getQuestion());
+        if (textCard.getText().equals("")) {
+            textCard.setText(PreferencesState.getInstance().getContext().getString(
+                    R.string.empty_review_value));
+        }
+        if ((value.getQuestionUId() != null)) {
+            textCard.setTag(value.getQuestionUId());
 
             //Adds click listener to hide the fragment and go to the clicked question.
             textCard.setOnClickListener(new View.OnClickListener() {
@@ -31,28 +31,17 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
                 public void onClick(View v) {
                     if(!DynamicTabAdapter.isClicked) {
                         DynamicTabAdapter.isClicked = true;
-                        Question question = (Question) v.getTag();
-                        DashboardActivity.dashboardActivity.hideReview(question);
+                        String questionUId = (String) v.getTag();
+
+                        DashboardActivity.dashboardActivity.hideReview(questionUId);
                     }
                 }
             });
-
-            if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
-                if(colorIterator.hasNext()) {
-                    textCard.setBackgroundColor(
-                            Color.parseColor(colorIterator.next()));
-                }
-            }
+            textCard.setBackgroundColor(
+                    Color.parseColor(value.getBackgroundColor()));
 
         }
         return rowView;
-    }
-
-    public static boolean isValidValue(Value value) {
-        if (value.getQuestion() == null) {
-            return false;
-        }
-        return true;
     }
 
     public static boolean shouldShowReviewScreen(){

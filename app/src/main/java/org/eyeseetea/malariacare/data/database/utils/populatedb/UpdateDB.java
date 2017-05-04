@@ -1,5 +1,10 @@
 package org.eyeseetea.malariacare.data.database.utils.populatedb;
 
+import static org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB
+        .OPTION_ATTRIBUTES_CSV;
+import static org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB.QUESTIONS_CSV;
+import static org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB.QUOTECHAR;
+import static org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB.SEPARATOR;
 import static org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateRow.populateMatch;
 import static org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateRow
         .populateQuestionRelation;
@@ -28,6 +33,7 @@ import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.Translation;
 import org.eyeseetea.malariacare.data.database.model.Treatment;
 import org.eyeseetea.malariacare.data.database.model.TreatmentMatch;
+import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.io.IOException;
@@ -46,7 +52,7 @@ public class UpdateDB {
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.QUESTIONS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
 
         String line[];
         int i = 0;
@@ -75,7 +81,7 @@ public class UpdateDB {
         List<Answer> answers = Answer.getAllAnswers();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.ANSWERS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         //Save new answers
         int i = 0;
@@ -103,7 +109,7 @@ public class UpdateDB {
         HashMap<Long, Tab> tabIds = RelationsIdCsvDB.getTabsIdRelationsCsvDB(context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.HEADERS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -128,7 +134,7 @@ public class UpdateDB {
         List<Program> programs = Program.getAllPrograms();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.PROGRAMS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -158,7 +164,7 @@ public class UpdateDB {
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.TABS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -181,7 +187,7 @@ public class UpdateDB {
                 RelationsIdCsvDB.getQuestionRelationIdRelationCsvDB(context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.MATCHES)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -203,7 +209,7 @@ public class UpdateDB {
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_RELATIONS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -235,7 +241,7 @@ public class UpdateDB {
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_OPTIONS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -265,7 +271,7 @@ public class UpdateDB {
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.QUESTION_THRESHOLDS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -294,7 +300,7 @@ public class UpdateDB {
         List<Drug> drugs = Drug.getAllDrugs();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.DRUGS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -322,7 +328,7 @@ public class UpdateDB {
         List<Partner> partners = Partner.getAllOrganisations();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.PARTNER_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -353,7 +359,7 @@ public class UpdateDB {
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.TREATMENT_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -385,7 +391,7 @@ public class UpdateDB {
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.DRUG_COMBINATIONS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -417,7 +423,7 @@ public class UpdateDB {
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.TREATMENT_MATCHES_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -439,7 +445,7 @@ public class UpdateDB {
         List<StringKey> stringKeys = StringKey.getAllStringKeys();
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.STRING_KEY_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -462,7 +468,7 @@ public class UpdateDB {
                 context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.TRANSLATION_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         String line[];
         int i = 0;
         while ((line = reader.readNext()) != null) {
@@ -485,7 +491,7 @@ public class UpdateDB {
                 RelationsIdCsvDB.getOptionAttributeIdRelationCsvDB(context);
         CSVReader reader = new CSVReader(
                 new InputStreamReader(context.openFileInput(PopulateDB.OPTIONS_CSV)),
-                PopulateDB.SEPARATOR, PopulateDB.QUOTECHAR);
+                SEPARATOR, QUOTECHAR);
         List<String[]> lines = reader.readAll();
 
         for (int i = lines.size() - numeberLines - 1; i < lines.size(); i++) {
@@ -494,5 +500,36 @@ public class UpdateDB {
         }
     }
 
+    public static void updateQuestionOrder(Context context) throws IOException {
+        List<Question> questions = Question.getAllQuestions();
+        CSVReader reader = new CSVReader(
+                        new InputStreamReader(new PopulateDBStrategy().openFile(context, QUESTIONS_CSV)),
+                        SEPARATOR, QUOTECHAR);
+        String line[];
+        while ((line = reader.readNext()) != null) {
+            for (Question question : questions) {
+                if(question.getUid().equals(line[5])) {
+                    question.setOrder_pos(Integer.valueOf(line[6]));
+                    question.save();
+                }
+            }
+        }
+    }
 
+
+    public static void updateOptionAttributes(Context context) throws IOException {
+        List<OptionAttribute> optionsAttributes = OptionAttribute.getAllOptionAttributes();
+        CSVReader reader = new CSVReader(
+                new InputStreamReader(new PopulateDBStrategy().openFile(context, OPTION_ATTRIBUTES_CSV)),
+                SEPARATOR, QUOTECHAR);
+        String line[];
+        while ((line = reader.readNext()) != null) {
+            for (OptionAttribute optionsAttribute : optionsAttributes) {
+                if(optionsAttribute.getId_option_attribute()==Integer.valueOf(line[0])) {
+                    optionsAttribute.setBackground_colour(line[1]);
+                    optionsAttribute.save();
+                }
+            }
+        }
+    }
 }

@@ -14,7 +14,6 @@
         android:gravity="center"
         android:paddingLeft="10dip"
         android:text="@string/review_subtitle"
-        android:lineSpacingMultiplier="2"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
         android:textColor="@color/white"

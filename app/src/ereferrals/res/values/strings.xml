@@ -118,6 +118,7 @@
     <string name="positive_hint">"Name, Details"</string>
     <string name="export_data_option_title">"Export database"</string>
     <string name="demo_login">"Demo"</string>
+    <string name="login_pin">"pin"</string>
     <string name="option_counter">"Repetitions: "</string>
     <string name="monitor_row_title_positive">"Positive cases"</string>
     <string name="monitor_row_title_negative">Negative</string>

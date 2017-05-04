@@ -55,4 +55,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         return false;
     }
 
+
+    @Override
+    public void initViews() {
+
+    }
 }

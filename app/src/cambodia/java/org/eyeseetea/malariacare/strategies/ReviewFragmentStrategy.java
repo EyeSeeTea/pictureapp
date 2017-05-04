@@ -20,7 +20,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
                 : value.getValue());
         if (textCard.getText().equals("")) {
             textCard.setText(PreferencesState.getInstance().getContext().getString(
-                    R.string.empty_phone_value));
+                    R.string.empty_review_value));
         }
         if ((value.getQuestionUId() != null)) {
             textCard.setTag(value.getQuestionUId());

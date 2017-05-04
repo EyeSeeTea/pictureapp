@@ -65,4 +65,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         return false;
     }
 
+    @Override
+    public void initLoginUseCase(IAuthenticationManager authenticationManager) {
+        loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager);
+    }
+
 }

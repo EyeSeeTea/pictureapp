@@ -77,7 +77,7 @@ public class AuthenticationDhisSDKDataSource implements IAuthenticationDataSourc
                                 }
                             })
                     .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<org.hisp.dhis.client.sdk.models.user.UserAccount>() {
                         @Override
                         public void call(

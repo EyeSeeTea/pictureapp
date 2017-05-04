@@ -71,7 +71,7 @@ public class LoginActivity extends AbsLoginActivity {
     public static final String DEFAULT_PASSWORD = "";
     private static final String TAG = ".LoginActivity";
     public IAuthenticationManager mAuthenticationManager = new AuthenticationManager(this);
-    public LoginUseCase mLoginUseCase = new LoginUseCase(mAuthenticationManager);
+    public LoginUseCase mLoginUseCase;
     public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
     EditText serverText;
     EditText usernameEditText;
@@ -85,8 +85,13 @@ public class LoginActivity extends AbsLoginActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
+        initLoginUseCase();
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
+    }
+
+    private void initLoginUseCase() {
+        mLoginActivityStrategy.initLoginUseCase(mAuthenticationManager);
     }
 
     private void initDataDownloadPeriodDropdown() {

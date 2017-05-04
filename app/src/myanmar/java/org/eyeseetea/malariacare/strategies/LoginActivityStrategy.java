@@ -197,4 +197,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public void onLoginSuccess(Credentials credentials) {
         loginActivity.checkAnnouncement();
     }
+
+    @Override
+    public void initLoginUseCase(IAuthenticationManager authenticationManager) {
+        loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager);
+    }
 }

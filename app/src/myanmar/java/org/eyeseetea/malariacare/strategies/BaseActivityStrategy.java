@@ -107,12 +107,4 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     }
 
-    @Override
-    public void goSettings() {
-        Intent intentSettings = new Intent(mBaseActivity, SettingsActivity.class);
-        intentSettings.putExtra(SettingsActivity.SETTINGS_CALLER_ACTIVITY, this.getClass());
-        intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
-        mBaseActivity.startActivity(new Intent(mBaseActivity, SettingsActivity.class));
-    }
-
 }

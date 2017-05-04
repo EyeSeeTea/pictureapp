@@ -43,8 +43,6 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
-import org.hisp.dhis.client.sdk.models.attribute.AttributeValue;
-import org.hisp.dhis.client.sdk.models.organisationunit.OrganisationUnit;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -779,23 +777,19 @@ public class ServerAPIController {
 
     private static OrgUnit parseOrgUnit(JSONObject orgUnitJO) throws IOException, JSONException {
         if (orgUnitJO != null) {
-            ObjectMapper mapper = new ObjectMapper();
-
-            OrganisationUnit organisationUnit = mapper.readValue(
-                    orgUnitJO.toString(),
-                    OrganisationUnit.class);
-            organisationUnit.toString();
 
             org.eyeseetea.malariacare.domain.entity.OrgUnit orgUnit =
                     new org.eyeseetea.malariacare.domain.entity.OrgUnit();
-            orgUnit.setCode(organisationUnit.getCode());
-            orgUnit.setId(organisationUnit.getUId());
+            orgUnit.setCode(orgUnitJO.getString("code"));
+            orgUnit.setId(orgUnitJO.getString("id"));
+            JSONArray attributeValues = orgUnitJO.getJSONArray("attributeValues");
             String pin = "";
-            for (AttributeValue attributeValue : organisationUnit.getAttributeValues()) {
-                if (attributeValue.getAttribute().getCode().equals(
+            for (int i = 0; i < attributeValues.length(); i++) {
+                JSONObject attributeValue = attributeValues.getJSONObject(i);
+                if (attributeValue.getJSONObject("attribute").getString("code").equals(
                         PreferencesState.getInstance().getContext().getString(
                                 R.string.attribute_pin_code))) {
-                    pin = attributeValue.getValue();
+                    pin = attributeValue.getString("value");
                 }
             }
             orgUnit.setPin(pin);

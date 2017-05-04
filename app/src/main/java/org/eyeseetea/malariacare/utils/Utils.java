@@ -244,6 +244,10 @@ public class Utils {
         return calendar;
     }
 
+    public static Date parseStringToDate(String datestring) {
+        return parseStringToCalendar(datestring).getTime();
+    }
+
     public static String parseDateToString(Date date, String dateFormat) {
         DateFormat df = new SimpleDateFormat(dateFormat);
         return df.format(date);

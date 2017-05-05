@@ -42,7 +42,6 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.User;
@@ -72,7 +71,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Move to that question from reviewfragment
      */
-    public static Question moveToQuestion;
+    public static String moveToThisUId;
     TabHost tabHost;
     MonitorFragment monitorFragment;
     DashboardUnsentFragment unsentFragment;
@@ -535,8 +534,8 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void reviewSurvey() {
-        DashboardActivity.moveToQuestion = (Session.getMalariaSurvey().getValuesFromDB().get(
-                0).getQuestion());
+        DashboardActivity.moveToThisUId = (Session.getMalariaSurvey().getValuesFromDB().get(
+                0).getQuestion()).getUid();
         hideReview();
     }
 
@@ -623,8 +622,8 @@ public class DashboardActivity extends BaseActivity {
     /**
      * This method hide the reviewFragment restoring the Assess tab with the active SurveyFragment
      */
-    public void hideReview(Question question) {
-        moveToQuestion = question;
+    public void hideReview(String questionUId) {
+        moveToThisUId = questionUId;
         hideReview();
     }
 

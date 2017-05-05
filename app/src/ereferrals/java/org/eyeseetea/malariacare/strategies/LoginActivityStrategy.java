@@ -20,6 +20,7 @@ import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.PullOrganisationCredentialsController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
@@ -29,8 +30,7 @@ import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
 import java.util.Date;
 
-public class LoginActivityStrategy extends ALoginActivityStrategy implements
-        CheckCredentialsWithOrgUnitUseCase.Callback {
+public class LoginActivityStrategy extends ALoginActivityStrategy{
 
     private static final String TAG = ".LoginActivityStrategy";
     public static final String EXIT = "exit";
@@ -148,9 +148,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
         passwordHint.setHint(loginActivity.getResources().getText(R.string.login_pin));
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return false;
->>>>>>> Temporary merge branch 2
+    @Override
+    public void onLoginSuccess(Credentials credentials) {
+
     }
 }
->>>>>>> Temporary merge branch 2

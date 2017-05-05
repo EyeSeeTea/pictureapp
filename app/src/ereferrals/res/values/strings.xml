@@ -136,12 +136,8 @@
     <string name="login_invalid_server_url">"Invalid Server URL"</string>
     <string name="error_conflict_message">"The event with UID: %1$s. was uploaded with conflict in the data element UID: %2$s with the message: %3$s. Please contact the administrator."</string>
     <string name="error_conflict_title">"Error"</string>
-    <string name="survey_first_step">"Survey first step"</string>
     <string name="confirmation_really_exit_title">"Really Exit?"</string>
     <string name="confirmation_really_exit">"Are you sure you want to exit the app?"</string>
-    <string name="survey_second_step">"Building questions..."</string>
-    <string name="survey_third_step">"Building treatment matrix..."</string>
-    <string name="survey_fourth_step">"Creating screens..."</string>
     <string name="ipc_issueEntry_q_firstName">"First name"</string>
     <string name="ipc_issueEntry_q_lastName">"Last Name"</string>
     <string name="ipc_issueEntry_q_gender">"Gender"</string>
@@ -178,9 +174,6 @@
     <string name="common_option_program_antinatalCare">"Antinatal Care"</string>
     <string name="common_option_gender_male">"Male"</string>
     <string name="common_option_gender_female">"Female"</string>
-<string name="admin_announcement">"Administrator announcement"</string>
-<string name="user_close">"This user was closed by de administrator."</string>
-<string name="run_in_demo_mode">"Run in demo mode"</string>
     <string name="login_error_json">"Error reading json config file. Please contact your administrator."</string>
 
     <string name="admin_announcement">"Administrator announcement"</string>
@@ -190,4 +183,5 @@
     <string name="survey_second_step"></string>
     <string name="survey_third_step"></string>
     <string name="survey_fourth_step"></string>
+    <string name="login_pin">"pin"</string>
 </resources>

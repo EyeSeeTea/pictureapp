@@ -10,9 +10,9 @@ import java.util.List;
 /**
  * Created by idelcano on 21/07/2016.
  */
-public class MonitorUtils {
+public class SuspectedPositiveTableBuilderStrategy {
 
-    public MonitorUtils(Context context) {
+    public SuspectedPositiveTableBuilderStrategy(Context context) {
     }
 
     public List<MonitorRowBuilder> defineRows() {

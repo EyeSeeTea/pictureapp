@@ -19,18 +19,15 @@
 
 package org.eyeseetea.malariacare;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
@@ -64,14 +61,6 @@ public class SettingsActivity extends PreferenceActivity implements
      * Extra param to annotate the activity to return after settings
      */
     public static final String SETTINGS_CALLER_ACTIVITY = "SETTINGS_CALLER_ACTIVITY";
-
-    /**
-     * Determines whether to always show the simplified settings UI, where
-     * settings are presented in a single list. When false, settings are shown
-     * as a master/detail two-pane view on tablets. When true, a single pane is
-     * shown on tablets.
-     */
-    private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
     private static final String TAG = ".SettingsActivity";
     /**
@@ -107,28 +96,6 @@ public class SettingsActivity extends PreferenceActivity implements
     public SettingsActivityStrategy mSettingsActivityStrategy = new SettingsActivityStrategy(this);
     public AutoCompleteEditTextPreference autoCompleteEditTextPreference;
     public Preference serverUrlPreference;
-
-    /**
-     * Helper method to determine if the device has an extra-large screen. For
-     * example, 10" tablets are extra-large.
-     */
-    private static boolean isXLargeTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
-    }
-
-    /**
-     * Determines whether the simplified settings UI should be shown. This is
-     * true if this is forced via {@link #ALWAYS_SIMPLE_PREFS}, or the device
-     * doesn't have newer APIs like {@link PreferenceFragment}, or the device
-     * doesn't have an extra-large screen. In these cases, a single-pane
-     * "simplified" settings UI should be shown.
-     */
-    private static boolean isSimplePreferences(Context context) {
-        return ALWAYS_SIMPLE_PREFS
-                || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
-                || !isXLargeTablet(context);
-    }
 
     /**
      * Binds a preference's summary to its value. More specifically, when the
@@ -230,18 +197,10 @@ public class SettingsActivity extends PreferenceActivity implements
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        setupSimplePreferencesScreen();
+        setupPreferencesScreen();
     }
 
-    /**
-     * Shows the simplified settings UI if the device configuration if the
-     * device configuration dictates that a simplified, single-pane UI should be
-     * shown.
-     */
-    private void setupSimplePreferencesScreen() {
-        if (!isSimplePreferences(this)) {
-            return;
-        }
+    private void setupPreferencesScreen() {
 
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
@@ -309,36 +268,12 @@ public class SettingsActivity extends PreferenceActivity implements
         listPreference.setDefaultValue(String.valueOf(FontStyle.Medium.getResId()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onIsMultiPane() {
-        return isXLargeTablet(this) && !isSimplePreferences(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void onBuildHeaders(List<Header> target) {
-        if (!isSimplePreferences(this)) {
-            loadHeadersFromResource(R.xml.pref_headers, target);
-        }
-    }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.language_code))) {
             restartActivity();
         }
 
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public boolean isValidFragment(String fragment) {
-        return true;
     }
 
     @Override
@@ -382,68 +317,5 @@ public class SettingsActivity extends PreferenceActivity implements
         return callerActivity;
     }
 
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            PreferencesState.getInstance().onCreateActivityPreferences(getResources(), null);//the theme not exist in a static context
-            addPreferencesFromResource(R.xml.pref_general);
-
-
-            if (BuildConfig.translations) {
-                setLanguageOptions(findPreference(
-                        PreferencesState.getInstance().getContext().getString(
-                                R.string.language_code)));
-            }
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.font_sizes)));
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.language_code)));
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.dhis_url)));
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.org_unit)));
-
-            SettingsActivity settingsActivity = (SettingsActivity) getActivity();
-
-            //Hide translation option if is not active in gradle variable
-            if (BuildConfig.translations) {
-                bindPreferenceSummaryToValue(
-                        findPreference(getResources().getString(R.string.language_code)));
-            }
-
-            settingsActivity.autoCompleteEditTextPreference =
-                    (AutoCompleteEditTextPreference) findPreference(getString(R.string.org_unit));
-            settingsActivity.serverUrlPreference = (Preference) findPreference(
-                    getResources().getString(R.string.dhis_url));
-
-            settingsActivity.loadFontStyleListPreference();
-
-            settingsActivity.autoCompleteEditTextPreference.pullOrgUnits();
-
-            settingsActivity.autoCompleteEditTextPreference.setOnPreferenceClickListener(
-                    settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
-            settingsActivity.serverUrlPreference.setOnPreferenceClickListener(
-                    settingsActivity.mSettingsActivityStrategy.getOnPreferenceClickListener());
-
-            settingsActivity.mSettingsActivityStrategy.setupPreferencesScreen(
-                    getPreferenceScreen());
-
-            if (settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener()
-                    != null) {
-                settingsActivity.serverUrlPreference.setOnPreferenceChangeListener(
-                        settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener());
-
-                settingsActivity.autoCompleteEditTextPreference.setOnPreferenceChangeListener(
-                        settingsActivity.mSettingsActivityStrategy.getOnPreferenceChangeListener());
-            }
-        }
-    }
 
 }

@@ -138,4 +138,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         mBaseActivity.startActivityForResult(new Intent(mBaseActivity, SettingsActivity.class),
                 SETTINGS_LOGOUT);
     }
+
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithMessage(app_copyright, copyright);
+    }
 }

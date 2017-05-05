@@ -23,9 +23,13 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         CustomTextView questionTextView = (CustomTextView) rowView.findViewById(
                 R.id.review_title_text);
 
-        if ((value.getQuestion() != null)) {
+
+        questionTextView.setText(questionTextView.getText().toString() +
+                ((value.getInternationalizedCode() != null) ? value.getInternationalizedCode()
+                        : value.getValue()));
+        if ((value.getQuestionUId() != null)) {
             questionTextView.setText(
-                    value.getQuestion().getInternationalizedCodeDe_Name() + TITLE_SEPARATOR);
+                    Question.findByUID(value.getQuestionUId()).getInternationalizedCodeDe_Name() + TITLE_SEPARATOR);
             //Adds click listener to hide the fragment and go to the clicked question.
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -58,4 +62,6 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         }
         return true;
     }
+}
+
 }

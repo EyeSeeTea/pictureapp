@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.data.sync.exporter.PushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
@@ -34,6 +35,7 @@ public abstract class APushServiceStrategy {
     public abstract void push();
 
     protected void executePush() {
+
         PushController pushController = new PushController(mPushService);
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
@@ -53,43 +55,41 @@ public abstract class APushServiceStrategy {
         pushUseCase.execute(new PushUseCase.Callback() {
             @Override
             public void onComplete() {
-                Log.d(TAG, "push complete");
+                Log.d(TAG, "PUSHUSECASE WITHOUT ERROR push complete");
                 mPushService.onPushFinished();
             }
 
             @Override
             public void onPushInProgressError() {
-                onError("Push stopped, There is already a push in progress");
+                Log.d(TAG, "PUSHUSECASE ERROR Push stopped, There is already a push in progress");
             }
 
             @Override
             public void onPushError() {
-                onError("Unexpected error has occurred in push process");
+                onError("PUSHUSECASE ERROR Unexpected error has occurred in push process");
             }
 
             @Override
             public void onSurveysNotFoundError() {
-                onError("Pending surveys not found");
-            }
+                onError("PUSHUSECASE ERROR Pending surveys not found");}
 
             @Override
             public void onConversionError() {
-                onError("An error has occurred to the conversion in push process");
+                onError("PUSHUSECASE ERROR An error has occurred to the conversion in push process");
             }
 
             @Override
             public void onNetworkError() {
-                onError("Network not available");
-            }
+                onError("PUSHUSECASE ERROR Network not available");}
 
             @Override
             public void onInformativeError(String message) {
                 showInDialog(PreferencesState.getInstance().getContext().getString(
-                        R.string.error_conflict_title), message);
+                        R.string.error_conflict_title), "PUSHUSECASE ERROR "+message + PreferencesState.getInstance().isPushInProgress());
             }
 
             @Override
-            public void onBannedOrgUnitError() {
+            public void onBannedOrgUnit() {
                 showInDialog("", PreferencesState.getInstance().getContext().getString(
                         R.string.exception_org_unit_banned));
             }
@@ -103,7 +103,13 @@ public abstract class APushServiceStrategy {
             }
 
             @Override
+            public void onApiCallError(ApiCallException e) {
+                onError("PUSHUSECASE ERROR "+e.getMessage());
+            }
+
+            @Override
             public void onClosedUser() {
+                onError("PUSHUSECASE ERROR on closedUser "+PreferencesState.getInstance().isPushInProgress());
                 closeUserLogout();
             }
         });

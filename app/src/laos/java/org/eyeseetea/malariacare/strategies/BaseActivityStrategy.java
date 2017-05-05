@@ -139,4 +139,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
         PreferencesState.getInstance().getContext().startService(surveysIntent);
     }
+
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithMessage(app_copyright, copyright);
+    }
 }

@@ -1,14 +1,14 @@
 package org.eyeseetea.malariacare.domain.usecase.push;
 
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
@@ -16,7 +16,6 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.service.OverLimitSurveysDomainService;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
-import org.eyeseetea.malariacare.network.ServerAPIController;
 
 import java.util.List;
 
@@ -47,6 +46,7 @@ public class PushUseCase implements UseCase {
     private IPushController mPushController;
     private ISurveyRepository mSurveyRepository;
     private IOrganisationUnitRepository mOrganisationUnitRepository;
+    private IUserRepository mUserRepository;
 
     private IAsyncExecutor mAsyncExecutor;
     private IMainExecutor mMainExecutor;
@@ -58,13 +58,15 @@ public class PushUseCase implements UseCase {
     public PushUseCase(IPushController pushController, IAsyncExecutor asyncExecutor,
             IMainExecutor mainExecutor, SurveysThresholds surveysThresholds,
             ISurveyRepository surveyRepository,
-            IOrganisationUnitRepository organisationUnitRepository) {
+            IOrganisationUnitRepository organisationUnitRepository,
+            IUserRepository userRepository) {
         mPushController = pushController;
         mAsyncExecutor = asyncExecutor;
         mMainExecutor = mainExecutor;
         mSurveysThresholds = surveysThresholds;
         mSurveyRepository = surveyRepository;
         mOrganisationUnitRepository = organisationUnitRepository;
+        mUserRepository = userRepository;
     }
 
     public void execute(final Callback callback) {
@@ -83,26 +85,32 @@ public class PushUseCase implements UseCase {
 
         try {
             boolean isBanned = isOrgUnitBanned();
-
-            OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
+            OrganisationUnit localOrgUnit =
+                    mOrganisationUnitRepository.getCurrentLocalOrganisationUnit();
             if (isBanned) {
-                if (orgUnit != null && !orgUnit.isBanned()) {
-                    orgUnit.setBan(true);
-                    orgUnit.save();
+                if (localOrgUnit != null && !localOrgUnit.isBanned()) {
+                    mOrganisationUnitRepository.banLocalOrganisationUnit(isBanned);
                     notifyBannedOrgUnitError();
-
                 }
             } else {
-                if (orgUnit != null && orgUnit.isBanned()) {
-                    orgUnit.setBan(false);
-                    orgUnit.save();
+                if (localOrgUnit != null && localOrgUnit.isBanned()) {
+                    mOrganisationUnitRepository.banLocalOrganisationUnit(isBanned);
                     notifyReOpenOrgUnit();
                 }
-                runPush();
+                if(!isUserClosed()) {
+                    runPush();
+                }else {
+                    notifyClosedUser();
+                }
             }
         } catch (Exception ex) {
             notifyPushError();
         }
+    }
+
+    private boolean isUserClosed() {
+        UserAccount userAccount = mUserRepository.getLoggedUser();
+        return userAccount.isClosed();
     }
 
     private boolean isOrgUnitBanned() {
@@ -147,7 +155,8 @@ public class PushUseCase implements UseCase {
     }
 
     private void banOrgUnitIfRequired() {
-        if (mSurveysThresholds.getCount() > 0 && mSurveysThresholds.getTimeHours() > 0) {
+        if (!isOrgUnitBanned() && mSurveysThresholds.getCount() > 0
+                && mSurveysThresholds.getTimeHours() > 0) {
             List<Survey> sentSurveys = mSurveyRepository.getLastSentSurveys(
                     mSurveysThresholds.getCount());
 
@@ -158,11 +167,11 @@ public class PushUseCase implements UseCase {
     }
 
     private void banOrgUnit() {
-        String url = ServerAPIController.getServerUrl();
-        String orgUnitNameOrCode = ServerAPIController.getOrgUnit();
-
-        if (!orgUnitNameOrCode.isEmpty()) {
-            ServerAPIController.banOrg(url, orgUnitNameOrCode);
+        OrganisationUnit organisationUnit =
+                mOrganisationUnitRepository.getCurrentOrganisationUnit();
+        if (organisationUnit != null) {
+            organisationUnit.ban();
+            mOrganisationUnitRepository.saveOrganisationUnit(organisationUnit);
             System.out.println("OrgUnit banned successfully");
         }
     }

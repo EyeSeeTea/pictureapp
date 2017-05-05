@@ -51,8 +51,10 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
     @Override
     public void login(Credentials credentials, IDataSourceCallback<UserAccount> callback) {
+        User loggedUser = User.getLoggedUser();
+        String userUid = loggedUser != null ? loggedUser.getUid() : null;
 
-        User user = new User(credentials.getUserUid(), credentials.getUsername());
+        User user = new User(userUid, credentials.getUsername());
 
         User.insertLoggedUser(user);
 
@@ -64,6 +66,7 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
 
         callback.onSuccess(null);
     }
+
 
     private void saveCredentials(Credentials credentials) {
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,

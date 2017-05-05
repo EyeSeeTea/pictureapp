@@ -9,11 +9,13 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
+import org.eyeseetea.malariacare.data.remote.UserAccountRemoteDataSource;
 import org.eyeseetea.malariacare.data.sync.exporter.PushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.SurveysThresholds;
 import org.eyeseetea.malariacare.network.SurveyChecker;
@@ -39,6 +41,7 @@ public abstract class APushServiceStrategy {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitDataSource();
+        IUserRepository userRepository = new UserAccountRemoteDataSource();
 
         SurveysThresholds surveysThresholds =
                 new SurveysThresholds(BuildConfig.LimitSurveysCount,
@@ -46,7 +49,7 @@ public abstract class APushServiceStrategy {
 
         PushUseCase pushUseCase =
                 new PushUseCase(pushController, asyncExecutor, mainExecutor,
-                        surveysThresholds, surveyRepository, orgUnitRepository);
+                        surveysThresholds, surveyRepository, orgUnitRepository, userRepository);
 
         SurveyChecker.launchQuarantineChecker();
 

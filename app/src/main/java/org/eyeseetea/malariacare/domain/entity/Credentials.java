@@ -7,7 +7,6 @@ public class Credentials {
     private static final String DEMO_SERVER = "demo.server";
 
     private String username;
-    private String userUid;
     private String password;
     private String serverURL;
 
@@ -33,14 +32,6 @@ public class Credentials {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getUserUid() {
-        return userUid;
-    }
-
-    public void setUserUid(String userUid) {
-        this.userUid = userUid;
     }
 
     public boolean isDemoCredentials() {

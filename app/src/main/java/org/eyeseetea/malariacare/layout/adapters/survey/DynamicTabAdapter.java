@@ -81,6 +81,7 @@ import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .ConfirmCounterSingleCustomViewStrategy;
@@ -623,6 +624,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             !GradleVariantConfig.isButtonNavigationActive()));
         } else if (questionView instanceof AOptionQuestionView) {
             ((AOptionQuestionView) questionView).setOnAnswerChangedListener(
+                    new QuestionAnswerChangedListener(this,
+                            !GradleVariantConfig.isButtonNavigationActive()));
+        } else if (questionView instanceof YearSelectorQuestionView) {
+            ((YearSelectorQuestionView) questionView).setOnAnswerChangedListener(
                     new QuestionAnswerChangedListener(this,
                             !GradleVariantConfig.isButtonNavigationActive()));
         }

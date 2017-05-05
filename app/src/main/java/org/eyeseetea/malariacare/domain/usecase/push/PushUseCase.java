@@ -1,21 +1,23 @@
 package org.eyeseetea.malariacare.domain.usecase.push;
 
 import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
-import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
+import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
+import org.eyeseetea.malariacare.domain.service.OverLimitSurveysDomainService;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.json.JSONException;
 
-import java.io.IOException;
 import java.util.List;
 
 public class PushUseCase implements UseCase {
@@ -44,21 +46,27 @@ public class PushUseCase implements UseCase {
         void onApiCallError(ApiCallException e);
     }
 
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR = 30;
-
-    private static int DHIS_LIMIT_HOURS = 1;
-
     private IPushController mPushController;
+    private ISurveyRepository mSurveyRepository;
+    private IOrganisationUnitRepository mOrganisationUnitRepository;
+
     private IAsyncExecutor mAsyncExecutor;
     private IMainExecutor mMainExecutor;
 
     private Callback mCallback;
 
+    private SurveysThresholds mSurveysThresholds;
+
     public PushUseCase(IPushController pushController, IAsyncExecutor asyncExecutor,
-            IMainExecutor mainExecutor) {
+            IMainExecutor mainExecutor, SurveysThresholds surveysThresholds,
+            ISurveyRepository surveyRepository,
+            IOrganisationUnitRepository organisationUnitRepository) {
         mPushController = pushController;
         mAsyncExecutor = asyncExecutor;
         mMainExecutor = mainExecutor;
+        mSurveysThresholds = surveysThresholds;
+        mSurveyRepository = surveyRepository;
+        mOrganisationUnitRepository = organisationUnitRepository;
     }
 
     public void execute(final Callback callback) {
@@ -70,13 +78,15 @@ public class PushUseCase implements UseCase {
     @Override
     public void run() {
 
+        if (mPushController.isPushInProgress()) {
+            notifyPushInProgressError();
+            return;
+        }
+
+        mPushController.changePushInProgress(true);
+
         try {
             Boolean isBanned = isOrgUnitBanned();
-
-            if(isBanned==null){
-                notifyApiCallError(new ApiCallException("Error checking banned call"));
-                return;
-            }
 
             OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
             if (isBanned) {
@@ -86,6 +96,7 @@ public class PushUseCase implements UseCase {
                     notifyBannedOrgUnitError();
 
                 }
+                mPushController.changePushInProgress(false);
             } else {
                 if (orgUnit != null && orgUnit.isBanned()) {
                     orgUnit.setBan(false);
@@ -94,28 +105,23 @@ public class PushUseCase implements UseCase {
                 }
                 runPush();
             }
-        } catch (Exception ex) {
+
+        } catch (NetworkException e) {
+            mPushController.changePushInProgress(false);
+            notifyNetworkError();
+        } catch (ApiCallException e) {
+            mPushController.changePushInProgress(false);
+            notifyApiCallError(e);
+        } catch (Exception e) {
+            mPushController.changePushInProgress(false);
             notifyPushError();
         }
     }
 
-    private Boolean isOrgUnitBanned() {
-        String url = ServerAPIController.getServerUrl();
-        String orgUnitNameOrCode = ServerAPIController.getOrgUnit();
-
-        if (orgUnitNameOrCode.isEmpty()) {
-            return false;
-        }
-
-        try {
-            return !ServerAPIController.isOrgUnitOpen(url, orgUnitNameOrCode);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
+    private boolean isOrgUnitBanned() throws NetworkException, ApiCallException {
+        OrganisationUnit orgUnit = null;
+        orgUnit = mOrganisationUnitRepository.getCurrentOrganisationUnit();
+        return orgUnit.isBanned();
     }
 
     private void runPush() {
@@ -123,7 +129,7 @@ public class PushUseCase implements UseCase {
         mPushController.push(new IPushController.IPushControllerCallback() {
             @Override
             public void onComplete() {
-                System.out.println("PusUseCase Complete");
+                mPushController.changePushInProgress(false);
 
                 notifyComplete();
 
@@ -132,12 +138,14 @@ public class PushUseCase implements UseCase {
 
             @Override
             public void onInformativeError(Throwable throwable) {
+                mPushController.changePushInProgress(false);
                 notifyInformativeError(throwable.getMessage());
                 banOrgUnitIfRequired();
             }
 
             @Override
             public void onError(Throwable throwable) {
+                mPushController.changePushInProgress(false);
                 System.out.println("PusUseCase error");
                 if (throwable instanceof NetworkException) {
                     notifyNetworkError();
@@ -156,12 +164,13 @@ public class PushUseCase implements UseCase {
     }
 
     private void banOrgUnitIfRequired() {
-        //TODO: use case should not invoke directly Survey because belongs to the outer layer
-        List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys(
-                DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR);
+        if (mSurveysThresholds.getCount() > 0 && mSurveysThresholds.getTimeHours() > 0) {
+            List<Survey> sentSurveys = mSurveyRepository.getLastSentSurveys(
+                    mSurveysThresholds.getCount());
 
-        if (isSurveysOverLimit(sentSurveys)) {
-            banOrgUnit();
+            if (OverLimitSurveysDomainService.isSurveysOverLimit(sentSurveys, mSurveysThresholds)) {
+                banOrgUnit();
+            }
         }
     }
 
@@ -180,37 +189,6 @@ public class PushUseCase implements UseCase {
 
         }
     }
-
-    private boolean isSurveysOverLimit(List<Survey> surveyList) {
-        //TODO: For Cambodia the surveys are never above the limit, we may need it for laos,
-        // it is commented for this moment necessary.
-        // Surely it would have to create a strategy in that case
-        return false;
-
-
-/*        //TODO: simplify this method
-        int countDates = 0;
-
-        if (surveyList.size() >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-            for (int i = 0; i < surveyList.size(); i++) {
-                Calendar actualSurvey = Utils.DateToCalendar(surveyList.get(i).getEventDate());
-                for (int d = 0; d < surveyList.size(); d++) {
-                    Calendar nextSurvey = Utils.DateToCalendar(surveyList.get(d).getEventDate());
-                    if (actualSurvey.before(nextSurvey)) {
-                        if (!Utils.isDateOverLimit(actualSurvey, nextSurvey, DHIS_LIMIT_HOURS)) {
-                            countDates++;
-                            Log.d(TAG, "Surveys sents in one hour:" + countDates);
-                            if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;*/
-    }
-
 
     private void notifyComplete() {
         mMainExecutor.run(new Runnable() {

@@ -37,6 +37,7 @@ import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
@@ -71,6 +72,8 @@ public class ServerAPIController {
      * Tag for closedDate (orgUnit) in json response
      */
     private static final String TAG_CLOSEDDATE = "closedDate";
+
+    private static final String TAG_NAME = "name";
 
     /**
      * Tag for orgunit description in json request/response
@@ -111,14 +114,14 @@ public class ServerAPIController {
      * Endpoint to retrieve orgUnits info filtering by CODE (API)
      */
     private static final String DHIS_PULL_ORG_UNIT_API =
-            "/api/organisationUnits.json?paging=false&fields=id,closedDate,"
+            "/api/organisationUnits.json?paging=false&fields=id,name,closedDate,"
                     + "description&filter=code:eq:%s&filter:programs:id:eq:%s";
 
     /**
      * Endpoint to retrieve orgUnits info filtering by NAME (SDK)
      */
     private static final String DHIS_PULL_ORG_UNIT_API_BY_NAME =
-            "/api/organisationUnits.json?paging=false&fields=id,closedDate,"
+            "/api/organisationUnits.json?paging=false&fields=id,name,closedDate,"
                     + "description&filter=name:eq:%s&filter:programs:id:eq:%s";
 
     /**
@@ -202,17 +205,17 @@ public class ServerAPIController {
      */
     public static String getServerVersion(String url) throws IOException, JSONException {
         String serverVersion;
-            String urlServerInfo = url + DHIS_SERVER_INFO;
-            Response response = executeCall(null, urlServerInfo, "GET");
+        String urlServerInfo = url + DHIS_SERVER_INFO;
+        Response response = executeCall(null, urlServerInfo, "GET");
 
-            //Error -> null
-            if (!response.isSuccessful()) {
-                Log.e(TAG,
-                        "getServerVersion (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
-            }
-            JSONObject data = parseResponse(response.body().string());
-            serverVersion = data.getString(TAG_VERSION);
+        //Error -> null
+        if (!response.isSuccessful()) {
+            Log.e(TAG,
+                    "getServerVersion (" + response.code() + "): " + response.body().string());
+            throw new IOException(response.message());
+        }
+        JSONObject data = parseResponse(response.body().string());
+        serverVersion = data.getString(TAG_VERSION);
         Log.i(TAG, String.format("getServerVersion(%s) -> %s", url, serverVersion));
         return serverVersion;
     }
@@ -282,11 +285,11 @@ public class ServerAPIController {
             Log.i(TAG, String.format("banOrg(%s,%s)", url, orgUnitNameOrCode));
             JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
             String orgUnitUID = null;
-            if(orgUnitJSON.has(TAG_ID)) {
+            if (orgUnitJSON.has(TAG_ID)) {
                 orgUnitUID = orgUnitJSON.getString(TAG_ID);
             }
             String orgUnitDescription = "";
-            if(orgUnitJSON.has(TAG_DESCRIPTIONCLOSEDATE)) {
+            if (orgUnitJSON.has(TAG_DESCRIPTIONCLOSEDATE)) {
                 orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
             }
             //NO OrgUnitUID -> Non blocking error, go on
@@ -314,14 +317,14 @@ public class ServerAPIController {
      */
     static void patchClosedDate(String url, String orgUnitUID) throws IOException, JSONException {
         //https://malariacare.psi.org/api/organisationUnits/u5jlxuod8xQ/closedDate
-            String urlPathClosedDate = getPatchClosedDateUrl(url, orgUnitUID);
-            JSONObject data = prepareTodayDateValue();
-            Response response = executeCall(data, urlPathClosedDate, "PATCH");
-            if (!response.isSuccessful()) {
-                Log.e(TAG,
-                        "closingDatePatch (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
-            }
+        String urlPathClosedDate = getPatchClosedDateUrl(url, orgUnitUID);
+        JSONObject data = prepareTodayDateValue();
+        Response response = executeCall(data, urlPathClosedDate, "PATCH");
+        if (!response.isSuccessful()) {
+            Log.e(TAG,
+                    "closingDatePatch (" + response.code() + "): " + response.body().string());
+            throw new IOException(response.message());
+        }
     }
 
     /**
@@ -339,14 +342,14 @@ public class ServerAPIController {
     static void patchDescriptionClosedDate(String url, String orgUnitUID,
             String orgUnitDescription) throws IOException, JSONException {
         //https://malariacare.psi.org/api/organisationUnits/u5jlxuod8xQ/closedDate
-            String urlPathClosedDescription = getPatchClosedDescriptionUrl(url, orgUnitUID);
-            JSONObject data = prepareClosingDescriptionValue(orgUnitDescription);
-            Response response = executeCall(data, urlPathClosedDescription, "PATCH");
-            if (!response.isSuccessful()) {
-                Log.e(TAG, "patchDescriptionClosedDate (" + response.code() + "): "
-                        + response.body().string());
-                throw new IOException(response.message());
-            }
+        String urlPathClosedDescription = getPatchClosedDescriptionUrl(url, orgUnitUID);
+        JSONObject data = prepareClosingDescriptionValue(orgUnitDescription);
+        Response response = executeCall(data, urlPathClosedDescription, "PATCH");
+        if (!response.isSuccessful()) {
+            Log.e(TAG, "patchDescriptionClosedDate (" + response.code() + "): "
+                    + response.body().string());
+            throw new IOException(response.message());
+        }
     }
 
     /**
@@ -404,8 +407,8 @@ public class ServerAPIController {
         //{"organisationUnits":[{}]}
         JSONObject jsonResponse = parseResponse(response.body().string());
         JSONArray orgUnitsArray = new JSONArray();
-        if(jsonResponse.has(TAG_ORGANISATIONUNITS)) {
-             orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATIONUNITS);
+        if (jsonResponse.has(TAG_ORGANISATIONUNITS)) {
+            orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATIONUNITS);
         }
         //0| >1 matches -> Error
         if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
@@ -414,6 +417,29 @@ public class ServerAPIController {
             return null;
         }
         return (JSONObject) orgUnitsArray.get(0);
+
+    }
+
+    public static OrganisationUnit getCurrentOrgUnit() throws IOException, JSONException {
+        String url = "";
+        String orgUnitNameOrCode = "";
+
+        url = ServerAPIController.getServerUrl();
+        orgUnitNameOrCode = ServerAPIController.getOrgUnit();
+
+        JSONObject jsonObject = getOrgUnitData(url, orgUnitNameOrCode);
+
+        String uid = jsonObject.getString(TAG_ID);
+        String name = jsonObject.has(TAG_NAME) ? jsonObject.getString(TAG_NAME) : "";
+        String description = jsonObject.has(TAG_DESCRIPTIONCLOSEDATE) ?
+                jsonObject.getString(TAG_DESCRIPTIONCLOSEDATE) : "";
+        Date closedDate = jsonObject.has(TAG_CLOSEDDATE) ?
+                Utils.parseStringToDate(jsonObject.getString(TAG_CLOSEDDATE)) : null;
+
+        OrganisationUnit organisationUnit = new OrganisationUnit(uid, name, description,
+                closedDate);
+
+        return organisationUnit;
     }
 
     public static User pullUserAttributes(User loggedUser) {
@@ -506,7 +532,7 @@ public class ServerAPIController {
             ex.printStackTrace();
             return null;
         }
-        if(closedDate == null) {
+        if (closedDate == null) {
             return false;
         }
         return closedDate.before(new Date());
@@ -543,12 +569,11 @@ public class ServerAPIController {
      * (which is fine too)
      */
     static String getClosedDate(JSONObject orgUnitJSON) throws JSONException {
-            if(orgUnitJSON.has(TAG_CLOSEDDATE)) {
-                return orgUnitJSON.getString(TAG_CLOSEDDATE);
-            }
-            else{
-                return null;
-            }
+        if (orgUnitJSON.has(TAG_CLOSEDDATE)) {
+            return orgUnitJSON.getString(TAG_CLOSEDDATE);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -640,9 +665,9 @@ public class ServerAPIController {
      * Returns null if its possible
      */
     static JSONObject parseResponse(String responseData) throws JSONException {
-            JSONObject jsonResponse = new JSONObject(responseData);
-            Log.d(TAG, "parseResponse: " + jsonResponse);
-            return jsonResponse;
+        JSONObject jsonResponse = new JSONObject(responseData);
+        Log.d(TAG, "parseResponse: " + jsonResponse);
+        return jsonResponse;
     }
 
 

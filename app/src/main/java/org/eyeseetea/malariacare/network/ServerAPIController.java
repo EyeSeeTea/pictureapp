@@ -38,6 +38,7 @@ import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -70,6 +71,8 @@ public class ServerAPIController {
      * Tag for closedDate (orgUnit) in json response
      */
     private static final String TAG_CLOSEDDATE = "closedDate";
+
+    private static final String TAG_NAME = "name";
 
     /**
      * Tag for orgunit description in json request/response
@@ -110,14 +113,14 @@ public class ServerAPIController {
      * Endpoint to retrieve orgUnits info filtering by CODE (API)
      */
     private static final String DHIS_PULL_ORG_UNIT_API =
-            "/api/organisationUnits.json?paging=false&fields=id,closedDate,"
+            "/api/organisationUnits.json?paging=false&fields=id,name,closedDate,"
                     + "description&filter=code:eq:%s&filter:programs:id:eq:%s";
 
     /**
      * Endpoint to retrieve orgUnits info filtering by NAME (SDK)
      */
     private static final String DHIS_PULL_ORG_UNIT_API_BY_NAME =
-            "/api/organisationUnits.json?paging=false&fields=id,closedDate,"
+            "/api/organisationUnits.json?paging=false&fields=id,name,closedDate,"
                     + "description&filter=name:eq:%s&filter:programs:id:eq:%s";
 
     /**
@@ -618,7 +621,37 @@ public class ServerAPIController {
                         orgUnitNameOrCode, orgUnitsArray.length()));
                 return null;
             }
+
             return (JSONObject) orgUnitsArray.get(0);
+
+        } catch (Exception ex) {
+            Log.e(TAG, String.format("getOrgUnitData(%s,%s): %s", url, orgUnitNameOrCode,
+                    ex.toString()));
+            return null;
+        }
+
+    }
+
+    public static OrganisationUnit getCurrentOrgUnit() {
+        String url = "";
+        String orgUnitNameOrCode = "";
+        try {
+            url = ServerAPIController.getServerUrl();
+            orgUnitNameOrCode = ServerAPIController.getOrgUnit();
+
+            JSONObject jsonObject = getOrgUnitData(url, orgUnitNameOrCode);
+
+            String uid = jsonObject.getString(TAG_ID);
+            String name = jsonObject.has(TAG_NAME) ? jsonObject.getString(TAG_NAME) : "";
+            String description = jsonObject.has(TAG_DESCRIPTIONCLOSEDATE) ?
+                    jsonObject.getString(TAG_DESCRIPTIONCLOSEDATE) : "";
+            Date closedDate = jsonObject.has(TAG_CLOSEDDATE) ?
+                    Utils.parseStringToDate(jsonObject.getString(TAG_CLOSEDDATE)) : null;
+
+            OrganisationUnit organisationUnit = new OrganisationUnit(uid, name, description,
+                    closedDate);
+
+            return organisationUnit;
 
         } catch (Exception ex) {
             Log.e(TAG, String.format("getOrgUnitData(%s,%s): %s", url, orgUnitNameOrCode,
@@ -718,7 +751,7 @@ public class ServerAPIController {
             ex.printStackTrace();
             return false;
         }
-        if(closedDate == null) {
+        if (closedDate == null) {
             return false;
         }
         return closedDate.before(new Date());

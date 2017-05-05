@@ -2,6 +2,8 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 
+import com.raizlabs.android.dbflow.sql.language.Select;
+
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.data.database.model.Program;
@@ -10,21 +12,23 @@ import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import java.util.Date;
+import org.eyeseetea.malariacare.fragments.OfflineFragment;
 
-/**
- * Created by manuel on 28/12/16.
- */
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
+
+    private OfflineFragment mOfflineFragment;
 
 
     @Override
     public void reloadStockFragment(Activity activity) {
-
+        mOfflineFragment.reloadHeader(activity);
     }
 
     @Override
     public boolean showStockFragment(Activity activity, boolean isMoveToLeft) {
+        mOfflineFragment = new OfflineFragment();
         return false;
     }
 

@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.presentation.factory.monitor.tables;
+package org.eyeseetea.malariacare.presentation.factory.monitor.tables.strategies;
 
 import android.content.Context;
 

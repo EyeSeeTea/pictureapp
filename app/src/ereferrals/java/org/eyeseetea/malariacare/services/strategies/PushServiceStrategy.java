@@ -31,57 +31,12 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
     @Override
     public void push() {
-        final Credentials oldCredentials = PreferencesEReferral.getUserCredentialsFromPreferences();
-        PullOrganisationCredentialsController pullOrganisationCredentialsController =
-                new PullOrganisationCredentialsController(oldCredentials, mPushService);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        PullOrganisationCredentialsUseCase pullOrganisationCredentialsUseCase =
-                new PullOrganisationCredentialsUseCase(asyncExecutor, mainExecutor,
-                        pullOrganisationCredentialsController);
-        pullOrganisationCredentialsUseCase.execute(
-                new PullOrganisationCredentialsUseCase.Callback() {
-                    @Override
-                    public void onComplete() {
-                        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                                new CheckCredentialsWithOrgUnitUseCase();
-                        checkCredentialsWithOrgUnitUseCase.execute(oldCredentials,
-                                new CheckCredentialsWithOrgUnitUseCase.Callback() {
-                                    @Override
-                                    public void onCorrectCredentials() {
-                                        PushServiceStrategy.this.onCorrectCredentials();
-                                    }
-
-                                    @Override
-                                    public void onBadCredentials(boolean b) {
-                                        logout();
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void onError(String message) {
-                        Log.e(TAG, "Error getting user credentials: " + message);
-                    }
-
-                    @Override
-                    public void onNetworkError() {
-                        Log.e(TAG, "Error getting user credentials: NetworkError");
-                    }
-
-                    @Override
-                    public void onPullConversionError() {
-                        Log.e(TAG, "Error getting user credentials: PullConversionError");
-                    }
-
-                    @Override
-                    public void onInvalidCredentials() {
-                        Log.e(TAG,
-                                "Error getting user credentials: Invalid credentials wrong username");
-                    }
-
-                });
-
+        if (Session.getCredentials().isDemoCredentials()) {
+            Log.d(TAG, "execute push");
+            executeMockedPush();
+        } else {
+            Log.d(TAG, "execute push fails, not logged");
+        }
     }
 
     protected void executeMockedPush() {

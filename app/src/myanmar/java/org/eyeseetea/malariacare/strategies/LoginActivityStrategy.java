@@ -112,6 +112,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                             public void onConfigJsonNotPresent() {
                                 Log.e(this.getClass().getSimpleName(), "Config Json file not found");
                             }
+
+                            @Override
+                            public void onUnexpectedError() {
+                                Log.e(this.getClass().getSimpleName(),
+                                        "Config Json file not found");
+                            }
                         });
             }
         });
@@ -185,10 +191,5 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     @Override
     public void initViews() {
 
-    }
-
-    @Override
-    public void onLoginSuccess(Credentials credentials) {
-        loginActivity.checkAnnouncement();
     }
 }

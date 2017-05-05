@@ -1,3 +1,4 @@
+
 package org.eyeseetea.malariacare.strategies;
 
 import android.graphics.Color;

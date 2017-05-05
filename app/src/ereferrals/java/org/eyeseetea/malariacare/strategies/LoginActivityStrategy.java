@@ -20,9 +20,7 @@ import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.PullOrganisationCredentialsController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.CheckCredentialsWithOrgUnitUseCase;
-import org.eyeseetea.malariacare.domain.usecase.PullOrganisationCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -75,7 +73,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
     private boolean existsLoggedUser() {
         return User.getLoggedUser() != null;
     }
-
 
     private void executePullDemo() {
         PullController pullController = new PullController(loginActivity);
@@ -148,129 +145,12 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
         passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
         TextInputLayout passwordHint =
                 (TextInputLayout) loginActivity.findViewById(R.id.password_hint);
-        passwordHint.setHint("Pin");
+        passwordHint.setHint(loginActivity.getResources().getText(R.string.login_pin));
     }
 
-    @Override
-    public void onLoginSuccess(final Credentials credentials) {
-        PullOrganisationCredentialsController pullOrganisationCredentialsController =
-                new PullOrganisationCredentialsController(credentials, loginActivity);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-
-        PullOrganisationCredentialsUseCase pullOrganisationCredentialsUseCase =
-                new PullOrganisationCredentialsUseCase(asyncExecutor, mainExecutor,
-                        pullOrganisationCredentialsController);
-        pullOrganisationCredentialsUseCase.execute(
-                new PullOrganisationCredentialsUseCase.Callback() {
-                    @Override
-                    public void onComplete() {
-                        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                                new CheckCredentialsWithOrgUnitUseCase();
-                        checkCredentialsWithOrgUnitUseCase.execute(credentials,LoginActivityStrategy.this);
-                    }
-
-                    @Override
-                    public void onError(String message) {
-                        loginActivity.onFinishLoading(null);
-                        Log.e(this.getClass().getSimpleName(), message);
-                        loginActivity.showError(R.string.dialog_title_error);
-                    }
-
-                    @Override
-                    public void onNetworkError() {
-                        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                                new CheckCredentialsWithOrgUnitUseCase();
-                        checkCredentialsWithOrgUnitUseCase.execute(credentials,LoginActivityStrategy.this);
-                    }
-
-                    @Override
-                    public void onPullConversionError() {
-                        loginActivity.onFinishLoading(null);
-                        Log.e(this.getClass().getSimpleName(), "Pull conversion error");
-                        loginActivity.showError(R.string.dialog_pull_error);
-                    }
-
-                    @Override
-                    public void onInvalidCredentials() {
-                        loginActivity.onFinishLoading(null);
-                        Log.e(this.getClass().getSimpleName(), "Invalid credentials");
-                        loginActivity.showError(R.string.login_invalid_credentials);
-                        onBadCredentials();
-                    }
-                });
-    }
-
-
-    @Override
-    public void onLoginNetworkError(Credentials credentials) {
-        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                new CheckCredentialsWithOrgUnitUseCase();
-        checkCredentialsWithOrgUnitUseCase.execute(credentials, LoginActivityStrategy.this);
-    }
-
-    @Override
-    public void onCorrectCredentials() {
-        loginActivity.checkAnnouncement();
-    }
-
-    @Override
-    public void onBadCredentials(boolean disableLogin) {
-        loginActivity.onFinishLoading(null);
-        loginActivity.showError(R.string.login_invalid_credentials);
-        loginActivity.enableLogin(!disableLogin);
-        if (disableLogin) {
-            PreferencesEReferral.setTimeLoginEnables();
-            checkEnableLogin();
-        }
-    }
-
-    private void checkEnableLogin() {
-        final long timeEnabled = PreferencesEReferral.getTimeLoginEnables();
-        long currentTime = new Date().getTime();
-        if (currentTime < timeEnabled) {
-            loginActivity.enableLogin(false);
-            final Handler h = new Handler();
-            final int delay = 1000; //milliseconds
-            h.postDelayed(new Runnable() {
-                public void run() {
-                    if (!loginActivity.isFinishing()) {
-                        long currentTime = new Date().getTime();
-                        if (currentTime < timeEnabled) {
-                            h.postDelayed(this, delay);
-                        } else {
-                            loginActivity.enableLogin(true);
-                        }
-                    }
-                }
-            }, delay);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        checkEnableLogin();
-    }
-
-
-    private void onBadCredentials() {
-        if (PreferencesEReferral.addBadLogin() >= 3) {
-            PreferencesEReferral.setTimeLoginEnables();
-            checkEnableLogin();
-            PreferencesEReferral.resetBadLogin();
-        }
-    }
-
-    public boolean canEnableLoginButtonOnTextChange() {
-        long timeEnabled = PreferencesEReferral.getTimeLoginEnables();
-        long currentTime = new Date().getTime();
-        return currentTime > timeEnabled;
-    }
-
-    @Override
-    public void onTextChange() {
-        if (canEnableLoginButtonOnTextChange()) {
-            super.onTextChange();
-        }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return false;
+>>>>>>> Temporary merge branch 2
     }
 }
+>>>>>>> Temporary merge branch 2

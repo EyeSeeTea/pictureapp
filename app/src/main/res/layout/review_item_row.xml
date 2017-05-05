@@ -10,7 +10,6 @@
         android:id="@+id/review_content_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:lineSpacingMultiplier="2"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
         android:background="@color/dark_navy_blue"

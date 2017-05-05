@@ -202,4 +202,5 @@
 <string name="unsent_survey_filter_option_last_month">"Last month"</string>
 <string name="dialog_reopen_org_unit">"Outlet %s is reopen."</string>
 <string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator. "</string>
+<string name="empty_review_value">"No Phone Number"</string>
 </resources>

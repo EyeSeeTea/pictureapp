@@ -49,7 +49,7 @@ public class SingleQuestionViewFactory implements IQuestionViewFactory {
                 imageOptionSingleQuestionView.setColumnsCount(1);
                 return imageOptionSingleQuestionView;
             default:
-                return SingleQuestionViewFactoryStrategy.createQuestion(context,typeQuestion);
+                return SingleQuestionViewFactoryStrategy.createQuestion(context, typeQuestion);
         }
     }
 }

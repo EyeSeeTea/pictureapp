@@ -75,7 +75,8 @@ public class StockService extends IntentService {
         }
 
         List<Survey> sentSurveysForStock = Survey.findSurveysWithProgramAndGreaterDate(
-                Program.findByUID(PreferencesState.getInstance().getContext().getString(R.string.stockProgramUID)), queryDate);
+                Program.findByUID(PreferencesState.getInstance().getContext().getString(
+                        R.string.stockProgramUID)), queryDate);
 
         Log.i(TAG, String.format("Found %d surveys to build monitor info, aggregating data...",
                 sentSurveysForStock.size()));

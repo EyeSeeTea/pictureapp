@@ -1,3 +1,4 @@
+
 package org.eyeseetea.malariacare.strategies;
 
 import android.graphics.Color;
@@ -51,23 +52,9 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
     }
 
     private Question getCorrectQuestion(String questionUId) {
-        if (questionUId.equals(PreferencesState.getInstance().getContext().getString(
-                R.string.dynamicTreatmentQuestionUID)) || questionUId.equals(
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.referralQuestionUID))
-                || questionUId.equals(
-                PreferencesState.getInstance().getContext().getString(
-                        R.string.treatmentDiagnosisVisibleQuestion))) {
-            return Question.findByUID(PreferencesState.getInstance().getContext().getString(
-                    R.string.dynamicTreatmentHideQuestionUID));
-        }
-        if (questionUId.equals(PreferencesState.getInstance().getContext().getString(
-                R.string.outOfStockQuestionUID))) {
-            return Question.findByUID(PreferencesState.getInstance().getContext().getString(
-                    R.string.dynamicStockQuestionUID));
-        }
         return Question.findByUID(questionUId);
     }
+
 
     public static boolean isValidValue(Value value) {
         if (Session.getStockSurvey()==null || value.getQuestionUId() == null) {

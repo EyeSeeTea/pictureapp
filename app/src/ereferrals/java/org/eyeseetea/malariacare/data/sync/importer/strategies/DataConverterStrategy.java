@@ -45,11 +45,6 @@ public class DataConverterStrategy implements IDataConverterStrategy {
     private void convertOrgUnitDataValue(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
 
-
-        if (event.getProgramUId().equals(mContext.getString(R.string.stockProgramUID))) {
-            return;
-        }
-
         Question orgUnitQuestion = Question.findByUID(ORG_UNIT_QUESTION_UID);
 
         if (orgUnitQuestion == null) {
@@ -67,10 +62,6 @@ public class DataConverterStrategy implements IDataConverterStrategy {
 
     private void convertPatientSexPregnancyDataValue(ConvertFromSDKVisitor converter,
             EventExtended event) throws QuestionNotFoundException {
-
-        if (event.getProgramUId().equals(mContext.getString(R.string.stockProgramUID))) {
-            return;
-        }
 
         Question sexPregnancyQuestion = Question.findByUID(SEX_PREGNANCY_QUESTION_UID);
 

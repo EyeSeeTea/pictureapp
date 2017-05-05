@@ -36,7 +36,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!DynamicTabAdapter.isClicked) {
+                    if (!DynamicTabAdapter.isClicked) {
                         DynamicTabAdapter.isClicked = true;
                         String questionUId = (String) v.getTag();
                         DashboardActivity.dashboardActivity.hideReview(questionUId);

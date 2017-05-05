@@ -110,7 +110,7 @@ public class DataConverterStrategy implements IDataConverterStrategy {
                 Option selectedHiddenOption = matchedQuestion.findOptionByValue(
                         valueFromServer.getValue());
 
-                if (selectedHiddenOption.getName().equals(trueHiddenOption.getName())) {
+                if (selectedHiddenOption.getCode().equals(trueHiddenOption.getCode())) {
                     selectedOption = matchedOption;
                     break;
                 }
@@ -128,7 +128,7 @@ public class DataConverterStrategy implements IDataConverterStrategy {
         }
 
         if (selectedOption != null) {
-            createDataValueExtended(event, question.getUid(), selectedOption.getName(), converter);
+            createDataValueExtended(event, question.getUid(), selectedOption.getCode(), converter);
         } else {
             Log.e(this.getClass().getSimpleName(),
                     "Value not create for question " + question.getUid());

@@ -72,7 +72,7 @@ public class DataValueExtended implements VisitableFromSDK {
         List<Option> options = answer.getOptions();
         List<String> optionCodes = new ArrayList<>();
         for (Option option : options) {
-            String optionName = option.getName();
+            String optionName = option.getCode();
             optionCodes.add(optionName);
             if (optionName == null) {
                 continue;

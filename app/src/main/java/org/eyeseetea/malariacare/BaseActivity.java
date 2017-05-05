@@ -77,7 +77,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);
-        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
 
         if (EyeSeeTeaApplication.permissions == null) {
             EyeSeeTeaApplication.permissions = Permissions.getInstance(this);
@@ -254,14 +254,6 @@ public abstract class BaseActivity extends ActionBarActivity {
             item.setVisible(false);
         }
         return true;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        if ((requestCode == DUMP_REQUEST_CODE)) {
-            ExportData.removeDumpIfExist(this);
-        }
     }
 
     /**

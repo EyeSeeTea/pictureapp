@@ -55,19 +55,19 @@ public class SurveyQuestionTreatmentValue {
 
 
     public String getValueQuestion(int question) {
-        for (Value value : mSurvey.getValues()) {//this values should be get from memory because the treatment options are in memory
-            if(value.getQuestion()==null) {
+        for (Value value : mSurvey.getValues()) {//this values should be get from memory because
+            // the treatment options are in memory
+            if (value.getQuestion() == null) {
                 continue;
             }
-            if(!new SurveyFragmentStrategy().isStockSurvey(mSurvey)){
-                if(question == OUT_STOCK) {
+            if (!new SurveyFragmentStrategy().isStockSurvey(mSurvey)) {
+                if (question == OUT_STOCK) {
                     if (TreatmentQueries.isOutStockQuestion(value.getQuestion().getUid())) {
                         return value.getValue();
                     }
                 }
                 break;
-            }
-            else {
+            } else {
                 switch (question) {
                     case RDT:
                         if (TreatmentQueries.isStockRDT(value.getQuestion().getUid())) {

@@ -7,9 +7,13 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.PushController;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 import org.eyeseetea.malariacare.network.SurveyChecker;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.services.PushService;
 
 public abstract class APushServiceStrategy {
@@ -31,7 +35,10 @@ public abstract class APushServiceStrategy {
         }
         PreferencesState.getInstance().setPushInProgress(true);
         PushController pushController = new PushController(mPushService);
-        PushUseCase pushUseCase = new PushUseCase(pushController);
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+
+        PushUseCase pushUseCase = new PushUseCase(pushController, asyncExecutor, mainExecutor);
 
         SurveyChecker.launchQuarantineChecker();
 

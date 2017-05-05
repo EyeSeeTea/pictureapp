@@ -176,7 +176,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         mSettingsActivityStrategy.onCreate();
     }
 

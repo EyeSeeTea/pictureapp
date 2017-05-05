@@ -1,10 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.Log;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Drug;
 import org.eyeseetea.malariacare.data.database.model.DrugCombination;
@@ -59,7 +57,8 @@ public class Treatment {
         List<Question> questions = mStockSurvey.getQuestionsFromValues();
         Question actQuestion = null;
         for (Question question : questions) {
-            if (TreatmentQueries.isACT24Question(question) || TreatmentQueries.isACT18Question(question) || TreatmentQueries.isACT12Question(question)
+            if (TreatmentQueries.isACT24Question(question) || TreatmentQueries.isACT18Question(
+                    question) || TreatmentQueries.isACT12Question(question)
                     || TreatmentQueries.isACT6Question(question)) {
                 actQuestion = question;
                 List<Value> values = mStockSurvey.getValuesFromDB();
@@ -162,7 +161,7 @@ public class Treatment {
             actValue = new Value(TreatmentQueries.getOptionTreatmentYesCode(),
                     actHiddenQuestion, Session.getMalariaSurvey());
         } else {
-            actValue.setOption(TreatmentQueries.getOptionTreatmentYesCode() );
+            actValue.setOption(TreatmentQueries.getOptionTreatmentYesCode());
         }
         actValue.save();
     }
@@ -184,9 +183,11 @@ public class Treatment {
             Question question = Question.findByUID(drug.getQuestion_code());
             if (question != null) {
                 if (TreatmentQueries.isPq(question.getUid())) {
-                    question.setForm_name(TreatmentQueries.getPqTitleDose(DrugCombination.getDose(treatment, drug)));
+                    question.setForm_name(TreatmentQueries.getPqTitleDose(
+                            DrugCombination.getDose(treatment, drug)));
                 } else if (TreatmentQueries.isCq(question.getUid())) {
-                    question.setForm_name(TreatmentQueries.getCqTitleDose(DrugCombination.getDose(treatment, drug)));
+                    question.setForm_name(TreatmentQueries.getCqTitleDose(
+                            DrugCombination.getDose(treatment, drug)));
                 }
                 doseByQuestion.put(question.getId_question(),
                         DrugCombination.getDose(treatment, drug));
@@ -261,16 +262,16 @@ public class Treatment {
             List<Drug> alternativeDrugs = treatment.getDrugsForTreatment();
             for (Drug drug : alternativeDrugs) {
                 if (TreatmentQueries.isACT24(drug.getQuestion_code())) {
-                    optionACT24.setCode(treatment.getMessage().toString());
+                    optionACT24.setName(treatment.getMessage().toString());
                     options.add(optionACT24);
                 } else if (TreatmentQueries.isACT18(drug.getQuestion_code())) {
-                    optionACT18.setCode(treatment.getMessage().toString());
+                    optionACT18.setName(treatment.getMessage().toString());
                     options.add(optionACT18);
                 } else if (TreatmentQueries.isACT12(drug.getQuestion_code())) {
-                    optionACT12.setCode(treatment.getMessage().toString());
+                    optionACT12.setName(treatment.getMessage().toString());
                     options.add(optionACT12);
                 } else if (TreatmentQueries.isACT6(drug.getQuestion_code())) {
-                    optionACT6.setCode(treatment.getMessage().toString());
+                    optionACT6.setName(treatment.getMessage().toString());
                     options.add(optionACT6);
                 }
             }
@@ -300,7 +301,7 @@ public class Treatment {
     }
 
     private void saveTreatmentInTreatmentQuestion(
-            
+
             //TODO: set value to hide question is realized without match relation
             // because is a question of type label. This is unique and isolated case
             // when exists one more case we should refactor this to more generic code

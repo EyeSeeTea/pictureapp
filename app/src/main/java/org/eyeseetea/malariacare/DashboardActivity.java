@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.model.Survey;
@@ -100,45 +101,23 @@ public class DashboardActivity extends BaseActivity {
 
     //Show dialog exception from class without activity.
     public static void showException(final String title, final String errorMessage) {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Run your task here
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        String dialogTitle = "", dialogMessage = "";
-                        if (title != null) {
-                            dialogTitle = title;
-                        }
-                        if (errorMessage != null) {
-                            dialogMessage = errorMessage;
-                        }
-                        new AlertDialog.Builder(dashboardActivity)
-                                .setCancelable(false)
-                                .setTitle(dialogTitle)
-                                .setMessage(dialogMessage)
-                                .setNeutralButton(android.R.string.ok, null)
-                                .create().show();
-                    }
-                });
-            }
-        }, 1000);
+        String dialogTitle = "", dialogMessage = "";
+        if (title != null) {
+            dialogTitle = title;
+        }
+        if (errorMessage != null) {
+            dialogMessage = errorMessage;
+        }
+        new AlertDialog.Builder(dashboardActivity)
+                .setCancelable(false)
+                .setTitle(dialogTitle)
+                .setMessage(dialogMessage)
+                .setNeutralButton(android.R.string.ok, null)
+                .create().show();
     }
     //Show dialog exception from class without activity.
     public static void closeUserFromService(final int title, final String errorMessage) {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Run your task here
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        AnnouncementMessageDialog.closeUser(title, errorMessage, dashboardActivity);
-                    }
-                });
-            }
-        }, 1000);
+        AnnouncementMessageDialog.closeUser(title, errorMessage, dashboardActivity);
     }
 
     public void setTabHostsWithText() {
@@ -233,6 +212,8 @@ public class DashboardActivity extends BaseActivity {
 
         ImageView imageView = (ImageView) tabIndicator.getChildAt(0);
         imageView.setTag(tabName);
+        TextView tabTitle= (TextView) tabIndicator.getChildAt(1);
+        tabTitle.setTextSize(getResources().getDimensionPixelSize(R.dimen.dashboard_tab_text_size));
     }
 
 
@@ -528,7 +509,7 @@ public class DashboardActivity extends BaseActivity {
      * Called when the user clicks the exit Review button
      */
     public void exitReview(View view) {
-        if(!DynamicTabAdapter.isClicked) {
+        if (!DynamicTabAdapter.isClicked) {
             DynamicTabAdapter.isClicked = true;
             reviewShowDone();
         }
@@ -578,14 +559,14 @@ public class DashboardActivity extends BaseActivity {
                 .setPositiveButton(R.string.survey_send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         sendSurvey();
-                        DynamicTabAdapter.isClicked=false;
+                        DynamicTabAdapter.isClicked = false;
                     }
                 });
         msgConfirmation.setNegativeButton(R.string.survey_review,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         reviewSurvey();
-                        DynamicTabAdapter.isClicked=false;
+                        DynamicTabAdapter.isClicked = false;
                     }
                 });
 

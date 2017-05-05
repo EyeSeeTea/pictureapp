@@ -82,5 +82,6 @@
     <string name="time_enable_login">time_enable_login</string>
 
     <string name="ws_version">1.0</string>
+    <string name="ws_base_url">https://james.psi-mis.org/</string>
 
 </resources>

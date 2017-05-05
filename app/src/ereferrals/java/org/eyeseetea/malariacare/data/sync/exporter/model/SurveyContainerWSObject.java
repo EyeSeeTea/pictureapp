@@ -1,23 +1,28 @@
 package org.eyeseetea.malariacare.data.sync.exporter.model;
 
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class EReferralWSObject {
+public class SurveyContainerWSObject {
     private String version;
     private String source;
     private String userName;
     private String password;
     private List<SurveySendAction> actions;
 
-    public EReferralWSObject() {
-        version = PreferencesState.getInstance().getContext().getString(R.string.ws_version);
+    public SurveyContainerWSObject() {
         actions = new ArrayList<>();
     }
 
+    public SurveyContainerWSObject(String version, String source, String userName,
+            String password) {
+        this.version = version;
+        this.source = source;
+        this.userName = userName;
+        this.password = password;
+        actions = new ArrayList<>();
+
+    }
 
     public String getVersion() {
         return version;

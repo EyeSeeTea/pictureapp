@@ -184,4 +184,5 @@
     <string name="survey_third_step"></string>
     <string name="survey_fourth_step"></string>
     <string name="login_pin">"pin"</string>
+    <string name="empty_review_value">""</string>
 </resources>

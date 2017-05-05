@@ -43,6 +43,12 @@ public class PullOrganisationCredentials {
                 }
             } catch (PullConversionException e) {
                 callback.onError(e);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                callback.onError(e);
+            } catch (IOException e) {
+                e.printStackTrace();
+                callback.onError(e);
             }
         }
     }
@@ -62,6 +68,12 @@ public class PullOrganisationCredentials {
                 program = parseOrganisationUnitToCorrectProgram(jsonObject);
                 callback.onSuccess(program);
             } catch (PullConversionException e) {
+                e.printStackTrace();
+                callback.onError(e);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                callback.onError(e);
+            } catch (IOException e) {
                 e.printStackTrace();
                 callback.onError(e);
             }

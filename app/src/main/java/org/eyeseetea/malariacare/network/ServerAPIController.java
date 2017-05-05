@@ -540,7 +540,7 @@ public class ServerAPIController {
     }
 
     public static JSONObject getOrganisationUnitsByCode(String code)
-            throws PullConversionException {
+            throws PullConversionException, IOException, JSONException {
         //Version is required to choose which field to match
         String serverVersion = getServerVersion(PreferencesState.getInstance().getDhisURL());
 

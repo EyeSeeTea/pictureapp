@@ -11,8 +11,8 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
-import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
+import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Constants;
 
@@ -38,8 +38,7 @@ public class WSPushController implements IPushController {
         mCallback = callback;
         mSurveys = Survey.getAllCompletedSurveys();
         if (mSurveys == null || mSurveys.size() == 0) {
-            Log.d(TAG, "Sets of Surveys to push");
-            callback.onError(new SurveysToPushNotFoundException());
+            callback.onError(new SurveysToPushNotFoundException("Null surveys"));
             return;
         }
         User loggedUser = User.getLoggedUser();
@@ -112,7 +111,7 @@ public class WSPushController implements IPushController {
                 String message =
                         "Survey with id: " + responseAction.getActionId() + " has conflicts: "
                                 + responseAction.getMessage();
-                mCallback.onError(new ImportSummaryErrorException(message));
+                mCallback.onError(new PushValueException(message));
             }
         }
         for (Survey survey : mSurveys) {

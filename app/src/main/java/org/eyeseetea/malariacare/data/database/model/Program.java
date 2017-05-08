@@ -211,6 +211,13 @@ public class Program extends BaseModel {
                         .is(UID)).querySingle();
     }
 
+    public static Program findByName(String name) {
+        return new Select()
+                .from(Program.class)
+                .where(Program_Table.name
+                        .is(name)).querySingle();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

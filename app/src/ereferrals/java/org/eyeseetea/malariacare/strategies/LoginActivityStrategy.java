@@ -13,12 +13,19 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -64,6 +71,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private boolean existsLoggedUser() {
         return User.getLoggedUser() != null;
     }
+
 
     private void executePullDemo() {
         PullController pullController = new PullController(loginActivity);
@@ -124,6 +132,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         finishAndGo(ProgressActivity.class);
     }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return false;
+    }
+
+
     @Override
     public void initViews() {
         EditText passwordEditText = (EditText) loginActivity.findViewById(R.id.edittext_password);
@@ -134,7 +147,19 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         passwordHint.setHint(loginActivity.getResources().getText(R.string.login_pin));
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return false;
+    @Override
+    public void onLoginSuccess(final Credentials credentials) {
+        loginActivity.checkAnnouncement();
+    }
+
+
+    @Override
+    public void initLoginUseCase(IAuthenticationManager authenticationManager) {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
+        IOrganisationUnitRepository organisationDataSource = new OrganisationUnitDataSource();
+        loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
+                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce);
     }
 }

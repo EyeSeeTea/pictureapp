@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
@@ -70,6 +71,9 @@ public abstract class AddlArrayAdapter<T> extends ArrayAdapter<T> {
 
         //Set text item
         drawText((CustomTextView) convertView.findViewById(android.R.id.text1), getItem(position));
+        if (!PreferencesState.getInstance().isCustomizeFontActive()) {
+            ((CustomTextView) convertView).setTextSize(23);
+        }
 
         // Return the completed view to render on screen
         return convertView;

@@ -330,4 +330,5 @@
 <string name="admin_announcement">"အုပ်ချုပ်ရေးမှူးကြေညာချက်"</string>
 <string name="user_close">"ဤအသုံးပြုသူသည်က de စီမံအုပ်ချုပ်သူကပိတ်ထားခဲ့ခြင်းဖြစ်သည်။"</string>
 <string name="run_in_demo_mode">"သရုပ်ပြ mode မှာ Run"</string>
+<string name="error_message_push">"UID နှင့်အတူထိုအဖြစ်အပျက်: %s ကို။ နေ့စွဲမရှိဘဲတင်ခံခဲ့ရသည်။ စီမံခန့်ခွဲသူကိုဆက်သွယ်ပါ။ "</string>
 </resources>

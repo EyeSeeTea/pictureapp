@@ -42,7 +42,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onCreateOptionsMenu(Menu menu) {
-
+        menu.removeItem(R.id.demo_mode);
     }
 
 
@@ -127,5 +127,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 SurveyService.class);
         surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
         PreferencesState.getInstance().getContext().startService(surveysIntent);
+    }
+
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithHtmlMessage(app_copyright, copyright);
     }
 }

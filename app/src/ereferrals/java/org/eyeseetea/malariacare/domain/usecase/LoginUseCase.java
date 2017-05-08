@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
-import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -14,32 +12,40 @@ import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
-import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 
-public class LoginUseCase extends ALoginUseCase {
+public class LoginUseCase extends ALoginUseCase implements UseCase {
     private IAuthenticationManager mAuthenticationManager;
     private Credentials insertedCredentials;
-    private IMainExecutor mMainExecutor = new UIThreadExecutor();
-    private IAsyncExecutor mAsyncExecutor = new AsyncExecutor();
+    private IMainExecutor mMainExecutor;
+    private IAsyncExecutor mAsyncExecutor;
+    private IOrganisationUnitRepository mOrgUnitDataSource;
+    private ICredentialsRepository mCredentialsLocalDataSource;
     private Callback mCallback;
 
     public LoginUseCase(IAuthenticationManager authenticationManager, IMainExecutor mainExecutor,
-            IAsyncExecutor asyncExecutor) {
+            IAsyncExecutor asyncExecutor, IOrganisationUnitRepository orgUnitDataSource,
+            ICredentialsRepository credentialsLocalDataSource) {
         mAuthenticationManager = authenticationManager;
         mMainExecutor = mainExecutor;
         mAsyncExecutor = asyncExecutor;
+        mOrgUnitDataSource = orgUnitDataSource;
+        mCredentialsLocalDataSource = credentialsLocalDataSource;
     }
 
     @Override
     public void execute(final Credentials credentials, final Callback callback) {
         mCallback = callback;
         insertedCredentials = credentials;
+        mAsyncExecutor.run(this);
+    }
+
+    @Override
+    public void run() {
         mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
@@ -47,7 +53,7 @@ public class LoginUseCase extends ALoginUseCase {
                         mAsyncExecutor.run(new Runnable() {
                             @Override
                             public void run() {
-                                pullOrganisationCredentials(credentials, callback);
+                                pullOrganisationCredentials();
                             }
                         });
                     }
@@ -60,46 +66,39 @@ public class LoginUseCase extends ALoginUseCase {
                         } else if (throwable instanceof InvalidCredentialsException) {
                             notifyInvalidCredentials();
                         } else if (throwable instanceof NetworkException) {
-                            ICredentialsRepository
-                                    credentialsLocalDataSource = new CredentialsLocalDataSource();
                             checkUserCredentialsWithOrgUnit(
-                                    credentialsLocalDataSource.getOrganisationCredentials(), false);
+                                    mCredentialsLocalDataSource.getOrganisationCredentials(),
+                                    false);
                         }
                     }
                 });
-
     }
 
 
-    private void pullOrganisationCredentials(Credentials credentials, final Callback callback) {
-        IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitDataSource();
-        ICredentialsRepository
-                credentialsLocalDataSource = new CredentialsLocalDataSource();
+    private void pullOrganisationCredentials() {
         Credentials orgUnitCredentials = null;
         try {
-            OrganisationUnit orgUnit = orgUnitDataSource.getUserOrgUnit(credentials);
+            OrganisationUnit orgUnit = mOrgUnitDataSource.getUserOrgUnit(insertedCredentials);
             if (orgUnit == null) {
                 notifyInvalidCredentials();
                 return;
             }
             orgUnitCredentials = new Credentials("", orgUnit.getCode(), orgUnit.getPin());
 
-        } catch (PullConversionException e) {
+        } catch (PullConversionException | JSONException e) {
             e.printStackTrace();
             notifyConfigJsonNotPresent();
         } catch (NetworkException e) {
             e.printStackTrace();
-            checkUserCredentialsWithOrgUnit(credentialsLocalDataSource.getOrganisationCredentials(),
+            checkUserCredentialsWithOrgUnit(
+                    mCredentialsLocalDataSource.getOrganisationCredentials(),
                     true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            notifyConfigJsonNotPresent();
         } catch (IOException e) {
             e.printStackTrace();
             notifyUnexpectedError();
         }
 
-        credentialsLocalDataSource.saveOrganisationCredentials(orgUnitCredentials);
+        mCredentialsLocalDataSource.saveOrganisationCredentials(orgUnitCredentials);
 
         checkUserCredentialsWithOrgUnit(orgUnitCredentials, false);
     }

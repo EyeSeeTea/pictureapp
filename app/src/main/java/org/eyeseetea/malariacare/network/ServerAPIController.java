@@ -32,7 +32,6 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
@@ -40,7 +39,6 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
-import org.eyeseetea.malariacare.domain.entity.OrgUnit;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -83,6 +81,7 @@ public class ServerAPIController {
      * Tag for orgunit description in json request/response
      */
     private static final String TAG_DESCRIPTIONCLOSEDATE = "description";
+
 
     /**
      * Tag for organisationUnits in json response
@@ -162,6 +161,10 @@ public class ServerAPIController {
     private static String VALUE = "value";
     private static String DHIS2_GMT_NEW_DATE_FORMAT = "yyyy-MM-dd";
     private static String TAG_USER = "users";
+    private static final String ANCESTORS = "ancestors";
+    private static final String LEVEL = "level";
+    private static final String OU_PIN = "OU_PIN";
+    private static final int ORG_UNIT_LEVEL = 3;
     private static String QUERY_USER_ATTRIBUTES =
             "/%s?fields=attributeValues[value,attribute[code]]id&paging=false";
 
@@ -433,17 +436,7 @@ public class ServerAPIController {
 
         JSONObject jsonObject = getOrgUnitData(url, orgUnitNameOrCode);
 
-        String uid = jsonObject.getString(TAG_ID);
-        String name = jsonObject.has(TAG_NAME) ? jsonObject.getString(TAG_NAME) : "";
-        String description = jsonObject.has(TAG_DESCRIPTIONCLOSEDATE) ?
-                jsonObject.getString(TAG_DESCRIPTIONCLOSEDATE) : "";
-        Date closedDate = jsonObject.has(TAG_CLOSEDDATE) ?
-                Utils.parseStringToDate(jsonObject.getString(TAG_CLOSEDDATE)) : null;
-
-        OrganisationUnit organisationUnit = new OrganisationUnit(uid, name, description,
-                closedDate);
-
-        return organisationUnit;
+        return parseOrgUnit(jsonObject);
     }
 
     public static User pullUserAttributes(User loggedUser) {
@@ -542,9 +535,9 @@ public class ServerAPIController {
         return closedDate.before(new Date());
     }
 
-    public static org.eyeseetea.malariacare.domain.entity.OrgUnit getOrganisationUnitsByCode(
+    public static OrganisationUnit getOrganisationUnitsByCode(
             String code)
-            throws PullConversionException, NetworkException {
+            throws PullConversionException, NetworkException, IOException, JSONException {
         //Version is required to choose which field to match
         String serverVersion = getServerVersion(PreferencesState.getInstance().getDhisURL());
 
@@ -590,40 +583,51 @@ public class ServerAPIController {
 
     }
 
-    private static OrgUnit parseOrgUnit(JSONObject orgUnitJO) throws IOException, JSONException {
+    private static OrganisationUnit parseOrgUnit(JSONObject orgUnitJO)
+            throws IOException, JSONException {
         if (orgUnitJO != null) {
 
-            org.eyeseetea.malariacare.domain.entity.OrgUnit orgUnit =
-                    new org.eyeseetea.malariacare.domain.entity.OrgUnit();
-            orgUnit.setCode(orgUnitJO.getString("code"));
-            orgUnit.setId(orgUnitJO.getString("id"));
-            JSONArray attributeValues = orgUnitJO.getJSONArray("attributeValues");
+            String uid = orgUnitJO.getString(TAG_ID);
+            String name = orgUnitJO.has(TAG_NAME) ? orgUnitJO.getString(TAG_NAME) : "";
+            String code = orgUnitJO.has(CODE) ? orgUnitJO.getString(CODE) : "";
+            String description = orgUnitJO.has(TAG_DESCRIPTIONCLOSEDATE) ?
+                    orgUnitJO.getString(TAG_DESCRIPTIONCLOSEDATE) : "";
+            Date closedDate = orgUnitJO.has(TAG_CLOSEDDATE) ?
+                    Utils.parseStringToDate(orgUnitJO.getString(TAG_CLOSEDDATE)) : null;
+
+            JSONArray attributeValues = orgUnitJO.has(ATTRIBUTE_VALUES) ? orgUnitJO.getJSONArray(
+                    ATTRIBUTE_VALUES) : null;
             String pin = "";
-            for (int i = 0; i < attributeValues.length(); i++) {
+            for (int i = 0; attributeValues != null && i < attributeValues.length(); i++) {
                 JSONObject attributeValue = attributeValues.getJSONObject(i);
-                if (attributeValue.getJSONObject("attribute").getString("code").equals(
-                        PreferencesState.getInstance().getContext().getString(
-                                R.string.attribute_pin_code))) {
-                    pin = attributeValue.getString("value");
+                JSONObject attribute = attributeValue.has(ATTRIBUTE)
+                        ? attributeValue.getJSONObject(ATTRIBUTE) : null;
+                String attributeCode = (attribute != null && attribute.has(CODE))
+                        ? attribute.getString(
+                        CODE) : "";
+                if (attributeCode.equals(OU_PIN)) {
+                    pin = attributeValue.has(VALUE) ? attributeValue.getString(VALUE) : "";
                 }
             }
-            orgUnit.setPin(pin);
 
             org.eyeseetea.malariacare.domain.entity.Program program = new org.eyeseetea
                     .malariacare.domain.entity.Program();
 
-            JSONArray ancestors = orgUnitJO.getJSONArray("ancestors");
-            for (int i = 0; i < ancestors.length(); i++) {
-                if (ancestors.getJSONObject(i).getInt("level") == Integer.parseInt(
-                        PreferencesState.getInstance().getContext().getString(
-                                R.string.ancestor_level))) {
-                    program.setId(ancestors.getJSONObject(i).getString("id"));
-                    program.setCode(ancestors.getJSONObject(i).getString("code"));
+            JSONArray ancestors = orgUnitJO.has(ANCESTORS) ? orgUnitJO.getJSONArray(ANCESTORS)
+                    : null;
+            for (int i = 0; ancestors != null && i < ancestors.length(); i++) {
+                if (ancestors.getJSONObject(i).has(LEVEL) && ancestors.getJSONObject(i).getInt(
+                        LEVEL) == ORG_UNIT_LEVEL) {
+                    program.setId(ancestors.getJSONObject(i).has(TAG_ID) ? ancestors.getJSONObject(
+                            i).getString(TAG_ID) : "");
+                    program.setCode(
+                            ancestors.getJSONObject(i).has(CODE) ? ancestors.getJSONObject(
+                                    i).getString(CODE) : "");
                 }
             }
-            orgUnit.setProgram(program);
 
-            return orgUnit;
+            return new OrganisationUnit(uid, name, code, description,
+                    closedDate, pin, program);
 
         } else {
             return null;

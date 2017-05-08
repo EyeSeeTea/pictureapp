@@ -1,14 +1,14 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.remote.OrgUnitDataSource;
+import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.IOrgUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.entity.OrgUnit;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -16,7 +16,9 @@ import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.json.JSONException;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 
@@ -70,12 +72,12 @@ public class LoginUseCase extends ALoginUseCase {
 
 
     private void pullOrganisationCredentials(Credentials credentials, final Callback callback) {
-        IOrgUnitRepository orgUnitDataSource = new OrgUnitDataSource();
+        IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitDataSource();
         ICredentialsRepository
                 credentialsLocalDataSource = new CredentialsLocalDataSource();
         Credentials orgUnitCredentials = null;
         try {
-            OrgUnit orgUnit = orgUnitDataSource.getUserOrgUnit(credentials);
+            OrganisationUnit orgUnit = orgUnitDataSource.getUserOrgUnit(credentials);
             if (orgUnit == null) {
                 notifyInvalidCredentials();
                 return;
@@ -89,6 +91,12 @@ public class LoginUseCase extends ALoginUseCase {
             e.printStackTrace();
             checkUserCredentialsWithOrgUnit(credentialsLocalDataSource.getOrganisationCredentials(),
                     true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            notifyConfigJsonNotPresent();
+        } catch (IOException e) {
+            e.printStackTrace();
+            notifyUnexpectedError();
         }
 
         credentialsLocalDataSource.saveOrganisationCredentials(orgUnitCredentials);

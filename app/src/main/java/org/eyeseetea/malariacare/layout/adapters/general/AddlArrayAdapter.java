@@ -71,9 +71,7 @@ public abstract class AddlArrayAdapter<T> extends ArrayAdapter<T> {
 
         //Set text item
         drawText((CustomTextView) convertView.findViewById(android.R.id.text1), getItem(position));
-        if (!PreferencesState.getInstance().isCustomizeFontActive()) {
-            ((CustomTextView) convertView).setTextSize(23);
-        }
+        ((CustomTextView) convertView).setTextSize(23);
 
         // Return the completed view to render on screen
         return convertView;

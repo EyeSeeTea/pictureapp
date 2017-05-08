@@ -2,14 +2,17 @@ package org.eyeseetea.malariacare.data.sync.importer.strategies;
 
 import android.util.Log;
 
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
-import org.eyeseetea.malariacare.data.sync.importer.PullOrganisationCredentialsController;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.CategoryOptionGroupFlow;
@@ -49,21 +52,19 @@ public class PullControllerStrategy extends APullControllerStrategy {
     @Override
     public void onPullDataComplete(final IPullController.Callback callback) {
         mPullController.convertData(callback);
-        PullOrganisationCredentialsController pullOrganisationCredentialsController =
-                new PullOrganisationCredentialsController(
-                        PreferencesEReferral.getUserCredentialsFromPreferences(),
-                        PreferencesState.getInstance().getContext());
-        pullOrganisationCredentialsController.pullUserProgram(
-                new PullOrganisationCredentialsController.Callback() {
-                    @Override
-                    public void onComplete() {
-                        callback.onComplete();
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        callback.onError(throwable);
-                    }
-                });
+        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
+        IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitDataSource();
+        IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
+        try {
+            org.eyeseetea.malariacare.domain.entity.OrganisationUnit orgUnit =
+                    orgUnitDataSource.getUserOrgUnit(
+                            credentialsLocalDataSource.getOrganisationCredentials());
+            org.eyeseetea.malariacare.domain.entity.Program program = orgUnit.getProgram();
+            programLocalDataSource.saveUserProgramId(program);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callback.onError(e);
+        }
+        callback.onComplete();
     }
 }

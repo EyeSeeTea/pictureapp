@@ -2,7 +2,16 @@ package org.eyeseetea.malariacare.presentation.factory.monitor.tables.strategies
 
 import android.content.Context;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.NegativeRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PeriodRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PfPvRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PfRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PositivityRateRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.PvRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.ReferralOptionRowBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.rows.TestedRowBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

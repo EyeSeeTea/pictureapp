@@ -324,4 +324,5 @@
 <string name="admin_announcement">"管理员公告"</string>
 <string name="user_close">"该用户被管理员关闭。"</string>
 <string name="run_in_demo_mode">"在演示模式下运行"</string>
+<string name="error_message_push">""UID：%s 的事件。 没有日期上传。 请联系管理员。""</string>
 </resources>

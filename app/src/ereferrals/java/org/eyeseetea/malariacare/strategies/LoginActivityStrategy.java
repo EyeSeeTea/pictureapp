@@ -14,25 +14,26 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
-import org.eyeseetea.malariacare.data.sync.importer.PullOrganisationCredentialsController;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.CheckCredentialsWithOrgUnitUseCase;
-import org.eyeseetea.malariacare.domain.usecase.PullOrganisationCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
-import java.util.Date;
-
-public class LoginActivityStrategy extends ALoginActivityStrategy implements
-        CheckCredentialsWithOrgUnitUseCase.Callback {
+public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private static final String TAG = ".LoginActivityStrategy";
     public static final String EXIT = "exit";
@@ -153,66 +154,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
 
     @Override
     public void onLoginSuccess(final Credentials credentials) {
-        PullOrganisationCredentialsController pullOrganisationCredentialsController =
-                new PullOrganisationCredentialsController(credentials, loginActivity);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-
-        PullOrganisationCredentialsUseCase pullOrganisationCredentialsUseCase =
-                new PullOrganisationCredentialsUseCase(asyncExecutor, mainExecutor,
-                        pullOrganisationCredentialsController);
-        pullOrganisationCredentialsUseCase.execute(
-                new PullOrganisationCredentialsUseCase.Callback() {
-                    @Override
-                    public void onComplete() {
-                        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                                new CheckCredentialsWithOrgUnitUseCase();
-                        checkCredentialsWithOrgUnitUseCase.execute(credentials,LoginActivityStrategy.this);
-                    }
-
-                    @Override
-                    public void onError(String message) {
-                        loginActivity.onFinishLoading(null);
-                        Log.e(this.getClass().getSimpleName(), message);
-                        loginActivity.showError(R.string.dialog_title_error);
-                    }
-
-                    @Override
-                    public void onNetworkError() {
-                        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                                new CheckCredentialsWithOrgUnitUseCase();
-                        checkCredentialsWithOrgUnitUseCase.execute(credentials,LoginActivityStrategy.this);
-                    }
-
-                    @Override
-                    public void onPullConversionError() {
-                        loginActivity.onFinishLoading(null);
-                        Log.e(this.getClass().getSimpleName(), "Pull conversion error");
-                        loginActivity.showError(R.string.dialog_pull_error);
-                    }
-
-                    @Override
-                    public void onInvalidCredentials() {
-                        loginActivity.onFinishLoading(null);
-                        Log.e(this.getClass().getSimpleName(), "Invalid credentials");
-                        loginActivity.showError(R.string.login_invalid_credentials);
-                        onBadCredentials();
-                    }
-                });
-    }
-
-
-    @Override
-    public void onLoginNetworkError(Credentials credentials) {
-        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                new CheckCredentialsWithOrgUnitUseCase();
-        checkCredentialsWithOrgUnitUseCase.execute(credentials, LoginActivityStrategy.this);
-    }
-
-    @Override
-    public void onCorrectCredentials() {
         loginActivity.checkAnnouncement();
     }
+
 
     @Override
     public void onBadCredentials(boolean disableLogin) {
@@ -272,5 +216,15 @@ public class LoginActivityStrategy extends ALoginActivityStrategy implements
         if (canEnableLoginButtonOnTextChange()) {
             super.onTextChange();
         }
+    }
+}
+
+    public void initLoginUseCase(IAuthenticationManager authenticationManager) {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
+        IOrganisationUnitRepository organisationDataSource = new OrganisationUnitDataSource();
+        loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
+                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce);
     }
 }

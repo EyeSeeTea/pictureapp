@@ -97,6 +97,10 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         item.setVisible(false);
     }
 
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithMessage(app_copyright, copyright);
+    }
+
     @Override
     public void onBackPressed() {
 

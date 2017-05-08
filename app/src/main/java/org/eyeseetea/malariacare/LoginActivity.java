@@ -83,7 +83,7 @@ public class LoginActivity extends Activity {
     private static final String TAG = ".LoginActivity";
     private static final String IS_LOADING = "state:isLoading";
     public IAuthenticationManager mAuthenticationManager = new AuthenticationManager(this);
-    public LoginUseCase mLoginUseCase = new LoginUseCase(mAuthenticationManager);
+    public LoginUseCase mLoginUseCase;
     public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
     EditText serverText;
     EditText usernameEditText;
@@ -109,8 +109,13 @@ public class LoginActivity extends Activity {
         Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_login);
         PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
+        initLoginUseCase();
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
+    }
+
+    private void initLoginUseCase() {
+        mLoginActivityStrategy.initLoginUseCase(mAuthenticationManager);
     }
 
     private void initDataDownloadPeriodDropdown() {

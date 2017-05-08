@@ -42,7 +42,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onCreateOptionsMenu(Menu menu) {
-
+        menu.removeItem(R.id.demo_mode);
     }
 
 
@@ -112,6 +112,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     @Override
                     public void onConfigJsonNotPresent() {
                         Log.d(TAG, "onConfigJsonNotPresent");
+                    }
+
+                    @Override
+                    public void onUnexpectedError() {
+                        Log.d(TAG, "onUnexpectedError");
                     }
                 }
         );

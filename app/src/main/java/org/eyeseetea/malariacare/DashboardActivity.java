@@ -45,7 +45,6 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.User;
@@ -75,7 +74,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Move to that question from reviewfragment
      */
-    public static Question moveToQuestion;
+    public static String moveToThisUId;
     TabHost tabHost;
     MonitorFragment monitorFragment;
     DashboardUnsentFragment unsentFragment;
@@ -105,45 +104,23 @@ public class DashboardActivity extends BaseActivity {
 
     //Show dialog exception from class without activity.
     public static void showException(final String title, final String errorMessage) {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Run your task here
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        String dialogTitle = "", dialogMessage = "";
-                        if (title != null) {
-                            dialogTitle = title;
-                        }
-                        if (errorMessage != null) {
-                            dialogMessage = errorMessage;
-                        }
-                        new AlertDialog.Builder(dashboardActivity)
-                                .setCancelable(false)
-                                .setTitle(dialogTitle)
-                                .setMessage(dialogMessage)
-                                .setNeutralButton(android.R.string.ok, null)
-                                .create().show();
-                    }
-                });
-            }
-        }, 1000);
+        String dialogTitle = "", dialogMessage = "";
+        if (title != null) {
+            dialogTitle = title;
+        }
+        if (errorMessage != null) {
+            dialogMessage = errorMessage;
+        }
+        new AlertDialog.Builder(dashboardActivity)
+                .setCancelable(false)
+                .setTitle(dialogTitle)
+                .setMessage(dialogMessage)
+                .setNeutralButton(android.R.string.ok, null)
+                .create().show();
     }
     //Show dialog exception from class without activity.
     public static void closeUserFromService(final int title, final String errorMessage) {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Run your task here
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        AnnouncementMessageDialog.closeUser(title, errorMessage, dashboardActivity);
-                    }
-                });
-            }
-        }, 1000);
+        AnnouncementMessageDialog.closeUser(title, errorMessage, dashboardActivity);
     }
 
     public void setTabHostsWithText() {
@@ -563,8 +540,8 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void reviewSurvey() {
-        DashboardActivity.moveToQuestion = (Session.getMalariaSurvey().getValuesFromDB().get(
-                0).getQuestion());
+        DashboardActivity.moveToThisUId = (Session.getMalariaSurvey().getValuesFromDB().get(
+                0).getQuestion()).getUid();
         hideReview();
     }
 
@@ -651,8 +628,8 @@ public class DashboardActivity extends BaseActivity {
     /**
      * This method hide the reviewFragment restoring the Assess tab with the active SurveyFragment
      */
-    public void hideReview(Question question) {
-        moveToQuestion = question;
+    public void hideReview(String questionUId) {
+        moveToThisUId = questionUId;
         hideReview();
     }
 

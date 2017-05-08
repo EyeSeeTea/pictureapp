@@ -46,9 +46,6 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.ExportData;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -324,7 +321,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param titleId Id of the title resource
      * @param rawId   Id of the raw text resource
      */
-    private void showAlertWithMessage(int titleId, int rawId) {
+    public void showAlertWithMessage(int titleId, int rawId) {
         InputStream message = getApplicationContext().getResources().openRawResource(rawId);
         new AlertDialog.Builder(this)
                 .setTitle(getApplicationContext().getString(titleId))

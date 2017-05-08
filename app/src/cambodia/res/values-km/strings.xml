@@ -20,6 +20,7 @@
 ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈ011 771 811"</string>
 <string name="exception_org_unit_banned">"កន្លែងផ្តល់សេវាត្រូវបានបិទ។
 ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈ011 771 811"</string>
+<string name="dialog_reopen_org_unit">"ហាង %s គឺបើក។"</string>
 <string name="dynamic_error_phone_format">"បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ ( 0NN NNN NNN{N} )"</string>
 <string name="dynamic_error_age">"អាយុមិនត្រឹមត្រូវ"</string>
 <string name="pref_header_general">"General"</string>
@@ -202,7 +203,6 @@
 <string name="unsent_survey_filter_option_this_month">"ខែ​នេះ"</string>
 <string name="unsent_survey_filter_option_last_week">"សប្តាហ៍ចុងក្រោយ"</string>
 <string name="unsent_survey_filter_option_last_month">"ខែចុងក្រោយ"</string>
-<string name="dialog_reopen_org_unit">"ហាង %s គឺបើក។"</string>
 <string name="unsent_survey_filter_option_today">"ថ្ងៃនេះ"</string>
 <string name="error_message_push">"ព្រឹត្តិការណ៍នេះជាមួយនឹងលេខសម្គាល់អ្នកប្រើ %s ។ ត្រូវបានផ្ទុកឡើងដោយគ្មានកាលបរិច្ឆេទ។ សូមទាក់ទងអ្នកគ្រប់គ្រង។"</string>
 <string name="empty_review_value">"គ្មានលេខទូរស័ព្ទ"</string>

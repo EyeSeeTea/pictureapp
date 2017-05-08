@@ -243,22 +243,6 @@ public class ServerAPIController {
     }
 
     /**
-     * Checks if the given orgUnit is open in the server.
-     *
-     * @param orgUnitNameOrCode OrgUnit code if server is 2.20, OrgUnit name if server is 2.21,2.22
-     * @return true|false
-     */
-    public static boolean isOrgUnitOpen(String url, String orgUnitNameOrCode)
-            throws IOException, JSONException {
-        JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
-        if (orgUnitJSON == null) {
-            return false;
-        }
-
-        return !isBanned(orgUnitJSON);
-    }
-
-    /**
      * Returns the orgUnit UID for the current server + orgunit
      */
     public static String getOrgUnitUID() throws IOException, JSONException {

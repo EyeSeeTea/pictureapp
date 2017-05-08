@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
     public LoginActivityStrategy(LoginActivity loginActivity) {

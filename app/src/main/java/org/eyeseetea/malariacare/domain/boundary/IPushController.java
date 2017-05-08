@@ -19,8 +19,6 @@
 
 package org.eyeseetea.malariacare.domain.boundary;
 
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-
 public interface IPushController {
     void push(IPushControllerCallback callback);
 

@@ -2,7 +2,6 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
@@ -15,20 +14,15 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
-import org.eyeseetea.malariacare.data.sync.importer.PullOrganisationCredentialsController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
-
-import java.util.Date;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy{
 
@@ -150,6 +144,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
 
     @Override
     public void onLoginSuccess(Credentials credentials) {
-
+        finishAndGo();
     }
 }

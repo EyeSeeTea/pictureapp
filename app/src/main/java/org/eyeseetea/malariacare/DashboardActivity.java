@@ -211,7 +211,7 @@ public class DashboardActivity extends BaseActivity {
     private void addTagToLastTab(String tabName) {
         TabWidget tabWidget = tabHost.getTabWidget();
         int numTabs = tabWidget.getTabCount();
-        RelativeLayout tabIndicator = (RelativeLayout) tabWidget.getChildTabViewAt(numTabs - 1);
+        LinearLayout tabIndicator = (LinearLayout) tabWidget.getChildTabViewAt(numTabs - 1);
 
         ImageView imageView = (ImageView) tabIndicator.getChildAt(0);
         imageView.setTag(tabName);

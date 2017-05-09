@@ -10,7 +10,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
@@ -68,15 +67,27 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     public void runDemoMode() {
-        PopulateDB.wipeSurveys();
-        PreferencesState.getInstance().saveStringPreference(R.string.org_unit, "");
-        PreferencesState.getInstance().reloadPreferences();
+        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                PreferencesState.getInstance().reloadPreferences();
+                updateActionBarTitleAfterLogout();
+                loginDemoMode();
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.e(TAG, message);
+            }
+        });
+    }
+
+    private void updateActionBarTitleAfterLogout() {
         android.support.v7.app.ActionBar actionBar = mBaseActivity.getSupportActionBar();
         LayoutUtils.setActionBarLogo(actionBar);
         LayoutUtils.setActionBarText(actionBar,
                 PreferencesState.getInstance().getContext().getResources().getString(
                         R.string.malaria_case_based_reporting), "");
-        loginDemoMode();
     }
     @Override
     public void onBackPressed() {
@@ -87,6 +98,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public void onWindowFocusChanged(boolean hasFocus) {
 
     }
+
 
 
     private void loginDemoMode() {

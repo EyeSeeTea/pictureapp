@@ -14,11 +14,13 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -85,7 +87,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onClick(View v) {
 
                 Credentials demoCrededentials = Credentials.createDemoCredentials();
-                loginActivity.onStartLoading();
+                loginActivity.showProgressBar();
                 loginActivity.mLoginUseCase.execute(demoCrededentials,
                         new ALoginUseCase.Callback() {
                             @Override
@@ -136,7 +138,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 finishAndGo(DashboardActivity.class);
             }
 
@@ -147,25 +149,25 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
             @Override
             public void onError(String message) {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), message);
             }
 
             @Override
             public void onPullConversionError() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull conversion error");
             }
 
             @Override
             public void onCancel() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull cancel");
             }
 
             @Override
             public void onNetworkError() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Network Error");
             }
         });
@@ -191,5 +193,15 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     @Override
     public void initViews() {
 
+    }
+
+    @Override
+    public void onLoginSuccess(Credentials credentials) {
+        loginActivity.checkAnnouncement();
+    }
+
+    @Override
+    public void initLoginUseCase(IAuthenticationManager authenticationManager) {
+        loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager);
     }
 }

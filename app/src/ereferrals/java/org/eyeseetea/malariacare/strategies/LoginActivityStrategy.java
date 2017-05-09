@@ -13,21 +13,28 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
-public class LoginActivityStrategy extends ALoginActivityStrategy{
+public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private static final String TAG = ".LoginActivityStrategy";
-    public static final String EXIT = "exit";
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -47,26 +54,24 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
 
     @Override
     public void onCreate() {
-        if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
-            loginActivity.finish();
+        if (existsLoggedUser() && PopulateDB.hasMandatoryTables()) {
+            LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
+                    new LoadUserAndCredentialsUseCase(loginActivity);
+
+            loadUserAndCredentialsUseCase.execute();
+
+            finishAndGo(DashboardActivity.class);
+        } else {
+            //TODO jsanchez, this is necessary because oncreate is called from
+            //AsyncTask review Why is invoked from AsyncTask, It's not very correct
+            PopulateDB.wipeDataBase();
         }
-//        if (existsLoggedUser() && PopulateDB.hasMandatoryTables()) {
-//            LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
-//                    new LoadUserAndCredentialsUseCase(loginActivity);
-//
-//            loadUserAndCredentialsUseCase.execute();
-//
-//            finishAndGo(DashboardActivity.class);
-//        } else {
-//            //TODO jsanchez, this is necessary because oncreate is called from
-//            //AsyncTask review Why is invoked from AsyncTask, It's not very correct
-//            PopulateDB.wipeDataBase();
-//        }
     }
 
     private boolean existsLoggedUser() {
         return User.getLoggedUser() != null;
     }
+
 
     private void executePullDemo() {
         PullController pullController = new PullController(loginActivity);
@@ -81,7 +86,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
         pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 finishAndGo(DashboardActivity.class);
             }
 
@@ -92,25 +97,25 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
 
             @Override
             public void onError(String message) {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), message);
             }
 
             @Override
             public void onPullConversionError() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull conversion error");
             }
 
             @Override
             public void onCancel() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull cancel");
             }
 
             @Override
             public void onNetworkError() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Network Error");
             }
         });
@@ -143,7 +148,18 @@ public class LoginActivityStrategy extends ALoginActivityStrategy{
     }
 
     @Override
-    public void onLoginSuccess(Credentials credentials) {
-        finishAndGo();
+    public void onLoginSuccess(final Credentials credentials) {
+        loginActivity.checkAnnouncement();
+    }
+
+
+    @Override
+    public void initLoginUseCase(IAuthenticationManager authenticationManager) {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
+        IOrganisationUnitRepository organisationDataSource = new OrganisationUnitDataSource();
+        loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
+                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce);
     }
 }

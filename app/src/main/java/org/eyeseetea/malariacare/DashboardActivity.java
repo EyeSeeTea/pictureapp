@@ -34,9 +34,12 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
@@ -206,12 +209,15 @@ public class DashboardActivity extends BaseActivity {
     private void addTagToLastTab(String tabName) {
         TabWidget tabWidget = tabHost.getTabWidget();
         int numTabs = tabWidget.getTabCount();
-        LinearLayout tabIndicator = (LinearLayout) tabWidget.getChildTabViewAt(numTabs - 1);
+        ViewGroup tabIndicator = (ViewGroup) tabWidget.getChildTabViewAt(numTabs - 1);
 
         ImageView imageView = (ImageView) tabIndicator.getChildAt(0);
         imageView.setTag(tabName);
-        TextView tabTitle= (TextView) tabIndicator.getChildAt(1);
-        tabTitle.setTextSize(getResources().getDimensionPixelSize(R.dimen.dashboard_tab_text_size));
+        TextView textView = (TextView) tabIndicator.getChildAt(1);
+        textView.setGravity(Gravity.CENTER);
+        textView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        textView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+
     }
 
 

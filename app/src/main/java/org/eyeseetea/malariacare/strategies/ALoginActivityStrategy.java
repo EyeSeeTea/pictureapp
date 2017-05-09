@@ -1,10 +1,8 @@
 package org.eyeseetea.malariacare.strategies;
 
 
-import android.view.MenuItem;
-
 import org.eyeseetea.malariacare.LoginActivity;
-import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 
 public abstract class ALoginActivityStrategy {
@@ -20,24 +18,9 @@ public abstract class ALoginActivityStrategy {
 
     public abstract void onCreate();
 
-
     public abstract void initViews();
 
     public abstract void onLoginSuccess(Credentials credentials);
 
-    public void onLoginNetworkError(Credentials credentials) {
-        loginActivity.onFinishLoading(null);
-        ;
-        loginActivity.showError(loginActivity.getString(R.string.network_error));
-    }
-
-    public void onStart() {
-    }
-
-    public void onTextChange() {
-        loginActivity.getLoginButton().setEnabled(
-                !(loginActivity.getServerText().getText().toString().isEmpty()) &&
-                        !(loginActivity.getUsernameEditText().getText().toString().isEmpty()) &&
-                        !(loginActivity.getPasswordEditText().getText().toString().isEmpty()));
-    }
+    public abstract void initLoginUseCase(IAuthenticationManager authenticationManager);
 }

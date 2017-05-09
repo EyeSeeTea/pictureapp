@@ -6,9 +6,11 @@ import android.net.NetworkInfo;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.json.JSONException;
 
@@ -30,6 +32,12 @@ public class OrganisationUnitDataSource implements IOrganisationUnitRepository {
         }
 
         return organisationUnit;
+    }
+
+    @Override
+    public OrganisationUnit getUserOrgUnit(Credentials credentials)
+            throws PullConversionException, NetworkException, IOException, JSONException {
+        return ServerAPIController.getOrganisationUnitsByCode(credentials.getUsername());
     }
 
     private boolean isNetworkAvailable() {

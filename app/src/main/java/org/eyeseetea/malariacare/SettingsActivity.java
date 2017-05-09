@@ -180,7 +180,7 @@ public class SettingsActivity extends PreferenceActivity implements
         mSettingsActivityStrategy.onCreate();
     }
 
-    private void restartActivity() {
+    public void restartActivity() {
         Intent intent = getIntent();
         finish();
         startActivity(intent);
@@ -273,7 +273,7 @@ public class SettingsActivity extends PreferenceActivity implements
         if (key.equals(getString(R.string.language_code))) {
             restartActivity();
         }
-
+        mSettingsActivityStrategy.onSharedPreferenceChanged(sharedPreferences, key);
     }
 
     @Override

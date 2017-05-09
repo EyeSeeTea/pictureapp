@@ -1,5 +1,6 @@
 package org.eyeseetea.malariacare.strategies;
 
+import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
@@ -50,6 +51,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public Preference.OnPreferenceChangeListener getOnPreferenceChangeListener() {
 
         return pullRequiredOnPreferenceChangeListener;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
     }
 
     public static boolean showAnnouncementOnBackPressed() {

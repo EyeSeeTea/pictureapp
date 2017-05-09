@@ -296,7 +296,8 @@ public class LoginActivity extends Activity {
 
             @Override
             public void onNetworkError() {
-                mLoginActivityStrategy.onLoginNetworkError(credentials);
+//                Uncomment when merge with feature-credential_expiration
+//                mLoginActivityStrategy.onLoginNetworkError(credentials);
             }
 
             @Override
@@ -386,11 +387,13 @@ public class LoginActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        mLoginActivityStrategy.onStart();
+        //                Uncomment when merge with feature-credential_expiration
+//               mLoginActivityStrategy.onStart();
     }
 
     private void onTextChanged() {
-        mLoginActivityStrategy.onTextChange();
+        //                Uncomment when merge with feature-credential_expiration
+//               mLoginActivityStrategy.onTextChange();
     }
 
     public EditText getServerText() {

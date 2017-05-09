@@ -115,7 +115,7 @@ public abstract class APushServiceStrategy {
         });
     }
 
-    private void onError(String error) {
+    public void onError(String error) {
         Log.e(TAG, error);
         mPushService.onPushError(error);
     }

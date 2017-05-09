@@ -309,6 +309,11 @@ public class LoginActivity extends Activity {
                 hideProgressBar();
                 showError(getString(R.string.login_unexpected_error));
             }
+
+            @Override
+            public void disableLogin() {
+                mLoginActivityStrategy.disableLogin();
+            }
         });
     }
 

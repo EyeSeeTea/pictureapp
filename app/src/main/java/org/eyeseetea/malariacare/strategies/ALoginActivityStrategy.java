@@ -37,6 +37,10 @@ public abstract class ALoginActivityStrategy {
     public void onStart() {
     }
 
+    public void disableLogin() {
+
+    }
+
     public void onTextChange() {
         loginActivity.getLoginButton().setEnabled(
                 !(loginActivity.getServerText().getText().toString().isEmpty()) &&

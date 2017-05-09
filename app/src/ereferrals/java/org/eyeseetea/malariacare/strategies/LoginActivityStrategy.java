@@ -13,14 +13,17 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -90,34 +93,28 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     @Override
     public void onBadCredentials() {
         super.onBadCredentials();
-        boolean disableLogin = disableLogin();
-        loginActivity.enableLogin(!disableLogin);
-        if (disableLogin) {
-            PreferencesEReferral.setTimeLoginEnables();
-            checkEnableLogin();
-        }
     }
 
-    private boolean disableLogin() {
-        if (PreferencesEReferral.addBadLogin() >= 3) {
-            PreferencesEReferral.resetBadLogin();
-            return true;
-        }
-        return false;
+    @Override
+    public void disableLogin() {
+        super.disableLogin();
+        loginActivity.enableLogin(false);
+        checkEnableLogin();
     }
 
     private void checkEnableLogin() {
-        final long timeEnabled = PreferencesEReferral.getTimeLoginEnables();
-        long currentTime = new Date().getTime();
-        if (currentTime < timeEnabled) {
+        IInvalidLoginAttemptsRepository invalidLoginAttemptsLocalDataSource =
+                new InvalidLoginAttemptsRepositoryLocalDataSource();
+        final InvalidLoginAttempts invalidLoginAttempts =
+                invalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
+        if (!invalidLoginAttempts.isLoginEnabled()) {
             loginActivity.enableLogin(false);
             final Handler h = new Handler();
             final int delay = 1000; //milliseconds
             h.postDelayed(new Runnable() {
                 public void run() {
                     if (!loginActivity.isFinishing()) {
-                        long currentTime = new Date().getTime();
-                        if (currentTime < timeEnabled) {
+                        if (!invalidLoginAttempts.isLoginEnabled()) {
                             h.postDelayed(this, delay);
                         } else {
                             loginActivity.enableLogin(true);
@@ -153,7 +150,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
         IOrganisationUnitRepository organisationDataSource = new OrganisationUnitDataSource();
+        IInvalidLoginAttemptsRepository
+                iInvalidLoginAttemptsRepository =
+                new InvalidLoginAttemptsRepositoryLocalDataSource();
         loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
-                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce);
+                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
+                iInvalidLoginAttemptsRepository);
     }
 }

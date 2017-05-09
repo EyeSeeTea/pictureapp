@@ -7,12 +7,14 @@ import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
@@ -40,8 +42,12 @@ public class PushServiceStrategy extends APushServiceStrategy {
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
         IOrganisationUnitRepository organisationDataSource = new OrganisationUnitDataSource();
+        IInvalidLoginAttemptsRepository
+                iInvalidLoginAttemptsRepository =
+                new InvalidLoginAttemptsRepositoryLocalDataSource();
         LoginUseCase loginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
-                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce);
+                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
+                iInvalidLoginAttemptsRepository);
         final Credentials oldCredentials = credentialsLocalDataSoruce.getOrganisationCredentials();
         loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
             @Override
@@ -72,6 +78,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
             @Override
             public void onUnexpectedError() {
                 Log.e(TAG, "Error getting user credentials: unexpectedError ");
+            }
+
+            @Override
+            public void disableLogin() {
+
             }
         });
     }

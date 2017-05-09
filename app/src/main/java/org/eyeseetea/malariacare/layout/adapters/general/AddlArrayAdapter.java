@@ -26,13 +26,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
 public abstract class AddlArrayAdapter<T> extends ArrayAdapter<T> {
     private Integer layout;
+    private Integer dropdownItemSize;
 
     public AddlArrayAdapter(Context context, List<T> objects) {
         super(context, R.layout.simple_spinner_item, objects);
@@ -71,9 +71,14 @@ public abstract class AddlArrayAdapter<T> extends ArrayAdapter<T> {
 
         //Set text item
         drawText((CustomTextView) convertView.findViewById(android.R.id.text1), getItem(position));
-        ((CustomTextView) convertView).setTextSize(23);
-
+        if(dropdownItemSize!=null) {
+            ((CustomTextView) convertView).setTextSize(dropdownItemSize);
+        }
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    public void setDropDownItemSize(Integer dropdownItemSize){
+        this.dropdownItemSize=dropdownItemSize;
     }
 }

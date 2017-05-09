@@ -34,14 +34,17 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
+import android.widget.TextView;
 
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.model.User;
@@ -71,7 +74,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Move to that question from reviewfragment
      */
-    public static Question moveToQuestion;
+    public static String moveToThisUId;
     TabHost tabHost;
     MonitorFragment monitorFragment;
     DashboardUnsentFragment unsentFragment;
@@ -208,10 +211,15 @@ public class DashboardActivity extends BaseActivity {
     private void addTagToLastTab(String tabName) {
         TabWidget tabWidget = tabHost.getTabWidget();
         int numTabs = tabWidget.getTabCount();
-        LinearLayout tabIndicator = (LinearLayout) tabWidget.getChildTabViewAt(numTabs - 1);
+        ViewGroup tabIndicator = (ViewGroup) tabWidget.getChildTabViewAt(numTabs - 1);
 
         ImageView imageView = (ImageView) tabIndicator.getChildAt(0);
         imageView.setTag(tabName);
+        TextView textView = (TextView) tabIndicator.getChildAt(1);
+        textView.setGravity(Gravity.CENTER);
+        textView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        textView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+
     }
 
 
@@ -532,8 +540,8 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void reviewSurvey() {
-        DashboardActivity.moveToQuestion = (Session.getMalariaSurvey().getValuesFromDB().get(
-                0).getQuestion());
+        DashboardActivity.moveToThisUId = (Session.getMalariaSurvey().getValuesFromDB().get(
+                0).getQuestion()).getUid();
         hideReview();
     }
 
@@ -620,8 +628,8 @@ public class DashboardActivity extends BaseActivity {
     /**
      * This method hide the reviewFragment restoring the Assess tab with the active SurveyFragment
      */
-    public void hideReview(Question question) {
-        moveToQuestion = question;
+    public void hideReview(String questionUId) {
+        moveToThisUId = questionUId;
         hideReview();
     }
 

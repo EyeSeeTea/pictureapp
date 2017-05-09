@@ -1,42 +1,176 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.PullConversionException;
+import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.json.JSONException;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 
-public class LoginUseCase extends ALoginUseCase {
+public class LoginUseCase extends ALoginUseCase implements UseCase {
     private IAuthenticationManager mAuthenticationManager;
+    private Credentials insertedCredentials;
+    private IMainExecutor mMainExecutor;
+    private IAsyncExecutor mAsyncExecutor;
+    private IOrganisationUnitRepository mOrgUnitDataSource;
+    private ICredentialsRepository mCredentialsLocalDataSource;
+    private Callback mCallback;
 
-    public LoginUseCase(IAuthenticationManager authenticationManager) {
+    public LoginUseCase(IAuthenticationManager authenticationManager, IMainExecutor mainExecutor,
+            IAsyncExecutor asyncExecutor, IOrganisationUnitRepository orgUnitDataSource,
+            ICredentialsRepository credentialsLocalDataSource) {
         mAuthenticationManager = authenticationManager;
+        mMainExecutor = mainExecutor;
+        mAsyncExecutor = asyncExecutor;
+        mOrgUnitDataSource = orgUnitDataSource;
+        mCredentialsLocalDataSource = credentialsLocalDataSource;
     }
 
     @Override
-    public void execute(Credentials credentials, final Callback callback) {
-        mAuthenticationManager.login(credentials,
+    public void execute(final Credentials credentials, final Callback callback) {
+        mCallback = callback;
+        insertedCredentials = credentials;
+        mAsyncExecutor.run(this);
+    }
+
+    @Override
+    public void run() {
+        mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
                 new IAuthenticationManager.Callback<UserAccount>() {
                     @Override
                     public void onSuccess(UserAccount userAccount) {
-                        callback.onLoginSuccess();
+                        mAsyncExecutor.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                pullOrganisationCredentials();
+                            }
+                        });
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
                         if (throwable instanceof MalformedURLException
                                 || throwable instanceof UnknownHostException) {
-                            callback.onServerURLNotValid();
+                            notifyServerURLNotValid();
                         } else if (throwable instanceof InvalidCredentialsException) {
-                            callback.onInvalidCredentials();
+                            notifyInvalidCredentials();
                         } else if (throwable instanceof NetworkException) {
-                            callback.onNetworkError();
+                            checkUserCredentialsWithOrgUnit(
+                                    mCredentialsLocalDataSource.getOrganisationCredentials(),
+                                    false);
                         }
                     }
                 });
-
     }
+
+
+    private void pullOrganisationCredentials() {
+        Credentials orgUnitCredentials = null;
+        try {
+            OrganisationUnit orgUnit = mOrgUnitDataSource.getUserOrgUnit(insertedCredentials);
+            if (orgUnit == null) {
+                notifyInvalidCredentials();
+                return;
+            }
+            orgUnitCredentials = new Credentials("", orgUnit.getCode(), orgUnit.getPin());
+
+        } catch (PullConversionException | JSONException e) {
+            e.printStackTrace();
+            notifyConfigJsonNotPresent();
+        } catch (NetworkException e) {
+            e.printStackTrace();
+            checkUserCredentialsWithOrgUnit(
+                    mCredentialsLocalDataSource.getOrganisationCredentials(),
+                    true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            notifyUnexpectedError();
+        }
+
+        mCredentialsLocalDataSource.saveOrganisationCredentials(orgUnitCredentials);
+
+        checkUserCredentialsWithOrgUnit(orgUnitCredentials, false);
+    }
+
+
+    private void checkUserCredentialsWithOrgUnit(Credentials credentials,
+            boolean fromNetWorkError) {
+        if (insertedCredentials.getUsername().equals(credentials.getUsername())
+                && insertedCredentials.getPassword().equals(credentials.getPassword())) {
+            notifyLoginSucces();
+        } else {
+            if (fromNetWorkError) {
+                notifyNetworkError();
+            } else {
+                notifyInvalidCredentials();
+            }
+        }
+    }
+
+    public void notifyLoginSucces() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onLoginSuccess();
+            }
+        });
+    }
+
+    public void notifyInvalidCredentials() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onInvalidCredentials();
+            }
+        });
+    }
+
+    public void notifyConfigJsonNotPresent() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onConfigJsonNotPresent();
+            }
+        });
+    }
+
+    public void notifyNetworkError() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onNetworkError();
+            }
+        });
+    }
+
+    public void notifyServerURLNotValid() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onServerURLNotValid();
+            }
+        });
+    }
+
+    public void notifyUnexpectedError() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onUnexpectedError();
+            }
+        });
+    }
+
+
 }

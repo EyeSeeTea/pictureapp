@@ -113,6 +113,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     public void onConfigJsonNotPresent() {
                         Log.d(TAG, "onConfigJsonNotPresent");
                     }
+
+                    @Override
+                    public void onUnexpectedError() {
+                        Log.d(TAG, "onUnexpectedError");
+                    }
                 }
         );
     }
@@ -122,5 +127,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 SurveyService.class);
         surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
         PreferencesState.getInstance().getContext().startService(surveysIntent);
+    }
+
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithHtmlMessage(app_copyright, copyright);
     }
 }

@@ -20,7 +20,6 @@ package org.eyeseetea.malariacare.presentation.factory.monitor.rows;
 
 import android.content.Context;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.PositivityRate;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonitor;
@@ -35,7 +34,7 @@ import java.util.List;
 public class PositivityRateRowBuilder extends MonitorRowBuilder {
 
     public PositivityRateRowBuilder(Context context) {
-        super(context, context.getString(R.string.monitor_row_title_positivity_rate));
+        super(context, "");
     }
 
     /**

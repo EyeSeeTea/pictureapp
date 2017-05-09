@@ -71,7 +71,7 @@ public class LoginActivity extends AbsLoginActivity {
     public static final String DEFAULT_PASSWORD = "";
     private static final String TAG = ".LoginActivity";
     public IAuthenticationManager mAuthenticationManager = new AuthenticationManager(this);
-    public LoginUseCase mLoginUseCase = new LoginUseCase(mAuthenticationManager);
+    public LoginUseCase mLoginUseCase;
     public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
     EditText serverText;
     EditText usernameEditText;
@@ -85,8 +85,13 @@ public class LoginActivity extends AbsLoginActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
+        initLoginUseCase();
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
+    }
+
+    private void initLoginUseCase() {
+        mLoginActivityStrategy.initLoginUseCase(mAuthenticationManager);
     }
 
     private void initDataDownloadPeriodDropdown() {
@@ -193,15 +198,13 @@ public class LoginActivity extends AbsLoginActivity {
     }
 
     public void login(String serverUrl, String username, String password) {
-        Credentials credentials = new Credentials(serverUrl, username, password);
+        final Credentials credentials = new Credentials(serverUrl, username, password);
         showProgressBar();
 
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {
-                PreferencesState.getInstance().setUserAccept(false);
-                AsyncPullAnnouncement asyncPullAnnouncement = new AsyncPullAnnouncement();
-                asyncPullAnnouncement.execute(LoginActivity.this);
+                mLoginActivityStrategy.onLoginSuccess(credentials);
             }
 
             @Override
@@ -228,6 +231,12 @@ public class LoginActivity extends AbsLoginActivity {
                 hideProgressBar();
                 showError(getString(R.string.login_error_json));
             }
+
+            @Override
+            public void onUnexpectedError() {
+                hideProgressBar();
+                showError(getString(R.string.login_unexpected_error));
+            }
         });
     }
 
@@ -239,6 +248,9 @@ public class LoginActivity extends AbsLoginActivity {
         mLoginActivityStrategy.onOptionsItemSelected(item);
 
         return super.onOptionsItemSelected(item);
+    }
+    public void showError(int message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -257,6 +269,7 @@ public class LoginActivity extends AbsLoginActivity {
         usernameEditText.setText(DEFAULT_USER);
         passwordEditText = (EditText) findViewById(R.id.edittext_password);
         passwordEditText.setText(DEFAULT_PASSWORD);
+        mLoginActivityStrategy.initViews();
     }
 
     public class AsyncInit extends AsyncTask<Void, Void, Exception> {
@@ -314,7 +327,9 @@ public class LoginActivity extends AbsLoginActivity {
         @Override
         protected Void doInBackground(LoginActivity... params) {
             loginActivity = params[0];
-            isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+            if (Session.getUser() != null) {
+                isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+            }
             return null;
         }
 
@@ -331,6 +346,12 @@ public class LoginActivity extends AbsLoginActivity {
                 mLoginActivityStrategy.finishAndGo();
             }
         }
+    }
+
+    public void checkAnnouncement() {
+        PreferencesState.getInstance().setUserAccept(false);
+        AsyncPullAnnouncement asyncPullAnnouncement = new AsyncPullAnnouncement();
+        asyncPullAnnouncement.execute(LoginActivity.this);
     }
 
 }

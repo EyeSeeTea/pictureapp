@@ -10,18 +10,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.google.common.collect.Iterables;
+
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
-import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ReviewFragment extends Fragment {
@@ -67,10 +71,67 @@ public class ReviewFragment extends Fragment {
      * Inits reviewfragment adapter.
      */
     private void initAdapter() {
-        values = getReviewValues();
-        ReviewScreenAdapter adapterInSession = new ReviewScreenAdapter(this.values, lInflater,
+        ReviewScreenAdapter adapterInSession = new ReviewScreenAdapter(prepareValues(), lInflater,
                 getActivity());
         this.adapter = adapterInSession;
+    }
+
+    private List<org.eyeseetea.malariacare.domain.entity.Value> prepareValues() {
+        Iterator<String> colorIterator;
+        List<org.eyeseetea.malariacare.domain.entity.Value> preparedValues = new ArrayList<>();
+        values = getReviewValues();
+        values = orderValues(values);
+        colorIterator = Iterables.cycle(createBackgroundColorList(preparedValues)).iterator();
+        for(Value value:values) {
+            org.eyeseetea.malariacare.domain.entity.Value preparedValue =new org.eyeseetea.malariacare.domain.entity.Value(value.getValue());
+            if(value.getQuestion()!=null)
+            preparedValue.setQuestionUId(value.getQuestion().getUid());
+            if(value.getOption()!=null)
+            preparedValue.setInternationalizedCode(value.getOption().getInternationalizedCode());
+            if(colorIterator.hasNext()) {
+                preparedValue.setBackgroundColor(colorIterator.next());
+            }
+            preparedValues.add(preparedValue);
+        }
+        return preparedValues;
+    }
+
+    private List<String> createBackgroundColorList(List<org.eyeseetea.malariacare.domain.entity.Value> preparedValues) {
+        List<String> colorsList = new ArrayList<>();
+        for(Value value:values) {
+            if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
+                String color = "#" + value.getOption().getBackground_colour();
+                if (!colorsList.contains(color)) {
+                    colorsList.add(color);
+                }
+            }
+        }
+        //Hardcoded colors for a colorList without colors.
+        if (colorsList.size() == 0) {
+            colorsList.add("#4d3a4b");
+        }
+        if (colorsList.size() == 1 && preparedValues.size() > 1) {
+            colorsList.add("#9c7f9b");
+        }
+        return colorsList;
+    }
+
+    private List<Value> orderValues(List<Value> values) {
+        List<Value> orderedList = new ArrayList<>();
+        NavigationController navigationController = Session.getNavigationController();
+        navigationController.first();
+        Question nextQuestion = null;
+        do {
+            for (Value value : values) {
+                if (value.getQuestion() != null) {
+                    if (value.getQuestion().equals(navigationController.getCurrentQuestion())) {
+                        orderedList.add(value);
+                        nextQuestion = navigationController.next(value.getOption());
+                    }
+                }
+            }
+        } while (nextQuestion != null);
+        return orderedList;
     }
 
     private List<Value> getReviewValues() {
@@ -94,7 +155,7 @@ public class ReviewFragment extends Fragment {
                 isReviewValue = false;
             }
             if (isReviewValue) {
-                if (ReviewFragmentStrategy.isValidValue(value)) {
+                if (value.getQuestion()!=null) {
                     reviewValues.add(value);
                 }
             }

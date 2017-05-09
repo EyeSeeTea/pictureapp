@@ -6,32 +6,26 @@ import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
-import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
-import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
-import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
-import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+
+import java.util.Date;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
@@ -59,71 +53,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
             loginActivity.finish();
         }
-//        if (existsLoggedUser() && PopulateDB.hasMandatoryTables()) {
-//            LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
-//                    new LoadUserAndCredentialsUseCase(loginActivity);
-//
-//            loadUserAndCredentialsUseCase.execute();
-//
-//            finishAndGo(DashboardActivity.class);
-//        } else {
-//            //TODO jsanchez, this is necessary because oncreate is called from
-//            //AsyncTask review Why is invoked from AsyncTask, It's not very correct
-//            PopulateDB.wipeDataBase();
-//        }
-    }
-
-    private boolean existsLoggedUser() {
-        return User.getLoggedUser() != null;
-    }
-
-
-    private void executePullDemo() {
-        PullController pullController = new PullController(loginActivity);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-
-        PullUseCase pullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
-
-        PullFilters pullFilters = new PullFilters();
-        pullFilters.setDemo(true);
-
-        pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
-            @Override
-            public void onComplete() {
-                loginActivity.onFinishLoading(null);
-                finishAndGo(DashboardActivity.class);
-            }
-
-            @Override
-            public void onStep(PullStep step) {
-                Log.d(this.getClass().getSimpleName(), step.toString());
-            }
-
-            @Override
-            public void onError(String message) {
-                loginActivity.onFinishLoading(null);
-                Log.e(this.getClass().getSimpleName(), message);
-            }
-
-            @Override
-            public void onPullConversionError() {
-                loginActivity.onFinishLoading(null);
-                Log.e(this.getClass().getSimpleName(), "Pull conversion error");
-            }
-
-            @Override
-            public void onCancel() {
-                loginActivity.onFinishLoading(null);
-                Log.e(this.getClass().getSimpleName(), "Pull cancel");
-            }
-
-            @Override
-            public void onNetworkError() {
-                loginActivity.onFinishLoading(null);
-                Log.e(this.getClass().getSimpleName(), "Network Error");
-            }
-        });
     }
 
     public void finishAndGo(Class<? extends Activity> activityClass) {
@@ -159,14 +88,22 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
 
     @Override
-    public void onBadCredentials(boolean disableLogin) {
-        loginActivity.onFinishLoading(null);
-        loginActivity.showError(R.string.login_invalid_credentials);
+    public void onBadCredentials() {
+        super.onBadCredentials();
+        boolean disableLogin = disableLogin();
         loginActivity.enableLogin(!disableLogin);
         if (disableLogin) {
             PreferencesEReferral.setTimeLoginEnables();
             checkEnableLogin();
         }
+    }
+
+    private boolean disableLogin() {
+        if (PreferencesEReferral.addBadLogin() >= 3) {
+            PreferencesEReferral.resetBadLogin();
+            return true;
+        }
+        return false;
     }
 
     private void checkEnableLogin() {
@@ -197,14 +134,6 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     }
 
 
-    private void onBadCredentials() {
-        if (PreferencesEReferral.addBadLogin() >= 3) {
-            PreferencesEReferral.setTimeLoginEnables();
-            checkEnableLogin();
-            PreferencesEReferral.resetBadLogin();
-        }
-    }
-
     public boolean canEnableLoginButtonOnTextChange() {
         long timeEnabled = PreferencesEReferral.getTimeLoginEnables();
         long currentTime = new Date().getTime();
@@ -217,7 +146,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             super.onTextChange();
         }
     }
-}
+
 
     public void initLoginUseCase(IAuthenticationManager authenticationManager) {
         IMainExecutor mainExecutor = new UIThreadExecutor();

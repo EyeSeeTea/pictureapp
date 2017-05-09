@@ -23,6 +23,10 @@ import android.content.Context;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorRowBuilder;
 import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorTableBuilder;
+import org.eyeseetea.malariacare.presentation.factory.monitor.tables.strategies
+        .ConsumptionTableBuilderStrategy;
+import org.eyeseetea.malariacare.presentation.factory.monitor.tables.strategies
+        .IConsumptionTableBuilderStrategy;
 
 import java.util.List;
 
@@ -34,7 +38,9 @@ public class ConsumptionTableBuilder extends MonitorTableBuilder {
 
     @Override
     protected List<MonitorRowBuilder> defineRowBuilders() {
+        IConsumptionTableBuilderStrategy consumptionTableBuilderStrategy =
+                new ConsumptionTableBuilderStrategy(context);
 
-        return null;
+        return consumptionTableBuilderStrategy.defineRows();
     }
 }

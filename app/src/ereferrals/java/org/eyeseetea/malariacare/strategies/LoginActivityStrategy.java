@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
@@ -12,8 +13,6 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
@@ -24,12 +23,8 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsReposi
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
-import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
-import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
-import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 
@@ -38,6 +33,7 @@ import java.util.Date;
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private static final String TAG = ".LoginActivityStrategy";
+    public static final String EXIT = "exit";
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -57,17 +53,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void onCreate() {
-        if (existsLoggedUser() && PopulateDB.hasMandatoryTables()) {
-            LoadUserAndCredentialsUseCase loadUserAndCredentialsUseCase =
-                    new LoadUserAndCredentialsUseCase(loginActivity);
-
-            loadUserAndCredentialsUseCase.execute();
-
-            finishAndGo(DashboardActivity.class);
-        } else {
-            //TODO jsanchez, this is necessary because oncreate is called from
-            //AsyncTask review Why is invoked from AsyncTask, It's not very correct
-            PopulateDB.wipeDataBase();
+        if (loginActivity.getIntent().getBooleanExtra(EXIT, false)) {
+            loginActivity.finish();
         }
     }
 

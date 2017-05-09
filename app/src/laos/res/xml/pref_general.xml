@@ -40,7 +40,7 @@
 
     <!--</PreferenceCategory>-->
     <PreferenceCategory
-        android:key="pref_server"
+        android:key="@string/pref_cat_server"
         android:title="@string/server">
         <EditTextPreference
             android:defaultValue="@string/DHIS_DEFAULT_SERVER"

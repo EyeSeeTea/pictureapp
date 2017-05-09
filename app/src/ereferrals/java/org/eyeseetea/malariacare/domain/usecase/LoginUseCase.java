@@ -4,8 +4,10 @@ import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
@@ -25,16 +27,19 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
     private IAsyncExecutor mAsyncExecutor;
     private IOrganisationUnitRepository mOrgUnitDataSource;
     private ICredentialsRepository mCredentialsLocalDataSource;
+    private IInvalidLoginAttemptsRepository mInvalidLoginAttemptsLocalDataSource;
     private Callback mCallback;
 
     public LoginUseCase(IAuthenticationManager authenticationManager, IMainExecutor mainExecutor,
             IAsyncExecutor asyncExecutor, IOrganisationUnitRepository orgUnitDataSource,
-            ICredentialsRepository credentialsLocalDataSource) {
+            ICredentialsRepository credentialsLocalDataSource,
+            IInvalidLoginAttemptsRepository iInvalidLoginAttemptsRepository) {
         mAuthenticationManager = authenticationManager;
         mMainExecutor = mainExecutor;
         mAsyncExecutor = asyncExecutor;
         mOrgUnitDataSource = orgUnitDataSource;
         mCredentialsLocalDataSource = credentialsLocalDataSource;
+        mInvalidLoginAttemptsLocalDataSource = iInvalidLoginAttemptsRepository;
     }
 
     @Override
@@ -128,12 +133,24 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
     }
 
     public void notifyInvalidCredentials() {
+        InvalidLoginAttempts invalidLoginAttempts =
+                mInvalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
+        invalidLoginAttempts.addFailedAttempts();
+        mInvalidLoginAttemptsLocalDataSource.saveInvalidLoginAttempts(invalidLoginAttempts);
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
                 mCallback.onInvalidCredentials();
             }
         });
+        if (!invalidLoginAttempts.isLoginEnabled()) {
+            mMainExecutor.run(new Runnable() {
+                @Override
+                public void run() {
+                    mCallback.disableLogin();
+                }
+            });
+        }
     }
 
     public void notifyConfigJsonNotPresent() {

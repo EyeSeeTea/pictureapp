@@ -129,6 +129,10 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         });
     }
 
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithMessage(app_copyright, copyright);
+    }
+
 
     @Override
     public void goSettings() {
@@ -137,9 +141,5 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
         mBaseActivity.startActivityForResult(new Intent(mBaseActivity, SettingsActivity.class),
                 SETTINGS_LOGOUT);
-    }
-
-    public void showCopyRight(int app_copyright, int copyright) {
-        mBaseActivity.showAlertWithMessage(app_copyright, copyright);
     }
 }

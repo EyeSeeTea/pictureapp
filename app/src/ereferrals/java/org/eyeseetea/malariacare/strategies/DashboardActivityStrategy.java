@@ -17,6 +17,7 @@ import java.util.Date;
 import org.eyeseetea.malariacare.fragments.OfflineFragment;
 
 
+
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private OfflineFragment mOfflineFragment;
@@ -24,7 +25,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadStockFragment(Activity activity) {
-        mOfflineFragment.reloadHeader(activity);
+
     }
 
     @Override

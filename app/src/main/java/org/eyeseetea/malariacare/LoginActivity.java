@@ -290,8 +290,7 @@ public class LoginActivity extends Activity {
 
             @Override
             public void onInvalidCredentials() {
-                onFinishLoading(null);
-                showError(getString(R.string.login_invalid_credentials));
+                mLoginActivityStrategy.onBadCredentials();
             }
 
             @Override
@@ -310,6 +309,11 @@ public class LoginActivity extends Activity {
             public void onUnexpectedError() {
                 hideProgressBar();
                 showError(getString(R.string.login_unexpected_error));
+            }
+
+            @Override
+            public void disableLogin() {
+                mLoginActivityStrategy.disableLogin();
             }
         });
     }
@@ -381,7 +385,9 @@ public class LoginActivity extends Activity {
     }
 
     public void enableLogin(boolean enable) {
-        loginButton.setEnabled(enable);
+        if (loginButton != null) {
+            loginButton.setEnabled(enable);
+        }
     }
 
     @Override

@@ -32,6 +32,7 @@ import java.util.List;
 
 public abstract class AddlArrayAdapter<T> extends ArrayAdapter<T> {
     private Integer layout;
+    private Integer dropdownItemSize;
 
     public AddlArrayAdapter(Context context, List<T> objects) {
         super(context, R.layout.simple_spinner_item, objects);
@@ -70,8 +71,14 @@ public abstract class AddlArrayAdapter<T> extends ArrayAdapter<T> {
 
         //Set text item
         drawText((CustomTextView) convertView.findViewById(android.R.id.text1), getItem(position));
-
+        if(dropdownItemSize!=null) {
+            ((CustomTextView) convertView).setTextSize(dropdownItemSize);
+        }
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    public void setDropDownItemSize(Integer dropdownItemSize){
+        this.dropdownItemSize=dropdownItemSize;
     }
 }

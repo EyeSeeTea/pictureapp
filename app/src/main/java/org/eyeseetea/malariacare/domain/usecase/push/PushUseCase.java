@@ -1,7 +1,5 @@
 package org.eyeseetea.malariacare.domain.usecase.push;
 
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -16,6 +14,7 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.service.OverLimitSurveysDomainService;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
+import org.eyeseetea.malariacare.domain.usecase.strategies.PushUseCaseStrategy;
 import org.eyeseetea.malariacare.network.ServerAPIController;
 
 import java.util.List;
@@ -46,7 +45,7 @@ public class PushUseCase implements UseCase {
         void onApiCallError(ApiCallException e);
     }
 
-    private IPushController mPushController;
+    public IPushController mPushController;
     private ISurveyRepository mSurveyRepository;
     private IOrganisationUnitRepository mOrganisationUnitRepository;
 
@@ -56,6 +55,7 @@ public class PushUseCase implements UseCase {
     private Callback mCallback;
 
     private SurveysThresholds mSurveysThresholds;
+    private PushUseCaseStrategy mPushUseCaseStrategy;
 
     public PushUseCase(IPushController pushController, IAsyncExecutor asyncExecutor,
             IMainExecutor mainExecutor, SurveysThresholds surveysThresholds,
@@ -67,6 +67,7 @@ public class PushUseCase implements UseCase {
         mSurveysThresholds = surveysThresholds;
         mSurveyRepository = surveyRepository;
         mOrganisationUnitRepository = organisationUnitRepository;
+        mPushUseCaseStrategy = new PushUseCaseStrategy(this);
     }
 
     public void execute(final Callback callback) {
@@ -77,54 +78,16 @@ public class PushUseCase implements UseCase {
 
     @Override
     public void run() {
-
-        if (mPushController.isPushInProgress()) {
-            notifyPushInProgressError();
-            return;
-        }
-
-        mPushController.changePushInProgress(true);
-
-        try {
-            Boolean isBanned = isOrgUnitBanned();
-
-            OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
-            if (isBanned) {
-                if (orgUnit != null && !orgUnit.isBanned()) {
-                    orgUnit.setBan(true);
-                    orgUnit.save();
-                    notifyBannedOrgUnitError();
-
-                }
-                mPushController.changePushInProgress(false);
-            } else {
-                if (orgUnit != null && orgUnit.isBanned()) {
-                    orgUnit.setBan(false);
-                    orgUnit.save();
-                    notifyReOpenOrgUnit();
-                }
-                runPush();
-            }
-
-        } catch (NetworkException e) {
-            mPushController.changePushInProgress(false);
-            notifyNetworkError();
-        } catch (ApiCallException e) {
-            mPushController.changePushInProgress(false);
-            notifyApiCallError(e);
-        } catch (Exception e) {
-            mPushController.changePushInProgress(false);
-            notifyPushError();
-        }
+        mPushUseCaseStrategy.run();
     }
 
-    private boolean isOrgUnitBanned() throws NetworkException, ApiCallException {
+    public boolean isOrgUnitBanned() throws NetworkException, ApiCallException {
         OrganisationUnit orgUnit = null;
         orgUnit = mOrganisationUnitRepository.getCurrentOrganisationUnit();
         return orgUnit.isBanned();
     }
 
-    private void runPush() {
+    public void runPush() {
 
         mPushController.push(new IPushController.IPushControllerCallback() {
             @Override
@@ -190,6 +153,10 @@ public class PushUseCase implements UseCase {
         }
     }
 
+    public IPushController getPushController() {
+        return mPushController;
+    }
+
     private void notifyComplete() {
         mMainExecutor.run(new Runnable() {
             @Override
@@ -199,7 +166,7 @@ public class PushUseCase implements UseCase {
         });
     }
 
-    private void notifyPushError() {
+    public void notifyPushError() {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
@@ -208,7 +175,7 @@ public class PushUseCase implements UseCase {
         });
     }
 
-    private void notifyPushInProgressError() {
+    public void notifyPushInProgressError() {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
@@ -235,7 +202,7 @@ public class PushUseCase implements UseCase {
         });
     }
 
-    private void notifyNetworkError() {
+    public void notifyNetworkError() {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
@@ -262,7 +229,7 @@ public class PushUseCase implements UseCase {
         });
     }
 
-    private void notifyBannedOrgUnitError() {
+    public void notifyBannedOrgUnitError() {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
@@ -271,7 +238,7 @@ public class PushUseCase implements UseCase {
         });
     }
 
-    private void notifyReOpenOrgUnit() {
+    public void notifyReOpenOrgUnit() {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
@@ -280,7 +247,7 @@ public class PushUseCase implements UseCase {
         });
     }
 
-    private void notifyApiCallError(final ApiCallException e) {
+    public void notifyApiCallError(final ApiCallException e) {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {

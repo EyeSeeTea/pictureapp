@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.data.sync.exporter.model;
 
 public class SurveyWSResponseAction {
+    private static final String SUCCESS = "success";
+
     private String actionId;
     private String message;
     private String status;
@@ -57,5 +59,9 @@ public class SurveyWSResponseAction {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isSuccess() {
+        return status.equals(SUCCESS);
     }
 }

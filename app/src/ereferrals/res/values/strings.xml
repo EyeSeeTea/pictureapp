@@ -190,4 +190,5 @@
     <string name="survey_third_step"></string>
     <string name="survey_fourth_step"></string>
     <string name="empty_review_value">""</string>
+    <string name="survey_error">"Survey with id: %1$s has conflicts: %2$s"</string>
 </resources>

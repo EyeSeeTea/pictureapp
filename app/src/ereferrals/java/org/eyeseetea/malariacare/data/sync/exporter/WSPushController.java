@@ -2,18 +2,16 @@ package org.eyeseetea.malariacare.data.sync.exporter;
 
 import android.util.Log;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
-import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
-import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
@@ -41,15 +39,6 @@ public class WSPushController implements IPushController {
             callback.onError(new SurveysToPushNotFoundException("Null surveys"));
             return;
         }
-        User loggedUser = User.getLoggedUser();
-        if (loggedUser != null && loggedUser.getUid() != null) {
-            if (ServerAPIController.isUserClosed(User.getLoggedUser().getUid())) {
-                Log.d(TAG, "The user is closed, Surveys not sent");
-                callback.onError(new ClosedUserPushException());
-                putSurveysAsCompleted();
-                return;
-            }
-        } else {
             for (Survey srv : mSurveys) {
                 Log.d("DpBlank", "Survey to push " + srv.toString());
                 for (Value dv : srv.getValuesFromDB()) {
@@ -65,8 +54,6 @@ public class WSPushController implements IPushController {
                 return;
             }
             pushSurveys();
-        }
-
     }
 
     @Override
@@ -106,12 +93,12 @@ public class WSPushController implements IPushController {
 
     private void checkPushResult(SurveyWSResult surveyWSResult) {
         for (SurveyWSResponseAction responseAction : surveyWSResult.getActions()) {
-            if (!responseAction.getStatus().equals("sucess")) {
-                //TODO save this message in strings.xml
-                String message =
-                        "Survey with id: " + responseAction.getActionId() + " has conflicts: "
-                                + responseAction.getMessage();
-                mCallback.onError(new PushValueException(message));
+            if (!responseAction.isSuccess()) {
+                String message = String.format(
+                        PreferencesState.getInstance().getContext().getString(
+                                R.string.survey_error), responseAction.getActionId(),
+                        responseAction.getMessage());
+                mCallback.onInformativeError(new PushValueException(message));
             }
         }
         for (Survey survey : mSurveys) {

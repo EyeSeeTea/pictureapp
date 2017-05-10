@@ -135,22 +135,30 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
     public void notifyInvalidCredentials() {
         InvalidLoginAttempts invalidLoginAttempts =
                 mInvalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
+
         invalidLoginAttempts.addFailedAttempts();
+
         mInvalidLoginAttemptsLocalDataSource.saveInvalidLoginAttempts(invalidLoginAttempts);
+
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
                 mCallback.onInvalidCredentials();
             }
         });
+
         if (!invalidLoginAttempts.isLoginEnabled()) {
-            mMainExecutor.run(new Runnable() {
-                @Override
-                public void run() {
-                    mCallback.disableLogin();
-                }
-            });
+            notifyMaxLoginAttemptsReached();
         }
+    }
+
+    private void notifyMaxLoginAttemptsReached() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onMaxLoginAttemptsReachedError();
+            }
+        });
     }
 
     public void notifyConfigJsonNotPresent() {

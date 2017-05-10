@@ -311,7 +311,7 @@ public class LoginActivity extends Activity {
             }
 
             @Override
-            public void disableLogin() {
+            public void onMaxLoginAttemptsReachedError() {
                 mLoginActivityStrategy.disableLogin();
             }
         });

@@ -19,7 +19,7 @@ public abstract class ALoginUseCase {
 
         void onUnexpectedError();
 
-        void disableLogin();
+        void onMaxLoginAttemptsReachedError();
     }
 
     public abstract void execute(Credentials credentials, Callback callback);

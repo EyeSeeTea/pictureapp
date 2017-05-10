@@ -81,7 +81,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
             }
 
             @Override
-            public void disableLogin() {
+            public void onMaxLoginAttemptsReachedError() {
 
             }
         });

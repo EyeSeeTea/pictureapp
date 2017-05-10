@@ -35,6 +35,7 @@ public class ReviewFragment extends Fragment {
     protected IDashboardAdapter adapter;
     LayoutInflater lInflater;
     private List<Value> values;
+    private OnEndReviewListener mOnEndReviewListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,11 +50,23 @@ public class ReviewFragment extends Fragment {
         this.lInflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.review_layout,
                 container, false);
-
         initAdapter();
         initListView(view);
+        initReviewButton(view);
         return view;
     }
+
+    private void initReviewButton(View view) {
+        view.findViewById(R.id.review_image_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mOnEndReviewListener != null) {
+                    mOnEndReviewListener.onEndReview();
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onResume() {
@@ -185,5 +198,14 @@ public class ReviewFragment extends Fragment {
 
     public void reloadHeader(Activity activity) {
         DashboardHeaderStrategy.getInstance().hideHeader(activity);
+    }
+
+    public void setOnEndReviewListener(
+            OnEndReviewListener onEndReviewListener) {
+        mOnEndReviewListener = onEndReviewListener;
+    }
+
+    public interface OnEndReviewListener {
+        void onEndReview();
     }
 }

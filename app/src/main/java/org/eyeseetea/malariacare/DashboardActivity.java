@@ -219,8 +219,12 @@ public class DashboardActivity extends BaseActivity {
         mDashboardActivityStrategy.showFirstFragment();
     }
 
+    public void showUnsentFragment() {
+        mDashboardActivityStrategy.showUnsentFragment();
+    }
+
     public void restoreAssess() {
-        replaceFragment(R.id.dashboard_details_container, surveyFragment);
+        replaceFragment(mDashboardActivityStrategy.getSurveyContainer(), surveyFragment);
     }
 
     /**
@@ -232,8 +236,14 @@ public class DashboardActivity extends BaseActivity {
         if (reviewFragment == null) {
             reviewFragment = new ReviewFragment();
         }
-        replaceFragment(R.id.dashboard_details_container, reviewFragment);
+        replaceFragment(mDashboardActivityStrategy.getSurveyContainer(), reviewFragment);
         reviewFragment.reloadHeader(dashboardActivity);
+        reviewFragment.setOnEndReviewListener(new ReviewFragment.OnEndReviewListener() {
+            @Override
+            public void onEndReview() {
+                exitReview();
+            }
+        });
     }
 
     /**
@@ -260,7 +270,7 @@ public class DashboardActivity extends BaseActivity {
             surveyFragment = new SurveyFragment();
         }
         surveyFragment.reloadHeader(dashboardActivity);
-        replaceFragment(R.id.dashboard_details_container, surveyFragment);
+        replaceFragment(mDashboardActivityStrategy.getSurveyContainer(), surveyFragment);
         android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
         LayoutUtils.setSurveyActionBar(actionBar);
     }
@@ -454,10 +464,10 @@ public class DashboardActivity extends BaseActivity {
 
         if (isSent) {
             tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
-            initAssess();
+            showUnsentFragment();
         } else {
-            initAssess();
-            mDashboardActivityStrategy.reloadFirstFragment();
+            showUnsentFragment();
+            mDashboardActivityStrategy.reloadStockFragment(this);
         }
     }
 
@@ -495,7 +505,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Called when the user clicks the exit Review button
      */
-    public void exitReview(View view) {
+    public void exitReview() {
         if (!DynamicTabAdapter.isClicked) {
             DynamicTabAdapter.isClicked = true;
             reviewShowDone();
@@ -564,14 +574,14 @@ public class DashboardActivity extends BaseActivity {
      * Checks if a survey fragment is active
      */
     private boolean isReviewFragmentActive() {
-        return isFragmentActive(reviewFragment, R.id.dashboard_details_container);
+        return isFragmentActive(reviewFragment, mDashboardActivityStrategy.getSurveyContainer());
     }
 
     /**
      * Checks if a survey fragment is active
      */
     private boolean isSurveyFragmentActive() {
-        return isFragmentActive(surveyFragment, R.id.dashboard_details_container);
+        return isFragmentActive(surveyFragment, mDashboardActivityStrategy.getSurveyContainer());
     }
 
     private boolean isNewHistoricReceiptBalanceFragmentActive() {
@@ -768,6 +778,4 @@ public class DashboardActivity extends BaseActivity {
             }
         }
     }
-
-
 }

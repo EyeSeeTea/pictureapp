@@ -157,4 +157,13 @@ public abstract class ADashboardActivityStrategy {
         monitorFragment.reloadData();
         monitorFragment.reloadHeader(mDashboardActivity);
     }
+
+    public int getSurveyContainer() {
+        return R.id.dashboard_details_container;
+    }
+
+    public void showUnsentFragment() {
+        reloadFirstFragment();
+        showFirstFragment();
+    }
 }

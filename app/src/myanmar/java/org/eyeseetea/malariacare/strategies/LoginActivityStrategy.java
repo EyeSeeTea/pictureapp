@@ -120,6 +120,11 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                                 Log.e(this.getClass().getSimpleName(),
                                         "Config Json file not found");
                             }
+
+                            @Override
+                            public void onMaxLoginAttemptsReachedError() {
+
+                            }
                         });
             }
         });

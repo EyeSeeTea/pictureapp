@@ -156,4 +156,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         statusFragment.reloadData();
         statusFragment.reloadHeader(mDashboardActivity);
     }
+
+    @Override
+    public int getSurveyContainer() {
+        return R.id.dashboard_stock_container;
+    }
+
+    @Override
+    public void showUnsentFragment() {
+        mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
+                mDashboardUnsentFragment);
+    }
 }

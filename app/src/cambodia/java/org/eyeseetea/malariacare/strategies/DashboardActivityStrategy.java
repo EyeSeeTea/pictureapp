@@ -19,6 +19,10 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
 
+    public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
+        super(dashboardActivity);
+    }
+
     @Override
     public void reloadStockFragment(Activity activity) {
 

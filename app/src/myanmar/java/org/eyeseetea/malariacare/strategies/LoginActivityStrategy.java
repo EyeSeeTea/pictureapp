@@ -87,7 +87,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onClick(View v) {
 
                 Credentials demoCrededentials = Credentials.createDemoCredentials();
-                loginActivity.showProgressBar();
+                loginActivity.onStartLoading();
                 loginActivity.mLoginUseCase.execute(demoCrededentials,
                         new ALoginUseCase.Callback() {
                             @Override
@@ -138,7 +138,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
-                loginActivity.hideProgressBar();
+                loginActivity.onFinishLoading(null);
                 finishAndGo(DashboardActivity.class);
             }
 
@@ -149,25 +149,25 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
             @Override
             public void onError(String message) {
-                loginActivity.hideProgressBar();
+                loginActivity.onFinishLoading(null);
                 Log.e(this.getClass().getSimpleName(), message);
             }
 
             @Override
             public void onPullConversionError() {
-                loginActivity.hideProgressBar();
+                loginActivity.onFinishLoading(null);
                 Log.e(this.getClass().getSimpleName(), "Pull conversion error");
             }
 
             @Override
             public void onCancel() {
-                loginActivity.hideProgressBar();
+                loginActivity.onFinishLoading(null);
                 Log.e(this.getClass().getSimpleName(), "Pull cancel");
             }
 
             @Override
             public void onNetworkError() {
-                loginActivity.hideProgressBar();
+                loginActivity.onFinishLoading(null);
                 Log.e(this.getClass().getSimpleName(), "Network Error");
             }
         });

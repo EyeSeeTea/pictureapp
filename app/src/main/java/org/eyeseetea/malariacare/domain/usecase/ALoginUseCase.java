@@ -18,6 +18,8 @@ public abstract class ALoginUseCase {
         void onConfigJsonNotPresent();
 
         void onUnexpectedError();
+
+        void onMaxLoginAttemptsReachedError();
     }
 
     public abstract void execute(Credentials credentials, Callback callback);

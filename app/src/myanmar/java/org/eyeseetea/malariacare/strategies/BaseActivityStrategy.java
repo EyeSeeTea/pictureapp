@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
@@ -24,6 +26,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
+    }
+
+    @Override
+    public void onStart() {
+
     }
 
     @Override
@@ -93,4 +100,15 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public void showCopyRight(int app_copyright, int copyright) {
         mBaseActivity.showAlertWithMessage(app_copyright, copyright);
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
+    }
+
 }

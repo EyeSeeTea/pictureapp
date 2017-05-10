@@ -2,13 +2,17 @@ package org.eyeseetea.malariacare.strategies;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.BaseActivity;
-import org.eyeseetea.malariacare.LoginActivity;
+import org.eyeseetea.malariacare.DashboardActivity;
+import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
@@ -18,12 +22,24 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     static String TAG = "BaseActivityStrategy";
     private static final int MENU_ITEM_LOGOUT = 99;
     private static final int MENU_ITEM_LOGOUT_ORDER = 106;
+    private static final int SETTINGS_LOGOUT = 107;
 
     LogoutUseCase mLogoutUseCase;
     IAuthenticationManager mAuthenticationManager;
 
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
+    }
+
+    @Override
+    public void onStart() {
+        applicationWillEnterForeground();
+    }
+
+    private void applicationWillEnterForeground() {
+        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
+            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(false);
+        }
     }
 
     @Override
@@ -34,7 +50,19 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onStop() {
+        applicationdidenterbackground();
+        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
+            logout();
+        }
     }
+
+    public void applicationdidenterbackground() {
+        if (!EyeSeeTeaApplication.getInstance().isWindowFocused()) {
+            EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
+        }
+    }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu) {
@@ -70,11 +98,28 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!(mBaseActivity instanceof DashboardActivity)) {
+            EyeSeeTeaApplication.getInstance().setIsBackPressed(true);
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        EyeSeeTeaApplication.getInstance().setIsWindowFocused(hasFocus);
+
+        if (EyeSeeTeaApplication.getInstance().isBackPressed() && !hasFocus) {
+            EyeSeeTeaApplication.getInstance().setIsBackPressed(false);
+            EyeSeeTeaApplication.getInstance().setIsWindowFocused(true);
+        }
+    }
+
     public void logout() {
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-                mBaseActivity.finishAndGo(LoginActivity.class);
+                ActivityCompat.finishAffinity(mBaseActivity);
             }
 
             @Override
@@ -86,5 +131,15 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     public void showCopyRight(int app_copyright, int copyright) {
         mBaseActivity.showAlertWithMessage(app_copyright, copyright);
+    }
+
+
+    @Override
+    public void goSettings() {
+        Intent intentSettings = new Intent(mBaseActivity, SettingsActivity.class);
+        intentSettings.putExtra(SettingsActivity.SETTINGS_CALLER_ACTIVITY, this.getClass());
+        intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
+        mBaseActivity.startActivityForResult(new Intent(mBaseActivity, SettingsActivity.class),
+                SETTINGS_LOGOUT);
     }
 }

@@ -51,6 +51,20 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
 
         return pullRequiredOnPreferenceChangeListener;
     }
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
+    }
 
     public static boolean showAnnouncementOnBackPressed() {
         return  true;

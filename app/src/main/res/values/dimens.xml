@@ -42,4 +42,5 @@
 
     <!--Old sdk-->
     <dimen name="medium_text_size">22sp</dimen>
+    <dimen name="progressbar_stroke_width">10dp</dimen>
 </resources>

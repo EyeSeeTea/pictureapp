@@ -295,6 +295,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     public void onBackPressed() {
+        mSettingsActivityStrategy.onBackPressed();
         PreferencesState.getInstance().reloadPreferences();
         Class callerActivityClass = getCallerActivity();
         Intent returnIntent = new Intent(this, callerActivityClass);
@@ -318,4 +319,26 @@ public class SettingsActivity extends PreferenceActivity implements
     }
 
 
+    /**
+     * Finish current activity and launches an activity with the given class
+     *
+     * @param targetActivityClass Given target activity class
+     */
+    public void finishAndGo(Class targetActivityClass) {
+        Intent targetActivityIntent = new Intent(this, targetActivityClass);
+        finish();
+        startActivity(targetActivityIntent);
+    }
+
+    @Override
+    protected void onStart() {
+        mSettingsActivityStrategy.onStart();
+        super.onStart();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        mSettingsActivityStrategy.onWindowFocusChanged(hasFocus);
+        super.onWindowFocusChanged(hasFocus);
+    }
 }

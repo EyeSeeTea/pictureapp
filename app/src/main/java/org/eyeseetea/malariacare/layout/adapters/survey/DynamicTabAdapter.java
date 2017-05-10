@@ -67,6 +67,7 @@ import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.presentation.factory.IQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.MultiQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.SingleQuestionViewFactory;
+import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -79,6 +80,7 @@ import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .ConfirmCounterSingleCustomViewStrategy;
@@ -143,11 +145,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             Question question = navigationController.getCurrentQuestion();
             if (question.getValueBySession() != null) {
-                if (DashboardActivity.moveToQuestion != null) {
-                    goToQuestion(DashboardActivity.moveToQuestion);
-                    DashboardActivity.moveToQuestion = null;
+                if (DashboardActivity.moveToThisUId != null) {
+                    goToQuestion(DashboardActivity.moveToThisUId);
+                    DashboardActivity.moveToThisUId = null;
                 } else {
-                    goToQuestion(question);
+                    goToQuestion(question.getUid());
                 }
             }
 
@@ -294,6 +296,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         question.saveValuesDDL(selectedOption, value);
+
 
         if (question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
                 question.getOutput().equals(Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT)) {
@@ -622,6 +625,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             ((AOptionQuestionView) questionView).setOnAnswerChangedListener(
                     new QuestionAnswerChangedListener(this,
                             !GradleVariantConfig.isButtonNavigationActive()));
+        } else if (questionView instanceof YearSelectorQuestionView) {
+            ((YearSelectorQuestionView) questionView).setOnAnswerChangedListener(
+                    new QuestionAnswerChangedListener(this,
+                            !GradleVariantConfig.isButtonNavigationActive()));
         }
     }
 
@@ -907,10 +914,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    public boolean wasPatientTested() {
-        return getMalariaSurvey().isRDT() || BuildConfig.patientTestedByDefault;
-    }
-
     /**
      * Advance to the next question with delay applied or finish survey according to question and
      * value.
@@ -983,7 +986,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * When the user click in a value in the review fragment the navigationController should go to
      * related question
      */
-    private void goToQuestion(Question isMoveToQuestion) {
+    private void goToQuestion(String questionUid) {
         navigationController.first();
 
         Question currentQuestion;
@@ -1001,12 +1004,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         currentQuestion.getHeader().getTab());
 
                 for (Question question : screenQuestions) {
-                    if (isMoveToQuestion.getUid().equals(question.getUid())) {
+                    if (questionUid.equals(question.getUid())) {
                         isQuestionFound = true;
                     }
                 }
             } else {
-                if (isMoveToQuestion.getUid().equals(currentQuestion.getUid())) {
+                if (questionUid.equals(currentQuestion.getUid())) {
                     isQuestionFound = true;
                 }
             }

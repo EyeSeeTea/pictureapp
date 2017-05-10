@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
+import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -40,6 +41,7 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
     public List<Question> addAdditionalQuestions(int tabType, List<Question> screenQuestions) {
         return null;
     }
+
 
     @Override
     public void instanceOfSingleQuestion(IQuestionView questionView, Question screenQuestion) {
@@ -88,11 +90,11 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
             return;
         }
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        handler.postDelayed( new Runnable() {
             @Override
             public void run() {
                 mDynamicTabAdapter.navigationController.isMovingToForward = false;
-                if (!mDynamicTabAdapter.wasPatientTested() || !BuildConfig.reviewScreen) {
+                if (!ReviewFragmentStrategy.shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
                     mDynamicTabAdapter.surveyShowDone();
                 } else {
                     DashboardActivity.dashboardActivity.showReviewFragment();

@@ -97,6 +97,10 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         item.setVisible(false);
     }
 
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithMessage(app_copyright, copyright);
+    }
+
     @Override
     public void onBackPressed() {
 
@@ -105,14 +109,6 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
 
-    }
-
-    @Override
-    public void goSettings() {
-        Intent intentSettings = new Intent(mBaseActivity, SettingsActivity.class);
-        intentSettings.putExtra(SettingsActivity.SETTINGS_CALLER_ACTIVITY, this.getClass());
-        intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
-        mBaseActivity.startActivity(new Intent(mBaseActivity, SettingsActivity.class));
     }
 
 }

@@ -15,6 +15,7 @@ import org.eyeseetea.malariacare.views.question.multiquestion.PregnantMonthNumbe
 import org.eyeseetea.malariacare.views.question.multiquestion.RadioButtonMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.SwitchMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.multiquestion.TextMultiQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 
 public class MultiQuestionViewFactory implements IQuestionViewFactory {
     public IQuestionView getView(Context context, int typeQuestion) {
@@ -49,6 +50,8 @@ public class MultiQuestionViewFactory implements IQuestionViewFactory {
                 return new DropdownMultiQuestionView(context);
             case Constants.SWITCH_BUTTON:
                 return new SwitchMultiQuestionView(context);
+            case Constants.YEAR:
+                return new YearSelectorQuestionView(context);
             default:
                 return MultiQuestionViewFactoryStrategy.createQuestion(context, typeQuestion);
 

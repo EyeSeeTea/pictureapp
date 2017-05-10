@@ -19,6 +19,7 @@ import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
+import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
@@ -200,7 +201,7 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
                 Value value = question.getValueBySession();
                 if (mDynamicTabAdapter.isDone(value)) {
                     mDynamicTabAdapter.navigationController.isMovingToForward = false;
-                    if (!mDynamicTabAdapter.wasPatientTested() || !BuildConfig.reviewScreen) {
+                    if (!ReviewFragmentStrategy.shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
                         mDynamicTabAdapter.surveyShowDone();
                     } else {
                         DashboardActivity.dashboardActivity.showReviewFragment();

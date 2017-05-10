@@ -1,7 +1,3 @@
-[submodule "DBFlowORM"]
-	path = DBFlowORM
-	url = https://github.com/EyeSeeTea/DBFlow.git
-	
 [submodule "sdk"]
 	path = sdk
 	url = https://github.com/EyeSeeTea/dhis2-android-sdk.git

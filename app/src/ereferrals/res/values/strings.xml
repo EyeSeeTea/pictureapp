@@ -181,10 +181,10 @@
     <string name="common_option_program_antinatalCare">"Antinatal Care"</string>
     <string name="common_option_gender_male">"Male"</string>
     <string name="common_option_gender_female">"Female"</string>
-
     <string name="admin_announcement">"Administrator announcement"</string>
     <string name="user_close">"This user was closed by de administrator."</string>
     <string name="run_in_demo_mode">"Run in demo mode"</string>
+    <string name="web_service_name">"Web Service URL"</string>
     <string name="survey_first_step"></string>
     <string name="survey_second_step"></string>
     <string name="survey_third_step"></string>

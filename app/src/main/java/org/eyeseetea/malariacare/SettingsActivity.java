@@ -106,7 +106,7 @@ public class SettingsActivity extends PreferenceActivity implements
      *
      * @see #sBindPreferenceSummaryToValueListener
      */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
+    public static void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -249,6 +249,8 @@ public class SettingsActivity extends PreferenceActivity implements
             autoCompleteEditTextPreference.setOnPreferenceChangeListener(
                     mSettingsActivityStrategy.getOnPreferenceChangeListener());
         }
+
+        mSettingsActivityStrategy.addExtraPreferences();
     }
 
     private void loadFontStyleListPreference() {

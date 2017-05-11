@@ -48,7 +48,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onCreateOptionsMenu(Menu menu) {
-
+        menu.removeItem(R.id.demo_mode);
     }
 
 
@@ -74,14 +74,6 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
 
-    }
-
-    @Override
-    public void goSettings() {
-        Intent intentSettings = new Intent(mBaseActivity, SettingsActivity.class);
-        intentSettings.putExtra(SettingsActivity.SETTINGS_CALLER_ACTIVITY, this.getClass());
-        intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
-        mBaseActivity.startActivity(new Intent(mBaseActivity, SettingsActivity.class));
     }
 
     public void runDemoMode() {
@@ -134,8 +126,18 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     }
 
                     @Override
-                    public void onConfigJsonNotPresent() {
-                        Log.d(TAG, "onConfigJsonNotPresent");
+                    public void onConfigJsonInvalid() {
+                        Log.d(TAG, "onConfigJsonInvalid");
+                    }
+
+                    @Override
+                    public void onUnexpectedError() {
+                        Log.d(TAG, "onUnexpectedError");
+                    }
+
+                    @Override
+                    public void onMaxLoginAttemptsReachedError() {
+
                     }
                 }
         );
@@ -146,5 +148,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 SurveyService.class);
         surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
         PreferencesState.getInstance().getContext().startService(surveysIntent);
+    }
+
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithHtmlMessage(app_copyright, copyright);
     }
 }

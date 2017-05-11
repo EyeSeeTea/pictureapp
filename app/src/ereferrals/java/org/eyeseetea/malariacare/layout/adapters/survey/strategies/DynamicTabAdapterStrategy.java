@@ -35,6 +35,7 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
         return null;
     }
 
+
     @Override
     public void instanceOfSingleQuestion(IQuestionView questionView, Question screenQuestion) {
         return;

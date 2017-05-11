@@ -7,8 +7,6 @@ import android.preference.PreferenceManager;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 
-import java.util.Date;
-
 public class PreferencesEReferral {
 
     /**
@@ -74,6 +72,17 @@ public class PreferencesEReferral {
         return getNumberBadLogin();
     }
 
+    public static int setBadLogin(int numberBadLogged) {
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(context.getString(R.string.number_bad_login), numberBadLogged);
+        editor.commit();
+        return getNumberBadLogin();
+    }
+
+
     public static void resetBadLogin() {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
@@ -84,12 +93,12 @@ public class PreferencesEReferral {
     }
 
 
-    public static void setTimeLoginEnables() {
+    public static void setTimeLoginEnables(long timeLoginEnables) {
         Context context = PreferencesState.getInstance().getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(context.getString(R.string.time_enable_login), new Date().getTime() + 30000);
+        editor.putLong(context.getString(R.string.time_enable_login), timeLoginEnables);
         editor.commit();
     }
 

@@ -14,6 +14,7 @@ public class DateFilter {
     boolean last6Days;
     boolean last6Weeks;
     boolean last6Month;
+    boolean today;
 
     public boolean isAll() {
         return all;
@@ -55,6 +56,15 @@ public class DateFilter {
         this.lastMonth = lastMonth;
     }
 
+    public boolean isToday() {
+        return today;
+    }
+
+    public void setToday(boolean today) {
+        all = false;
+        this.today=today;
+    }
+
     //This filter include the current day
     public boolean isLast6Days() {
         return last6Days;
@@ -85,25 +95,26 @@ public class DateFilter {
     }
 
     public Date getStartFilterDate(Calendar calendar) {
-        if (isLast6Days()) {
+        if (isToday()) {
+            clearTime(calendar);
+        } else if (isLast6Days()) {
             calendar.add(Calendar.DAY_OF_YEAR, -5);
         } else if (isLast6Weeks()) {
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
             calendar.add(Calendar.WEEK_OF_YEAR, -5);
         } else if (isLast6Month()) {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.add(Calendar.MONTH, -7);
-        } else if (isLastWeek()) {
-            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-            calendar.add(Calendar.WEEK_OF_YEAR, -1);
+            calendar.add(Calendar.MONTH, -5);
         } else if (isThisWeek()) {
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
         } else if (isThisMonth()) {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.add(Calendar.MONTH, -1);
+        } else if (isLastWeek()) {
+            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+            calendar.add(Calendar.WEEK_OF_YEAR, -1);
         } else if (isLastMonth()) {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.add(Calendar.MONTH, -2);
+            calendar.add(Calendar.MONTH, -1);
         }
         clearTime(calendar);
         return calendar.getTime();
@@ -111,25 +122,17 @@ public class DateFilter {
 
     public Date getEndFilterDate(Calendar calendar) {
         if (isLastWeek()) {
+            //the end of the last week
             calendar.add(Calendar.WEEK_OF_YEAR, -1);
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
             calendar.add(Calendar.DAY_OF_YEAR, 6);
-        } else if (isLastMonth() || isLast6Month()) {
+        } else if (isLastMonth()) {
+            //the end of the last month
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.add(Calendar.DAY_OF_YEAR, -1);
-        }else if (isThisWeek()){
-            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-            calendar.add(Calendar.DAY_OF_YEAR, 6);
-        }else if (isThisMonth()){
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.add(Calendar.MONTH, 1);
-            calendar.set(Calendar.DAY_OF_MONTH, -1);
-        }else if (isLast6Month()){
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.set(Calendar.DAY_OF_MONTH, -1);
-        } else if (isLast6Weeks()) {
-            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-            calendar.add(Calendar.DAY_OF_YEAR, 6);
+        } else if  (isLast6Month() || isLast6Weeks() || isLast6Days() || isToday() || isThisMonth() || isThisWeek()){
+            //this moment
+            return calendar.getTime();
         }
         completeDayTime(calendar);
         return calendar.getTime();
@@ -137,8 +140,8 @@ public class DateFilter {
 
     public boolean isDateBetweenDates(Date dateInTheMiddle, Date startDate, Date endDate) {
         System.out.println(
-                "start: " + getHumanReadableDate(startDate) + " middle: " + getHumanReadableDate(
-                        dateInTheMiddle) + " end " + getHumanReadableDate(endDate));
+                "startDate: " + getHumanReadableDate(startDate) + " middleDate: " + getHumanReadableDate(
+                        dateInTheMiddle) + " endDate " + getHumanReadableDate(endDate));
         return dateInTheMiddle.getTime() >= startDate.getTime()
                 && dateInTheMiddle.getTime() <= endDate.getTime();
     }

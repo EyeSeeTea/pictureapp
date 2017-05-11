@@ -6,16 +6,20 @@ import android.util.Log;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
-import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.data.sync.importer.PullOrganisationCredentialsController;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.CheckCredentialsWithOrgUnitUseCase;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
-import org.eyeseetea.malariacare.domain.usecase.PullOrganisationCredentialsUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -31,57 +35,56 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
     @Override
     public void push() {
-        final Credentials oldCredentials = PreferencesEReferral.getUserCredentialsFromPreferences();
-        PullOrganisationCredentialsController pullOrganisationCredentialsController =
-                new PullOrganisationCredentialsController(oldCredentials, mPushService);
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+
+        IAuthenticationManager authenticationManager = new AuthenticationManager(
+                PreferencesState.getInstance().getContext());
         IMainExecutor mainExecutor = new UIThreadExecutor();
-        PullOrganisationCredentialsUseCase pullOrganisationCredentialsUseCase =
-                new PullOrganisationCredentialsUseCase(asyncExecutor, mainExecutor,
-                        pullOrganisationCredentialsController);
-        pullOrganisationCredentialsUseCase.execute(
-                new PullOrganisationCredentialsUseCase.Callback() {
-                    @Override
-                    public void onComplete() {
-                        CheckCredentialsWithOrgUnitUseCase checkCredentialsWithOrgUnitUseCase =
-                                new CheckCredentialsWithOrgUnitUseCase();
-                        checkCredentialsWithOrgUnitUseCase.execute(oldCredentials,
-                                new CheckCredentialsWithOrgUnitUseCase.Callback() {
-                                    @Override
-                                    public void onCorrectCredentials() {
-                                        PushServiceStrategy.this.onCorrectCredentials();
-                                    }
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
+        IOrganisationUnitRepository organisationDataSource = new OrganisationUnitDataSource();
+        IInvalidLoginAttemptsRepository
+                iInvalidLoginAttemptsRepository =
+                new InvalidLoginAttemptsRepositoryLocalDataSource();
+        LoginUseCase loginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
+                asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
+                iInvalidLoginAttemptsRepository);
+        final Credentials oldCredentials = credentialsLocalDataSoruce.getOrganisationCredentials();
+        loginUseCase.execute(oldCredentials, new ALoginUseCase.Callback() {
+            @Override
+            public void onLoginSuccess() {
+                PushServiceStrategy.this.onCorrectCredentials();
+            }
 
-                                    @Override
-                                    public void onBadCredentials(boolean b) {
-                                        logout();
-                                    }
-                                });
-                    }
+            @Override
+            public void onServerURLNotValid() {
+                Log.e(TAG, "Error getting user credentials: URL not valid ");
+            }
 
-                    @Override
-                    public void onError(String message) {
-                        Log.e(TAG, "Error getting user credentials: " + message);
-                    }
+            @Override
+            public void onInvalidCredentials() {
+                logout();
+            }
 
-                    @Override
-                    public void onNetworkError() {
-                        Log.e(TAG, "Error getting user credentials: NetworkError");
-                    }
+            @Override
+            public void onNetworkError() {
+                Log.e(TAG, "Error getting user credentials: NetworkError");
+            }
 
-                    @Override
-                    public void onPullConversionError() {
-                        Log.e(TAG, "Error getting user credentials: PullConversionError");
-                    }
+            @Override
+            public void onConfigJsonInvalid() {
+                Log.e(TAG, "Error getting user credentials: JsonInvalid");
+            }
 
-                    @Override
-                    public void onInvalidCredentials() {
-                        Log.e(TAG,
-                                "Error getting user credentials: Invalid credentials wrong username");
-                    }
+            @Override
+            public void onUnexpectedError() {
+                Log.e(TAG, "Error getting user credentials: unexpectedError ");
+            }
 
-                });
+            @Override
+            public void onMaxLoginAttemptsReachedError() {
 
+            }
+        });
     }
 
     protected void executeMockedPush() {
@@ -97,13 +100,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
     }
 
     private void onCorrectCredentials() {
-        if (Session.getCredentials().isDemoCredentials()) {
-            Log.d(TAG, "execute push");
-            executeMockedPush();
-        } else {
-            Log.d(TAG, "execute push fails, not logged");
-            executePush();
-        }
+        executePush();
     }
 
 

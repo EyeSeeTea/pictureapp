@@ -8,7 +8,6 @@
         android:layout_height="wrap_content"
         android:background="@color/questionHeaderColor"
         android:gravity="center"
-        android:lineSpacingMultiplier="1.5"
         android:paddingBottom="2dip"
         android:paddingLeft="10dip"
         android:paddingTop="2dip"

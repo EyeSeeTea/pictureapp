@@ -83,9 +83,9 @@
 <string name="option_confirm">"អះអាងជម្រើស"</string>
 <string name="dhis_url_error_generic">"កំហុសម៉ាស៊ីនបម្រើនេះ។ ម៉ាស៊ីនបម្រើមិនឆ្លើយតបឱ្យបានត្រឹមត្រូវ"</string>
 <string name="no_data">"គ្មាន​ទិន្នន័យ"</string>
-<string name="last_6_days">" ចុងក្រោយ 6 ថ្ងៃ"</string>
-<string name="last_6_weeks">"ចុងក្រោយ 6 សប្តាហ៍"</string>
-<string name="last_6_months">" 6 ខែចុង"</string>
+<string name="last_6_days">"៦ ថ្ងៃចុងក្រោយ"</string>
+<string name="last_6_weeks">"៦ សប្ដាហ៍ចុងក្រោយ"</string>
+<string name="last_6_months">"៦ ខែចុងក្រោយ"</string>
 <string name="download">" ទាញយក:"</string>
 <string name="settings_select_language">"ភាសា"</string>
 <string name="system_defined">"ដែលបានកំណត់ប្រព័ន្ធ"</string>
@@ -106,9 +106,9 @@
 <string name="app_visual">"ដែលមើលឃើញ"</string>
 <string name="monitoring_title_dropdown">"សូមធ្វើការជ្រើសរើសរយៈពេលមួយ៖"</string>
 <string name="monitoring_title">"ការតាមដាន"</string>
-<string name="monitoring_label_option_months">"៦ ខែមុន"</string>
-<string name="monitoring_label_option_days">"៦ ថ្ងៃមុន"</string>
-<string name="monitoring_label_option_weeks">"៦ សប្តាហ៍មុន"</string>
+<string name="monitoring_label_option_months">"៦ ខែចុងក្រោយ"</string>
+<string name="monitoring_label_option_days">"៦ ថ្ងៃចុងក្រោយ"</string>
+<string name="monitoring_label_option_weeks">"៦ សប្ដាហ៍ចុងក្រោយ"</string>
 <string name="monitoring_case_stats">"ករណីីសង្ស័យ និងករណីវិជ្ជមាន"</string>
 <string name="consumption">"ស្តុកនៃការប្រើប្រាស់"</string>
 <string name="monitoring_row_title_week">"សប្តាហ៍"</string>
@@ -136,6 +136,7 @@
 <string name="app_logout">"ចាកចេញ"</string>
 <string name="network_error">"មានបញ្ហាជាមួយនឹងបណ្តាញនេះគឺជាការ, សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។"</string>
 <string name="login_invalid_credentials">"លិខិត​សម្គាល់​មិន​ត្រឹមត្រូវ"</string>
+    <string name="login_unexpected_error">"មានកំហុសបានកើតឡើងសូមព្យាយាមម្ដងទៀតនៅពេលក្រោយ"</string>
 <string name="login_invalid_server_url">"URL របស់ម៉ាស៊ីនបម្រើមិនត្រឹមត្រូវ"</string>
 <string name="error_conflict_message">"ព្រឹត្តិការណ៍នេះជាមួយនឹងលេខសម្គាល់អ្នកប្រើ:%1$s ។ ត្រូវបានផ្ទុកឡើងជាមួយនឹងជម្លោះនៅ UID របស់ធាតុទិន្នន័យ:%2$s ដោយមានសារ:%3$s ។ សូមទាក់ទងអ្នកគ្រប់គ្រង។"</string>
 <string name="error_conflict_title">"កំហុសក្នុងការ"</string>
@@ -145,7 +146,7 @@
 <string name="survey_second_step">"សំណួរអគារ ..."</string>
 <string name="survey_third_step">"ដើមឈើសំណួរអគារ ..."</string>
 <string name="survey_fourth_step">"ការបង្កើតអេក្រង់ ..."</string>
-<string name="dynamic_error_pregnant_month">"ខែមិនត្រឹមត្រូវមានផ្ទៃពោះ"</string>
+<string name="dynamic_error_pregnant_month">"ចំនួនខែនៃផ្ទៃពោះមិនត្រឹមត្រូវ"</string>
 <string name="admin_announcement">"សេចក្តីប្រកាសអ្នកគ្រប់គ្រង"</string>
 <string name="user_close">"អ្នកប្រើនេះត្រូវបានបិទដោយអ្នកគ្រប់គ្រងដឺ។"</string>
 <string name="run_in_demo_mode">"រត់នៅក្នុងរបៀបបង្ហាញសាកល្បង"</string>
@@ -159,31 +160,24 @@
 <string name="Option_Text_Test_Sex_Male">"ប្រុស"</string>
 <string name="Option_Text_Test_Sex_Female">"ស្រី"</string>
 <string name="Option_Text_Test_Result_Pf">"ផ្លាស្មូដ្យូម ហ្វាល់ស៊ីប៉ារ៉ូម(Pf)"</string>
-<string name="Option_Text_Test_Result_Pv">"ផផ្លាស្មូដ្យូម វីវ៉ាក់(Pv)"</string>
-<string name="Option_Text_Test_Result_Mixed">"ចំរុះ(Mixed)'"</string>
+<string name="Option_Text_Test_Result_Pv">"ផ្លាស្មូដ្យូម វីវ៉ាក់(Pv)"</string>
+<string name="Option_Text_Test_Result_Mixed">"ចំរុះ(Mixed)"</string>
 <string name="Option_Text_Test_Treatment_DHAPIP">"អឺរ៉ាតេស៊ីម"</string>
 <string name="Option_Text_Test_Treatment_ASMQ">"អាតេស៊ុយណាត ម៉េហ្លូគីន"</string>
 <string name="Option_Text_Test_Treatment_Referral">"ធ្វើកាបេញ្ជូន"</string>
-<string name="Option_Text_Test_Treatment_DHAPIP_4_5_Pills">"អាយុ ៥ - ១០ ឆ្នាំ
-ទម្ងន់ ១៩ - ៣០ គីឡូ"</string>
-<string name="Option_Text_Test_Treatment_DHAPIP_6_Pills">"អាយុ ១០ - ១៥ ឆ្នាំ
-ទម្ងន់ ៣០ - ៤០ គីឡូ"</string>
-<string name="Option_Text_Test_Treatment_DHAPIP_9_Pills">"អាយុ &gt;១៥ ឆ្នាំ
-ទម្ងន់ ៤០ - ៦០ គីឡូ"</string>
-<string name="Option_Text_Test_Treatment_DHAPIP_12_Pills">"អាយុ &gt;១៥ ឆ្នាំ
-ទម្ងន់ &gt;៦០ គីឡូ"</string>
-<string name="Option_Text_Test_Treatment_ASMQ_1_5_Pills">"អាយុ ៥ - ៦ ឆ្នាំ
-ទម្ងន់ ៩ - ១៧ គីឡូ"</string>
-<string name="Option_Text_Test_Treatment_ASMQ_3_Pills">"អាយុ ៧ - ១២ ឆ្នាំ
-ទម្ងន់ ១៨ - ២៩ គីឡូ"</string>
-<string name="Option_Text_Test_Treatment_ASMQ_6_Pills">"អាយុ &gt;១៣ ឆ្នាំ
-ទម្ងន់ &gt;៣០ គីឡូ"</string>
+<string name="Option_Text_Test_Treatment_DHAPIP_4_5_Pills">"៤​កន្លះ គ្រាប់"</string>
+<string name="Option_Text_Test_Treatment_DHAPIP_6_Pills">"៦​ គ្រាប់"</string>
+<string name="Option_Text_Test_Treatment_DHAPIP_9_Pills">"៩​ គ្រាប់"</string>
+<string name="Option_Text_Test_Treatment_DHAPIP_12_Pills">"១២​ គ្រាប់"</string>
+<string name="Option_Text_Test_Treatment_ASMQ_1_5_Pills">"១កន្លះ​ គ្រាប់"</string>
+<string name="Option_Text_Test_Treatment_ASMQ_3_Pills">"៣​ គ្រាប់"</string>
+<string name="Option_Text_Test_Treatment_ASMQ_6_Pills">"៦​ គ្រាប់"</string>
 <string name="Option_Text_Test_Referral_Reason_Child">"កុមារអាយុក្រោម ៥ឆ្នាំ"</string>
 <string name="Option_Text_Test_Referral_Reason_Pregnancy">"ស្រី្តមានផ្ទៃពោះ"</string>
-<string name="Option_Text_Test_Referral_Reason_Suspected_Failure">"សង្ស័យថាការខកខានក្នុងការព្យាបាល"</string>
+<string name="Option_Text_Test_Referral_Reason_Suspected_Failure">"សង្ស័យបរាជ័យក្នុងការព្យាបាល"</string>
 <string name="Option_Text_Test_Referral_Reason_Stock_out">"ឱសថ ACT មិនមាននៅក្នុងស្តុក"</string>
-<string name="Option_Text_Test_Classification_Yes">"បាទ / ចា៎"</string>
-<string name="Option_Text_Test_Classification_No">"អត់ទេ"</string>
+<string name="Option_Text_Test_Classification_Yes">"ស្នាក់នៅក្រៅភូមិ"</string>
+<string name="Option_Text_Test_Classification_No">"ស្នាក់នៅក្នុងភូមិ"</string>
 <string name="Option_Text_Test_Occupation_Plantation">"កម្មករតាមចំការ"</string>
 <string name="Option_Text_Test_Occupation_Construction_Mine">"កម្្មករសំណង់ ឬកម្មកររ៉ែ"</string>
 <string name="Option_Text_Test_Occupation_Forest">"អ្នកធ្វើការក្នុងព្រៃ"</string>
@@ -201,12 +195,15 @@
 <string name="Question_Title_Classification">"តើអ្នកជំងឺធ្លាប់គេង ពេលយប់នៅខាងក្រៅភូមិដែលគាត់រស់នៅដែរ ឬ ទេ កាលពី ២សប្តាហ៍មុន?"</string>
 <string name="Question_Title_Occupation">"តើអ្នកជំងឺប្រកបមុខរបរអ្វី?"</string>
 <string name="Question_Title_Phone">"សូមវាយបញ្ចូលលេខទូរស័ព្ទអ្នកជំងឺ"</string>
-<string name="Question_Title_Pregnant_months">"តើមានមនុស្សប៉ុន្មានខែអ្នកជំងឺបានមានផ្ទៃពោះ?"</string>
+<string name="Question_Title_Pregnant_months">"តើអ្នកជំងឺមានផ្ទៃពោះប៉ុន្មានខែ?"</string>
 <string name="review_title">"សូមធ្វើការពិនិត្យឡើងវិញមុននឹង"</string>
 <string name="review_subtitle">"ធ្វើការបញ្ជូន"</string>
 <string name="unsent_survey_filter_number_of_cases">"%d ករណី"</string>
 <string name="unsent_survey_filter_option_this_week">"ស​ប្តា​ហ៍​នេះ"</string>
 <string name="unsent_survey_filter_option_this_month">"ខែ​នេះ"</string>
-<string name="unsent_survey_filter_option_last_week">"សប្ដាហ៍​មុន"</string>
-<string name="unsent_survey_filter_option_last_month">"ខែមុន"</string>
+<string name="unsent_survey_filter_option_last_week">"សប្តាហ៍ចុងក្រោយ"</string>
+<string name="unsent_survey_filter_option_last_month">"ខែចុងក្រោយ"</string>
+<string name="unsent_survey_filter_option_today">"ថ្ងៃនេះ"</string>
+<string name="error_message_push">"ព្រឹត្តិការណ៍នេះជាមួយនឹងលេខសម្គាល់អ្នកប្រើ %s ។ ត្រូវបានផ្ទុកឡើងដោយគ្មានកាលបរិច្ឆេទ។ សូមទាក់ទងអ្នកគ្រប់គ្រង។"</string>
+<string name="empty_review_value">"គ្មានលេខទូរស័ព្ទ"</string>
 </resources>

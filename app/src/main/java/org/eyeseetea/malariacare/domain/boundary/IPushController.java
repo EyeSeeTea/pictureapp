@@ -29,6 +29,8 @@ public interface IPushController {
     interface IPushControllerCallback {
         void onComplete();
 
+        void onInformativeError(Throwable throwable);
+
         void onError(Throwable throwable);
     }
 }

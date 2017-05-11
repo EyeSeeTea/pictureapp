@@ -473,8 +473,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 //not have additionalQuestions(variant dependent) and is not multi question tab
                 screenQuestions.add(questionItem);
             }
-            swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
-                    R.id.scrolled_table)).findViewById(R.id.table_scroll));
+            mDynamicTabAdapterStrategy.addScrollToSwipeTouchListener(rowView);
         } else {
             tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);

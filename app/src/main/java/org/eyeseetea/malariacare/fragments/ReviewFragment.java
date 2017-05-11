@@ -81,7 +81,7 @@ public class ReviewFragment extends Fragment {
         List<org.eyeseetea.malariacare.domain.entity.Value> preparedValues = new ArrayList<>();
         values = getReviewValues();
         values = orderValues(values);
-        colorIterator = Iterables.cycle(createBackgroundColorList(preparedValues)).iterator();
+        colorIterator = Iterables.cycle(createBackgroundColorList()).iterator();
         for(Value value:values) {
             org.eyeseetea.malariacare.domain.entity.Value preparedValue =new org.eyeseetea.malariacare.domain.entity.Value(value.getValue());
             if(value.getQuestion()!=null)
@@ -96,7 +96,7 @@ public class ReviewFragment extends Fragment {
         return preparedValues;
     }
 
-    private List<String> createBackgroundColorList(List<org.eyeseetea.malariacare.domain.entity.Value> preparedValues) {
+    private List<String> createBackgroundColorList() {
         List<String> colorsList = new ArrayList<>();
         for(Value value:values) {
             if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
@@ -110,7 +110,7 @@ public class ReviewFragment extends Fragment {
         if (colorsList.size() == 0) {
             colorsList.add("#4d3a4b");
         }
-        if (colorsList.size() == 1 && preparedValues.size() > 1) {
+        if (colorsList.size() == 1 && values.size() > 1) {
             colorsList.add("#9c7f9b");
         }
         return colorsList;

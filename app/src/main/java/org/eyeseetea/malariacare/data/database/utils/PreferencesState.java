@@ -30,7 +30,6 @@ import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.DateFilter;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.FontUtils;
 import org.eyeseetea.sdk.presentation.styles.FontStyle;
 
@@ -155,12 +154,19 @@ public class PreferencesState {
                 instance.getContext().getString(R.string.DHIS_DEFAULT_SERVER));
     }
 
+    public boolean isCustomizeFontActive() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.customize_fonts),
+                false);
+    }
+
     private FontStyle initFontStyle() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
 
-        if (sharedPreferences.getBoolean(instance.getContext().getString(R.string.customize_fonts),
-                false)) {
+        if (isCustomizeFontActive()) {
             String fontStyleId = sharedPreferences.getString(instance.getContext().getString(R.string.font_sizes),
                     String.valueOf(FontStyle.Medium.getResId()));
 

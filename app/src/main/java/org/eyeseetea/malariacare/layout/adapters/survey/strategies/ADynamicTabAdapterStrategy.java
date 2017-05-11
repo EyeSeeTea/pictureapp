@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
 
 import android.os.Handler;
+import android.view.View;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -83,4 +84,5 @@ public abstract class ADynamicTabAdapterStrategy {
             }
         }, 750);
     }
+    public abstract void addScrollToSwipeTouchListener(View rowView);
 }

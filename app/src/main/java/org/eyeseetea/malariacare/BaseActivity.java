@@ -46,9 +46,6 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.ExportData;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
-import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
-import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -91,15 +88,12 @@ public abstract class BaseActivity extends ActionBarActivity {
         }
 
         initView(savedInstanceState);
-        if (PreferencesState.getInstance().isPushInProgress()) {
-            List<Survey> surveys = Survey.getAllSendingSurveys();
-            Log.d(TAG, "The app was closed in the middle of a push. Surveys sending: "
-                    + surveys.size());
-            for (Survey survey : surveys) {
-                survey.setStatus(Constants.SURVEY_QUARANTINE);
-                survey.save();
-            }
-            PreferencesState.getInstance().setPushInProgress(false);
+        PreferencesState.getInstance().setPushInProgress(false);
+        List<Survey> surveys = Survey.getAllSendingSurveys();
+        Log.d(TAG, "Surveys sending: " + surveys.size());
+        for (Survey survey : surveys) {
+            survey.setStatus(Constants.SURVEY_QUARANTINE);
+            survey.save();
         }
         alarmPush = new AlarmPushReceiver();
         alarmPush.setPushAlarm(this);
@@ -215,7 +209,7 @@ public abstract class BaseActivity extends ActionBarActivity {
                 break;
             case R.id.action_copyright:
                 debugMessage("User asked for copyright");
-                showAlertWithMessage(R.string.app_copyright, R.raw.copyright);
+                mBaseActivityStrategy.showCopyRight(R.string.app_copyright, R.raw.copyright);
                 break;
             case R.id.action_licenses:
                 debugMessage("User asked for software licenses");
@@ -260,14 +254,6 @@ public abstract class BaseActivity extends ActionBarActivity {
             item.setVisible(false);
         }
         return true;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        if ((requestCode == DUMP_REQUEST_CODE)) {
-            ExportData.removeDumpIfExist(this);
-        }
     }
 
     /**
@@ -333,7 +319,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param titleId Id of the title resource
      * @param rawId   Id of the raw text resource
      */
-    private void showAlertWithMessage(int titleId, int rawId) {
+    public void showAlertWithMessage(int titleId, int rawId) {
         InputStream message = getApplicationContext().getResources().openRawResource(rawId);
         new AlertDialog.Builder(this)
                 .setTitle(getApplicationContext().getString(titleId))
@@ -347,7 +333,7 @@ public abstract class BaseActivity extends ActionBarActivity {
      * @param titleId Id of the title resource
      * @param rawId   Id of the raw text resource in HTML format
      */
-    private void showAlertWithHtmlMessage(int titleId, int rawId) {
+    public void showAlertWithHtmlMessage(int titleId, int rawId) {
         InputStream message = getApplicationContext().getResources().openRawResource(rawId);
         final SpannableString linkedMessage = new SpannableString(
                 Html.fromHtml(Utils.convertFromInputStreamToString(message).toString()));

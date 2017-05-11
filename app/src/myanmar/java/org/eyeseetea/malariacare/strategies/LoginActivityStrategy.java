@@ -14,11 +14,13 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoadUserAndCredentialsUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
@@ -108,9 +110,21 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                                 Log.e(this.getClass().getSimpleName(), "Network Error");
                             }
 
+
                             @Override
-                            public void onConfigJsonNotPresent() {
-                                Log.e(this.getClass().getSimpleName(), "Config Json file not found");
+                            public void onConfigJsonInvalid() {
+                                Log.d(TAG, "onConfigJsonInvalid");
+                            }
+
+                            @Override
+                            public void onUnexpectedError() {
+                                Log.e(this.getClass().getSimpleName(),
+                                        "Config Json file not found");
+                            }
+
+                            @Override
+                            public void onMaxLoginAttemptsReachedError() {
+                                Log.d(TAG, "onMaxLoginAttemptsReachedError");
                             }
                         });
             }
@@ -190,5 +204,10 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     @Override
     public void onLoginSuccess(Credentials credentials) {
         loginActivity.checkAnnouncement();
+    }
+
+    @Override
+    public void initLoginUseCase(IAuthenticationManager authenticationManager) {
+        loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager);
     }
 }

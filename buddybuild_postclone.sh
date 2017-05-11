@@ -12,4 +12,4 @@ cd sdk
 git checkout 2.25_EyeSeeTea
 cd -
 mkdir app/src/cambodia/res/raw
-cp ${BUDDYBUILD_SECURE_FILES}/config.json app/src/cambodia/res/raw/config.json
+cp ${BUDDYBUILD_SECURE_FILES}/config_laos.json app/src/laos/res/raw/config.json

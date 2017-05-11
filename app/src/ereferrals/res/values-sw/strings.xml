@@ -34,4 +34,5 @@
     <string name="common_option_program_familyPlanning">"Uzazi wa mpango"</string>
     <string name="common_option_program_cervicalCancer">"Saratani ya  mlango wa Kizazi"</string>
     <string name="common_option_program_antinatalCare">"Uangalizi wa wajawazito "</string>
+    <string name="login_pin">"siri"</string>
 </resources>

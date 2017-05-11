@@ -41,7 +41,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:background="@color/custom_background_grey" />
+                android:background="@color/custom_background_grey"/>
 
             <FrameLayout
                 android:id="@android:id/tabcontent"

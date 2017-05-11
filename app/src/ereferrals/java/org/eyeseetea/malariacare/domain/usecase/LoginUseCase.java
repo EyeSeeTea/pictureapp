@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
@@ -90,7 +91,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
             }
             orgUnitCredentials = new Credentials("", orgUnit.getCode(), orgUnit.getPin());
 
-        } catch (PullConversionException | JSONException e) {
+        } catch (PullConversionException | JSONException | ConfigJsonIOException e) {
             e.printStackTrace();
             notifyConfigJsonNotPresent();
         } catch (NetworkException e) {
@@ -165,7 +166,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onConfigJsonNotPresent();
+                mCallback.onConfigJsonInvalid();
             }
         });
     }

@@ -110,15 +110,21 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                                 Log.e(this.getClass().getSimpleName(), "Network Error");
                             }
 
+
                             @Override
-                            public void onConfigJsonNotPresent() {
-                                Log.e(this.getClass().getSimpleName(), "Config Json file not found");
+                            public void onConfigJsonInvalid() {
+                                Log.d(TAG, "onConfigJsonInvalid");
                             }
 
                             @Override
                             public void onUnexpectedError() {
                                 Log.e(this.getClass().getSimpleName(),
                                         "Config Json file not found");
+                            }
+
+                            @Override
+                            public void onMaxLoginAttemptsReachedError() {
+                                Log.d(TAG, "onMaxLoginAttemptsReachedError");
                             }
                         });
             }

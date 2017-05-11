@@ -299,7 +299,7 @@ public class LoginActivity extends Activity {
             }
 
             @Override
-            public void onConfigJsonNotPresent() {
+            public void onConfigJsonInvalid() {
                 onFinishLoading(null);
                 showError(getString(R.string.login_error_json));
             }

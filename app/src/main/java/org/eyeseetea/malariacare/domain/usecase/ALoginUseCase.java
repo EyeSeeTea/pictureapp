@@ -15,7 +15,7 @@ public abstract class ALoginUseCase {
 
         void onNetworkError();
 
-        void onConfigJsonNotPresent();
+        void onConfigJsonInvalid();
 
         void onUnexpectedError();
 

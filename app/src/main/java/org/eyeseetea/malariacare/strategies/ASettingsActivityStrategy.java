@@ -25,4 +25,10 @@ public abstract class ASettingsActivityStrategy {
     public abstract Preference.OnPreferenceClickListener getOnPreferenceClickListener();
 
     public abstract Preference.OnPreferenceChangeListener getOnPreferenceChangeListener();
+
+    public abstract void onStart();
+
+    public abstract void onBackPressed();
+
+    public abstract void onWindowFocusChanged(boolean hasFocus);
 }

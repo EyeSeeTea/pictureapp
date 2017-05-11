@@ -32,14 +32,14 @@
         android:layout_marginRight="16dp"
         android:layout_weight="0.6"
         android:background="@android:drawable/btn_dropdown"
-        android:dropDownWidth="fill_parent"
+        android:dropDownWidth="wrap_content"
         android:paddingBottom="5dip"
         android:paddingLeft="10dp"
         android:paddingTop="5dip"
-        android:spinnerMode="dropdown"
+        android:spinnerMode="dialog"
         android:textColor="@color/black"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="?attr/font_small"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="?attr/font_medium"
         app:font_name="@string/condensed_font_name" >
 
     </org.eyeseetea.sdk.presentation.views.CustomSpinner>

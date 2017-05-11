@@ -1,64 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="specific_language_font" translatable="false">saysettha_ot.ttf</string>
+    <string name="user_push" translatable="false">Android_eRef</string>
+    <string name="pass_push" translatable="false">DduPx352i9BRRGpa</string>
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
-    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://dev.scpr-mm-mal.org</string>
+    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://sandbox.psi-mis.org</string>
     <string name="url_server_demo_login" translatable="false">demo.server</string>
     <string name="monitor_row_title" translatable="false"><![CDATA[%1$s]]></string>
     <string name="monitor_row_title_space" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
     <string name="monitor_table_title_suspected_header" translatable="false">" "</string>
     <string name="monitor_table_title_stock_header" translatable="false"><![CDATA[&nbsp;&nbsp;]]></string>
-
-
-    <string-array name="stock_table_drugs_strings">
-        <item>@string/RDT</item>
-        <item>@string/ACT_x_6</item>
-        <item>@string/ACT_x_12</item>
-        <item>@string/ACT_x_18</item>
-        <item>@string/ACT_x_24</item>
-        <item>@string/Cq</item>
-        <item>@string/Pq</item>
-    </string-array>
-
-    <string name="malariaProgramUID" translatable="false">FsRWMqGdXgS</string>
-    <string name="stockProgramUID" translatable="false">B8KA2uJOVD9</string>
-    <string name="ageQuestionUID" translatable="false">bGH0k4Ubsxx</string>
-    <string name="sexPregnantQuestionUID" translatable="false">NoDataElementSexPregnancy</string>
-    <string name="severeSymtomsQuestionUID" translatable="false">paYP43NHaNV</string>
-    <string name="rdtQuestionUID" translatable="false">FfsqctsJo2s</string>
-    <string name="referralQuestionUID" translatable="false">JqL5jeyDa7N</string>
-    <string name="pqQuestionUID" translatable="false">"AcS0UXwsSsg"</string>
-    <string name="cqQuestionUID" translatable="false">ZvH3wyLVoCX</string>
-    <string name="act6QuestionUID" translatable="false">FUg5X4D538R</string>
-    <string name="act12QuestionUID" translatable="false">oakPX84Jug0</string>
-    <string name="act18QuestionUID" translatable="false">PNkxsc5QwSP</string>
-    <string name="act24QuestionUID" translatable="false">OR8HOulQb62</string>
-    <string name="dynamicStockQuestionUID" translatable="false">NoDataElementOutOfStock</string>
-    <string name="outOfStockQuestionUID" translatable="false">ZEopAP6tQN4</string>
-    <string name="dynamicTreatmentHideQuestionUID" translatable="false">NoDataDynamicTreatment</string>
-    <string name="dynamicTreatmentQuestionUID" translatable="false">yPACdIBZEeZ</string>
-    <string name="stockRDTQuestionUID" translatable="false">FGG1GvvS8Xg</string>
-    <string name="confirmInvalidQuestionUID" translatable="false">lhJLBNebHcz</string>
-    <string name="residenceVillageUID" translatable="false">NoDataElementOrgUnit</string>
-    <string name="patientResidenceVillageOtherCode" translatable="false">Dropdown parent</string>
-    <string name="myanmar_locale" translatable="false">my</string>
-    <string name="chinese_locale" translatable="false">zh</string>
-    <string name="treatment_diagnosis" translatable="false">treatment_diagnosis_%d</string>
-    <string name="treatment_message" translatable="false">treatment_message_%d</string>
-    <string name="option_sex_pregnant" translatable="false">patient_sex_female_pregnant</string>
-    <string name="option_sex_male" translatable="false">patient_sex_male</string>
-    <string name="option_sex_female" translatable="false">patient_sex_female</string>
-    <string name="option_severe" translatable="false">symptoms_severity_yes</string>
-    <string name="option_severe_no" translatable="false">symptoms_severity_no</string>
-    <string name="option_rdt_mixed" translatable="false">rdt_mixed</string>
-    <string name="option_rdt_pf" translatable="false">rdt_pf</string>
-    <string name="option_rdt_pv" translatable="false">rdt_pv</string>
-    <string name="stockPqQuestionUID" translatable="false">NoDataElementNoPqSelected</string>
-    <string name="alternativePqQuestionUID" translatable="false">Lsmjv2E992L</string>
-    <string name="treatmentDiagnosisVisibleQuestion" translatable="false">NoDataElementTreatmentShow</string>
-    <string name="dynamic_treatment_yes_code" translatable="false">dynamic_treatment_yes</string>
+    <string name="tab_tag_offline" translatable="false">tab_tag_offline</string>
 
     <string name="control_data_element_phone_metadata" translatable="false">LRYXAP3Lfcu</string>
     <string name="control_data_element_datetime_capture" translatable="false">wSRDoeLTAyv</string>
@@ -68,4 +22,16 @@
     <string name="test_organisation_name">test_organisation</string>
     <string name="test_organisation_uid">9fV2JoHmO94</string>
     <string name="authority">EREFERRALS_DHIS2_DEFAULT_AUTHORITY</string>
+    <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
+    <string name="GPS_LATITUDE_DEFAULT" translatable="false">-0.996961</string>
+    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">33.932726</string>
+    <string name="logged_user_username">logged_user_username</string>
+    <string name="logged_user_pin">logged_user_pin</string>
+    <string name="attribute_pin_code">OU_PIN</string>
+    <string name="logged_user_program">logged_user_program</string>
+    <string name="ancestor_level">3</string>
+    <string name="number_bad_login">number_bad_login</string>
+    <string name="time_enable_login">time_enable_login</string>
+
+
 </resources>

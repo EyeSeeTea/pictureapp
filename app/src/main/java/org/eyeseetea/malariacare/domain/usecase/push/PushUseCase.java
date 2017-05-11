@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
@@ -183,6 +184,9 @@ public class PushUseCase implements UseCase {
                 ServerAPIController.banOrg(url, orgUnitNameOrCode);
                 System.out.println("OrgUnit banned successfully");
             } catch (ApiCallException e) {
+                System.out.println("An error has occurred to banned orgUnit");
+                notifyPushError();
+            } catch (ConfigJsonIOException e) {
                 System.out.println("An error has occurred to banned orgUnit");
                 notifyPushError();
             }

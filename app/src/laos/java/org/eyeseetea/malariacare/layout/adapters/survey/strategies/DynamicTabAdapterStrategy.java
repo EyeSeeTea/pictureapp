@@ -1,5 +1,9 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
+import android.view.View;
+import android.widget.ScrollView;
+
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
@@ -56,5 +60,11 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
     public void configureAnswerChangedListener(DynamicTabAdapter dynamicTabAdapter,
             IQuestionView questionView) {
         return;
+    }
+
+    @Override
+    public void addScrollToSwipeTouchListener(View rowView) {
+        DynamicTabAdapter.swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
+                R.id.scrolled_table)).findViewById(R.id.table_scroll));
     }
 }

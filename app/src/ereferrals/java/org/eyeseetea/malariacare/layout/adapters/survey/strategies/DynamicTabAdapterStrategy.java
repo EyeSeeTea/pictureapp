@@ -5,6 +5,8 @@ import android.os.Handler;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
+import android.view.View;
+
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -67,6 +69,12 @@ public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
             IQuestionView questionView) {
         return;
     }
+
+    @Override
+    public void addScrollToSwipeTouchListener(View rowView) {
+    }
+
+
 
     @Override
     public void finishOrNext() {

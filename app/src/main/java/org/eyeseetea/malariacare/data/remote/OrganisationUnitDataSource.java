@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitR
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -36,7 +37,8 @@ public class OrganisationUnitDataSource implements IOrganisationUnitRepository {
 
     @Override
     public OrganisationUnit getUserOrgUnit(Credentials credentials)
-            throws PullConversionException, NetworkException, IOException, JSONException {
+            throws PullConversionException, NetworkException, IOException, JSONException,
+            ConfigJsonIOException {
         return ServerAPIController.getOrganisationUnitsByCode(credentials.getUsername());
     }
 

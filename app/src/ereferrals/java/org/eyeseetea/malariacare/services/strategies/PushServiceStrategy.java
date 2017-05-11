@@ -71,8 +71,8 @@ public class PushServiceStrategy extends APushServiceStrategy {
             }
 
             @Override
-            public void onConfigJsonNotPresent() {
-                Log.e(TAG, "Error getting user credentials: JsonNotPresent");
+            public void onConfigJsonInvalid() {
+                Log.e(TAG, "Error getting user credentials: JsonInvalid");
             }
 
             @Override

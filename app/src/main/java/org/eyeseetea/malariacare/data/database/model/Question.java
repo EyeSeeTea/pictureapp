@@ -625,7 +625,7 @@ public class Question extends BaseModel {
         this.id_header_fk = (header != null) ? header.getId_header() : null;
     }
 
-    public Long getHeaderForeingKeyId(){
+    public Long getHeaderForeingKeyId() {
         return id_header_fk;
     }
     public Integer getOutput() {
@@ -854,13 +854,13 @@ public class Question extends BaseModel {
         List<Option> options = answer.getOptions();
 
         for (Option option : options) {
-            String optionName = option.getName();
+            String optionCode = option.getCode();
 
-            if (optionName == null) {
+            if (optionCode == null) {
                 continue;
             }
 
-            if (optionName.equals(value)) {
+            if (optionCode.equals(value)) {
                 return option;
             }
         }
@@ -1095,7 +1095,7 @@ public class Question extends BaseModel {
         }
         SurveyFragmentStrategy.saveValueDDlExtraOperations(value, option, getUid());
 
-        if (!option.getName().equals(Constants.DEFAULT_SELECT_OPTION)) {
+        if (!option.getCode().equals(Constants.DEFAULT_SELECT_OPTION)) {
             Survey survey = SurveyFragmentStrategy.getSaveValuesDDLSurvey(this);
 
             createOrSaveDDLValue(option, value, survey);
@@ -1137,7 +1137,7 @@ public class Question extends BaseModel {
         } else {
             SurveyFragmentStrategy.recursiveRemover(value, option, this, survey);
             value.setOption(option);
-            value.setValue(option.getName());
+            value.setValue(option.getCode());
         }
 
         value.save();

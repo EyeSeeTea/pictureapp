@@ -29,4 +29,10 @@ public abstract class ASettingsActivityStrategy {
 
     public abstract void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key);
 
+
+    public abstract void onStart();
+
+    public abstract void onBackPressed();
+
+    public abstract void onWindowFocusChanged(boolean hasFocus);
 }

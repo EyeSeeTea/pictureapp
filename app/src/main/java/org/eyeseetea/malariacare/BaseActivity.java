@@ -77,7 +77,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);
-        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
 
         if (EyeSeeTeaApplication.permissions == null) {
             EyeSeeTeaApplication.permissions = Permissions.getInstance(this);
@@ -256,18 +256,11 @@ public abstract class BaseActivity extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        if ((requestCode == DUMP_REQUEST_CODE)) {
-            ExportData.removeDumpIfExist(this);
-        }
-    }
-
     /**
      * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
      */
     public void onBackPressed() {
+        mBaseActivityStrategy.onBackPressed();
         finishAndGo(DashboardActivity.class);
     }
 
@@ -296,10 +289,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     protected void goSettings() {
-        Intent intentSettings = new Intent(this, SettingsActivity.class);
-        intentSettings.putExtra(SettingsActivity.SETTINGS_CALLER_ACTIVITY, this.getClass());
-        intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
-        startActivity(new Intent(this, SettingsActivity.class));
+        mBaseActivityStrategy.goSettings();
     }
 
     /**
@@ -446,4 +436,17 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onDestroy();
         alarmPush.cancelPushAlarm(this);
     }
+
+    @Override
+    protected void onStart() {
+        mBaseActivityStrategy.onStart();
+        super.onStart();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        mBaseActivityStrategy.onWindowFocusChanged(hasFocus);
+        super.onWindowFocusChanged(hasFocus);
+    }
+
 }

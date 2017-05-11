@@ -58,4 +58,19 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public static boolean showAnnouncementOnBackPressed() {
         return false;
     }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
+    }
 }

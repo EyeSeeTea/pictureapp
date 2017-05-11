@@ -89,10 +89,12 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
         //remove older values, but not the especial "other" option
         for (Question question : questions) {
-            List<Option> options = question.getAnswer().getOptions();
-            for (Option option : options) {
-                if (QuestionOption.findByQuestionAndOption(question, option).size() == 0) {
-                    option.delete();
+            if (question.getAnswer() != null) {
+                List<Option> options = question.getAnswer().getOptions();
+                for (Option option : options) {
+                    if (QuestionOption.findByQuestionAndOption(question, option).size() == 0) {
+                        option.delete();
+                    }
                 }
             }
         }

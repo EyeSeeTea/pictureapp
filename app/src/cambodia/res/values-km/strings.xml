@@ -19,7 +19,8 @@
 <string name="exception_org_unit_not_valid">"លេខកូដកន្លែងផ្តល់សេវាមិនត្រឹមត្រូវទេ។
 ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈ 011 771 811"</string>
 <string name="exception_org_unit_banned">"កន្លែងផ្តល់សេវាត្រូវបានបិទ។
-ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈ 011 771 811"</string>
+ទំនាក់ទំនងមក ភី អេស អាយ តាមរយៈ011 771 811"</string>
+<string name="dialog_reopen_org_unit">"ហាង %s គឺបើក។"</string>
 <string name="dynamic_error_phone_format">"បញ្ចូលលេខទូរស័ព្ទមិនត្រឹមត្រូវ ( 0NN NNN NNN{N} )"</string>
 <string name="dynamic_error_age">"អាយុមិនត្រឹមត្រូវ"</string>
 <string name="pref_header_general">"ទូទៅ"</string>
@@ -28,7 +29,7 @@
 <string name="dialog_info_push_ok">"ទិន្នន័យ ការស្ទាបស្ទង់មតិ បានជំរុញ ទៅកាន់ម៉ាស៊ីនបម្រើ លទ្ធផល ។"</string>
 <string name="dialog_info_push_bad_credentials">"លិខិត​សម្គាល់​អាក្រក់​សម្រាប់​ជំរុញ​ឱ្យ​មាន "</string>
 <string name="dialog_error_push_no_uid">"លេខកូដ UID មិនត្រូវបានរកឃើញនៅក្នុងម៉ាស៊ីនបម្រើ (Server)"</string>
-<string name="dialog_error_push_no_location">"​គ្មានទីតាំង​ដែល​អាច​ប្រើ​បាន"</string>
+<string name="dialog_error_push_no_location">"ទីតាំង​ដែល​អាច​ប្រើ​បាន​គ្មាន"</string>
 <string name="number_0">"០"</string>
 <string name="number_1">"១"</string>
 <string name="number_2">"២"</string>
@@ -135,6 +136,7 @@
 <string name="app_logout">"ចាកចេញ"</string>
 <string name="network_error">"មានបញ្ហាជាមួយនឹងបណ្តាញនេះគឺជាការ, សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។"</string>
 <string name="login_invalid_credentials">"លិខិត​សម្គាល់​មិន​ត្រឹមត្រូវ"</string>
+    <string name="login_unexpected_error">"មានកំហុសបានកើតឡើងសូមព្យាយាមម្ដងទៀតនៅពេលក្រោយ"</string>
 <string name="login_invalid_server_url">"URL របស់ម៉ាស៊ីនបម្រើមិនត្រឹមត្រូវ"</string>
 <string name="error_conflict_message">"ព្រឹត្តិការណ៍នេះជាមួយនឹងលេខសម្គាល់អ្នកប្រើ:%1$s ។ ត្រូវបានផ្ទុកឡើងជាមួយនឹងជម្លោះនៅ UID របស់ធាតុទិន្នន័យ:%2$s ដោយមានសារ:%3$s ។ សូមទាក់ទងអ្នកគ្រប់គ្រង។"</string>
 <string name="error_conflict_title">"កំហុសក្នុងការ"</string>
@@ -201,7 +203,6 @@
 <string name="unsent_survey_filter_option_this_month">"ខែ​នេះ"</string>
 <string name="unsent_survey_filter_option_last_week">"សប្តាហ៍មុន"</string>
 <string name="unsent_survey_filter_option_last_month">"ខែមុន"</string>
-<string name="dialog_reopen_org_unit">"ហាង %s បានបើឡើងវិញ។"</string>
 <string name="unsent_survey_filter_option_today">"ថ្ងៃនេះ"</string>
 <string name="error_message_push">"ព្រឹត្តិការណ៍នេះជាមួយនឹងលេខសម្គាល់អ្នកប្រើ %s ។ ត្រូវបានផ្ទុកឡើងដោយគ្មានកាលបរិច្ឆេទ។ សូមទាក់ទងអ្នកគ្រប់គ្រង។"</string>
 <string name="empty_review_value">"គ្មានលេខទូរស័ព្ទ"</string>

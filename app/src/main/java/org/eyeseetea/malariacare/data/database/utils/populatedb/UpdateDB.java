@@ -13,7 +13,6 @@ import android.content.Context;
 
 import com.opencsv.CSVReader;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Drug;
 import org.eyeseetea.malariacare.data.database.model.DrugCombination;
@@ -21,7 +20,6 @@ import org.eyeseetea.malariacare.data.database.model.Header;
 import org.eyeseetea.malariacare.data.database.model.Match;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Partner;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;

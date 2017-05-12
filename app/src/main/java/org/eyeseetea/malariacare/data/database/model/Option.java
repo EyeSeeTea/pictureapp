@@ -321,4 +321,9 @@ public class Option extends BaseModel {
                 ", id_option_attribute_fk=" + id_option_attribute_fk +
                 '}';
     }
+
+    @Override
+    public void delete() {
+        super.delete();
+    }
 }

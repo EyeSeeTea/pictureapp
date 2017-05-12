@@ -57,17 +57,11 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
 
     public static boolean isValidValue(Value value) {
-        if (Session.getStockSurvey()==null || value.getQuestionUId() == null) {
+        if (value.getQuestionUId() == null) {
             return false;
         }
-        for (org.eyeseetea.malariacare.data.database.model.Value stockValue : Session.getStockSurvey().getValuesFromDB()) {
-            if (stockValue.getQuestion() != null) {
-                if (stockValue.getQuestion().getUid().equals(value.getQuestionUId())) {
-                    return true;
-                }
-            }
-        }
-        return false;
+
+        return true;
     }
 
 }

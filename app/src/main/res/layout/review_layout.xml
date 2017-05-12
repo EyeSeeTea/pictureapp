@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/questionLayoutBackground" >
-        <ListView
-            android:layout_above="@+id/review_image_button"
-            android:id="@+id/review_list"
-            android:layout_width="match_parent"
-            android:dividerHeight="0dp"
-            android:layout_height="0dip"
-            android:layout_weight="1"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"  >
-        </ListView>
-        <ImageView
-            android:id="@id/review_image_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerInside"
-            android:background="@color/orange"
-            android:onClick="exitReview"
-            android:src="@drawable/check"
-            android:layout_alignParentBottom="true"/>
+    android:background="@color/questionLayoutBackground"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/review_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_above="@+id/review_image_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_weight="1"
+        android:dividerHeight="0dp"></ListView>
+
+    <ImageView
+        android:id="@id/review_image_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/orange"
+        android:onClick="exitReview"
+        android:scaleType="centerInside"
+        android:src="@drawable/check" />
 </LinearLayout>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rdt_negative_image">question_images/p5_negative_my.png</string>
+    <string name="rdt_invalid_image">question_images/p5_invalid_my.png</string>
+</resources>

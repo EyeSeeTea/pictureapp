@@ -21,81 +21,138 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 </head>
-<style>
-    @font-face {
-    font-family: 'Saysettha OT';
-    src: url('../fonts/saysettha_ot.ttf');
-    font-weight: 300;
+<style>    @font-face {
+		font-family: 'Saysettha OT';
+		src: url('../fonts/saysettha_ot.ttf');
+		font-weight: 300;
     }
 
     body {
-    background-color: #14b2be;
-    font-family: 'saysettha_ot';
+		background-color: #ed9c00;
+		font-family: 'saysettha_ot';
+    }
+
+    select{
+        -webkit-appearance: none!important;
+        -moz-appearance: none!important;
+        appearance: none!important;
+        font-size: 13px;
+        padding: 0 0 0 20px;
+        background: url(img/select.png) no-repeat right #c8b8c7!important;
+        color: #4d3a4b!important;
+        width: 50%!important;
+        text-size-adjust: initial;
+        padding-top: 2px!important;
+        padding-bottom: 2px!important;
     }
 
     table {
-    width: 100%;
-    border-collapse: collapse;
+		width: 100%;
+		border-collapse: collapse;
     }
 
     table,
     td,
     th {
-    border: 1px solid black;
-    text-align: center;
+		border: 1px solid black;
+		text-align: center;
     }
 
     .stats {
-    margin-top: 25px;
+		margin-top: 25px;
     }
 
     .line-title {
-    color:#ffffff;}
+		color:#ffffff;
+	}
 
     .rowMetric {
-    background-color: #f9f3cf;
-    text-align: left;
-    width: 40%;
+		background-color: #ed9c00;
+		text-align: left;
+		width: 40%;
     }
 
     tr:first-child td {
     }
 
     tr:nth-child(even){background: #ffffff}
-    tr:nth-child(odd){background: #ffffff}
+    tr:nth-child(odd){background: #ed9c00}
 
     .rowTimeUnit {
-    font-weight: 700;
+		font-weight: 700;
     }
 
     .rowSummary {
-    background-color: #c4dfb2 !important;
+		//background-color: #c4dfb2 !important;
     }
 
     .timeUnitPicker {
-    text-align: right;
+		text-align: right;
     }
     #LBL_TIMEUNIT{
-    color:white;
-    float:left;
+		display:none;
     }
 
     .selectParent{
-    width:80px;
-    overflow:hidden;
-
-
+		width:80px;
+		overflow:hidden;
     }
 
     #timeUnit{
-    border-radius:4px;border:1px;
-    width: 40%;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border: none;
-    background: #fafbf6 url("triangle.png") no-repeat 90% center;}
+		border-radius:4px;border:1px;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		border: none;
+		background: transparent;
+		color: white;
+		margin: auto;
+		padding-top: 15px;
+		padding-bottom: 12px;
+		width: 35%;
     }
+	.timeUnitPicker{
+	}
+	table:first-child tr:first-child td:first-child {
+        color: #785c77;
+        border: 1px solid transparent;
+        border-bottom: 2px solid #795d77;
+	}
+	table:first-child tr:first-child td:not(:first-child) {
+        background: #c8b8c7;
+        color: #785c77;
+        border: 1px solid transparent;
+        border-bottom: 2px solid #795d77;
+        border-radius: 17px 17px 17px 17px;
+	}
+
+	table:first-child tr:not(:first-child) td:first-child {
+        background: #785c77;
+        color: #c9b8c8;
+        border: 1px solid transparent;
+        border-bottom: 2px solid #795d77;
+        border-radius: 17px 17px 17px 17px;
+        padding-left: 10px;
+    }
+
+	table:first-child tr:not(:first-child) td:not(:first-child) {
+        background: white;
+        color: #785c77;
+        border: 1px solid  transparent;
+        border-bottom: 2px solid #795d77;
+        border-radius: 17px 17px 17px 17px;
+    }
+	table:first-child tr:last-child td {
+	    border-bottom: 2px solid transparent!important;
+	}
+
+
+
+
+
+
+
+
 </style>
 
 <body>
@@ -103,7 +160,7 @@
     <label for="timeUnit" id="LBL_TIMEUNIT">
         Select last 6
     </label>
-    <select id="timeUnit" name="timeUnit" onchange="monitor.updateTimeUnit(this)">
+    <select id="timeUnit" name="timeUnit" onchange="statistics.updateTimeUnit(this)">
         <option value="months" id="OPT_MONTHS"> months</option>
         <option value="weeks" id="OPT_WEEKS"> weeks</option>
         <option value="days" id="OPT_DAYS"> days</option>
@@ -124,7 +181,7 @@
     </div>
 </script>
 <!-- JS to fill table with data -->
-<script type="text/javascript" src="./monitor.js"></script>
+<script type="text/javascript" src="../js/statistics.js"></script>
 </body>
 
 </html>

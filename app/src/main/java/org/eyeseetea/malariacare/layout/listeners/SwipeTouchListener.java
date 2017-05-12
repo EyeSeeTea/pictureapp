@@ -5,6 +5,10 @@ import android.graphics.Rect;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ScrollView;
+
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +17,7 @@ import java.util.List;
  * Created by idelcano on 14/06/2016.
  */
 public class SwipeTouchListener implements View.OnTouchListener {
-
+    public static ScrollView scrollView;
     /**
      * Custom gesture detector
      */
@@ -24,9 +28,9 @@ public class SwipeTouchListener implements View.OnTouchListener {
      */
     private final List<View> clickableViews;
 
-    public SwipeTouchListener(Context ctx){
+    public SwipeTouchListener(Context ctx) {
         gestureDetector = new GestureDetector(ctx, new GestureListener());
-        clickableViews =new ArrayList<>();
+        clickableViews = new ArrayList<>();
     }
 
     @Override
@@ -34,37 +38,62 @@ public class SwipeTouchListener implements View.OnTouchListener {
      * Delegates any touch into the our custom gesture detector
      */
     public boolean onTouch(View v, MotionEvent event) {
+        if (scrollView != null) {
+            fixScrollEventY(event);
+            scrollView.onTouchEvent(event);
+        }
         return gestureDetector.onTouchEvent(event);
+    }
+
+
+    /**
+     * Fix the position of the touch removing the space of the navigation layout
+     */
+    private void fixScrollEventY(MotionEvent event) {
+        float x = event.getAxisValue(0);
+        float y = event.getAxisValue(1);
+        event.setLocation(x, y
+                - PreferencesState.getInstance().getContext().getResources().getDimensionPixelSize(
+
+
+                R.dimen.footer_navigation_size));
     }
 
     /**
      * Adds a clickable view
-     * @param view
      */
-    public void addClickableView(View view){
+    public void addClickableView(View view) {
         clickableViews.add(view);
+    }
+
+    /**
+     * Adds a clickable view
+     */
+    public void addScrollView(ScrollView view) {
+        scrollView = view;
     }
 
     /**
      * Clears the list of clickable items
      */
-    public void clearClickableViews(){
+    public void clearClickableViews() {
         clickableViews.clear();
     }
 
     /**
      * Calculates de clickable view that has been 'clicked' in the given event
-     * @param event
+     *
      * @return Returns de touched view or null otherwise
      */
-    public View findViewByCoords(MotionEvent event){
-        float x=event.getRawX();
-        float y=event.getRawY();
-        for(View v: clickableViews){
+    public View findViewByCoords(MotionEvent event) {
+        float x = event.getRawX();
+        float y = event.getRawY();
+        for (View v : clickableViews) {
             Rect visibleRectangle = new Rect();
             v.getGlobalVisibleRect(visibleRectangle);
             //Image/Button clicked
-            if(x>=visibleRectangle.left && x<=visibleRectangle.right && y>=visibleRectangle.top && y<=visibleRectangle.bottom){
+            if (x >= visibleRectangle.left && x <= visibleRectangle.right
+                    && y >= visibleRectangle.top && y <= visibleRectangle.bottom) {
                 return v;
             }
         }
@@ -72,15 +101,15 @@ public class SwipeTouchListener implements View.OnTouchListener {
         return null;
     }
 
-    public void onClick(View view){
+    public void onClick(View view) {
 //            Log.e(".DynamicTabAdapter", "empty onclick");
     }
 
-    public void onSwipeRight(){
+    public void onSwipeRight() {
 //            Log.e(TAG, "onSwipeRight(DEFAULT)");
     }
 
-    public void onSwipeLeft(){
+    public void onSwipeLeft() {
 //            Log.e(TAG, "onSwipeLeft(DEFAULT)");
     }
 
@@ -95,14 +124,15 @@ public class SwipeTouchListener implements View.OnTouchListener {
         private float lastX;
 
         @Override
-        public boolean onSingleTapConfirmed(MotionEvent event){
-//              Log.d(TAG, String.format("onSingleTapConfirmed: %f %f", event.getX(), event.getY()));
+        public boolean onSingleTapConfirmed(MotionEvent event) {
+//              Log.d(TAG, String.format("onSingleTapConfirmed: %f %f", event.getX(), event.getY
+// ()));
 
             //Find the clicked button
-            View clickedView=findViewByCoords(event);
+            View clickedView = findViewByCoords(event);
 
             //If found
-            if(clickedView!=null) {
+            if (clickedView != null) {
                 //delegate onClick
                 onClick(clickedView);
                 return true;
@@ -114,7 +144,7 @@ public class SwipeTouchListener implements View.OnTouchListener {
 
         @Override
         public boolean onDown(MotionEvent e) {
-            lastX=e.getX();
+            lastX = e.getX();
 //                Log.d(TAG, "onDown: "+lastX);
             return true;
         }
@@ -122,9 +152,11 @@ public class SwipeTouchListener implements View.OnTouchListener {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             try {
-                float diffX = e2.getX()-((e1==null)?lastX:e1.getX());
-//                    Log.d(TAG, String.format("onFling (%f): diffX: %f, velocityX: %f",lastX, diffX, velocityX));
-                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                float diffX = e2.getX() - ((e1 == null) ? lastX : e1.getX());
+//                    Log.d(TAG, String.format("onFling (%f): diffX: %f, velocityX: %f",lastX,
+// diffX, velocityX));
+                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX)
+                        > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffX > 0) {
                         onSwipeRight();
                     } else {

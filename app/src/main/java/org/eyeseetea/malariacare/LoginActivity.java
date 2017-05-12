@@ -19,194 +19,274 @@
 
 package org.eyeseetea.malariacare;
 
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.Intent;
-import android.content.Loader;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.squareup.otto.Subscribe;
-
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.hisp.dhis.android.sdk.job.NetworkJob;
-import org.hisp.dhis.android.sdk.persistence.preferences.ResourceType;
+import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
+import org.eyeseetea.malariacare.utils.Utils;
+import org.hisp.dhis.client.sdk.ui.activities.AbsLoginActivity;
+
+import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * Login Screen.
  * It shows only when the user has an open session.
  */
-public class LoginActivity extends org.hisp.dhis.android.sdk.ui.activities.LoginActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AbsLoginActivity {
 
+    public static final String PULL_REQUIRED = "PULL_REQUIRED";
+    public static final String DEFAULT_USER = "";
+    public static final String DEFAULT_PASSWORD = "";
     private static final String TAG = ".LoginActivity";
-    /**
-     * DHIS server URL
-     */
-    private String serverUrl;
+    public IAuthenticationManager mAuthenticationManager = new AuthenticationManager(this);
+    public LoginUseCase mLoginUseCase = new LoginUseCase(mAuthenticationManager);
+    public LoginActivityStrategy mLoginActivityStrategy = new LoginActivityStrategy(this);
+    EditText serverText;
+    EditText usernameEditText;
+    EditText passwordEditText;
 
-    /**
-     * DHIS username account
-     */
-    private String username;
 
-    /**
-     * DHIS password (required since push is done natively instead of using sdk)
-     */
-    private String password;
+    private ProgressBar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(),getTheme());
+        AsyncInit asyncPopulateDB = new AsyncInit(this);
+        asyncPopulateDB.execute((Void) null);
+    }
 
+    private void initDataDownloadPeriodDropdown() {
+        if (!BuildConfig.loginDataDownloadPeriod) {
+            return;
+        }
+
+        ViewGroup loginViewsContainer = (ViewGroup) findViewById(
+                R.id.login_dynamic_views_container);
+
+        getLayoutInflater().inflate(R.layout.login_spinner, loginViewsContainer,
+                true);
+
+        //Add left text for the spinner "title"
+        findViewById(R.id.date_spinner_container).setVisibility(View.VISIBLE);
+        TextView textView = (TextView) findViewById(R.id.data_text_view);
+        textView.setText(R.string.download);
+
+        //add options
+        ArrayList<String> dataLimitOptions = new ArrayList<>();
+        dataLimitOptions.add(getString(R.string.no_data));
+        dataLimitOptions.add(getString(R.string.last_6_days));
+        dataLimitOptions.add(getString(R.string.last_6_weeks));
+        dataLimitOptions.add(getString(R.string.last_6_months));
+
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, dataLimitOptions);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        //add spinner
+        Spinner spinner = (Spinner) findViewById(R.id.data_spinner);
+        spinner.setVisibility(View.VISIBLE);
+        spinner.setAdapter(spinnerArrayAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                PreferencesState.getInstance().setDataLimitedByDate(
+                        spinnerArrayAdapter.getItem(pos).toString());
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        //select the selected option or default no data option
+        String dateLimit = PreferencesState.getInstance().getDataLimitedByDate();
+        if (dateLimit.equals("")) {
+            spinner.setSelection(spinnerArrayAdapter.getPosition(getString(R.string.no_data)));
+        } else {
+            spinner.setSelection(spinnerArrayAdapter.getPosition(dateLimit));
+        }
+    }
+
+    @Override
+    protected void onLoginButtonClicked(Editable server, Editable username, Editable password) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!sharedPreferences.getBoolean(getString(R.string.eula_accepted), false)) {
+            askEula(R.string.app_EULA, R.raw.eula, LoginActivity.this);
+        } else {
+            login(server.toString(), username.toString(), password.toString());
+        }
+    }
+
+
+    /**
+     * Shows an alert dialog asking for acceptance of the EULA terms. If ok calls login function,
+     * do
+     * nothing otherwise
+     */
+    public void askEula(int titleId, int rawId, final Context context) {
+        InputStream message = context.getResources().openRawResource(rawId);
+        String stringMessage = Utils.convertFromInputStreamToString(message).toString();
+        final SpannableString linkedMessage = new SpannableString(Html.fromHtml(stringMessage));
+        Linkify.addLinks(linkedMessage, Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle(context.getString(titleId))
+                .setMessage(linkedMessage)
+                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        rememberEulaAccepted(context);
+                        login(serverText.getText().toString(),
+                                usernameEditText.getText().toString(),
+                                passwordEditText.getText().toString());
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).create();
+
+        dialog.show();
+
+        ((TextView) dialog.findViewById(android.R.id.message)).setMovementMethod(
+                LinkMovementMethod.getInstance());
+    }
+
+    /**
+     * Save a preference to remember that EULA was already accepted
+     */
+    public void rememberEulaAccepted(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(getString(R.string.eula_accepted), true);
+        editor.commit();
+    }
+
+    public void login(String serverUrl, String username, String password) {
+        Credentials credentials = new Credentials(serverUrl, username, password);
+        showProgressBar();
+
+        mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
+            @Override
+            public void onLoginSuccess() {
+                hideProgressBar();
+                mLoginActivityStrategy.finishAndGo();
+            }
+
+            @Override
+            public void onServerURLNotValid() {
+                hideProgressBar();
+                serverText.setError(getString(R.string.login_invalid_server_url));
+                showError(getString(R.string.login_invalid_server_url));
+            }
+
+            @Override
+            public void onInvalidCredentials() {
+                hideProgressBar();
+                showError(getString(R.string.login_invalid_credentials));
+            }
+
+            @Override
+            public void onNetworkError() {
+                hideProgressBar();
+                showError(getString(R.string.network_error));
+            }
+        });
+    }
+
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        mLoginActivityStrategy.onBackPressed();
+    }
+
+    private void init() {
+        initDataDownloadPeriodDropdown();
         //Populate server with the current value
-        EditText serverText = (EditText) findViewById(org.hisp.dhis.android.sdk.R.id.server_url);
+        serverText = (EditText) findViewById(R.id.edittext_server_url);
         serverText.setText(ServerAPIController.getServerUrl());
-        //Readonly
-        //serverText.setEnabled(false);
 
         //Username, Password blanks to force real login
-        EditText usernameEditText = (EditText) findViewById(R.id.username);
-        usernameEditText.setText("");
-        EditText passwordEditText = (EditText) findViewById(R.id.password);
-        passwordEditText.setText("");
+        usernameEditText = (EditText) findViewById(R.id.edittext_username);
+        usernameEditText.setText(DEFAULT_USER);
+        passwordEditText = (EditText) findViewById(R.id.edittext_password);
+        passwordEditText.setText(DEFAULT_PASSWORD);
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
+    public class AsyncInit extends AsyncTask<Void, Void, Exception> {
+        Activity activity;
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        AsyncInit(Activity activity) {
+            this.activity = activity;
+        }
 
-    }
+        @Override
+        protected void onPreExecute() {
+            //// FIXME: 30/12/16  Fix mising progressbar
+            //bar = (ProgressBar) activity.findViewById(R.id.progress_bar_circular);
+            bar = (ProgressBar) activity.findViewById(R.id.progress_bar_circular);
+            bar.setVisibility(View.VISIBLE);
+            activity.findViewById(R.id.layout_login_views).setVisibility(View.GONE);
+        }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+        @Override
+        protected Exception doInBackground(Void... params) {
+            //TODO jsanchez, Why is called from AsyncTask?, It's not very correct and force
+            //run explicitly in main thread accions over views in LoginActivityStrategy
+            mLoginActivityStrategy.onCreate();
+            return null;
+        }
 
-    }
+        @Override
+        protected void onPostExecute(final Exception exception) {
+            //Error
+            bar.setVisibility(View.GONE);
+            activity.findViewById(R.id.layout_login_views).setVisibility(View.VISIBLE);
 
-    @Override
-    public void onClick(View v) {
-        // Save dhis URL and establish in preferences, so it will be used to make the pull
-        EditText serverEditText = (EditText) findViewById(R.id.server_url);
-        PreferencesState.getInstance().saveStringPreference(R.string.dhis_url, serverEditText.getText().toString());
-        super.onClick(v);
-    }
-
-    @Subscribe
-    public void onLoginFinished(NetworkJob.NetworkJobResult<ResourceType> result) {
-        if(result!=null && result.getResourceType().equals(ResourceType.USERS)) {
-            if(result.getResponseHolder().getApiException() == null) {
-                goSettingsWithRightExtras();
-            } else {
-                onLoginFail(result.getResponseHolder().getApiException());
-            }
+            init();
         }
     }
 
-    private void goSettingsWithRightExtras(){
-
-        Intent intent = new Intent(LoginActivity.this,SettingsActivity.class);
-        intent = propagateExtraAndResult(intent);
-
-        finish();
-        if(!getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false))
-            startActivity(intent);
+    public void showProgressBar() {
+        bar = (ProgressBar) findViewById(R.id.progress_bar_circular);
+        bar.setVisibility(View.VISIBLE);
+        findViewById(R.id.layout_login_views).setVisibility(View.GONE);
     }
 
-    private Intent propagateExtraAndResult(Intent intent){
-        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,false)){
-            Log.i(TAG, "propagateExtraAndResult -> Changing orgunit");
-            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_ORGUNIT,true);
-        }
-
-        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,false)){
-            Log.i(TAG, "propagateExtraAndResult -> Changing server");
-            intent.putExtra(SettingsActivity.SETTINGS_CHANGING_SERVER,true);
-        }
-
-        if(getIntent().getBooleanExtra(SettingsActivity.SETTINGS_EULA_ACCEPTED, false)){
-            Log.i(TAG, "propagateExtraAndResult -> EULA accepted, Server overwrite from "+PreferencesState.getInstance().getDhisURL() +" to "+getUserIntroducedServer());
-            PreferencesState.getInstance().setDhisURL(getUserIntroducedServer());
-            setResult(RESULT_OK, intent);
-        } else {
-            if (isEulaAccepted() && !getServerFromPreferences().equals(getUserIntroducedServer())) {
-                Log.i(TAG, "propagateExtraAndResult -> Server changed from "+PreferencesState.getInstance().getDhisURL() +" to "+getUserIntroducedServer());
-                //If the user change the server, the getServerFromPreferents have the old server value only before to call reloadPreferences()
-                PreferencesState.getInstance().reloadPreferences();
-                PreferencesState.getInstance().setIsNewServerUrl(true);
-            }
-        }
-
-        intent.putExtra(SettingsActivity.LOGIN_BEFORE_CHANGE_DONE,true);
-        return intent;
-    }
-
-    /**
-     * Check whether the EULA has already been accepted by the user. When the user accepts the EULA,
-     * a preference is set so the app will remind between different executions
-     * @return
-     */
-    private boolean isEulaAccepted(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        return sharedPreferences.getBoolean(getApplicationContext().getResources().getString(R.string.eula_accepted), false);
-    }
-
-    /**
-     * Get from the server textfield what the user introduced
-     * @return
-     */
-    private String getUserIntroducedServer(){
-        EditText serverEditText = (EditText) findViewById(R.id.server_url);
-        return serverEditText.getText().toString();
-    }
-
-    /**
-     * Get from the preferences the server setting
-     * @return
-     */
-    private String getServerFromPreferences(){
-        return PreferencesState.getInstance().getDhisURL();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
-
-    /**
-     * Every BaseActivity(Details, Create, Survey) goes back to DashBoard
-     */
-    public void onBackPressed(){
-        finishAndGo(DashboardActivity.class);
-    }
-
-    /**
-     * Finish current activity and launches an activity with the given class
-     * @param targetActivityClass Given target activity class
-     */
-    public void finishAndGo(Class targetActivityClass){
-        Intent targetActivityIntent = new Intent(this,targetActivityClass);
-        finish();
-        startActivity(targetActivityIntent);
+    public void hideProgressBar() {
+        bar = (ProgressBar) findViewById(R.id.progress_bar_circular);
+        bar.setVisibility(View.GONE);
+        findViewById(R.id.layout_login_views).setVisibility(View.VISIBLE);
     }
 }
 

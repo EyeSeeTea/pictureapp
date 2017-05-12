@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-       maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://maven.fabric.io/public' }
         mavenCentral()
         mavenLocal()
     }
@@ -8,35 +8,38 @@ buildscript {
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
+
+def cfg = rootProject.ext.configuration
+def libs = rootProject.ext.libraries
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
-//apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-
     signingConfigs {
         config {}
     }
 
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion cfg.compileSdkVersion
+    buildToolsVersion cfg.buildToolsVersion
 
     defaultConfig {
-        applicationId 'org.eyeseetea.surveillance_kh'
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 11
+        applicationId 'org.eyeseetea.surveillance'
+        minSdkVersion cfg.minSdkVersion
+        targetSdkVersion cfg.targetSdkVersion
+        versionCode cfg.versionCode
+        versionName cfg.versionName
         multiDexEnabled true
         dexOptions {
             javaMaxHeapSize "6g"
         }
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.config
     }
@@ -45,78 +48,150 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
             debuggable true
         }
     }
     //TODO This config is related to a known issue: http://stackoverflow.com/questions/20827885/android-studio-0-4-duplicate-files-copied-in-apk-meta-inf-license-txt
     packagingOptions {
-        // gradle requires to exclude these files both
-        // with .txt extension and without.
-        exclude 'META-INF/NOTICE.txt'
+        exclude 'LICENSE.txt'
+        //FIXME: This has been automatically suggested by AndroidStudio while sdk integration
+        exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
-
-        // without .txt
+        exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
     }
     productFlavors {
         cambodia {
             applicationId 'org.eyeseetea.surveillance_kh'
-            versionName "1.2.7"
+            versionName "1.2.11"
             buildConfigField "boolean", "reviewScreen", "false"
+            buildConfigField "boolean", "activeSwipeNavigator", "true"
+            buildConfigField "boolean", "activeButtonNavigator", "false"
+            buildConfigField "boolean", "loginDataDownloadPeriod", "true"
+            buildConfigField "boolean", "translations", "false"
+            buildConfigField "boolean", "developerOptions", "false"
+            buildConfigField "boolean", "multiuser", "false"
+            buildConfigField "boolean", "activeStockFragment", "false"
+            buildConfigField "boolean", "patientTestedByDefault", "false"
+            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.KHDBProvider\""
         }
         laos {
             applicationId 'org.eyeseetea.surveillance_la'
-            versionName "1.0.5"
-            buildConfigField "boolean","reviewScreen", "true"
+            versionName "1.0.9"
+            buildConfigField "boolean", "reviewScreen", "true"
+            buildConfigField "boolean", "activeSwipeNavigator", "true"
+            buildConfigField "boolean", "activeButtonNavigator", "false"
+            buildConfigField "boolean", "loginDataDownloadPeriod", "false"
+            buildConfigField "boolean", "translations", "true"
+            buildConfigField "boolean", "developerOptions", "false"
+            buildConfigField "boolean", "multiuser", "false"
+            buildConfigField "boolean", "activeStockFragment", "false"
+            buildConfigField "boolean", "patientTestedByDefault", "false"
+            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.LADBProvider\""
         }
         myanmar {
             applicationId 'org.eyeseetea.surveillance_mm'
-            versionName "1.0.0"
-            buildConfigField "boolean","reviewScreen", "true"
+            versionName "1.0.3"
+            buildConfigField "boolean", "reviewScreen", "true"
+            buildConfigField "boolean", "activeSwipeNavigator", "false"
+            buildConfigField "boolean", "activeButtonNavigator", "true"
+            buildConfigField "boolean", "loginDataDownloadPeriod", "true"
+            buildConfigField "boolean", "translations", "true"
+            buildConfigField "boolean", "developerOptions", "true"
+            buildConfigField "boolean", "multiuser", "true"
+            buildConfigField "boolean", "activeStockFragment", "true"
+            buildConfigField "boolean", "patientTestedByDefault", "true"
+            buildConfigField "String", "AuthoritiesProvider", "\"org.eyeseetea.malariacare.data.database.utils.SCMMDBProvider\""
         }
     }
-    
     lintOptions {
         disable 'RtlSymmetry', 'RtlHardcoded'
-    }    
+        checkReleaseBuilds false
+    }
+    apt {
+        arguments {
+            targetModuleName 'EyeSeeTea'
+        }
+    }
+    buildToolsVersion '24.0.3'
+}
+
+configurations {
+    all*.exclude group: 'com.google.guava', module: 'guava-jdk5'
 }
 
 dependencies {
+    // SDK submodules
+    compile project(":core-rules")
+    compile project(":ui-bindings")
+    compile project(":EyeSeeTea-sdk")
+
+    // App dependencies
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
     apply plugin: 'android-apt'
     apply plugin: 'com.github.dcendents.android-maven'
 
+    //Android support
+    compile "com.android.support:support-v4:${libs.supportVersion}"
+    compile "com.android.support:appcompat-v7:${libs.supportVersion}"
+    compile "com.android.support:support-annotations:${libs.supportVersion}"
+    compile "com.android.support:multidex:${libs.multidex}"
+    compile 'com.android.support:recyclerview-v7:25.1.0'
+    //3rd party dependencies
+    compile "com.opencsv:opencsv:${libs.opencsvVersion}"
+    compile "com.google.android.gms:play-services:${libs.gmsPlayVersion}"
+    compile "com.google.guava:guava:${libs.guavaVersion}"
+    compile "com.squareup.okhttp:okhttp:$rootProject.okhttpVersion"
+    compile "com.googlecode.libphonenumber:libphonenumber:${libs.libphonenumberVersion}"
 
-    compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:support-annotations:23.4.0'
+    //Drive dependencies
+    compile "com.google.android.gms:play-services-identity:${libs.gmsPlayVersion}"
+    compile("com.google.api-client:google-api-client-android:${libs.googleApiClientAndroidVersion}") {
+        exclude group: 'org.apache.httpcomponents'
+        exclude group: 'com.google.code.findbugs'
+    }
+    compile("com.google.apis:google-api-services-drive:${libs.googleApiServicesDriveVersion}") {
+        exclude group: 'org.apache.httpcomponents'
+    }
 
-    // App dependencies
-    compile 'com.opencsv:opencsv:3.3'
-    compile 'com.google.android.gms:play-services:9.4.0'
-    compile 'com.google.guava:guava:18.0'
-    compile 'com.squareup.okhttp:okhttp:2.2.0'
-    compile 'com.googlecode.libphonenumber:libphonenumber:7.0.9'
-    compile 'com.android.support:multidex:1.0.1'
-//    apt 'com.raizlabs.android:DBFlow-Compiler:2.2.1'
-//    compile 'com.raizlabs.android:DBFlow-Core:2.2.1'
-//    compile 'com.raizlabs.android:DBFlow:2.2.1'
-    apt project(':DBFlowORM:DBFlow-Compiler')
-    compile project(':DBFlowORM:DBFlow-Core')
-    compile project(':DBFlowORM:DBFlow')
-    compile project(':sdk:app')
-    
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+    compile "com.google.code.findbugs:jsr305:${libs.jsr305Version}"
+
+    // Unit testing dependencies
+    testCompile "junit:junit:${libs.jUnitVersion}"
+
+    // Instrumented tests dependencies
+    // Android Testing Support Library's runner and rules
+
+    androidTestCompile "com.android.support.test:runner:${libs.runnerVersion}"
+    androidTestCompile "com.android.support.test:rules:${libs.runnerVersion}"
+
+    // Espresso UI Testing dependencies.
+    androidTestCompile "com.android.support.test.espresso:espresso-core:${libs.espressoVersion}"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:${libs.espressoVersion}"
+    // Espresso-idling-resource for synchronization with background jobs
+    androidTestCompile "com.android.support.test.espresso:espresso-idling-resource:${libs.espressoVersion}"
+    // Espresso-web for WebView support
+    androidTestCompile "com.android.support.test.espresso:espresso-web:${libs.espressoVersion}"
+
+    //Tracking crashes
+    compile("com.crashlytics.sdk.android:crashlytics:${libs.crashlyticsVersion}") {
         transitive = true;
     }
 
-    // Unit testing dependencies
-    testCompile 'junit:junit:4.12'
+    // JavaPoet (sucessor to JavaWriter)
+    compile "com.squareup:javapoet:${libs.javapoetVersion}"
 
-    // Instrumented tests dependencies
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
+    //DBFlow
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${libs.dbFlowVersion}"
+    compile "com.github.Raizlabs.DBFlow:dbflow:${libs.dbFlowVersion}"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:${libs.dbFlowVersion}"
+    compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${libs.dbFlowVersion}"
 }

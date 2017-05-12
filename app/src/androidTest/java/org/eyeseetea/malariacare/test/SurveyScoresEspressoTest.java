@@ -30,10 +30,10 @@
 //import org.eyeseetea.malariacare.DashboardActivity;
 //import org.eyeseetea.malariacare.R;
 //import org.eyeseetea.malariacare.SurveyActivity;
-//import org.eyeseetea.malariacare.database.model.Option;
-//import org.eyeseetea.malariacare.database.model.Question;
-//import org.eyeseetea.malariacare.database.model.Tab;
-//import org.eyeseetea.malariacare.database.utils.PreferencesState;
+//import org.eyeseetea.malariacare.data.database.model.Option;
+//import org.eyeseetea.malariacare.data.database.model.Question;
+//import org.eyeseetea.malariacare.data.database.model.Tab;
+//import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 //import org.eyeseetea.malariacare.services.SurveyService;
 //import org.eyeseetea.malariacare.test.utils.IntentServiceIdlingResource;
 //import org.eyeseetea.malariacare.utils.Constants;
@@ -84,7 +84,8 @@
 //        Log.i(TAG,"---BEFORE---");
 //        super.setup();
 //        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(), SurveyService.class);
+//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(),
+// SurveyService.class);
 //        Espresso.registerIdlingResources(idlingResource);
 //    }
 //
@@ -173,7 +174,8 @@
 //
 //        //THEN
 //        onView(withId(R.id.score)).check(matches(withText("66 % ")));
-//        onView(withId(R.id.qualitativeScore)).check(matches(withText(getActivityInstance().getString(R.string.fair))));
+//        onView(withId(R.id.qualitativeScore)).check(matches(withText(getActivityInstance()
+// .getString(R.string.fair))));
 //    }
 //
 //    @Test

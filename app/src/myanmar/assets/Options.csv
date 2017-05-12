@@ -1,32 +1,47 @@
-1;'ຖືກກວດ';'1';0;1;1
-2;'ບໍ່ຖືກກວດ';'0';0;1;2
-3;'ຄົນເຈັບເປັນໄຂ້ມາລາເຣຍຮ້າຍແຮງ';'Severe';0;2;3
-4;'ຄົນເຈັບຖືພາ';'Pregnant';0;2;4
-5;'ຄົນເຈັບປະຕິເສດທີ່ຈະກວດ';'Refused';0;2;5
-6;'ເຈ້ຍຈຸ່ມກວດເລືອດໝົດ';'RDT Stockout';0;2;6
-7;'ຊາຍ';'Male';0;3;7
-8;'ຍິງ';'Female';0;3;8
-9;'ຜົນລົບ';'Negative';0;5;9
-10;'Pf';'Pf';0;5;10
-11;'Pv';'Pv';0;5;11
-12;'Pf+Pv';'Pf+Pv';0;5;12
-13;'ທີ່ບໍ່ຖືກຕ້ອງ';'Invalid';0;5;13
-14;'ກະລຸນາລອງໃໝ່';'Repeat';0;6;
-15;'ບໍ່ໄດ້ກວດບໍ່ຖືກຕ້ອງ';'Ignore';0;6;
-16;'ກະລຸນາລອງໃໝ່';'TryAgain';0;7;
-17;'ACT 6x1';'ACT 6x1';0;8;14
-18;'ACT 6x2';'ACT 6x2';0;8;15
-19;'ACT 6x3';'ACT 6x3';0;8;16
-20;'ACT 6x4';'ACT 6x4';0;8;17
-21;'ນຳສົ່ງຄົນເຈັບເພາະຢາໝົດ';'Referred ACT stockout';0;8;18
-22;'ຈັດຢາຕາມຂະໜາດຂ້າງເທິງໃຫ້ຖືກກັບຄົນເຈັບ';'Combined blister';0;8;19
-23;'ກວດຕໍ່';'ReferHospital';0;9;20
-24;'ກວດຄົນເຈັບໂດຍໃຊ້ເຈ້ຍຈຸ່ມກວດເລືອດອັນໃໝ່. ຢ່າລືມກວດເບິ່ງມື້ໝົດອາຍຸຂອງເຈ້ຍຈຸ່ມກວດເລືອດກ່ອນການກວດ \n ກະລຸນາລອງອີກຄັ້ງ';'Counter Text';0;11;21
-25;'ກະລຸນາລອງໃໝ່';'Counter button';0;11;22
-26;'ບໍ່ໄດ້ກວດບໍ່ຖືກຕ້ອງ';'Counter button';0;11;23
-27;'ການໃຫ້ຂະໜາດຢາບໍ່ຖືກກັບກຸ່ມອາຍຸຂອງຄົນເຈັບ';'Warning text';0;11;24
-28;'ກະລຸນາລອງໃໝ່';'Warning button';0;11;25
-29;'ຖ້າທ່ານພົບເຊື້ອ Pv ຫຼື Pf+Pv, ໃຫ້ຢາ Coartem ແລະ ສົ່ງຕໍ່';'Remminder text';0;11;26
-30;'ກວດຕໍ່';'Warning button';0;11;27
-31;'ກະລຸນານຳສົ່ງຄົນເຈັບໄປສະຖານທີ່ປິ່ນປົວຂອງພາກລັດທີ່ໃກ້ທີ່ສຸດ ຖ້າຫາກວ່າຄົນເຈັບເປັນໄຂ້ມາລາເຣຍຮ້າຍແຮງ, ຄົນເຈັບຖືພາ ຫຼື ເຈ້ຍຈຸ່ມໝົດ';'Remminder text';0;11;26
-32;'ສົ່ງ';'Remminder button';0;11;27
+1;'patient_residence_village_other_option';'rV8AX9l6RUs';0;4;1
+2;'patient_sex_male';'NoDataElementM';0;6;2
+3;'patient_sex_female';'NoDataElementF';0;6;3
+4;'patient_sex_female_pregnant';'NoDataElementFP';0;6;4
+5;'Hidden';'F';0;7;5
+6;'Hidden';'M';0;7;6
+7;'Hidden';'false';0;8;7
+8;'Hidden';'true';0;8;8
+9;'symptoms_fever_yes';'true';0;9;9
+10;'symptoms_fever_no';'false';0;9;10
+11;'symptoms_care_sought_within_24h';'true';0;10;11
+12;'symptoms_care_sought_after_24h';'false';0;10;12
+13;'symptoms_severity_yes';'true';0;11;13
+14;'symptoms_severity_no';'false';0;11;14
+15;'rdt_negative';'NEG';0;12;15
+16;'rdt_pf';'PF';0;12;16
+17;'rdt_pv';'PV';0;12;17
+18;'rdt_mixed';'MIX';0;12;18
+19;'rdt_invalid';'INV';2;12;19
+20;'negative_result_text';'negative_result_subtext';0;13;20
+21;'negative_end_test';'Negative Reminder Button';0;13;21
+22;'invalid%s_result_text';'invalid%s_result_subtext';0;14;22
+23;'Counter First button';'Counter F';0;14;23
+24;'invalid%s_end_test';'Counter S';0;14;24
+25;'follow_up_travelling_yes';'true';0;20;25
+26;'follow_up_travelling_no';'false';0;20;26
+27;'follow_up_LLIN_ITN_usage_yes';'true';0;21;27
+28;'follow_up_LLIN_ITN_usage_no';'false';0;21;28
+29;'follow_up_LLIN_ITN_ownership_yes';'true';0;22;29
+30;'follow_up_LLIN_ITN_ownership_no';'false';0;22;30
+31;'drugs_referral_ACTx12_yes';'true';0;24;31
+32;'drugs_referral_ACTx12_no';'false';0;24;32
+33;'drugs_referral_Pqx2_yes';'true';0;25;33
+34;'drugs_referral_Pqx2_no';'false';0;25;34
+35;'drugs_referral_yes';'true';0;26;35
+36;'drugs_referral_no';'false';0;26;36
+37;'follow_up_occupation_option_plantation';'Plantation';0;27;37
+38;'follow_up_occupation_option_forest';'Forest';0;27;38
+39;'follow_up_occupation_option_worksites';'Worksites';0;27;39
+40;'follow_up_occupation_option_village';'Village';0;27;40
+41;'dynamic_treatment_yes';'Yes';0;28;13
+42;'dynamic_treatment_no';'No';0;28;14
+43;'no_pq_cq_out_stock';'OUT_OF_STOCK';0;29;41
+44;'no_pq_adverse_reaction';'ADVERSE_REACTIONS';0;29;42
+45;'no_pq_cq_other';'OTHER';0;29;43
+46;'true_option_identifier';'true';0;31;13
+46;'false_option_identifier';'false';0;31;14

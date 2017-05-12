@@ -1,10 +1,9 @@
 package org.eyeseetea.malariacare.layout.adapters.survey.navigation.status;
 
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.QuestionOption;
-import org.eyeseetea.malariacare.database.model.QuestionRelation;
-import org.eyeseetea.malariacare.database.utils.ReadWriteDB;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.QuestionOption;
+import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +20,14 @@ public class ReminderStatusChecker extends StatusChecker {
      */
     List<QuestionOption> reminderTriggers;
 
-    public ReminderStatusChecker(Question reminderQuestion){
+    public ReminderStatusChecker(Question reminderQuestion) {
         initRemainderTriggers(reminderQuestion);
     }
 
     @Override
-    public boolean isEnabled(){
-        for(QuestionOption questionOption:reminderTriggers){
-            if(isSelected(questionOption)){
+    public boolean isEnabled() {
+        for (QuestionOption questionOption : reminderTriggers) {
+            if (isSelected(questionOption)) {
                 return true;
             }
         }
@@ -36,22 +35,22 @@ public class ReminderStatusChecker extends StatusChecker {
     }
 
     @Override
-    public boolean isVisibleInReview(){
+    public boolean isVisibleInReview() {
         return false;
     }
 
-    private void initRemainderTriggers(Question reminderQuestion){
+    private void initRemainderTriggers(Question reminderQuestion) {
         this.reminderTriggers = new ArrayList<>();
 
         //Look for a REMINDER relation which origin questionOption is activated
-        for(QuestionRelation questionRelation:reminderQuestion.getQuestionRelations()){
-            if(!questionRelation.isAReminder()){
+        for (QuestionRelation questionRelation : reminderQuestion.getQuestionRelations()) {
+            if (!questionRelation.isAReminder()) {
                 continue;
             }
 
             //Find QuestionOption for this relation
             QuestionOption questionOption = findQuestionOption(questionRelation);
-            if(questionOption==null){
+            if (questionOption == null) {
                 continue;
             }
 
@@ -62,12 +61,11 @@ public class ReminderStatusChecker extends StatusChecker {
 
     /**
      * Checks if the given questionOption is activated
-     * @param questionOption
-     * @return
      */
-    private boolean isSelected(QuestionOption questionOption){
-        Option currentOption=ReadWriteDB.readOptionAnswered(questionOption.getQuestion());
-        return currentOption!=null && currentOption.getId_option()==questionOption.getOption().getId_option();
+    private boolean isSelected(QuestionOption questionOption) {
+        Option currentOption = questionOption.getQuestion().getOptionByValueInSession();
+        return currentOption != null
+                && currentOption.getId_option() == questionOption.getOption().getId_option();
     }
 
 

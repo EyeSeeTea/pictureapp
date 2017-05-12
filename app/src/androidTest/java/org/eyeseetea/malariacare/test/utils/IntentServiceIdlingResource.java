@@ -15,7 +15,8 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with QIS Surveillance App.  If not, see <http://www.gnu.org/licenses/>.
- */
+ *//*
+
 
 package org.eyeseetea.malariacare.test.utils;
 
@@ -23,9 +24,11 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.support.test.espresso.IdlingResource;
 
+*/
 /**
  * Created by arrizabalaga on 24/06/15.
- */
+ *//*
+
 public class IntentServiceIdlingResource implements IdlingResource {
 
     private final Context context;
@@ -33,9 +36,9 @@ public class IntentServiceIdlingResource implements IdlingResource {
     private ResourceCallback resourceCallback;
 
 
-    public IntentServiceIdlingResource(Context context,Class serviceClass) {
+    public IntentServiceIdlingResource(Context context, Class serviceClass) {
         this.context = context;
-        this.serviceClass=serviceClass;
+        this.serviceClass = serviceClass;
     }
 
     @Override
@@ -58,8 +61,10 @@ public class IntentServiceIdlingResource implements IdlingResource {
     }
 
     private boolean isIntentServiceRunning() {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo info : manager.getRunningServices(Integer.MAX_VALUE)) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(
+                Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo info : manager.getRunningServices(
+                Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(info.service.getClassName())) {
                 return true;
             }
@@ -67,3 +72,4 @@ public class IntentServiceIdlingResource implements IdlingResource {
         return false;
     }
 }
+*/

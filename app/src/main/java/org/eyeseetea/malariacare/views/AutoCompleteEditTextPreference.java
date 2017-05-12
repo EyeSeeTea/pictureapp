@@ -25,27 +25,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.EditTextPreference;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
-import com.squareup.okhttp.Response;
-
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.OrgUnit;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.network.PushClient;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.network.ServerAPIController;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.filters.AutocompleteAdapterFilter;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -69,53 +62,20 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         mEditText.setThreshold(0);
         this.context = context;
     }
-//
-//    @Override
-//    public void setOnPreferenceChangeListener(OnPreferenceChangeListener onPreferenceChangeListener) {
-//        super.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-//            @Override
-//            public boolean onPreferenceChange(Preference preference, Object newValue) {
-//                PreferencesState.getInstance().saveStringPreference(R.string.org_unit,newValue.toString());
-//                preference.setSummary(newValue.toString());
-//                mEditText.setText(newValue.toString());
-//                PreferencesState.getInstance().reloadPreferences();
-//                return true;
-//            }
-//        });
-//
-//    }
 
-    public void pullOrgUnits(String serverVersion) {
-
-        //Annotate new version
-        this.serverVersion = serverVersion;
+    public void pullOrgUnits() {
 
         //Reload options
-        String[]  orgUnits;
-        if(Constants.DHIS_API_SERVER.equals(serverVersion)){
-            orgUnits=findOrgUnitsFromServer();
-        }else{
-            orgUnits=findOrgUnitsFromDB();
-        }
+        String[] orgUnits;
+
+        orgUnits = findOrgUnitsFromDB();
 
         AutocompleteAdapterFilter<String> adapter = new AutocompleteAdapterFilter(this.getContext(),
-                android.R.layout.simple_dropdown_item_1line,orgUnits);
+                android.R.layout.simple_dropdown_item_1line, orgUnits);
         mEditText.setAdapter(adapter);
     }
 
-    private String[] findOrgUnitsFromServer(){
-        String[]  orgUnits;
-        try {
-            GetOrgUnitsAsync getOrgUnitsAsynctask = new GetOrgUnitsAsync(context);
-            orgUnits = getOrgUnitsAsynctask.execute(new ArrayList<String>()).get();
-        } catch (Exception ex) {
-            Log.e(TAG, "Cannot findOrgUnitsFromServer: " + ex.getMessage());
-            orgUnits = new String[]{""};
-        }
-        return orgUnits;
-    }
-
-    private String[] findOrgUnitsFromDB(){
+    private String[] findOrgUnitsFromDB() {
         return OrgUnit.listAllNames();
     }
 
@@ -125,9 +85,10 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
         //super.onBindDialogView(view);
 
         AutoCompleteTextView editText = mEditText;
-        SharedPreferences preferences = view.getContext().getSharedPreferences("org.eyeseetea.surveillance_kh_preferences", view.getContext().MODE_PRIVATE);
-        String key=view.getContext().getResources().getString(R.string.org_unit);
-        String value=preferences.getString(key, "");
+        SharedPreferences preferences = view.getContext().getSharedPreferences(
+                "org.eyeseetea.surveillance_kh_preferences", view.getContext().MODE_PRIVATE);
+        String key = view.getContext().getResources().getString(R.string.org_unit);
+        String value = preferences.getString(key, "");
         editText.setText(value);
         ViewParent oldParent = editText.getParent();
         if (oldParent != view) {
@@ -141,8 +102,12 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PreferencesState.getInstance().getContext());
-        if(sharedPreferences.getBoolean(PreferencesState.getInstance().getContext().getApplicationContext().getResources().getString(R.string.eula_accepted), false) && positiveResult) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                PreferencesState.getInstance().getContext());
+        if (sharedPreferences.getBoolean(
+                PreferencesState.getInstance().getContext().getApplicationContext().getResources
+                        ().getString(
+                        R.string.eula_accepted), false) && positiveResult) {
             String value = mEditText.getText().toString();
             //Check orgUnit state in server
             CheckCodeAsync checkCodeAsync = new CheckCodeAsync(mEditText.getContext());
@@ -150,67 +115,79 @@ public class AutoCompleteEditTextPreference extends EditTextPreference {
                 boolean orgUnits = checkCodeAsync.execute(value).get();
                 if (!orgUnits) {
                     ShowException.showError(R.string.exception_org_unit_not_valid);
-                }else{
-                    //Super invokes changeListener
-                    callChangeListener(value);
+                } else {
+                    CheckBanAsync checkBanAsync = new CheckBanAsync(mEditText.getContext());
+                    try {
+                        orgUnits = checkBanAsync.execute(value).get();
+                        if (!orgUnits) {
+                            ShowException.showError(R.string.exception_org_unit_banned);
+                        } else {
+                            PreferencesState.getInstance().saveStringPreference(R.string.org_unit,
+                                    value);
+                            PreferencesState.getInstance().reloadPreferences();
+                            //Super invokes changeListener
+                            callChangeListener(value);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }catch(Exception ex){
-                Log.e(TAG,"onDialogClosed: "+ex.getMessage());
+            } catch (Exception ex) {
+                Log.e(TAG, "onDialogClosed: " + ex.getMessage());
             }
         }
     }
 
-    class GetOrgUnitsAsync extends AsyncTask<ArrayList<String>, Void, String[]> {
+}
 
-        Context context;
-        public GetOrgUnitsAsync(Context context) {
-            this.context = context;
-        }
+class CheckCodeAsync extends AsyncTask<String, Void, Boolean> {
 
-        @Override
-        protected void onPreExecute() {
-        }
+    Context context;
 
-        protected String[] doInBackground(ArrayList<String>... passing) {
-            boolean validServer=false;
-            String[] result = {""};
-            //Reload preferences to ensure asking right server
-            PreferencesState.getInstance().reloadPreferences();
-            String serverUrl=PreferencesState.getInstance().getDhisURL();
-            //Ask server via API
-            if(ServerAPIController.isValidProgram(serverUrl))
-                result = ServerAPIController.pullOrgUnitsCodes(serverUrl);
-            else {
-                ShowException.showError(R.string.dialog_error_push_no_uid);
-            }
-
-            return result; //return result
-        }
-
+    public CheckCodeAsync(Context context) {
+        this.context = context;
     }
 
-    class CheckCodeAsync extends AsyncTask<String, Void, Boolean> {
+    @Override
+    protected void onPreExecute() {
+    }
 
-        Context context;
-        public CheckCodeAsync(Context context) {
-            this.context=context;
+    protected Boolean doInBackground(String... param) {
+        boolean result = false;
+
+        String orgUnit = param[0];
+        if (orgUnit == null || orgUnit.isEmpty()) {
+            return false;
         }
+        String serverUrl = PreferencesState.getInstance().getDhisURL();
+        return ServerAPIController.isValidOrgUnit(serverUrl, orgUnit);
+    }
 
-        @Override
-        protected void onPreExecute() {
+}
+
+class CheckBanAsync extends AsyncTask<String, Void, Boolean> {
+
+    Context context;
+
+    public CheckBanAsync(Context context) {
+        this.context = context;
+    }
+
+    @Override
+    protected void onPreExecute() {
+    }
+
+    protected Boolean doInBackground(String... param) {
+        boolean result = false;
+
+        String orgUnit = param[0];
+        if (orgUnit == null || orgUnit.isEmpty()) {
+            return false;
         }
-
-        protected Boolean doInBackground(String... param) {
-            boolean result = false;
-
-            String orgUnit = param[0];
-            if(orgUnit==null || orgUnit.isEmpty()){
-                return false;
-            }
-            String serverUrl=PreferencesState.getInstance().getDhisURL();
-            return ServerAPIController.isValidOrgUnit(serverUrl,orgUnit);
-        }
-
+        String serverUrl = PreferencesState.getInstance().getDhisURL();
+        return ServerAPIController.isOrgUnitOpen(serverUrl, orgUnit);
     }
 
 }

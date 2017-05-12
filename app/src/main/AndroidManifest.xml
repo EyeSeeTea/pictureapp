@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.eyeseetea.malariacare"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    package="org.eyeseetea.malariacare">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--
-     To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
-     option is required to comply with the Google+ Sign-In developer policies
-    -->
-    <!--<uses-permission android:name="android.permission.USE_CREDENTIALS" />  To retrieve the account name (email) as part of sign-in: -->
-    <!--<uses-permission android:name="android.permission.GET_ACCOUNTS" />  To auto-complete the email text field in the login form with the user's emails -->
-    <!--<uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" /> -->
-    <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> --> <!-- Needed to profile with Debug class -->
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" tools:node="remove" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" tools:node="remove" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" tools:node="remove" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.GET_ACCOUNTS"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_CONTACTS"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.USE_CREDENTIALS"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:node="remove" />
 
     <application
         android:name=".EyeSeeTeaApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@drawable/pictureapp_logo"
-        android:label="@string/app_name"
+        android:label="@string/malaria_case_based_reporting"
         android:theme="@style/EyeSeeTheme"
-        tools:replace="android:icon" >
+        tools:replace="android:allowBackup, android:icon">
 
-        <service android:name=".services.MonitorService" android:exported="false"/>
-        <service android:name=".services.SurveyService" android:exported="false"/>
-        <service android:name=".services.PushService" android:exported="false"/>
+        <service
+            android:name=".services.MonitorService"
+            android:exported="false" />
+        <service
+            android:name=".services.SurveyService"
+            android:exported="false" />
+        <service
+            android:name=".services.PushService"
+            android:exported="false" />
 
         <meta-data
             android:name="DATABASE"
@@ -47,37 +49,20 @@
             android:value="false" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="org.eyeseetea.malariacare.database.model" />
+            android:value="org.eyeseetea.malariacare.data.database.model" />
 
         <activity
             android:name=".DashboardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:label="@string/malaria_case_based_reporting"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="org.eyeseetea.malariacare.views.Dialog"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:finishOnTaskLaunch="true"
-            android:label="@string/app_name"
-            android:parentActivityName=".DashboardActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DashboardActivity" />
-        </activity>
-        <activity
-            android:name="org.eyeseetea.malariacare.SurveyActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:finishOnTaskLaunch="true"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan"
-            android:parentActivityName=".DashboardActivity" >
-
+            android:label="@string/malaria_case_based_reporting"
+            android:parentActivityName=".DashboardActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DashboardActivity" />
@@ -85,43 +70,35 @@
 
         <activity
             android:name=".ProgressActivity"
-            android:label="@string/app_name"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize"
+            android:label="@string/malaria_case_based_reporting" />
+
+        <activity
+            android:name=".SplashScreenActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/malaria_case_based_reporting"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity
             android:name="org.eyeseetea.malariacare.SettingsActivity"
-            android:label="@string/title_activity_settings"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:finishOnTaskLaunch="true"
-            android:parentActivityName=".DashboardActivity" >
+            android:label="@string/app_settings"
+            android:parentActivityName=".DashboardActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DashboardActivity" />
         </activity>
 
-        <activity
-            android:name=".LoginActivity"
-            android:finishOnTaskLaunch="true"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SettingsActivity" />
-        </activity>
 
-        <activity
-            android:name=".MonitorActivity"
-            android:label="@string/app_name"
-            android:configChanges="orientation|screenSize">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DashboardActivity" />
-        </activity>
-
-
-        <receiver android:name="org.eyeseetea.malariacare.receivers.AlarmPushReceiver"></receiver>
+        <receiver android:name="org.eyeseetea.malariacare.receivers.AlarmPushReceiver" />
 
         <meta-data
             android:name="com.google.android.gms.version"

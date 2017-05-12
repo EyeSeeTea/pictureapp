@@ -18,11 +18,10 @@
  */
 package org.eyeseetea.malariacare.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
@@ -38,23 +37,25 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.model.CompositeScore;
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.database.model.Question;
-import org.eyeseetea.malariacare.database.model.Survey;
-import org.eyeseetea.malariacare.database.model.Tab;
-import org.eyeseetea.malariacare.database.utils.Session;
+import org.eyeseetea.malariacare.data.database.model.CompositeScore;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.ITabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.services.SurveyService;
-import org.eyeseetea.malariacare.utils.Constants;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,58 +63,73 @@ import java.util.Set;
 /**
  * Activity that supports the data entry for the surveys.
  */
-public class SurveyFragment extends Fragment{
+public class SurveyFragment extends Fragment implements IDashboardFragment {
 
     public static final String TAG = ".SurveyActivity";
-
     /**
-     * List of tabs that belongs to the current selected survey
+     * Progress text shown while loading
      */
-    private List<Tab> tabsList=new ArrayList<>();
-
-    private TabAdaptersCache tabAdaptersCache = new TabAdaptersCache();
-
-    /**
-     * Receiver of data from SurveyService
-     */
-    private SurveyReceiver surveyReceiver;
-
-    /**
-     * Progress dialog shown while loading
-     */
-    private ProgressBar progressBar;
-
-    /**
-     * Parent view of main content
-     */
-    private LinearLayout content;
-
-    /**
-     * Flags required to decide if the survey must be deleted or not
-     */
-    private boolean isBackPressed=false;
-
+    public static CustomTextView progressText;
+    public static Iterator<String> messageIterator;
+    public static int messagesCount;
+    public boolean mReviewMode = false;
     /**
      * Actual layout to be accessible in the fragment
      */
     RelativeLayout llLayout;
+    /**
+     * List of tabs that belongs to the current selected survey
+     */
+    private List<Tab> tabsList = new ArrayList<>();
+    private TabAdaptersCache tabAdaptersCache = new TabAdaptersCache();
+    /**
+     * Receiver of data from SurveyService
+     */
+    private SurveyReceiver surveyReceiver;
+    /**
+     * Progress dialog shown while loading
+     */
+    private ProgressBar progressBar;
+    /**
+     * Parent view of main content
+     */
+    private LinearLayout content;
+    /**
+     * Flags required to decide if the survey must be deleted or not
+     */
+    private boolean isBackPressed = false;
 
+    public static void nextProgressMessage() {
+        DashboardActivity.dashboardActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                if (messageIterator.hasNext()) {
+                    progressText.setText(messageIterator.next());
+                }
+            }
+        });
+    }
+
+    public static int progressMessagesCount() {
+        return messagesCount;
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         prepareSurveyInfo();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         if (container == null) {
             return null;
         }
+
         llLayout = (RelativeLayout) inflater.inflate(R.layout.survey, container, false);
-        registerReceiver();
+        registerFragmentReceiver();
         createProgress();
         return llLayout;
     }
@@ -124,68 +140,193 @@ public class SurveyFragment extends Fragment{
         super.onActivityCreated(savedInstanceState);
     }
 
-    public void onResume(){
+    public void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
-        if(Session.getSurvey()!=null){
-            Session.getSurvey().getValuesFromDB();
+        if (Session.getMalariaSurvey() != null) {
+            Session.getMalariaSurvey().getValuesFromDB();
+        }
+        if (Session.getStockSurvey() != null) {
+            Session.getStockSurvey().getValuesFromDB();
         }
 
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         Log.d(TAG, "onPause");
-        if(!DashboardActivity.dashboardActivity.isLoadingReview())
+        if (!DashboardActivity.dashboardActivity.isLoadingReview()
+                && !areActiveSurveysInQuarantine()) {
             beforeExit();
+        }
         super.onPause();
     }
 
-    private void beforeExit(){
+    private boolean areActiveSurveysInQuarantine() {
+        Survey survey = Session.getMalariaSurvey();
+        if (survey != null && survey.isQuarantine()) {
+            return true;
+        }
+        survey = Session.getStockSurvey();
+        if (survey != null && survey.isQuarantine()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void beforeExit() {
         DashboardActivity.dashboardActivity.beforeExit();
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         Log.d(TAG, "onStop");
-        unregisterReceiver();
+        unregisterFragmentReceiver();
         super.onStop();
     }
 
     /**
      * Finds the option from the current answer associated with the given text.
      * Only for dynamicTabAdapter, required for automated testing.
-     * @param text
-     * @return
      */
-    public Option findOptionByText(String text){
+    public Option findOptionByText(String text) {
         try {
             //Find adapter
-            Tab tabZero=this.tabsList.get(0);
-            DynamicTabAdapter tabAdapter=(DynamicTabAdapter)this.tabAdaptersCache.findAdapter(tabZero);
+            Tab tabZero = this.tabsList.get(0);
+            DynamicTabAdapter tabAdapter = (DynamicTabAdapter) this.tabAdaptersCache.findAdapter(
+                    tabZero);
 
             //Get options from question
-//            List<Option> options=tabAdapter.progressTabStatus.getCurrentQuestion().getAnswer().getOptions();
-            List<Option> options=tabAdapter.navigationController.getCurrentQuestion().getAnswer().getOptions();
+            List<Option> options =
+                    tabAdapter.navigationController.getCurrentQuestion().getAnswer().getOptions();
 
             //Return proper option if possible
-            for(Option option:options){
-                if(option.getName().equals(text)){
+            for (Option option : options) {
+                if (option.getName().equals(text)) {
                     return option;
                 }
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return null;
         }
         return null;
     }
 
-    public class AsyncChangeTab extends AsyncTask<Void, Integer, View> {
+    /**
+     * Gets a reference to the progress view in order to stop it later
+     */
+    private void createProgress() {
+        content = (LinearLayout) llLayout.findViewById(R.id.content);
+        progressBar = (ProgressBar) llLayout.findViewById(R.id.survey_progress);
+        progressText = (CustomTextView) llLayout.findViewById(R.id.progress_text);
+        createProgressMessages();
+    }
 
-        private Tab tab;
+    private void createProgressMessages() {
+        List<String> messagesList = new ArrayList<>();
+        //// FIXME: 20/03/2017 it is a fake flow.
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_first_step));
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_second_step));
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_third_step));
+        messagesList.add(
+                PreferencesState.getInstance().getContext().getString(R.string.survey_fourth_step));
+        messageIterator = messagesList.iterator();
+        // An iterator doesn't return properly its size after next() has been called
+        messagesCount = messagesList.size();
+    }
 
-        public AsyncChangeTab(Tab tab) {
-            this.tab = tab;
+    /**
+     * Prepares the selected tab to be shown
+     */
+    private View prepareTab(Tab selectedTab) {
+        LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
+
+        if (selectedTab.isCompositeScore()) {
+            //Initialize scores x question not loaded yet
+            List<Tab> notLoadedTabs = tabAdaptersCache.getNotLoadedTabs();
+            ScoreRegister.initScoresForQuestions(Question.listAllByTabs(notLoadedTabs),
+                    Session.getMalariaSurvey());
+        }
+        ITabAdapter tabAdapter = tabAdaptersCache.findAdapter(selectedTab);
+
+        return inflater.inflate(tabAdapter.getLayout(), content, false);
+    }
+
+    /**
+     * Stops progress view and shows real form
+     */
+    private void stopProgress() {
+        this.progressBar.setVisibility(View.GONE);
+        this.progressText.setVisibility(View.GONE);
+        this.content.setVisibility(View.VISIBLE);
+
+    }
+
+    private void startProgress() {
+        this.content.setVisibility(View.GONE);
+        this.progressBar.setVisibility(View.VISIBLE);
+        this.progressBar.setEnabled(true);
+        this.progressText.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Register a survey receiver to load surveys into the listadapter
+     */
+    public void registerFragmentReceiver() {
+        Log.d(TAG, "registerFragmentReceiver");
+
+        if (surveyReceiver == null) {
+            surveyReceiver = new SurveyReceiver();
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(surveyReceiver,
+                    new IntentFilter(SurveyService.PREPARE_SURVEY_ACTION));
+        }
+    }
+
+    /**
+     * Unregisters the survey receiver.
+     * It really important to do this, otherwise each receiver will invoke its code.
+     */
+    public void unregisterFragmentReceiver() {
+        Log.d(TAG, "unregisterFragmentReceiver");
+        if (surveyReceiver != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
+            surveyReceiver = null;
+        }
+    }
+
+    /**
+     * Asks SurveyService for the current list of surveys
+     */
+    public void prepareSurveyInfo() {
+        Log.d(TAG, "prepareSurveyInfo");
+        Intent surveysIntent = new Intent(getActivity().getApplicationContext(),
+                SurveyService.class);
+        surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.PREPARE_SURVEY_ACTION);
+        getActivity().getApplicationContext().startService(surveysIntent);
+    }
+
+    @Override
+    public void reloadData() {
+
+    }
+
+    public void reloadHeader(Activity activity) {
+        DashboardHeaderStrategy.getInstance().hideHeader(activity);
+    }
+
+    public class AsyncReloadAdaptersAndChangeTab extends AsyncTask<Void, Integer, View> {
+
+        private List<Tab> tabs;
+        private List<CompositeScore> compositeScores;
+
+        public AsyncReloadAdaptersAndChangeTab(List<Tab> tabs,
+                List<CompositeScore> compositeScores) {
+            this.tabs = tabs;
+            this.compositeScores = compositeScores;
         }
 
         @Override
@@ -196,9 +337,12 @@ public class SurveyFragment extends Fragment{
 
         @Override
         protected View doInBackground(Void... params) {
+            tabsList.clear();
+            tabsList.addAll(tabs);
+            tabAdaptersCache.reloadAdapters(tabs, compositeScores);
 
-            Log.d(TAG, "doInBackground("+Thread.currentThread().getId()+")..");
-            View view=prepareTab(tab);
+            Log.d(TAG, "doInBackground(" + Thread.currentThread().getId() + ")..");
+            View view = prepareTab(tabs.get(0));
             Log.d(TAG, "doInBackground(" + Thread.currentThread().getId() + ")..DONE");
             return view;
         }
@@ -207,18 +351,15 @@ public class SurveyFragment extends Fragment{
         protected void onPostExecute(View viewContent) {
             super.onPostExecute(viewContent);
 
+            Tab tab = tabs.get(0);
+
             content.removeAllViews();
             content.addView(viewContent);
             ITabAdapter tabAdapter = tabAdaptersCache.findAdapter(tab);
-            if (    tab.getType() == Constants.TAB_AUTOMATIC ||
-                    tab.getType() == Constants.TAB_ADHERENCE    ||
-                    tab.getType() == Constants.TAB_IQATAB ||
-                    tab.getType() == Constants.TAB_SCORE_SUMMARY) {
-                tabAdapter.initializeSubscore();
-            }
+
             ListView listViewTab = (ListView) llLayout.findViewById(R.id.listView);
-            if(tabAdapter instanceof DynamicTabAdapter ){
-                ((DynamicTabAdapter)tabAdapter).addOnSwipeListener(listViewTab);
+            if (tabAdapter instanceof DynamicTabAdapter) {
+                ((DynamicTabAdapter) tabAdapter).addOnSwipeListener(listViewTab);
             }
             listViewTab.setAdapter((BaseAdapter) tabAdapter);
             stopProgress();
@@ -226,130 +367,45 @@ public class SurveyFragment extends Fragment{
     }
 
     /**
-     * Gets a reference to the progress view in order to stop it later
-     */
-    private void createProgress(){
-        content = (LinearLayout) llLayout.findViewById(R.id.content);
-        progressBar=(ProgressBar) llLayout.findViewById(R.id.survey_progress);
-    }
-
-    /**
-     * Prepares the selected tab to be shown
-     * @param selectedTab
-     * @return
-     */
-    private View prepareTab(Tab selectedTab) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
-
-        if(selectedTab.isCompositeScore()){
-            //Initialize scores x question not loaded yet
-            List<Tab> notLoadedTabs=tabAdaptersCache.getNotLoadedTabs();
-            ScoreRegister.initScoresForQuestions(Question.listAllByTabs(notLoadedTabs), Session.getSurvey());
-        }
-        ITabAdapter tabAdapter=tabAdaptersCache.findAdapter(selectedTab);
-
-        return inflater.inflate(tabAdapter.getLayout(), content, false);
-    }
-
-    /**
-     * Stops progress view and shows real form
-     */
-    private void stopProgress(){
-        this.progressBar.setVisibility(View.GONE);
-        this.content.setVisibility(View.VISIBLE);
-
-    }
-
-    private void startProgress(){
-        this.content.setVisibility(View.GONE);
-        this.progressBar.setVisibility(View.VISIBLE);
-        this.progressBar.setEnabled(true);
-    }
-
-    /**
-     * Register a survey receiver to load surveys into the listadapter
-     */
-    public void registerReceiver() {
-        Log.d(TAG, "registerReceiver");
-
-        if(surveyReceiver==null){
-            surveyReceiver=new SurveyReceiver();
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(surveyReceiver, new IntentFilter(SurveyService.PREPARE_SURVEY_ACTION));
-        }
-    }
-
-    /**
-     * Unregisters the survey receiver.
-     * It really important to do this, otherwise each receiver will invoke its code.
-     */
-    public void  unregisterReceiver(){
-        Log.d(TAG, "unregisterReceiver");
-        if(surveyReceiver!=null){
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(surveyReceiver);
-            surveyReceiver=null;
-        }
-    }
-
-    /**
-     * Asks SurveyService for the current list of surveys
-     */
-    public void prepareSurveyInfo(){
-        Log.d(TAG, "prepareSurveyInfo");
-        Intent surveysIntent=new Intent(getActivity().getApplicationContext(), SurveyService.class);
-        surveysIntent.putExtra(SurveyService.SERVICE_METHOD,SurveyService.PREPARE_SURVEY_ACTION);
-        getActivity().getApplicationContext().startService(surveysIntent);
-    }
-
-    /**
-     * Reloads tabs info and notifies its adapter
-     * @param tabs
-     */
-    private void reloadTabs(List<Tab> tabs){
-        Log.d(TAG, "reloadTabs(" + tabs.size() + ")");
-
-        this.tabsList.clear();
-        this.tabsList.addAll(tabs);
-
-        new AsyncChangeTab(tabs.get(0)).execute((Void) null);
-
-        Log.d(TAG, "reloadTabs(" + tabs.size() + ")..DONE");
-    }
-
-
-    /**
      * Inner private class that receives the result from the service
      */
     private class SurveyReceiver extends BroadcastReceiver {
-        private SurveyReceiver(){}
+        private SurveyReceiver() {
+        }
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG,"onReceive");
+            Log.d(TAG, "onReceive");
+            //FIXME: 09/03/2017  Refactor: This is used to prevent multiple open and close
+            // surveys crash
+            Session.setIsLoadingSurvey(true);
             List<CompositeScore> compositeScores;
             List<Tab> tabs;
             Session.valuesLock.readLock().lock();
             try {
-                compositeScores = (List<CompositeScore>) Session.popServiceValue(SurveyService.PREPARE_SURVEY_ACTION_COMPOSITE_SCORES);
+                compositeScores = (List<CompositeScore>) Session.popServiceValue(
+                        SurveyService.PREPARE_SURVEY_ACTION_COMPOSITE_SCORES);
             } finally {
                 Session.valuesLock.readLock().unlock();
             }
             Session.valuesLock.readLock().lock();
             try {
-                tabs = (List<Tab>) Session.popServiceValue(SurveyService.PREPARE_SURVEY_ACTION_TABS);
+                tabs = (List<Tab>) Session.popServiceValue(
+                        SurveyService.PREPARE_SURVEY_ACTION_TABS);
             } finally {
                 Session.valuesLock.readLock().unlock();
             }
 
-            tabAdaptersCache.reloadAdapters(tabs,compositeScores);
-            reloadTabs(tabs);
-            stopProgress();
+            new AsyncReloadAdaptersAndChangeTab(tabs, compositeScores)
+                    .execute((Void) null);
         }
     }
 
     /**
-     * Inner class that resolves each Tab as it is required (lazy manner) instead of loading all of them at once.
+     * Inner class that resolves each Tab as it is required (lazy manner) instead of loading all of
+     * them at once.
      */
-    private class TabAdaptersCache{
+    private class TabAdaptersCache {
 
         /**
          * Cache of {tab: adapter} for each tab in the survey
@@ -364,36 +420,37 @@ public class SurveyFragment extends Fragment{
         /**
          * Flag that optimizes the load of compositeScore the next time
          */
-        private boolean compositeScoreTabShown=false;
+        private boolean compositeScoreTabShown = false;
 
         /**
          * Finds the right adapter according to the selected tab.
          * Tabs are lazy trying to speed up the first load
+         *
          * @param tab Tab whose adapter is searched.
          * @return The right adapter to deal with that Tab
          */
-        public ITabAdapter findAdapter(Tab tab){
-            ITabAdapter adapter=adapters.get(tab);
-            if(adapter==null){
-                adapter=buildAdapter(tab);
+        public ITabAdapter findAdapter(Tab tab) {
+            ITabAdapter adapter = adapters.get(tab);
+            if (adapter == null) {
+                adapter = buildAdapter(tab);
                 //The 'Score' tab has no adapter
-                if(adapter!=null) {
+                if (adapter != null) {
                     this.adapters.put(tab, adapter);
                 }
             }
             return adapter;
         }
 
-        public List<Tab> getNotLoadedTabs(){
-            List<Tab> notLoadedTabs=new ArrayList<Tab>();
+        public List<Tab> getNotLoadedTabs() {
+            List<Tab> notLoadedTabs = new ArrayList<Tab>();
             //If has already been shown NOTHING to reload
-            if(compositeScoreTabShown){
+            if (compositeScoreTabShown) {
                 return notLoadedTabs;
             }
 
-            compositeScoreTabShown=true;
-            notLoadedTabs=new ArrayList<>(tabsList);
-            Set<Tab> loadedTabs=adapters.keySet();
+            compositeScoreTabShown = true;
+            notLoadedTabs = new ArrayList<>(tabsList);
+            Set<Tab> loadedTabs = adapters.keySet();
             notLoadedTabs.removeAll(loadedTabs);
             return notLoadedTabs;
         }
@@ -401,24 +458,21 @@ public class SurveyFragment extends Fragment{
         /**
          * Resets the state of the cache.
          * Called form the receiver once data is ready.
-         * @param tabs
-         * @param compositeScores
          */
-        public void reloadAdapters(List<Tab> tabs, List<CompositeScore> compositeScores){
-            Tab firstTab=tabs.get(0);
+        public void reloadAdapters(List<Tab> tabs, List<CompositeScore> compositeScores) {
+            Tab firstTab = tabs.get(0);
             this.adapters.clear();
-            this.adapters.put(firstTab,buildAdapter(firstTab));
-            this.compositeScores=compositeScores;
+            this.adapters.put(firstTab, buildAdapter(firstTab));
+            this.compositeScores = compositeScores;
         }
 
         /**
          * Returns the list of adapters.
          * Puts every adapter (for every tab) into the cache if is not already there.
-         * @return
          */
-        public List<ITabAdapter> list(){
+        public List<ITabAdapter> list() {
             //The cache only has loaded Tabs
-            if (this.adapters.size() < tabsList.size()){
+            if (this.adapters.size() < tabsList.size()) {
                 cacheAllTabs();
             }
             //Return full list of adapters
@@ -429,20 +483,19 @@ public class SurveyFragment extends Fragment{
         /**
          * Puts every adapter (for every tab) into the cache if is not already there.
          */
-        public void cacheAllTabs(){
-            for(Tab tab:tabsList){
+        public void cacheAllTabs() {
+            for (Tab tab : tabsList) {
                 findAdapter(tab);
             }
         }
 
         /**
          * Builds the right adapter for the given tab
-         * @param tab
-         * @return
          */
-        private ITabAdapter buildAdapter(Tab tab){
-            if (tab.isDynamicTab())
-                return new DynamicTabAdapter(tab,getActivity());
+        private ITabAdapter buildAdapter(Tab tab) {
+            if (tab.isDynamicTab() || tab.isMultiQuestionTab()) {
+                return new DynamicTabAdapter(tab, getActivity(), mReviewMode);
+            }
 
             return null;
         }

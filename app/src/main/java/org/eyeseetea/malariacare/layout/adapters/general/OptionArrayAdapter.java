@@ -21,22 +21,23 @@ package org.eyeseetea.malariacare.layout.adapters.general;
 
 import android.content.Context;
 
-import org.eyeseetea.malariacare.database.model.Option;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.model.Option;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.utils.Utils;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
-/**
- * Created by adrian on 30/04/15.
- */
 public class OptionArrayAdapter extends AddlArrayAdapter<Option> {
 
     public OptionArrayAdapter(Context context, List<Option> options) {
         super(context, options);
     }
 
-    @Override public void drawText(TextCard textCard, Option option) {
-        textCard.setText(option.getName());
+    @Override
+    public void drawText(CustomTextView customTextView, Option option) {
+        customTextView.setText(Utils.getInternationalizedString(option.getCode()));
     }
 
 }

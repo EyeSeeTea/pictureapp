@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2016.
   ~
   ~ This file is part of QA App.
@@ -18,10 +17,9 @@
   ~  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<set xmlns:android="http://schemas.android.com/apk/res/android" >
+<set xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <objectAnimator
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
         android:duration="600"
         android:propertyName="x"
         android:valueFrom="1000"

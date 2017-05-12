@@ -29,10 +29,10 @@
 //
 //import org.eyeseetea.malariacare.R;
 //import org.eyeseetea.malariacare.SurveyActivity;
-//import org.eyeseetea.malariacare.database.model.Question;
-//import org.eyeseetea.malariacare.database.model.Survey;
-//import org.eyeseetea.malariacare.database.model.Tab;
-//import org.eyeseetea.malariacare.database.utils.PreferencesState;
+//import org.eyeseetea.malariacare.data.database.model.Question;
+//import org.eyeseetea.malariacare.data.database.model.Survey;
+//import org.eyeseetea.malariacare.data.database.model.Tab;
+//import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 //import org.eyeseetea.malariacare.services.SurveyService;
 //import org.eyeseetea.malariacare.test.utils.IntentServiceIdlingResource;
 //import org.eyeseetea.malariacare.utils.Constants;
@@ -52,7 +52,8 @@
 //import static android.support.test.espresso.matcher.ViewMatchers.withText;
 //import static junit.framework.Assert.assertEquals;
 //import static org.eyeseetea.malariacare.test.utils.TextCardScaleMatcher.hasTextCardScale;
-//import static org.eyeseetea.malariacare.test.utils.UncheckeableRadioButtonScaleMatcher.hasRadioButtonScale;
+//import static org.eyeseetea.malariacare.test.utils.UncheckeableRadioButtonScaleMatcher
+// .hasRadioButtonScale;
 //import static org.hamcrest.Matchers.allOf;
 //import static org.hamcrest.Matchers.instanceOf;
 //import static org.hamcrest.Matchers.is;
@@ -84,7 +85,8 @@
 //    public void registerIntentServiceIdlingResource(){
 //        super.setup();
 //        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(), SurveyService.class);
+//        idlingResource = new IntentServiceIdlingResource(instrumentation.getTargetContext(),
+// SurveyService.class);
 //        Espresso.registerIdlingResources(idlingResource);
 //    }
 //

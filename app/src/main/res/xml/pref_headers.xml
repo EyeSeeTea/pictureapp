@@ -21,7 +21,8 @@
 
     <!-- These settings headers are only used on tablets. -->
 
-    <header android:fragment="org.eyeseetea.malariacare.SettingsActivity$GeneralPreferenceFragment"
+    <header
+        android:fragment="org.eyeseetea.malariacare.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
 
 

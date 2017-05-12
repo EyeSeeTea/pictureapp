@@ -21,22 +21,20 @@ package org.eyeseetea.malariacare.layout.adapters.general;
 
 import android.content.Context;
 
-import org.eyeseetea.malariacare.database.model.OrgUnit;
-import org.eyeseetea.malariacare.views.TextCard;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
+import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
-/**
- * Created by adrian on 30/04/15.
- */
 public class OrgUnitArrayAdapter extends AddlArrayAdapter<OrgUnit> {
 
     public OrgUnitArrayAdapter(Context context, List<OrgUnit> orgUnits) {
         super(context, orgUnits);
     }
 
-    @Override public void drawText(TextCard textCard, OrgUnit orgUnit) {
-        textCard.setText(orgUnit.getName());
+    @Override
+    public void drawText(CustomTextView customTextView, OrgUnit orgUnit) {
+        customTextView.setText(orgUnit.getName());
     }
 
 }

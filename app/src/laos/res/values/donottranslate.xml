@@ -3,12 +3,44 @@
     <string name="specific_language_font" translatable="false">saysettha_ot.ttf</string>
     <string name="user_push" translatable="false">LAMCS</string>
     <string name="pass_push" translatable="false">LAMCSadmin1</string>
-    <string name="monitor_row_title_act6x1" translatable="false">ACT6x1</string>
-    <string name="monitor_row_title_act6x2" translatable="false">ACT6x2</string>
-    <string name="monitor_row_title_act6x3" translatable="false">ACT6x3</string>
-    <string name="monitor_row_title_act6x4" translatable="false">ACT6x4</string>
+    <string name="ACT_x_6" translatable="false">ACT6x1</string>
+    <string name="ACT_x_12" translatable="false">ACT6x2</string>
+    <string name="ACT_x_18" translatable="false">ACT6x3</string>
+    <string name="ACT_x_24" translatable="false">ACT6x4</string>
     <string name="rdtPositive" translatable="false">1</string>
     <string name="rdtNegative" translatable="false">0</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
     <string name="DHIS_DEFAULT_SERVER" translatable="false">https://dev.psi-mis.org</string>
+    <string name="work_in_progress" translatable="false">Work in progress</string>
+
+
+    <string name="malariaProgramUID" translatable="false"></string>
+    <string name="stockProgramUID" translatable="false"></string>
+    <string name="ageQuestionUID" translatable="false"></string>
+    <string name="sexPregnantQuestionUID" translatable="false"></string>
+    <string name="severeSymtomsQuestionUID" translatable="false"></string>
+    <string name="rdtQuestionUID" translatable="false"></string>
+    <string name="referralQuestionUID" translatable="false"></string>
+    <string name="pqQuestionUID" translatable="false"></string>
+    <string name="cqQuestionUID" translatable="false"></string>
+    <string name="act6QuestionUID" translatable="false"></string>
+    <string name="act12QuestionUID" translatable="false"></string>
+    <string name="act18QuestionUID" translatable="false"></string>
+    <string name="act24QuestionUID" translatable="false"></string>
+    <string name="dynamicStockQuestionUID" translatable="false"></string>
+    <string name="outOfStockQuestionUID" translatable="false"></string>
+    <string name="dynamicTreatmentQuestionUID" translatable="false"></string>
+    <string name="stockRDTQuestionUID" translatable="false"></string>
+    <string name="confirmInvalidQuestionUID" translatable="false"></string>
+    <string name="residenceVillageUID" translatable="false"></string>
+    <string name="patientResidenceVillageOtherCode" translatable="false"></string>
+
+    <string name="control_data_element_phone_metadata" translatable="false">RuNZUhiAmlv</string>
+    <string name="control_data_element_datetime_capture" translatable="false">qWMb2UM2ikL</string>
+    <string name="control_data_element_datetime_sent" translatable="false">aBahytzj2u0</string>
+    <string name="category_cc" translatable="false"></string>
+
+    <string name="GPS_PROVIDER_DEFAULT" translatable="false">default</string>
+    <string name="GPS_LATITUDE_DEFAULT" translatable="false">18.560019</string>
+    <string name="GPS_LONGITUDE_DEFAULT" translatable="false">107.345912</string>
 </resources>

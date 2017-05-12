@@ -19,6 +19,7 @@
 
 package org.eyeseetea.malariacare.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,23 +36,28 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.database.utils.Session;
-import org.eyeseetea.malariacare.monitor.MonitorBuilder;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.presentation.factory.monitor.MonitorBuilder;
 import org.eyeseetea.malariacare.services.MonitorService;
+import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.webview.IWebView;
+import org.eyeseetea.malariacare.webview.IWebViewBuilder;
 
 
 /**
  * Activity that shows summary info related to the surveys that have been sent
+ *
  * @author ivan.arrizabalaga
  */
-public class MonitorFragment extends Fragment {
+public class MonitorFragment extends Fragment implements IDashboardFragment, IWebView {
 
     public static final String TAG = ".MonitorFragment";
     /**
      * Local monitor html
      */
-    public static final String FILE_ANDROID_ASSET_MONITOR_MONITOR_HTML = "file:///android_asset/monitor/monitor.html";
+    public static final String FILE_ANDROID_ASSET_MONITOR_MONITOR_HTML =
+            "file:///android_asset/monitor/monitor.html";
 
     /**
      * Reference to webview ui
@@ -65,14 +71,15 @@ public class MonitorFragment extends Fragment {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         if (container == null) {
             return null;
@@ -80,6 +87,7 @@ public class MonitorFragment extends Fragment {
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.d(TAG, "onActivityCreated");
@@ -87,13 +95,14 @@ public class MonitorFragment extends Fragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         Log.d(TAG, "onResume");
         //Listen for data
-        registerMonitorReceiver();
+        registerFragmentReceiver();
 
         //Ask for data
-        Intent surveysIntent=new Intent(getActivity().getApplicationContext(), MonitorService.class);
+        Intent surveysIntent = new Intent(getActivity().getApplicationContext(),
+                MonitorService.class);
         surveysIntent.putExtra(MonitorService.SERVICE_METHOD, MonitorService.PREPARE_MONITOR_DATA);
         getActivity().startService(surveysIntent);
 
@@ -102,50 +111,52 @@ public class MonitorFragment extends Fragment {
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         Log.d(TAG, "onStop");
-        unregisterMonitorReceiver();
-        stopMonitor();
+        unregisterFragmentReceiver();
+        stopWebView();
         super.onStop();
     }
 
     /**
      * Register a monitor receiver to load monitor data into webview
      */
-    private void registerMonitorReceiver() {
-        Log.d(TAG, "registerMonitorReceiver");
+    public void registerFragmentReceiver() {
+        Log.d(TAG, "registerFragmentReceiver");
 
         if (monitorReceiver == null) {
-            monitorReceiver= new MonitorReceiver();
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(monitorReceiver, new IntentFilter(MonitorService.PREPARE_MONITOR_DATA));
+            monitorReceiver = new MonitorReceiver();
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(monitorReceiver,
+                    new IntentFilter(MonitorService.PREPARE_MONITOR_DATA));
         }
     }
+
     /**
      * Unregisters the monitor receiver.
      * It really important to do this, otherwise each receiver will invoke its code.
      */
-    public void unregisterMonitorReceiver() {
+    public void unregisterFragmentReceiver() {
         if (monitorReceiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(monitorReceiver);
             monitorReceiver = null;
         }
     }
 
-    public void reloadMonitor(final MonitorBuilder monitorBuilder) {
-        initMonitor();
+    public void reloadWebView(final IWebViewBuilder iWebViewBuilder) {
+        initWebView();
         //onPageFinish load data
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                monitorBuilder.addDataToView(webView);
+                iWebViewBuilder.addDataToView(webView);
             }
         });
         //Load html
         webView.loadUrl(FILE_ANDROID_ASSET_MONITOR_MONITOR_HTML);
     }
 
-    private WebView initMonitor() {
+    public WebView initWebView() {
         webView = (WebView) getActivity().findViewById(R.id.dashboard_monitor);
         //Init webView settings
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -163,15 +174,32 @@ public class MonitorFragment extends Fragment {
     /**
      * Stops webView gracefully
      */
-    private void stopMonitor(){
-        try{
-            if(webView!=null){
+    public void stopWebView() {
+        try {
+            if (webView != null) {
                 webView.stopLoading();
-                webView=null;
+                webView = null;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void reloadHeader(Activity activity) {
+        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_monitor);
+    }
+
+    /**
+     * load and reload sent surveys
+     */
+    public void reloadData() {
+        //Reload data using service
+        Intent surveysIntent = new Intent(
+                PreferencesState.getInstance().getContext().getApplicationContext(),
+                MonitorService.class);
+        surveysIntent.putExtra(MonitorService.SERVICE_METHOD, MonitorService.PREPARE_MONITOR_DATA);
+        PreferencesState.getInstance().getContext().getApplicationContext().startService(
+                surveysIntent);
     }
 
     /**
@@ -189,23 +217,13 @@ public class MonitorFragment extends Fragment {
                 MonitorBuilder monitorBuilder;
                 Session.valuesLock.readLock().lock();
                 try {
-                    monitorBuilder = (MonitorBuilder) Session.popServiceValue(MonitorService.PREPARE_MONITOR_DATA);
+                    monitorBuilder = (MonitorBuilder) Session.popServiceValue(
+                            MonitorService.PREPARE_MONITOR_DATA);
                 } finally {
                     Session.valuesLock.readLock().unlock();
                 }
-                reloadMonitor(monitorBuilder);
+                reloadWebView(monitorBuilder);
             }
         }
-    }
-
-
-    /**
-     * load and reload sent surveys
-     */
-    public void reloadData() {
-        //Reload data using service
-        Intent surveysIntent=new Intent(PreferencesState.getInstance().getContext().getApplicationContext(), MonitorService.class);
-        surveysIntent.putExtra(MonitorService.SERVICE_METHOD, MonitorService.PREPARE_MONITOR_DATA);
-        PreferencesState.getInstance().getContext().getApplicationContext().startService(surveysIntent);
     }
 }

@@ -106,7 +106,7 @@ public class SettingsActivity extends PreferenceActivity implements
      *
      * @see #sBindPreferenceSummaryToValueListener
      */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
+    public static void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -180,7 +180,7 @@ public class SettingsActivity extends PreferenceActivity implements
         mSettingsActivityStrategy.onCreate();
     }
 
-    private void restartActivity() {
+    public void restartActivity() {
         Intent intent = getIntent();
         finish();
         startActivity(intent);
@@ -249,6 +249,8 @@ public class SettingsActivity extends PreferenceActivity implements
             autoCompleteEditTextPreference.setOnPreferenceChangeListener(
                     mSettingsActivityStrategy.getOnPreferenceChangeListener());
         }
+
+        mSettingsActivityStrategy.addExtraPreferences();
     }
 
     private void loadFontStyleListPreference() {
@@ -273,7 +275,7 @@ public class SettingsActivity extends PreferenceActivity implements
         if (key.equals(getString(R.string.language_code))) {
             restartActivity();
         }
-
+        mSettingsActivityStrategy.onSharedPreferenceChanged(sharedPreferences, key);
     }
 
     @Override

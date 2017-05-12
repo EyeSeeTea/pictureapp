@@ -701,17 +701,19 @@ public class DashboardActivity extends BaseActivity {
                         unsentFragment.reloadData();
                     }
                     unsentFragment.reloadHeader(dashboardActivity);
+                    mDashboardActivityStrategy.onUnsentTabSelected(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_improve))) {
                     sentFragment.reloadData();
                     sentFragment.reloadHeader(dashboardActivity);
+                    mDashboardActivityStrategy.onSentTabSelected(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_stock))) {
                     mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
-                    monitorFragment.reloadData();
-                    monitorFragment.reloadHeader(dashboardActivity);
+                    mDashboardActivityStrategy.reloadMonitorFragment(dashboardActivity,
+                            monitorFragment);
                 }
                 tabHost.getCurrentTabView().setBackgroundColor(
                         getResources().getColor(R.color.tab_pressed_background));

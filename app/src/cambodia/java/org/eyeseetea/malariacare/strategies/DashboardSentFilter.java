@@ -45,9 +45,13 @@ public class DashboardSentFilter {
     private void initOrgUnitFilters(ListView view) {
         initiatingFilters = true;
         filterSpinnerSurveys = (Spinner) view.findViewById(R.id.filter_surveys);
+        // Specify the layout to use when the list of choices appears
         ArrayList<String> filterList = initFilterList();
-        filterSpinnerSurveys.setAdapter(new StringArrayAdapter(view.getContext(),
-                filterList));
+        StringArrayAdapter adapter = new StringArrayAdapter(view.getContext(),
+                filterList);
+        adapter.setDropDownViewResource(R.layout.main_spinner_item);
+        adapter.setDropDownItemSize(23);
+        filterSpinnerSurveys.setAdapter(adapter);
         if (lastFilterSelection == null) {
             lastFilterSelection = filterList.get(0);
         }
@@ -76,7 +80,9 @@ public class DashboardSentFilter {
     private void reloadSurveyFilter() {
         Context context = PreferencesState.getInstance().getContext();
         surveyFilter = new DateFilter();
-        if(lastFilterSelection.equals(context.getString(R.string.last_6_days))){
+        if(lastFilterSelection.equals(context.getString(R.string.unsent_survey_filter_option_today))) {
+            surveyFilter.setToday(true);
+        }else if(lastFilterSelection.equals(context.getString(R.string.last_6_days))){
             surveyFilter.setLast6Days(true);
         }else if(lastFilterSelection.equals(context.getString(R.string.last_6_weeks))) {
             surveyFilter.setLast6Weeks(true);
@@ -117,6 +123,8 @@ public class DashboardSentFilter {
 
     private ArrayList<String> initFilterList() {
         ArrayList<String> filterList = new ArrayList<>();
+        filterList.add(PreferencesState.getInstance().getContext().getString(
+                R.string.unsent_survey_filter_option_today));
         filterList.add(PreferencesState.getInstance().getContext().getString(
                 R.string.unsent_survey_filter_option_this_week));
         filterList.add(PreferencesState.getInstance().getContext().getString(

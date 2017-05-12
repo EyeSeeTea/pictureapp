@@ -80,6 +80,10 @@ public class LoginUseCase extends ALoginUseCase {
             callback.onNetworkError();
         } else if (throwable instanceof ConfigJsonIOException) {
             callback.onConfigJsonInvalid();
+        } else {
+            throwable.printStackTrace();
+            callback.onUnexpectedError();
         }
+
     }
 }

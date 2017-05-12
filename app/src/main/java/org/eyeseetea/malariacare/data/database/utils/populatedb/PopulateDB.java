@@ -225,7 +225,7 @@ public class PopulateDB {
                 continue;
             }
             String[] line;
-            while ((line = reader.readNext()) != null) {
+            while ((line = reader.readNext()) != null && !line[0].isEmpty()) {
                 switch (table) {
                     case PROGRAMS_CSV:
                         Program program = new Program();

@@ -241,6 +241,12 @@ public class Tab extends BaseModel {
         return new Select().from(Tab.class).querySingle();
     }
 
+    public static Tab getFirstTabWithProgram(Long programId) {
+        return new Select()
+                .from(Tab.class)
+                .where(Tab_Table.id_program_fk.is(programId)).querySingle();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

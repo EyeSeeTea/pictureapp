@@ -3,6 +3,8 @@ package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
 import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurvey;
 
+import android.view.View;
+
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
@@ -25,16 +27,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
-
-    DynamicTabAdapter mDynamicTabAdapter;
+public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
     /**
      * Added to save the dose by a quetion id when questions are dynamic treatment questions
      */
     HashMap<Long, Float> doseByQuestion;
 
     public DynamicTabAdapterStrategy(DynamicTabAdapter dynamicTabAdapter) {
-        this.mDynamicTabAdapter = dynamicTabAdapter;
+        super(dynamicTabAdapter);
     }
 
     @Override
@@ -165,5 +165,9 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
                     new QuestionAnswerChangedListener(dynamicTabAdapter,
                             !GradleVariantConfig.isButtonNavigationActive()));
         }
+    }
+
+    @Override
+    public void addScrollToSwipeTouchListener(View rowView) {
     }
 }

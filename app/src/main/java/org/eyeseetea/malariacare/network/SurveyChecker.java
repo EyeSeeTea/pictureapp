@@ -15,6 +15,7 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.strategies.SurveyCheckerStrategy;
@@ -40,11 +41,17 @@ public class SurveyChecker {
         Thread t = new Thread() {
             @Override
             public void run() {
-                int quarantineSurveysSize = Survey.countQuarantineSurveys();
-                Log.d(TAG, "Quarantine size: " + quarantineSurveysSize);
-                if (quarantineSurveysSize > 0) {
-                    checkAllQuarantineSurveys();
-                    PushService.reloadDashboard();
+                try {
+                    int quarantineSurveysSize = Survey.countQuarantineSurveys();
+                    Log.d(TAG, "Quarantine size: " + quarantineSurveysSize);
+                    if (quarantineSurveysSize > 0) {
+                        checkAllQuarantineSurveys();
+                        PushService.reloadDashboard();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    Log.d(TAG, "Quarantine thread finished");
                 }
             }
         };
@@ -55,8 +62,7 @@ public class SurveyChecker {
      * Get events filtered by program orgUnit and between dates.
      */
     public static List<EventExtended> getEvents(String program, String orgUnit, Date minDate,
-            Date maxDate) {
-        try {
+            Date maxDate) throws IOException, JSONException, ConfigJsonIOException {
             Response response;
 
             String DHIS_URL = PreferencesState.getInstance().getDhisURL();
@@ -103,11 +109,29 @@ public class SurveyChecker {
                         orgUnit);
                 Date maxDate = Survey.getMaxQuarantineEventDateByProgramAndOrgUnit(program,
                         orgUnit);
-                List<EventExtended> events = getEvents(program.getUid(), orgUnit.getUid(), minDate,
-                        maxDate);
-                if (events != null && events.size() > 0) {
-                    for (Survey survey : quarantineSurveys) {
+                List<EventExtended> events;
+                try {
+                    events = getEvents(program.getUid(), orgUnit.getUid(),
+                            minDate,
+                            maxDate);
+                }catch (IOException e){
+                    e.printStackTrace();
+                    return;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                } catch (ConfigJsonIOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                if(events==null){
+                    return;
+                }
+                for (Survey survey : quarantineSurveys) {
+                    if (events.size() > 0) {
                         updateQuarantineSurveysStatus(events, survey);
+                    } else {
+                        changeSurveyStatusFromQuarantineTo(survey, Constants.SURVEY_COMPLETED);
                     }
                 }
 
@@ -155,19 +179,27 @@ public class SurveyChecker {
                 break;
             }
         }
-        if (isSent) {
-            Log.d(TAG, "Set quarantine survey as sent" + survey.getId_survey());
-            survey.setStatus(Constants.SURVEY_SENT);
-        } else {
-            //When the completion date for a survey is not present in the server, this survey is
-            // not in the server.
-            //This survey is set as "completed" and will be send in the future.
-            Log.d(TAG, "Set quarantine survey as completed" + survey.getId_survey());
-            survey.setStatus(Constants.SURVEY_COMPLETED);
-        }
-        survey.save();
+        //When the completion date for a survey is not present in the server, this survey is
+        // not in the server.
+        //This survey is set as "completed" and will be send in the future.
+        changeSurveyStatusFromQuarantineTo(survey, (isSent) ? Constants.SURVEY_SENT : Constants.SURVEY_COMPLETED);
+
     }
 
+    private static void changeSurveyStatusFromQuarantineTo(Survey survey, int status){
+        try {
+            Log.d(TAG, "Set quarantine survey as " + ((status == Constants.SURVEY_SENT) ? "sent "
+                    : "complete ") + survey.getId_survey() + " date "
+                    + EventExtended.format(survey.getCreationDate(),
+                    EventExtended.DHIS2_GMT_DATE_FORMAT));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        if(survey.isQuarantine()){
+            survey.setStatus(status);
+            survey.save();
+        }
+    }
 
     /**
      * Given an event, check through all its DVs if the survey completion date is present in the

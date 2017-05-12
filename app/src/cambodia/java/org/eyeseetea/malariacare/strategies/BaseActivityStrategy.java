@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -28,6 +29,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     @Override
+    public void onStart() {
+
+    }
+
+    @Override
     public void onStop() {
 
     }
@@ -42,7 +48,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onCreateOptionsMenu(Menu menu) {
-
+        menu.removeItem(R.id.demo_mode);
     }
 
 
@@ -58,6 +64,16 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 return false;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
     }
 
     public void runDemoMode() {
@@ -113,6 +129,17 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     public void onConfigJsonInvalid() {
                         Log.d(TAG, "onConfigJsonInvalid");
                     }
+
+                    @Override
+                    public void onUnexpectedError() {
+                        Log.d(TAG, "onUnexpectedError");
+                    }
+
+                    @Override
+                    public void onMaxLoginAttemptsReachedError() {
+                        Log.e(this.getClass().getSimpleName(),
+                                "Max Login Attempts Reached Error");
+                    }
                 }
         );
     }
@@ -122,5 +149,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 SurveyService.class);
         surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
         PreferencesState.getInstance().getContext().startService(surveysIntent);
+    }
+
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithHtmlMessage(app_copyright, copyright);
     }
 }

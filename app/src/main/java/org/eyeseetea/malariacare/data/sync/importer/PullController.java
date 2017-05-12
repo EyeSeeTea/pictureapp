@@ -49,7 +49,7 @@ public class PullController implements IPullController {
     PullDhisSDKDataSource mPullRemoteDataSource = new PullDhisSDKDataSource();
     ConvertFromSDKVisitor mConverter;
     DataConverter mDataConverter;
-    private APullControllerStrategy mPullControllerStrategy = new PullControllerStrategy();
+    private APullControllerStrategy mPullControllerStrategy = new PullControllerStrategy(this);
     private Context mContext;
     private boolean cancelPull;
 
@@ -64,19 +64,7 @@ public class PullController implements IPullController {
 
     @Override
     public void pull(final PullFilters pullFilters, final Callback callback) {
-        Log.d(TAG, "Starting PULL process...");
-        callback.onStep(PullStep.METADATA);
-        try {
-            populateMetadataFromCsvs(pullFilters.isDemo());
-        } catch (IOException e) {
-            callback.onError(new PopulateCsvException(e));
-            return;
-        }
-        if (pullFilters.isDemo()) {
-            callback.onComplete();
-        } else {
-            pullMetada(pullFilters, callback);
-        }
+        mPullControllerStrategy.pull(pullFilters, callback);
     }
 
     @Override
@@ -84,7 +72,7 @@ public class PullController implements IPullController {
         cancelPull = true;
     }
 
-    private void pullMetada(final PullFilters pullFilters, final Callback callback) {
+    public void pullMetada(final PullFilters pullFilters, final Callback callback) {
         if (cancelPull) {
             callback.onCancel();
             return;
@@ -120,7 +108,7 @@ public class PullController implements IPullController {
         }
     }
 
-    private void populateMetadataFromCsvs(boolean isDemo) throws IOException {
+    public void populateMetadataFromCsvs(boolean isDemo) throws IOException {
         PopulateDB.initDataIfRequired(mContext);
 
         if (isDemo) {
@@ -129,7 +117,7 @@ public class PullController implements IPullController {
         }
     }
 
-    private void pullData(PullFilters pullFilters, List<OrganisationUnit> organisationUnits,
+    public void pullData(PullFilters pullFilters, List<OrganisationUnit> organisationUnits,
             final Callback callback) {
 
         if (cancelPull) {
@@ -141,8 +129,7 @@ public class PullController implements IPullController {
                 new IDataSourceCallback<List<Event>>() {
                     @Override
                     public void onSuccess(List<Event> result) {
-                        convertData(callback);
-                        callback.onComplete();
+                        mPullControllerStrategy.onPullDataComplete(callback);
                     }
 
                     @Override
@@ -176,7 +163,7 @@ public class PullController implements IPullController {
         }
     }
 
-    private void convertData(final Callback callback) {
+    public void convertData(final Callback callback) {
 
         if (cancelPull) {
             callback.onCancel();

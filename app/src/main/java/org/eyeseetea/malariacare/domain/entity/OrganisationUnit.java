@@ -85,9 +85,13 @@ public class OrganisationUnit {
 
     private String addDescription(String descriptionAdded) {
         StringBuilder sb = new StringBuilder();
-        sb.append(description);
-        sb.append("");//next line
-        sb.append("");//next line
+
+        if (description != null) {
+            sb.append(description);
+            sb.append("");//next line
+            sb.append("");//next line
+        }
+
         sb.append(descriptionAdded);
         return sb.toString();
     }

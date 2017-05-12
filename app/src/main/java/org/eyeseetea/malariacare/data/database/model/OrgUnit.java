@@ -19,8 +19,6 @@
 
 package org.eyeseetea.malariacare.data.database.model;
 
-import static org.apache.commons.jexl2.parser.ParserConstants.or;
-
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -30,7 +28,6 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.eyeseetea.malariacare.data.database.AppDatabase;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 
 import java.util.ArrayList;
@@ -272,6 +269,12 @@ public class OrgUnit extends BaseModel {
         orgUnit.setName(organisationUnit.getName());
 
         orgUnit.save();
+    }
+
+    public static OrganisationUnit getByName(String name) {
+        OrgUnit orgUnit = findByName(name);
+
+        return new OrganisationUnit(orgUnit.getUid(), orgUnit.getName(), orgUnit.isBanned());
     }
 
     @Override

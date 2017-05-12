@@ -76,18 +76,6 @@ public class PushUseCase implements UseCase {
     @Override
     public void run() {
 
-        mOrganisationUnitRepository.setBanOrgUnitChangeListener(
-                new IOrganisationUnitRepository.BanOrgUnitChangeListener() {
-                    @Override
-                    public void onBanOrgUnitChanged(OrganisationUnit organisationUnit) {
-                        if (organisationUnit.isBanned()) {
-                            notifyBannedOrgUnitError();
-                        } else {
-                            notifyReOpenOrgUnit();
-                        }
-                    }
-                });
-
         if (mPushController.isPushInProgress()) {
             notifyPushInProgressError();
             return;
@@ -96,6 +84,8 @@ public class PushUseCase implements UseCase {
         mPushController.changePushInProgress(true);
 
         try {
+            configureBanOrgUnitChangeListener();
+
             boolean isBanned = isOrgUnitBanned();
 
             if (isBanned) {
@@ -108,6 +98,20 @@ public class PushUseCase implements UseCase {
             mPushController.changePushInProgress(false);
             notifyPushError();
         }
+    }
+
+    private void configureBanOrgUnitChangeListener() {
+        mOrganisationUnitRepository.setBanOrgUnitChangeListener(
+                new IOrganisationUnitRepository.BanOrgUnitChangeListener() {
+                    @Override
+                    public void onBanOrgUnitChanged(OrganisationUnit organisationUnit) {
+                        if (organisationUnit.isBanned()) {
+                            notifyBannedOrgUnitError();
+                        } else {
+                            notifyReOpenOrgUnit();
+                        }
+                    }
+                });
     }
 
     private boolean isOrgUnitBanned() {
@@ -176,8 +180,7 @@ public class PushUseCase implements UseCase {
     }
 
     private void banOrgUnit() {
-        OrganisationUnit organisationUnit =
-                null;
+        OrganisationUnit organisationUnit = null;
         try {
             organisationUnit =
                     mOrganisationUnitRepository.getCurrentOrganisationUnit(ReadPolicy.CACHE);

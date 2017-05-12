@@ -13,12 +13,10 @@ import org.eyeseetea.malariacare.views.question.IQuestionView;
 
 import java.util.List;
 
-public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
-
-    DynamicTabAdapter mDynamicTabAdapter;
+public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
 
     public DynamicTabAdapterStrategy(DynamicTabAdapter dynamicTabAdapter) {
-        this.mDynamicTabAdapter = dynamicTabAdapter;
+        super(dynamicTabAdapter);
     }
 
     @Override

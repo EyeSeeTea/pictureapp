@@ -137,7 +137,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
                     @Override
                     public void onMaxLoginAttemptsReachedError() {
-
+                        Log.e(this.getClass().getSimpleName(),
+                                "Max Login Attempts Reached Error");
                     }
                 }
         );

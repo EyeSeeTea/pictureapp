@@ -27,16 +27,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
-
-    DynamicTabAdapter mDynamicTabAdapter;
+public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
     /**
      * Added to save the dose by a quetion id when questions are dynamic treatment questions
      */
     HashMap<Long, Float> doseByQuestion;
 
     public DynamicTabAdapterStrategy(DynamicTabAdapter dynamicTabAdapter) {
-        this.mDynamicTabAdapter = dynamicTabAdapter;
+        super(dynamicTabAdapter);
     }
 
     @Override

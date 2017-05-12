@@ -1,11 +1,13 @@
-package org.eyeseetea.malariacare.data.remote;
+package org.eyeseetea.malariacare.data.repositories;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
@@ -17,10 +19,39 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-public class OrganisationUnitDataSource implements IOrganisationUnitRepository {
-    @Override
-    public OrganisationUnit getCurrentOrganisationUnit() throws NetworkException, ApiCallException {
+public class OrganisationUnitRepository implements IOrganisationUnitRepository {
+    BanOrgUnitChangeListener mBanOrgUnitChangeListener;
 
+    @Override
+    public OrganisationUnit getCurrentOrganisationUnit(ReadPolicy readPolicy)
+            throws NetworkException, ApiCallException {
+
+        OrganisationUnit organisationUnit;
+
+        if (readPolicy == ReadPolicy.REMOTE) {
+            organisationUnit = getFromRemote();
+
+            verifyBanChanged(organisationUnit);
+
+            OrgUnit.refresh(organisationUnit);
+        } else {
+            organisationUnit = OrgUnit.getByName(PreferencesState.getInstance().getOrgUnit());
+        }
+
+        return organisationUnit;
+    }
+
+    private void verifyBanChanged(OrganisationUnit organisationUnit) {
+        OrgUnit cachedOrganisationUnit =
+                OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
+
+        if (cachedOrganisationUnit != null
+                && organisationUnit.isBanned() != cachedOrganisationUnit.isBanned()) {
+            mBanOrgUnitChangeListener.onBanOrgUnitChanged(organisationUnit);
+        }
+    }
+
+    private OrganisationUnit getFromRemote() throws NetworkException, ApiCallException {
         if (!isNetworkAvailable()) {
             throw new NetworkException();
         }
@@ -31,15 +62,29 @@ public class OrganisationUnitDataSource implements IOrganisationUnitRepository {
         } catch (Exception e) {
             throw new ApiCallException("Error checking banned call");
         }
-
         return organisationUnit;
     }
+
+    @Override
+    public void saveOrganisationUnit(OrganisationUnit organisationUnit) {
+        ServerAPIController.saveOrganisationUnit(organisationUnit);
+
+        OrgUnit.refresh(organisationUnit);
+    }
+
 
     @Override
     public OrganisationUnit getUserOrgUnit(Credentials credentials)
             throws PullConversionException, NetworkException, IOException, JSONException,
             ConfigJsonIOException {
         return ServerAPIController.getOrganisationUnitsByCode(credentials.getUsername());
+    }
+
+
+    @Override
+    public void setBanOrgUnitChangeListener(
+            BanOrgUnitChangeListener listener) {
+        mBanOrgUnitChangeListener = listener;
     }
 
     private boolean isNetworkAvailable() {

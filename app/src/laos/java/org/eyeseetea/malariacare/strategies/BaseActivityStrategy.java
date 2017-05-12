@@ -7,9 +7,9 @@ import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
@@ -26,6 +26,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
         mBaseActivity = baseActivity;
+    }
+
+    @Override
+    public void onStart() {
+
     }
 
     @Override
@@ -62,16 +67,39 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     public void runDemoMode() {
-        PopulateDB.wipeSurveys();
-        PreferencesState.getInstance().saveStringPreference(R.string.org_unit, "");
-        PreferencesState.getInstance().reloadPreferences();
+        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                PreferencesState.getInstance().reloadPreferences();
+                updateActionBarTitleAfterLogout();
+                loginDemoMode();
+            }
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.e(TAG, message);
+            }
+        });
+    }
+
+    private void updateActionBarTitleAfterLogout() {
         android.support.v7.app.ActionBar actionBar = mBaseActivity.getSupportActionBar();
         LayoutUtils.setActionBarLogo(actionBar);
         LayoutUtils.setActionBarText(actionBar,
                 PreferencesState.getInstance().getContext().getResources().getString(
                         R.string.malaria_case_based_reporting), "");
-        loginDemoMode();
     }
+    @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+
+    }
+
+
 
     private void loginDemoMode() {
         mLoginUseCase.execute(Credentials.createDemoCredentials(),
@@ -98,8 +126,18 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     }
 
                     @Override
-                    public void onConfigJsonNotPresent() {
-                        Log.d(TAG, "onConfigJsonNotPresent");
+                    public void onConfigJsonInvalid() {
+                        Log.d(TAG, "onConfigJsonInvalid");
+                    }
+
+                    @Override
+                    public void onUnexpectedError() {
+                        Log.d(TAG, "onUnexpectedError");
+                    }
+
+                    @Override
+                    public void onMaxLoginAttemptsReachedError() {
+                        Log.d(TAG, "onMaxLoginAttemptsReachedError");
                     }
                 }
         );
@@ -110,5 +148,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                 SurveyService.class);
         surveysIntent.putExtra(SurveyService.SERVICE_METHOD, SurveyService.RELOAD_DASHBOARD_ACTION);
         PreferencesState.getInstance().getContext().startService(surveysIntent);
+    }
+
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithHtmlMessage(app_copyright, copyright);
     }
 }

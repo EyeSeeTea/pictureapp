@@ -12,9 +12,12 @@ public class OrganisationUnit {
     private static final String CLOSE_DATE_FORMAT = "dd-MM-yyyy";
     private String uid;
     private String name;
+    private String code;
     private String description;
     private Date closedDate;
     private boolean banned;
+    private String pin;
+    private Program mProgram;
 
     public OrganisationUnit(String uid, String name, String description, Date closedDate) {
         this.uid = uid;
@@ -27,6 +30,17 @@ public class OrganisationUnit {
         this.uid = uid;
         this.name = name;
         this.banned = banned;
+    }
+
+    public OrganisationUnit(String uid, String name, String code, String description,
+            Date closedDate, String pin, Program program) {
+        this.uid = uid;
+        this.name = name;
+        this.code = code;
+        this.description = description;
+        this.closedDate = closedDate;
+        this.pin = pin;
+        mProgram = program;
     }
 
     public String getUid() {
@@ -76,5 +90,37 @@ public class OrganisationUnit {
         sb.append("");//next line
         sb.append(descriptionAdded);
         return sb.toString();
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
+    public Program getProgram() {
+        return mProgram;
+    }
+
+    public void setProgram(Program program) {
+        mProgram = program;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

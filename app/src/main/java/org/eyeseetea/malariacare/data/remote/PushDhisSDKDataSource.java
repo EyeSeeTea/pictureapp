@@ -26,6 +26,11 @@ import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.sync.mappers.PushReportMapper;
+import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
+import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
+import org.eyeseetea.malariacare.domain.exception.push.PushDhisException;
+import org.eyeseetea.malariacare.domain.exception.push.PushReportException;
 import org.hisp.dhis.client.sdk.android.api.D2;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.StateFlow;
@@ -44,16 +49,16 @@ import rx.schedulers.Schedulers;
 public class PushDhisSDKDataSource {
     private final String TAG = ".PushControllerB&D";
 
-    public void pushData(final IDataSourceCallback<Map<String, ImportSummary>> callback) {
+    public void pushData(final IDataSourceCallback<Map<String, PushReport>> callback) {
         pushEvents(callback);
     }
 
-    private void pushEvents(final IDataSourceCallback<Map<String, ImportSummary>> callback) {
+    private void pushEvents(final IDataSourceCallback<Map<String, PushReport>> callback) {
 
         final Set<String> eventUids = getEventUidToBePushed();
 
         if (eventUids.isEmpty() || eventUids.size() == 0) {
-            callback.onError(new Exception("Empty events"));
+            callback.onError(new SurveysToPushNotFoundException("Null events"));
             return;
         }
         Observable<Map<String, ImportSummary>> eventObserver =
@@ -65,27 +70,26 @@ public class PushDhisSDKDataSource {
                 .subscribe(new Action1<Map<String, ImportSummary>>() {
                     @Override
                     public void call(Map<String, ImportSummary> mapEventsImportSummary) {
-                        if (mapEventsImportSummary != null) {
-                            Log.d(TAG,
-                                    "Push of events finish. Number of events: "
-                                            + mapEventsImportSummary.size());
+
+                        if (mapEventsImportSummary == null) {
+                            callback.onError(new PushReportException("Error during push"));
+                            return;
                         }
-                        callback.onSuccess(mapEventsImportSummary);
-                        //TODO: from data source should comverto always from SDK object to domain
-                        // object
-                        // this class should not return sdk objects directly
-                        //create a object similar to Map<String,ImportSummary> in domain and
-                        // convert before
-                        // to invoke callback.onSuccess
+                        Log.d(TAG,
+                                "Push of events finish. Number of events: "
+                                        + mapEventsImportSummary.size());
+                        try {
+                            callback.onSuccess(
+                                    PushReportMapper.mapFromImportSummariesToPushReports(
+                                            mapEventsImportSummary));
+                        } catch (NullPointerException e) {
+                            callback.onError(new PushReportException(e));
+                        }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        throwable.printStackTrace();
-                        callback.onError(throwable);
-
-                        Log.e(TAG,
-                                "Error pushing Events: " + throwable.getLocalizedMessage());
+                        callback.onError(new PushDhisException(throwable));
                     }
                 });
     }

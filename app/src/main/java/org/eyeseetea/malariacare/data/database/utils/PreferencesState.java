@@ -26,10 +26,10 @@ import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.DateFilter;
-import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.views.FontUtils;
 import org.eyeseetea.sdk.presentation.styles.FontStyle;
 
@@ -154,12 +154,19 @@ public class PreferencesState {
                 instance.getContext().getString(R.string.DHIS_DEFAULT_SERVER));
     }
 
+    public boolean isCustomizeFontActive() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                instance.getContext());
+        return sharedPreferences.getBoolean(
+                instance.getContext().getString(R.string.customize_fonts),
+                false);
+    }
+
     private FontStyle initFontStyle() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 instance.getContext());
 
-        if (sharedPreferences.getBoolean(instance.getContext().getString(R.string.customize_fonts),
-                false)) {
+        if (isCustomizeFontActive()) {
             String fontStyleId = sharedPreferences.getString(instance.getContext().getString(R.string.font_sizes),
                     String.valueOf(FontStyle.Medium.getResId()));
 
@@ -300,7 +307,9 @@ public class PreferencesState {
         prefEditor.commit(); // finally save changes
     }
     public void onCreateActivityPreferences(Resources resources, Resources.Theme theme) {
-        loadsLanguageInActivity();
+        if(BuildConfig.translations) {
+            loadsLanguageInActivity();
+        }
         if (theme != null) {
             FontUtils.applyFontStyleByPreference(resources, theme);
         }
@@ -308,8 +317,15 @@ public class PreferencesState {
 
     public void loadsLanguageInActivity() {
         if (languageCode.equals("")) {
+            Locale locale = Resources.getSystem().getConfiguration().locale;
+            setLocale(locale.getLanguage());
             return;
+        }else {
+            setLocale(languageCode);
         }
+    }
+
+    private void setLocale(String languageCode) {
         Resources res = context.getResources();
         // Change locale settings in the app.
         DisplayMetrics dm = res.getDisplayMetrics();
@@ -336,6 +352,7 @@ public class PreferencesState {
     }
 
     public void setPushInProgress(boolean inProgress) {
+        Log.d(TAG, "change set push in progress to "+ inProgress);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();

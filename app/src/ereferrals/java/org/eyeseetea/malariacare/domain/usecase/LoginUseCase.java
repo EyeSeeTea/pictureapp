@@ -6,6 +6,7 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
@@ -29,18 +30,21 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
     private IOrganisationUnitRepository mOrgUnitDataSource;
     private ICredentialsRepository mCredentialsLocalDataSource;
     private IInvalidLoginAttemptsRepository mInvalidLoginAttemptsLocalDataSource;
+    private ISurveyRepository mSurveyLocalDataSource;
     private Callback mCallback;
 
     public LoginUseCase(IAuthenticationManager authenticationManager, IMainExecutor mainExecutor,
             IAsyncExecutor asyncExecutor, IOrganisationUnitRepository orgUnitDataSource,
             ICredentialsRepository credentialsLocalDataSource,
-            IInvalidLoginAttemptsRepository iInvalidLoginAttemptsRepository) {
+            IInvalidLoginAttemptsRepository iInvalidLoginAttemptsRepository,
+            ISurveyRepository surveyLocalDataSource) {
         mAuthenticationManager = authenticationManager;
         mMainExecutor = mainExecutor;
         mAsyncExecutor = asyncExecutor;
         mOrgUnitDataSource = orgUnitDataSource;
         mCredentialsLocalDataSource = credentialsLocalDataSource;
         mInvalidLoginAttemptsLocalDataSource = iInvalidLoginAttemptsRepository;
+        mSurveyLocalDataSource = surveyLocalDataSource;
     }
 
     @Override
@@ -59,7 +63,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                         mAsyncExecutor.run(new Runnable() {
                             @Override
                             public void run() {
-                                pullOrganisationCredentials();
+                                deleteSurveys();
                             }
                         });
                     }
@@ -78,6 +82,15 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                         }
                     }
                 });
+    }
+
+
+    private void deleteSurveys() {
+        Credentials oldCredentials = mCredentialsLocalDataSource.getOrganisationCredentials();
+        if (!insertedCredentials.getUsername().equals(oldCredentials.getUsername())) {
+            mSurveyLocalDataSource.deleteSurveys();
+        }
+        pullOrganisationCredentials();
     }
 
 

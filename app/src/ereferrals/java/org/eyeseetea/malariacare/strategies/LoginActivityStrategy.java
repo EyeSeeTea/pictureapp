@@ -14,6 +14,7 @@ import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -22,6 +23,7 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
@@ -153,8 +155,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         IInvalidLoginAttemptsRepository
                 iInvalidLoginAttemptsRepository =
                 new InvalidLoginAttemptsRepositoryLocalDataSource();
+        ISurveyRepository surveyRepository = new SurveyLocalDataSource();
         loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
                 asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
-                iInvalidLoginAttemptsRepository);
+                iInvalidLoginAttemptsRepository, surveyRepository);
     }
 }

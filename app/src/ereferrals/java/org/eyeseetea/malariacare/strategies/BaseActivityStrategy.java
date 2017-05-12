@@ -1,12 +1,17 @@
 package org.eyeseetea.malariacare.strategies;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.DashboardActivity;
@@ -16,6 +21,7 @@ import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
 
@@ -25,15 +31,19 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     private static final int SETTINGS_LOGOUT = 107;
 
     LogoutUseCase mLogoutUseCase;
-    IAuthenticationManager mAuthenticationManager;
+    private IAuthenticationManager mAuthenticationManager;
+    private int notConnectedText = R.string.offline_status;
 
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
     }
 
     @Override
-    public void onStart() {
-        applicationWillEnterForeground();
+    public void onCreate() {
+        mAuthenticationManager = new AuthenticationManager(mBaseActivity);
+        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
+        mBaseActivity.registerReceiver(connectionReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     private void applicationWillEnterForeground() {
@@ -43,17 +53,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     @Override
-    public void onCreate() {
-        mAuthenticationManager = new AuthenticationManager(mBaseActivity);
-        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
-    }
-
-    @Override
-    public void onStop() {
-        applicationdidenterbackground();
-        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-            logout();
-        }
+    public void onStart() {
+        applicationWillEnterForeground();
     }
 
     public void applicationdidenterbackground() {
@@ -61,7 +62,6 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             EyeSeeTeaApplication.getInstance().setIsAppWentToBg(true);
         }
     }
-
 
 
     @Override
@@ -129,6 +129,10 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         });
     }
 
+    public void showCopyRight(int app_copyright, int copyright) {
+        mBaseActivity.showAlertWithMessage(app_copyright, copyright);
+    }
+
 
     @Override
     public void goSettings() {
@@ -138,4 +142,28 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         mBaseActivity.startActivityForResult(new Intent(mBaseActivity, SettingsActivity.class),
                 SETTINGS_LOGOUT);
     }
+
+    @Override
+    public void onStop() {
+        applicationdidenterbackground();
+        if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
+            logout();
+        }
+        mBaseActivity.unregisterReceiver(connectionReceiver);
+    }
+
+    public void setNotConnectedText(int notConnectedText) {
+        this.notConnectedText = notConnectedText;
+    }
+
+    private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!ConnectivityStatus.isConnected(mBaseActivity)) {
+                Toast.makeText(mBaseActivity, notConnectedText, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 }

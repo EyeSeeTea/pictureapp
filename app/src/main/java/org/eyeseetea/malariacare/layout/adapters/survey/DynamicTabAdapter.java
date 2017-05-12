@@ -44,7 +44,6 @@ import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
@@ -60,7 +59,7 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
-import org.eyeseetea.malariacare.layout.adapters.survey.strategies.IDynamicTabAdapterStrategy;
+import org.eyeseetea.malariacare.layout.adapters.survey.strategies.ADynamicTabAdapterStrategy;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
@@ -79,6 +78,7 @@ import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.multiquestion.YearSelectorQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.ImageRadioButtonSingleQuestionView;
 import org.eyeseetea.malariacare.views.question.singlequestion.strategies
         .ConfirmCounterSingleCustomViewStrategy;
@@ -116,7 +116,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     View keyboardView;
     List<IMultiQuestionView> mMultiQuestionViews = new ArrayList<>();
-    IDynamicTabAdapterStrategy mDynamicTabAdapterStrategy;
+    ADynamicTabAdapterStrategy mDynamicTabAdapterStrategy;
     /**
      * Flag that indicates if the current survey in session is already sent or not (it affects
      * readonly settings)
@@ -143,11 +143,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
             Question question = navigationController.getCurrentQuestion();
             if (question.getValueBySession() != null) {
-                if (DashboardActivity.moveToQuestion != null) {
-                    goToQuestion(DashboardActivity.moveToQuestion);
-                    DashboardActivity.moveToQuestion = null;
+                if (DashboardActivity.moveToThisUId != null) {
+                    goToQuestion(DashboardActivity.moveToThisUId);
+                    DashboardActivity.moveToThisUId = null;
                 } else {
-                    goToQuestion(question);
+                    goToQuestion(question.getUid());
                 }
             }
 
@@ -294,6 +294,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
 
         question.saveValuesDDL(selectedOption, value);
+
 
         if (question.getOutput().equals(Constants.IMAGE_3_NO_DATAELEMENT) ||
                 question.getOutput().equals(Constants.IMAGE_RADIO_GROUP_NO_DATAELEMENT)) {
@@ -469,8 +470,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 //not have additionalQuestions(variant dependent) and is not multi question tab
                 screenQuestions.add(questionItem);
             }
-            swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
-                    R.id.scrolled_table)).findViewById(R.id.table_scroll));
+            mDynamicTabAdapterStrategy.addScrollToSwipeTouchListener(rowView);
         } else {
             tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);
@@ -620,6 +620,10 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                             !GradleVariantConfig.isButtonNavigationActive()));
         } else if (questionView instanceof AOptionQuestionView) {
             ((AOptionQuestionView) questionView).setOnAnswerChangedListener(
+                    new QuestionAnswerChangedListener(this,
+                            !GradleVariantConfig.isButtonNavigationActive()));
+        } else if (questionView instanceof YearSelectorQuestionView) {
+            ((YearSelectorQuestionView) questionView).setOnAnswerChangedListener(
                     new QuestionAnswerChangedListener(this,
                             !GradleVariantConfig.isButtonNavigationActive()));
         }
@@ -907,10 +911,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    public boolean wasPatientTested() {
-        return getMalariaSurvey().isRDT() || BuildConfig.patientTestedByDefault;
-    }
-
     /**
      * Advance to the next question with delay applied or finish survey according to question and
      * value.
@@ -983,7 +983,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * When the user click in a value in the review fragment the navigationController should go to
      * related question
      */
-    private void goToQuestion(Question isMoveToQuestion) {
+    private void goToQuestion(String questionUid) {
         navigationController.first();
 
         Question currentQuestion;
@@ -1001,12 +1001,12 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                         currentQuestion.getHeader().getTab());
 
                 for (Question question : screenQuestions) {
-                    if (isMoveToQuestion.getUid().equals(question.getUid())) {
+                    if (questionUid.equals(question.getUid())) {
                         isQuestionFound = true;
                     }
                 }
             } else {
-                if (isMoveToQuestion.getUid().equals(currentQuestion.getUid())) {
+                if (questionUid.equals(currentQuestion.getUid())) {
                     isQuestionFound = true;
                 }
             }

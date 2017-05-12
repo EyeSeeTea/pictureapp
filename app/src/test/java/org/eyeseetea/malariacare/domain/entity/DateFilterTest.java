@@ -19,26 +19,29 @@ public class DateFilterTest {
     DateFilter mSurveyFilter;
     String mockedTodayDate = "2017-12-20";
 
-    String thisWeekStart = "2017-12-18";
-    String thisWeekEnd = "2017-12-24";
+    String thisDayStart = "2017-12-20";
+    String thisDayEnd = "2017-12-20";
 
-    String thisMonthStart = "2017-11-01";
-    String thisMonthEnd = "2017-12-30";
+    String thisWeekStart = "2017-12-18";
+    String thisWeekEnd = "2017-12-20";
+
+    String thisMonthStart = "2017-12-01";
+    String thisMonthEnd = "2017-12-20";
 
     String lastWeekStart = "2017-12-11";
     String lastWeekEnd = "2017-12-17";
 
-    String lastMonthStart = "2017-10-01";
+    String lastMonthStart = "2017-11-01";
     String lastMonthEnd = "2017-11-30";
 
     String last6DaysStart = "2017-12-15";
     String last6DaysEnd = "2017-12-20";
 
     String last6WeeksStart = "2017-11-13";
-    String last6WeeksEnd = "2017-12-24";
+    String last6WeeksEnd = "2017-12-20";
 
-    String last6MonthsStart = "2017-05-01";
-    String last6MonthsEnd = "2017-11-30";
+    String last6MonthsStart = "2017-07-01";
+    String last6MonthsEnd = "2017-12-20";
 
     @Before
     public void setup() {
@@ -106,6 +109,14 @@ public class DateFilterTest {
     }
 
     @Test
+    public void testToday() {
+        mSurveyFilter.setToday(true);
+        Date startDate = getDateFromString(thisDayStart);
+        Date endDate = getDateFromString(thisDayEnd);
+        testDates(startDate, endDate);
+    }
+
+    @Test
     public void testLast6Days() {
         mSurveyFilter.setLast6Days(true);
         Date startDate = getDateFromString(last6DaysStart);
@@ -135,9 +146,13 @@ public class DateFilterTest {
 
         Date filterStart = mSurveyFilter.getStartFilterDate(getFakeTodayCalendar());
         Date filterEnd = mSurveyFilter.getEndFilterDate(getFakeTodayCalendar());
+        System.out.println("test 1: Valid date");
         assertTrue(mSurveyFilter.isDateBetweenDates(startDate, filterStart, filterEnd));
+        System.out.println("test 2: Invalid date");
         assertFalse(mSurveyFilter.isDateBetweenDates(startDateOut, filterStart, filterEnd));
+        System.out.println("test 3: Valid date");
         assertTrue(mSurveyFilter.isDateBetweenDates(endDate, filterStart, filterEnd));
+        System.out.println("test 4: Invalid date");
         assertFalse(mSurveyFilter.isDateBetweenDates(endDateOut, filterStart, filterEnd));
     }
 }

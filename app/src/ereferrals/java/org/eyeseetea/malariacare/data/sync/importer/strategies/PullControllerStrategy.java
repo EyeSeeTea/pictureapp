@@ -4,8 +4,8 @@ import android.util.Log;
 
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.ProgramLocalDataSource;
-import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
+import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.importer.ConvertFromSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.data.sync.importer.models.CategoryOptionGroupExtended;
@@ -53,7 +53,7 @@ public class PullControllerStrategy extends APullControllerStrategy {
     public void onPullDataComplete(final IPullController.Callback callback) {
         mPullController.convertData(callback);
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
-        IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitDataSource();
+        IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitRepository();
         IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
         try {
             org.eyeseetea.malariacare.domain.entity.OrganisationUnit orgUnit =

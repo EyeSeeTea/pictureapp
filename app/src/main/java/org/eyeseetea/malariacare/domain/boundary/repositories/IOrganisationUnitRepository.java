@@ -11,10 +11,21 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public interface IOrganisationUnitRepository {
-    OrganisationUnit getCurrentOrganisationUnit() throws NetworkException, ApiCallException;
+
+    interface BanOrgUnitChangeListener{
+        void onBanOrgUnitChanged(OrganisationUnit organisationUnit);
+    }
+
+    OrganisationUnit getCurrentOrganisationUnit(ReadPolicy readPolicy)
+            throws NetworkException, ApiCallException;
 
     OrganisationUnit getUserOrgUnit(Credentials credentials)
             throws PullConversionException, NetworkException, IOException, JSONException,
             ConfigJsonIOException;
+
+
+    void saveOrganisationUnit(OrganisationUnit organisationUnit);
+
+    void setBanOrgUnitChangeListener(BanOrgUnitChangeListener listener);
 
 }

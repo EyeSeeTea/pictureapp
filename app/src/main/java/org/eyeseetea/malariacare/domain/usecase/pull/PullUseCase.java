@@ -6,6 +6,8 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.strategies.APullUseCaseStrategy;
+import org.eyeseetea.malariacare.domain.usecase.strategies.PullUseCaseStrategies;
 
 public class PullUseCase implements UseCase {
 
@@ -30,11 +32,14 @@ public class PullUseCase implements UseCase {
     private PullFilters mPullFilters;
     private Callback mCallback;
 
+    private APullUseCaseStrategy mPullUseCaseStrategy;
+
     public PullUseCase(IPullController pullController, IAsyncExecutor asyncExecutor,
             IMainExecutor mainExecutor) {
         mPullController = pullController;
         mAsyncExecutor = asyncExecutor;
         mMainExecutor = mainExecutor;
+        mPullUseCaseStrategy = new PullUseCaseStrategies(this);
     }
 
     public void execute(PullFilters pullFilters, final Callback callback) {
@@ -52,7 +57,7 @@ public class PullUseCase implements UseCase {
                 //TODO jsanchez create OrgUnitRepository and when pull finish
                 //invoke remove current OrgUnit from here (only laos and cambodia)
 
-                notifyComplete();
+                mPullUseCaseStrategy.onPullComplete();
             }
 
             @Override
@@ -63,7 +68,7 @@ public class PullUseCase implements UseCase {
             @Override
             public void onError(Throwable throwable) {
                 if (throwable instanceof NetworkException) {
-                    notifyOnNetworkError();
+                    mPullUseCaseStrategy.onOnNetworkError();
                 } else if (throwable instanceof PullConversionException) {
                     notifyPullConversionError();
                 } else {
@@ -82,7 +87,7 @@ public class PullUseCase implements UseCase {
         mPullController.cancel();
     }
 
-    private void notifyComplete() {
+    public void notifyComplete() {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
@@ -101,7 +106,7 @@ public class PullUseCase implements UseCase {
 
     }
 
-    private void notifyOnNetworkError() {
+    public void notifyOnNetworkError() {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
@@ -110,7 +115,7 @@ public class PullUseCase implements UseCase {
         });
     }
 
-    private void notifyPullConversionError() {
+    public void notifyPullConversionError() {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
@@ -119,7 +124,7 @@ public class PullUseCase implements UseCase {
         });
     }
 
-    private void notifyError(final String message) {
+    public void notifyError(final String message) {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {

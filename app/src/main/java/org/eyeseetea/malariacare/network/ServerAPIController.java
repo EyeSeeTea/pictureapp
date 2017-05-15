@@ -43,7 +43,6 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Utility class that shows specific operations to check server status with the given config
@@ -171,20 +170,22 @@ public class ServerAPIController {
      * Null if something went wrong
      */
     public static String getServerVersion(String url)
-            throws IOException, JSONException, ConfigJsonIOException {
-        String serverVersion;
+            throws ApiCallException {
+        String serverVersion = null;
         String urlServerInfo = url + DHIS_SERVER_INFO;
-        Response response = executeCall(null, urlServerInfo, "GET");
-
-        //Error -> null
-        if (!response.isSuccessful()) {
-            Log.e(TAG,
-                    "getServerVersion (" + response.code() + "): " + response.body().string());
-            throw new IOException(response.message());
+        Response response = ServerApiCallExecution.executeCall(null, urlServerInfo, "GET");
+        Log.i(TAG, "Call"+urlServerInfo);
+        JSONObject body = ServerApiUtils.getApiResponseAsJSONObject(response);
+        if (body.has(TAG_VERSION)) {
+            try {
+                serverVersion = body.getString(TAG_VERSION);
+            } catch (JSONException e) {
+                new ApiCallException(e);
+            }
         }
-        JSONObject data = parseResponse(response.body().string());
-        serverVersion = data.getString(TAG_VERSION);
-        Log.i(TAG, String.format("getServerVersion(%s) -> %s", url, serverVersion));
+        if (serverVersion != null) {
+            Log.i(TAG, String.format("getServerVersion(%s) -> %s", url, serverVersion));
+        }
         return serverVersion;
     }
 
@@ -201,22 +202,6 @@ public class ServerAPIController {
             return false;
         }
         return activeNetwork.isConnectedOrConnecting();
-    }
-
-    /**
-     * Checks if the given orgUnit is open in the server.
-     *
-     * @param orgUnitNameOrCode OrgUnit code if server is 2.20, OrgUnit name if server is 2.21,2.22
-     * @return true|false
-     */
-    public static boolean isOrgUnitOpen(String url, String orgUnitNameOrCode)
-            throws ApiCallException {
-        JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
-        if (orgUnitJSON == null) {
-            return false;
-        }
-
-        return !isBanned(orgUnitJSON);
     }
 
     /**
@@ -388,6 +373,19 @@ public class ServerAPIController {
         }
     }
 
+    public static OrganisationUnit getCurrentOrgUnit()
+            throws ApiCallException {
+        String url = "";
+        String orgUnitNameOrCode = "";
+
+        url = ServerAPIController.getServerUrl();
+        orgUnitNameOrCode = ServerAPIController.getOrgUnit();
+
+        JSONObject jsonObject = getOrgUnitData(url, orgUnitNameOrCode);
+
+        return parseOrgUnit(jsonObject);
+    }
+
     public static User pullUserAttributes(User loggedUser) throws ApiCallException {
         String lastMessage = loggedUser.getAnnouncement();
         String uid = loggedUser.getUid();
@@ -462,8 +460,7 @@ public class ServerAPIController {
 
     public static OrganisationUnit getOrganisationUnitsByCode(
             String code)
-            throws PullConversionException, NetworkException, IOException, JSONException,
-            ConfigJsonIOException {
+            throws ApiCallException {
         //Version is required to choose which field to match
         String serverVersion = getServerVersion(PreferencesState.getInstance().getDhisURL());
 
@@ -477,17 +474,11 @@ public class ServerAPIController {
             if (!isNetworkAvailable()) {
                 throw new NetworkException();
             }
-            Response response = executeCall(null, urlOrgUnitData, "GET");
+            Response response = ServerApiCallExecution.executeCall(null, urlOrgUnitData, "GET");
 
-            //Error -> null
-            if (!response.isSuccessful()) {
-                Log.e(TAG, "getOrgUnitData (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
-            }
-
+            JSONObject body = ServerApiUtils.getApiResponseAsJSONObject(response);
             //{"organisationUnits":[{}]}
-            JSONObject jsonResponse = parseResponse(response.body().string());
-            JSONArray orgUnitsArray = (JSONArray) jsonResponse.get(TAG_ORGANISATIONUNITS);
+            JSONArray orgUnitsArray = (JSONArray) body.get(TAG_ORGANISATIONUNITS);
 
             //0| >1 matches -> Error
             if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
@@ -499,21 +490,20 @@ public class ServerAPIController {
             JSONObject orgUnitJO = (JSONObject) orgUnitsArray.get(0);
             return parseOrgUnit(orgUnitJO);
         } catch (NetworkException e) {
-            throw e;
+            throw new ApiCallException(e);
         } catch (Exception ex) {
-            Log.e(TAG, String.format("getOrgUnitData(%s): %s", code,
-                    ex.toString()));
-            ex.printStackTrace();
-            throw new PullConversionException();
+            throw new ApiCallException(ex);
         }
 
     }
 
     private static OrganisationUnit parseOrgUnit(JSONObject orgUnitJO)
-            throws IOException, JSONException {
+            throws ApiCallException {
         if (orgUnitJO != null) {
 
-            String uid = orgUnitJO.getString(TAG_ID);
+            String uid = null;
+            try {
+                uid = orgUnitJO.getString(TAG_ID);
             String name = orgUnitJO.has(TAG_NAME) ? orgUnitJO.getString(TAG_NAME) : "";
             String code = orgUnitJO.has(CODE) ? orgUnitJO.getString(CODE) : "";
             String description = orgUnitJO.has(TAG_DESCRIPTIONCLOSEDATE) ?
@@ -554,6 +544,9 @@ public class ServerAPIController {
 
             return new OrganisationUnit(uid, name, code, description,
                     closedDate, pin, program);
+            } catch (JSONException e) {
+                throw new ApiCallException(e);
+            }
 
         } else {
             return null;

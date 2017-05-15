@@ -15,7 +15,6 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.strategies.SurveyCheckerStrategy;
@@ -62,7 +61,7 @@ public class SurveyChecker {
      * Get events filtered by program orgUnit and between dates.
      */
     public static List<EventExtended> getEvents(String program, String orgUnit, Date minDate,
-            Date maxDate) throws IOException, JSONException, ConfigJsonIOException {
+            Date maxDate) throws ApiCallException {
             Response response;
 
             String DHIS_URL = PreferencesState.getInstance().getDhisURL();
@@ -85,10 +84,6 @@ public class SurveyChecker {
             JsonNode jsonNode = ServerApiUtils.getJsonNodeMappedResponse(events);
 
             return getEvents(jsonNode);
-
-        } catch (ApiCallException ex) {
-            return null;
-        }
     }
 
     /**
@@ -96,7 +91,7 @@ public class SurveyChecker {
      * If a survey is in the server, the survey should be set as sent. Else, the survey should be
      * set as completed and it will be resend.
      */
-    public static void checkAllQuarantineSurveys() {
+    public static void checkAllQuarantineSurveys(){
         List<Program> programs = Program.getAllPrograms();
         for (Program program : programs) {
             for (OrgUnit orgUnit : Survey.getQuarantineOrgUnits(program.getId_program())) {
@@ -114,13 +109,7 @@ public class SurveyChecker {
                     events = getEvents(program.getUid(), orgUnit.getUid(),
                             minDate,
                             maxDate);
-                }catch (IOException e){
-                    e.printStackTrace();
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                } catch (ConfigJsonIOException e) {
+                }catch (ApiCallException e){
                     e.printStackTrace();
                     return;
                 }

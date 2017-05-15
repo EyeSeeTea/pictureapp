@@ -32,10 +32,12 @@ public class InvalidLoginAttempts {
     }
 
     public void addFailedAttempts() {
-        failedLoginAttempts++;
-        if (failedLoginAttempts >= NUMBER_ATTEMPTS) {
-            enableLoginTime = new Date().getTime() + DISABLE_TIME;
-            failedLoginAttempts = 0;
+        if (isLoginEnabled()) {
+            failedLoginAttempts++;
+            if (failedLoginAttempts >= NUMBER_ATTEMPTS) {
+                enableLoginTime = new Date().getTime() + DISABLE_TIME;
+                failedLoginAttempts = 0;
+            }
         }
     }
 

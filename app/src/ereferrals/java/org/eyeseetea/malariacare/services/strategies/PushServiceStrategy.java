@@ -9,7 +9,7 @@ import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
+import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -41,7 +41,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         ICredentialsRepository credentialsLocalDataSoruce = new CredentialsLocalDataSource();
-        IOrganisationUnitRepository organisationDataSource = new OrganisationUnitDataSource();
+        IOrganisationUnitRepository organisationDataSource = new OrganisationUnitRepository();
         IInvalidLoginAttemptsRepository
                 iInvalidLoginAttemptsRepository =
                 new InvalidLoginAttemptsRepositoryLocalDataSource();

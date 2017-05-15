@@ -81,10 +81,17 @@ public class InvalidLoginAttemptsTest {
     }
 
     @Test
-    public void check_enable_if_in_constructor_passed_two_attempts() {
-        InvalidLoginAttempts invalidLoginAttempts = new InvalidLoginAttempts(2,
+    public void check_enable_if_in_constructor_passed_time_enables() {
+        InvalidLoginAttempts invalidLoginAttempts = new InvalidLoginAttempts(0,
                 new Date().getTime() + 30000);
-        assertThat(invalidLoginAttempts.isLoginEnabled(), is(true));
+        assertThat(invalidLoginAttempts.isLoginEnabled(), is(false));
+    }
+
+    @Test
+    public void check_enable_if_in_constructor_passed_two_attempts() {
+        InvalidLoginAttempts invalidLoginAttempts = new InvalidLoginAttempts(2, 0);
+        invalidLoginAttempts.addFailedAttempts();
+        assertThat(invalidLoginAttempts.isLoginEnabled(), is(false));
     }
 
 }

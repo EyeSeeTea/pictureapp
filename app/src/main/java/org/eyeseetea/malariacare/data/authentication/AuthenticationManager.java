@@ -5,9 +5,11 @@ import android.content.Context;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.datasources.AuthenticationLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.AuthenticationDhisSDKDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
@@ -15,11 +17,13 @@ import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 public class AuthenticationManager implements IAuthenticationManager {
     IAuthenticationDataSource userAccountLocalDataSource;
     IAuthenticationDataSource userAccountRemoteDataSource;
+    IUserRepository mUserRepository;
 
     public AuthenticationManager(Context context) {
 
         userAccountLocalDataSource = new AuthenticationLocalDataSource(context);
         userAccountRemoteDataSource = new AuthenticationDhisSDKDataSource(context);
+        mUserRepository = new UserAccountDataSource();
     }
 
     @Override
@@ -73,7 +77,7 @@ public class AuthenticationManager implements IAuthenticationManager {
         userAccountRemoteDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount result) {
-                credentials.setUserUid(result.getUserUid());
+                mUserRepository.saveLoggedUser(result);
                 localLogin(credentials, callback);
             }
 
@@ -100,7 +104,8 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     private void localLogin(Credentials credentials,
             final IAuthenticationManager.Callback<UserAccount> callback) {
-        userAccountLocalDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
+        userAccountLocalDataSource.login(credentials,
+                new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount userAccount) {
                 callback.onSuccess(userAccount);

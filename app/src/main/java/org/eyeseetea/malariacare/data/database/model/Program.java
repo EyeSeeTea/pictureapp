@@ -87,29 +87,30 @@ public class Program extends BaseModel {
     public static int getMaxTotalQuestions() {
         int maxTotalQuestions = 0;
         Program p = Program.getFirstProgram();
-        Question qMax = SQLite.select(Method.max(Question_Table.total_questions),
-                Question_Table.total_questions)
-                .from(Question.class).as(AppDatabase.questionName)
-                .join(Header.class, Join.JoinType.INNER).as(AppDatabase.headerName)
-                .on(Question_Table.id_header_fk.withTable(AppDatabase.questionAlias)
-                        .eq(Header_Table.id_header.withTable(AppDatabase.headerAlias)))
+        if (p != null) {
+            Question qMax = SQLite.select(Method.max(Question_Table.total_questions),
+                    Question_Table.total_questions)
+                    .from(Question.class).as(AppDatabase.questionName)
+                    .join(Header.class, Join.JoinType.INNER).as(AppDatabase.headerName)
+                    .on(Question_Table.id_header_fk.withTable(AppDatabase.questionAlias)
+                            .eq(Header_Table.id_header.withTable(AppDatabase.headerAlias)))
 
-                .join(Tab.class, Join.JoinType.INNER).as(AppDatabase.tabName)
-                .on(Header_Table.id_tab_fk.withTable(AppDatabase.headerAlias)
-                        .eq(Tab_Table.id_tab.withTable(AppDatabase.tabAlias)))
+                    .join(Tab.class, Join.JoinType.INNER).as(AppDatabase.tabName)
+                    .on(Header_Table.id_tab_fk.withTable(AppDatabase.headerAlias)
+                            .eq(Tab_Table.id_tab.withTable(AppDatabase.tabAlias)))
 
-                .join(Program.class, Join.JoinType.INNER).as(AppDatabase.programName)
-                .on(Tab_Table.id_program_fk.withTable(AppDatabase.tabAlias)
-                        .eq(Program_Table.id_program.withTable(AppDatabase.programAlias)))
+                    .join(Program.class, Join.JoinType.INNER).as(AppDatabase.programName)
+                    .on(Tab_Table.id_program_fk.withTable(AppDatabase.tabAlias)
+                            .eq(Program_Table.id_program.withTable(AppDatabase.programAlias)))
 
-                .where(Program_Table.uid_program.withTable(AppDatabase.programAlias).eq(
-                        p.getUid()))
-                .querySingle();
+                    .where(Program_Table.uid_program.withTable(AppDatabase.programAlias).eq(
+                            p.getUid()))
+                    .querySingle();
 
-        if (qMax != null && qMax.getTotalQuestions() != null) {
-            maxTotalQuestions = qMax.getTotalQuestions();
+            if (qMax != null && qMax.getTotalQuestions() != null) {
+                maxTotalQuestions = qMax.getTotalQuestions();
+            }
         }
-
         return maxTotalQuestions;
     }
 
@@ -208,6 +209,13 @@ public class Program extends BaseModel {
                 .from(Program.class)
                 .where(Program_Table.uid_program
                         .is(UID)).querySingle();
+    }
+
+    public static Program findByName(String name) {
+        return new Select()
+                .from(Program.class)
+                .where(Program_Table.name
+                        .is(name)).querySingle();
     }
 
     @Override

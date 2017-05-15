@@ -22,6 +22,10 @@ package org.eyeseetea.malariacare.domain.exception;
 public class SurveysToPushNotFoundException extends Exception {
     public static final String ERROR_MESSAGE = "Exception info: Surveys to push not found ";
 
+    public SurveysToPushNotFoundException(String message) {
+        super(ERROR_MESSAGE);
+        System.out.println(ERROR_MESSAGE + message);
+    }
     public SurveysToPushNotFoundException() {
         super(ERROR_MESSAGE);
         System.out.println(ERROR_MESSAGE);

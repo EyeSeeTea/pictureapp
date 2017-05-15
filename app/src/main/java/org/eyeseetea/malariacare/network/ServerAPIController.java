@@ -30,7 +30,11 @@ import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
+import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -62,10 +66,13 @@ public class ServerAPIController {
      */
     private static final String TAG_CLOSEDDATE = "closedDate";
 
+    private static final String TAG_NAME = "name";
+
     /**
      * Tag for orgunit description in json request/response
      */
     private static final String TAG_DESCRIPTIONCLOSEDATE = "description";
+
 
     /**
      * Tag for organisationUnits in json response
@@ -86,14 +93,14 @@ public class ServerAPIController {
      * Endpoint to retrieve orgUnits info filtering by CODE (API)
      */
     private static final String DHIS_PULL_ORG_UNIT_API =
-            "/api/organisationUnits.json?paging=false&fields=id,closedDate,"
+            "/api/organisationUnits.json?paging=false&fields=id,name,closedDate,"
                     + "description&filter=code:eq:%s&filter:programs:id:eq:%s";
 
     /**
      * Endpoint to retrieve orgUnits info filtering by NAME (SDK)
      */
     private static final String DHIS_PULL_ORG_UNIT_API_BY_NAME =
-            "/api/organisationUnits.json?paging=false&fields=id,closedDate,"
+            "/api/organisationUnits.json?paging=false&fields=id,name,closedDate,"
                     + "description&filter=name:eq:%s&filter:programs:id:eq:%s";
 
     /**
@@ -121,6 +128,10 @@ public class ServerAPIController {
     private static String VALUE = "value";
     private static String DHIS2_GMT_NEW_DATE_FORMAT = "yyyy-MM-dd";
     private static String TAG_USER = "users";
+    private static final String ANCESTORS = "ancestors";
+    private static final String LEVEL = "level";
+    private static final String OU_PIN = "OU_PIN";
+    private static final int ORG_UNIT_LEVEL = 3;
     private static String QUERY_USER_ATTRIBUTES =
             "/%s?fields=attributeValues[value,attribute[code]]id&paging=false";
 
@@ -158,15 +169,24 @@ public class ServerAPIController {
      * Returns the version of the given server.
      * Null if something went wrong
      */
-    public static String getServerVersion(String url) throws ApiCallException {
+    public static String getServerVersion(String url)
+            throws ApiCallException {
+        String serverVersion = null;
         String urlServerInfo = url + DHIS_SERVER_INFO;
         Response response = ServerApiCallExecution.executeCall(null, urlServerInfo, "GET");
-        JSONObject data = ServerApiUtils.getApiResponseAsJSONObject(response);
-        try {
-            return data.getString(TAG_VERSION);
-        } catch (JSONException e) {
-            throw new ApiCallException(e);
+        Log.i(TAG, "Call"+urlServerInfo);
+        JSONObject body = ServerApiUtils.getApiResponseAsJSONObject(response);
+        if (body.has(TAG_VERSION)) {
+            try {
+                serverVersion = body.getString(TAG_VERSION);
+            } catch (JSONException e) {
+                new ApiCallException(e);
+            }
         }
+        if (serverVersion != null) {
+            Log.i(TAG, String.format("getServerVersion(%s) -> %s", url, serverVersion));
+        }
+        return serverVersion;
     }
 
     /**
@@ -182,22 +202,6 @@ public class ServerAPIController {
             return false;
         }
         return activeNetwork.isConnectedOrConnecting();
-    }
-
-    /**
-     * Checks if the given orgUnit is open in the server.
-     *
-     * @param orgUnitNameOrCode OrgUnit code if server is 2.20, OrgUnit name if server is 2.21,2.22
-     * @return true|false
-     */
-    public static boolean isOrgUnitOpen(String url, String orgUnitNameOrCode)
-            throws ApiCallException {
-        JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
-        if (orgUnitJSON == null) {
-            return false;
-        }
-
-        return !isBanned(orgUnitJSON);
     }
 
     /**
@@ -228,18 +232,18 @@ public class ServerAPIController {
     /**
      * Bans the orgUnit for future pushes (too many too quick)
      */
-    public static boolean banOrg(String url, String orgUnitNameOrCode) {
+    public static boolean banOrg(String url, String orgUnitNameOrCode) throws ApiCallException, ConfigJsonIOException {
         Log.i(TAG, String.format("banOrg(%s,%s)", url, orgUnitNameOrCode));
         try {
+            Log.i(TAG, String.format("banOrg(%s,%s)", url, orgUnitNameOrCode));
             JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
             String orgUnitUID = "";
             String orgUnitDescription = "";
-            try {
+            if (orgUnitJSON.has(TAG_ID)) {
                 orgUnitUID = orgUnitJSON.getString(TAG_ID);
+            }
+            if (orgUnitJSON.has(TAG_DESCRIPTIONCLOSEDATE)) {
                 orgUnitDescription = orgUnitJSON.getString(TAG_DESCRIPTIONCLOSEDATE);
-            } catch (JSONException e) {
-                new ApiCallException(e);
-                return false;
             }
             //NO OrgUnitUID -> Non blocking error, go on
             if (orgUnitUID == null) {
@@ -251,6 +255,9 @@ public class ServerAPIController {
             patchClosedDate(url, orgUnitUID);
             patchDescriptionClosedDate(url, orgUnitUID, orgUnitDescription);
             return true;
+        } catch (JSONException e) {
+            throw new ApiCallException(
+                    String.format("banOrg(%s,%s): %s", url, orgUnitNameOrCode, e.getMessage()));
         } catch (ApiCallException ex) {
             return false;
         }
@@ -366,6 +373,19 @@ public class ServerAPIController {
         }
     }
 
+    public static OrganisationUnit getCurrentOrgUnit()
+            throws ApiCallException {
+        String url = "";
+        String orgUnitNameOrCode = "";
+
+        url = ServerAPIController.getServerUrl();
+        orgUnitNameOrCode = ServerAPIController.getOrgUnit();
+
+        JSONObject jsonObject = getOrgUnitData(url, orgUnitNameOrCode);
+
+        return parseOrgUnit(jsonObject);
+    }
+
     public static User pullUserAttributes(User loggedUser) throws ApiCallException {
         String lastMessage = loggedUser.getAnnouncement();
         String uid = loggedUser.getUid();
@@ -438,45 +458,135 @@ public class ServerAPIController {
         return closedDate.before(new Date());
     }
 
+    public static OrganisationUnit getOrganisationUnitsByCode(
+            String code)
+            throws ApiCallException {
+        //Version is required to choose which field to match
+        String serverVersion = getServerVersion(PreferencesState.getInstance().getDhisURL());
+
+        //No version -> No data
+        if (serverVersion == null) {
+            return null;
+        }
+
+        try {
+            String urlOrgUnitData = getOrganisationUnitsCredentialsUrl(code);
+            if (!isNetworkAvailable()) {
+                throw new NetworkException();
+            }
+            Response response = ServerApiCallExecution.executeCall(null, urlOrgUnitData, "GET");
+
+            JSONObject body = ServerApiUtils.getApiResponseAsJSONObject(response);
+            //{"organisationUnits":[{}]}
+            JSONArray orgUnitsArray = (JSONArray) body.get(TAG_ORGANISATIONUNITS);
+
+            //0| >1 matches -> Error
+            if (orgUnitsArray.length() == 0 || orgUnitsArray.length() > 1) {
+                Log.e(TAG, String.format("getOrgUnitData(%s) -> Found %d matches", code,
+                        orgUnitsArray.length()));
+                return null;
+            }
+
+            JSONObject orgUnitJO = (JSONObject) orgUnitsArray.get(0);
+            return parseOrgUnit(orgUnitJO);
+        } catch (NetworkException e) {
+            throw new ApiCallException(e);
+        } catch (Exception ex) {
+            throw new ApiCallException(ex);
+        }
+
+    }
+
+    private static OrganisationUnit parseOrgUnit(JSONObject orgUnitJO)
+            throws ApiCallException {
+        if (orgUnitJO != null) {
+
+            String uid = null;
+            try {
+                uid = orgUnitJO.getString(TAG_ID);
+            String name = orgUnitJO.has(TAG_NAME) ? orgUnitJO.getString(TAG_NAME) : "";
+            String code = orgUnitJO.has(CODE) ? orgUnitJO.getString(CODE) : "";
+            String description = orgUnitJO.has(TAG_DESCRIPTIONCLOSEDATE) ?
+                    orgUnitJO.getString(TAG_DESCRIPTIONCLOSEDATE) : "";
+            Date closedDate = orgUnitJO.has(TAG_CLOSEDDATE) ?
+                    Utils.parseStringToDate(orgUnitJO.getString(TAG_CLOSEDDATE)) : null;
+
+            JSONArray attributeValues = orgUnitJO.has(ATTRIBUTE_VALUES) ? orgUnitJO.getJSONArray(
+                    ATTRIBUTE_VALUES) : null;
+            String pin = "";
+            for (int i = 0; attributeValues != null && i < attributeValues.length(); i++) {
+                JSONObject attributeValue = attributeValues.getJSONObject(i);
+                JSONObject attribute = attributeValue.has(ATTRIBUTE)
+                        ? attributeValue.getJSONObject(ATTRIBUTE) : null;
+                String attributeCode = (attribute != null && attribute.has(CODE))
+                        ? attribute.getString(
+                        CODE) : "";
+                if (attributeCode.equals(OU_PIN)) {
+                    pin = attributeValue.has(VALUE) ? attributeValue.getString(VALUE) : "";
+                }
+            }
+
+            org.eyeseetea.malariacare.domain.entity.Program program = new org.eyeseetea
+                    .malariacare.domain.entity.Program();
+
+            JSONArray ancestors = orgUnitJO.has(ANCESTORS) ? orgUnitJO.getJSONArray(ANCESTORS)
+                    : null;
+            for (int i = 0; ancestors != null && i < ancestors.length(); i++) {
+                if (ancestors.getJSONObject(i).has(LEVEL) && ancestors.getJSONObject(i).getInt(
+                        LEVEL) == ORG_UNIT_LEVEL) {
+                    program.setId(ancestors.getJSONObject(i).has(TAG_ID) ? ancestors.getJSONObject(
+                            i).getString(TAG_ID) : "");
+                    program.setCode(
+                            ancestors.getJSONObject(i).has(CODE) ? ancestors.getJSONObject(
+                                    i).getString(CODE) : "");
+                }
+            }
+
+            return new OrganisationUnit(uid, name, code, description,
+                    closedDate, pin, program);
+            } catch (JSONException e) {
+                throw new ApiCallException(e);
+            }
+
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Checks if the orgunit is closed (due to too much surveys being pushed)
      */
-    static boolean isBanned(JSONObject orgUnitJSON) throws ApiCallException {
+    static boolean isBanned(JSONObject orgUnitJSON) throws JSONException {
         if (orgUnitJSON == null) {
             return true;
         }
         Log.d(TAG, String.format("isBanned(%s)", orgUnitJSON.toString()));
-        try {
-            String closedDateAsString = getClosedDate(orgUnitJSON);
-            //No closedDate -> Open
-            if (closedDateAsString == null || closedDateAsString.isEmpty()) {
-                return false;
-            }
-
-            //CloseDate -> Check dates
-            Calendar calendarClosedDate = Utils.parseStringToCalendar(closedDateAsString);
-
-            //ClosedDate bad format -> Closed
-            if (calendarClosedDate == null) {
-                return true;
-            }
-
-            //If closeddate>today -> Closed
-            return !Utils.isDateOverSystemDate(calendarClosedDate);
-
-        } catch (NullPointerException ex) {
-            throw new ApiCallException(ex);
+        String closedDateAsString = getClosedDate(orgUnitJSON);
+        //No closedDate -> Open
+        if (closedDateAsString == null || closedDateAsString.isEmpty()) {
+            return false;
         }
+
+        //CloseDate -> Check dates
+        Calendar calendarClosedDate = Utils.parseStringToCalendar(closedDateAsString);
+
+        //ClosedDate bad format -> Closed
+        if (calendarClosedDate == null) {
+            return true;
+        }
+
+        //If closeddate>today -> Closed
+        return !Utils.isDateOverSystemDate(calendarClosedDate);
     }
 
     /**
      * Returns the closedDate from the given orgUnit (json format) or null if it is not present
      * (which is fine too)
      */
-    static String getClosedDate(JSONObject orgUnitJSON) {
-        try {
+    static String getClosedDate(JSONObject orgUnitJSON) throws JSONException {
+        if (orgUnitJSON.has(TAG_CLOSEDDATE)) {
             return orgUnitJSON.getString(TAG_CLOSEDDATE);
-        } catch (JSONException ex) {
+        } else {
             return null;
         }
     }
@@ -498,6 +608,14 @@ public class ServerAPIController {
         Log.d(TAG, String.format("getOrgUnitDataUrl(%s,%s,%s) -> %s", url, serverVersion,
                 orgUnitNameOrCode, endpoint));
         return endpoint;
+    }
+
+    static String getOrganisationUnitsCredentialsUrl(String code) {
+        String url = PreferencesState.getInstance().getDhisURL()
+                + "/api/organisationUnits.json?filter=code:eq:%s&fields=id,code,ancestors[id,"
+                + "code,level],attributeValues[value,attribute[code]";
+        url = String.format(url, code);
+        return url;
     }
 
     /**

@@ -336,8 +336,6 @@ public class Survey extends BaseModel implements VisitableToSDK {
                         .isNot(Constants.SURVEY_SENT))
                 .and(Survey_Table.status.withTable(surveyAlias)
                         .isNot(Constants.SURVEY_CONFLICT))
-                .and(Survey_Table.status.withTable(surveyAlias)
-                        .isNot(Constants.SURVEY_QUARANTINE))
                 .and(Program_Table.uid_program.withTable(programAlias)
                         .is(malariaProgramUid))
                 .orderBy(OrderBy.fromProperty(Survey_Table.event_date.withTable(surveyAlias)))
@@ -360,9 +358,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
                                 .is(malariaProgramUid))
                         .and(ConditionGroup.clause()
                                 .and(Survey_Table.status.withTable(surveyAlias)
-                                        .is(Constants.SURVEY_SENT))
-                                .or(Survey_Table.status.withTable(surveyAlias)
-                                        .is(Constants.SURVEY_QUARANTINE))))
+                                        .is(Constants.SURVEY_SENT)))
+                .or(Survey_Table.status.eq(Constants.SURVEY_CONFLICT)))
                 .orderBy(Survey_Table.event_date, false).queryList();
     }
 
@@ -571,6 +568,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     public static List<Survey> findSentSurveysAfterDate(Date minDateForMonitor) {
         return new Select().from(Survey.class)
                 .where(Survey_Table.status.eq(Constants.SURVEY_SENT))
+                .or(Survey_Table.status.eq(Constants.SURVEY_CONFLICT))
                 .and(Survey_Table.event_date.greaterThanOrEq(
                         minDateForMonitor)).queryList();
     }

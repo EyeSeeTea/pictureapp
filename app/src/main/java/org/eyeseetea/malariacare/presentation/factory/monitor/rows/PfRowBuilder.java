@@ -29,8 +29,7 @@ import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonito
 public class PfRowBuilder extends CounterRowBuilder {
 
     public PfRowBuilder(Context context) {
-        super(context,
-                context.getString(R.string.monitor_row_title, context.getString(R.string.Pf)));
+        super(context,"");
     }
 
     @Override

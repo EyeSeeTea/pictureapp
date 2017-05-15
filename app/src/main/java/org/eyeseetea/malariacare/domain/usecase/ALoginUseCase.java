@@ -16,6 +16,10 @@ public abstract class ALoginUseCase {
         void onNetworkError();
 
         void onConfigJsonInvalid();
+
+        void onUnexpectedError();
+
+        void onMaxLoginAttemptsReachedError();
     }
 
     public abstract void execute(Credentials credentials, Callback callback);

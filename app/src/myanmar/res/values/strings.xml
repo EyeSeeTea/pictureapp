@@ -308,6 +308,7 @@
 <string name="previous_distributions">"Previous distributions"</string>
 <string name="network_error">"There is a problem with the network, please try again later."</string>
 <string name="login_invalid_credentials">"Invalid credentials"</string>
+<string name="login_unexpected_error">"An error has occurred, please try again later"</string>
 <string name="login_invalid_server_url">"Invalid Server URL"</string>
 <string name="login_error_json">Error reading json config file. Please contact your administrator.</string>
 <string name="see_resets">"See Resets"</string>
@@ -338,6 +339,7 @@
 <string name="survey_fourth_step">"Creating screens..."</string>
 <string name="admin_announcement">"Administrator announcement"</string>
 <string name="user_close">"This user was closed by de administrator."</string>
+<string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator. "</string>
 <string name="db_migration_error">"Please inform the administrator, the application may need to be reinstalled"</string>
 <string name="error_exporting_data">"Error metadata could not be exported."</string>
 </resources>

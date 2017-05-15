@@ -4,7 +4,7 @@
     <string name="rdtPositive" translatable="false">Positive</string>
     <string name="rdtNegative" translatable="false">Negative</string>
     <string name="rdtNotTested" translatable="false">Not Tested</string>
-    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://www.psi-mis.org</string>
+    <string name="DHIS_DEFAULT_SERVER" translatable="false">https://data.psi-mis.org</string>
     <string name="work_in_progress" translatable="false">Work in progress</string>
 
 

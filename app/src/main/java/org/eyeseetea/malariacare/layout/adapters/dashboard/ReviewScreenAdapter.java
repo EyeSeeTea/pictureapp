@@ -7,10 +7,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TableRow;
 
+import com.google.common.collect.Iterables;
+
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Value;
+import org.eyeseetea.malariacare.data.database.model.OptionAttribute;
+import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapter {
@@ -19,10 +24,10 @@ public class ReviewScreenAdapter extends BaseAdapter implements IDashboardAdapte
     private LayoutInflater lInflater;
     private Context context;
     private Integer headerLayout;
-    private Integer subHeaderLayout;
     private Integer footerLayout;
     private Integer recordLayout;
     private String title;
+    private Integer subHeaderLayout;
 
     public ReviewScreenAdapter(List<Value> items, LayoutInflater inflater, Context context) {
         this.items = items;

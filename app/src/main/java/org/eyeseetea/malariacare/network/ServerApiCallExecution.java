@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.network;
 
+import android.util.Log;
+
 import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -28,7 +30,7 @@ public class ServerApiCallExecution {
     static Response executeCall(JSONObject data, String url, String method)
             throws ApiCallException {
         final String DHIS_URL = url;
-
+        Log.d(method, DHIS_URL);
         OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
         BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
 

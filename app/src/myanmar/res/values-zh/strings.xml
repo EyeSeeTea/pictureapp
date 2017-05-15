@@ -294,6 +294,7 @@
 <string name="previous_distributions">"先前分配"</string>
 <string name="network_error">"有與網絡問題 請稍後重試"</string>
 <string name="login_invalid_credentials">"無效的憑證"</string>
+    <string name="login_unexpected_error">"发生错误，请稍后再试"</string>
 <string name="login_invalid_server_url">"無效的服務器"</string>
 <string name="login_error_json">读取json配置文件时出错。 请联系您的管理员。</string>
 <string name="see_resets">"查看之前校正库存登记"</string>
@@ -323,6 +324,7 @@
 <string name="admin_announcement">"管理员公告"</string>
 <string name="user_close">"该用户被管理员关闭。"</string>
 <string name="run_in_demo_mode">"在演示模式下运行"</string>
+<string name="error_message_push">""UID：%s 的事件。 没有日期上传。 请联系管理员。""</string>
 <string name="db_migration_error">"请通知管理员，申请可能需要重新安装"</string>
 <string name="error_exporting_data">"无法导出错误元数据。"</string>
 </resources>

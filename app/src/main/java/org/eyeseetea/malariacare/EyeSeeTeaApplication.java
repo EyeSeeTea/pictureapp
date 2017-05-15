@@ -43,10 +43,19 @@ public class EyeSeeTeaApplication extends Application {
     private static final String TAG = ".EyeSeeTeaApplication";
     public static Permissions permissions;
 
+    private static boolean isAppWentToBg = false;
+
+    private static boolean isWindowFocused = false;
+
+    private static boolean isBackPressed = false;
+
+    private static EyeSeeTeaApplication mInstance;
+
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
+        mInstance = this;
         Fabric.with(this, new Crashlytics());
         PreferencesState.getInstance().init(getApplicationContext());
         FlowConfig flowConfig = new FlowConfig
@@ -72,5 +81,33 @@ public class EyeSeeTeaApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+    public static EyeSeeTeaApplication getInstance() {
+        return mInstance;
+    }
+
+    public boolean isAppWentToBg() {
+        return isAppWentToBg;
+    }
+
+    public void setIsAppWentToBg(boolean isAppWentToBg) {
+        EyeSeeTeaApplication.isAppWentToBg = isAppWentToBg;
+    }
+
+    public boolean isWindowFocused() {
+        return isWindowFocused;
+    }
+
+    public void setIsWindowFocused(boolean isWindowFocused) {
+        EyeSeeTeaApplication.isWindowFocused = isWindowFocused;
+    }
+
+    public boolean isBackPressed() {
+        return isBackPressed;
+    }
+
+    public void setIsBackPressed(boolean isBackPressed) {
+        EyeSeeTeaApplication.isBackPressed = isBackPressed;
     }
 }

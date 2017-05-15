@@ -26,6 +26,8 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.squareup.okhttp.Response;
 
+import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -227,6 +229,41 @@ public class ServerAPIController {
         }
     }
 
+    public static void saveOrganisationUnit(OrganisationUnit organisationUnit) {
+        patchClosedDate(organisationUnit);
+        patchDescription(organisationUnit);
+    }
+
+    static void patchDescription(OrganisationUnit organisationUnit) {
+        String url = ServerAPIController.getServerUrl();
+        try {
+            String urlPathClosedDescription = getPatchClosedDescriptionUrl(url,
+                    organisationUnit.getUid());
+            JSONObject data = parseOrganisationUnitDescriptionToJson(
+                    organisationUnit.getDescription());
+            Response response = ServerApiCallExecution.executeCall(data, urlPathClosedDescription, "PATCH");
+            ServerApiUtils.checkResponse(response, null);
+        } catch (Exception e) {
+            Log.e(TAG, String.format("patchDescriptionClosedDate(%s,%s): %s", url,
+                    organisationUnit.getUid(),
+                    e.getMessage()));
+        }
+    }
+
+    /**
+     * Pull the current description.
+     *
+     * @return new description.
+     * @url url for pull the current description
+     */
+    static JSONObject parseOrganisationUnitDescriptionToJson(String orgUnitDescription)
+            throws Exception {
+        //As a JSON
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_DESCRIPTIONCLOSEDATE, orgUnitDescription);
+        return elementObject;
+    }
+
     /**
      * Bans the orgUnit for future pushes (too many too quick)
      */
@@ -277,6 +314,30 @@ public class ServerAPIController {
 
     }
 
+    /**
+     * Updates the orgUnit adding a closedDate
+     */
+    static void patchClosedDate(OrganisationUnit organisationUnit) {
+        String url = ServerAPIController.getServerUrl();
+        try {
+            String urlPathClosedDate = getPatchClosedDateUrl(url, organisationUnit.getUid());
+            JSONObject data = prepareCloseDateValue(organisationUnit);
+            Response response = ServerApiCallExecution.executeCall(data, urlPathClosedDate, "PATCH");
+            ServerApiUtils.checkResponse(response, null);
+        } catch (Exception e) {
+            Log.e(TAG,
+                    String.format("patchClosedDate(%s,%s): %s", url, organisationUnit.getUid(),
+                            e.getMessage()));
+        }
+    }
+
+    static JSONObject prepareCloseDateValue(OrganisationUnit organisationUnit) throws JSONException {
+        String dateFormatted = Utils.parseDateToString(organisationUnit.getClosedDate(),
+                DATE_CLOSED_DATE_FORMAT);
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_CLOSEDDATE, dateFormatted);
+        return elementObject;
+    }
     /**
      * Prepare the closing value.
      *

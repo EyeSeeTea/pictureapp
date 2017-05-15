@@ -45,7 +45,6 @@ import java.util.Map;
 import java.util.Set;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
@@ -69,7 +68,7 @@ public class PushDhisSDKDataSource {
 
         eventObserver
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(new Action1<Map<String, ImportSummary>>() {
                     @Override
                     public void call(Map<String, ImportSummary> mapEventsImportSummary) {

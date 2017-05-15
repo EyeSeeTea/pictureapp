@@ -13,8 +13,10 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
@@ -104,7 +106,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     }
 
     @Override
-    public void initNavigationController() {
+    public void initNavigationController() throws LoadingNavigationControllerException {
         NavigationBuilder.getInstance().buildController(
                 Tab.getFirstTabWithProgram(PreferencesEReferral.getUserProgramId()));
     }

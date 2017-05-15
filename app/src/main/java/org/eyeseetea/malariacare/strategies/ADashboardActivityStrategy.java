@@ -18,6 +18,7 @@ import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 
 public abstract class ADashboardActivityStrategy {

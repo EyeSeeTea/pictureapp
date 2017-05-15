@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
+import com.google.android.gms.common.api.Api;
+
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -10,6 +12,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -91,17 +94,18 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
             }
             orgUnitCredentials = new Credentials("", orgUnit.getCode(), orgUnit.getPin());
 
-        } catch (PullConversionException | JSONException | ConfigJsonIOException e) {
-            e.printStackTrace();
-            notifyConfigJsonNotPresent();
+        } catch (ApiCallException e) {
+            if(e.getCause() instanceof  IOException){
+                notifyUnexpectedError();
+            }else {
+                e.printStackTrace();
+                notifyConfigJsonNotPresent();
+            }
         } catch (NetworkException e) {
             e.printStackTrace();
             checkUserCredentialsWithOrgUnit(
                     mCredentialsLocalDataSource.getOrganisationCredentials(),
                     true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            notifyUnexpectedError();
         }
 
         mCredentialsLocalDataSource.saveOrganisationCredentials(orgUnitCredentials);

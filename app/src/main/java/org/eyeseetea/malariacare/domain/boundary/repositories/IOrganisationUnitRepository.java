@@ -14,7 +14,6 @@ public interface IOrganisationUnitRepository {
     OrganisationUnit getCurrentOrganisationUnit() throws NetworkException, ApiCallException;
 
     OrganisationUnit getUserOrgUnit(Credentials credentials)
-            throws PullConversionException, NetworkException, IOException, JSONException,
-            ConfigJsonIOException, ApiCallException;
+            throws NetworkException, ApiCallException;
 
 }

@@ -34,7 +34,6 @@ import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
-import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.json.JSONArray;
@@ -174,7 +173,6 @@ public class ServerAPIController {
         String serverVersion = null;
         String urlServerInfo = url + DHIS_SERVER_INFO;
         Response response = ServerApiCallExecution.executeCall(null, urlServerInfo, "GET");
-        Log.i(TAG, "Call"+urlServerInfo);
         JSONObject body = ServerApiUtils.getApiResponseAsJSONObject(response);
         if (body.has(TAG_VERSION)) {
             try {
@@ -504,43 +502,45 @@ public class ServerAPIController {
             String uid = null;
             try {
                 uid = orgUnitJO.getString(TAG_ID);
-            String name = orgUnitJO.has(TAG_NAME) ? orgUnitJO.getString(TAG_NAME) : "";
-            String code = orgUnitJO.has(CODE) ? orgUnitJO.getString(CODE) : "";
-            String description = orgUnitJO.has(TAG_DESCRIPTIONCLOSEDATE) ?
-                    orgUnitJO.getString(TAG_DESCRIPTIONCLOSEDATE) : "";
-            Date closedDate = orgUnitJO.has(TAG_CLOSEDDATE) ?
-                    Utils.parseStringToDate(orgUnitJO.getString(TAG_CLOSEDDATE)) : null;
+                String name = orgUnitJO.has(TAG_NAME) ? orgUnitJO.getString(TAG_NAME) : "";
+                String code = orgUnitJO.has(CODE) ? orgUnitJO.getString(CODE) : "";
+                String description = orgUnitJO.has(TAG_DESCRIPTIONCLOSEDATE) ?
+                        orgUnitJO.getString(TAG_DESCRIPTIONCLOSEDATE) : "";
+                Date closedDate = orgUnitJO.has(TAG_CLOSEDDATE) ?
+                        Utils.parseStringToDate(orgUnitJO.getString(TAG_CLOSEDDATE)) : null;
 
-            JSONArray attributeValues = orgUnitJO.has(ATTRIBUTE_VALUES) ? orgUnitJO.getJSONArray(
-                    ATTRIBUTE_VALUES) : null;
-            String pin = "";
-            for (int i = 0; attributeValues != null && i < attributeValues.length(); i++) {
-                JSONObject attributeValue = attributeValues.getJSONObject(i);
-                JSONObject attribute = attributeValue.has(ATTRIBUTE)
-                        ? attributeValue.getJSONObject(ATTRIBUTE) : null;
-                String attributeCode = (attribute != null && attribute.has(CODE))
-                        ? attribute.getString(
-                        CODE) : "";
-                if (attributeCode.equals(OU_PIN)) {
-                    pin = attributeValue.has(VALUE) ? attributeValue.getString(VALUE) : "";
+                JSONArray attributeValues = orgUnitJO.has(ATTRIBUTE_VALUES)
+                        ? orgUnitJO.getJSONArray(
+                        ATTRIBUTE_VALUES) : null;
+                String pin = "";
+                for (int i = 0; attributeValues != null && i < attributeValues.length(); i++) {
+                    JSONObject attributeValue = attributeValues.getJSONObject(i);
+                    JSONObject attribute = attributeValue.has(ATTRIBUTE)
+                            ? attributeValue.getJSONObject(ATTRIBUTE) : null;
+                    String attributeCode = (attribute != null && attribute.has(CODE))
+                            ? attribute.getString(
+                            CODE) : "";
+                    if (attributeCode.equals(OU_PIN)) {
+                        pin = attributeValue.has(VALUE) ? attributeValue.getString(VALUE) : "";
+                    }
                 }
-            }
 
-            org.eyeseetea.malariacare.domain.entity.Program program = new org.eyeseetea
-                    .malariacare.domain.entity.Program();
+                org.eyeseetea.malariacare.domain.entity.Program program = new org.eyeseetea
+                        .malariacare.domain.entity.Program();
 
-            JSONArray ancestors = orgUnitJO.has(ANCESTORS) ? orgUnitJO.getJSONArray(ANCESTORS)
-                    : null;
-            for (int i = 0; ancestors != null && i < ancestors.length(); i++) {
-                if (ancestors.getJSONObject(i).has(LEVEL) && ancestors.getJSONObject(i).getInt(
-                        LEVEL) == ORG_UNIT_LEVEL) {
-                    program.setId(ancestors.getJSONObject(i).has(TAG_ID) ? ancestors.getJSONObject(
-                            i).getString(TAG_ID) : "");
-                    program.setCode(
-                            ancestors.getJSONObject(i).has(CODE) ? ancestors.getJSONObject(
-                                    i).getString(CODE) : "");
+                JSONArray ancestors = orgUnitJO.has(ANCESTORS) ? orgUnitJO.getJSONArray(ANCESTORS)
+                        : null;
+                for (int i = 0; ancestors != null && i < ancestors.length(); i++) {
+                    if (ancestors.getJSONObject(i).has(LEVEL) && ancestors.getJSONObject(i).getInt(
+                            LEVEL) == ORG_UNIT_LEVEL) {
+                        program.setId(
+                                ancestors.getJSONObject(i).has(TAG_ID) ? ancestors.getJSONObject(
+                                        i).getString(TAG_ID) : "");
+                        program.setCode(
+                                ancestors.getJSONObject(i).has(CODE) ? ancestors.getJSONObject(
+                                        i).getString(CODE) : "");
+                    }
                 }
-            }
 
             return new OrganisationUnit(uid, name, code, description,
                     closedDate, pin, program);

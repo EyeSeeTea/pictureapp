@@ -82,7 +82,11 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                         .setPositiveButton(android.R.string.yes,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface arg0, int arg1) {
-                                        logout();
+                                        if (mBaseActivity instanceof DashboardActivity) {
+                                            ((DashboardActivity) mBaseActivity).executeLogout();
+                                        } else {
+                                            logout();
+                                        }
                                     }
                                 })
                         .setNegativeButton(android.R.string.no,

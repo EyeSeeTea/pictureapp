@@ -13,15 +13,14 @@ import android.widget.ListView;
 import com.google.common.collect.Iterables;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -117,21 +116,8 @@ public class ReviewFragment extends Fragment {
     }
 
     private List<Value> orderValues(List<Value> values) {
-        List<Value> orderedList = new ArrayList<>();
-        NavigationController navigationController = Session.getNavigationController();
-        navigationController.first();
-        Question nextQuestion = null;
-        do {
-            for (Value value : values) {
-                if (value.getQuestion() != null) {
-                    if (value.getQuestion().equals(navigationController.getCurrentQuestion())) {
-                        orderedList.add(value);
-                        nextQuestion = navigationController.next(value.getOption());
-                    }
-                }
-            }
-        } while (nextQuestion != null);
-        return orderedList;
+        ReviewFragmentStrategy reviewFragmentStrategy = new ReviewFragmentStrategy();
+        return reviewFragmentStrategy.orderValues(values);
     }
 
     private List<Value> getReviewValues() {

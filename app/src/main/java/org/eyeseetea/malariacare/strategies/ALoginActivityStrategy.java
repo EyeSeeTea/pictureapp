@@ -51,11 +51,13 @@ public abstract class ALoginActivityStrategy {
     public abstract void initLoginUseCase(IAuthenticationManager authenticationManager);
 
     public void checkCredentials(Credentials credentials, Callback callback) {
-        callback.onSuccess();
+        callback.onSuccessDoLogin();
     }
 
     public interface Callback {
         void onSuccess();
+
+        void onSuccessDoLogin();
 
         void onError();
     }

@@ -33,8 +33,12 @@ public class PreferencesEReferral {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        String username = credentials.getUsername();
-        String pin = credentials.getPassword();
+        String username = null;
+        String pin = null;
+        if (credentials != null) {
+            username = credentials.getUsername();
+            pin = credentials.getPassword();
+        }
         editor.putString(context.getString(R.string.logged_user_username), username);
         editor.putString(context.getString(R.string.logged_user_pin), pin);
         editor.commit();

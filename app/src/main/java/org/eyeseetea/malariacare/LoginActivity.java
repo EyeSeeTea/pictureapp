@@ -278,6 +278,11 @@ public class LoginActivity extends Activity {
         mLoginActivityStrategy.checkCredentials(credentials, new ALoginActivityStrategy.Callback() {
             @Override
             public void onSuccess() {
+                mLoginActivityStrategy.onLoginSuccess(credentials);
+            }
+
+            @Override
+            public void onSuccessDoLogin() {
                 executeLoginUseCase(credentials);
             }
 

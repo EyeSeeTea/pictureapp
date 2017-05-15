@@ -164,9 +164,13 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public void checkCredentials(Credentials credentials, final Callback callback) {
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
         Credentials savedCredentials = credentialsLocalDataSource.getOrganisationCredentials();
-
         if (savedCredentials == null || savedCredentials.getUsername().equals(
-                credentials.getUsername())) {
+                credentials.getUsername()) && !savedCredentials.getPassword().equals(
+                credentials.getPassword())) {
+            callback.onSuccessDoLogin();
+        } else if (savedCredentials.getUsername().equals(
+                credentials.getUsername()) && savedCredentials.getPassword().equals(
+                credentials.getPassword())) {
             callback.onSuccess();
         } else {
             IAuthenticationManager iAuthenticationManager = new AuthenticationManager(
@@ -175,7 +179,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             logoutUseCase.execute(new LogoutUseCase.Callback() {
                 @Override
                 public void onLogoutSuccess() {
-                    callback.onSuccess();
+                    callback.onSuccessDoLogin();
                 }
 
                 @Override

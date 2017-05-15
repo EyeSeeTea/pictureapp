@@ -555,6 +555,7 @@ public class LoginActivity extends Activity {
         protected Void doInBackground(LoginActivity... params) {
             loginActivity = params[0];
             if(Session.getUser()==null){
+                isUserClosed = null;
                 return null;
             }
             try {

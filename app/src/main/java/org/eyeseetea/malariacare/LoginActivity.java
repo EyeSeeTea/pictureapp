@@ -60,6 +60,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.strategies.ALoginActivityStrategy;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
@@ -274,7 +275,23 @@ public class LoginActivity extends Activity {
     public void login(String serverUrl, String username, String password) {
         final Credentials credentials = new Credentials(serverUrl, username, password);
         onStartLoading();
+        mLoginActivityStrategy.checkCredentials(credentials, new ALoginActivityStrategy.Callback() {
+            @Override
+            public void onSuccess() {
+                executeLoginUseCase(credentials);
+            }
 
+            @Override
+            public void onError() {
+                hideProgressBar();
+                showError(getString(R.string.login_unexpected_error));
+            }
+        });
+
+    }
+
+
+    private void executeLoginUseCase(final Credentials credentials) {
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {

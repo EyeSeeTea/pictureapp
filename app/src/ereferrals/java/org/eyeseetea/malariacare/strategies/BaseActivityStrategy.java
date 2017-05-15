@@ -16,6 +16,7 @@ import android.widget.Toast;
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
+import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
@@ -119,7 +120,9 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         mLogoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {
-                ActivityCompat.finishAffinity(mBaseActivity);
+                Intent loginIntent = new Intent(mBaseActivity, LoginActivity.class);
+                loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                mBaseActivity.startActivity(loginIntent);
             }
 
             @Override
@@ -147,7 +150,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public void onStop() {
         applicationdidenterbackground();
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-            logout();
+            ActivityCompat.finishAffinity(mBaseActivity);
         }
         mBaseActivity.unregisterReceiver(connectionReceiver);
     }

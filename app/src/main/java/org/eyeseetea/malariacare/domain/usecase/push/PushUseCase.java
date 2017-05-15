@@ -1,20 +1,24 @@
 package org.eyeseetea.malariacare.domain.usecase.push;
 
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.model.Survey;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
+import org.eyeseetea.malariacare.domain.entity.Survey;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
-import org.eyeseetea.malariacare.domain.exception.ImportSummaryErrorException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
-import org.eyeseetea.malariacare.network.BanOrgUnitExecutor;
+import org.eyeseetea.malariacare.domain.service.OverLimitSurveysDomainService;
+import org.eyeseetea.malariacare.domain.usecase.UseCase;
 
 import java.util.List;
 
-public class PushUseCase {
+public class PushUseCase implements UseCase {
 
     public interface Callback {
         void onComplete();
@@ -33,151 +37,262 @@ public class PushUseCase {
 
         void onClosedUser();
 
-        void onBannedOrgUnitError();
+        void onBannedOrgUnit();
 
         void onReOpenOrgUnit();
+
+        void onApiCallError(ApiCallException e);
     }
 
-    private static int DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR = 30;
-
-    private static int DHIS_LIMIT_HOURS = 1;
-
     private IPushController mPushController;
-    private BanOrgUnitExecutor mBanOrgUnitExecutor;
+    private ISurveyRepository mSurveyRepository;
+    private IOrganisationUnitRepository mOrganisationUnitRepository;
 
-    public PushUseCase(IPushController pushController) {
+    private IAsyncExecutor mAsyncExecutor;
+    private IMainExecutor mMainExecutor;
+
+    private Callback mCallback;
+
+    private SurveysThresholds mSurveysThresholds;
+
+    public PushUseCase(IPushController pushController, IAsyncExecutor asyncExecutor,
+            IMainExecutor mainExecutor, SurveysThresholds surveysThresholds,
+            ISurveyRepository surveyRepository,
+            IOrganisationUnitRepository organisationUnitRepository) {
         mPushController = pushController;
-        mBanOrgUnitExecutor = new BanOrgUnitExecutor();
+        mAsyncExecutor = asyncExecutor;
+        mMainExecutor = mainExecutor;
+        mSurveysThresholds = surveysThresholds;
+        mSurveyRepository = surveyRepository;
+        mOrganisationUnitRepository = organisationUnitRepository;
     }
 
     public void execute(final Callback callback) {
+        mCallback = callback;
+
+        mAsyncExecutor.run(this);
+    }
+
+    @Override
+    public void run() {
+
         if (mPushController.isPushInProgress()) {
-            callback.onPushInProgressError();
+            notifyPushInProgressError();
             return;
         }
 
-        mBanOrgUnitExecutor.isOrgUnitBanned(new BanOrgUnitExecutor.isOrgUnitBannedCallback() {
-            @Override
-            public void onSuccess(boolean isBanned) {
-                OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
-                if (isBanned)
-                {
-                    if (orgUnit!=null && !orgUnit.isBanned()) {
-                        orgUnit.setBan(true);
-                        orgUnit.save();
-                        callback.onBannedOrgUnitError();
-
-                    }
-                } else {
-                    if (orgUnit!=null && orgUnit.isBanned()) {
-                        orgUnit.setBan(false);
-                        orgUnit.save();
-                        callback.onReOpenOrgUnit();
-                    }
-                    runPush(callback);
-                }
-            }
-
-            @Override
-            public void onError() {
-                callback.onPushError();
-            }
-        });
-
-
-    }
-
-    private void resetOrgUnit() {
-        //TODO: use case should not invoke directly PreferenceState because belongs to the outer
-        // layer
-        PreferencesState.getInstance().saveStringPreference(R.string.org_unit, "");
-        PreferencesState.getInstance().reloadPreferences();
-    }
-
-    private void runPush(final Callback callback) {
         mPushController.changePushInProgress(true);
+
+        try {
+            configureBanOrgUnitChangeListener();
+
+            boolean isBanned = isOrgUnitBanned();
+
+            if (isBanned) {
+                mPushController.changePushInProgress(false);
+            } else {
+                runPush();
+            }
+
+        } catch (Exception e) {
+            mPushController.changePushInProgress(false);
+            notifyPushError();
+        }
+    }
+
+    private void configureBanOrgUnitChangeListener() {
+        mOrganisationUnitRepository.setBanOrgUnitChangeListener(
+                new IOrganisationUnitRepository.BanOrgUnitChangeListener() {
+                    @Override
+                    public void onBanOrgUnitChanged(OrganisationUnit organisationUnit) {
+                        if (organisationUnit.isBanned()) {
+                            notifyBannedOrgUnitError();
+                        } else {
+                            notifyReOpenOrgUnit();
+                        }
+                    }
+                });
+    }
+
+    private boolean isOrgUnitBanned() {
+        OrganisationUnit orgUnit = null;
+        try {
+            orgUnit = mOrganisationUnitRepository.getCurrentOrganisationUnit(
+                    ReadPolicy.REMOTE);
+        } catch (NetworkException e) {
+            mPushController.changePushInProgress(false);
+            notifyNetworkError();
+        } catch (ApiCallException e) {
+            mPushController.changePushInProgress(false);
+            notifyApiCallError(e);
+        }
+        return orgUnit.isBanned();
+    }
+
+    private void runPush() {
 
         mPushController.push(new IPushController.IPushControllerCallback() {
             @Override
             public void onComplete() {
                 mPushController.changePushInProgress(false);
 
-                callback.onComplete();
+                notifyComplete();
 
-                banOrgUnitIfRequired(callback);
+                banOrgUnitIfRequired();
+            }
+
+            @Override
+            public void onInformativeError(Throwable throwable) {
+                mPushController.changePushInProgress(false);
+                notifyInformativeError(throwable.getMessage());
+                banOrgUnitIfRequired();
             }
 
             @Override
             public void onError(Throwable throwable) {
                 mPushController.changePushInProgress(false);
-
+                System.out.println("PusUseCase error");
                 if (throwable instanceof NetworkException) {
-                    callback.onNetworkError();
+                    notifyNetworkError();
                 } else if (throwable instanceof ConversionException) {
-                    callback.onConversionError();
+                    notifyConversionError();
                 } else if (throwable instanceof SurveysToPushNotFoundException) {
-                    callback.onSurveysNotFoundError();
-                } else if (throwable instanceof ImportSummaryErrorException) {
-                    callback.onInformativeError(throwable.getMessage());
-                    banOrgUnitIfRequired(callback);
-                }else if (throwable instanceof ClosedUserPushException){
-                    callback.onClosedUser();
+                    notifySurveysNotFoundError();
+                } else if (throwable instanceof ClosedUserPushException) {
+                    notifyClosedUser();
                 } else {
-                    callback.onPushError();
+                    notifyPushError();
                 }
+
             }
         });
     }
 
-    private void banOrgUnitIfRequired(final Callback callback) {
-        //TODO: use case should not invoke directly Survey because belongs to the outer layer
-        List<Survey> sentSurveys = Survey.getAllHideAndSentSurveys(
-                DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR);
+    private void banOrgUnitIfRequired() {
+        if (mSurveysThresholds.getCount() > 0 && mSurveysThresholds.getTimeHours() > 0) {
+            List<Survey> sentSurveys = mSurveyRepository.getLastSentSurveys(
+                    mSurveysThresholds.getCount());
 
-        if (isSurveysOverLimit(sentSurveys)) {
-            mBanOrgUnitExecutor.banOrgUnit(new BanOrgUnitExecutor.banOrgUnitCallback() {
-                @Override
-                public void onSuccess() {
-                    System.out.println("OrgUnit banned successfully");
-                    resetOrgUnit();
-                }
-
-                @Override
-                public void onError() {
-                    callback.onPushError();
-                }
-            });
+            if (OverLimitSurveysDomainService.isSurveysOverLimit(sentSurveys, mSurveysThresholds)) {
+                banOrgUnit();
+            }
         }
     }
 
-    private boolean isSurveysOverLimit(List<Survey> surveyList) {
-        //TODO: For Cambodia the surveys are never above the limit, we may need it for laos,
-        // it is commented for this moment necessary.
-        // Surely it would have to create a strategy in that case
-        return false;
-
-
-/*        //TODO: simplify this method
-        int countDates = 0;
-
-        if (surveyList.size() >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-            for (int i = 0; i < surveyList.size(); i++) {
-                Calendar actualSurvey = Utils.DateToCalendar(surveyList.get(i).getEventDate());
-                for (int d = 0; d < surveyList.size(); d++) {
-                    Calendar nextSurvey = Utils.DateToCalendar(surveyList.get(d).getEventDate());
-                    if (actualSurvey.before(nextSurvey)) {
-                        if (!Utils.isDateOverLimit(actualSurvey, nextSurvey, DHIS_LIMIT_HOURS)) {
-                            countDates++;
-                            Log.d(TAG, "Surveys sents in one hour:" + countDates);
-                            if (countDates >= DHIS_LIMIT_SENT_SURVEYS_IN_ONE_HOUR) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
+    private void banOrgUnit() {
+        OrganisationUnit organisationUnit = null;
+        try {
+            organisationUnit =
+                    mOrganisationUnitRepository.getCurrentOrganisationUnit(ReadPolicy.CACHE);
+        } catch (NetworkException e) {
+            e.printStackTrace();
+        } catch (ApiCallException e) {
+            e.printStackTrace();
         }
-        return false;*/
+        if (organisationUnit != null) {
+            organisationUnit.ban();
+            mOrganisationUnitRepository.saveOrganisationUnit(organisationUnit);
+            System.out.println("OrgUnit banned successfully");
+        }
+    }
+
+    private void notifyComplete() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onComplete();
+            }
+        });
+    }
+
+    private void notifyPushError() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onPushError();
+            }
+        });
+    }
+
+    private void notifyPushInProgressError() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onPushInProgressError();
+            }
+        });
+    }
+
+    private void notifySurveysNotFoundError() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onSurveysNotFoundError();
+            }
+        });
+    }
+
+    private void notifyConversionError() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onConversionError();
+            }
+        });
+    }
+
+    private void notifyNetworkError() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onNetworkError();
+            }
+        });
+    }
+
+    private void notifyInformativeError(final String message) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onInformativeError(message);
+            }
+        });
+    }
+
+    private void notifyClosedUser() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onClosedUser();
+            }
+        });
+    }
+
+    private void notifyBannedOrgUnitError() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onBannedOrgUnit();
+            }
+        });
+    }
+
+    private void notifyReOpenOrgUnit() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onReOpenOrgUnit();
+            }
+        });
+    }
+
+    private void notifyApiCallError(final ApiCallException e) {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onApiCallError(e);
+            }
+        });
     }
 }
 

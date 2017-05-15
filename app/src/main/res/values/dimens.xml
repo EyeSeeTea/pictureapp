@@ -13,6 +13,7 @@
 
     <!-- Dashboard -->
     <dimen name="dashboard_row_padding">5dp</dimen>
+    <dimen name="dashboard_tab_text_size">8sp</dimen>
     <!--<dimen name="dashboard_text_size">18dp</dimen>-->
 
     <!--Text size for radio button text-->
@@ -41,4 +42,5 @@
 
     <!--Old sdk-->
     <dimen name="medium_text_size">22sp</dimen>
+    <dimen name="progressbar_stroke_width">10dp</dimen>
 </resources>

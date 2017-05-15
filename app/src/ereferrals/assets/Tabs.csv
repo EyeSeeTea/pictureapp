@@ -1,14 +1,4 @@
-1;'patient_profile_subtitle';1;1;10
-2;'patient_sex_pregnancy';2;1;9
-3;'symptoms_title';3;1;10
-4;'rdt_test_result';4;1;9
-5;'Negative Test Result';5;1;9
-6;'Counter';6;1;9
-7;'tab_dynamic_treatment';7;1;11
-8;'patient_advice';8;1;10
-9;'follow_up';9;1;10
-11;'stock';11;2;10
-12;'tab_dynamic_stock';8;1;9
-13;'tab_no_cq';9;1;9
-14;'tab_no_pq';10;1;9
-15;'tab_malaria_stock';12;1;9
+1;'tanzania_program_eref';1;1;10
+2;'uganda_program_eref';1;2;10
+3;'tanzania_program';1;3;10
+4;'uganda_program';1;4;10

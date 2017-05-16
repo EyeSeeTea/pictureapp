@@ -65,7 +65,7 @@ public class InvalidLoginAttemptsTest {
 
 
     @Test
-    public void check_enable_after_add_five_attempts_and_thirty_seconds_and_add_one_attempt_after
+    public void should_throw_exception_if_add_more_failed_attempts_that_allowed
             () throws InterruptedException, ActionNotAllowed {
         thrown.expect(ActionNotAllowed.class);
         InvalidLoginAttempts invalidLoginAttempts = new InvalidLoginAttempts(0, 0);
@@ -74,12 +74,6 @@ public class InvalidLoginAttemptsTest {
         invalidLoginAttempts.addFailedAttempts();
         invalidLoginAttempts.addFailedAttempts();
         invalidLoginAttempts.addFailedAttempts();
-        invalidLoginAttempts.addFailedAttempts();
-
-        Thread.sleep(11);
-        invalidLoginAttempts.addFailedAttempts();
-        assertThat(invalidLoginAttempts.isLoginEnabled(), is(true));
-
     }
 
     @Test

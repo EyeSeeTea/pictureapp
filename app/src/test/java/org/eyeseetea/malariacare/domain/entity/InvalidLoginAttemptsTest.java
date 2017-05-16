@@ -41,12 +41,12 @@ public class InvalidLoginAttemptsTest {
     public void check_disable_after_add_three_attempts_and_twenty_seconds()
             throws InterruptedException, ActionNotAllowed {
         InvalidLoginAttempts invalidLoginAttempts = new InvalidLoginAttempts(0, 0);
+        invalidLoginAttempts.setDisableTime(10);
         invalidLoginAttempts.addFailedAttempts();
         invalidLoginAttempts.addFailedAttempts();
         invalidLoginAttempts.addFailedAttempts();
 
-
-        Thread.sleep(20000);
+        Thread.sleep(5);
         assertThat(invalidLoginAttempts.isLoginEnabled(), is(false));
     }
 
@@ -54,11 +54,12 @@ public class InvalidLoginAttemptsTest {
     public void check_enable_after_add_three_attempts_and_thirty_seconds()
             throws InterruptedException, ActionNotAllowed {
         InvalidLoginAttempts invalidLoginAttempts = new InvalidLoginAttempts(0, 0);
+        invalidLoginAttempts.setDisableTime(10);
         invalidLoginAttempts.addFailedAttempts();
         invalidLoginAttempts.addFailedAttempts();
         invalidLoginAttempts.addFailedAttempts();
 
-        Thread.sleep(30001);
+        Thread.sleep(11);
         assertThat(invalidLoginAttempts.isLoginEnabled(), is(true));
     }
 
@@ -68,13 +69,14 @@ public class InvalidLoginAttemptsTest {
             () throws InterruptedException, ActionNotAllowed {
         thrown.expect(ActionNotAllowed.class);
         InvalidLoginAttempts invalidLoginAttempts = new InvalidLoginAttempts(0, 0);
+        invalidLoginAttempts.setDisableTime(10);
         invalidLoginAttempts.addFailedAttempts();
         invalidLoginAttempts.addFailedAttempts();
         invalidLoginAttempts.addFailedAttempts();
         invalidLoginAttempts.addFailedAttempts();
         invalidLoginAttempts.addFailedAttempts();
 
-        Thread.sleep(30001);
+        Thread.sleep(11);
         invalidLoginAttempts.addFailedAttempts();
         assertThat(invalidLoginAttempts.isLoginEnabled(), is(true));
 

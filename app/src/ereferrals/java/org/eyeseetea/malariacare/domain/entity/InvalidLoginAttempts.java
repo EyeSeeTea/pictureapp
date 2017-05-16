@@ -7,14 +7,16 @@ import java.util.Date;
 public class InvalidLoginAttempts {
 
     private static final int NUMBER_ATTEMPTS = 3;
-    private static final int DISABLE_TIME = 30000;
+    private static final int DEFAULT_DISABLE_TIME = 30000;
 
     private int failedLoginAttempts;
     private long enableLoginTime;
+    private long disableTime;
 
     public InvalidLoginAttempts(int failedLoginAttempts, long enableLoginTime) {
         this.failedLoginAttempts = failedLoginAttempts;
         this.enableLoginTime = enableLoginTime;
+        disableTime = DEFAULT_DISABLE_TIME;
     }
 
     public int getFailedLoginAttempts() {
@@ -37,7 +39,7 @@ public class InvalidLoginAttempts {
         if (isLoginEnabled()) {
             failedLoginAttempts++;
             if (failedLoginAttempts >= NUMBER_ATTEMPTS) {
-                enableLoginTime = new Date().getTime() + DISABLE_TIME;
+                enableLoginTime = new Date().getTime() + disableTime;
                 failedLoginAttempts = 0;
             }
         } else {
@@ -49,5 +51,11 @@ public class InvalidLoginAttempts {
         return enableLoginTime < new Date().getTime();
     }
 
+    public long getDisableTime() {
+        return disableTime;
+    }
 
+    public void setDisableTime(long disableTime) {
+        this.disableTime = disableTime;
+    }
 }

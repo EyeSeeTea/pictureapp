@@ -12,6 +12,7 @@ import android.widget.EditText;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
@@ -25,8 +26,10 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitR
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 
 import java.util.Date;
 
@@ -178,5 +181,39 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         loginActivity.mLoginUseCase = new LoginUseCase(authenticationManager, mainExecutor,
                 asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
                 iInvalidLoginAttemptsRepository);
+    }
+
+    @Override
+    public void checkCredentials(Credentials credentials, final Callback callback) {
+        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
+        Credentials savedCredentials = credentialsLocalDataSource.getOrganisationCredentials();
+        if (savedCredentials == null || savedCredentials.isEmpty()
+                || savedCredentials.getUsername().equals(
+                credentials.getUsername()) && !savedCredentials.getPassword().equals(
+                credentials.getPassword())) {
+            callback.onSuccessDoLogin();
+        } else if (savedCredentials.getUsername().equals(
+                credentials.getUsername()) && savedCredentials.getPassword().equals(
+                credentials.getPassword())) {
+            callback.onSuccess();
+        } else {
+            IAuthenticationManager iAuthenticationManager = new AuthenticationManager(
+                    loginActivity);
+            LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+            AlarmPushReceiver.cancelPushAlarm(loginActivity);
+            logoutUseCase.execute(new LogoutUseCase.Callback() {
+                @Override
+                public void onLogoutSuccess() {
+                    callback.onSuccessDoLogin();
+                }
+
+                @Override
+                public void onLogoutError(String message) {
+                    callback.onError();
+                }
+            });
+        }
+
+
     }
 }

@@ -23,6 +23,7 @@ import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.domain.usecase.push.MockedPushSurveysUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.PushService;
 
 public class PushServiceStrategy extends APushServiceStrategy {
@@ -109,7 +110,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
         LogoutUseCase logoutUseCase;
         authenticationManager = new AuthenticationManager(mPushService);
         logoutUseCase = new LogoutUseCase(authenticationManager);
-
+        AlarmPushReceiver.cancelPushAlarm(mPushService);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

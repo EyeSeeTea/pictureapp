@@ -23,4 +23,13 @@ public class SurveyLocalDataSource implements ISurveyRepository {
 
         return surveys;
     }
+
+    @Override
+    public void deleteSurveys() {
+        List<org.eyeseetea.malariacare.data.database.model.Survey> surveys =
+                org.eyeseetea.malariacare.data.database.model.Survey.getAllSurveys();
+        for (org.eyeseetea.malariacare.data.database.model.Survey survey : surveys) {
+            survey.delete();
+        }
+    }
 }

@@ -12,6 +12,7 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 
 /**
  * Listener that moves to the LoginActivity before changing DHIS config
@@ -53,7 +54,7 @@ public class LogoutAndLoginRequiredOnPreferenceClickListener implements
         Log.d(TAG, "Logging out...");
         AuthenticationManager authenticationManager = new AuthenticationManager(settingsActivity);
         LogoutUseCase logoutUseCase = new LogoutUseCase(authenticationManager);
-
+        AlarmPushReceiver.cancelPushAlarm(settingsActivity);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

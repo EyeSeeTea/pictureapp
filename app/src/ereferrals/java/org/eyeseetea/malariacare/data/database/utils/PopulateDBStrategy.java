@@ -5,7 +5,6 @@ import android.content.res.AssetManager;
 
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.Answer;
 import org.eyeseetea.malariacare.data.database.model.Header;
 import org.eyeseetea.malariacare.data.database.model.Match;
@@ -18,7 +17,6 @@ import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.IPopulateDBStrategy;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -66,8 +64,6 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
         for (Survey survey : surveys) {
             survey.delete();
         }
-        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
-        credentialsLocalDataSource.saveOrganisationCredentials(null);
     }
 
 

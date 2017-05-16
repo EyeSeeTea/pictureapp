@@ -18,6 +18,13 @@ public class CredentialsLocalDataSource implements ICredentialsRepository {
     }
 
     @Override
+    public void clearOrganisationCredentials() {
+        Credentials credentials = getOrganisationCredentials();
+        credentials.clear();
+        saveOrganisationCredentials(credentials);
+    }
+
+    @Override
     public Credentials getCredentials() {
         return PreferencesState.getCredentialsFromPreferences();
     }

@@ -164,7 +164,8 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     public void checkCredentials(Credentials credentials, final Callback callback) {
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
         Credentials savedCredentials = credentialsLocalDataSource.getOrganisationCredentials();
-        if (savedCredentials == null || savedCredentials.getUsername().equals(
+        if (savedCredentials == null || savedCredentials.isEmpty()
+                || savedCredentials.getUsername().equals(
                 credentials.getUsername()) && !savedCredentials.getPassword().equals(
                 credentials.getPassword())) {
             callback.onSuccessDoLogin();

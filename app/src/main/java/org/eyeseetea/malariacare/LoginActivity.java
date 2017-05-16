@@ -42,6 +42,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -373,6 +374,7 @@ public class LoginActivity extends Activity {
     }
 
     public void showProgressBar() {
+        hideKeyboard();
         if (layoutTransitionSlideOut != null) {
             findViewById(R.id.layout_login_views).startAnimation(layoutTransitionSlideOut);
         }
@@ -642,6 +644,15 @@ public class LoginActivity extends Activity {
                 onPostAnimationAction.run();
                 onPostAnimationAction = null;
             }
+        }
+    }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 }

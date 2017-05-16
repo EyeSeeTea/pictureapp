@@ -18,7 +18,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
     public TableRow createViewRow(TableRow rowView, Value value) {
 
-        rowView.setTag(getCorrectQuestion(value.getQuestionUId()).getUid());
+        rowView.setTag(value.getQuestionUId());
 
         //Sets the value text in the row and add the question as tag.
         CustomTextView questionTextView = (CustomTextView) rowView.findViewById(

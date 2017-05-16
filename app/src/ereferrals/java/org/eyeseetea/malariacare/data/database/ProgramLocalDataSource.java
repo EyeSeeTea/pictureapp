@@ -19,4 +19,10 @@ public class ProgramLocalDataSource implements IProgramRepository {
         return PreferencesEReferral.getUserProgramId();
     }
 
+    @Override
+    public String getUserProgramUID() {
+        return org.eyeseetea.malariacare.data.database.model.Program.getProgram(
+                getUserProgramId()).getUid();
+    }
+
 }

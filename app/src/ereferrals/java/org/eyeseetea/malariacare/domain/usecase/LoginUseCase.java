@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.ActionNotAllowed;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -148,7 +149,12 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         InvalidLoginAttempts invalidLoginAttempts =
                 mInvalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
 
-        invalidLoginAttempts.addFailedAttempts();
+        try {
+            invalidLoginAttempts.addFailedAttempts();
+        } catch (ActionNotAllowed actionNotAllowed) {
+            actionNotAllowed.printStackTrace();
+            notifyMaxLoginAttemptsReached();
+        }
 
         mInvalidLoginAttemptsLocalDataSource.saveInvalidLoginAttempts(invalidLoginAttempts);
 

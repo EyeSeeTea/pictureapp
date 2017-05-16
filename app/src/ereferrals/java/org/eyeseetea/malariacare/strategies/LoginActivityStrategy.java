@@ -23,7 +23,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsReposi
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
+import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -34,6 +34,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private static final String TAG = ".LoginActivityStrategy";
     public static final String EXIT = "exit";
+    private IsLoginEnableUseCase mIsLoginEnableUseCase;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
@@ -105,24 +106,45 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private void checkEnableLogin() {
         IInvalidLoginAttemptsRepository invalidLoginAttemptsLocalDataSource =
                 new InvalidLoginAttemptsRepositoryLocalDataSource();
-        final InvalidLoginAttempts invalidLoginAttempts =
-                invalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
-        if (!invalidLoginAttempts.isLoginEnabled()) {
-            loginActivity.enableLogin(false);
-            final Handler h = new Handler();
-            final int delay = 1000; //milliseconds
-            h.postDelayed(new Runnable() {
-                public void run() {
-                    if (!loginActivity.isFinishing()) {
-                        if (!invalidLoginAttempts.isLoginEnabled()) {
-                            h.postDelayed(this, delay);
-                        } else {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        mIsLoginEnableUseCase = new IsLoginEnableUseCase(
+                invalidLoginAttemptsLocalDataSource, mainExecutor, asyncExecutor);
+        mIsLoginEnableUseCase.execute(new IsLoginEnableUseCase.Callback() {
+            @Override
+            public void onLoginEnable() {
+                loginActivity.enableLogin(true);
+            }
+
+            @Override
+            public void onLoginDisable() {
+                loginDisable();
+            }
+        });
+    }
+
+    private void loginDisable() {
+        loginActivity.enableLogin(false);
+        final Handler h = new Handler();
+        final int delay = 1000; //milliseconds
+        h.postDelayed(new Runnable() {
+            public void run() {
+                final Runnable runnable = this;
+                if (!loginActivity.isFinishing()) {
+                    mIsLoginEnableUseCase.execute(new IsLoginEnableUseCase.Callback() {
+                        @Override
+                        public void onLoginEnable() {
                             loginActivity.enableLogin(true);
                         }
-                    }
+
+                        @Override
+                        public void onLoginDisable() {
+                            h.postDelayed(runnable, delay);
+                        }
+                    });
                 }
-            }, delay);
-        }
+            }
+        }, delay);
     }
 
     @Override

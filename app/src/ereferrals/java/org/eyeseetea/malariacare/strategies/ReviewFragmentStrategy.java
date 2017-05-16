@@ -14,7 +14,7 @@ import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
-    final String TITLE_SEPARATOR = ": \n";
+    final String TITLE_SEPARATOR = ": ";
 
     public TableRow createViewRow(TableRow rowView, Value value) {
 

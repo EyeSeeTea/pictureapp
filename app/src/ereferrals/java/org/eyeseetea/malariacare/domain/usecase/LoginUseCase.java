@@ -53,32 +53,43 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
 
     @Override
     public void run() {
-        mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
-                new IAuthenticationManager.Callback<UserAccount>() {
-                    @Override
-                    public void onSuccess(UserAccount userAccount) {
-                        mAsyncExecutor.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                pullOrganisationCredentials();
-                            }
-                        });
-                    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        if (throwable instanceof MalformedURLException
-                                || throwable instanceof UnknownHostException) {
-                            notifyServerURLNotValid();
-                        } else if (throwable instanceof InvalidCredentialsException) {
-                            notifyInvalidCredentials();
-                        } else if (throwable instanceof NetworkException) {
-                            checkUserCredentialsWithOrgUnit(
-                                    mCredentialsLocalDataSource.getOrganisationCredentials(),
-                                    false);
+        if (isLoginEnable()) {
+            mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
+                    new IAuthenticationManager.Callback<UserAccount>() {
+                        @Override
+                        public void onSuccess(UserAccount userAccount) {
+                            mAsyncExecutor.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pullOrganisationCredentials();
                         }
+                            });
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            if (throwable instanceof MalformedURLException
+                                    || throwable instanceof UnknownHostException) {
+                                notifyServerURLNotValid();
+                            } else if (throwable instanceof InvalidCredentialsException) {
+                                notifyInvalidCredentials();
+                            } else if (throwable instanceof NetworkException) {
+                                checkUserCredentialsWithOrgUnit(
+                                        mCredentialsLocalDataSource.getOrganisationCredentials(),
+                                        false);
                     }
-                });
+                        }
+                    });
+        } else {
+            notifyMaxLoginAttemptsReached();
+        }
+    }
+
+    private boolean isLoginEnable() {
+        InvalidLoginAttempts invalidLoginAttempts =
+                mInvalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
+        return invalidLoginAttempts.isLoginEnabled();
     }
 
 

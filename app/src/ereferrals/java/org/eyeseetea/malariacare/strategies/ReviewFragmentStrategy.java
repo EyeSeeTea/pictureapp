@@ -14,11 +14,11 @@ import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
-    final String TITLE_SEPARATOR = ": \n";
+    final String TITLE_SEPARATOR = ": ";
 
     public TableRow createViewRow(TableRow rowView, Value value) {
 
-        rowView.setTag(getCorrectQuestion(value.getQuestionUId()));
+        rowView.setTag(value.getQuestionUId());
 
         //Sets the value text in the row and add the question as tag.
         CustomTextView questionTextView = (CustomTextView) rowView.findViewById(

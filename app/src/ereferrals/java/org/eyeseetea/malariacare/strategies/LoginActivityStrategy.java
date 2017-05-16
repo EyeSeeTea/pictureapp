@@ -29,6 +29,7 @@ import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 
 import java.util.Date;
 
@@ -177,6 +178,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             IAuthenticationManager iAuthenticationManager = new AuthenticationManager(
                     loginActivity);
             LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+            AlarmPushReceiver.cancelPushAlarm(loginActivity);
             logoutUseCase.execute(new LogoutUseCase.Callback() {
                 @Override
                 public void onLogoutSuccess() {

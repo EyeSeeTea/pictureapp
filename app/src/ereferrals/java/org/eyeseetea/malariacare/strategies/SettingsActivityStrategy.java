@@ -39,7 +39,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public void onStop() {
         applicationdidenterbackground();
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-            logout();
+            ActivityCompat.finishAffinity(settingsActivity);
         }
     }
     public void applicationdidenterbackground() {
@@ -100,20 +100,6 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
             EyeSeeTeaApplication.getInstance().setIsBackPressed(false);
             EyeSeeTeaApplication.getInstance().setIsWindowFocused(true);
         }
-    }
-
-    private void logout() {
-        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
-            @Override
-            public void onLogoutSuccess() {
-                ActivityCompat.finishAffinity(settingsActivity);
-            }
-
-            @Override
-            public void onLogoutError(String message) {
-                Log.d(TAG, message);
-            }
-        });
     }
 
     @Override

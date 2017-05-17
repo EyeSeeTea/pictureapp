@@ -13,15 +13,14 @@ import android.widget.ListView;
 import com.google.common.collect.Iterables;
 
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -81,7 +80,7 @@ public class ReviewFragment extends Fragment {
         List<org.eyeseetea.malariacare.domain.entity.Value> preparedValues = new ArrayList<>();
         values = getReviewValues();
         values = orderValues(values);
-        colorIterator = Iterables.cycle(createBackgroundColorList(preparedValues)).iterator();
+        colorIterator = Iterables.cycle(createBackgroundColorList()).iterator();
         for(Value value:values) {
             org.eyeseetea.malariacare.domain.entity.Value preparedValue =new org.eyeseetea.malariacare.domain.entity.Value(value.getValue());
             if(value.getQuestion()!=null)
@@ -96,7 +95,7 @@ public class ReviewFragment extends Fragment {
         return preparedValues;
     }
 
-    private List<String> createBackgroundColorList(List<org.eyeseetea.malariacare.domain.entity.Value> preparedValues) {
+    private List<String> createBackgroundColorList() {
         List<String> colorsList = new ArrayList<>();
         for(Value value:values) {
             if (value.getOption() != null && value.getOption().getBackground_colour() != null) {
@@ -110,28 +109,15 @@ public class ReviewFragment extends Fragment {
         if (colorsList.size() == 0) {
             colorsList.add("#4d3a4b");
         }
-        if (colorsList.size() == 1 && preparedValues.size() > 1) {
+        if (colorsList.size() == 1 && values.size() > 1) {
             colorsList.add("#9c7f9b");
         }
         return colorsList;
     }
 
     private List<Value> orderValues(List<Value> values) {
-        List<Value> orderedList = new ArrayList<>();
-        NavigationController navigationController = Session.getNavigationController();
-        navigationController.first();
-        Question nextQuestion = null;
-        do {
-            for (Value value : values) {
-                if (value.getQuestion() != null) {
-                    if (value.getQuestion().equals(navigationController.getCurrentQuestion())) {
-                        orderedList.add(value);
-                        nextQuestion = navigationController.next(value.getOption());
-                    }
-                }
-            }
-        } while (nextQuestion != null);
-        return orderedList;
+        ReviewFragmentStrategy reviewFragmentStrategy = new ReviewFragmentStrategy();
+        return reviewFragmentStrategy.orderValues(values);
     }
 
     private List<Value> getReviewValues() {

@@ -5,20 +5,25 @@ import android.content.Context;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.datasources.AuthenticationLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.UserAccountDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.remote.AuthenticationDhisSDKDataSource;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IUserRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 
 public class AuthenticationManager implements IAuthenticationManager {
     IAuthenticationDataSource userAccountLocalDataSource;
     IAuthenticationDataSource userAccountRemoteDataSource;
+    IUserRepository mUserRepository;
 
     public AuthenticationManager(Context context) {
 
         userAccountLocalDataSource = new AuthenticationLocalDataSource(context);
         userAccountRemoteDataSource = new AuthenticationDhisSDKDataSource(context);
+        mUserRepository = new UserAccountDataSource();
     }
 
     @Override
@@ -33,7 +38,11 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     @Override
     public void hardcodedLogin(String url, Callback<UserAccount> callback) {
-        remoteLogin(getHardcodedServerCredentials(url), callback);
+        try {
+            remoteLogin(getHardcodedServerCredentials(url), callback);
+        } catch (Exception e) {
+            callback.onError(e);
+        }
     }
 
     @Override
@@ -68,7 +77,7 @@ public class AuthenticationManager implements IAuthenticationManager {
         userAccountRemoteDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount result) {
-                credentials.setUserUid(result.getUserUid());
+                mUserRepository.saveLoggedUser(result);
                 localLogin(credentials, callback);
             }
 
@@ -95,7 +104,8 @@ public class AuthenticationManager implements IAuthenticationManager {
 
     private void localLogin(Credentials credentials,
             final IAuthenticationManager.Callback<UserAccount> callback) {
-        userAccountLocalDataSource.login(credentials, new IDataSourceCallback<UserAccount>() {
+        userAccountLocalDataSource.login(credentials,
+                new IDataSourceCallback<UserAccount>() {
             @Override
             public void onSuccess(UserAccount userAccount) {
                 callback.onSuccess(userAccount);
@@ -109,11 +119,10 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
 
 
-    public Credentials getHardcodedServerCredentials(String serverUrl) {
-
+    public Credentials getHardcodedServerCredentials(String serverUrl) throws
+            ConfigJsonIOException {
         String username = CredentialsReader.getInstance().getUser();
         String password = CredentialsReader.getInstance().getPassword();
-
         Credentials credentials = new Credentials(serverUrl, username, password);
         return credentials;
     }

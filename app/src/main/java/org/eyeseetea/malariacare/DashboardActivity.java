@@ -38,8 +38,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
@@ -60,6 +58,7 @@ import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.services.SurveyService;
 import org.eyeseetea.malariacare.strategies.DashboardActivityStrategy;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
@@ -701,17 +700,19 @@ public class DashboardActivity extends BaseActivity {
                         unsentFragment.reloadData();
                     }
                     unsentFragment.reloadHeader(dashboardActivity);
+                    mDashboardActivityStrategy.onUnsentTabSelected(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_improve))) {
                     sentFragment.reloadData();
                     sentFragment.reloadHeader(dashboardActivity);
+                    mDashboardActivityStrategy.onSentTabSelected(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_stock))) {
                     mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
-                    monitorFragment.reloadData();
-                    monitorFragment.reloadHeader(dashboardActivity);
+                    mDashboardActivityStrategy.reloadMonitorFragment(dashboardActivity,
+                            monitorFragment);
                 }
                 tabHost.getCurrentTabView().setBackgroundColor(
                         getResources().getColor(R.color.tab_pressed_background));
@@ -736,6 +737,7 @@ public class DashboardActivity extends BaseActivity {
     public void executeLogout() {
         IAuthenticationManager iAuthenticationManager = new AuthenticationManager(this);
         LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+        AlarmPushReceiver.cancelPushAlarm(this);
         logoutUseCase.execute(new LogoutUseCase.Callback() {
             @Override
             public void onLogoutSuccess() {

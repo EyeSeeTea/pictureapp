@@ -449,4 +449,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onWindowFocusChanged(hasFocus);
     }
 
+    public BaseActivityStrategy getBaseActivityStrategy() {
+        return mBaseActivityStrategy;
+    }
 }

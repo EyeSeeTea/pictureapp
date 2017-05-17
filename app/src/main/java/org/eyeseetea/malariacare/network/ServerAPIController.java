@@ -33,11 +33,13 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.eyeseetea.malariacare.data.authentication.api.AuthenticationApiStrategy;
+import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -211,7 +213,8 @@ public class ServerAPIController {
      * Returns the version of the given server.
      * Null if something went wrong
      */
-    public static String getServerVersion(String url) throws IOException, JSONException {
+    public static String getServerVersion(String url)
+            throws IOException, JSONException, ConfigJsonIOException {
         String serverVersion;
         String urlServerInfo = url + DHIS_SERVER_INFO;
         Response response = executeCall(null, urlServerInfo, "GET");
@@ -246,7 +249,7 @@ public class ServerAPIController {
     /**
      * Returns the orgUnit UID for the current server + orgunit
      */
-    public static String getOrgUnitUID() throws IOException, JSONException {
+    public static String getOrgUnitUID() throws IOException, JSONException, ConfigJsonIOException {
         String serverUrl = getServerUrl();
         String orgUnit = getOrgUnit();
         return getOrgUnitUID(serverUrl, orgUnit);
@@ -256,7 +259,7 @@ public class ServerAPIController {
      * Returns the orgUnit UID for the given url and orgUnit (code or name)
      */
     public static String getOrgUnitUID(String url, String orgUnitNameOrCode)
-            throws IOException, JSONException {
+            throws IOException, JSONException, ConfigJsonIOException {
         JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
         if (orgUnitJSON == null) {
             return null;
@@ -268,11 +271,16 @@ public class ServerAPIController {
         }
     }
 
+    public static void saveOrganisationUnit(OrganisationUnit organisationUnit) {
+        patchClosedDate(organisationUnit);
+        patchDescription(organisationUnit);
+    }
+
     /**
      * Bans the orgUnit for future pushes (too many too quick)
      */
     public static void banOrg(String url, String orgUnitNameOrCode)
-            throws ApiCallException {
+            throws ApiCallException, ConfigJsonIOException {
         try {
             Log.i(TAG, String.format("banOrg(%s,%s)", url, orgUnitNameOrCode));
             JSONObject orgUnitJSON = getOrgUnitData(url, orgUnitNameOrCode);
@@ -307,7 +315,8 @@ public class ServerAPIController {
     /**
      * Updates the orgUnit adding a closedDate
      */
-    static void patchClosedDate(String url, String orgUnitUID) throws IOException, JSONException {
+    static void patchClosedDate(String url, String orgUnitUID)
+            throws IOException, JSONException, ConfigJsonIOException {
         //https://malariacare.psi.org/api/organisationUnits/u5jlxuod8xQ/closedDate
         String urlPathClosedDate = getPatchClosedDateUrl(url, orgUnitUID);
         JSONObject data = prepareTodayDateValue();
@@ -317,6 +326,35 @@ public class ServerAPIController {
                     "closingDatePatch (" + response.code() + "): " + response.body().string());
             throw new IOException(response.message());
         }
+    }
+
+    /**
+     * Updates the orgUnit adding a closedDate
+     */
+    static void patchClosedDate(OrganisationUnit organisationUnit) {
+        String url = ServerAPIController.getServerUrl();
+        try {
+            String urlPathClosedDate = getPatchClosedDateUrl(url, organisationUnit.getUid());
+            JSONObject data = prepareCloseDateValue(organisationUnit);
+            Response response = executeCall(data, urlPathClosedDate, "PATCH");
+            if (!response.isSuccessful()) {
+                Log.e(TAG,
+                        "closingDatePatch (" + response.code() + "): " + response.body().string());
+                throw new IOException(response.message());
+            }
+        } catch (Exception e) {
+            Log.e(TAG,
+                    String.format("patchClosedDate(%s,%s): %s", url, organisationUnit.getUid(),
+                            e.getMessage()));
+        }
+    }
+
+    static JSONObject prepareCloseDateValue(OrganisationUnit organisationUnit) throws Exception {
+        String dateFormatted = Utils.parseDateToString(organisationUnit.getClosedDate(),
+                DATE_CLOSED_DATE_FORMAT);
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_CLOSEDDATE, dateFormatted);
+        return elementObject;
     }
 
     /**
@@ -332,7 +370,7 @@ public class ServerAPIController {
     }
 
     static void patchDescriptionClosedDate(String url, String orgUnitUID,
-            String orgUnitDescription) throws IOException, JSONException {
+            String orgUnitDescription) throws IOException, JSONException, ConfigJsonIOException {
         //https://malariacare.psi.org/api/organisationUnits/u5jlxuod8xQ/closedDate
         String urlPathClosedDescription = getPatchClosedDescriptionUrl(url, orgUnitUID);
         JSONObject data = prepareClosingDescriptionValue(orgUnitDescription);
@@ -344,6 +382,39 @@ public class ServerAPIController {
         }
     }
 
+    static void patchDescription(OrganisationUnit organisationUnit) {
+        String url = ServerAPIController.getServerUrl();
+        try {
+            String urlPathClosedDescription = getPatchClosedDescriptionUrl(url,
+                    organisationUnit.getUid());
+            JSONObject data = parseOrganisationUnitDescriptionToJson(
+                    organisationUnit.getDescription());
+            Response response = executeCall(data, urlPathClosedDescription, "PATCH");
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "patchDescriptionClosedDate (" + response.code() + "): "
+                        + response.body().string());
+                throw new IOException(response.message());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, String.format("patchDescriptionClosedDate(%s,%s): %s", url,
+                    organisationUnit.getUid(),
+                    e.getMessage()));
+        }
+    }
+
+    /**
+     * Pull the current description.
+     *
+     * @return new description.
+     * @url url for pull the current description
+     */
+    static JSONObject parseOrganisationUnitDescriptionToJson(String orgUnitDescription)
+            throws Exception {
+        //As a JSON
+        JSONObject elementObject = new JSONObject();
+        elementObject.put(TAG_DESCRIPTIONCLOSEDATE, orgUnitDescription);
+        return elementObject;
+    }
     /**
      * Pull the current description and adds new closed organization description.
      *
@@ -379,7 +450,7 @@ public class ServerAPIController {
      * Returns the orgunit data from the given server according to its current version
      */
     static JSONObject getOrgUnitData(String url, String orgUnitNameOrCode)
-            throws IOException, JSONException {
+            throws IOException, JSONException, ConfigJsonIOException {
         //Version is required to choose which field to match
         String serverVersion = getServerVersion(url);
 
@@ -412,7 +483,8 @@ public class ServerAPIController {
 
     }
 
-    public static OrganisationUnit getCurrentOrgUnit() throws IOException, JSONException {
+    public static OrganisationUnit getCurrentOrgUnit()
+            throws IOException, JSONException, ConfigJsonIOException {
         String url = "";
         String orgUnitNameOrCode = "";
 
@@ -522,7 +594,8 @@ public class ServerAPIController {
 
     public static OrganisationUnit getOrganisationUnitsByCode(
             String code)
-            throws PullConversionException, NetworkException, IOException, JSONException {
+            throws PullConversionException, NetworkException, IOException, JSONException,
+            ConfigJsonIOException {
         //Version is required to choose which field to match
         String serverVersion = getServerVersion(PreferencesState.getInstance().getDhisURL());
 
@@ -709,7 +782,8 @@ public class ServerAPIController {
     /**
      * Call to DHIS Server
      */
-    static Response executeCall(JSONObject data, String url, String method) throws IOException {
+    static Response executeCall(JSONObject data, String url, String method) throws IOException,
+            ConfigJsonIOException {
         final String DHIS_URL = url;
 
         OkHttpClient client = UnsafeOkHttpsClientFactory.getUnsafeOkHttpClient();
@@ -720,6 +794,7 @@ public class ServerAPIController {
         client.setRetryOnConnectionFailure(false);    // Cancel retry on failure
 
         BasicAuthenticator basicAuthenticator = new BasicAuthenticator();
+
         client.setAuthenticator(basicAuthenticator);
 
         Request.Builder builder = new Request.Builder()
@@ -768,7 +843,7 @@ class BasicAuthenticator implements Authenticator {
     public final String AUTHORIZATION_HEADER = "Authorization";
     private String credentials;
 
-    BasicAuthenticator() {
+    BasicAuthenticator() throws ConfigJsonIOException {
         credentials = AuthenticationApiStrategy.getApiCredentials();
     }
 

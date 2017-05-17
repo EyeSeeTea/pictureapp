@@ -16,6 +16,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.strategies.SurveyCheckerStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -61,7 +62,7 @@ public class SurveyChecker {
      * Get events filtered by program orgUnit and between dates.
      */
     public static List<EventExtended> getEvents(String program, String orgUnit, Date minDate,
-            Date maxDate) throws IOException, JSONException {
+            Date maxDate) throws IOException, JSONException, ConfigJsonIOException {
             Response response;
 
             String DHIS_URL = PreferencesState.getInstance().getDhisURL();
@@ -120,6 +121,9 @@ public class SurveyChecker {
                     e.printStackTrace();
                     return;
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                } catch (ConfigJsonIOException e) {
                     e.printStackTrace();
                     return;
                 }

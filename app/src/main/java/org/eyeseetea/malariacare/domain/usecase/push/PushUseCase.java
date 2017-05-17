@@ -5,6 +5,7 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
@@ -138,18 +139,19 @@ public class PushUseCase implements UseCase {
     }
 
     private void banOrgUnit() {
-        String url = ServerAPIController.getServerUrl();
-        String orgUnitNameOrCode = ServerAPIController.getOrgUnit();
-
-        if (!orgUnitNameOrCode.isEmpty()) {
-            try {
-                ServerAPIController.banOrg(url, orgUnitNameOrCode);
-                System.out.println("OrgUnit banned successfully");
-            } catch (ApiCallException e) {
-                System.out.println("An error has occurred to banned orgUnit");
-                notifyPushError();
-            }
-
+        OrganisationUnit organisationUnit = null;
+        try {
+            organisationUnit =
+                    mOrganisationUnitRepository.getCurrentOrganisationUnit(ReadPolicy.CACHE);
+        } catch (NetworkException e) {
+            e.printStackTrace();
+        } catch (ApiCallException e) {
+            e.printStackTrace();
+        }
+        if (organisationUnit != null) {
+            organisationUnit.ban();
+            mOrganisationUnitRepository.saveOrganisationUnit(organisationUnit);
+            System.out.println("OrgUnit banned successfully");
         }
     }
 

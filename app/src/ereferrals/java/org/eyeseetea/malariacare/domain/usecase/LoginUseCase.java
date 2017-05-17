@@ -6,10 +6,13 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.ActionNotAllowed;
+import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
@@ -51,34 +54,44 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
 
     @Override
     public void run() {
-        mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
-                new IAuthenticationManager.Callback<UserAccount>() {
-                    @Override
-                    public void onSuccess(UserAccount userAccount) {
-                        mAsyncExecutor.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                pullOrganisationCredentials();
-                            }
-                        });
-                    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        if (throwable instanceof MalformedURLException
-                                || throwable instanceof UnknownHostException) {
-                            notifyServerURLNotValid();
-                        } else if (throwable instanceof InvalidCredentialsException) {
-                            notifyInvalidCredentials();
-                        } else if (throwable instanceof NetworkException) {
-                            checkUserCredentialsWithOrgUnit(
-                                    mCredentialsLocalDataSource.getOrganisationCredentials(),
-                                    false);
+        if (isLoginEnable()) {
+            mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
+                    new IAuthenticationManager.Callback<UserAccount>() {
+                        @Override
+                        public void onSuccess(UserAccount userAccount) {
+                            mAsyncExecutor.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pullOrganisationCredentials();
                         }
+                            });
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            if (throwable instanceof MalformedURLException
+                                    || throwable instanceof UnknownHostException) {
+                                notifyServerURLNotValid();
+                            } else if (throwable instanceof InvalidCredentialsException) {
+                                notifyInvalidCredentials();
+                            } else if (throwable instanceof NetworkException) {
+                                checkUserCredentialsWithOrgUnit(
+                                        mCredentialsLocalDataSource.getOrganisationCredentials(),
+                                        false);
                     }
-                });
+                        }
+                    });
+        } else {
+            notifyMaxLoginAttemptsReached();
+        }
     }
 
+    private boolean isLoginEnable() {
+        InvalidLoginAttempts invalidLoginAttempts =
+                mInvalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
+        return invalidLoginAttempts.isLoginEnabled();
+    }
 
     private void pullOrganisationCredentials() {
         Credentials orgUnitCredentials = null;
@@ -90,7 +103,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
             }
             orgUnitCredentials = new Credentials("", orgUnit.getCode(), orgUnit.getPin());
 
-        } catch (PullConversionException | JSONException e) {
+        } catch (PullConversionException | JSONException | ConfigJsonIOException e) {
             e.printStackTrace();
             notifyConfigJsonNotPresent();
         } catch (NetworkException e) {
@@ -135,29 +148,42 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
     public void notifyInvalidCredentials() {
         InvalidLoginAttempts invalidLoginAttempts =
                 mInvalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
-        invalidLoginAttempts.addFailedAttempts();
+
+        try {
+            invalidLoginAttempts.addFailedAttempts();
+        } catch (ActionNotAllowed actionNotAllowed) {
+            actionNotAllowed.printStackTrace();
+            notifyMaxLoginAttemptsReached();
+        }
+
         mInvalidLoginAttemptsLocalDataSource.saveInvalidLoginAttempts(invalidLoginAttempts);
+
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
                 mCallback.onInvalidCredentials();
             }
         });
+
         if (!invalidLoginAttempts.isLoginEnabled()) {
-            mMainExecutor.run(new Runnable() {
-                @Override
-                public void run() {
-                    mCallback.disableLogin();
-                }
-            });
+            notifyMaxLoginAttemptsReached();
         }
+    }
+
+    private void notifyMaxLoginAttemptsReached() {
+        mMainExecutor.run(new Runnable() {
+            @Override
+            public void run() {
+                mCallback.onMaxLoginAttemptsReachedError();
+            }
+        });
     }
 
     public void notifyConfigJsonNotPresent() {
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onConfigJsonNotPresent();
+                mCallback.onConfigJsonInvalid();
             }
         });
     }

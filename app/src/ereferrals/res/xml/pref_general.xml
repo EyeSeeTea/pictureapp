@@ -60,6 +60,15 @@
             android:singleLine="true"
             android:title="@string/create_info_organization_unit" />
 
+        <EditTextPreference
+            android:defaultValue="@string/preferences_web_service_url"
+            android:inputType="textUri"
+            android:key="@string/web_service_url"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/web_service_name" />
+
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_visual"

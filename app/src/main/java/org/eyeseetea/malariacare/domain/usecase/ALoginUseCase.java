@@ -15,11 +15,11 @@ public abstract class ALoginUseCase {
 
         void onNetworkError();
 
-        void onConfigJsonNotPresent();
+        void onConfigJsonInvalid();
 
         void onUnexpectedError();
 
-        void disableLogin();
+        void onMaxLoginAttemptsReachedError();
     }
 
     public abstract void execute(Credentials credentials, Callback callback);

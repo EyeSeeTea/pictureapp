@@ -3,10 +3,8 @@ package org.eyeseetea.malariacare.layout.adapters.survey.strategies;
 
 import static org.eyeseetea.malariacare.data.database.utils.Session.getMalariaSurvey;
 
-import android.os.Handler;
+import android.view.View;
 
-import org.eyeseetea.malariacare.BuildConfig;
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
@@ -16,10 +14,8 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Treatment;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
-import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
-import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.GradleVariantConfig;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -31,16 +27,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
-
-    DynamicTabAdapter mDynamicTabAdapter;
+public class DynamicTabAdapterStrategy extends ADynamicTabAdapterStrategy {
     /**
      * Added to save the dose by a quetion id when questions are dynamic treatment questions
      */
     HashMap<Long, Float> doseByQuestion;
 
     public DynamicTabAdapterStrategy(DynamicTabAdapter dynamicTabAdapter) {
-        this.mDynamicTabAdapter = dynamicTabAdapter;
+        super(dynamicTabAdapter);
     }
 
     @Override
@@ -174,44 +168,6 @@ public class DynamicTabAdapterStrategy implements IDynamicTabAdapterStrategy {
     }
 
     @Override
-    public void finishOrNext() {
-        try {
-            System.out.println(Session.getMalariaSurvey().getValuesFromDB().toString());
-            System.out.println(Session.getStockSurvey().getValuesFromDB().toString());
-        } catch (Exception e) {
-        }
-        if (Validation.hasErrors()) {
-            Validation.showErrors();
-            DynamicTabAdapter.setIsClicked(false);
-            return;
-        }
-        if (mDynamicTabAdapter.navigationController.getCurrentQuestion().hasCompulsoryNotAnswered
-                ()) {
-
-            UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();
-            DynamicTabAdapter.setIsClicked(false);
-            return;
-        }
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Question question = mDynamicTabAdapter.navigationController.getCurrentQuestion();
-                Value value = question.getValueBySession();
-                if (mDynamicTabAdapter.isDone(value)) {
-                    mDynamicTabAdapter.navigationController.isMovingToForward = false;
-                    if (!mDynamicTabAdapter.wasPatientTested() || !BuildConfig.reviewScreen) {
-                        mDynamicTabAdapter.surveyShowDone();
-                    } else {
-                        DashboardActivity.dashboardActivity.showReviewFragment();
-                        mDynamicTabAdapter.hideKeyboard(
-                                PreferencesState.getInstance().getContext());
-                        DynamicTabAdapter.setIsClicked(false);
-                    }
-                    return;
-                }
-                mDynamicTabAdapter.next();
-            }
-        }, 750);
+    public void addScrollToSwipeTouchListener(View rowView) {
     }
 }

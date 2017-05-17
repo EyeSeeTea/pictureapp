@@ -45,11 +45,12 @@ public class DashboardSentFilter {
     private void initOrgUnitFilters(ListView view) {
         initiatingFilters = true;
         filterSpinnerSurveys = (Spinner) view.findViewById(R.id.filter_surveys);
-// Specify the layout to use when the list of choices appears
+        // Specify the layout to use when the list of choices appears
         ArrayList<String> filterList = initFilterList();
         StringArrayAdapter adapter = new StringArrayAdapter(view.getContext(),
                 filterList);
         adapter.setDropDownViewResource(R.layout.main_spinner_item);
+        adapter.setDropDownItemSize(23);
         filterSpinnerSurveys.setAdapter(adapter);
         if (lastFilterSelection == null) {
             lastFilterSelection = filterList.get(0);

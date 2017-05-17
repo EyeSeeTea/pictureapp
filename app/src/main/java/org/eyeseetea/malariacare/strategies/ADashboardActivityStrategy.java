@@ -9,10 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 
@@ -20,6 +23,11 @@ public abstract class ADashboardActivityStrategy {
     private final static String TAG = ".DashActivityStrategy";
 
     public abstract void reloadStockFragment(Activity activity);
+
+    public void reloadMonitorFragment(Activity activity, MonitorFragment monitorFragment) {
+        monitorFragment.reloadData();
+        monitorFragment.reloadHeader(activity);
+    }
 
     public abstract boolean showStockFragment(Activity activity, boolean isMoveToLeft);
 
@@ -105,5 +113,13 @@ public abstract class ADashboardActivityStrategy {
 
     public void initNavigationController() {
         NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
+    }
+
+    public void onUnsentTabSelected(DashboardActivity dashboardActivity) {
+
+    }
+
+    public void onSentTabSelected(DashboardActivity dashboardActivity) {
+
     }
 }

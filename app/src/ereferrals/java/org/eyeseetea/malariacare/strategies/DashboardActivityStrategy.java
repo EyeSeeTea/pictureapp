@@ -5,13 +5,17 @@ import android.app.Activity;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import java.util.Date;
 import org.eyeseetea.malariacare.fragments.OfflineFragment;
@@ -25,7 +29,32 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void reloadStockFragment(Activity activity) {
+        if (activity instanceof BaseActivity) {
+            ((BaseActivity) activity).getBaseActivityStrategy().setNotConnectedText(
+                    R.string.offline_status);
+        }
+    }
 
+    @Override
+    public void reloadMonitorFragment(Activity activity, MonitorFragment monitorFragment) {
+        if (activity instanceof BaseActivity) {
+            ((BaseActivity) activity).getBaseActivityStrategy().setNotConnectedText(
+                    R.string.offline_status_online_tab);
+        }
+    }
+
+    @Override
+    public void onUnsentTabSelected(DashboardActivity dashboardActivity) {
+        super.onUnsentTabSelected(dashboardActivity);
+        dashboardActivity.getBaseActivityStrategy().setNotConnectedText(
+                R.string.offline_status);
+    }
+
+    @Override
+    public void onSentTabSelected(DashboardActivity dashboardActivity) {
+        super.onSentTabSelected(dashboardActivity);
+        dashboardActivity.getBaseActivityStrategy().setNotConnectedText(
+                R.string.offline_status);
     }
 
     @Override

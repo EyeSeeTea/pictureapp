@@ -5,11 +5,12 @@ import android.content.Context;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IAuthenticationDataSource;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
+import org.eyeseetea.malariacare.data.database.datasources.strategies
+        .AuthenticationLocalDataSourceStrategy;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.User;
-import org.eyeseetea.malariacare.data.database.utils.PopulateDBStrategy;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
@@ -20,39 +21,26 @@ import java.util.List;
 public class AuthenticationLocalDataSource implements IAuthenticationDataSource {
 
     Context mContext;
+    private AuthenticationLocalDataSourceStrategy
+
+            mAuthenticationLocalDataSourceStrategy;
 
     public AuthenticationLocalDataSource(Context context) {
         mContext = context;
+        mAuthenticationLocalDataSourceStrategy = new AuthenticationLocalDataSourceStrategy(this);
     }
 
     @Override
     public void logout(IDataSourceCallback<Void> callback) {
-        User user = User.getLoggedUser();
-
-        if (user != null) {
-            user.delete();
-        }
-
-        clearCredentials();
-
-        Session.logout();
-
-        //reset org_unit
-        PreferencesState.getInstance().saveStringPreference(R.string.org_unit,
-                "");
-
-
-        new PopulateDBStrategy().logoutWipe();
-
-        deleteOrgUnitQuestionOptions();
-
-        callback.onSuccess(null);
+        mAuthenticationLocalDataSourceStrategy.logout(callback);
     }
 
     @Override
     public void login(Credentials credentials, IDataSourceCallback<UserAccount> callback) {
+        User loggedUser = User.getLoggedUser();
+        String userUid = loggedUser != null ? loggedUser.getUid() : null;
 
-        User user = new User(credentials.getUserUid(), credentials.getUsername());
+        User user = new User(userUid, credentials.getUsername());
 
         User.insertLoggedUser(user);
 
@@ -65,6 +53,7 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
         callback.onSuccess(null);
     }
 
+
     private void saveCredentials(Credentials credentials) {
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,
                 credentials.getServerURL());
@@ -76,7 +65,7 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
     }
 
 
-    private void clearCredentials() {
+    public void clearCredentials() {
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_url,
                 mContext.getString(R.string.DHIS_DEFAULT_SERVER));
         PreferencesState.getInstance().saveStringPreference(R.string.dhis_user, "");
@@ -85,7 +74,7 @@ public class AuthenticationLocalDataSource implements IAuthenticationDataSource 
     }
 
 
-    private void deleteOrgUnitQuestionOptions() {
+    public void deleteOrgUnitQuestionOptions() {
         List<Question> questions = Question.getAllQuestionsWithOrgUnitDropdownList();
         //remove older values, but not the especial "other" option
         for (Question question : questions) {

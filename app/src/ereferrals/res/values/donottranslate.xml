@@ -36,4 +36,6 @@
     <item name="web_service_url" translatable="false" type="string">web_service_url</item>
 
 
+    <string name="ws_version">1.0</string>
+
 </resources>

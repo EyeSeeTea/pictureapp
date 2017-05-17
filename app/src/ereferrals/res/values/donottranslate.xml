@@ -36,6 +36,7 @@
     <item name="web_service_url" translatable="false" type="string">web_service_url</item>
 
     <string name="ws_version">1.0</string>
+    <string name="ws_source">Android v1.1</string>
     <string name="ws_base_url">https://james.psi-mis.org/</string>
 
 </resources>

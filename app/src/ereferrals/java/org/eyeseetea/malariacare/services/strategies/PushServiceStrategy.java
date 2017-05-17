@@ -179,7 +179,10 @@ public class PushServiceStrategy extends APushServiceStrategy {
 
             @Override
             public void onConversionError() {
-                onError("PUSHUSECASE ERROR An error has occurred to the conversion in push process");
+                showInDialog(PreferencesState.getInstance().getContext().getString(
+                        R.string.error_conflict_title),
+                        PreferencesState.getInstance().getContext().getString(
+                                R.string.ws_conversion_error));
             }
 
             @Override

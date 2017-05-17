@@ -1,13 +1,14 @@
 package org.eyeseetea.malariacare.data.sync.exporter;
 
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.sync.exporter.model.AttributeValueWS;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObject;
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySendAction;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.hisp.dhis.client.sdk.core.common.utils.CodeGenerator;
 
@@ -20,11 +21,12 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     private SurveyContainerWSObject mSurveyContainerWSObject;
 
     public ConvertToWSVisitor() {
-        Credentials credentials = PreferencesEReferral.getUserCredentialsFromPreferences();
-        //TODO ask what to put here
+        ICredentialsRepository credentialsRepository = new CredentialsLocalDataSource();
+        Credentials credentials = credentialsRepository.getOrganisationCredentials();
         mSurveyContainerWSObject = new SurveyContainerWSObject(
                 PreferencesState.getInstance().getContext().getString(
-                        R.string.ws_version), "androidversion", credentials.getUsername(),
+                        R.string.ws_version), PreferencesState.getInstance().getContext().getString(
+                R.string.ws_source), credentials.getUsername(),
                 credentials.getPassword());
     }
 

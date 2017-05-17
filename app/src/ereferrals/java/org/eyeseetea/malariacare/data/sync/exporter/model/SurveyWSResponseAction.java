@@ -2,6 +2,7 @@ package org.eyeseetea.malariacare.data.sync.exporter.model;
 
 public class SurveyWSResponseAction {
     private static final String SUCCESS = "success";
+    private static final String FAILED = "failed";
 
     private String actionId;
     private String message;

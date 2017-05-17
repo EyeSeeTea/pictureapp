@@ -104,7 +104,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         openFragment = new WebViewFragment();
         Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
                 ? mDashboardActivity.getIntent().getExtras() : new Bundle();
-        bundle.putString(WebViewFragment.WEB_VIEW_URL, "https://es.stackoverflow.com/");
+        bundle.putString(WebViewFragment.WEB_VIEW_URL,
+                "https://james.psi-mis.org/eReferralsDev/pages/ipc"
+                        + ".html?skipHeader=true&action=ipcOpenReferrals&userName=8001&password"
+                        + "=1234");
         bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_assess);
         openFragment.setArguments(bundle);
         openFragment.reloadData();
@@ -126,7 +129,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         closeFragment = new WebViewFragment();
         Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
                 ? mDashboardActivity.getIntent().getExtras() : new Bundle();
-        bundle.putString(WebViewFragment.WEB_VIEW_URL, "https://www.google.es/");
+        bundle.putString(WebViewFragment.WEB_VIEW_URL,
+                "https://james.psi-mis.org/eReferralsDev/pages/ipc"
+                        + ".html?skipHeader=true&action=ipcRedeemedReferrals&userName=8001"
+                        + "&password=1234");
         bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_improve);
         closeFragment.setArguments(bundle);
         closeFragment.reloadData();
@@ -144,7 +150,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         statusFragment = new WebViewFragment();
         Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
                 ? mDashboardActivity.getIntent().getExtras() : new Bundle();
-        bundle.putString(WebViewFragment.WEB_VIEW_URL, "https://github.com/");
+        bundle.putString(WebViewFragment.WEB_VIEW_URL,
+                "https://james.psi-mis.org/eReferralsDev/pages/ipc"
+                        + ".html?skipHeader=true&action=ipcStats&userName=8001&password=1234");
         bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_monitor);
         statusFragment.setArguments(bundle);
         statusFragment.reloadData();

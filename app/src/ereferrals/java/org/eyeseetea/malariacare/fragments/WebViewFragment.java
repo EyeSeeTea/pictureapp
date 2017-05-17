@@ -37,7 +37,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     private void initViews(View view) {
         mWebView = (WebView) view.findViewById(R.id.web_view);
-        mWebView.loadUrl(url);
+        loadUrlInWebView();
     }
 
     private void manageBundle(Bundle savedInstanceState) {
@@ -48,11 +48,14 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     @Override
     public void reloadData() {
+        loadUrlInWebView();
+    }
+
+    private void loadUrlInWebView() {
         if (mWebView != null) {
-            mWebView.setVisibility(View.GONE);
             mWebView.loadUrl(url);
-            mWebView.reload();
-            mWebView.setVisibility(View.VISIBLE);
+            mWebView.getSettings().setJavaScriptEnabled(true);
+            mWebView.getSettings().setDomStorageEnabled(true);
         }
     }
 

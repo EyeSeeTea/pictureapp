@@ -108,6 +108,10 @@ public class SurveyService extends IntentService {
      * Tag for logging
      */
     public static final String TAG = ".SurveyService";
+    /**
+     * The user program UID
+     */
+    private String mProgramUID;
 
     /**
      * Constructor required due to a error message in AndroidManifest.xml if it is not present
@@ -152,12 +156,7 @@ public class SurveyService extends IntentService {
 
     private void reloadDashboard() {
         Log.i(TAG, "reloadDashboard");
-        IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
-                programLocalDataSource, mainExecutor, asyncExecutor);
-        getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+        getProgramUID(new Callback() {
             @Override
             public void onSuccess(String uid) {
                 List<Survey> unsentSurveys = Survey.getAllUnsentMalariaSurveys(uid);
@@ -173,14 +172,7 @@ public class SurveyService extends IntentService {
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
                         new Intent(ALL_SENT_SURVEYS_ACTION));
             }
-
-            @Override
-            public void onError() {
-                Log.e(TAG, "error getting user program");
-            }
         });
-
-
     }
 
     /**
@@ -188,16 +180,10 @@ public class SurveyService extends IntentService {
      */
     private void getAllUnsentSurveys() {
         Log.d(TAG, "getAllUnsentMalariaSurveys (Thread:" + Thread.currentThread().getId() + ")");
-
-        IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
-                programLocalDataSource, mainExecutor, asyncExecutor);
-        getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+//Select surveys from sql
+        getProgramUID(new Callback() {
             @Override
             public void onSuccess(String uid) {
-//Select surveys from sql
                 List<Survey> surveys = Survey.getAllUnsentMalariaSurveys(uid);
                 List<Survey> unsentSurveys = new ArrayList<Survey>();
 
@@ -217,14 +203,7 @@ public class SurveyService extends IntentService {
                 Intent resultIntent = new Intent(ALL_UNSENT_SURVEYS_ACTION);
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(resultIntent);
             }
-
-            @Override
-            public void onError() {
-                Log.e(TAG, "error getting user program");
-            }
         });
-
-
     }
 
     /**
@@ -232,12 +211,7 @@ public class SurveyService extends IntentService {
      */
     private void getAllSentSurveys() {
         Log.d(TAG, "getAllSentMalariaSurveys (Thread:" + Thread.currentThread().getId() + ")");
-        IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
-                programLocalDataSource, mainExecutor, asyncExecutor);
-        getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+        getProgramUID(new Callback() {
             @Override
             public void onSuccess(String uid) {
                 //Select surveys from sql
@@ -250,13 +224,7 @@ public class SurveyService extends IntentService {
                 Intent resultIntent = new Intent(ALL_SENT_SURVEYS_ACTION);
                 LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(resultIntent);
             }
-
-            @Override
-            public void onError() {
-                Log.e(TAG, "error getting user program");
-            }
         });
-
     }
 
     /**
@@ -264,16 +232,10 @@ public class SurveyService extends IntentService {
      */
     private void removeAllSentSurveys() {
         Log.d(TAG, "removeAllSentSurveys (Thread:" + Thread.currentThread().getId() + ")");
-
-        IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
-        IMainExecutor mainExecutor = new UIThreadExecutor();
-        IAsyncExecutor asyncExecutor = new AsyncExecutor();
-        GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
-                programLocalDataSource, mainExecutor, asyncExecutor);
-        getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+        getProgramUID(new Callback() {
             @Override
             public void onSuccess(String uid) {
-//Select all sent surveys from sql and delete.
+                //Select all sent surveys from sql and delete.
                 List<Survey> surveys = Survey.getAllSentMalariaSurveys(uid);
                 for (int i = surveys.size() - 1; i >= 0; i--) {
                     //If is over limit the survey be delete, if is in the limit the survey change
@@ -288,14 +250,7 @@ public class SurveyService extends IntentService {
                     }
                 }
             }
-
-            @Override
-            public void onError() {
-                Log.e(TAG, "error getting user program");
-            }
         });
-
-
     }
 
     private void getAllUncompletedSurveys() {
@@ -358,5 +313,34 @@ public class SurveyService extends IntentService {
         //Returning result to anyone listening
         Intent resultIntent = new Intent(PREPARE_SURVEY_ACTION);
         LocalBroadcastManager.getInstance(this).sendBroadcast(resultIntent);
+    }
+
+
+    private void getProgramUID(final Callback callback) {
+        if (mProgramUID != null) {
+            callback.onSuccess(mProgramUID);
+        } else {
+            IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
+            IMainExecutor mainExecutor = new UIThreadExecutor();
+            IAsyncExecutor asyncExecutor = new AsyncExecutor();
+            GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
+                    programLocalDataSource, mainExecutor, asyncExecutor);
+            getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+                @Override
+                public void onSuccess(String uid) {
+                    mProgramUID = uid;
+                    callback.onSuccess(uid);
+                }
+
+                @Override
+                public void onError() {
+                    Log.e(TAG, "error getting user program");
+                }
+            });
+        }
+    }
+
+    private interface Callback {
+        void onSuccess(String uid);
     }
 }

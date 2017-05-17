@@ -14,27 +14,17 @@ public class ProgramLocalDataSource implements IProgramRepository {
 
     }
 
-    @Override
-    public Long getUserProgramId() {
-        org.eyeseetea.malariacare.data.database.model.Program program =
-                org.eyeseetea.malariacare.data.database.model.Program.findByUID(
-                        PreferencesState.getInstance().getContext().getString(
-                                R.string.malariaProgramUID));
-        if (program == null) {
-            return 0l;
-        }
-        return program.getId_program();
-    }
 
     @Override
-    public String getUserProgramUID() {
-        org.eyeseetea.malariacare.data.database.model.Program program =
+    public Program getUserProgram() {
+        org.eyeseetea.malariacare.data.database.model.Program programDB =
                 org.eyeseetea.malariacare.data.database.model.Program.findByUID(
                         PreferencesState.getInstance().getContext().getString(
                                 R.string.malariaProgramUID));
-        if (program == null) {
-            return "";
+        if (programDB == null) {
+            return null;
         }
-        return program.getUid();
+        Program program = new Program(programDB.getName(), programDB.getUid());
+        return program;
     }
 }

@@ -17,7 +17,7 @@ public class MockedPushSurveysUseCase {
 
     public void execute(Callback callback) {
         List<Survey> surveys = Survey.getAllMalariaSurveysToBeSent(
-                mProgramLocalDataSource.getUserProgramUID());
+                mProgramLocalDataSource.getUserProgram().getId());
 
         for (Survey survey : surveys) {
             SurveyFragmentStrategy.setSurveyAsSent(survey);

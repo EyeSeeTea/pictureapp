@@ -8,7 +8,7 @@ import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
-import org.eyeseetea.malariacare.data.database.ProgramLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;

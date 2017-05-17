@@ -7,7 +7,5 @@ public interface IProgramRepository {
 
     void saveUserProgramId(Program program);
 
-    Long getUserProgramId();
-
-    String getUserProgramUID();
+    Program getUserProgram();
 }

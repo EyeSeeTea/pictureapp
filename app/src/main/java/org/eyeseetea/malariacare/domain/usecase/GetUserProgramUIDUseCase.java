@@ -26,7 +26,7 @@ public class GetUserProgramUIDUseCase implements UseCase {
 
     @Override
     public void run() {
-        final String uid = mProgramLocalDataSource.getUserProgramUID();
+        final String uid = mProgramLocalDataSource.getUserProgram().getId();
         if (uid != null && !uid.isEmpty()) {
             mMainExecutor.run(new Runnable() {
                 @Override

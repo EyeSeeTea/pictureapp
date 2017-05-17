@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.data.database;
+package org.eyeseetea.malariacare.data.database.datasources;
 
 import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
@@ -15,14 +15,13 @@ public class ProgramLocalDataSource implements IProgramRepository {
     }
 
     @Override
-    public Long getUserProgramId() {
-        return PreferencesEReferral.getUserProgramId();
+    public Program getUserProgram() {
+        org.eyeseetea.malariacare.data.database.model.Program databaseProgram =
+                org.eyeseetea.malariacare.data.database.model.Program.getProgram(
+                        PreferencesEReferral.getUserProgramId());
+        Program program = new Program(databaseProgram.getName(), databaseProgram.getUid());
+        return program;
     }
 
-    @Override
-    public String getUserProgramUID() {
-        return org.eyeseetea.malariacare.data.database.model.Program.getProgram(
-                getUserProgramId()).getUid();
-    }
 
 }

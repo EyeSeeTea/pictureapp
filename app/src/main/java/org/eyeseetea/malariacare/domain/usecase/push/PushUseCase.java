@@ -45,7 +45,7 @@ public class PushUseCase implements UseCase {
         void onApiCallError(ApiCallException e);
     }
 
-    public IPushController mPushController;
+    private IPushController mPushController;
     private ISurveyRepository mSurveyRepository;
     private IOrganisationUnitRepository mOrganisationUnitRepository;
 
@@ -67,7 +67,8 @@ public class PushUseCase implements UseCase {
         mSurveysThresholds = surveysThresholds;
         mSurveyRepository = surveyRepository;
         mOrganisationUnitRepository = organisationUnitRepository;
-        mPushUseCaseStrategy = new PushUseCaseStrategy(this);
+        mPushUseCaseStrategy = new PushUseCaseStrategy(this, pushController,
+                organisationUnitRepository);
     }
 
     public void execute(final Callback callback) {
@@ -81,7 +82,7 @@ public class PushUseCase implements UseCase {
         mPushUseCaseStrategy.run();
     }
 
-    public boolean isOrgUnitBanned() throws NetworkException, ApiCallException {
+    private boolean isOrgUnitBanned() throws NetworkException, ApiCallException {
         OrganisationUnit orgUnit = null;
         try {
             orgUnit = mOrganisationUnitRepository.getCurrentOrganisationUnit(ReadPolicy.REMOTE);
@@ -160,10 +161,6 @@ public class PushUseCase implements UseCase {
             mOrganisationUnitRepository.saveOrganisationUnit(organisationUnit);
             System.out.println("OrgUnit banned successfully");
         }
-    }
-
-    public IPushController getPushController() {
-        return mPushController;
     }
 
     public IOrganisationUnitRepository getOrganisationUnitRepository() {

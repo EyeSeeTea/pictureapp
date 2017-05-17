@@ -33,7 +33,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
             questionTextView.setText(rowText);
             //Adds click listener to hide the fragment and go to the clicked question.
-            textCard.setOnClickListener(new View.OnClickListener() {
+            questionTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(!DynamicTabAdapter.isClicked) {

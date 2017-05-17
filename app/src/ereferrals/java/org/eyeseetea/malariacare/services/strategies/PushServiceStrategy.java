@@ -12,9 +12,8 @@ import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.remote.OrganisationUnitDataSource;
-import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -145,7 +144,7 @@ public class PushServiceStrategy extends APushServiceStrategy {
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IMainExecutor mainExecutor = new UIThreadExecutor();
         ISurveyRepository surveyRepository = new SurveyLocalDataSource();
-        IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitDataSource();
+        IOrganisationUnitRepository orgUnitRepository = new OrganisationUnitRepository();
 
         SurveysThresholds surveysThresholds =
                 new SurveysThresholds(BuildConfig.LimitSurveysCount,

@@ -1,10 +1,8 @@
 package org.eyeseetea.malariacare.domain.usecase.push.strategies;
 
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
-import org.eyeseetea.malariacare.domain.exception.ApiCallException;
-import org.eyeseetea.malariacare.domain.exception.NetworkException;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
+import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.usecase.push.PushUseCase;
 
 public abstract class APushUseCaseStrategy {
@@ -25,35 +23,33 @@ public abstract class APushUseCaseStrategy {
         pushController.changePushInProgress(true);
 
         try {
-            Boolean isBanned = mPushUseCase.isOrgUnitBanned();
+            configureBanOrgUnitChangeListener();
 
-            OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
+            boolean isBanned = mPushUseCase.isOrgUnitBanned();
+
             if (isBanned) {
-                if (orgUnit != null && !orgUnit.isBanned()) {
-                    orgUnit.setBan(true);
-                    orgUnit.save();
-                    mPushUseCase.notifyBannedOrgUnitError();
-
-                }
                 pushController.changePushInProgress(false);
             } else {
-                if (orgUnit != null && orgUnit.isBanned()) {
-                    orgUnit.setBan(false);
-                    orgUnit.save();
-                    mPushUseCase.notifyReOpenOrgUnit();
-                }
                 mPushUseCase.runPush();
             }
 
-        } catch (NetworkException e) {
-            mPushUseCase.mPushController.changePushInProgress(false);
-            mPushUseCase.notifyNetworkError();
-        } catch (ApiCallException e) {
-            mPushUseCase.mPushController.changePushInProgress(false);
-            mPushUseCase.notifyApiCallError(e);
         } catch (Exception e) {
-            mPushUseCase.mPushController.changePushInProgress(false);
+            pushController.changePushInProgress(false);
             mPushUseCase.notifyPushError();
         }
+    }
+
+    private void configureBanOrgUnitChangeListener() {
+        mPushUseCase.getOrganisationUnitRepository().setBanOrgUnitChangeListener(
+                new IOrganisationUnitRepository.BanOrgUnitChangeListener() {
+                    @Override
+                    public void onBanOrgUnitChanged(OrganisationUnit organisationUnit) {
+                        if (organisationUnit.isBanned()) {
+                            mPushUseCase.notifyBannedOrgUnitError();
+                        } else {
+                            mPushUseCase.notifyReOpenOrgUnit();
+                        }
+                    }
+                });
     }
 }

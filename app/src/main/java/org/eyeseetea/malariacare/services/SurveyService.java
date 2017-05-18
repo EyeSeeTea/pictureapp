@@ -26,12 +26,18 @@ import android.util.Log;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.CompositeScore;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
+import org.eyeseetea.malariacare.domain.usecase.GetUserProgramUIDUseCase;
 import org.eyeseetea.malariacare.layout.score.ScoreRegister;
-import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.eyeseetea.malariacare.utils.Utils;
 
@@ -102,6 +108,10 @@ public class SurveyService extends IntentService {
      * Tag for logging
      */
     public static final String TAG = ".SurveyService";
+    /**
+     * The user program UID
+     */
+    private String mProgramUID;
 
     /**
      * Constructor required due to a error message in AndroidManifest.xml if it is not present
@@ -146,21 +156,23 @@ public class SurveyService extends IntentService {
 
     private void reloadDashboard() {
         Log.i(TAG, "reloadDashboard");
-        List<Survey> surveys = Survey.getAllSurveys();
+        getProgramUID(new Callback() {
+            @Override
+            public void onSuccess(String uid) {
+                List<Survey> unsentSurveys = Survey.getAllUnsentMalariaSurveys(uid);
+                List<Survey> sentSurveys = Survey.getAllSentMalariaSurveys(uid);
 
-        List<Survey> unsentSurveys = Survey.getAllUnsentMalariaSurveys(
-                new SurveyFragmentStrategy().getMalariaProgram());
-        List<Survey> sentSurveys = Survey.getAllSentMalariaSurveys(
-                new SurveyFragmentStrategy().getMalariaProgram());
+                //Since intents does NOT admit NON serializable as values we use Session instead
+                Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveys);
+                Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, sentSurveys);
 
-        //Since intents does NOT admit NON serializable as values we use Session instead
-        Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveys);
-        Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, sentSurveys);
-
-        //Returning result to anyone listening
-        LocalBroadcastManager.getInstance(this).sendBroadcast(
-                new Intent(ALL_UNSENT_SURVEYS_ACTION));
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ALL_SENT_SURVEYS_ACTION));
+                //Returning result to anyone listening
+                LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
+                        new Intent(ALL_UNSENT_SURVEYS_ACTION));
+                LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(
+                        new Intent(ALL_SENT_SURVEYS_ACTION));
+            }
+        });
     }
 
     /**
@@ -168,26 +180,30 @@ public class SurveyService extends IntentService {
      */
     private void getAllUnsentSurveys() {
         Log.d(TAG, "getAllUnsentMalariaSurveys (Thread:" + Thread.currentThread().getId() + ")");
+//Select surveys from sql
+        getProgramUID(new Callback() {
+            @Override
+            public void onSuccess(String uid) {
+                List<Survey> surveys = Survey.getAllUnsentMalariaSurveys(uid);
+                List<Survey> unsentSurveys = new ArrayList<Survey>();
 
-        //Select surveys from sql
-        List<Survey> surveys = Survey.getAllUnsentMalariaSurveys(
-                new SurveyFragmentStrategy().getMalariaProgram());
-        List<Survey> unsentSurveys = new ArrayList<Survey>();
+                //Load %completion in every survey (it takes a while so it can NOT be done in UI
+                // Thread)
+                for (Survey survey : surveys) {
+                    if (!survey.isSent() && !survey.isHide() && !survey.isConflict()) {
+                        survey.getAnsweredQuestionRatio();
+                        unsentSurveys.add(survey);
+                    }
+                }
 
-        //Load %completion in every survey (it takes a while so it can NOT be done in UI Thread)
-        for (Survey survey : surveys) {
-            if (!survey.isSent() && !survey.isHide() && !survey.isConflict()) {
-                survey.getAnsweredQuestionRatio();
-                unsentSurveys.add(survey);
+                //Since intents does NOT admit NON serializable as values we use Session instead
+                Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveys);
+
+                //Returning result to anyone listening
+                Intent resultIntent = new Intent(ALL_UNSENT_SURVEYS_ACTION);
+                LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(resultIntent);
             }
-        }
-
-        //Since intents does NOT admit NON serializable as values we use Session instead
-        Session.putServiceValue(ALL_UNSENT_SURVEYS_ACTION, unsentSurveys);
-
-        //Returning result to anyone listening
-        Intent resultIntent = new Intent(ALL_UNSENT_SURVEYS_ACTION);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(resultIntent);
+        });
     }
 
     /**
@@ -195,17 +211,20 @@ public class SurveyService extends IntentService {
      */
     private void getAllSentSurveys() {
         Log.d(TAG, "getAllSentMalariaSurveys (Thread:" + Thread.currentThread().getId() + ")");
+        getProgramUID(new Callback() {
+            @Override
+            public void onSuccess(String uid) {
+                //Select surveys from sql
+                List<Survey> surveys = Survey.getAllSentMalariaSurveys(uid);
 
-        //Select surveys from sql
-        List<Survey> surveys = Survey.getAllSentMalariaSurveys(
-                new SurveyFragmentStrategy().getMalariaProgram());
+                //Since intents does NOT admit NON serializable as values we use Session instead
+                Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, surveys);
 
-        //Since intents does NOT admit NON serializable as values we use Session instead
-        Session.putServiceValue(ALL_SENT_SURVEYS_ACTION, surveys);
-
-        //Returning result to anyone listening
-        Intent resultIntent = new Intent(ALL_SENT_SURVEYS_ACTION);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(resultIntent);
+                //Returning result to anyone listening
+                Intent resultIntent = new Intent(ALL_SENT_SURVEYS_ACTION);
+                LocalBroadcastManager.getInstance(SurveyService.this).sendBroadcast(resultIntent);
+            }
+        });
     }
 
     /**
@@ -213,20 +232,25 @@ public class SurveyService extends IntentService {
      */
     private void removeAllSentSurveys() {
         Log.d(TAG, "removeAllSentSurveys (Thread:" + Thread.currentThread().getId() + ")");
-
-        //Select all sent surveys from sql and delete.
-        List<Survey> surveys = Survey.getAllSentMalariaSurveys(
-                new SurveyFragmentStrategy().getMalariaProgram());
-        for (int i = surveys.size() - 1; i >= 0; i--) {
-            //If is over limit the survey be delete, if is in the limit the survey change the
-            // state to STATE_HIDE
-            if (Utils.isDateOverLimit(Utils.DateToCalendar(surveys.get(i).getEventDate()), 1)) {
-                surveys.get(i).delete();
-            } else {
-                surveys.get(i).setStatus(Constants.SURVEY_HIDE);
-                surveys.get(i).save();
+        getProgramUID(new Callback() {
+            @Override
+            public void onSuccess(String uid) {
+                //Select all sent surveys from sql and delete.
+                List<Survey> surveys = Survey.getAllSentMalariaSurveys(uid);
+                for (int i = surveys.size() - 1; i >= 0; i--) {
+                    //If is over limit the survey be delete, if is in the limit the survey change
+                    // the
+                    // state to STATE_HIDE
+                    if (Utils.isDateOverLimit(Utils.DateToCalendar(surveys.get(i).getEventDate()),
+                            1)) {
+                        surveys.get(i).delete();
+                    } else {
+                        surveys.get(i).setStatus(Constants.SURVEY_HIDE);
+                        surveys.get(i).save();
+                    }
+                }
             }
-        }
+        });
     }
 
     private void getAllUncompletedSurveys() {
@@ -289,5 +313,34 @@ public class SurveyService extends IntentService {
         //Returning result to anyone listening
         Intent resultIntent = new Intent(PREPARE_SURVEY_ACTION);
         LocalBroadcastManager.getInstance(this).sendBroadcast(resultIntent);
+    }
+
+
+    private void getProgramUID(final Callback callback) {
+        if (mProgramUID != null) {
+            callback.onSuccess(mProgramUID);
+        } else {
+            IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
+            IMainExecutor mainExecutor = new UIThreadExecutor();
+            IAsyncExecutor asyncExecutor = new AsyncExecutor();
+            GetUserProgramUIDUseCase getUserProgramUIDUseCase = new GetUserProgramUIDUseCase(
+                    programLocalDataSource, mainExecutor, asyncExecutor);
+            getUserProgramUIDUseCase.execute(new GetUserProgramUIDUseCase.Callback() {
+                @Override
+                public void onSuccess(String uid) {
+                    mProgramUID = uid;
+                    callback.onSuccess(uid);
+                }
+
+                @Override
+                public void onError() {
+                    Log.e(TAG, "error getting user program");
+                }
+            });
+        }
+    }
+
+    private interface Callback {
+        void onSuccess(String uid);
     }
 }

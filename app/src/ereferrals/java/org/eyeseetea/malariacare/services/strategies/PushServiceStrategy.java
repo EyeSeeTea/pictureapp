@@ -11,6 +11,7 @@ import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
 import org.eyeseetea.malariacare.data.database.datasources.SurveyLocalDataSource;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.data.sync.exporter.WSPushController;
@@ -22,6 +23,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsReposi
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
@@ -99,7 +101,9 @@ public class PushServiceStrategy extends APushServiceStrategy {
     }
 
     protected void executeMockedPush() {
-        MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase();
+        IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
+        MockedPushSurveysUseCase mockedPushSurveysUseCase = new MockedPushSurveysUseCase(
+                programLocalDataSource);
 
         mockedPushSurveysUseCase.execute(new MockedPushSurveysUseCase.Callback() {
             @Override

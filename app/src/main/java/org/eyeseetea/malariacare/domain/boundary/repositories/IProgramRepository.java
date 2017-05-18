@@ -7,5 +7,5 @@ public interface IProgramRepository {
 
     void saveUserProgramId(Program program);
 
-    Long getUserProgramId();
+    Program getUserProgram();
 }

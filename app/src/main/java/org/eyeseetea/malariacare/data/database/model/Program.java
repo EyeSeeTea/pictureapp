@@ -252,4 +252,9 @@ public class Program extends BaseModel {
         return new Select().from(Program.class)
                 .where(Program_Table.uid_program.eq(uid)).querySingle();
     }
+
+    public static Program getProgram(long id) {
+        return new Select().from(Program.class)
+                .where(Program_Table.id_program.is(id)).querySingle();
+    }
 }

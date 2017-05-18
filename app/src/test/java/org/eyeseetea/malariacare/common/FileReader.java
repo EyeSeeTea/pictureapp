@@ -29,16 +29,4 @@ public class FileReader {
         }
         return sb.toString();
     }
-
-    public static Object getApiMessageFromJson(String jsonFile) throws IOException {
-        String json = new FileReader().getStringFromFile(
-                jsonFile);
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return (mapper.readValue(json, ApiMessage.class)).getResponse().getImportSummaries().get(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }

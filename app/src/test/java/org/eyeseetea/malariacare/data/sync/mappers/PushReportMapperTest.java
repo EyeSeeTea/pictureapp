@@ -1,12 +1,14 @@
 package org.eyeseetea.malariacare.data.sync.mappers;
 
 
+import static org.eyeseetea.malariacare.common.PushReportCommon.EVENT_UID_KEY;
+import static org.eyeseetea.malariacare.common.PushReportCommon.IMPORT_SUMMARY_CONFLICT_RESPONSE;
+import static org.eyeseetea.malariacare.common.PushReportCommon.IMPORT_SUMMARY_SUCCESS_RESPONSE;
+import static org.eyeseetea.malariacare.common.PushReportCommon.getApiMessageFromJson;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-import org.eyeseetea.malariacare.common.FileReader;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
-import org.hisp.dhis.client.sdk.core.common.network.ApiMessage;
 import org.hisp.dhis.client.sdk.models.common.importsummary.ImportSummary;
 import org.junit.Test;
 
@@ -14,18 +16,14 @@ import java.io.IOException;
 
 public class PushReportMapperTest {
 
-    public final String IMPORT_SUMMARY_SUCCESS_RESPONSE = "import_summary_success_response.json";
-
-    private String IMPORT_SUMMARY_CONFLICT_RESPONSE ="import_summary_conflict_response.json";
-
-    public final String EVENT_UID_KEY = "DSifqmkzKfJ";
-
     @Test
     public void test_conversion_of_success_import_summary() throws IOException {
-        ImportSummary importSummary = (ImportSummary) FileReader.getApiMessageFromJson(IMPORT_SUMMARY_SUCCESS_RESPONSE);
+        //given
+        ImportSummary importSummary = (ImportSummary) getApiMessageFromJson(
+                IMPORT_SUMMARY_SUCCESS_RESPONSE);
         PushReport pushReport = PushReportMapper.mapFromImportSummaryToPushReport(importSummary,
                 EVENT_UID_KEY);
-
+        //then
         assertThat(pushReport.getDescription().equals(importSummary.getDescription()), is(true));
         assertThat(pushReport.getEventUid().equals(importSummary.getReference()), is(true));
         assertThat(pushReport.getHref().equals(importSummary.getHref()), is(true));
@@ -45,10 +43,12 @@ public class PushReportMapperTest {
     @Test
     public void test_conversion_of_success_import_summary_with_conflicts()
             throws IOException {
-        ImportSummary importSummary = (ImportSummary) FileReader.getApiMessageFromJson(IMPORT_SUMMARY_CONFLICT_RESPONSE);
+        //given
+        ImportSummary importSummary = (ImportSummary) getApiMessageFromJson(
+                IMPORT_SUMMARY_CONFLICT_RESPONSE);
         PushReport pushReport = PushReportMapper.mapFromImportSummaryToPushReport(importSummary,
                 EVENT_UID_KEY);
-
+        //then
         assertThat(pushReport.getEventUid().equals(importSummary.getReference()), is(true));
         assertThat(pushReport.getHref().equals(importSummary.getHref()), is(true));
         assertThat((pushReport.getStatus().equals(PushReport.Status.SUCCESS)), is(true));

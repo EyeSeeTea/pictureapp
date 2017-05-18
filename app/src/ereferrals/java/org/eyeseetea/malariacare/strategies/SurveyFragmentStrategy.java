@@ -3,7 +3,6 @@ package org.eyeseetea.malariacare.strategies;
 import static org.eyeseetea.malariacare.utils.Constants.SURVEY_SENT;
 
 import org.eyeseetea.malariacare.data.database.model.Option;
-import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Value;
@@ -77,10 +76,6 @@ public class SurveyFragmentStrategy {
         //Check surveys not in progress
         survey.setStatus(SURVEY_SENT);
         survey.save();
-    }
-
-    public String getMalariaProgram() {
-        return Program.getFirstProgram().getUid();
     }
 
     public void removeSurveysInSession() {

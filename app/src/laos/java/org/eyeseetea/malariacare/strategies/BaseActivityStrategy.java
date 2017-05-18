@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
@@ -125,8 +126,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     }
 
                     @Override
-                    public void onConfigJsonNotPresent() {
-                        Log.d(TAG, "onConfigJsonNotPresent");
+                    public void onConfigJsonInvalid() {
+                        Log.d(TAG, "onConfigJsonInvalid");
                     }
 
                     @Override
@@ -136,7 +137,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
                     @Override
                     public void onMaxLoginAttemptsReachedError() {
-
+                        Log.d(TAG, "onMaxLoginAttemptsReachedError");
                     }
                 }
         );

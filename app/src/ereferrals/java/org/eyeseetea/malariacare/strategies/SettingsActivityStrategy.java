@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
 
+import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
@@ -38,7 +39,7 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     public void onStop() {
         applicationdidenterbackground();
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-            logout();
+            ActivityCompat.finishAffinity(settingsActivity);
         }
     }
     public void applicationdidenterbackground() {
@@ -71,6 +72,11 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
     }
 
     @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+    }
+
+    @Override
     public void onStart() {
         applicationWillEnterForeground();
     }
@@ -96,18 +102,9 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         }
     }
 
-    private void logout() {
-        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
-            @Override
-            public void onLogoutSuccess() {
-                ActivityCompat.finishAffinity(settingsActivity);
-            }
-
-            @Override
-            public void onLogoutError(String message) {
-                Log.d(TAG, message);
-            }
-        });
+    @Override
+    public void addExtraPreferences() {
+        settingsActivity.bindPreferenceSummaryToValue(settingsActivity.findPreference(
+                settingsActivity.getString(R.string.web_service_url)));
     }
-
 }

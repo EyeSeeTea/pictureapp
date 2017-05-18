@@ -1,6 +1,7 @@
 package org.eyeseetea.malariacare.strategies;
 
 
+import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
@@ -26,9 +27,15 @@ public abstract class ASettingsActivityStrategy {
 
     public abstract Preference.OnPreferenceChangeListener getOnPreferenceChangeListener();
 
+    public abstract void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key);
+
+
     public abstract void onStart();
 
     public abstract void onBackPressed();
 
     public abstract void onWindowFocusChanged(boolean hasFocus);
+
+    public void addExtraPreferences() {
+    }
 }

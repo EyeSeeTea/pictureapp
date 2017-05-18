@@ -6,17 +6,24 @@ import android.os.Bundle;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
+import org.eyeseetea.malariacare.data.database.model.Tab;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import org.eyeseetea.malariacare.fragments.MonitorFragment;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
@@ -63,7 +70,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void newSurvey(Activity activity) {
-        Program program = new Select().from(Program.class).querySingle();
+        Program program = Program.findById(PreferencesEReferral.getUserProgramId());
         // Put new survey in session
         Survey survey = new Survey(null, program, Session.getUser());
         survey.save();
@@ -196,5 +203,10 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void showUnsentFragment() {
         mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
                 mDashboardUnsentFragment);
+    }
+    @Override
+    public void initNavigationController() {
+        NavigationBuilder.getInstance().buildController(
+                Tab.getFirstTabWithProgram(PreferencesEReferral.getUserProgramId()));
     }
 }

@@ -32,6 +32,9 @@
     <string name="ancestor_level">3</string>
     <string name="number_bad_login">number_bad_login</string>
     <string name="time_enable_login">time_enable_login</string>
+    <string name="preferences_web_service_url"></string>
+    <item name="web_service_url" translatable="false" type="string">web_service_url</item>
+
     <string name="url_status_fragment">ipcStats</string>
     <string name="url_open_fragment">ipcOpenReferrals</string>
     <string name="url_closed_fragment">ipcRedeemedReferrals</string>

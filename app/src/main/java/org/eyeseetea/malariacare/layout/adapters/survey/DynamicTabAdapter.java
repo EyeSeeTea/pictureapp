@@ -28,7 +28,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +44,6 @@ import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
@@ -61,14 +59,13 @@ import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
-import org.eyeseetea.malariacare.layout.adapters.survey.strategies.IDynamicTabAdapterStrategy;
+import org.eyeseetea.malariacare.layout.adapters.survey.strategies.ADynamicTabAdapterStrategy;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.presentation.factory.IQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.MultiQuestionViewFactory;
 import org.eyeseetea.malariacare.presentation.factory.SingleQuestionViewFactory;
-import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.strategies.UIMessagesStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -119,7 +116,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      */
     View keyboardView;
     List<IMultiQuestionView> mMultiQuestionViews = new ArrayList<>();
-    IDynamicTabAdapterStrategy mDynamicTabAdapterStrategy;
+    ADynamicTabAdapterStrategy mDynamicTabAdapterStrategy;
     /**
      * Flag that indicates if the current survey in session is already sent or not (it affects
      * readonly settings)
@@ -473,8 +470,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 //not have additionalQuestions(variant dependent) and is not multi question tab
                 screenQuestions.add(questionItem);
             }
-            swipeTouchListener.addScrollView((ScrollView) (rowView.findViewById(
-                    R.id.scrolled_table)).findViewById(R.id.table_scroll));
+            mDynamicTabAdapterStrategy.addScrollToSwipeTouchListener(rowView);
         } else {
             tableLayout = (TableLayout) rowView.findViewById(R.id.dynamic_tab_options_table);
             (rowView.findViewById(R.id.no_scrolled_table)).setVisibility(View.VISIBLE);
@@ -759,16 +755,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         }
     }
 
-    /**
-     * hide keyboard using a keyboardView variable view
-     */
-    private void hideKeyboard(Context c) {
-        Log.d(TAG, "KEYBOARD HIDE ");
-        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        if (keyboardView != null) {
-            keyboard.hideSoftInputFromWindow(keyboardView.getWindowToken(), 0);
-        }
+    public static void setIsClicked(boolean isClicked) {
+        DynamicTabAdapter.isClicked = isClicked;
     }
 
     /**
@@ -912,51 +900,29 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     }
 
     /**
+     * hide keyboard using a keyboardView variable view
+     */
+    public void hideKeyboard(Context c) {
+        Log.d(TAG, "KEYBOARD HIDE ");
+        InputMethodManager keyboard = (InputMethodManager) c.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        if (keyboardView != null) {
+            keyboard.hideSoftInputFromWindow(keyboardView.getWindowToken(), 0);
+        }
+    }
+
+    /**
      * Advance to the next question with delay applied or finish survey according to question and
      * value.
      */
     public void finishOrNext() {
-        try{
-            System.out.println(Session.getMalariaSurvey().getValuesFromDB().toString());
-            System.out.println(Session.getStockSurvey().getValuesFromDB().toString());
-        }catch (Exception e){}
-        if (Validation.hasErrors()) {
-            Validation.showErrors();
-            isClicked = false;
-            return;
-        }
-        if (navigationController.getCurrentQuestion().hasCompulsoryNotAnswered()) {
-
-            UIMessagesStrategy.getInstance().showCompulsoryUnansweredToast();
-            isClicked = false;
-            return;
-        }
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Question question = navigationController.getCurrentQuestion();
-                Value value = question.getValueBySession();
-                if (isDone(value)) {
-                    navigationController.isMovingToForward = false;
-                    if (!ReviewFragmentStrategy.shouldShowReviewScreen() || !BuildConfig.reviewScreen) {
-                        surveyShowDone();
-                    } else {
-                        DashboardActivity.dashboardActivity.showReviewFragment();
-                        hideKeyboard(PreferencesState.getInstance().getContext());
-                        isClicked = false;
-                    }
-                    return;
-                }
-                next();
-            }
-        }, 750);
+        mDynamicTabAdapterStrategy.finishOrNext();
     }
 
     /**
      * Show a final dialog to announce the survey is over without reviewfragment.
      */
-    private void surveyShowDone() {
+    public void surveyShowDone() {
         AlertDialog.Builder msgConfirmation = new AlertDialog.Builder(context)
                 .setTitle(R.string.survey_completed)
                 .setMessage(R.string.survey_completed_text)
@@ -983,35 +949,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     /**
      * Checks if there are more questions to answer according to the given value + current status.
      */
-    private boolean isDone(Value value) {
+    public boolean isDone(Value value) {
         return !navigationController.hasNext(value != null ? value.getOption() : null);
-    }
-
-    /**
-     * Changes the current question moving forward
-     */
-    private void next() {
-        Question question = navigationController.getCurrentQuestion();
-
-        Value value = question.getValueBySession();
-
-        if (isDone(value)) {
-            navigationController.isMovingToForward = false;
-            return;
-        }
-        navigationController.next(value != null ? value.getOption() : null);
-
-        notifyDataSetChanged();
-        hideKeyboard(PreferencesState.getInstance().getContext());
-
-        question = navigationController.getCurrentQuestion();
-
-        if (value != null && !readOnly
-                && navigationController.getCurrentTotalPages() < question.getTotalQuestions()) {
-            navigationController.setTotalPages(question.getTotalQuestions());
-        }
-        navigationController.isMovingToForward = false;
-        isClicked = false;
     }
 
     /**
@@ -1101,6 +1040,33 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 next();
             }
         }
+    }
+
+    /**
+     * Changes the current question moving forward
+     */
+    public void next() {
+        Question question = navigationController.getCurrentQuestion();
+
+        Value value = question.getValueBySession();
+
+        if (isDone(value)) {
+            navigationController.isMovingToForward = false;
+            return;
+        }
+        navigationController.next(value != null ? value.getOption() : null);
+
+        notifyDataSetChanged();
+        hideKeyboard(PreferencesState.getInstance().getContext());
+
+        question = navigationController.getCurrentQuestion();
+
+        if (value != null && !readOnly
+                && navigationController.getCurrentTotalPages() < question.getTotalQuestions()) {
+            navigationController.setTotalPages(question.getTotalQuestions());
+        }
+        navigationController.isMovingToForward = false;
+        isClicked = false;
     }
 
     private void saveSwitchOption(Question question, boolean isChecked) {

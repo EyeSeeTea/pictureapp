@@ -1,12 +1,11 @@
 package org.eyeseetea.malariacare.domain.usecase.push;
 
-import org.eyeseetea.malariacare.data.database.model.OrgUnit;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
@@ -16,7 +15,6 @@ import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.service.OverLimitSurveysDomainService;
 import org.eyeseetea.malariacare.domain.usecase.UseCase;
-import org.eyeseetea.malariacare.network.ServerAPIController;
 
 import java.util.List;
 
@@ -86,41 +84,48 @@ public class PushUseCase implements UseCase {
         mPushController.changePushInProgress(true);
 
         try {
-            Boolean isBanned = isOrgUnitBanned();
+            configureBanOrgUnitChangeListener();
 
-            OrgUnit orgUnit = OrgUnit.findByName(PreferencesState.getInstance().getOrgUnit());
+            boolean isBanned = isOrgUnitBanned();
+
             if (isBanned) {
-                if (orgUnit != null && !orgUnit.isBanned()) {
-                    orgUnit.setBan(true);
-                    orgUnit.save();
-                    notifyBannedOrgUnitError();
-
-                }
                 mPushController.changePushInProgress(false);
             } else {
-                if (orgUnit != null && orgUnit.isBanned()) {
-                    orgUnit.setBan(false);
-                    orgUnit.save();
-                    notifyReOpenOrgUnit();
-                }
                 runPush();
             }
 
-        } catch (NetworkException e) {
-            mPushController.changePushInProgress(false);
-            notifyNetworkError();
-        } catch (ApiCallException e) {
-            mPushController.changePushInProgress(false);
-            notifyApiCallError(e);
         } catch (Exception e) {
             mPushController.changePushInProgress(false);
             notifyPushError();
         }
     }
 
-    private boolean isOrgUnitBanned() throws NetworkException, ApiCallException {
+    private void configureBanOrgUnitChangeListener() {
+        mOrganisationUnitRepository.setBanOrgUnitChangeListener(
+                new IOrganisationUnitRepository.BanOrgUnitChangeListener() {
+                    @Override
+                    public void onBanOrgUnitChanged(OrganisationUnit organisationUnit) {
+                        if (organisationUnit.isBanned()) {
+                            notifyBannedOrgUnitError();
+                        } else {
+                            notifyReOpenOrgUnit();
+                        }
+                    }
+                });
+    }
+
+    private boolean isOrgUnitBanned() {
         OrganisationUnit orgUnit = null;
-        orgUnit = mOrganisationUnitRepository.getCurrentOrganisationUnit();
+        try {
+            orgUnit = mOrganisationUnitRepository.getCurrentOrganisationUnit(
+                    ReadPolicy.REMOTE);
+        } catch (NetworkException e) {
+            mPushController.changePushInProgress(false);
+            notifyNetworkError();
+        } catch (ApiCallException e) {
+            mPushController.changePushInProgress(false);
+            notifyApiCallError(e);
+        }
         return orgUnit.isBanned();
     }
 
@@ -175,18 +180,19 @@ public class PushUseCase implements UseCase {
     }
 
     private void banOrgUnit() {
-        String url = ServerAPIController.getServerUrl();
-        String orgUnitNameOrCode = ServerAPIController.getOrgUnit();
-
-        if (!orgUnitNameOrCode.isEmpty()) {
-            try {
-                ServerAPIController.banOrg(url, orgUnitNameOrCode);
-                System.out.println("OrgUnit banned successfully");
-            } catch (ApiCallException e) {
-                System.out.println("An error has occurred to banned orgUnit");
-                notifyPushError();
-            }
-
+        OrganisationUnit organisationUnit = null;
+        try {
+            organisationUnit =
+                    mOrganisationUnitRepository.getCurrentOrganisationUnit(ReadPolicy.CACHE);
+        } catch (NetworkException e) {
+            e.printStackTrace();
+        } catch (ApiCallException e) {
+            e.printStackTrace();
+        }
+        if (organisationUnit != null) {
+            organisationUnit.ban();
+            mOrganisationUnitRepository.saveOrganisationUnit(organisationUnit);
+            System.out.println("OrgUnit banned successfully");
         }
     }
 

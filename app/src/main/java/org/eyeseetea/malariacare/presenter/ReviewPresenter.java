@@ -3,13 +3,12 @@ package org.eyeseetea.malariacare.presenter;
 import com.google.common.collect.Iterables;
 
 import org.eyeseetea.malariacare.DashboardActivity;
-import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Value;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
+import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -33,25 +32,6 @@ public class ReviewPresenter implements ReviewScreenAdapter.onClickListener {
         this.view = reviewView;
         view.showValues(prepareValues());
         view.initListView();
-    }
-
-    public List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(
-            List<org.eyeseetea.malariacare.data.database.model.Value> values) {
-        List<org.eyeseetea.malariacare.data.database.model.Value> orderedList = new ArrayList<>();
-        NavigationController navigationController = Session.getNavigationController();
-        navigationController.first();
-        Question nextQuestion = null;
-        do {
-            for (org.eyeseetea.malariacare.data.database.model.Value value : values) {
-                if (value.getQuestion() != null) {
-                    if (value.getQuestion().equals(navigationController.getCurrentQuestion())) {
-                        orderedList.add(value);
-                        nextQuestion = navigationController.next(value.getOption());
-                    }
-                }
-            }
-        } while (nextQuestion != null);
-        return orderedList;
     }
 
     private List<org.eyeseetea.malariacare.domain.entity.Value> prepareValues() {
@@ -98,6 +78,11 @@ public class ReviewPresenter implements ReviewScreenAdapter.onClickListener {
             colorsList.add("#9c7f9b");
         }
         return colorsList;
+    }
+
+    private List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(
+            List<org.eyeseetea.malariacare.data.database.model.Value> values) {
+        return ReviewFragmentStrategy.orderValues(values);
     }
 
     private List<org.eyeseetea.malariacare.data.database.model.Value> getReviewValues() {

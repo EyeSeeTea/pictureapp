@@ -9,10 +9,16 @@ import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.domain.entity.Value;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
+    ReviewScreenAdapter.onClickListener onClickListener;
+
+    public ReviewFragmentStrategy(ReviewScreenAdapter.onClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
 
     final String TITLE_SEPARATOR = ": ";
 
@@ -38,7 +44,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
                     if(!DynamicTabAdapter.isClicked) {
                         DynamicTabAdapter.isClicked = true;
                         String questionUId = (String) v.getTag();
-                        DashboardActivity.dashboardActivity.hideReview(questionUId);
+                        onClickListener.onClickOnValue(questionUId);
                     }
                 }
             });

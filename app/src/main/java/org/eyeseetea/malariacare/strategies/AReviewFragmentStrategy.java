@@ -18,7 +18,7 @@ public abstract class AReviewFragmentStrategy{
         return getMalariaSurvey().isRDT() || BuildConfig.patientTestedByDefault;
     }
 
-    public List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(
+    public static List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(
             List<org.eyeseetea.malariacare.data.database.model.Value> values) {
         return values;
     }

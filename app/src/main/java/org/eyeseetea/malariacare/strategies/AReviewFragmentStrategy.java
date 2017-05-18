@@ -6,10 +6,11 @@ import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.domain.entity.Value;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 
 import java.util.List;
 
-public abstract class AReviewFragmentStrategy {
+public abstract class AReviewFragmentStrategy{
 
     public abstract TableRow createViewRow(TableRow rowView, Value value);
 

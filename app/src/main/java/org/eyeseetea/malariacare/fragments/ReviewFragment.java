@@ -89,7 +89,12 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
     @Override
     public void showValues(List<org.eyeseetea.malariacare.domain.entity.Value> values) {
         ReviewScreenAdapter adapterInSession = new ReviewScreenAdapter(values, lInflater,
-                getActivity());
+                getActivity(), new ReviewScreenAdapter.onClickListener() {
+            @Override
+            public void onClickOnValue(String UId) {
+                mReviewPresenter.onClickOnValue(UId);
+            }
+        });
         this.adapter = adapterInSession;
     }
 }

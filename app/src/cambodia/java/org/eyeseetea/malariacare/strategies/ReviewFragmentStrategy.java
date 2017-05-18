@@ -4,20 +4,18 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.TableRow;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Value;
+import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
+    ReviewScreenAdapter.onClickListener onClickListener;
+    public ReviewFragmentStrategy(ReviewScreenAdapter.onClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
 
     public TableRow createViewRow(TableRow rowView, Value value) {
         //Sets the value text in the row and add the question as tag.
@@ -38,8 +36,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
                     if(!DynamicTabAdapter.isClicked) {
                         DynamicTabAdapter.isClicked = true;
                         String questionUId = (String) v.getTag();
-
-                        DashboardActivity.dashboardActivity.hideReview(questionUId);
+                        onClickListener.onClickOnValue(questionUId);
                     }
                 }
             });
@@ -52,25 +49,5 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
     public static boolean shouldShowReviewScreen(){
         return true;
-    }
-
-    @Override
-    public List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(
-            List<org.eyeseetea.malariacare.data.database.model.Value> values) {
-        List<org.eyeseetea.malariacare.data.database.model.Value> orderedList = new ArrayList<>();
-        NavigationController navigationController = Session.getNavigationController();
-        navigationController.first();
-        Question nextQuestion = null;
-        do {
-            for (org.eyeseetea.malariacare.data.database.model.Value value : values) {
-                if (value.getQuestion() != null) {
-                    if (value.getQuestion().equals(navigationController.getCurrentQuestion())) {
-                        orderedList.add(value);
-                        nextQuestion = navigationController.next(value.getOption());
-                    }
-                }
-            }
-        } while (nextQuestion != null);
-        return orderedList;
     }
 }

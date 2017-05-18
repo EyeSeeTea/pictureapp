@@ -9,9 +9,12 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
+import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
 
@@ -20,11 +23,18 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     private DashboardUnsentFragment mDashboardUnsentFragment;
     private WebViewFragment openFragment, closeFragment, statusFragment;
+    private GetUrlForWebViewsUseCase mGetUrlForWebViewsUseCase;
 
     public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
         super(dashboardActivity);
     }
 
+    @Override
+    public void onCreate() {
+        ICredentialsRepository iCredentialsRepository = new CredentialsLocalDataSource();
+        mGetUrlForWebViewsUseCase = new GetUrlForWebViewsUseCase(mDashboardActivity,
+                iCredentialsRepository);
+    }
 
     @Override
     public void reloadStockFragment(Activity activity) {
@@ -101,17 +111,21 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void showFirstFragment() {
-        openFragment = new WebViewFragment();
-        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
-                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
-        bundle.putString(WebViewFragment.WEB_VIEW_URL,
-                "https://james.psi-mis.org/eReferralsDev/pages/ipc"
-                        + ".html?skipHeader=true&action=ipcOpenReferrals&userName=8001&password"
-                        + "=1234");
-        bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_assess);
-        openFragment.setArguments(bundle);
-        openFragment.reloadData();
-        mDashboardActivity.replaceFragment(R.id.dashboard_details_container, openFragment);
+        mGetUrlForWebViewsUseCase.execute(GetUrlForWebViewsUseCase.OPEN_TYPE,
+                new GetUrlForWebViewsUseCase.Callback() {
+                    @Override
+                    public void onGetUrl(String url) {
+                        openFragment = new WebViewFragment();
+                        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
+                                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
+                        bundle.putString(WebViewFragment.WEB_VIEW_URL, url);
+                        bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_assess);
+                        openFragment.setArguments(bundle);
+                        openFragment.reloadData();
+                        mDashboardActivity.replaceFragment(R.id.dashboard_details_container,
+                                openFragment);
+                    }
+                });
     }
 
     @Override
@@ -126,17 +140,21 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void showSecondFragment() {
-        closeFragment = new WebViewFragment();
-        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
-                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
-        bundle.putString(WebViewFragment.WEB_VIEW_URL,
-                "https://james.psi-mis.org/eReferralsDev/pages/ipc"
-                        + ".html?skipHeader=true&action=ipcRedeemedReferrals&userName=8001"
-                        + "&password=1234");
-        bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_improve);
-        closeFragment.setArguments(bundle);
-        closeFragment.reloadData();
-        mDashboardActivity.replaceFragment(R.id.dashboard_completed_container, closeFragment);
+        mGetUrlForWebViewsUseCase.execute(GetUrlForWebViewsUseCase.CLOSED_TYPE,
+                new GetUrlForWebViewsUseCase.Callback() {
+                    @Override
+                    public void onGetUrl(String url) {
+                        closeFragment = new WebViewFragment();
+                        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
+                                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
+                        bundle.putString(WebViewFragment.WEB_VIEW_URL, url);
+                        bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_improve);
+                        closeFragment.setArguments(bundle);
+                        closeFragment.reloadData();
+                        mDashboardActivity.replaceFragment(R.id.dashboard_completed_container,
+                                closeFragment);
+                    }
+                });
     }
 
     @Override
@@ -147,16 +165,20 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
 
     @Override
     public void showFourthFragment() {
+        mGetUrlForWebViewsUseCase.execute(GetUrlForWebViewsUseCase.STATUS_TYPE,
+                new GetUrlForWebViewsUseCase.Callback() {
+                    @Override
+                    public void onGetUrl(String url) {
         statusFragment = new WebViewFragment();
         Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
                 ? mDashboardActivity.getIntent().getExtras() : new Bundle();
-        bundle.putString(WebViewFragment.WEB_VIEW_URL,
-                "https://james.psi-mis.org/eReferralsDev/pages/ipc"
-                        + ".html?skipHeader=true&action=ipcStats&userName=8001&password=1234");
+                        bundle.putString(WebViewFragment.WEB_VIEW_URL, url);
         bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_monitor);
         statusFragment.setArguments(bundle);
         statusFragment.reloadData();
         mDashboardActivity.replaceFragment(R.id.dashboard_charts_container, statusFragment);
+                    }
+                });
     }
 
     @Override

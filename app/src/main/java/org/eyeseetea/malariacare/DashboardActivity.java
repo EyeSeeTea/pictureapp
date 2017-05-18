@@ -655,6 +655,7 @@ public class DashboardActivity extends BaseActivity {
         }
         handler = new Handler(Looper.getMainLooper());
         mDashboardActivityStrategy = new DashboardActivityStrategy(this);
+        mDashboardActivityStrategy.onCreate();
         dashboardActivity = this;
         setContentView(R.layout.tab_dashboard);
         Survey.removeInProgress();

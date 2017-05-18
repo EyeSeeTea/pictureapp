@@ -2,13 +2,19 @@ package org.eyeseetea.malariacare.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.HttpAuthHandler;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
@@ -51,13 +57,14 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         loadUrlInWebView();
     }
 
-    private void loadUrlInWebView() {
-        if (mWebView != null) {
-            mWebView.loadUrl(url);
-            mWebView.getSettings().setJavaScriptEnabled(true);
-            mWebView.getSettings().setDomStorageEnabled(true);
+    private WebViewClient mWebViewClient = new WebViewClient() {
+
+        public void onReceivedHttpAuthRequest(WebView view,
+                HttpAuthHandler handler, String host, String realm) {
+
+            handler.proceed("manu", "0000");
         }
-    }
+    };
 
     @Override
     public void reloadHeader(Activity activity) {
@@ -72,5 +79,37 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
     @Override
     public void unregisterFragmentReceiver() {
 
+    }
+
+    public static void clearCookies(Context context) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            Log.d(TAG, "Using clearCookies code for API >=" + String.valueOf(
+                    Build.VERSION_CODES.LOLLIPOP_MR1));
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        } else {
+            Log.d(TAG, "Using clearCookies code for API <" + String.valueOf(
+                    Build.VERSION_CODES.LOLLIPOP_MR1));
+            CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(context);
+            cookieSyncMngr.startSync();
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.removeAllCookie();
+            cookieManager.removeSessionCookie();
+            cookieSyncMngr.stopSync();
+            cookieSyncMngr.sync();
+        }
+    }
+
+    private void loadUrlInWebView() {
+        if (mWebView != null) {
+            mWebView.getSettings().setJavaScriptEnabled(true);
+            mWebView.getSettings().setDomStorageEnabled(true);
+            mWebView.setWebViewClient(mWebViewClient);
+            mWebView.clearCache(true);
+            mWebView.clearHistory();
+            clearCookies(getActivity());
+            mWebView.loadUrl(url);
+        }
     }
 }

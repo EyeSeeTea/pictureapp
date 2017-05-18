@@ -25,6 +25,10 @@ public abstract class ADashboardActivityStrategy {
     protected DashboardSentFragment sentFragment;
     protected MonitorFragment monitorFragment;
 
+    public void onCreate() {
+
+    }
+
     public abstract void reloadStockFragment(Activity activity);
 
     public abstract boolean showStockFragment(Activity activity, boolean isMoveToLeft);

@@ -32,6 +32,9 @@
     <string name="ancestor_level">3</string>
     <string name="number_bad_login">number_bad_login</string>
     <string name="time_enable_login">time_enable_login</string>
-
+    <string name="url_status_fragment">ipcStats</string>
+    <string name="url_open_fragment">ipcOpenReferrals</string>
+    <string name="url_closed_fragment">ipcRedeemedReferrals</string>
+    <string name="base_web_view_url">https://james.psi-mis.org/eReferralsDev/pages/ipc.html?skipHeader=true&amp;action=%1$s&amp;userName=%2$s&amp;password=%3$s</string>
 
 </resources>

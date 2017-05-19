@@ -12,9 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.HttpAuthHandler;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
@@ -98,19 +96,10 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         if (mWebView != null) {
             mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.getSettings().setDomStorageEnabled(true);
-//            mWebView.setWebViewClient(mWebViewClient);
             mWebView.clearCache(true);
             mWebView.clearHistory();
             clearCookies(getActivity());
             mWebView.loadUrl(url);
         }
     }
-
-    private WebViewClient mWebViewClient = new WebViewClient() {
-
-        public void onReceivedHttpAuthRequest(WebView view,
-                HttpAuthHandler handler, String host, String realm) {
-            handler.proceed("8001", "1234");
-        }
-    };
 }

@@ -38,8 +38,10 @@ public class GetUrlForWebViewsUseCase implements UseCase {
     @Override
     public void run() {
         String typeUrl = getTypeUrlText();
-        String url = String.format(mContext.getString(R.string.base_web_view_url), typeUrl,
+        String url = String.format(mContext.getString(R.string.base_web_view_no_credentials), typeUrl,
                 mCredentials.getUsername(), mCredentials.getPassword());
+//        String url = String.format(mContext.getString(R.string.base_web_view_no_credentials),
+//                typeUrl);
         mCallback.onGetUrl(url);
     }
 

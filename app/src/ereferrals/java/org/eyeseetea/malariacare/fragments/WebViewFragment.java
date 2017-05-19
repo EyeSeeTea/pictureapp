@@ -57,14 +57,7 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         loadUrlInWebView();
     }
 
-    private WebViewClient mWebViewClient = new WebViewClient() {
 
-        public void onReceivedHttpAuthRequest(WebView view,
-                HttpAuthHandler handler, String host, String realm) {
-
-            handler.proceed("manu", "0000");
-        }
-    };
 
     @Override
     public void reloadHeader(Activity activity) {
@@ -105,11 +98,19 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         if (mWebView != null) {
             mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.getSettings().setDomStorageEnabled(true);
-            mWebView.setWebViewClient(mWebViewClient);
+//            mWebView.setWebViewClient(mWebViewClient);
             mWebView.clearCache(true);
             mWebView.clearHistory();
             clearCookies(getActivity());
             mWebView.loadUrl(url);
         }
     }
+
+    private WebViewClient mWebViewClient = new WebViewClient() {
+
+        public void onReceivedHttpAuthRequest(WebView view,
+                HttpAuthHandler handler, String host, String realm) {
+            handler.proceed("8001", "1234");
+        }
+    };
 }

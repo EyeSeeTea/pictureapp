@@ -1110,7 +1110,10 @@ public class Survey extends BaseModel implements VisitableToSDK {
         String valuesStr = "";
 
         //Define a filter to select which values will be turned into string by code_question
-        List<Question> questions = Question.getAllQuestions();
+        List<Question> questions = new ArrayList<>();
+        for (Value value : values) {
+            questions.add(value.getQuestion());
+        }
         List<String> codeQuestionFilter = new ArrayList<String>();
 
         for (Question question : questions) {

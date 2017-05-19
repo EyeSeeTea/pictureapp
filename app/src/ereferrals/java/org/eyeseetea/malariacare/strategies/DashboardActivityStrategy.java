@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
@@ -24,6 +25,9 @@ import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
+import java.util.Date;
+import org.eyeseetea.malariacare.fragments.OfflineFragment;
+
 
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {

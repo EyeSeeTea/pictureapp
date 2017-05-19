@@ -157,9 +157,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
 
     public boolean canEnableLoginButtonOnTextChange() {
-        long timeEnabled = PreferencesEReferral.getTimeLoginEnables();
-        long currentTime = new Date().getTime();
-        return currentTime > timeEnabled;
+        IInvalidLoginAttemptsRepository invalidLoginAttemptsLocalDataSource =
+                new InvalidLoginAttemptsRepositoryLocalDataSource();
+        return invalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts().isLoginEnabled();
     }
 
     @Override

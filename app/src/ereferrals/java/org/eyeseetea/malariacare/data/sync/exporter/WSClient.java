@@ -14,6 +14,8 @@ import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 
 import java.io.IOException;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -27,9 +29,16 @@ public class WSClient {
 
     public WSClient() {
         mContext = PreferencesState.getInstance().getContext();
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(mContext.getString(R.string.ws_base_url))
                 .addConverterFactory(JacksonConverterFactory.create())
+                .client(client)
                 .build();
 
         mSurveyApiClientRetrofit = mRetrofit.create(SurveyApiClientRetrofit.class);

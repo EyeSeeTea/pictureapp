@@ -993,18 +993,45 @@ public class Question extends BaseModel {
                         questionRelationsIterator.next().getQuestion().getId_question()));
             }
         }
+
+        Program questionProgram = getQuestionProgram();
+
         //Siblings without parents relations
-        this.sibling = new Select().from(Question.class).as(questionName)
+        List<Question> questions = new Select().from(Question.class).as(questionName)
                 .where(Question_Table.order_pos.withTable(questionAlias)
                         .greaterThan(this.getOrder_pos()))
                 .and(in)
+                .orderBy(OrderBy.fromProperty(Question_Table.order_pos).ascending()).queryList();
 
-                .orderBy(OrderBy.fromProperty(Question_Table.order_pos).ascending()).querySingle();
+        //Doing like this because DBFLOW bug
+        for (Question question : questions) {
+            if (question.getQuestionProgram().equals(questionProgram)) {
+                this.sibling = question;
+                break;
+            }
+        }
+
         //no question behind this one -> build a null question to use cached value
         if (this.sibling == null) {
             this.sibling = buildNullQuestion();
         }
         return this.sibling;
+    }
+
+    private Program getQuestionProgram() {
+
+        return new Select().from(Program.class).as(programName)
+                .join(Tab.class, Join.JoinType.LEFT_OUTER).as(tabName)
+                .on(Tab_Table.id_program_fk.withTable(tabAlias)
+                        .eq(Program_Table.id_program.withTable(programAlias)))
+                .join(Header.class, Join.JoinType.LEFT_OUTER).as(headerName)
+                .on(Header_Table.id_tab_fk.withTable(headerAlias)
+                        .eq(Tab_Table.id_tab.withTable(tabAlias)))
+                .join(Question.class, Join.JoinType.LEFT_OUTER).as(questionName)
+                .on(Question_Table.id_header_fk.withTable(questionAlias)
+                        .eq(Header_Table.id_header.withTable(headerAlias)))
+                .where(Question_Table.id_question.withTable(questionAlias).eq(
+                        this.getId_question())).querySingle();
     }
 
     public static List<Question> getQuestionsByTab(Tab tab) {

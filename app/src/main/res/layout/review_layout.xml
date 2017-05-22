@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/orange"
-        android:onClick="exitReview"
         android:scaleType="centerInside"
         android:src="@drawable/check" />
 </LinearLayout>

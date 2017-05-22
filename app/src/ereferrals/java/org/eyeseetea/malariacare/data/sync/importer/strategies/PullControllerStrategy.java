@@ -51,7 +51,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
 
     @Override
     public void onPullDataComplete(final IPullController.Callback callback) {
-        mPullController.convertData(callback);
         ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
         IOrganisationUnitRepository orgUnitDataSource = new OrganisationUnitRepository();
         IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
@@ -65,6 +64,6 @@ public class PullControllerStrategy extends APullControllerStrategy {
             e.printStackTrace();
             callback.onError(e);
         }
-        callback.onComplete();
+        mPullController.convertData(callback);
     }
 }

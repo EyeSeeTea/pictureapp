@@ -97,7 +97,7 @@ public class WSPushController implements IPushController {
                 String message = String.format(
                         PreferencesState.getInstance().getContext().getString(
                                 R.string.survey_error), responseAction.getActionId(),
-                        responseAction.getMessage());
+                        responseAction.getMessage(), responseAction.getResponse().getMsg());
                 mCallback.onInformativeError(new PushValueException(message));
             }
         }

@@ -4,15 +4,10 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
-
-import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
@@ -23,11 +18,6 @@ import org.eyeseetea.malariacare.domain.usecase.GetUrlForWebViewsUseCase;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.WebViewFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
-import org.eyeseetea.malariacare.fragments.MonitorFragment;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
-import java.util.Date;
-import org.eyeseetea.malariacare.fragments.OfflineFragment;
-
 
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
@@ -180,14 +170,15 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 new GetUrlForWebViewsUseCase.Callback() {
                     @Override
                     public void onGetUrl(String url) {
-        statusFragment = new WebViewFragment();
-        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
-                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
+                        statusFragment = new WebViewFragment();
+                        Bundle bundle = mDashboardActivity.getIntent().getExtras() != null
+                                ? mDashboardActivity.getIntent().getExtras() : new Bundle();
                         bundle.putString(WebViewFragment.WEB_VIEW_URL, url);
-        bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_monitor);
-        statusFragment.setArguments(bundle);
-        statusFragment.reloadData();
-        mDashboardActivity.replaceFragment(R.id.dashboard_charts_container, statusFragment);
+                        bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_monitor);
+                        statusFragment.setArguments(bundle);
+                        statusFragment.reloadData();
+                        mDashboardActivity.replaceFragment(R.id.dashboard_charts_container,
+                                statusFragment);
                     }
                 });
     }
@@ -208,6 +199,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardActivity.replaceFragment(R.id.dashboard_stock_container,
                 mDashboardUnsentFragment);
     }
+
     @Override
     public void initNavigationController() {
         NavigationBuilder.getInstance().buildController(

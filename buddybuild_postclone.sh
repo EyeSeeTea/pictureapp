@@ -1,4 +1,5 @@
 #!/bin/sh
+set -x
 
 # Definitions
 gitPath=$(git rev-parse --show-toplevel)

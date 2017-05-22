@@ -64,4 +64,8 @@ public class PhoneMask {
         return phoneValue.isEmpty() || phoneValue.matches(FORMATTED_PHONENUMBER_MASK)
                 || phoneValue.replace(" ", "").matches(PLAIN_PHONENUMBER_MASK);
     }
+
+    public static String applyValueTransformations(String value){
+        return value;
+    }
 }

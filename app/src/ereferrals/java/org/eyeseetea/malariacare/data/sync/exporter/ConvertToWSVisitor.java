@@ -36,11 +36,13 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
             if (value.getQuestion() != null) {
                 if (value.getOption() == null) {
                     valueWSes.add(
-                            new AttributeValueWS(value.getQuestion().getCode(), value.getValue()));
+                            new AttributeValueWS(value.getQuestion().getCode(),
+                                    value.getValue()));
                 } else {
                     valueWSes.add(new AttributeValueWS(value.getQuestion().getCode(),
                             value.getOption().getCode()));
                 }
+
             }
         }
         return valueWSes;

@@ -42,6 +42,4 @@
     <string name="ws_version">1.0</string>
     <string name="ws_source">Android v1.1</string>
     <string name="ws_base_url">https://james.psi-mis.org/</string>
-    <string name="phone_question_uid">fake_uid_pn</string>
-
 </resources>

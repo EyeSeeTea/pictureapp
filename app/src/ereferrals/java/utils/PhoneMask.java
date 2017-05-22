@@ -34,4 +34,16 @@ public class PhoneMask {
         }
         return phoneValue.isEmpty() || phoneValue.matches(PLAIN_PHONE_NUMBER_MASK);
     }
+
+    public static String applyValueTransformations(String value){
+        String valueText = value;
+        if (valueText.startsWith("00")) {
+            valueText = valueText.replace("00", "+");
+        } else if (valueText.startsWith("06")) {
+            valueText = valueText.replace("06", "+2556");
+        } else if (valueText.startsWith("07")) {
+            valueText = valueText.replace("07", "+2557");
+        }
+        return valueText;
+    }
 }

@@ -34,13 +34,29 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
         List<AttributeValueWS> valueWSes = new ArrayList<>();
         for (Value value : survey.getValuesFromDB()) {
             if (value.getQuestion() != null) {
+                if (value.getQuestion().getUid().equals(
+                        PreferencesState.getInstance().getContext().getString(
+                                R.string.phone_question_uid))) {
+                    String valueText = value.getValue();
+                    if (valueText.startsWith("00")) {
+                        value.setValue(valueText.replace("00", "+"));
+                    } else if (valueText.startsWith("06")) {
+                        value.setValue(valueText.replace("06", "+2556"));
+                    } else if (valueText.startsWith("07")) {
+                        value.setValue(valueText.replace("07", "+2557"));
+                    }
+                }
+
+
                 if (value.getOption() == null) {
                     valueWSes.add(
-                            new AttributeValueWS(value.getQuestion().getCode(), value.getValue()));
+                            new AttributeValueWS(value.getQuestion().getCode(),
+                                    value.getValue()));
                 } else {
                     valueWSes.add(new AttributeValueWS(value.getQuestion().getCode(),
                             value.getOption().getCode()));
                 }
+
             }
         }
         return valueWSes;

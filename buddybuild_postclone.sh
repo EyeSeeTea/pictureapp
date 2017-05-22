@@ -13,5 +13,5 @@ cd sdk
 git checkout 2.25_EyeSeeTea
 cd -
 
-mkdir app/src/"${BUDDYBUILD_VARIANTS}${}"/res/raw
+mkdir app/src/"${FLAVOR}"/res/raw
 cp ${BUDDYBUILD_SECURE_FILES}/config_${FLAVOR}.json app/src/${FLAVOR}/res/raw/config.json

@@ -38,4 +38,8 @@ public abstract class ASettingsActivityStrategy {
 
     public void addExtraPreferences() {
     }
+
+    public void onDestroy() {
+
+    }
 }

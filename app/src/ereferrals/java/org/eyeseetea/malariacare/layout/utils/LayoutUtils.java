@@ -1,10 +1,8 @@
 package org.eyeseetea.malariacare.layout.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Html;
@@ -17,8 +15,8 @@ import android.widget.TextView;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
-import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 
 /**
  * Created by idelcano on 01/11/2016.
@@ -50,7 +48,12 @@ public class LayoutUtils extends BaseLayoutUtils {
                         context.getString(R.string.malaria_case_based_reporting)));
         color = ContextCompat.getColor(context, R.color.text_second_color);
         colorString = String.format("%X", color).substring(2);
-        String userName = CredentialsLocalDataSource.getLoggedUserName();
+
+
+        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
+
+        Credentials credentials = credentialsLocalDataSource.getOrganisationCredentials();
+        String userName = credentials.getUsername();
 
         String volunteer = context.getString(R.string.volunteer_label);
 

@@ -2,6 +2,7 @@
 <resources>
     <string name="ipc_issueEntry_q_firstName">"Jina la kwanza"</string>
     <string name="ipc_issueEntry_q_lastName">"Jina la ukoo"</string>
+    <string name="system_defined">"mfumo defined"</string>
     <string name="ipc_issueEntry_q_gender">"Jinsia"</string>
     <string name="ipc_issueEntry_q_motherName">"Jina la mama"</string>
     <string name="ipc_issueEntry_q_birthDistrict">"Wilaya uliyozaliwa"</string>
@@ -35,4 +36,48 @@
     <string name="common_option_program_cervicalCancer">"Saratani ya  mlango wa Kizazi"</string>
     <string name="common_option_program_antinatalCare">"Uangalizi wa wajawazito "</string>
     <string name="login_pin">"siri"</string>
+
+    <string name="app_settings">"Vipimo vya"</string>
+    <string name="server">"Seva:"</string>
+    <string name="server_name">"DHIS Seva URL"</string>
+    <string name="sent_data">"Kufungwa"</string>
+    <string name="status_subtitle">""</string>
+    <string name="unsent_data">"Fungua"</string>
+    <string name="monitoring_title">"Hali"</string>
+    <string name="new_case_title">"KESI MPYA"</string>
+    <string name="open_tab_title">"FUNGUA"</string>
+    <string name="closed_tab_title">"KUFUNGWA"</string>
+    <string name="status_tab_title">"HALI"</string>
+    <string name="malaria_case_based_reporting">"eReferrals"</string>
+    <string name="volunteer_label">"Kujitolea:"</string>
+    <string name="fonts_customise">"Customize fonti"</string>
+    <string name="font_size">"Ukubwa wa fonti"</string>
+    <string name="font_extra_small">"Ndogo zaidi"</string>
+    <string name="font_small">"Ndogo"</string>
+    <string name="font_medium">"Kati"</string>
+    <string name="font_large">"Kubwa"</string>
+    <string name="font_extra_large">"Kubwa sana"</string>
+    <string name="settings_select_language">"Lugha"</string>
+    <string name="developer_option_title">"Onyesha chaguo la msanidi"</string>
+    <string name="developer_option_summary">"Kipengele hiki Kinaamilisha chaguo la msanidi."</string>
+    <string name="app_about">"Kuhusu"</string>
+    <string name="app_legal">"Kisheria"</string>
+    <string name="app_copyright">"Hati miliki"</string>
+    <string name="app_software_licenses">"Leseni ya programu"</string>
+    <string name="app_EULA">"EULA"</string>
+    <string name="app_logout">"Kutoka"</string>
+    <string name="error_message_push">"Tukio na UID: %s . ilipakiwa bila tarehe. Tafadhali wasiliana na msimamizi."</string>
+    <string name="survey_error">"Survey na kitambulisho: %1$s ina migogoro: %2$s . Undani ujumbe: %3$s"</string>
+    <string name="online_status">Programu ni online</string>
+    <string name="offline_status_online_tab">programu ni nje ya mtandao, habari hii inaweza kuwa na lawama</string>
+    <string name="offline_status">Programu ni nje ya mtandao, tafadhali kwenda online na kuona habari hii</string>
+    <string name="ws_conversion_error">"PUSHUSECASE ERROR Kosa limetokea kwa uongofu katika kushinikiza mchakato"</string>
+    <string name="server_url">URL ya seva</string>
+    <string name="username">jina la mtumiaji</string>
+    <string name="log_in">Ingia</string>
+    <string name="progress_pull_downloading">"metadata Refreshing (hii inaweza kuchukua dakika chache)"</string>
+    <string name="progress_pull_done">"yamekamilika"</string>
+    <string name="dialog_title_pull_response">"hali kwa kuvuta"</string>
+    <string name="dialog_pull_success">"metadata DHIS mafanikio kujiondoa kutoka kwenye seva"</string>
+    <string name="cancel">"kufuta"</string>
 </resources>

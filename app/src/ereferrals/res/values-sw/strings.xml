@@ -35,4 +35,6 @@
     <string name="common_option_program_cervicalCancer">"Saratani ya  mlango wa Kizazi"</string>
     <string name="common_option_program_antinatalCare">"Uangalizi wa wajawazito "</string>
     <string name="login_pin">"siri"</string>
+
+    <string name="error_web">errorpage_sw.html</string>
 </resources>

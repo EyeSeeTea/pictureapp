@@ -114,6 +114,9 @@ public class LoginActivity extends Activity {
         initLoginUseCase();
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
+        if(BuildConfig.translations) {
+            PreferencesState.getInstance().loadsLanguageInActivity();
+        }
     }
 
     private void initLoginUseCase() {

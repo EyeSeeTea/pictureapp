@@ -611,8 +611,7 @@ public class DashboardActivity extends BaseActivity {
      */
     public void openSentSurvey() {
         isReadOnly = true;
-        tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_assess));
-        initSurvey();
+        mDashboardActivityStrategy.openSentSurvey();
     }
 
     /**
@@ -648,6 +647,7 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         if (getIntent().getBooleanExtra(getString(R.string.show_announcement_key), true)
                 && !Session.getCredentials().isDemoCredentials()) {
             new AsyncAnnouncement().execute();
@@ -778,5 +778,9 @@ public class DashboardActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    public TabHost getTabHost() {
+        return tabHost;
     }
 }

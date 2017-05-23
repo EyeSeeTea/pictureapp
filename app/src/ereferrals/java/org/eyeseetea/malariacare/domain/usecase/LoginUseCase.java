@@ -6,7 +6,6 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
-import org.eyeseetea.malariacare.domain.boundary.repositories.ISurveyRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
@@ -78,7 +77,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                             } else if (throwable instanceof NetworkException) {
                                 checkUserCredentialsWithOrgUnit(
                                         mCredentialsLocalDataSource.getOrganisationCredentials(),
-                                        false);
+                                        true);
                     }
                         }
                     });

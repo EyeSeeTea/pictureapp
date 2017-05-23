@@ -18,8 +18,6 @@ import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
-import org.eyeseetea.malariacare.fragments.MonitorFragment;
-import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 
 public abstract class ADashboardActivityStrategy {
@@ -191,5 +189,11 @@ public abstract class ADashboardActivityStrategy {
 
     public void onSentTabSelected(DashboardActivity dashboardActivity) {
 
+    }
+
+    public void openSentSurvey() {
+        mDashboardActivity.getTabHost().setCurrentTabByTag(
+                mDashboardActivity.getResources().getString(R.string.tab_tag_assess));
+        mDashboardActivity.initSurvey();
     }
 }

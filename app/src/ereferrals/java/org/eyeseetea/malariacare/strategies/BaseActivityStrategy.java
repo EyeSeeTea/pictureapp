@@ -198,4 +198,12 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public void onDestroy() {
         mBaseActivity.unregisterReceiver(mScreenOffReceiver);
     }
+
+    @Override
+    public void hideMenuItems(Menu menu) {
+        super.hideMenuItems(menu);
+
+        MenuItem item = menu.findItem(R.id.demo_mode);
+        item.setVisible(false);
+    }
 }

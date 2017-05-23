@@ -343,4 +343,10 @@ public class SettingsActivity extends PreferenceActivity implements
         mSettingsActivityStrategy.onWindowFocusChanged(hasFocus);
         super.onWindowFocusChanged(hasFocus);
     }
+
+    @Override
+    protected void onDestroy() {
+        mSettingsActivityStrategy.onDestroy();
+        super.onDestroy();
+    }
 }

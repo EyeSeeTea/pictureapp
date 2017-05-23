@@ -433,6 +433,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
+        mBaseActivityStrategy.onDestroy();
         super.onDestroy();
         alarmPush.cancelPushAlarm(this);
     }
@@ -452,4 +453,5 @@ public abstract class BaseActivity extends ActionBarActivity {
     public BaseActivityStrategy getBaseActivityStrategy() {
         return mBaseActivityStrategy;
     }
+
 }

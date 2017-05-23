@@ -39,6 +39,8 @@
     <string name="common_option_gender_female">"Mwanamke"</string>
     <string name="login_pin">"siri"</string>
 
+    <string name="error_web">errorpage_sw.html</string>
+
     <string name="app_settings">"Vipimo vya"</string>
     <string name="server">"Seva:"</string>
     <string name="server_name">"DHIS Seva URL"</string>

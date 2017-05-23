@@ -21,8 +21,8 @@ package org.eyeseetea.malariacare.data.database.utils;
 
 import android.support.v4.content.FileProvider;
 
-public class ERDBProvider extends FileProvider {
-    public ERDBProvider() {
+public class REFDBProvider extends FileProvider {
+    public REFDBProvider() {
         super();
     }
 }

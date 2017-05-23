@@ -40,11 +40,16 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         super(baseActivity);
     }
 
-    @Override
-    public void onCreate() {
-        mAuthenticationManager = new AuthenticationManager(mBaseActivity);
-        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
-    }
+    private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!ConnectivityStatus.isConnected(mBaseActivity)) {
+                Toast.makeText(mBaseActivity, notConnectedText, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     private void applicationWillEnterForeground() {
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
@@ -120,23 +125,16 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             EyeSeeTeaApplication.getInstance().setIsWindowFocused(true);
         }
     }
+    private BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() {
 
-    public void logout() {
-        AlarmPushReceiver.cancelPushAlarm(mBaseActivity);
-        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
-            @Override
-            public void onLogoutSuccess() {
-                Intent loginIntent = new Intent(mBaseActivity, LoginActivity.class);
-                loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                mBaseActivity.startActivity(loginIntent);
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                Log.d(TAG, "Screen off");
+                showLogin();
             }
-
-            @Override
-            public void onLogoutError(String message) {
-                Log.d(TAG, message);
-            }
-        });
-    }
+        }
+    };
 
     public void showCopyRight(int app_copyright, int copyright) {
         mBaseActivity.showAlertWithMessage(app_copyright, copyright);
@@ -165,16 +163,41 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         this.notConnectedText = notConnectedText;
     }
 
-    private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (!ConnectivityStatus.isConnected(mBaseActivity)) {
-                Toast.makeText(mBaseActivity, notConnectedText, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();
+    @Override
+    public void onCreate() {
+        mAuthenticationManager = new AuthenticationManager(mBaseActivity);
+        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
+        IntentFilter screenStateFilter = new IntentFilter();
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        mBaseActivity.registerReceiver(mScreenOffReceiver, screenStateFilter);
+    }
+
+    public void logout() {
+        AlarmPushReceiver.cancelPushAlarm(mBaseActivity);
+        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                showLogin();
             }
-        }
-    };
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.d(TAG, message);
+            }
+        });
+    }
+
+    private void showLogin() {
+        Intent loginIntent = new Intent(mBaseActivity, LoginActivity.class);
+        loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mBaseActivity.startActivity(loginIntent);
+    }
+
+    @Override
+    public void onDestroy() {
+        mBaseActivity.unregisterReceiver(mScreenOffReceiver);
+    }
 
     @Override
     public void hideMenuItems(Menu menu) {

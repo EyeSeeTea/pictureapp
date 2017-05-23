@@ -67,6 +67,7 @@ public class YearSelectorQuestionView extends LinearLayout implements IQuestionV
             public void onClick(View view) {
                 if (enabled) {
                     YearPicker yearPicker = new YearPicker();
+                    yearPicker.setInterval(context.getResources().getInteger(R.integer.year_interval));
                     yearPicker.setOnYearSelectedListener(new YearPicker.OnYearSelectedListener() {
                         @Override
                         public void onYearSelected(int year) {

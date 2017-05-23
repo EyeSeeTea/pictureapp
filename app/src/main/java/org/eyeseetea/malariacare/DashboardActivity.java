@@ -648,6 +648,7 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         if (getIntent().getBooleanExtra(getString(R.string.show_announcement_key), true)
                 && !Session.getCredentials().isDemoCredentials()) {
             new AsyncAnnouncement().execute();

@@ -10,8 +10,10 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResponseAction
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyWSResult;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
+import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.exception.push.PushValueException;
+import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.List;
@@ -34,11 +36,16 @@ public class WSPushController implements IPushController {
     @Override
     public void push(IPushControllerCallback callback) {
         mCallback = callback;
-        mSurveys = Survey.getAllCompletedSurveys();
-        if (mSurveys == null || mSurveys.size() == 0) {
-            callback.onError(new SurveysToPushNotFoundException("Null surveys"));
-            return;
-        }
+
+        if (!ConnectivityStatus.isConnected(PreferencesState.getInstance().getContext())) {
+            Log.d(TAG, "No network");
+            callback.onError(new NetworkException());
+        } else {
+            mSurveys = Survey.getAllCompletedSurveys();
+            if (mSurveys == null || mSurveys.size() == 0) {
+                callback.onError(new SurveysToPushNotFoundException("Null surveys"));
+                return;
+            }
             for (Survey srv : mSurveys) {
                 Log.d("DpBlank", "Survey to push " + srv.toString());
                 for (Value dv : srv.getValuesFromDB()) {
@@ -54,6 +61,7 @@ public class WSPushController implements IPushController {
                 return;
             }
             pushSurveys();
+        }
     }
 
     @Override

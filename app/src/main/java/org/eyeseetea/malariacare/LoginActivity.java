@@ -586,8 +586,8 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            onFinishLoading(null);
             if (isUserClosed) {
+                onFinishLoading(null);
                 Log.d(TAG, "user closed");
                 AnnouncementMessageDialog.closeUser(R.string.admin_announcement,
                         PreferencesState.getInstance().getContext().getString(R.string.user_close),

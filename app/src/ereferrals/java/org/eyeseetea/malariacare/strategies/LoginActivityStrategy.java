@@ -15,7 +15,6 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -30,8 +29,6 @@ import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
-
-import java.util.Date;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
@@ -189,12 +186,15 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         Credentials savedCredentials = credentialsLocalDataSource.getOrganisationCredentials();
         if (savedCredentials == null || savedCredentials.isEmpty()
                 || savedCredentials.getUsername().equals(
-                credentials.getUsername()) && !savedCredentials.getPassword().equals(
-                credentials.getPassword())) {
+                credentials.getUsername()) && (!savedCredentials.getPassword().equals(
+                credentials.getPassword()) || !savedCredentials.getServerURL().equals(
+                credentials.getServerURL()))) {
             callback.onSuccessDoLogin();
         } else if (savedCredentials.getUsername().equals(
                 credentials.getUsername()) && savedCredentials.getPassword().equals(
-                credentials.getPassword())) {
+                credentials.getPassword())
+                && savedCredentials.getServerURL().equals(
+                credentials.getServerURL())) {
             callback.onSuccess();
         } else {
             IAuthenticationManager iAuthenticationManager = new AuthenticationManager(

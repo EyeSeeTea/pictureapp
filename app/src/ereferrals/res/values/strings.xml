@@ -105,7 +105,7 @@
     <string name="progress_push_preparing_survey">"Preparing survey for pushing ..."</string>
     <string name="progress_push_updating_survey">"Updating pushed survey data ..."</string>
     <string name="cancellingPull">"The process will stop in a few seconds"</string>
-    <string name="dialog_title_pull_response">"Pull status"</string>cancel
+    <string name="dialog_title_pull_response">"Pull status"</string>
     <string name="dialog_pull_error">"Error while trying to pull metadata from DHIS server"</string>
     <string name="last_6_days">"Last 6 days"</string>
     <string name="last_6_weeks">"Last 6 weeks"</string>

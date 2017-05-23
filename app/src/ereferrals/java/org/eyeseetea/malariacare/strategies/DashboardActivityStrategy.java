@@ -210,4 +210,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         NavigationBuilder.getInstance().buildController(
                 Tab.getFirstTabWithProgram(PreferencesEReferral.getUserProgramId()));
     }
+
+    @Override
+    public void openSentSurvey() {
+        mDashboardActivity.initSurvey();
+    }
 }

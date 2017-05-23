@@ -44,8 +44,6 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public void onCreate() {
         mAuthenticationManager = new AuthenticationManager(mBaseActivity);
         mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
-        mBaseActivity.registerReceiver(connectionReceiver,
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     private void applicationWillEnterForeground() {
@@ -56,6 +54,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onStart() {
+        mBaseActivity.registerReceiver(connectionReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         applicationWillEnterForeground();
     }
 

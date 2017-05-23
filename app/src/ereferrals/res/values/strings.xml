@@ -195,5 +195,6 @@
     <string name="offline_status_online_tab">The app is offline, this information may be deprecated</string>
     <string name="offline_status">App is offline, please go online to see this information</string>
     <string name="ws_conversion_error">"PUSHUSECASE ERROR An error has occurred to the conversion in push process"</string>
-    <string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator. "</string>
+    <string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator."</string>
+    <string name="dialog_pull_success">"Dhis metadata successfully pulled from server"</string>
 </resources>

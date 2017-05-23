@@ -80,4 +80,7 @@
     <string name="dialog_title_pull_response">"hali kwa kuvuta"</string>
     <string name="dialog_pull_success">"metadata DHIS mafanikio kujiondoa kutoka kwenye seva"</string>
     <string name="cancel">"kufuta"</string>
+    <string name="settings_menu_logout_message">"Kubadilisha server inahitaji kuingia nje. Tafiti zote ambazo hazijatumwa yatafutwa. Una uhakika unataka kuendelea?"</string>
+    <string name="dashboard_menu_logout_message">"Tafiti zote ambazo hazijatumwa yatafutwa. Una uhakika unataka kuendelea?"</string>
+    <string name="settings_menu_about">"kuhusu"</string>
 </resources>

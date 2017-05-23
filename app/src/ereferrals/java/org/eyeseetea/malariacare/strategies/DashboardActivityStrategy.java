@@ -207,7 +207,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 Tab.getFirstTabWithProgram(PreferencesEReferral.getUserProgramId()));
     }
 
-    public void hiddenHeader(Activity activity) {
+    public void fixHeader(Activity activity) {
         mDashboardUnsentFragment.reloadHeader(activity, R.string.tab_tag_stock);
     }
 }

@@ -106,7 +106,6 @@
     <string name="progress_push_updating_survey">"Updating pushed survey data ..."</string>
     <string name="cancellingPull">"The process will stop in a few seconds"</string>
     <string name="dialog_title_pull_response">"Pull status"</string>
-    <string name="dialog_pull_success">"DHIS metadata successfully pulled from server"</string>
     <string name="dialog_pull_error">"Error while trying to pull metadata from DHIS server"</string>
     <string name="last_6_days">"Last 6 days"</string>
     <string name="last_6_weeks">"Last 6 weeks"</string>
@@ -196,4 +195,8 @@
     <string name="offline_status_online_tab">The app is offline, this information may be deprecated</string>
     <string name="offline_status">App is offline, please go online to see this information</string>
     <string name="ws_conversion_error">"PUSHUSECASE ERROR An error has occurred to the conversion in push process"</string>
+
+    <string name="error_web">errorpage.html</string>
+    <string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator."</string>
+    <string name="dialog_pull_success">"Dhis metadata successfully pulled from server"</string>
 </resources>

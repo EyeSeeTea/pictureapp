@@ -2,7 +2,11 @@ package org.eyeseetea.malariacare.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +20,7 @@ import android.webkit.WebView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
+import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 
 
 public class WebViewFragment extends Fragment implements IDashboardFragment {
@@ -37,6 +42,19 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         manageBundle(savedInstanceState);
         initViews(view);
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        getActivity().registerReceiver(connectionReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        getActivity().unregisterReceiver(connectionReceiver);
+        super.onStop();
     }
 
     private void initViews(View view) {
@@ -98,12 +116,35 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
 
     private void loadUrlInWebView() {
         if (mWebView != null) {
+            ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(
+                    Activity.CONNECTIVITY_SERVICE);
+            if (cm != null && cm.getActiveNetworkInfo() != null
+                    && cm.getActiveNetworkInfo().isConnected()) {
+                loadValidUrl();
+            } else {
+                mWebView.loadUrl(String.format(getString(R.string.error_web_resource),
+                        getString(R.string.error_web)));
+            }
+        }
+    }
+
+    private void loadValidUrl() {
+        if (mWebView != null) {
             mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.getSettings().setDomStorageEnabled(true);
-            mWebView.clearCache(true);
-            mWebView.clearHistory();
             clearCookies(getActivity());
             mWebView.loadUrl(url);
         }
     }
+
+    private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ConnectivityStatus.isConnected(getActivity())) {
+                loadValidUrl();
+            }
+        }
+    };
+
+
 }

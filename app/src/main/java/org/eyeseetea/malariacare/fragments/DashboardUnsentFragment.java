@@ -235,8 +235,13 @@ public class DashboardUnsentFragment extends ListFragment implements IDashboardF
     }
 
     public void reloadHeader(Activity activity) {
-        DashboardHeaderStrategy.getInstance().init(activity, R.string.tab_tag_assess);
+        reloadHeader(activity, R.string.tab_tag_assess);
     }
+
+    public void reloadHeader(Activity activity, int id) {
+        DashboardHeaderStrategy.getInstance().init(activity, id);
+    }
+
 
     public void reloadData() {
         //Reload data using service

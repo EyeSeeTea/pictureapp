@@ -47,7 +47,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardUnsentFragment = new DashboardUnsentFragment();
         mDashboardUnsentFragment.setArguments(activity.getIntent().getExtras());
         mDashboardUnsentFragment.reloadData();
-        mDashboardUnsentFragment.reloadHeader(activity);
 
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
         if (isMoveToLeft) {
@@ -58,6 +57,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         }
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.replace(R.id.dashboard_stock_container, mDashboardUnsentFragment);
+
         ft.commit();
         return isMoveToLeft;
     }
@@ -123,6 +123,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_assess);
                         openFragment.setArguments(bundle);
                         openFragment.reloadData();
+                        openFragment.reloadHeader(mDashboardActivity, R.string.tab_tag_assess);
                         mDashboardActivity.replaceFragment(R.id.dashboard_details_container,
                                 openFragment);
                     }
@@ -204,5 +205,9 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     public void initNavigationController() {
         NavigationBuilder.getInstance().buildController(
                 Tab.getFirstTabWithProgram(PreferencesEReferral.getUserProgramId()));
+    }
+
+    public void hiddenHeader(Activity activity) {
+        mDashboardUnsentFragment.reloadHeader(activity, R.string.tab_tag_stock);
     }
 }

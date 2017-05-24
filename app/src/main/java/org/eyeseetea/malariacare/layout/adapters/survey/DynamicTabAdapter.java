@@ -482,6 +482,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         if (GradleVariantConfig.isButtonNavigationActive()) {
             initializeNavigationButtons(navigationButtonHolder);
+            if(navigationController.getCurrentPage()==0){
+                navigationButtonHolder.findViewById(R.id.back_btn_container).setVisibility(View.GONE);
+            }
             isClicked = false;
         }
 

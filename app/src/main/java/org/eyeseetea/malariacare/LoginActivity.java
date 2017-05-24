@@ -114,6 +114,9 @@ public class LoginActivity extends Activity {
         initLoginUseCase();
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
+        if(BuildConfig.translations) {
+            PreferencesState.getInstance().loadsLanguageInActivity();
+        }
     }
 
     private void initLoginUseCase() {
@@ -586,8 +589,8 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            onFinishLoading(null);
             if (isUserClosed) {
+                onFinishLoading(null);
                 Log.d(TAG, "user closed");
                 AnnouncementMessageDialog.closeUser(R.string.admin_announcement,
                         PreferencesState.getInstance().getContext().getString(R.string.user_close),

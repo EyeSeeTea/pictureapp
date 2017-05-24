@@ -114,5 +114,12 @@ public class PreferencesEReferral {
         return sharedPreferences.getLong(context.getString(R.string.time_enable_login), 0);
     }
 
+    public static String getWSURL(){
+        Context context = PreferencesState.getInstance().getContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                context);
+        return sharedPreferences.getString(context.getString(R.string.web_service_url), context.getString(R.string.ws_base_url));
+    }
+
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="malaria_case_based_reporting">"eReferrals"</string>
-    <string name="volunteer_label">"Volunteer:"</string>
+    <string name="volunteer_label">"IPC:"</string>
     <string name="new_case_title">"NEW CASE"</string>
     <string name="open_tab_title">"OPEN"</string>
     <string name="closed_tab_title">"CLOSED"</string>
@@ -106,7 +106,6 @@
     <string name="progress_push_updating_survey">"Updating pushed survey data ..."</string>
     <string name="cancellingPull">"The process will stop in a few seconds"</string>
     <string name="dialog_title_pull_response">"Pull status"</string>
-    <string name="dialog_pull_success">"DHIS metadata successfully pulled from server"</string>
     <string name="dialog_pull_error">"Error while trying to pull metadata from DHIS server"</string>
     <string name="last_6_days">"Last 6 days"</string>
     <string name="last_6_weeks">"Last 6 weeks"</string>
@@ -196,4 +195,8 @@
     <string name="offline_status_online_tab">The app is offline, this information may be deprecated</string>
     <string name="offline_status">App is offline, please go online to see this information</string>
     <string name="ws_conversion_error">"PUSHUSECASE ERROR An error has occurred to the conversion in push process"</string>
+
+    <string name="error_web">errorpage.html</string>
+    <string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator."</string>
+    <string name="dialog_pull_success">"Dhis metadata successfully pulled from server"</string>
 </resources>

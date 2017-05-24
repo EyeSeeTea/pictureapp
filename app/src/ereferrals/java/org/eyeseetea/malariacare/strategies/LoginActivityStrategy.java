@@ -9,14 +9,17 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
-import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
@@ -26,6 +29,9 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -34,10 +40,16 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private static final String TAG = ".LoginActivityStrategy";
     public static final String EXIT = "exit";
+    private final PullUseCase mPullUseCase;
     private IsLoginEnableUseCase mIsLoginEnableUseCase;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
+        IPullController pullController = new PullController(loginActivity);
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+
+        mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
     }
 
     /**
@@ -67,7 +79,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void finishAndGo() {
-        finishAndGo(ProgressActivity.class);
+        launchPull(false);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -216,4 +228,56 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
 
     }
+
+
+    private void launchPull(boolean isDemo) {
+        PullFilters pullFilters = new PullFilters();
+        pullFilters.setStartDate(PreferencesState.getInstance().getDateStarDateLimitFilter());
+        pullFilters.setDownloadDataRequired(PreferencesState.getInstance().downloadDataFilter());
+        pullFilters.setPullDataAfterMetadata(
+                PreferencesState.getInstance().getPullDataAfterMetadata());
+        pullFilters.setPullMetaData(PreferencesState.getInstance().downloadMetaData());
+        if (PreferencesState.getInstance().getDataFilteredByOrgUnit()) {
+            pullFilters.setDataByOrgUnit(PreferencesState.getInstance().getOrgUnit());
+        }
+        pullFilters.setDemo(isDemo);
+
+        mPullUseCase.execute(pullFilters, new PullUseCase.Callback() {
+            @Override
+            public void onComplete() {
+                loginActivity.onFinishLoading(null);
+                finishAndGo(DashboardActivity.class);
+            }
+
+            @Override
+            public void onStep(PullStep pullStep) {
+
+            }
+
+            @Override
+            public void onError(String message) {
+                loginActivity.onFinishLoading(null);
+                loginActivity.showError(R.string.dialog_pull_error);
+            }
+
+            @Override
+            public void onNetworkError() {
+                loginActivity.onFinishLoading(null);
+                loginActivity.showError(R.string.network_error);
+            }
+
+            @Override
+            public void onPullConversionError() {
+                loginActivity.onFinishLoading(null);
+                loginActivity.showError(R.string.dialog_pull_error);
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+
+    }
+
 }

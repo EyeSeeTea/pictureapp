@@ -76,7 +76,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                             } else if (throwable instanceof NetworkException) {
                                 checkUserCredentialsWithOrgUnit(
                                         mCredentialsLocalDataSource.getOrganisationCredentials(),
-                                        false);
+                                        true);
                     }
                         }
                     });

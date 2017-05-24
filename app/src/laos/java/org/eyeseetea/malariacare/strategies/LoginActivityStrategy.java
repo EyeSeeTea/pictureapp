@@ -35,6 +35,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void finishAndGo() {
+        loginActivity.onFinishLoading(null);
         if (loginActivity.getIntent().getBooleanExtra(LoginActivity.PULL_REQUIRED, false)) {
             loginActivity.startActivity(new Intent(loginActivity, ProgressActivity.class));
         } else {

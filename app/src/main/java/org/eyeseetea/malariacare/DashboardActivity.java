@@ -703,7 +703,6 @@ public class DashboardActivity extends BaseActivity {
                     mDashboardActivityStrategy.reloadSecondFragment();
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_stock))) {
-                    mDashboardActivityStrategy.fixHeader(dashboardActivity);
                     mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {

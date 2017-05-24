@@ -42,6 +42,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void reloadStockFragment(Activity activity) {
         mDashboardUnsentFragment.reloadData();
+        mDashboardUnsentFragment.reloadHeader(activity, R.string.tab_tag_stock);
     }
 
     @Override
@@ -215,9 +216,5 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void openSentSurvey() {
         mDashboardActivity.initSurvey();
-    }
-
-    public void fixHeader(Activity activity) {
-        mDashboardUnsentFragment.reloadHeader(activity, R.string.tab_tag_stock);
     }
 }

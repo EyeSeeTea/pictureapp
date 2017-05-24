@@ -198,12 +198,15 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         Credentials savedCredentials = credentialsLocalDataSource.getOrganisationCredentials();
         if (savedCredentials == null || savedCredentials.isEmpty()
                 || savedCredentials.getUsername().equals(
-                credentials.getUsername()) && !savedCredentials.getPassword().equals(
-                credentials.getPassword())) {
+                credentials.getUsername()) && (!savedCredentials.getPassword().equals(
+                credentials.getPassword()) || !savedCredentials.getServerURL().equals(
+                credentials.getServerURL()))) {
             callback.onSuccessDoLogin();
         } else if (savedCredentials.getUsername().equals(
                 credentials.getUsername()) && savedCredentials.getPassword().equals(
-                credentials.getPassword())) {
+                credentials.getPassword())
+                && savedCredentials.getServerURL().equals(
+                credentials.getServerURL())) {
             callback.onSuccess();
         } else {
             IAuthenticationManager iAuthenticationManager = new AuthenticationManager(

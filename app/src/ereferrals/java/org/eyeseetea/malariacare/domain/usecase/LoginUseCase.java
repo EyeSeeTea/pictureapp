@@ -15,7 +15,6 @@ import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
-import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -55,7 +54,7 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
     public void run() {
 
         if (isLoginEnable()) {
-            mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
+            mAuthenticationManager.hardcodedLogin(insertedCredentials.getServerURL(),
                     new IAuthenticationManager.Callback<UserAccount>() {
                         @Override
                         public void onSuccess(UserAccount userAccount) {
@@ -100,7 +99,9 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                 notifyInvalidCredentials();
                 return;
             }
-            orgUnitCredentials = new Credentials("", orgUnit.getCode(), orgUnit.getPin());
+            orgUnitCredentials =
+                    new Credentials(insertedCredentials.getServerURL(), orgUnit.getCode(),
+                            orgUnit.getPin());
 
         } catch (PullConversionException | JSONException | ConfigJsonIOException e) {
             e.printStackTrace();
@@ -124,7 +125,9 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
     private void checkUserCredentialsWithOrgUnit(Credentials credentials,
             boolean fromNetWorkError) {
         if (insertedCredentials.getUsername().equals(credentials.getUsername())
-                && insertedCredentials.getPassword().equals(credentials.getPassword())) {
+                && insertedCredentials.getPassword().equals(credentials.getPassword())
+                && (fromNetWorkError || insertedCredentials.getServerURL().equals(
+                credentials.getServerURL()))) {
             notifyLoginSucces();
         } else {
             if (fromNetWorkError) {

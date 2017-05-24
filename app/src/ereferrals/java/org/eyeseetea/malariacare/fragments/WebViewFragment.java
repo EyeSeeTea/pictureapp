@@ -80,6 +80,10 @@ public class WebViewFragment extends Fragment implements IDashboardFragment {
         DashboardHeaderStrategy.getInstance().init(activity, title);
     }
 
+    public void reloadHeader(Activity activity, int id) {
+        DashboardHeaderStrategy.getInstance().init(activity, id);
+    }
+
     @Override
     public void registerFragmentReceiver() {
 

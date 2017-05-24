@@ -42,6 +42,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     @Override
     public void reloadStockFragment(Activity activity) {
         mDashboardUnsentFragment.reloadData();
+        mDashboardUnsentFragment.reloadHeader(activity, R.string.tab_tag_stock);
     }
 
     @Override
@@ -49,7 +50,6 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         mDashboardUnsentFragment = new DashboardUnsentFragment();
         mDashboardUnsentFragment.setArguments(activity.getIntent().getExtras());
         mDashboardUnsentFragment.reloadData();
-        mDashboardUnsentFragment.reloadHeader(activity);
 
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
         if (isMoveToLeft) {
@@ -60,6 +60,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
         }
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.replace(R.id.dashboard_stock_container, mDashboardUnsentFragment);
+
         ft.commit();
         if(BuildConfig.translations) {
             PreferencesState.getInstance().loadsLanguageInActivity();
@@ -128,6 +129,7 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                         bundle.putInt(WebViewFragment.TITLE, R.string.tab_tag_assess);
                         openFragment.setArguments(bundle);
                         openFragment.reloadData();
+                        openFragment.reloadHeader(mDashboardActivity, R.string.tab_tag_assess);
                         mDashboardActivity.replaceFragment(R.id.dashboard_details_container,
                                 openFragment);
                     }

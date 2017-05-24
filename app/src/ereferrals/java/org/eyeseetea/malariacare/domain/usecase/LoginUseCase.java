@@ -99,7 +99,9 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                 notifyInvalidCredentials();
                 return;
             }
-            orgUnitCredentials = new Credentials("", orgUnit.getCode(), orgUnit.getPin());
+            orgUnitCredentials =
+                    new Credentials(insertedCredentials.getServerURL(), orgUnit.getCode(),
+                            orgUnit.getPin());
 
         } catch (PullConversionException | JSONException | ConfigJsonIOException e) {
             e.printStackTrace();

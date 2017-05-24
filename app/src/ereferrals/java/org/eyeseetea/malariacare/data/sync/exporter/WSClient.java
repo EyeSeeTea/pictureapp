@@ -27,7 +27,7 @@ public class WSClient {
     private Context mContext;
     private SurveyApiClientRetrofit mSurveyApiClientRetrofit;
 
-    public WSClient() {
+    public WSClient() throws IllegalArgumentException{
         mContext = PreferencesState.getInstance().getContext();
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();

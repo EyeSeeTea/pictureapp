@@ -28,7 +28,7 @@ public class WSPushController implements IPushController {
     private IPushControllerCallback mCallback;
 
 
-    public WSPushController() {
+    public WSPushController() throws IllegalArgumentException {
         mWSClient = new WSClient();
         mConvertToWSVisitor = new ConvertToWSVisitor();
     }

@@ -195,6 +195,8 @@
     <string name="offline_status_online_tab">The app is offline, this information may be deprecated</string>
     <string name="offline_status">App is offline, please go online to see this information</string>
     <string name="ws_conversion_error">"PUSHUSECASE ERROR An error has occurred to the conversion in push process"</string>
+    <string name="webservice_url_error_title">"Webservice error"</string>
+    <string name="webservice_url_error">"Error building webservice: %s"</string>
 
     <string name="error_web">errorpage.html</string>
     <string name="error_message_push">"The event with UID: %s. was uploaded without date. Please contact the administrator."</string>

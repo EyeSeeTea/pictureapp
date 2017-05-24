@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="malaria_case_based_reporting">"eReferrals"</string>
-    <string name="volunteer_label">"Volunteer:"</string>
+    <string name="volunteer_label">"IPC:"</string>
     <string name="new_case_title">"NEW CASE"</string>
     <string name="open_tab_title">"OPEN"</string>
     <string name="closed_tab_title">"CLOSED"</string>

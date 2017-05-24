@@ -187,6 +187,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void finishAndGo() {
+        loginActivity.onFinishLoading(null);
         finishAndGo(ProgressActivity.class);
     }
 

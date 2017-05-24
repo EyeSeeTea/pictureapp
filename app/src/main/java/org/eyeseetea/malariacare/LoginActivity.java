@@ -575,7 +575,7 @@ public class LoginActivity extends Activity {
     public class AsyncPullAnnouncement extends AsyncTask<LoginActivity, Void, Void> {
         //userCloseChecker is never saved, Only for check if the date is closed.
         LoginActivity loginActivity;
-        boolean isUserClosed = false;
+        Boolean isUserClosed = false;
 
         @Override
         protected Void doInBackground(LoginActivity... params) {
@@ -589,8 +589,8 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            onFinishLoading(null);
-            if (isUserClosed) {
+            if (isUserClosed != null && isUserClosed) {
+                onFinishLoading(null);
                 Log.d(TAG, "user closed");
                 AnnouncementMessageDialog.closeUser(R.string.admin_announcement,
                         PreferencesState.getInstance().getContext().getString(R.string.user_close),

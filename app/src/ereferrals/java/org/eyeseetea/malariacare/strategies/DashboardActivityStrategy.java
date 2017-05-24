@@ -212,6 +212,11 @@ public class DashboardActivityStrategy extends ADashboardActivityStrategy {
                 Tab.getFirstTabWithProgram(PreferencesEReferral.getUserProgramId()));
     }
 
+    @Override
+    public void openSentSurvey() {
+        mDashboardActivity.initSurvey();
+    }
+
     public void fixHeader(Activity activity) {
         mDashboardUnsentFragment.reloadHeader(activity, R.string.tab_tag_stock);
     }

@@ -26,6 +26,7 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -301,6 +302,13 @@ public class DashboardActivity extends BaseActivity {
         ft.commit();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+        if(BuildConfig.translations) {
+            PreferencesState.getInstance().loadsLanguageInActivity();
+        }
+    }
     @NonNull
     private FragmentTransaction getFragmentTransaction() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();

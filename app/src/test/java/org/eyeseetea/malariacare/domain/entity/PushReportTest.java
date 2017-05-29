@@ -20,9 +20,8 @@ public class PushReportTest {
     @Test
     public void test_when_import_summary_has_conflict_push_report_error_is_false() throws
             IOException {
-        //given
-        ImportSummary importSummary = (ImportSummary) getApiMessageFromJson(
-                IMPORT_SUMMARY_CONFLICT_RESPONSE);
+        ImportSummary importSummary = givenAImportSummary(IMPORT_SUMMARY_CONFLICT_RESPONSE);
+
         PushReport pushReport = PushReportMapper.mapFromImportSummaryToPushReport(importSummary,
                 EVENT_UID_KEY);
         //then
@@ -31,9 +30,8 @@ public class PushReportTest {
 
     @Test
     public void test_when_import_summary_has_errors_push_report_error_is_true() throws IOException {
-        //given
-        ImportSummary importSummary = (ImportSummary) getApiMessageFromJson(
-                IMPORT_SUMMARY_ERROR_RESPONSE);
+        ImportSummary importSummary = givenAImportSummary(IMPORT_SUMMARY_ERROR_RESPONSE);
+
         PushReport pushReport = PushReportMapper.mapFromImportSummaryToPushReport(importSummary,
                 EVENT_UID_KEY);
         //then
@@ -41,12 +39,16 @@ public class PushReportTest {
     }
     @Test
     public void test_when_import_summary_has_0_imported_data_values_push_report_error_is_true() throws IOException {
-        //given
-        ImportSummary importSummary = (ImportSummary) getApiMessageFromJson(
-                IMPORT_SUMMARY_DATA_VALUES);
+        ImportSummary importSummary = givenAImportSummary(IMPORT_SUMMARY_DATA_VALUES);
+
         PushReport pushReport = PushReportMapper.mapFromImportSummaryToPushReport(importSummary,
                 EVENT_UID_KEY);
         //then
         assertThat(pushReport.hasPushErrors(), is(true));
+    }
+
+
+    private ImportSummary givenAImportSummary(String jsonFile) throws IOException {
+        return (ImportSummary) getApiMessageFromJson(jsonFile);
     }
 }

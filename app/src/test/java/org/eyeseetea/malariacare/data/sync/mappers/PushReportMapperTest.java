@@ -18,9 +18,8 @@ public class PushReportMapperTest {
 
     @Test
     public void test_conversion_of_success_import_summary() throws IOException {
-        //given
-        ImportSummary importSummary = (ImportSummary) getApiMessageFromJson(
-                IMPORT_SUMMARY_SUCCESS_RESPONSE);
+        ImportSummary importSummary = givenAImportSummary(IMPORT_SUMMARY_SUCCESS_RESPONSE);
+
         PushReport pushReport = PushReportMapper.mapFromImportSummaryToPushReport(importSummary,
                 EVENT_UID_KEY);
         //then
@@ -44,8 +43,8 @@ public class PushReportMapperTest {
     public void test_conversion_of_success_import_summary_with_conflicts()
             throws IOException {
         //given
-        ImportSummary importSummary = (ImportSummary) getApiMessageFromJson(
-                IMPORT_SUMMARY_CONFLICT_RESPONSE);
+        ImportSummary importSummary = givenAImportSummary(IMPORT_SUMMARY_CONFLICT_RESPONSE);
+
         PushReport pushReport = PushReportMapper.mapFromImportSummaryToPushReport(importSummary,
                 EVENT_UID_KEY);
         //then
@@ -66,5 +65,9 @@ public class PushReportMapperTest {
                 importSummary.getConflicts().get(0).getObject()), is(true));
         assertThat(pushReport.getPushConflicts().get(0).getValue().equals(
                 importSummary.getConflicts().get(0).getValue()), is(true));
+    }
+
+    private ImportSummary givenAImportSummary(String jsonFile) throws IOException {
+        return (ImportSummary) getApiMessageFromJson(jsonFile);
     }
 }

@@ -1,9 +1,5 @@
 package org.eyeseetea.malariacare.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.hisp.dhis.client.sdk.core.common.network.ApiMessage;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;

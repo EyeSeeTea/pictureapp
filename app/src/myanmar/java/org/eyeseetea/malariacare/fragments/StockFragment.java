@@ -202,12 +202,8 @@ public class StockFragment extends Fragment implements IDashboardFragment, IWebV
 
     @Override
     public void stopWebView() {
-        try {
-            if (table != null) {
-                table.stopLoading();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (table != null) {
+            table.stopLoading();
         }
     }
 

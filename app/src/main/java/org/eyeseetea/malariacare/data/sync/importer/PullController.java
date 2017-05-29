@@ -32,6 +32,7 @@ import org.eyeseetea.malariacare.data.sync.importer.models.OrganisationUnitExten
 import org.eyeseetea.malariacare.data.sync.importer.strategies.APullControllerStrategy;
 import org.eyeseetea.malariacare.data.sync.importer.strategies.PullControllerStrategy;
 import org.eyeseetea.malariacare.domain.boundary.IPullController;
+import org.eyeseetea.malariacare.domain.exception.PopulateCsvException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
 import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
@@ -157,9 +158,8 @@ public class PullController implements IPullController {
 
             OrgUnitToOptionConverter.convert();
             mPullControllerStrategy.convertMetadata(mConverter);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            callback.onError(new PullConversionException());
+        } catch (NullPointerException ex) {
+            callback.onError(new PullConversionException(ex));
         }
     }
 
@@ -175,9 +175,8 @@ public class PullController implements IPullController {
         try {
             mConverter.setOrgUnits(OrgUnit.getAllOrgUnit());
             mDataConverter.convert(callback, mConverter);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            callback.onError(new PullConversionException());
+        } catch (NullPointerException ex) {
+            callback.onError(new PullConversionException(ex));
         }
     }
 }

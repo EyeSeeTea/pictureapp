@@ -68,15 +68,11 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
     );
 
     @Override
-    public void init() {
-        try {
-            FileCsvs fileCsvs = new FileCsvs();
-            fileCsvs.saveCsvsInFileIfNeeded();
-            TreatmentTableOperations treatmentTable = new TreatmentTableOperations();
-            treatmentTable.generateTreatmentMatrixIFNeeded();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void init() throws IOException {
+        FileCsvs fileCsvs = new FileCsvs();
+        fileCsvs.saveCsvsInFileIfNeeded();
+        TreatmentTableOperations treatmentTable = new TreatmentTableOperations();
+        treatmentTable.generateTreatmentMatrixIFNeeded();
     }
 
     @Override

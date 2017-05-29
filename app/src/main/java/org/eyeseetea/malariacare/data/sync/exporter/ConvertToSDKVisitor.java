@@ -37,6 +37,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.strategies.ConvertToSdkVisit
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
 import org.eyeseetea.malariacare.domain.boundary.IPushController;
+import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
 import org.eyeseetea.malariacare.domain.entity.pushsummary.PushConflict;
 import org.eyeseetea.malariacare.domain.exception.push.NullEventDateException;
@@ -90,7 +91,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     }
 
     @Override
-    public void visit(Survey survey) throws Exception {
+    public void visit(Survey survey) throws ConversionException {
         EventExtended event = null;
         try {
             //Precondition
@@ -131,10 +132,10 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
 
             //Annotate both objects to update its state once the process is over
             annotateSurveyAndEvent(survey, event);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NullPointerException e) {
             //If the conversion fails the survey is wrong and will be delete.
             removeSurveyAndEvent(survey, event);
+            throw new ConversionException(e);
         }
     }
 
@@ -223,7 +224,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Builds an event from a survey
      */
-    private EventExtended buildEvent(Survey survey) throws Exception {
+    private EventExtended buildEvent(Survey survey) {
         EventExtended event = new EventExtended();
 
         ConvertToSdkVisitorStrategy.setAttributeCategoryOptionsInEvent(event);
@@ -271,7 +272,7 @@ public class ConvertToSDKVisitor implements IConvertToSDKVisitor {
     /**
      * Updates the location of the current event that it is being processed
      */
-    private EventExtended updateEventLocation(Survey survey, EventExtended event) throws Exception {
+    private EventExtended updateEventLocation(Survey survey, EventExtended event) {
         Location lastLocation = LocationMemory.get(survey.getId_survey());
 
         //No location + not required -> done

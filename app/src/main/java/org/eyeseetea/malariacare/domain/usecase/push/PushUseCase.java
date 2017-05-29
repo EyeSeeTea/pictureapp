@@ -9,6 +9,7 @@ import org.eyeseetea.malariacare.domain.boundary.repositories.ReadPolicy;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.Survey;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
@@ -40,6 +41,8 @@ public class PushUseCase implements UseCase {
         void onBannedOrgUnit();
 
         void onReOpenOrgUnit();
+
+        void onApiCallError();
 
         void onApiCallError(ApiCallException e);
     }

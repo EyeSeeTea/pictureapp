@@ -329,4 +329,6 @@
     <string name="user_close">"该用户被管理员关闭。"</string>
     <string name="run_in_demo_mode">"在演示模式下运行"</string>
     <string name="error_message_push">"UID：%s 的事件。 没有日期上传。 请联系管理员。"</string>
+    <string name="db_migration_error">"请通知管理员，申请可能需要重新安装"</string>
+    <string name="error_exporting_data">"无法导出错误元数据。"</string>
 </resources>

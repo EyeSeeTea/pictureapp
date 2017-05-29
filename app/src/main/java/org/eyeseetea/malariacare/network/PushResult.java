@@ -90,6 +90,7 @@ public class PushResult {
             JSONObject response = jsonObject.getJSONObject(DHIS220_RESPONSE);
             return response.getString(key);
         } catch (JSONException e) {
+            e.printStackTrace();
             return "";
         }
     }

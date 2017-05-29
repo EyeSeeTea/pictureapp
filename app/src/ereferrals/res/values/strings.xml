@@ -192,4 +192,6 @@
     <string name="online_status">App is online</string>
     <string name="offline_status_online_tab">The app is offline, this information may be deprecated</string>
     <string name="offline_status">App is offline, please go online to see this information</string>
+    <string name="db_migration_error">"Please inform the administrator, the application may need to be reinstalled"</string>
+    <string name="error_exporting_data">"Error metadata could not be exported."</string>
 </resources>

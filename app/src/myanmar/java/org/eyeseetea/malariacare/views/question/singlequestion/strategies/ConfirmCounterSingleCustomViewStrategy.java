@@ -113,7 +113,7 @@ public class ConfirmCounterSingleCustomViewStrategy implements
     public void showQuestionImage(Question questionCounter, View rootView) {
         if (questionCounter.getPath() != null && !questionCounter.getPath().equals("")) {
             ImageView imageView = (ImageView) rootView.findViewById(R.id.questionImageRow);
-            BaseLayoutUtils.putImageInImageViewDensityHight(
+            BaseLayoutUtils.putImageInImageViewDensityHigh(
                     questionCounter.getInternationalizedPath(),
                     imageView);
             imageView.setVisibility(View.VISIBLE);

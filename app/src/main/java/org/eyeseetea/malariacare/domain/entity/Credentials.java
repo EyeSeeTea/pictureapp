@@ -38,6 +38,11 @@ public class Credentials {
         return this.equals(Credentials.createDemoCredentials());
     }
 
+    public void clear() {
+        username = "";
+        password = "";
+    }
+
     public boolean isEmpty() {
         return username.isEmpty() && password.isEmpty();
     }

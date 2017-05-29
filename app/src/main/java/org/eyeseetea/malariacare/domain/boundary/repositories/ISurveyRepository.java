@@ -7,4 +7,6 @@ import java.util.List;
 public interface ISurveyRepository {
 
     List<Survey> getLastSentSurveys(int count);
+
+    void deleteSurveys();
 }

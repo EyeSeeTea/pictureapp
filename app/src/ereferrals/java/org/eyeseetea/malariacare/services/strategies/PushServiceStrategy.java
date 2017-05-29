@@ -223,6 +223,11 @@ public class PushServiceStrategy extends APushServiceStrategy {
             }
 
             @Override
+            public void onApiCallError() {
+                onError("API call error");
+            }
+
+            @Override
             public void onApiCallError(ApiCallException e) {
                 onError("PUSHUSECASE ERROR "+e.getMessage());
                 e.printStackTrace();

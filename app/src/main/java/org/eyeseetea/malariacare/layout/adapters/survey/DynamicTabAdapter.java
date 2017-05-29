@@ -132,7 +132,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private boolean mReviewMode = false;
     private boolean isBackward = true;
 
-    public DynamicTabAdapter(Context context, boolean reviewMode) {
+    public DynamicTabAdapter(Context context, boolean reviewMode) throws NullPointerException {
         mReviewMode = reviewMode;
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
@@ -189,7 +189,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return false;
     }
 
-    private NavigationController initNavigationController() {
+    private NavigationController initNavigationController() throws NullPointerException{
         NavigationController navigationController = Session.getNavigationController();
         navigationController.first();
         return navigationController;
@@ -960,10 +960,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Changes the current question moving backward
      */
     private void previous() {
-        try{
-            System.out.println(Session.getMalariaSurvey().getValuesFromDB().toString());
-            System.out.println(Session.getStockSurvey().getValuesFromDB().toString());
-        }catch (Exception e){}
         if (!navigationController.hasPrevious()) {
             return;
         }

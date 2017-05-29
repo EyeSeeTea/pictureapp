@@ -20,20 +20,20 @@ public class CredentialsReader {
 
     private static CredentialsReader credentialsInstance;
 
-    public static CredentialsReader getInstance() throws ConfigJsonIOException {
-            if (credentialsInstance == null) {
-                credentialsInstance = new CredentialsReader();
-            }
+    public static CredentialsReader getInstance() throws ConfigJsonIOException{
+        if (credentialsInstance == null) {
+            credentialsInstance = new CredentialsReader();
+        }
         return credentialsInstance;
     }
 
-    public CredentialsReader() throws  ConfigJsonIOException {
+    public CredentialsReader() throws ConfigJsonIOException {
         readJson();
         try {
             name = mJSONObject.getString(NAME_KEY);
             password = mJSONObject.getString(PASS_KEY);
         }catch (JSONException e){
-            throw new ConfigJsonIOException(e.getMessage());
+            throw new ConfigJsonIOException(e);
         }
     }
 
@@ -42,7 +42,7 @@ public class CredentialsReader {
             readJson();
         }
         if (name == null) {
-            throw  new ConfigJsonIOException("name not valid");
+            throw new ConfigJsonIOException("name not valid");
         }
         return name;
     }
@@ -52,7 +52,7 @@ public class CredentialsReader {
             readJson();
         }
         if (password == null) {
-            throw  new ConfigJsonIOException("password not valid");
+            throw new ConfigJsonIOException("password not valid");
         }
         return password;
     }
@@ -78,15 +78,15 @@ public class CredentialsReader {
             }
             mJSONObject = new JSONObject(sb.toString());
         } catch (IOException e) {
-            throw new ConfigJsonIOException(e.getMessage());
+            throw new ConfigJsonIOException(e);
         } catch (JSONException e) {
-            throw new ConfigJsonIOException(e.getMessage());
+            throw new ConfigJsonIOException(e);
         } finally {
             try {
                 if (inputStream != null) inputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new ConfigJsonIOException(e.getMessage());
+                throw new ConfigJsonIOException(e);
             }
         }
     }

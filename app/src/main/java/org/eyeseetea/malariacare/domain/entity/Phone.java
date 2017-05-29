@@ -10,7 +10,7 @@ public class Phone {
 
     public Phone(String value) throws InvalidPhoneException {
         if (!isValid(value)) {
-            throw new InvalidPhoneException("Invalid Phone format");
+            throw new InvalidPhoneException();
         }
 
         this.value = applyTransformations(value);

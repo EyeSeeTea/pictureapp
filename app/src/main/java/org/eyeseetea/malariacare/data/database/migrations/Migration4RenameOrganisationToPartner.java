@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.FileCsvs;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.PopulateDB;
+import org.eyeseetea.malariacare.domain.exception.MigrateMigrationException;
+import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
 
 import java.io.IOException;
 
@@ -66,16 +68,7 @@ public class Migration4RenameOrganisationToPartner extends BaseMigration {
         try {
             fileCsvs.copyCsvFile("Organisations.csv", PopulateDB.PARTNER_CSV);
         } catch (IOException e) {
-            Log.e(TAG, "Error copying csv\n" + e.getMessage());
-            e.printStackTrace();
+           new MigrateMigrationException(e);
         }
-
-//        TreatmentTable treatmentTable=new TreatmentTable();
-//        try {
-//            treatmentTable.generateTreatmentMatrix();
-//        } catch (IOException e) {
-//            Log.e(TAG, "Error getting treatment\n" + e.getMessage());
-//            e.printStackTrace();
-//        }
     }
 }

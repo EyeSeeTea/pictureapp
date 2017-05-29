@@ -10,6 +10,7 @@ import org.eyeseetea.malariacare.data.sync.exporter.model.SurveyContainerWSObjec
 import org.eyeseetea.malariacare.data.sync.exporter.model.SurveySendAction;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.hisp.dhis.client.sdk.core.common.utils.CodeGenerator;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class ConvertToWSVisitor implements IConvertToSDKVisitor {
     }
 
     @Override
-    public void visit(Survey survey) throws Exception {
+    public void visit(Survey survey) throws ConversionException {
         SurveySendAction surveySendAction = new SurveySendAction();
         surveySendAction.setActionId(CodeGenerator.generateCode());
         surveySendAction.setType(SURVEY_ACTION_ID);

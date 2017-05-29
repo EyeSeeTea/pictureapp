@@ -54,13 +54,13 @@ public class WSClient {
             response = mSurveyApiClientRetrofit.pushSurveys(
                     surveyContainerWSObject).execute();
         } catch (UnrecognizedPropertyException e) {
-            ConversionException conversionException = new ConversionException();
+            ConversionException conversionException = new ConversionException(e);
             wsClientCallBack.onError(conversionException);
         } catch (IOException e) {
             wsClientCallBack.onError(e);
         }
         if (response != null && response.code() == 401) {
-            ConversionException conversionException = new ConversionException();
+            ConversionException conversionException = new ConversionException(null);
             wsClientCallBack.onError(conversionException);
         } else if (response != null && response.code() == 402) {
             InvalidCredentialsException invalidCredentialsException =
@@ -70,7 +70,7 @@ public class WSClient {
             wsClientCallBack.onSuccess(response.body());
         } else {
             Log.e(TAG, "Failed response when pushing surveys");
-            wsClientCallBack.onError(new ConversionException());
+            wsClientCallBack.onError(new ConversionException(null));
         }
 
     }

@@ -16,6 +16,9 @@ import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
 import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
 import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
+import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
+import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
 import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
@@ -66,7 +69,7 @@ public abstract class ADashboardActivityStrategy {
                             Context.LOCATION_SERVICE);
         }
         catch (NullPointerException e){
-            e.printStackTrace();
+            new EmptyLocationException(e);
         }
 
         if (locationManager == null)
@@ -179,7 +182,7 @@ public abstract class ADashboardActivityStrategy {
     }
 
 
-    public void initNavigationController() {
+    public void initNavigationController() throws LoadingNavigationControllerException {
         NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
     }
 

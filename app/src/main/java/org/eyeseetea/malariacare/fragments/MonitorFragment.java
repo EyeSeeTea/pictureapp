@@ -175,13 +175,9 @@ public class MonitorFragment extends Fragment implements IDashboardFragment, IWe
      * Stops webView gracefully
      */
     public void stopWebView() {
-        try {
-            if (webView != null) {
-                webView.stopLoading();
-                webView = null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (webView != null) {
+            webView.stopLoading();
+            webView = null;
         }
     }
 

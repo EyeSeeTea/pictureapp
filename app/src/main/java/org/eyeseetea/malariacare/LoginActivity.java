@@ -58,6 +58,7 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
@@ -580,8 +581,14 @@ public class LoginActivity extends Activity {
         @Override
         protected Void doInBackground(LoginActivity... params) {
             loginActivity = params[0];
-            if (Session.getUser() != null) {
+            if(Session.getUser()==null){
+                isUserClosed = null;
+                return null;
+            }
+            try {
                 isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+            }catch (ApiCallException e){
+                isUserClosed = null;
             }
             return null;
         }

@@ -14,6 +14,8 @@ import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.LocationMemory;
+import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
+import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
 import org.eyeseetea.malariacare.domain.exception.EmptyLocationException;
 import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationBuilder;
@@ -23,6 +25,14 @@ import org.eyeseetea.malariacare.layout.listeners.SurveyLocationListener;
 
 public abstract class ADashboardActivityStrategy {
     private final static String TAG = ".DashActivityStrategy";
+    protected DashboardActivity mDashboardActivity;
+    protected DashboardUnsentFragment unsentFragment;
+    protected DashboardSentFragment sentFragment;
+    protected MonitorFragment monitorFragment;
+
+    public void onCreate() {
+
+    }
 
     public abstract void reloadStockFragment(Activity activity);
 
@@ -42,6 +52,11 @@ public abstract class ADashboardActivityStrategy {
     public abstract void completeSurvey();
 
     public abstract boolean isHistoricNewReceiptBalanceFragment(Activity activity);
+
+
+    public ADashboardActivityStrategy(DashboardActivity dashboardActivity) {
+        mDashboardActivity = dashboardActivity;
+    }
 
     public void prepareLocationListener(Activity activity, Survey survey) {
 
@@ -112,6 +127,60 @@ public abstract class ADashboardActivityStrategy {
         return defaultLocation;
     }
 
+    public void showFirstFragment() {
+        mDashboardActivity.setLoadingReview(false);
+        unsentFragment = new DashboardUnsentFragment();
+        unsentFragment.setArguments(mDashboardActivity.getIntent().getExtras());
+        mDashboardActivity.replaceListFragment(R.id.dashboard_details_container, unsentFragment);
+        unsentFragment.reloadHeader(mDashboardActivity);
+
+    }
+
+    public void reloadFirstFragment() {
+        if (unsentFragment != null) {
+            unsentFragment.reloadData();
+        }
+    }
+
+    public void reloadFirstFragmentHeader() {
+        if (unsentFragment != null) {
+            unsentFragment.reloadHeader(mDashboardActivity);
+        }
+    }
+
+    public void showSecondFragment() {
+        sentFragment = new DashboardSentFragment();
+        sentFragment.setArguments(mDashboardActivity.getIntent().getExtras());
+        sentFragment.reloadData();
+        mDashboardActivity.replaceListFragment(R.id.dashboard_completed_container, sentFragment);
+    }
+
+    public void reloadSecondFragment() {
+        sentFragment.reloadData();
+        sentFragment.reloadHeader(mDashboardActivity);
+    }
+
+    public void showFourthFragment() {
+        if (monitorFragment == null) {
+            monitorFragment = new MonitorFragment();
+        }
+        mDashboardActivity.replaceFragment(R.id.dashboard_charts_container, monitorFragment);
+    }
+
+    public void reloadFourthFragment() {
+        monitorFragment.reloadData();
+        monitorFragment.reloadHeader(mDashboardActivity);
+    }
+
+    public int getSurveyContainer() {
+        return R.id.dashboard_details_container;
+    }
+
+    public void showUnsentFragment() {
+        reloadFirstFragment();
+        showFirstFragment();
+    }
+
 
     public void initNavigationController() throws LoadingNavigationControllerException {
         NavigationBuilder.getInstance().buildController(Tab.getFirstTab());
@@ -123,5 +192,11 @@ public abstract class ADashboardActivityStrategy {
 
     public void onSentTabSelected(DashboardActivity dashboardActivity) {
 
+    }
+
+    public void openSentSurvey() {
+        mDashboardActivity.getTabHost().setCurrentTabByTag(
+                mDashboardActivity.getResources().getString(R.string.tab_tag_assess));
+        mDashboardActivity.initSurvey();
     }
 }

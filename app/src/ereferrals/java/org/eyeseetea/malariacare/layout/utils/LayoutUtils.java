@@ -14,8 +14,9 @@ import android.widget.TextView;
 
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.data.database.model.User;
+import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
 
 /**
  * Created by idelcano on 01/11/2016.
@@ -47,9 +48,12 @@ public class LayoutUtils extends BaseLayoutUtils {
                         context.getString(R.string.malaria_case_based_reporting)));
         color = ContextCompat.getColor(context, R.color.text_second_color);
         colorString = String.format("%X", color).substring(2);
-        User user = User.getLoggedUser();
-        String userName;
-        userName = (user == null) ? "" : user.getName();
+
+
+        CredentialsLocalDataSource credentialsLocalDataSource = new CredentialsLocalDataSource();
+
+        Credentials credentials = credentialsLocalDataSource.getOrganisationCredentials();
+        String userName = credentials.getUsername();
 
         String volunteer = context.getString(R.string.volunteer_label);
 
@@ -141,5 +145,4 @@ public class LayoutUtils extends BaseLayoutUtils {
             row.findViewById(R.id.dotted_line).setVisibility(View.GONE);
         }
     }
-
 }

@@ -87,7 +87,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
             public void onClick(View v) {
 
                 Credentials demoCrededentials = Credentials.createDemoCredentials();
-                loginActivity.onStartLoading();
+                loginActivity.showProgressBar();
                 loginActivity.mLoginUseCase.execute(demoCrededentials,
                         new ALoginUseCase.Callback() {
                             @Override
@@ -144,7 +144,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
         pullUseCase.execute(pullFilters, new PullUseCase.Callback() {
             @Override
             public void onComplete() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 finishAndGo(DashboardActivity.class);
             }
 
@@ -155,25 +155,25 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
             @Override
             public void onError(String message) {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), message);
             }
 
             @Override
             public void onPullConversionError() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull conversion error");
             }
 
             @Override
             public void onCancel() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Pull cancel");
             }
 
             @Override
             public void onNetworkError() {
-                loginActivity.onFinishLoading(null);
+                loginActivity.hideProgressBar();
                 Log.e(this.getClass().getSimpleName(), "Network Error");
             }
         });
@@ -187,6 +187,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void finishAndGo() {
+        loginActivity.onFinishLoading(null);
         finishAndGo(ProgressActivity.class);
     }
 

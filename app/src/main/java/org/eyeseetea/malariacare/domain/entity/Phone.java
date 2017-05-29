@@ -13,7 +13,11 @@ public class Phone {
             throw new InvalidPhoneException();
         }
 
-        this.value = value;
+        this.value = applyTransformations(value);
+    }
+
+    private String applyTransformations(String value){
+        return PhoneMask.applyValueTransformations(value);
     }
 
     private boolean isValid(String value) {

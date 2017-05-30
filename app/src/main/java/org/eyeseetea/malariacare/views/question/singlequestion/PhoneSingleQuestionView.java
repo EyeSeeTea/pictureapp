@@ -91,9 +91,4 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
             mCustomEditText.setError(context.getString(R.string.dynamic_error_phone_format));
         }
     }
-
-    @Override
-    public CustomEditText getInputView() {
-        return mCustomEditText;
-    }
 }

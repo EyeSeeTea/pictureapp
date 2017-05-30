@@ -87,9 +87,4 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
             }
         });
     }
-
-    @Override
-    public CustomEditText getInputView() {
-        return numberPicker;
-    }
 }

@@ -89,9 +89,4 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
             }
         });
     }
-
-    @Override
-    public CustomEditText getInputView() {
-        return numberPicker;
-    }
 }

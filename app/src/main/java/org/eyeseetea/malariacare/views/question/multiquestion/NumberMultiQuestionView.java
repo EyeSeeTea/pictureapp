@@ -86,9 +86,4 @@ public class NumberMultiQuestionView extends AKeyboardQuestionView implements IQ
             }
         });
     }
-
-    @Override
-    public CustomEditText getInputView() {
-        return numberPicker;
-    }
 }

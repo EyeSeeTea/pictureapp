@@ -824,15 +824,11 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             if (rowQuestion.isHiddenBySurveyAndHeader(survey)) {
                 row.clearFocus();
                 row.setVisibility(View.GONE);
-                ((CommonQuestionView) row.getChildAt(0)).setActive(false);
-                Object inputView = ((AKeyboardQuestionView) row.getChildAt(0)).getInputView();
-                Validation.getInstance().removeInputError(inputView);
+                ((CommonQuestionView) row.getChildAt(0)).deactivateQuestion();
                 hideDefaultValue(rowQuestion);
             } else {
                 row.setVisibility(View.VISIBLE);
-                ((CommonQuestionView) row.getChildAt(0)).setActive(true);
-                Object inputView = ((AKeyboardQuestionView) row.getChildAt(0)).getInputView();
-                Validation.getInstance().addInput(inputView);
+                ((CommonQuestionView) row.getChildAt(0)).activateQuestion();
                 showDefaultValue(row, rowQuestion);
             }
             return true;

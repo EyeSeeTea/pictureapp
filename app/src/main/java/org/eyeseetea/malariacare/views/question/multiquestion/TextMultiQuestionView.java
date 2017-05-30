@@ -78,9 +78,4 @@ public class TextMultiQuestionView extends AKeyboardQuestionView implements IQue
     public void setInputType(int value) {
         mCustomEditText.setInputType(value | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
     }
-
-    @Override
-    public CustomEditText getInputView() {
-        return mCustomEditText;
-    }
 }

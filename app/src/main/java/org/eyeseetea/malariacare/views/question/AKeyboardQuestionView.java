@@ -43,6 +43,4 @@ public abstract class AKeyboardQuestionView extends CommonQuestionView {
     public interface onAnswerChangedListener {
         void onAnswerChanged(View view, String newValue);
     }
-
-    public abstract EditText getInputView();
 }

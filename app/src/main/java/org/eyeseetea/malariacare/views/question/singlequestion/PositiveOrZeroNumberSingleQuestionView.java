@@ -97,9 +97,4 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
             isClicked = false;
         }
     }
-
-    @Override
-    public CustomEditText getInputView() {
-        return numberPicker;
-    }
 }

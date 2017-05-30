@@ -93,9 +93,4 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
             numberPicker.setError(context.getString(R.string.dynamic_error_age));
         }
     }
-
-    @Override
-    public CustomEditText getInputView() {
-        return numberPicker;
-    }
 }

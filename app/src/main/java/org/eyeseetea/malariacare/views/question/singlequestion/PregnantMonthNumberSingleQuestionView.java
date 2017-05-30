@@ -98,9 +98,4 @@ public class PregnantMonthNumberSingleQuestionView extends AKeyboardSingleQuesti
         }
     }
 
-    @Override
-    public CustomEditText getInputView() {
-        return numberPicker;
-    }
-
 }

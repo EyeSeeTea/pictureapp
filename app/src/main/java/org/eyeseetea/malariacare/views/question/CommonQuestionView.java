@@ -5,8 +5,11 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-public class CommonQuestionView extends LinearLayout implements IValidationQuestion {
-    boolean isActive;
+import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.domain.entity.Validation;
+
+public class CommonQuestionView extends LinearLayout {
+    boolean isActive = true;
 
     public CommonQuestionView(Context context) {
         super(context);
@@ -22,13 +25,27 @@ public class CommonQuestionView extends LinearLayout implements IValidationQuest
         super(context, attrs, defStyleAttr);
     }
 
-    @Override
     public boolean isActive() {
         return isActive;
     }
 
-    @Override
     public void setActive(Boolean value) {
         isActive = value;
+    }
+
+    public void activateQuestion() {
+        setActive(true);
+        Object inputView = this.findViewById(R.id.answer);
+        if (inputView != null) {
+            Validation.getInstance().addInput(inputView);
+        }
+    }
+
+    public void deactivateQuestion() {
+        setActive(false);
+        Object inputView = this.findViewById(R.id.answer);
+        if (inputView != null) {
+            Validation.getInstance().removeInputError(inputView);
+        }
     }
 }

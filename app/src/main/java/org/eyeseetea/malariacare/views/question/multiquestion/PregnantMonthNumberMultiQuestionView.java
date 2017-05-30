@@ -88,9 +88,4 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
             }
         });
     }
-
-    @Override
-    public CustomEditText getInputView() {
-        return numberPicker;
-    }
 }

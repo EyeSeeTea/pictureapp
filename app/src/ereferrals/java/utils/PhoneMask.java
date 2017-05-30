@@ -10,7 +10,7 @@ public class PhoneMask {
      * 07|06|+|+2556|+2557 and have 9 more digits
      */
     public static final String PLAIN_PHONE_NUMBER_MASK =
-            "(^(00|\\+)\\d{11}$)|(^(06|07|\\+2556|\\+2557)\\d{9}$)";
+            "((^(00)\\d{10,15})|(^(\\+)\\d{10,15}$)|(^(06|07|\\+2556|\\+2557)\\d{9}$))";
 
     public static String formatPhoneNumber(String phoneValue) {
         //Empty -> nothing to format
@@ -38,11 +38,11 @@ public class PhoneMask {
     public static String applyValueTransformations(String value){
         String valueText = value;
         if (valueText.startsWith("00")) {
-            valueText = valueText.replace("00", "+");
+            valueText = "+" + valueText.substring(2,valueText.length());
         } else if (valueText.startsWith("06")) {
-            valueText = valueText.replace("06", "+2556");
+            valueText = "+2556" + valueText.substring(2,valueText.length());
         } else if (valueText.startsWith("07")) {
-            valueText = valueText.replace("07", "+2557");
+            valueText = "+2557" + valueText.substring(2,valueText.length());
         }
         return valueText;
     }

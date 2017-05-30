@@ -61,7 +61,7 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
         numberPicker = (CustomEditText) findViewById(R.id.answer);
-        Validation.getInstance().addInput(numberPicker);
+        Validation.getInstance().addInput(this);
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -69,10 +69,10 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
                     monthNumber = PregnantMonthNumber.parse(
                             numberPicker.getText().toString());
                     notifyAnswerChanged(String.valueOf(monthNumber.getValue()));
-                    Validation.getInstance().removeInputError(numberPicker);
+                    Validation.getInstance().removeInputError(this);
 
                 } catch (InvalidPregnantMonthNumberException e) {
-                    Validation.getInstance().addinvalidInput(numberPicker,
+                    Validation.getInstance().addinvalidInput(this,
                             context.getString(R.string.dynamic_error_pregnant_month));
                 }
             }
@@ -87,5 +87,10 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
 
             }
         });
+    }
+
+    @Override
+    public CustomEditText getInputView() {
+        return numberPicker;
     }
 }

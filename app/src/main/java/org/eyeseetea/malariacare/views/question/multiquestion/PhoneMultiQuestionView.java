@@ -85,4 +85,10 @@ public class PhoneMultiQuestionView extends AKeyboardQuestionView implements IQu
             }
         });
     }
+
+    @Override
+    public CustomEditText getInputView() {
+        return mCustomEditText;
+    }
+
 }

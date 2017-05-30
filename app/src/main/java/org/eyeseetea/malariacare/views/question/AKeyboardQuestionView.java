@@ -5,9 +5,9 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 
-public abstract class AKeyboardQuestionView extends LinearLayout {
+public abstract class AKeyboardQuestionView extends CommonQuestionView {
     protected onAnswerChangedListener mOnAnswerChangedListener;
 
     public AKeyboardQuestionView(Context context) {
@@ -43,4 +43,6 @@ public abstract class AKeyboardQuestionView extends LinearLayout {
     public interface onAnswerChangedListener {
         void onAnswerChanged(View view, String newValue);
     }
+
+    public abstract EditText getInputView();
 }

@@ -61,17 +61,17 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
         header = (CustomTextView) findViewById(R.id.row_header_text);
         numberPicker = (CustomEditText) findViewById(R.id.answer);
 
-        Validation.getInstance().addInput(numberPicker);
+        Validation.getInstance().addInput(this);
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 try {
                     positiveNumber = PositiveNumber.parse(numberPicker.getText().toString());
                     notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
-                    Validation.getInstance().removeInputError(numberPicker);
+                    Validation.getInstance().removeInputError(this);
 
                 } catch (InvalidPositiveNumberException e) {
-                    Validation.getInstance().addinvalidInput(numberPicker,
+                    Validation.getInstance().addinvalidInput(this,
                             context.getString(R.string.dynamic_error_age));
                 }
             }
@@ -86,5 +86,10 @@ public class PositiveNumberMultiQuestionView extends AKeyboardQuestionView imple
 
             }
         });
+    }
+
+    @Override
+    public CustomEditText getInputView() {
+        return numberPicker;
     }
 }

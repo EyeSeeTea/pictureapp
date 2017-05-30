@@ -57,7 +57,7 @@ public class PregnantMonthNumberSingleQuestionView extends AKeyboardSingleQuesti
         numberPicker.setFocusable(true);
         numberPicker.setFocusableInTouchMode(true);
 
-        Validation.getInstance().addInput(numberPicker);
+        Validation.getInstance().addInput(this);
         sendButton = (CustomButton) findViewById(R.id.dynamic_positiveInt_btn);
 
         sendButton.setOnClickListener(new OnClickListener() {
@@ -86,16 +86,21 @@ public class PregnantMonthNumberSingleQuestionView extends AKeyboardSingleQuesti
             try {
                 PregnantMonthNumber pregnantMonthNumber = PregnantMonthNumber.parse(
                         numberPicker.getText().toString());
-                Validation.getInstance().removeInputError(numberPicker);
+                Validation.getInstance().removeInputError(this);
                 hideKeyboard(numberPicker);
                 notifyAnswerChanged(String.valueOf(pregnantMonthNumber.getValue()));
             } catch (InvalidPregnantMonthNumberException e) {
-                Validation.getInstance().addinvalidInput(numberPicker,
+                Validation.getInstance().addinvalidInput(this,
                         context.getString(R.string.dynamic_error_age));
                 numberPicker.setError(context.getString(R.string.dynamic_error_pregnant_month));
             }
             isClicked = false;
         }
+    }
+
+    @Override
+    public CustomEditText getInputView() {
+        return numberPicker;
     }
 
 }

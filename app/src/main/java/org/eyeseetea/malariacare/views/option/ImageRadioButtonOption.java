@@ -6,15 +6,15 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
-public class ImageRadioButtonOption extends LinearLayout {
+public class ImageRadioButtonOption extends CommonQuestionView {
     Option mOption;
     OnCheckedChangeListener mOnCheckedChangeListener;
     ImageView mImageView;

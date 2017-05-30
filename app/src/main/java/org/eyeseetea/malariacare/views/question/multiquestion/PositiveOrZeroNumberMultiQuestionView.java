@@ -62,7 +62,7 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
         header = (CustomTextView) findViewById(R.id.row_header_text);
         numberPicker = (CustomEditText) findViewById(R.id.answer);
 
-        Validation.getInstance().addInput(numberPicker);
+        Validation.getInstance().addInput(this);
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -88,5 +88,10 @@ public class PositiveOrZeroNumberMultiQuestionView extends AKeyboardQuestionView
 
             }
         });
+    }
+
+    @Override
+    public CustomEditText getInputView() {
+        return numberPicker;
     }
 }

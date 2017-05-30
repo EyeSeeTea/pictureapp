@@ -57,7 +57,7 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
 
         sendButton = (CustomButton) findViewById(R.id.row_phone_btn);
 
-        Validation.getInstance().addInput(mCustomEditText);
+        Validation.getInstance().addInput(this);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,13 +82,18 @@ public class PhoneSingleQuestionView extends AKeyboardSingleQuestionView impleme
         try {
             Phone phone = new Phone(mCustomEditText.getText().toString());
             hideKeyboard(mCustomEditText);
-            Validation.getInstance().removeInputError(mCustomEditText);
+            Validation.getInstance().removeInputError(this);
             String value = phone.getValue();
             notifyAnswerChanged(value);
         } catch (InvalidPhoneException e) {
-            Validation.getInstance().addinvalidInput(mCustomEditText,
+            Validation.getInstance().addinvalidInput(this,
                     context.getString(R.string.dynamic_error_phone_format));
             mCustomEditText.setError(context.getString(R.string.dynamic_error_phone_format));
         }
+    }
+
+    @Override
+    public CustomEditText getInputView() {
+        return mCustomEditText;
     }
 }

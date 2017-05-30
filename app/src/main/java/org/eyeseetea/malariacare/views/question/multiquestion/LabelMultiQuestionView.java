@@ -8,12 +8,13 @@ import android.widget.LinearLayout;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
-public class LabelMultiQuestionView extends LinearLayout implements IQuestionView,
+public class LabelMultiQuestionView extends CommonQuestionView implements IQuestionView,
         IMultiQuestionView, IImageQuestionView {
     CustomTextView header;
     ImageView imageView;

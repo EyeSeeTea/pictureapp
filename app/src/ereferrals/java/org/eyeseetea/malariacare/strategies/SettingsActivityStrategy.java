@@ -40,7 +40,8 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 Log.d(TAG, "Screen off");
-                showLogin();
+                //// FIXME: 30/05/2017 Uncomment this line to reactivate the disable login feature
+                //showLogin();
             }
         }
     };

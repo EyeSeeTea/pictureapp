@@ -61,7 +61,7 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
 
         header = (CustomTextView) findViewById(R.id.row_header_text);
         numberPicker = (CustomEditText) findViewById(R.id.answer);
-        Validation.getInstance().addInput(this);
+        Validation.getInstance().addInput(numberPicker);
         numberPicker.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -69,10 +69,10 @@ public class PregnantMonthNumberMultiQuestionView extends AKeyboardQuestionView 
                     monthNumber = PregnantMonthNumber.parse(
                             numberPicker.getText().toString());
                     notifyAnswerChanged(String.valueOf(monthNumber.getValue()));
-                    Validation.getInstance().removeInputError(this);
+                    Validation.getInstance().removeInputError(numberPicker);
 
                 } catch (InvalidPregnantMonthNumberException e) {
-                    Validation.getInstance().addinvalidInput(this,
+                    Validation.getInstance().addinvalidInput(numberPicker,
                             context.getString(R.string.dynamic_error_pregnant_month));
                 }
             }

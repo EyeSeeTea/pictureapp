@@ -56,7 +56,7 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         numberPicker.setFocusable(true);
         numberPicker.setFocusableInTouchMode(true);
 
-        Validation.getInstance().addInput(this);
+        Validation.getInstance().addInput(numberPicker);
         sendButton = (CustomButton) findViewById(R.id.dynamic_positiveInt_btn);
 
         sendButton.setOnClickListener(new OnClickListener() {
@@ -84,11 +84,11 @@ public class PositiveNumberSingleQuestionView extends AKeyboardSingleQuestionVie
         try {
             PositiveNumber positiveNumber = PositiveNumber.parse(
                     numberPicker.getText().toString());
-            Validation.getInstance().removeInputError(this);
+            Validation.getInstance().removeInputError(numberPicker);
             hideKeyboard(numberPicker);
             notifyAnswerChanged(String.valueOf(positiveNumber.getValue()));
         } catch (InvalidPositiveNumberException e) {
-            Validation.getInstance().addinvalidInput(this,
+            Validation.getInstance().addinvalidInput(numberPicker,
                     context.getString(R.string.dynamic_error_age));
             numberPicker.setError(context.getString(R.string.dynamic_error_age));
         }

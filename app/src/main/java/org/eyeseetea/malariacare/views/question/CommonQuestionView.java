@@ -17,10 +17,6 @@ public class CommonQuestionView extends LinearLayout {
         return isActive;
     }
 
-    public void setActive(Boolean value) {
-        isActive = value;
-    }
-
     public void activateQuestion() {
         setActive(true);
         Object inputView = this.findViewById(R.id.answer);
@@ -35,5 +31,9 @@ public class CommonQuestionView extends LinearLayout {
         if (inputView != null) {
             Validation.getInstance().removeInputError(inputView);
         }
+    }
+
+    private void setActive(Boolean value) {
+        isActive = value;
     }
 }

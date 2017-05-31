@@ -2,7 +2,6 @@ package org.eyeseetea.malariacare.views.option;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -31,12 +30,6 @@ public class ImageRadioButtonOption extends CommonQuestionView {
         super(context);
 
         init(context, bigRadioButton);
-    }
-
-    public ImageRadioButtonOption(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        init(context);
     }
 
     public Option getOption() {

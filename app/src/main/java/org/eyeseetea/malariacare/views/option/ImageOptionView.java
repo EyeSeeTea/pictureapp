@@ -2,7 +2,6 @@ package org.eyeseetea.malariacare.views.option;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -28,12 +27,6 @@ public class ImageOptionView extends CommonQuestionView {
 
     public ImageOptionView(Context context) {
         super(context);
-
-        init(context);
-    }
-
-    public ImageOptionView(Context context, AttributeSet attrs) {
-        super(context, attrs);
 
         init(context);
     }

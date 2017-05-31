@@ -2,14 +2,13 @@ package org.eyeseetea.malariacare.views.question;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import org.eyeseetea.malariacare.data.database.model.Option;
 import org.eyeseetea.malariacare.data.database.model.Question;
 
 import java.util.List;
 
-public abstract class AOptionQuestionView extends LinearLayout {
+public abstract class AOptionQuestionView extends CommonQuestionView {
     private onAnswerChangedListener mOnAnswerChangedListener;
 
     public AOptionQuestionView(Context context) {

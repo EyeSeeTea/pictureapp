@@ -1121,7 +1121,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
         List<String> codeQuestionFilter = new ArrayList<String>();
 
         for (Question question : questions) {
-            if (question.isVisible()) {
+            if (question != null && question.isVisible()) {
                 codeQuestionFilter.add(question.getCode());
             }
         }

@@ -26,3 +26,5 @@
 26;'Warning_Button_Refer_Hospital';'Reminder button';0;10;26
 27;'Warning_Text_Refer_Not_Tested';'Reminder text';0;11;27
 28;'Warning_Button_Refer_Not_Tested';'Remminder button';0;11;28
+29;'Option_Text_Reason_Child';'Under 2 years';0;2;29
+30;'Option_Text_Reason_Calendar';'Treated last 28 days';0;2;30

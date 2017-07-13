@@ -56,12 +56,16 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     }
 
     private void changeDemoModeText() {
-        MenuItem demoItem = mMenu.findItem(R.id.demo_mode);
-        if (Session.getCredentials().isDemoCredentials()) {
-            demoItem.setTitle(R.string.clean_demo_db);
+        MenuItem demoModeMenuItem = mMenu.findItem(R.id.demo_mode);
+        if (isDemoModeActivated()) {
+            demoModeMenuItem.setTitle(R.string.clean_demo_db);
         } else {
-            demoItem.setTitle(R.string.run_in_demo_mode);
+            demoModeMenuItem.setTitle(R.string.run_in_demo_mode);
         }
+    }
+
+    private boolean isDemoModeActivated() {
+        return Session.getCredentials().isDemoCredentials();
     }
 
     @Override

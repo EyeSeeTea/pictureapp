@@ -25,12 +25,12 @@ public abstract class ALoginActivityStrategy {
     public abstract void onLoginSuccess(Credentials credentials);
 
     public void onLoginNetworkError(Credentials credentials) {
-        loginActivity.onFinishLoading(null);
+        loginActivity.hideProgressBar();
         loginActivity.showError(loginActivity.getString(R.string.network_error));
     }
 
     public void onBadCredentials() {
-        loginActivity.onFinishLoading(null);
+        loginActivity.hideProgressBar();
         loginActivity.showError(loginActivity.getString(R.string.login_invalid_credentials));
     }
 

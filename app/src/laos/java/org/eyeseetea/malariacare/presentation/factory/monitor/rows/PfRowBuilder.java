@@ -20,19 +20,21 @@ package org.eyeseetea.malariacare.presentation.factory.monitor.rows;
 
 import android.content.Context;
 
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.presentation.factory.monitor.utils.SurveyMonitor;
 
 /**
  * Created by arrizabalaga on 26/02/16.
  */
-public class NegativeRowBuilder extends CounterRowBuilder {
+public class PfRowBuilder extends CounterRowBuilder {
 
-    public NegativeRowBuilder(Context context) {
-        super(context, "");
+    public PfRowBuilder(Context context) {
+        super(context,
+                context.getString(R.string.monitor_row_title, context.getString(R.string.Pf)));
     }
 
     @Override
     protected Integer incrementCount(SurveyMonitor surveyMonitor) {
-        return (surveyMonitor.isNegative()) ? 1 : 0;
+        return (surveyMonitor.isPf()) ? 1 : 0;
     }
 }

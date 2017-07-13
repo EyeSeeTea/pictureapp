@@ -20,4 +20,6 @@
     <string name="GPS_LATITUDE_DEFAULT" translatable="false">18.560019</string>
     <string name="GPS_LONGITUDE_DEFAULT" translatable="false">107.345912</string>
     <string name="authority">LAOS_DHIS2_DEFAULT_AUTHORITY</string>
+    <string name="monitor_row_title" translatable="false">%1$s</string>
+
 </resources>

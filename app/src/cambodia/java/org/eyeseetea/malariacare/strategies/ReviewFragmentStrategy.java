@@ -22,7 +22,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
     public TableRow createViewRow(TableRow rowView, Value value) {
         //Sets the value text in the row and add the question as tag.
         CustomTextView textCard = (CustomTextView) rowView.findViewById(R.id.review_content_text);
-        textCard.setText((value.getInternationalizedCode() != null) ? value.getInternationalizedCode()
+        textCard.setText((value.getInternationalizedName() != null) ? value.getInternationalizedName()
                 : value.getValue());
         if (textCard.getText().equals("")) {
             textCard.setText(PreferencesState.getInstance().getContext().getString(

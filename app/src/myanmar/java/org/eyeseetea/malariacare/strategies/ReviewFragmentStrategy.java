@@ -27,7 +27,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
 
         questionTextView.setText(questionTextView.getText().toString() +
-                ((value.getInternationalizedCode() != null) ? value.getInternationalizedCode()
+                ((value.getInternationalizedName() != null) ? value.getInternationalizedName()
                         : value.getValue()));
         if ((value.getQuestionUId() != null)) {
             questionTextView.setText(

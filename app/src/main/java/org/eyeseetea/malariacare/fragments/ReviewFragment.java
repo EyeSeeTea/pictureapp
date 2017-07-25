@@ -99,7 +99,7 @@ public class ReviewFragment extends Fragment {
             if(value.getQuestion()!=null)
             preparedValue.setQuestionUId(value.getQuestion().getUid());
             if(value.getOption()!=null)
-            preparedValue.setInternationalizedCode(value.getOption().getInternationalizedCode());
+            preparedValue.setInternationalizedName(value.getOption().getInternationalizedName());
             if(colorIterator.hasNext()) {
                 preparedValue.setBackgroundColor(colorIterator.next());
             }

@@ -28,7 +28,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
         if ((value.getQuestionUId() != null)) {
             String rowText = (Question.findByUID(
                     value.getQuestionUId()).getInternationalizedCodeDe_Name() + TITLE_SEPARATOR)
-                    + ((value.getInternationalizedCode() != null) ? value.getInternationalizedCode()
+                    + ((value.getInternationalizedName() != null) ? value.getInternationalizedName()
                     : value.getValue());
 
             questionTextView.setText(rowText);

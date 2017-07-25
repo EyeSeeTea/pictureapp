@@ -173,7 +173,7 @@
 <string name="Option_Text_Rdt_Invalid">"ທີ່ບໍ່ຖືກຕ້ອງ"</string>
 <string name="Warning_Text_Invalid">"ກວດຄົນເຈັບໂດຍໃຊ້ເຈ້ຍຈຸ່ມກວດເລືອດອັນໃໝ່. ຢ່າລືມກວດເບິ່ງມື້ໝົດອາຍຸຂອງເຈ້ຍຈຸ່ມກວດເລືອດກ່ອນການກວດ"</string>
 <string name="Warning_Button_Ignore_Invalid">"ກະລຸນາລອງອີກຄັ້ງ"</string>
-<string name="Warning_Button_Ignore_TryAgain">"ຖ້າທ່ານກົດຜິດ /n ກັບຄືນ"</string>
+<string name="Warning_Button_Ignore_TryAgain">"ຖ້າທ່ານກົດຜິດ ກັບຄືນ"</string>
 <string name="Option_Text_Treatment_ACT6x1">"ACT 6x1"</string>
 <string name="Option_Text_Treatment_ACT6x2">"ACT 6x2"</string>
 <string name="Option_Text_Treatment_ACT6x3">"ACT 6x3"</string>
@@ -221,4 +221,5 @@
 <string name="error_exporting_data">"metadata Error ບໍ່ສາມາດໄດ້ຮັບການສົ່ງອອກ."</string>
 <string name="Option_Text_Reason_Child">"ເດັກນ້ອຍຕ່ໍາກວ່າ 2 ປີ"</string>
 <string name="Option_Text_Reason_Calendar">"ຮັບການປິ່ນປົວພາຍໃນ 28 ວັນ"</string>
+<string name="clean_demo_db">"ຖານຂໍ້ມູນຕົວຢ່າງທີ່ສະອາດ"</string>
 </resources>

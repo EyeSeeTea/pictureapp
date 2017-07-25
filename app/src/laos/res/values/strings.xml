@@ -213,4 +213,5 @@
 <string name="error_exporting_data">"Error metadata could not be exported."</string>
 <string name="Option_Text_Reason_Child">"Children under 2 year old"</string>
 <string name="Option_Text_Reason_Calendar">"Treated within the last 28 days"</string>
+<string name="clean_demo_db">"Clean demo DB"</string>
 </resources>

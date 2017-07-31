@@ -2,8 +2,8 @@
 2;'BF2626';'Option_Tested_False';'1';'0';24
 3;'07b0bd';'Option_Reason_Sick';'3';'3';20
 4;'5ebcc7';'Option_Reason_Pregnant';'3';'3';20
-5;'07b0bd';'Option_Reason_Stock';'3';'3';20
-6;'5ebcc7';'Option_Reason_Box';'3';'3';20
+5;'5ebcc7';'Option_Reason_Stock';'3';'3';20
+6;'07b0bd';'Option_Reason_Box';'3';'3';20
 7;'07B0BD';'Option_Sex_Male';'3';'3';24
 8;'5EBCC7';'Option_Sex_Female';'3';'3';24
 9;'447bbf';'Option_Test_Negative';'3';'3';12
@@ -25,4 +25,6 @@
 25;'29B4BC';'';0;0;30
 26;'29B4BC';'';0;0;24
 27;'29B4BC';'';0;0;30
-28;'29B4BC';'';0;0;24
+28;'07b0bd';'';0;0;24
+29;'07b0bd';'Option_Reason_Child';'3';'3';20
+30;'5ebcc7';'Option_Reason_Calendar';'3';'3';20

@@ -202,7 +202,7 @@
 <string name="app_logout">ອກ​ຈາກ​ລະ​ບົບ</string>
 <string name="network_error">ມີບັນຫາກັບເຄືອຂ່າຍໄດ້, ກະລຸນາພະຍາຍາມອີກເທື່ອຫນຶ່ງຕໍ່ມາ.</string>
 <string name="login_invalid_credentials">ຂໍ້ມູນທີ່ບໍ່ຖືກຕ້ອງ</string>
-    <string name="login_unexpected_error">"ມີຂໍ້ຜິດຜາດເກີດຂຶ້ນ, ກະລຸນາພະຍາຍາມອີກເທື່ອຫນຶ່ງຕໍ່ມາ"</string>
+<string name="login_unexpected_error">"ມີຂໍ້ຜິດຜາດເກີດຂຶ້ນ, ກະລຸນາພະຍາຍາມອີກເທື່ອຫນຶ່ງຕໍ່ມາ"</string>
 <string name="login_invalid_server_url">URL Server ບໍ່ຖືກຕ້ອງ</string>
 <string name="login_error_json">ມີສິ່ງຜິດພາດການອ່ານເອກະສານ json config. ກະລຸນາຕິດຕໍ່ຫາບໍລິຫານຂອງທ່ານ.</string>
 <string name="error_conflict_message">ໃນກໍລະນີທີ່ມີ UID:%1$s. ໄດ້ອັບກັບຂໍ້ຂັດແຍ່ງໃນ UID ອົງປະກອບຂໍ້ມູນ:%2$s ທີ່ມີຂໍ້ຄວາມ:%3$s. ກະລຸນາຕິດຕໍ່ຫາບໍລິຫານ.</string>
@@ -217,4 +217,9 @@
 <string name="admin_announcement">"ປະກາດບໍລິຫານ"</string>
 <string name="user_close">"ຜູ້ໃຊ້ນີ້ໄດ້ປິດລົງໂດຍບໍລິຫານ."</string>
 <string name="error_message_push">"ໃນກໍລະນີທີ່ມີ UID: %s . ໄດ້ອັບໂດຍບໍ່ມີວັນທີ. ກະລຸນາຕິດຕໍ່ຫາບໍລິຫານ."</string>
+<string name="db_migration_error">"ກະລຸນາແຈ້ງໃຫ້ຜູ້ບໍລິຫານ, ຄໍາຮ້ອງສະຫມັກອາດຈໍາເປັນຕ້ອງໄດ້ຮັບການຕິດຕັ້ງ"</string>
+<string name="error_exporting_data">"metadata Error ບໍ່ສາມາດໄດ້ຮັບການສົ່ງອອກ."</string>
+<string name="Option_Text_Reason_Child">"ເດັກນ້ອຍຕ່ໍາກວ່າ 2 ປີ"</string>
+<string name="Option_Text_Reason_Calendar">"ຮັບການປິ່ນປົວພາຍໃນ 28 ວັນ"</string>
+<string name="clean_demo_db">"ຖານຂໍ້ມູນຕົວຢ່າງທີ່ສະອາດ"</string>
 </resources>

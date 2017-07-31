@@ -25,4 +25,6 @@
     <string name="Question_Wrong_Age">question_images/p11_warning.png</string>
     <string name="Question_Reminder">question_images/p8_rdt_all.png</string>
     <string name="Question_Phone">question_images/p13_phone.png</string>
+    <string name="Option_Reason_Child">question_images/p2_child_lo.png</string>
+    <string name="Option_Reason_Calendar">question_images/p2_calendar_lo.png</string>
 </resources>

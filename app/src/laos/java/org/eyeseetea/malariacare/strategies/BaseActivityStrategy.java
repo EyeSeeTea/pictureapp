@@ -7,9 +7,9 @@ import android.view.MenuItem;
 
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.R;
-import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
+import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
@@ -23,6 +23,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     IAuthenticationManager mAuthenticationManager;
     LoginUseCase mLoginUseCase;
     BaseActivity mBaseActivity;
+    private Menu mMenu;
     public BaseActivityStrategy(BaseActivity baseActivity) {
         super(baseActivity);
         mBaseActivity = baseActivity;
@@ -48,9 +49,24 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onCreateOptionsMenu(Menu menu) {
-
+        mMenu = menu;
+        MenuItem item = menu.findItem(R.id.demo_mode);
+        item.setVisible(PreferencesState.getInstance().isDevelopOptionActive());
+        changeDemoModeText();
     }
 
+    private void changeDemoModeText() {
+        MenuItem demoModeMenuItem = mMenu.findItem(R.id.demo_mode);
+        if (isDemoModeActivated()) {
+            demoModeMenuItem.setTitle(R.string.clean_demo_db);
+        } else {
+            demoModeMenuItem.setTitle(R.string.run_in_demo_mode);
+        }
+    }
+
+    private boolean isDemoModeActivated() {
+        return Session.getCredentials().isDemoCredentials();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -107,6 +123,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
                     @Override
                     public void onLoginSuccess() {
                         reloadDashboard();
+                        changeDemoModeText();
                         Log.d(TAG, "login successful");
                     }
 

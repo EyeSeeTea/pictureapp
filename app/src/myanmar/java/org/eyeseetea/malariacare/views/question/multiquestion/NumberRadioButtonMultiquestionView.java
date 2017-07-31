@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import org.eyeseetea.malariacare.R;
@@ -18,6 +17,7 @@ import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
@@ -26,7 +26,7 @@ import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 import java.util.List;
 
-public class NumberRadioButtonMultiquestionView extends LinearLayout implements IQuestionView,
+public class NumberRadioButtonMultiquestionView extends CommonQuestionView implements IQuestionView,
         IMultiQuestionView, IImageQuestionView, RadioGroup.OnCheckedChangeListener {
     CustomTextView header;
     ImageView image;

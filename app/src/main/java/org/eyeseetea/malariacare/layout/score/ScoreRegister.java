@@ -87,7 +87,7 @@ public class ScoreRegister {
             //FIXME this try catch just covers a error in data compositeScore: '4.2'
             try {
                 return compositeScoreMap.get(cScore).calculateNumDenTotal(result);
-            } catch (Exception ex) {
+            } catch (NullPointerException ex) {
                 return Arrays.asList(new Float(0f), new Float(0f));
             }
         } else {

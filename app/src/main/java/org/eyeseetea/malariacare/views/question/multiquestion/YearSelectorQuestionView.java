@@ -3,17 +3,17 @@ package org.eyeseetea.malariacare.views.question.multiquestion;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
 import org.eyeseetea.sdk.presentation.views.dialogs.YearPicker;
 
-public class YearSelectorQuestionView extends LinearLayout implements IQuestionView,
+public class YearSelectorQuestionView extends CommonQuestionView implements IQuestionView,
         IMultiQuestionView {
 
     TextView header;
@@ -67,6 +67,7 @@ public class YearSelectorQuestionView extends LinearLayout implements IQuestionV
             public void onClick(View view) {
                 if (enabled) {
                     YearPicker yearPicker = new YearPicker();
+                    yearPicker.setInterval(context.getResources().getInteger(R.integer.year_interval));
                     yearPicker.setOnYearSelectedListener(new YearPicker.OnYearSelectedListener() {
                         @Override
                         public void onYearSelected(int year) {

@@ -97,5 +97,4 @@ public class PositiveOrZeroNumberSingleQuestionView  extends AKeyboardSingleQues
             isClicked = false;
         }
     }
-
 }

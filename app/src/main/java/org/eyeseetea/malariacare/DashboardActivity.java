@@ -26,6 +26,7 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,10 +49,9 @@ import org.eyeseetea.malariacare.data.database.model.User;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
+import org.eyeseetea.malariacare.domain.exception.LoadingNavigationControllerException;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
-import org.eyeseetea.malariacare.fragments.DashboardSentFragment;
-import org.eyeseetea.malariacare.fragments.DashboardUnsentFragment;
-import org.eyeseetea.malariacare.fragments.MonitorFragment;
 import org.eyeseetea.malariacare.fragments.ReviewFragment;
 import org.eyeseetea.malariacare.fragments.SurveyFragment;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
@@ -73,9 +73,6 @@ public class DashboardActivity extends BaseActivity {
      */
     public static String moveToThisUId;
     TabHost tabHost;
-    MonitorFragment monitorFragment;
-    DashboardUnsentFragment unsentFragment;
-    DashboardSentFragment sentFragment;
     ReviewFragment reviewFragment;
     SurveyFragment surveyFragment;
     DashboardActivityStrategy mDashboardActivityStrategy;
@@ -221,15 +218,15 @@ public class DashboardActivity extends BaseActivity {
 
 
     public void initAssess() {
-        isLoadingReview = false;
-        unsentFragment = new DashboardUnsentFragment();
-        unsentFragment.setArguments(getIntent().getExtras());
-        replaceListFragment(R.id.dashboard_details_container, unsentFragment);
-        unsentFragment.reloadHeader(dashboardActivity);
+        mDashboardActivityStrategy.showFirstFragment();
+    }
+
+    public void showUnsentFragment() {
+        mDashboardActivityStrategy.showUnsentFragment();
     }
 
     public void restoreAssess() {
-        replaceFragment(R.id.dashboard_details_container, surveyFragment);
+        replaceFragment(mDashboardActivityStrategy.getSurveyContainer(), surveyFragment);
     }
 
     /**
@@ -241,18 +238,21 @@ public class DashboardActivity extends BaseActivity {
         if (reviewFragment == null) {
             reviewFragment = new ReviewFragment();
         }
-        replaceFragment(R.id.dashboard_details_container, reviewFragment);
+        replaceFragment(mDashboardActivityStrategy.getSurveyContainer(), reviewFragment);
         reviewFragment.reloadHeader(dashboardActivity);
+        reviewFragment.setOnEndReviewListener(new ReviewFragment.OnEndReviewListener() {
+            @Override
+            public void onEndReview() {
+                exitReview();
+            }
+        });
     }
 
     /**
      * This method initializes the Improve fragment(DashboardSentFragment)
      */
     public void initImprove() {
-        sentFragment = new DashboardSentFragment();
-        sentFragment.setArguments(getIntent().getExtras());
-        sentFragment.reloadData();
-        replaceListFragment(R.id.dashboard_completed_container, sentFragment);
+        mDashboardActivityStrategy.showSecondFragment();
     }
 
     /**
@@ -272,7 +272,7 @@ public class DashboardActivity extends BaseActivity {
             surveyFragment = new SurveyFragment();
         }
         surveyFragment.reloadHeader(dashboardActivity);
-        replaceFragment(R.id.dashboard_details_container, surveyFragment);
+        replaceFragment(mDashboardActivityStrategy.getSurveyContainer(), surveyFragment);
         android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
         LayoutUtils.setSurveyActionBar(actionBar);
     }
@@ -281,10 +281,7 @@ public class DashboardActivity extends BaseActivity {
      * This method initializes the Monitor fragment
      */
     public void initMonitor() {
-        if (monitorFragment == null) {
-            monitorFragment = new MonitorFragment();
-        }
-        replaceFragment(R.id.dashboard_charts_container, monitorFragment);
+        mDashboardActivityStrategy.showFourthFragment();
     }
 
 
@@ -295,18 +292,25 @@ public class DashboardActivity extends BaseActivity {
 
     // Add the fragment to the activity, pushing this transaction
     // on to the back stack.
-    private void replaceFragment(int layout, Fragment fragment) {
+    public void replaceFragment(int layout, Fragment fragment) {
         FragmentTransaction ft = getFragmentTransaction();
         ft.replace(layout, fragment);
         ft.commit();
     }
 
-    private void replaceListFragment(int layout, ListFragment fragment) {
+    public void replaceListFragment(int layout, ListFragment fragment) {
         FragmentTransaction ft = getFragmentTransaction();
         ft.replace(layout, fragment);
         ft.commit();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+        if(BuildConfig.translations) {
+            PreferencesState.getInstance().loadsLanguageInActivity();
+        }
+    }
     @NonNull
     private FragmentTransaction getFragmentTransaction() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -469,15 +473,14 @@ public class DashboardActivity extends BaseActivity {
 
         if (isSent) {
             tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_improve));
-            initAssess();
+            showUnsentFragment();
         } else {
-            initAssess();
-            unsentFragment.reloadData();
+            showUnsentFragment();
+            mDashboardActivityStrategy.reloadStockFragment(this);
         }
     }
 
     public void closeReceiptBalanceFragment() {
-        DashboardActivityStrategy mDashboardActivityStrategy = new DashboardActivityStrategy();
         mDashboardActivityStrategy.showStockFragment(this, false);
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
     }
@@ -492,7 +495,7 @@ public class DashboardActivity extends BaseActivity {
         tabHost.getTabWidget().setVisibility(View.VISIBLE);
         isLoadingReview = false;
         initAssess();
-        unsentFragment.reloadData();
+        mDashboardActivityStrategy.reloadFirstFragment();
     }
 
 
@@ -511,7 +514,7 @@ public class DashboardActivity extends BaseActivity {
     /**
      * Called when the user clicks the exit Review button
      */
-    public void exitReview(View view) {
+    public void exitReview() {
         if (!DynamicTabAdapter.isClicked) {
             DynamicTabAdapter.isClicked = true;
             reviewShowDone();
@@ -580,14 +583,14 @@ public class DashboardActivity extends BaseActivity {
      * Checks if a survey fragment is active
      */
     private boolean isReviewFragmentActive() {
-        return isFragmentActive(reviewFragment, R.id.dashboard_details_container);
+        return isFragmentActive(reviewFragment, mDashboardActivityStrategy.getSurveyContainer());
     }
 
     /**
      * Checks if a survey fragment is active
      */
     private boolean isSurveyFragmentActive() {
-        return isFragmentActive(surveyFragment, R.id.dashboard_details_container);
+        return isFragmentActive(surveyFragment, mDashboardActivityStrategy.getSurveyContainer());
     }
 
     private boolean isNewHistoricReceiptBalanceFragmentActive() {
@@ -618,8 +621,7 @@ public class DashboardActivity extends BaseActivity {
      */
     public void openSentSurvey() {
         isReadOnly = true;
-        tabHost.setCurrentTabByTag(getResources().getString(R.string.tab_tag_assess));
-        initSurvey();
+        mDashboardActivityStrategy.openSentSurvey();
     }
 
     /**
@@ -638,6 +640,10 @@ public class DashboardActivity extends BaseActivity {
         restoreAssess();
     }
 
+    public void setLoadingReview(boolean loadingReview) {
+        isLoadingReview = loadingReview;
+    }
+
     public boolean isLoadingReview() {
         return isLoadingReview;
     }
@@ -651,12 +657,14 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        PreferencesState.getInstance().onCreateActivityPreferences(getResources(), getTheme());
         if (getIntent().getBooleanExtra(getString(R.string.show_announcement_key), true)
                 && !Session.getCredentials().isDemoCredentials()) {
             new AsyncAnnouncement().execute();
         }
         handler = new Handler(Looper.getMainLooper());
-        mDashboardActivityStrategy = new DashboardActivityStrategy();
+        mDashboardActivityStrategy = new DashboardActivityStrategy(this);
+        mDashboardActivityStrategy.onCreate();
         dashboardActivity = this;
         setContentView(R.layout.tab_dashboard);
         Survey.removeInProgress();
@@ -697,22 +705,18 @@ public class DashboardActivity extends BaseActivity {
                 }
                 if (tabId.equalsIgnoreCase(getResources().getString(R.string.tab_tag_assess))) {
                     if (!isReadOnly) {
-                        unsentFragment.reloadData();
+                        mDashboardActivityStrategy.reloadFirstFragment();
                     }
-                    unsentFragment.reloadHeader(dashboardActivity);
-                    mDashboardActivityStrategy.onUnsentTabSelected(dashboardActivity);
+                    mDashboardActivityStrategy.reloadFirstFragmentHeader();
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_improve))) {
-                    sentFragment.reloadData();
-                    sentFragment.reloadHeader(dashboardActivity);
-                    mDashboardActivityStrategy.onSentTabSelected(dashboardActivity);
+                    mDashboardActivityStrategy.reloadSecondFragment();
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_stock))) {
                     mDashboardActivityStrategy.reloadStockFragment(dashboardActivity);
                 } else if (tabId.equalsIgnoreCase(
                         getResources().getString(R.string.tab_tag_monitor))) {
-                    mDashboardActivityStrategy.reloadMonitorFragment(dashboardActivity,
-                            monitorFragment);
+                    mDashboardActivityStrategy.reloadFourthFragment();
                 }
                 tabHost.getCurrentTabView().setBackgroundColor(
                         getResources().getColor(R.color.tab_pressed_background));
@@ -726,11 +730,15 @@ public class DashboardActivity extends BaseActivity {
         getSurveysFromService();
 
         if (BuildConfig.multiuser) {
-            initNavigationController();
+            try {
+                initNavigationController();
+            }catch (LoadingNavigationControllerException ex){
+                ex.printStackTrace();
+            }
         }
     }
 
-    private void initNavigationController() {
+    private void initNavigationController() throws LoadingNavigationControllerException{
         mDashboardActivityStrategy.initNavigationController();
     }
 
@@ -763,7 +771,11 @@ public class DashboardActivity extends BaseActivity {
         protected Void doInBackground(Void... params) {
             loggedUser = User.getLoggedUser();
             if (loggedUser != null) {
-                loggedUser = ServerAPIController.pullUserAttributes(loggedUser);
+                try {
+                    loggedUser = ServerAPIController.pullUserAttributes(loggedUser);
+                }catch (ApiCallException e){
+                    return null;
+                }
             }
             return null;
         }
@@ -786,5 +798,7 @@ public class DashboardActivity extends BaseActivity {
         }
     }
 
-
+    public TabHost getTabHost() {
+        return tabHost;
+    }
 }

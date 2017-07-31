@@ -75,8 +75,7 @@ public class OrganisationUnitRepository implements IOrganisationUnitRepository {
 
     @Override
     public OrganisationUnit getUserOrgUnit(Credentials credentials)
-            throws PullConversionException, NetworkException, IOException, JSONException,
-            ConfigJsonIOException {
+            throws ApiCallException {
         return ServerAPIController.getOrganisationUnitsByCode(credentials.getUsername());
     }
 

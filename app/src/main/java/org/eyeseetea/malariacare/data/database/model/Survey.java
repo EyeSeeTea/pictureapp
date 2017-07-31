@@ -56,12 +56,15 @@ import com.raizlabs.android.dbflow.structure.database.transaction.Transaction;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.IDataSourceCallback;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.data.database.datasources.ProgramLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.data.database.utils.SurveyAnsweredRatioCache;
 import org.eyeseetea.malariacare.data.sync.exporter.IConvertToSDKVisitor;
 import org.eyeseetea.malariacare.data.sync.exporter.VisitableToSDK;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IProgramRepository;
 import org.eyeseetea.malariacare.domain.entity.SurveyAnsweredRatio;
+import org.eyeseetea.malariacare.domain.exception.ConversionException;
 import org.eyeseetea.malariacare.strategies.SurveyFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 import org.hisp.dhis.client.sdk.android.api.persistence.flow.EventFlow;
@@ -932,7 +935,8 @@ public class Survey extends BaseModel implements VisitableToSDK {
         int numRequired = 1;
         int numAnswered = 0;
 
-        Program program = Program.getFirstProgram();
+        IProgramRepository programLocalDataSource = new ProgramLocalDataSource();
+        Program program = Program.findByUID(programLocalDataSource.getUserProgram().getId());
         Tab tab = program.getTabs().get(0);
         Question rootQuestion = Question.findRootQuestion(tab);
         Question localQuestion = rootQuestion;
@@ -1110,11 +1114,14 @@ public class Survey extends BaseModel implements VisitableToSDK {
         String valuesStr = "";
 
         //Define a filter to select which values will be turned into string by code_question
-        List<Question> questions = Question.getAllQuestions();
+        List<Question> questions = new ArrayList<>();
+        for (Value value : values) {
+            questions.add(value.getQuestion());
+        }
         List<String> codeQuestionFilter = new ArrayList<String>();
 
         for (Question question : questions) {
-            if (question.isVisible()) {
+            if (question != null && question.isVisible()) {
                 codeQuestionFilter.add(question.getCode());
             }
         }
@@ -1257,7 +1264,7 @@ public class Survey extends BaseModel implements VisitableToSDK {
     }
 
     @Override
-    public void accept(IConvertToSDKVisitor IConvertToSDKVisitor) throws Exception {
+    public void accept(IConvertToSDKVisitor IConvertToSDKVisitor) throws ConversionException {
         IConvertToSDKVisitor.visit(this);
     }
 

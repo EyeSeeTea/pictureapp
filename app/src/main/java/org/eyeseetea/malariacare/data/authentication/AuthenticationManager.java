@@ -40,7 +40,7 @@ public class AuthenticationManager implements IAuthenticationManager {
     public void hardcodedLogin(String url, Callback<UserAccount> callback) {
         try {
             remoteLogin(getHardcodedServerCredentials(url), callback);
-        } catch (Exception e) {
+        } catch (ConfigJsonIOException e) {
             callback.onError(e);
         }
     }

@@ -27,6 +27,7 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
     View mView;
     ListView listView;
     ReviewPresenter mReviewPresenter;
+    private OnEndReviewListener mOnEndReviewListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +44,21 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
                 container, false);
         listView = (ListView) mView.findViewById(R.id.review_list);
         initializePresenter();
+        initReviewButton(view);
         return mView;
     }
+
+    private void initReviewButton(View view) {
+        view.findViewById(R.id.review_image_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mOnEndReviewListener != null) {
+                    mOnEndReviewListener.onEndReview();
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onResume() {
@@ -96,5 +110,14 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
             }
         });
         this.adapter = adapterInSession;
+    }
+
+    public void setOnEndReviewListener(
+            OnEndReviewListener onEndReviewListener) {
+        mOnEndReviewListener = onEndReviewListener;
+    }
+
+    public interface OnEndReviewListener {
+        void onEndReview();
     }
 }

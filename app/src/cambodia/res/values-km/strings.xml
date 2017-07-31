@@ -206,4 +206,6 @@
 <string name="unsent_survey_filter_option_today">"ថ្ងៃនេះ"</string>
 <string name="error_message_push">"ព្រឹត្តិការណ៍នេះជាមួយនឹងលេខសម្គាល់អ្នកប្រើ %s ។ ត្រូវបានផ្ទុកឡើងដោយគ្មានកាលបរិច្ឆេទ។ សូមទាក់ទងអ្នកគ្រប់គ្រង។"</string>
 <string name="empty_review_value">"គ្មានលេខទូរស័ព្ទ"</string>
+<string name="db_migration_error">"សូមជូនដំណឹងអ្នកគ្រប់គ្រងកម្មវិធីនេះអាចត្រូវការដើម្បីត្រូវបានដំឡើងឡើងវិញ"</string>
+<string name="error_exporting_data">"កំហុសក្នុងទិន្នន័យមេតាមិនអាចនាំចេញ»។"</string>
 </resources>

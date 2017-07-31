@@ -13,10 +13,9 @@ import org.eyeseetea.malariacare.data.database.model.OrgUnit;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
-import org.eyeseetea.malariacare.data.remote.SdkQueries;
 import org.eyeseetea.malariacare.data.sync.importer.models.DataValueExtended;
 import org.eyeseetea.malariacare.data.sync.importer.models.EventExtended;
-import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.services.PushService;
 import org.eyeseetea.malariacare.strategies.SurveyCheckerStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
@@ -62,7 +61,7 @@ public class SurveyChecker {
      * Get events filtered by program orgUnit and between dates.
      */
     public static List<EventExtended> getEvents(String program, String orgUnit, Date minDate,
-            Date maxDate) throws IOException, JSONException, ConfigJsonIOException {
+            Date maxDate) throws ApiCallException {
             Response response;
 
             String DHIS_URL = PreferencesState.getInstance().getDhisURL();
@@ -73,23 +72,16 @@ public class SurveyChecker {
             String url = SurveyCheckerStrategy.getApiEventUrl(DHIS_URL, program, orgUnit, startDate,
                     endDate);
             Log.d(TAG, url);
-            url = ServerAPIController.encodeBlanks(url);
+            url = ServerApiUtils.encodeBlanks(url);
 
-            response = ServerAPIController.executeCall(null, url, "GET");
-            if (!response.isSuccessful()) {
-                Log.e(TAG, "pushData (" + response.code() + "): " + response.body().string());
-                throw new IOException(response.message());
+            response = ServerApiCallExecution.executeCall(null, url, "GET");
+            JSONObject events = null;
+            try {
+                events = new JSONObject(ServerApiUtils.getReadableBodyResponse(response));
+            } catch (JSONException ex) {
+                throw new ApiCallException(ex);
             }
-        JSONObject events = null;
-        try {
-            events = new JSONObject(response.body().string());
-        } catch (JSONException e) {
-            e.printStackTrace();
-            throw new JSONException(response.message());
-        }
-        ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode = mapper.convertValue(mapper.readTree(events.toString()),
-                    JsonNode.class);
+            JsonNode jsonNode = ServerApiUtils.getJsonNodeMappedResponse(events);
 
             return getEvents(jsonNode);
     }
@@ -99,7 +91,7 @@ public class SurveyChecker {
      * If a survey is in the server, the survey should be set as sent. Else, the survey should be
      * set as completed and it will be resend.
      */
-    public static void checkAllQuarantineSurveys() {
+    public static void checkAllQuarantineSurveys(){
         List<Program> programs = Program.getAllPrograms();
         for (Program program : programs) {
             for (OrgUnit orgUnit : Survey.getQuarantineOrgUnits(program.getId_program())) {
@@ -117,13 +109,7 @@ public class SurveyChecker {
                     events = getEvents(program.getUid(), orgUnit.getUid(),
                             minDate,
                             maxDate);
-                }catch (IOException e){
-                    e.printStackTrace();
-                    return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                } catch (ConfigJsonIOException e) {
+                }catch (ApiCallException e){
                     e.printStackTrace();
                     return;
                 }

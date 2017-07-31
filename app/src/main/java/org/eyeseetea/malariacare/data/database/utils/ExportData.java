@@ -10,6 +10,7 @@ import android.util.Log;
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.AppDatabase;
+import org.eyeseetea.malariacare.domain.exception.ExportDataException;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.hisp.dhis.client.sdk.android.api.persistence.DbDhis;
 
@@ -56,7 +57,7 @@ public class ExportData {
     /**
      * This method create the dump and returns the intent
      */
-    public static Intent dumpAndSendToAIntent(Activity activity) {
+    public static Intent dumpAndSendToAIntent(Activity activity) throws ExportDataException{
         ExportData.removeDumpIfExist(activity);
         File tempFolder = new File(getCacheDir() + "/" + EXPORT_DATA_FOLDER);
         tempFolder.mkdir();
@@ -81,12 +82,11 @@ public class ExportData {
     /**
      * This method create the dump the metadata in a temporally file
      */
-    private static void dumpMetadata(File customInformation, Activity activity) {
+    private static void dumpMetadata(File customInformation, Activity activity) throws ExportDataException{
         try {
             customInformation.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
-            return;
+            throw new ExportDataException(e);
         }
         try {
             FileWriter fw = new FileWriter(customInformation.getAbsoluteFile(), true);
@@ -102,14 +102,14 @@ public class ExportData {
             bw.close();
             fw.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ExportDataException(e);
         }
     }
 
     /**
      * This method checks if the tempfolder contains files and zip it.
      */
-    private static File compressFolder(File tempFolder) {
+    private static File compressFolder(File tempFolder) throws ExportDataException {
         if (tempFolder.listFiles() == null) {
             Log.d(TAG, "Error, nothing to convert");
             return null;
@@ -123,7 +123,7 @@ public class ExportData {
     /**
      * This method compress all the files in the temporal folder to be sent
      */
-    private static void zipFolder(String inputFolderPath, String outputFilePath) {
+    private static void zipFolder(String inputFolderPath, String outputFilePath)throws ExportDataException {
         try {
             FileOutputStream fos = new FileOutputStream(outputFilePath);
             ZipOutputStream zos = new ZipOutputStream(fos);
@@ -143,8 +143,8 @@ public class ExportData {
                 fis.close();
             }
             zos.close();
-        } catch (IOException ioe) {
-            Log.e("", ioe.getMessage());
+        } catch (IOException e) {
+            throw new ExportDataException(e);
         }
     }
 
@@ -152,7 +152,7 @@ public class ExportData {
     /**
      * This method dump a database
      */
-    private static void dumpDatabase(String dbName, File tempFolder) {
+    private static void dumpDatabase(String dbName, File tempFolder) throws ExportDataException {
         File backupDB = null;
         if (tempFolder.canWrite()) {
             File currentDB = new File(getDatabasesFolder(), dbName);
@@ -164,7 +164,7 @@ public class ExportData {
     /**
      * This method dump the sharedPreferences
      */
-    private static void dumpSharedPreferences(File tempFolder) {
+    private static void dumpSharedPreferences(File tempFolder) throws ExportDataException{
         File files[] = getSharedPreferencesFolder().listFiles();
         Log.d("Files", "Size: " + files.length);
         for (int i = 0; i < files.length; i++) {
@@ -176,7 +176,7 @@ public class ExportData {
     /**
      * This method copy a file in other file
      */
-    private static void copyFile(File current, File backup) {
+    private static void copyFile(File current, File backup) throws ExportDataException{
         if (current.exists()) {
 
             try {
@@ -188,8 +188,7 @@ public class ExportData {
                 src.close();
                 dst.close();
             } catch (IOException e) {
-                e.printStackTrace();
-                Log.d(TAG, "Error exporting file " + current + " to " + backup);
+                throw new ExportDataException(e, "Error exporting file " + current + " to " + backup);
             }
         }
     }

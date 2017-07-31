@@ -1,11 +1,9 @@
 package org.eyeseetea.malariacare.data.database;
 
-/**
- * Created by idelcano on 29/09/2016.
- */
+import org.eyeseetea.malariacare.domain.exception.PostMigrationException;
 
 public class PostMigration {
 
-    public static void launchPostMigration() {
+    public static void launchPostMigration() throws PostMigrationException {
     }
 }

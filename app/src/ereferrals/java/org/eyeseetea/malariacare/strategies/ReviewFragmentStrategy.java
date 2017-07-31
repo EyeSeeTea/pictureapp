@@ -22,6 +22,7 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
     final String TITLE_SEPARATOR = ": ";
 
+    @Override
     public TableRow createViewRow(TableRow rowView, Value value) {
 
         rowView.setTag(value.getQuestionUId());
@@ -38,13 +39,14 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
             questionTextView.setText(rowText);
             //Adds click listener to hide the fragment and go to the clicked question.
-            rowView.setOnClickListener(new View.OnClickListener() {
+            questionTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(!DynamicTabAdapter.isClicked) {
                         DynamicTabAdapter.isClicked = true;
                         String questionUId = (String) v.getTag();
                         onClickListener.onClickOnValue(questionUId);
+                        DashboardActivity.dashboardActivity.hideReview(questionUId);
                     }
                 }
             });

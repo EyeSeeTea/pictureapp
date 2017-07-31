@@ -1,11 +1,11 @@
 package org.eyeseetea.malariacare.domain.exception;
 
 public class ConversionException extends Exception {
+    public static String ERROR_MESSAGE = "Exception info: Error during conversion";
+
     public ConversionException(Exception e) {
-        super("Error in conversion");
+        super(ERROR_MESSAGE);
+        System.out.println(ERROR_MESSAGE);
         e.printStackTrace();
-    }
-    public ConversionException() {
-        super("Error in conversion");
     }
 }

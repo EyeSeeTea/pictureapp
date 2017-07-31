@@ -1,6 +1,8 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Rule;
@@ -145,4 +147,13 @@ public class OrganisationUnitTest {
 
         new OrganisationUnit("uid", "name", "code", "description", new Date(), "pin", null);
     }
+
+    @Test
+    public void test_description_when_banning() {
+        OrganisationUnit organisationUnit = new OrganisationUnit("uid", "name", false);
+        organisationUnit.ban();
+        assertThat(organisationUnit.getDescription(), is(not(equalTo(""))));
+    }
+
+
 }

@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.entity;
 
+import static org.eyeseetea.malariacare.domain.utils.RequiredChecker.required;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,27 +22,27 @@ public class OrganisationUnit {
     private Program mProgram;
 
     public OrganisationUnit(String uid, String name, String description, Date closedDate) {
-        this.uid = uid;
-        this.name = name;
-        this.description = description;
+        this.uid = required(uid,"UID is required");
+        this.name = required(name,"Name is required");
+        this.description = required(description,"Description is required");
         this.closedDate = closedDate;
     }
 
     public OrganisationUnit(String uid, String name, boolean banned) {
-        this.uid = uid;
-        this.name = name;
+        this.uid = required(uid,"UID is required");
+        this.name = required(name,"Name is required");
         this.banned = banned;
     }
 
     public OrganisationUnit(String uid, String name, String code, String description,
             Date closedDate, String pin, Program program) {
-        this.uid = uid;
-        this.name = name;
-        this.code = code;
-        this.description = description;
+        this.uid = required(uid,"UID is required");
+        this.name = required(name,"Name is required");
+        this.code = required(code,"Code is required");
+        this.description = required(description,"Description is required");
         this.closedDate = closedDate;
-        this.pin = pin;
-        mProgram = program;
+        this.pin = required(pin,"Pin is required");
+        mProgram = required(program,"Program is required");
     }
 
     public String getUid() {

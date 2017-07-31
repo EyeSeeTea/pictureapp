@@ -56,7 +56,7 @@ public class GetReviewValuesBySurveyIdUseCase implements UseCase {
         List<java.lang.String> colorsList = new ArrayList<>();
         for (Value value : values) {
             if (value.getBackgroundColor() != null) {
-                java.lang.String color = "#" + value.getBackgroundColor();
+                java.lang.String color = value.getBackgroundColor();
                 if (!colorsList.contains(color)) {
                     colorsList.add(color);
                 }

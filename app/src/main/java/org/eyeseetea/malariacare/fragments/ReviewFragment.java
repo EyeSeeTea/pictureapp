@@ -44,7 +44,7 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
                 container, false);
         listView = (ListView) mView.findViewById(R.id.review_list);
         initializePresenter();
-        initReviewButton(view);
+        initReviewButton(mView);
         return mView;
     }
 

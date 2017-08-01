@@ -1,16 +1,18 @@
 package org.eyeseetea.malariacare.domain.entity;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.eyeseetea.malariacare.domain.entity.OrganisationUnit.CLOSE_DATE_DESCRIPTION;
+import static org.eyeseetea.malariacare.domain.entity.OrganisationUnit.CLOSE_DATE_FORMAT;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class OrganisationUnitTest {
 
@@ -152,7 +154,32 @@ public class OrganisationUnitTest {
     public void test_description_when_banning() {
         OrganisationUnit organisationUnit = new OrganisationUnit("uid", "name", false);
         organisationUnit.ban();
-        assertThat(organisationUnit.getDescription(), is(not(equalTo(""))));
+        String closeDateText = getStringFromDateWithFormat(organisationUnit.getClosedDate(),
+                CLOSE_DATE_FORMAT);
+        String bannedDescription = String.format(CLOSE_DATE_DESCRIPTION,
+                organisationUnit.getClosedDate().getTime(),
+                closeDateText);
+        StringBuilder sb = new StringBuilder();
+        sb.append(bannedDescription);
+
+        assertThat(organisationUnit.getDescription(), is(sb.toString()));
+
+        organisationUnit.ban();
+        closeDateText = getStringFromDateWithFormat(organisationUnit.getClosedDate(),
+                CLOSE_DATE_FORMAT);
+        bannedDescription = String.format(CLOSE_DATE_DESCRIPTION,
+                organisationUnit.getClosedDate().getTime(),
+                closeDateText);
+        sb.append("");//next line
+        sb.append("");//next line
+        sb.append(bannedDescription);
+
+        assertThat(organisationUnit.getDescription(), is(sb.toString()));
+    }
+
+    private String getStringFromDateWithFormat(Date date, String dateFormat) {
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.US);
+        return format.format(date.getTime());
     }
 
 

@@ -3,6 +3,7 @@
 # Definitions
 gitPath=$(git rev-parse --show-toplevel)
 postCheckoutFile=${gitPath}/.git/hooks/post-checkout
+${EST_FLAVOR:="ereferrals"}
 
 # Generate last commit
 sh ${gitPath}/generate_last_commit.sh
@@ -11,5 +12,6 @@ sh ${gitPath}/generate_last_commit.sh
 cd sdk
 git checkout 2.25_EyeSeeTea
 cd -
-mkdir app/src/cambodia/res/raw
-cp ${BUDDYBUILD_SECURE_FILES}/config_laos.json app/src/laos/res/raw/config.json
+
+mkdir app/src/"${EST_FLAVOR}"/res/raw
+cp ${BUDDYBUILD_SECURE_FILES}/config_${EST_FLAVOR}.json app/src/${EST_FLAVOR}/res/raw/config.json

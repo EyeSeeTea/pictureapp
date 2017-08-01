@@ -5,9 +5,8 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 
-public abstract class AKeyboardQuestionView extends LinearLayout {
+public abstract class AKeyboardQuestionView extends CommonQuestionView {
     protected onAnswerChangedListener mOnAnswerChangedListener;
 
     public AKeyboardQuestionView(Context context) {

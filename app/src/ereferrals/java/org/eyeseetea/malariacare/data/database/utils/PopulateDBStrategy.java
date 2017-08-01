@@ -14,6 +14,7 @@ import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.QuestionOption;
 import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
+import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.model.Tab;
 import org.eyeseetea.malariacare.data.database.utils.populatedb.IPopulateDBStrategy;
 
@@ -59,7 +60,10 @@ public class PopulateDBStrategy implements IPopulateDBStrategy {
 
     @Override
     public void logoutWipe() {
-
+        List<Survey> surveys = Survey.getAllSurveys();
+        for (Survey survey : surveys) {
+            survey.delete();
+        }
     }
 
 

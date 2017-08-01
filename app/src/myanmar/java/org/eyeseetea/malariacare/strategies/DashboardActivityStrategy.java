@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 
-import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
+import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Program;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.Session;
@@ -21,6 +21,10 @@ import java.util.Date;
 
 public class DashboardActivityStrategy extends ADashboardActivityStrategy {
     private StockFragment stockFragment;
+
+    public DashboardActivityStrategy(DashboardActivity dashboardActivity) {
+        super(dashboardActivity);
+    }
 
     @Override
     public void reloadStockFragment(Activity activity) {

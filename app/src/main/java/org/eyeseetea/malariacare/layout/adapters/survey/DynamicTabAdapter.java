@@ -58,8 +58,8 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.entity.Validation;
 import org.eyeseetea.malariacare.layout.adapters.survey.navigation.NavigationController;
-import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
 import org.eyeseetea.malariacare.layout.adapters.survey.strategies.ADynamicTabAdapterStrategy;
+import org.eyeseetea.malariacare.layout.adapters.survey.strategies.DynamicTabAdapterStrategy;
 import org.eyeseetea.malariacare.layout.listeners.SwipeTouchListener;
 import org.eyeseetea.malariacare.layout.listeners.question.QuestionAnswerChangedListener;
 import org.eyeseetea.malariacare.layout.utils.BaseLayoutUtils;
@@ -74,6 +74,7 @@ import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 import org.eyeseetea.malariacare.views.question.IImageQuestionView;
 import org.eyeseetea.malariacare.views.question.IMultiQuestionView;
 import org.eyeseetea.malariacare.views.question.INavigationQuestionView;
@@ -132,7 +133,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
     private boolean mReviewMode = false;
     private boolean isBackward = true;
 
-    public DynamicTabAdapter(Context context, boolean reviewMode) {
+    public DynamicTabAdapter(Context context, boolean reviewMode) throws NullPointerException {
         mReviewMode = reviewMode;
         this.lInflater = LayoutInflater.from(context);
         this.context = context;
@@ -189,7 +190,7 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
         return false;
     }
 
-    private NavigationController initNavigationController() {
+    private NavigationController initNavigationController() throws NullPointerException{
         NavigationController navigationController = Session.getNavigationController();
         navigationController.first();
         return navigationController;
@@ -482,6 +483,9 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
 
         if (GradleVariantConfig.isButtonNavigationActive()) {
             initializeNavigationButtons(navigationButtonHolder);
+            if(navigationController.getCurrentPage()==0){
+                navigationButtonHolder.findViewById(R.id.back_btn_container).setVisibility(View.GONE);
+            }
             isClicked = false;
         }
 
@@ -667,7 +671,8 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
                 boolean questionsWithError = false;
 
                 for (IMultiQuestionView multiquestionView : mMultiQuestionViews) {
-                    if (multiquestionView.hasError()) {
+                    if (((CommonQuestionView) multiquestionView).isActive()
+                            && multiquestionView.hasError()) {
                         questionsWithError = true;
                         break;
                     }
@@ -817,10 +822,13 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
             Survey survey = SurveyFragmentStrategy.getSessionSurveyByQuestion(rowQuestion);
 
             if (rowQuestion.isHiddenBySurveyAndHeader(survey)) {
+                row.clearFocus();
                 row.setVisibility(View.GONE);
+                ((CommonQuestionView) row.getChildAt(0)).deactivateQuestion();
                 hideDefaultValue(rowQuestion);
             } else {
                 row.setVisibility(View.VISIBLE);
+                ((CommonQuestionView) row.getChildAt(0)).activateQuestion();
                 showDefaultValue(row, rowQuestion);
             }
             return true;
@@ -957,10 +965,6 @@ public class DynamicTabAdapter extends BaseAdapter implements ITabAdapter {
      * Changes the current question moving backward
      */
     private void previous() {
-        try{
-            System.out.println(Session.getMalariaSurvey().getValuesFromDB().toString());
-            System.out.println(Session.getStockSurvey().getValuesFromDB().toString());
-        }catch (Exception e){}
         if (!navigationController.hasPrevious()) {
             return;
         }

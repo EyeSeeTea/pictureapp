@@ -25,12 +25,12 @@ public abstract class ALoginActivityStrategy {
     public abstract void onLoginSuccess(Credentials credentials);
 
     public void onLoginNetworkError(Credentials credentials) {
-        loginActivity.onFinishLoading(null);
+        loginActivity.hideProgressBar();
         loginActivity.showError(loginActivity.getString(R.string.network_error));
     }
 
     public void onBadCredentials() {
-        loginActivity.onFinishLoading(null);
+        loginActivity.hideProgressBar();
         loginActivity.showError(loginActivity.getString(R.string.login_invalid_credentials));
     }
 
@@ -49,4 +49,18 @@ public abstract class ALoginActivityStrategy {
     }
 
     public abstract void initLoginUseCase(IAuthenticationManager authenticationManager);
+
+    public void checkCredentials(Credentials credentials, Callback callback) {
+        callback.onSuccessDoLogin();
+    }
+
+    public interface Callback {
+        void onSuccess();
+
+        void onSuccessDoLogin();
+
+        void onError();
+    }
+
+
 }

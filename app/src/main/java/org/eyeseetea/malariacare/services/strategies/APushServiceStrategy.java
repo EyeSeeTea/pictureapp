@@ -112,10 +112,15 @@ public abstract class APushServiceStrategy {
                 onError("PUSHUSECASE ERROR on closedUser "+PreferencesState.getInstance().isPushInProgress());
                 closeUserLogout();
             }
+
+            @Override
+            public void onApiCallError() {
+                onError("onApiCallError");
+            }
         });
     }
 
-    private void onError(String error) {
+    public void onError(String error) {
         Log.e(TAG, error);
         mPushService.onPushError(error);
     }

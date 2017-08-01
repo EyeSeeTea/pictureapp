@@ -8,7 +8,7 @@ public class PositiveOrZeroNumber {
 
     public PositiveOrZeroNumber(int value) throws InvalidPositiveOrZeroNumberException {
         if (!isValid(value)) {
-            throw new InvalidPositiveOrZeroNumberException("Invalid positive number");
+            throw new InvalidPositiveOrZeroNumberException();
         }
 
         this.value = value;
@@ -21,7 +21,7 @@ public class PositiveOrZeroNumber {
         try {
             numericValue = Integer.parseInt(positiveNumber);
         } catch (NumberFormatException e) {
-            throw new InvalidPositiveOrZeroNumberException("Invalid positive Number");
+            throw new InvalidPositiveOrZeroNumberException();
         }
 
         return new PositiveOrZeroNumber(numericValue);

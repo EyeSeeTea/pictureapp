@@ -300,7 +300,7 @@
 <string name="previous_distributions">"ယခင်ဖြန့်ဖြူး"</string>
 <string name="network_error">"ကွန်ယက်နှင့်အတူပြဿနာရှိပါတယ်, နောက်တခါထပ်ကြိုးစားကြည့်ပါ။"</string>
 <string name="login_invalid_credentials">"မှားနေသောအထောက်အထားများ"</string>
-    <string name="login_unexpected_error">"အမှားတစ်ခုတွေ့ရပါတယ်။ ကျေးဇူးပြု။ နောက်တစ်ကြိမ်ကြိုးစားပါ"</string>
+<string name="login_unexpected_error">"အမှားတစ်ခုတွေ့ရပါတယ်။ ကျေးဇူးပြု။ နောက်တစ်ကြိမ်ကြိုးစားပါ"</string>
 <string name="login_invalid_server_url">"မှားနေသော Server ကို URL ကို"</string>
 <string name="login_error_json">မှားယွင်းနေသည် JSON config ကိုဖိုင်ကိုဖတ်နေ။ သင်၏စီမံအုပ်ချုပ်သူကိုဆက်သွယ်ပါ။</string>
 <string name="see_resets">"ယခင်စာရင်းပြင်ဆင်ထားမှုများ ကြည့်ရန်"</string>
@@ -331,4 +331,6 @@
 <string name="user_close">"ဤအသုံးပြုသူသည်က de စီမံအုပ်ချုပ်သူကပိတ်ထားခဲ့ခြင်းဖြစ်သည်။"</string>
 <string name="run_in_demo_mode">"သရုပ်ပြ mode မှာ Run"</string>
 <string name="error_message_push">"UID နှင့်အတူထိုအဖြစ်အပျက်: %s ကို။ နေ့စွဲမရှိဘဲတင်ခံခဲ့ရသည်။ စီမံခန့်ခွဲသူကိုဆက်သွယ်ပါ။ "</string>
+<string name="db_migration_error">"ဟုအဆိုပါစီမံအုပ်ချုပ်သူကိုအကြောင်းကြားပေးပါ, လျှောက်လွှာ-install ခံရဖို့လိုအပ်နိုင်ပါသည်"</string>
+<string name="error_exporting_data">"မှားယွင်းနေသည် metadata ကိုတင်ပို့လို့မရပါ။ "</string>
 </resources>

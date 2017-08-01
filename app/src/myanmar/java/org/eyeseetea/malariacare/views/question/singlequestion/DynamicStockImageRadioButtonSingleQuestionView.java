@@ -14,17 +14,19 @@ import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.model.Value;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.domain.entity.TreatmentQueries;
+import org.eyeseetea.malariacare.domain.exception.ImageNotShowException;
 import org.eyeseetea.malariacare.views.option.ImageRadioButtonOption;
 import org.eyeseetea.malariacare.views.question.AKeyboardQuestionView;
 import org.eyeseetea.malariacare.views.question.AOptionQuestionView;
 import org.eyeseetea.malariacare.views.question.IQuestionView;
+import org.eyeseetea.malariacare.views.question.CommonQuestionView;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
-public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout implements
+public class DynamicStockImageRadioButtonSingleQuestionView extends CommonQuestionView implements
         IQuestionView, ImageRadioButtonOption.OnCheckedChangeListener {
 
     protected AKeyboardQuestionView.onAnswerChangedListener mOnAnswerChangedListener;
@@ -104,7 +106,7 @@ public class DynamicStockImageRadioButtonSingleQuestionView extends LinearLayout
             imageRadioButtonOption.setImageDrawable(drawable);
             ims.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            new ImageNotShowException(e, "Image path:" + path);
         }
     }
 

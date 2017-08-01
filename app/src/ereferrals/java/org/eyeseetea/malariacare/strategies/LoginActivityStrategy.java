@@ -9,34 +9,47 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.LoginActivity;
-import org.eyeseetea.malariacare.ProgressActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.data.database.CredentialsLocalDataSource;
 import org.eyeseetea.malariacare.data.database.InvalidLoginAttemptsRepositoryLocalDataSource;
-import org.eyeseetea.malariacare.data.database.utils.PreferencesEReferral;
+import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.repositories.OrganisationUnitRepository;
+import org.eyeseetea.malariacare.data.sync.importer.PullController;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.boundary.IPullController;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.ICredentialsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IInvalidLoginAttemptsRepository;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IOrganisationUnitRepository;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
-import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
+import org.eyeseetea.malariacare.domain.usecase.IsLoginEnableUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
+import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullFilters;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullStep;
+import org.eyeseetea.malariacare.domain.usecase.pull.PullUseCase;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
-
-import java.util.Date;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 
 public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     private static final String TAG = ".LoginActivityStrategy";
     public static final String EXIT = "exit";
+    private final PullUseCase mPullUseCase;
+    private IsLoginEnableUseCase mIsLoginEnableUseCase;
 
     public LoginActivityStrategy(LoginActivity loginActivity) {
         super(loginActivity);
+        IPullController pullController = new PullController(loginActivity);
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+
+        mPullUseCase = new PullUseCase(pullController, asyncExecutor, mainExecutor);
     }
 
     /**
@@ -66,7 +79,7 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
     @Override
     public void finishAndGo() {
-        finishAndGo(ProgressActivity.class);
+        launchPull(false);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -105,24 +118,45 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
     private void checkEnableLogin() {
         IInvalidLoginAttemptsRepository invalidLoginAttemptsLocalDataSource =
                 new InvalidLoginAttemptsRepositoryLocalDataSource();
-        final InvalidLoginAttempts invalidLoginAttempts =
-                invalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
-        if (!invalidLoginAttempts.isLoginEnabled()) {
-            loginActivity.enableLogin(false);
-            final Handler h = new Handler();
-            final int delay = 1000; //milliseconds
-            h.postDelayed(new Runnable() {
-                public void run() {
-                    if (!loginActivity.isFinishing()) {
-                        if (!invalidLoginAttempts.isLoginEnabled()) {
-                            h.postDelayed(this, delay);
-                        } else {
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        mIsLoginEnableUseCase = new IsLoginEnableUseCase(
+                invalidLoginAttemptsLocalDataSource, mainExecutor, asyncExecutor);
+        mIsLoginEnableUseCase.execute(new IsLoginEnableUseCase.Callback() {
+            @Override
+            public void onLoginEnable() {
+                loginActivity.enableLogin(true);
+            }
+
+            @Override
+            public void onLoginDisable() {
+                loginDisable();
+            }
+        });
+    }
+
+    private void loginDisable() {
+        loginActivity.enableLogin(false);
+        final Handler h = new Handler();
+        final int delay = 1000; //milliseconds
+        h.postDelayed(new Runnable() {
+            public void run() {
+                final Runnable runnable = this;
+                if (!loginActivity.isFinishing()) {
+                    mIsLoginEnableUseCase.execute(new IsLoginEnableUseCase.Callback() {
+                        @Override
+                        public void onLoginEnable() {
                             loginActivity.enableLogin(true);
                         }
-                    }
+
+                        @Override
+                        public void onLoginDisable() {
+                            h.postDelayed(runnable, delay);
+                        }
+                    });
                 }
-            }, delay);
-        }
+            }
+        }, delay);
     }
 
     @Override
@@ -132,9 +166,9 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
 
 
     public boolean canEnableLoginButtonOnTextChange() {
-        long timeEnabled = PreferencesEReferral.getTimeLoginEnables();
-        long currentTime = new Date().getTime();
-        return currentTime > timeEnabled;
+        IInvalidLoginAttemptsRepository invalidLoginAttemptsLocalDataSource =
+                new InvalidLoginAttemptsRepositoryLocalDataSource();
+        return invalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts().isLoginEnabled();
     }
 
     @Override
@@ -157,4 +191,93 @@ public class LoginActivityStrategy extends ALoginActivityStrategy {
                 asyncExecutor, organisationDataSource, credentialsLocalDataSoruce,
                 iInvalidLoginAttemptsRepository);
     }
+
+    @Override
+    public void checkCredentials(Credentials credentials, final Callback callback) {
+        ICredentialsRepository credentialsLocalDataSource = new CredentialsLocalDataSource();
+        Credentials savedCredentials = credentialsLocalDataSource.getOrganisationCredentials();
+        if (savedCredentials == null || savedCredentials.isEmpty()
+                || savedCredentials.getUsername().equals(
+                credentials.getUsername()) && (!savedCredentials.getPassword().equals(
+                credentials.getPassword()) || !savedCredentials.getServerURL().equals(
+                credentials.getServerURL()))) {
+            callback.onSuccessDoLogin();
+        } else if (savedCredentials.getUsername().equals(
+                credentials.getUsername()) && savedCredentials.getPassword().equals(
+                credentials.getPassword())
+                && savedCredentials.getServerURL().equals(
+                credentials.getServerURL())) {
+            callback.onSuccess();
+        } else {
+            IAuthenticationManager iAuthenticationManager = new AuthenticationManager(
+                    loginActivity);
+            LogoutUseCase logoutUseCase = new LogoutUseCase(iAuthenticationManager);
+            AlarmPushReceiver.cancelPushAlarm(loginActivity);
+            logoutUseCase.execute(new LogoutUseCase.Callback() {
+                @Override
+                public void onLogoutSuccess() {
+                    callback.onSuccessDoLogin();
+                }
+
+                @Override
+                public void onLogoutError(String message) {
+                    callback.onError();
+                }
+            });
+        }
+
+
+    }
+
+
+    private void launchPull(boolean isDemo) {
+        PullFilters pullFilters = new PullFilters();
+        pullFilters.setStartDate(PreferencesState.getInstance().getDateStarDateLimitFilter());
+        pullFilters.setDownloadDataRequired(PreferencesState.getInstance().downloadDataFilter());
+        pullFilters.setPullDataAfterMetadata(
+                PreferencesState.getInstance().getPullDataAfterMetadata());
+        pullFilters.setPullMetaData(PreferencesState.getInstance().downloadMetaData());
+        if (PreferencesState.getInstance().getDataFilteredByOrgUnit()) {
+            pullFilters.setDataByOrgUnit(PreferencesState.getInstance().getOrgUnit());
+        }
+        pullFilters.setDemo(isDemo);
+
+        mPullUseCase.execute(pullFilters, new PullUseCase.Callback() {
+            @Override
+            public void onComplete() {
+                loginActivity.onFinishLoading(null);
+                finishAndGo(DashboardActivity.class);
+            }
+
+            @Override
+            public void onStep(PullStep pullStep) {
+
+            }
+
+            @Override
+            public void onError(String message) {
+                loginActivity.onFinishLoading(null);
+                loginActivity.showError(R.string.dialog_pull_error);
+            }
+
+            @Override
+            public void onNetworkError() {
+                loginActivity.onFinishLoading(null);
+                loginActivity.showError(R.string.network_error);
+            }
+
+            @Override
+            public void onPullConversionError() {
+                loginActivity.onFinishLoading(null);
+                loginActivity.showError(R.string.dialog_pull_error);
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+
+    }
+
 }

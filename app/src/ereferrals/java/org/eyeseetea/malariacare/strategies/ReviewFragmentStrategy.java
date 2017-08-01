@@ -14,11 +14,12 @@ import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
 public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
-    final String TITLE_SEPARATOR = ": \n";
+    final String TITLE_SEPARATOR = ": ";
 
+    @Override
     public TableRow createViewRow(TableRow rowView, Value value) {
 
-        rowView.setTag(getCorrectQuestion(value.getQuestionUId()));
+        rowView.setTag(value.getQuestionUId());
 
         //Sets the value text in the row and add the question as tag.
         CustomTextView questionTextView = (CustomTextView) rowView.findViewById(
@@ -32,12 +33,13 @@ public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
 
             questionTextView.setText(rowText);
             //Adds click listener to hide the fragment and go to the clicked question.
-            rowView.setOnClickListener(new View.OnClickListener() {
+            questionTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(!DynamicTabAdapter.isClicked) {
                         DynamicTabAdapter.isClicked = true;
                         String questionUId = (String) v.getTag();
+
                         DashboardActivity.dashboardActivity.hideReview(questionUId);
                     }
                 }

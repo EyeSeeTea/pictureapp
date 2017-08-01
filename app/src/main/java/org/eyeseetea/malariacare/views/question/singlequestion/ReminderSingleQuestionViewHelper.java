@@ -14,7 +14,7 @@ public class ReminderSingleQuestionViewHelper {
     public static void setImage(View rowView, String path) {
         if (path != null && !path.equals("")) {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.questionImageRow);
-            BaseLayoutUtils.putImageInImageViewDensityHight(path, imageView);
+            BaseLayoutUtils.putImageInImageViewDensityHigh(path, imageView);
             imageView.setVisibility(View.VISIBLE);
             DynamicTabAdapter.swipeTouchListener.addTouchableView(imageView);
         }

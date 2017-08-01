@@ -42,6 +42,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -57,9 +58,11 @@ import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.domain.usecase.LoginUseCase;
 import org.eyeseetea.malariacare.network.ServerAPIController;
+import org.eyeseetea.malariacare.strategies.ALoginActivityStrategy;
 import org.eyeseetea.malariacare.strategies.LoginActivityStrategy;
 import org.eyeseetea.malariacare.utils.Utils;
 import org.eyeseetea.malariacare.views.dialog.AnnouncementMessageDialog;
@@ -112,6 +115,9 @@ public class LoginActivity extends Activity {
         initLoginUseCase();
         AsyncInit asyncPopulateDB = new AsyncInit(this);
         asyncPopulateDB.execute((Void) null);
+        if(BuildConfig.translations) {
+            PreferencesState.getInstance().loadsLanguageInActivity();
+        }
     }
 
     private void initLoginUseCase() {
@@ -274,7 +280,28 @@ public class LoginActivity extends Activity {
     public void login(String serverUrl, String username, String password) {
         final Credentials credentials = new Credentials(serverUrl, username, password);
         onStartLoading();
+        mLoginActivityStrategy.checkCredentials(credentials, new ALoginActivityStrategy.Callback() {
+            @Override
+            public void onSuccess() {
+                mLoginActivityStrategy.onLoginSuccess(credentials);
+            }
 
+            @Override
+            public void onSuccessDoLogin() {
+                executeLoginUseCase(credentials);
+            }
+
+            @Override
+            public void onError() {
+                hideProgressBar();
+                showError(getString(R.string.login_unexpected_error));
+            }
+        });
+
+    }
+
+
+    private void executeLoginUseCase(final Credentials credentials) {
         mLoginUseCase.execute(credentials, new ALoginUseCase.Callback() {
             @Override
             public void onLoginSuccess() {
@@ -351,6 +378,7 @@ public class LoginActivity extends Activity {
     }
 
     public void showProgressBar() {
+        hideKeyboard();
         if (layoutTransitionSlideOut != null) {
             findViewById(R.id.layout_login_views).startAnimation(layoutTransitionSlideOut);
         }
@@ -548,13 +576,19 @@ public class LoginActivity extends Activity {
     public class AsyncPullAnnouncement extends AsyncTask<LoginActivity, Void, Void> {
         //userCloseChecker is never saved, Only for check if the date is closed.
         LoginActivity loginActivity;
-        boolean isUserClosed = false;
+        Boolean isUserClosed = false;
 
         @Override
         protected Void doInBackground(LoginActivity... params) {
             loginActivity = params[0];
-            if (Session.getUser() != null) {
+            if(Session.getUser()==null){
+                isUserClosed = null;
+                return null;
+            }
+            try {
                 isUserClosed = ServerAPIController.isUserClosed(Session.getUser().getUid());
+            }catch (ApiCallException e){
+                isUserClosed = null;
             }
             return null;
         }
@@ -562,8 +596,8 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            onFinishLoading(null);
-            if (isUserClosed) {
+            if (isUserClosed != null && isUserClosed) {
+                onFinishLoading(null);
                 Log.d(TAG, "user closed");
                 AnnouncementMessageDialog.closeUser(R.string.admin_announcement,
                         PreferencesState.getInstance().getContext().getString(R.string.user_close),
@@ -620,6 +654,15 @@ public class LoginActivity extends Activity {
                 onPostAnimationAction.run();
                 onPostAnimationAction = null;
             }
+        }
+    }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 }

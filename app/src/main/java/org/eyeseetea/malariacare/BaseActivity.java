@@ -46,6 +46,10 @@ import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.data.database.utils.ExportData;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
 import org.eyeseetea.malariacare.data.database.utils.Session;
+import org.eyeseetea.malariacare.domain.exception.ExportDataException;
+import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
+import org.eyeseetea.malariacare.domain.entity.Credentials;
+import org.eyeseetea.malariacare.domain.usecase.ALoginUseCase;
 import org.eyeseetea.malariacare.layout.utils.LayoutUtils;
 import org.eyeseetea.malariacare.phonemetadata.PhoneMetaData;
 import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
@@ -225,7 +229,12 @@ public abstract class BaseActivity extends ActionBarActivity {
                 break;
             case R.id.export_db:
                 debugMessage("Export db");
-                Intent emailIntent = ExportData.dumpAndSendToAIntent(this);
+                Intent emailIntent = null;
+                try {
+                    emailIntent = ExportData.dumpAndSendToAIntent(this);
+                } catch (ExportDataException e) {
+                    Toast.makeText(this, R.string.error_exporting_data, Toast.LENGTH_LONG).show();
+                }
                 if (emailIntent != null) {
                     startActivityForResult(emailIntent, DUMP_REQUEST_CODE);
                 }
@@ -236,12 +245,6 @@ public abstract class BaseActivity extends ActionBarActivity {
                 }
         }
         return true;
-    }
-
-    private void runInDemoMode() {
-        //logout
-        //login as demo mode
-
     }
 
     @Override
@@ -433,6 +436,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
+        mBaseActivityStrategy.onDestroy();
         super.onDestroy();
         alarmPush.cancelPushAlarm(this);
     }
@@ -452,4 +456,5 @@ public abstract class BaseActivity extends ActionBarActivity {
     public BaseActivityStrategy getBaseActivityStrategy() {
         return mBaseActivityStrategy;
     }
+
 }

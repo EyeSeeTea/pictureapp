@@ -16,11 +16,13 @@ import android.widget.Toast;
 import org.eyeseetea.malariacare.BaseActivity;
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
+import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.usecase.LogoutUseCase;
+import org.eyeseetea.malariacare.receivers.AlarmPushReceiver;
 import org.eyeseetea.malariacare.utils.ConnectivityStatus;
 
 public class BaseActivityStrategy extends ABaseActivityStrategy {
@@ -38,13 +40,16 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         super(baseActivity);
     }
 
-    @Override
-    public void onCreate() {
-        mAuthenticationManager = new AuthenticationManager(mBaseActivity);
-        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
-        mBaseActivity.registerReceiver(connectionReceiver,
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-    }
+    private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!ConnectivityStatus.isConnected(mBaseActivity)) {
+                Toast.makeText(mBaseActivity, notConnectedText, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     private void applicationWillEnterForeground() {
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
@@ -54,6 +59,8 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
 
     @Override
     public void onStart() {
+        mBaseActivity.registerReceiver(connectionReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         applicationWillEnterForeground();
     }
 
@@ -118,20 +125,17 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
             EyeSeeTeaApplication.getInstance().setIsWindowFocused(true);
         }
     }
+    private BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() {
 
-    public void logout() {
-        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
-            @Override
-            public void onLogoutSuccess() {
-                ActivityCompat.finishAffinity(mBaseActivity);
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                Log.d(TAG, "Screen off");
+                //// FIXME: 30/05/2017 Uncomment this line to reactivate the disable login feature
+                //showLogin();
             }
-
-            @Override
-            public void onLogoutError(String message) {
-                Log.d(TAG, message);
-            }
-        });
-    }
+        }
+    };
 
     public void showCopyRight(int app_copyright, int copyright) {
         mBaseActivity.showAlertWithMessage(app_copyright, copyright);
@@ -151,7 +155,7 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
     public void onStop() {
         applicationdidenterbackground();
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-            logout();
+            ActivityCompat.finishAffinity(mBaseActivity);
         }
         mBaseActivity.unregisterReceiver(connectionReceiver);
     }
@@ -160,14 +164,47 @@ public class BaseActivityStrategy extends ABaseActivityStrategy {
         this.notConnectedText = notConnectedText;
     }
 
-    private BroadcastReceiver connectionReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (!ConnectivityStatus.isConnected(mBaseActivity)) {
-                Toast.makeText(mBaseActivity, notConnectedText, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(mBaseActivity, R.string.online_status, Toast.LENGTH_SHORT).show();
+    @Override
+    public void onCreate() {
+        mAuthenticationManager = new AuthenticationManager(mBaseActivity);
+        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
+        IntentFilter screenStateFilter = new IntentFilter();
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        mBaseActivity.registerReceiver(mScreenOffReceiver, screenStateFilter);
+    }
+
+    public void logout() {
+        AlarmPushReceiver.cancelPushAlarm(mBaseActivity);
+        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
+            @Override
+            public void onLogoutSuccess() {
+                showLogin();
             }
-        }
-    };
+
+            @Override
+            public void onLogoutError(String message) {
+                Log.d(TAG, message);
+            }
+        });
+    }
+
+    private void showLogin() {
+        Intent loginIntent = new Intent(mBaseActivity, LoginActivity.class);
+        loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mBaseActivity.startActivity(loginIntent);
+    }
+
+    @Override
+    public void onDestroy() {
+        mBaseActivity.unregisterReceiver(mScreenOffReceiver);
+    }
+
+    @Override
+    public void hideMenuItems(Menu menu) {
+        super.hideMenuItems(menu);
+
+        MenuItem item = menu.findItem(R.id.demo_mode);
+        item.setVisible(false);
+    }
 }

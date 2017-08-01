@@ -1,6 +1,10 @@
 package org.eyeseetea.malariacare.strategies;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -9,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import org.eyeseetea.malariacare.EyeSeeTeaApplication;
+import org.eyeseetea.malariacare.LoginActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.SettingsActivity;
 import org.eyeseetea.malariacare.data.authentication.AuthenticationManager;
@@ -29,17 +34,23 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
                 new LogoutAndLoginRequiredOnPreferenceClickListener(settingsActivity);
     }
 
-    @Override
-    public void onCreate() {
-        mAuthenticationManager = new AuthenticationManager(settingsActivity);
-        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
-    }
+    private BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                Log.d(TAG, "Screen off");
+                //// FIXME: 30/05/2017 Uncomment this line to reactivate the disable login feature
+                //showLogin();
+            }
+        }
+    };
 
     @Override
     public void onStop() {
         applicationdidenterbackground();
         if (EyeSeeTeaApplication.getInstance().isAppWentToBg()) {
-            logout();
+            ActivityCompat.finishAffinity(settingsActivity);
         }
     }
     public void applicationdidenterbackground() {
@@ -102,23 +113,30 @@ public class SettingsActivityStrategy extends ASettingsActivityStrategy {
         }
     }
 
-    private void logout() {
-        mLogoutUseCase.execute(new LogoutUseCase.Callback() {
-            @Override
-            public void onLogoutSuccess() {
-                ActivityCompat.finishAffinity(settingsActivity);
-            }
-
-            @Override
-            public void onLogoutError(String message) {
-                Log.d(TAG, message);
-            }
-        });
-    }
-
     @Override
     public void addExtraPreferences() {
         settingsActivity.bindPreferenceSummaryToValue(settingsActivity.findPreference(
                 settingsActivity.getString(R.string.web_service_url)));
+    }
+
+    @Override
+    public void onCreate() {
+        mAuthenticationManager = new AuthenticationManager(settingsActivity);
+        mLogoutUseCase = new LogoutUseCase(mAuthenticationManager);
+        IntentFilter screenStateFilter = new IntentFilter();
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        settingsActivity.registerReceiver(mScreenOffReceiver, screenStateFilter);
+    }
+
+    private void showLogin() {
+        Intent loginIntent = new Intent(settingsActivity, LoginActivity.class);
+        loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        settingsActivity.startActivity(loginIntent);
+    }
+
+    @Override
+    public void onDestroy() {
+        settingsActivity.unregisterReceiver(mScreenOffReceiver);
     }
 }

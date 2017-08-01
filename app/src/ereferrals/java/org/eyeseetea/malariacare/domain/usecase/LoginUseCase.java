@@ -1,5 +1,7 @@
 package org.eyeseetea.malariacare.domain.usecase;
 
+import com.google.android.gms.common.api.Api;
+
 import org.eyeseetea.malariacare.domain.boundary.IAuthenticationManager;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
@@ -10,11 +12,12 @@ import org.eyeseetea.malariacare.domain.entity.Credentials;
 import org.eyeseetea.malariacare.domain.entity.InvalidLoginAttempts;
 import org.eyeseetea.malariacare.domain.entity.OrganisationUnit;
 import org.eyeseetea.malariacare.domain.entity.UserAccount;
+import org.eyeseetea.malariacare.domain.exception.ActionNotAllowed;
+import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ConfigJsonIOException;
 import org.eyeseetea.malariacare.domain.exception.InvalidCredentialsException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.PullConversionException;
-import org.eyeseetea.malariacare.network.ServerAPIController;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -52,34 +55,44 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
 
     @Override
     public void run() {
-        mAuthenticationManager.hardcodedLogin(ServerAPIController.getServerUrl(),
-                new IAuthenticationManager.Callback<UserAccount>() {
-                    @Override
-                    public void onSuccess(UserAccount userAccount) {
-                        mAsyncExecutor.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                pullOrganisationCredentials();
-                            }
-                        });
-                    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        if (throwable instanceof MalformedURLException
-                                || throwable instanceof UnknownHostException) {
-                            notifyServerURLNotValid();
-                        } else if (throwable instanceof InvalidCredentialsException) {
-                            notifyInvalidCredentials();
-                        } else if (throwable instanceof NetworkException) {
-                            checkUserCredentialsWithOrgUnit(
-                                    mCredentialsLocalDataSource.getOrganisationCredentials(),
-                                    false);
+        if (isLoginEnable()) {
+            mAuthenticationManager.hardcodedLogin(insertedCredentials.getServerURL(),
+                    new IAuthenticationManager.Callback<UserAccount>() {
+                        @Override
+                        public void onSuccess(UserAccount userAccount) {
+                            mAsyncExecutor.run(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pullOrganisationCredentials();
                         }
+                            });
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            if (throwable instanceof MalformedURLException
+                                    || throwable instanceof UnknownHostException) {
+                                notifyServerURLNotValid();
+                            } else if (throwable instanceof InvalidCredentialsException) {
+                                notifyInvalidCredentials();
+                            } else if (throwable instanceof NetworkException) {
+                                checkUserCredentialsWithOrgUnit(
+                                        mCredentialsLocalDataSource.getOrganisationCredentials(),
+                                        true);
                     }
-                });
+                        }
+                    });
+        } else {
+            notifyMaxLoginAttemptsReached();
+        }
     }
 
+    private boolean isLoginEnable() {
+        InvalidLoginAttempts invalidLoginAttempts =
+                mInvalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
+        return invalidLoginAttempts.isLoginEnabled();
+    }
 
     private void pullOrganisationCredentials() {
         Credentials orgUnitCredentials = null;
@@ -89,19 +102,22 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
                 notifyInvalidCredentials();
                 return;
             }
-            orgUnitCredentials = new Credentials("", orgUnit.getCode(), orgUnit.getPin());
+            orgUnitCredentials =
+                    new Credentials(insertedCredentials.getServerURL(), orgUnit.getCode(),
+                            orgUnit.getPin());
 
-        } catch (PullConversionException | JSONException | ConfigJsonIOException e) {
-            e.printStackTrace();
-            notifyConfigJsonNotPresent();
+        } catch (ApiCallException e) {
+            if(e.getCause() instanceof  IOException){
+                notifyUnexpectedError();
+            }else {
+                e.printStackTrace();
+                notifyConfigJsonNotPresent();
+            }
         } catch (NetworkException e) {
             e.printStackTrace();
             checkUserCredentialsWithOrgUnit(
                     mCredentialsLocalDataSource.getOrganisationCredentials(),
                     true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            notifyUnexpectedError();
         }
 
         mCredentialsLocalDataSource.saveOrganisationCredentials(orgUnitCredentials);
@@ -113,7 +129,9 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
     private void checkUserCredentialsWithOrgUnit(Credentials credentials,
             boolean fromNetWorkError) {
         if (insertedCredentials.getUsername().equals(credentials.getUsername())
-                && insertedCredentials.getPassword().equals(credentials.getPassword())) {
+                && insertedCredentials.getPassword().equals(credentials.getPassword())
+                && (fromNetWorkError || insertedCredentials.getServerURL().equals(
+                credentials.getServerURL()))) {
             notifyLoginSucces();
         } else {
             if (fromNetWorkError) {
@@ -137,7 +155,12 @@ public class LoginUseCase extends ALoginUseCase implements UseCase {
         InvalidLoginAttempts invalidLoginAttempts =
                 mInvalidLoginAttemptsLocalDataSource.getInvalidLoginAttempts();
 
-        invalidLoginAttempts.addFailedAttempts();
+        try {
+            invalidLoginAttempts.addFailedAttempts();
+        } catch (ActionNotAllowed actionNotAllowed) {
+            actionNotAllowed.printStackTrace();
+            notifyMaxLoginAttemptsReached();
+        }
 
         mInvalidLoginAttemptsLocalDataSource.saveInvalidLoginAttempts(invalidLoginAttempts);
 

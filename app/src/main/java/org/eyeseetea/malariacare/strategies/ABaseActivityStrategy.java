@@ -37,4 +37,8 @@ public abstract class ABaseActivityStrategy {
         intentSettings.putExtra(SettingsActivity.IS_LOGIN_DONE, false);
         mBaseActivity.startActivity(new Intent(mBaseActivity, SettingsActivity.class));
     }
+
+    public void onDestroy() {
+
+    }
 }

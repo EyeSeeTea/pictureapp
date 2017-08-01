@@ -33,4 +33,8 @@ public class PhoneMask {
         }
         return phoneValue.isEmpty() || phoneValue.matches(PLAIN_PHONE_NUMBER_MASK);
     }
+
+    public static String applyValueTransformations(String value){
+        return value;
+    }
 }

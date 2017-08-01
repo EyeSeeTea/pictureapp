@@ -33,6 +33,7 @@ import org.eyeseetea.malariacare.domain.entity.pushsummary.PushReport;
 import org.eyeseetea.malariacare.domain.exception.ApiCallException;
 import org.eyeseetea.malariacare.domain.exception.ClosedUserPushException;
 import org.eyeseetea.malariacare.domain.exception.ConversionException;
+import org.eyeseetea.malariacare.domain.exception.ConvertedEventsToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.exception.NetworkException;
 import org.eyeseetea.malariacare.domain.exception.SurveysToPushNotFoundException;
 import org.eyeseetea.malariacare.domain.exception.push.PushDhisException;
@@ -74,7 +75,11 @@ public class PushController implements IPushController {
 
             User loggedUser = User.getLoggedUser();
             if (loggedUser != null && loggedUser.getUid() != null) {
+                try {
                 isUserClosed = ServerAPIController.isUserClosed(User.getLoggedUser().getUid());
+                } catch (ApiCallException e) {
+                    isUserClosed = null;
+            }
             }
 
             if(isUserClosed==null){
@@ -101,7 +106,7 @@ public class PushController implements IPushController {
                 }
 
                 if (EventExtended.getAllEvents().size() == 0) {
-                    callback.onError(new ConversionException());
+                    callback.onError(new ConvertedEventsToPushNotFoundException());
                     return;
                 } else {
                     Log.d(TAG, "push data");
@@ -153,7 +158,7 @@ public class PushController implements IPushController {
     /**
      * Launches visitor that turns an APP survey into a SDK event
      */
-    private void convertToSDK(List<Survey> surveys) throws Exception {
+    private void convertToSDK(List<Survey> surveys) throws ConversionException {
         Log.d(TAG, "Converting APP survey into a SDK event");
         for (Survey survey : surveys) {
             survey.setStatus(Constants.SURVEY_SENDING);

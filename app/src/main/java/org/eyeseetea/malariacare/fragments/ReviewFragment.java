@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
@@ -91,6 +92,7 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
         listView.setDividerHeight(0);
     }
 
+
     public void reloadHeader(Activity activity) {
         DashboardHeaderStrategy.getInstance().hideHeader(activity);
     }
@@ -119,5 +121,10 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
 
     public interface OnEndReviewListener {
         void onEndReview();
+    }
+
+    @Override
+    public void navigateToQuestion(String uId) {
+        DashboardActivity.dashboardActivity.hideReview(uId);
     }
 }

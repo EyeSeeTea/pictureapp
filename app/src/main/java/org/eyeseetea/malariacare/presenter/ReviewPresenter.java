@@ -1,6 +1,5 @@
 package org.eyeseetea.malariacare.presenter;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
 import org.eyeseetea.malariacare.data.database.utils.Session;
 import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
@@ -21,6 +20,8 @@ public class ReviewPresenter implements ReviewScreenAdapter.onClickListener {
         void showValues(List<Value> values);
 
         void initListView();
+
+        void navigateToQuestion(String uId);
     }
 
     ReviewView view;
@@ -49,6 +50,6 @@ public class ReviewPresenter implements ReviewScreenAdapter.onClickListener {
 
     @Override
     public void onClickOnValue(String UId) {
-        DashboardActivity.dashboardActivity.hideReview(UId);
+        view.navigateToQuestion(UId);
     }
 }

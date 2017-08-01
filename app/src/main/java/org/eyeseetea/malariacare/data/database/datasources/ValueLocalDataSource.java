@@ -4,7 +4,6 @@ import org.eyeseetea.malariacare.data.database.model.QuestionRelation;
 import org.eyeseetea.malariacare.data.database.model.Survey;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
 import org.eyeseetea.malariacare.domain.entity.Value;
-import org.eyeseetea.malariacare.strategies.ReviewFragmentStrategy;
 import org.eyeseetea.malariacare.utils.Constants;
 
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ public class ValueLocalDataSource implements IValueRepository {
             if (dBValue.getOption() != null) {
                 value.setInternationalizedCode(
                         dBValue.getOption().getInternationalizedCode());
+                value.setOptionCode(dBValue.getOption().getCode());
             }
             if (dBValue.getOption() != null && dBValue.getOption().getBackground_colour() != null) {
                 String color = "#" + dBValue.getOption().getBackground_colour();
@@ -68,11 +68,8 @@ public class ValueLocalDataSource implements IValueRepository {
                 }
             }
         }
-        return orderValues(reviewValues);
+        return reviewValues;
     }
 
-    private List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(
-            List<org.eyeseetea.malariacare.data.database.model.Value> values) {
-        return ReviewFragmentStrategy.orderValues(values);
-    }
+
 }

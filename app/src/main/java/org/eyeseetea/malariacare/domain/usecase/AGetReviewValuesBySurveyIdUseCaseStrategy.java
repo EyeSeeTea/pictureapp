@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GetReviewValuesBySurveyIdUseCase implements UseCase {
+public abstract class AGetReviewValuesBySurveyIdUseCaseStrategy implements UseCase {
     private IMainExecutor mMainExecutor;
     private IAsyncExecutor mAsyncExecutor;
     private Callback mCallback;
@@ -20,7 +20,7 @@ public class GetReviewValuesBySurveyIdUseCase implements UseCase {
     private long mSurveyId;
 
 
-    public GetReviewValuesBySurveyIdUseCase(
+    public AGetReviewValuesBySurveyIdUseCaseStrategy(
             IMainExecutor mainExecutor,
             IAsyncExecutor asyncExecutor,
             IValueRepository IValueRepository) {
@@ -37,16 +37,17 @@ public class GetReviewValuesBySurveyIdUseCase implements UseCase {
 
     @Override
     public void run() {
-        final List<Value> values = mIValueRepository.getValuesFromSurvey(mSurveyId);
+        List<Value> values = mIValueRepository.getValuesFromSurvey(mSurveyId);
         Iterator<String> colorIterator = Iterables.cycle(
                 createBackgroundColorList(values)).iterator();
         for (Value value : values) {
             value.setBackgroundColor(colorIterator.next());
         }
+        final List<Value> orderValues = orderValues(values);
         mMainExecutor.run(new Runnable() {
             @Override
             public void run() {
-                mCallback.onGetValues(values);
+                mCallback.onGetValues(orderValues);
             }
         });
     }
@@ -76,4 +77,5 @@ public class GetReviewValuesBySurveyIdUseCase implements UseCase {
         void onGetValues(List<Value> values);
     }
 
+    protected abstract List<Value> orderValues(List<Value> values);
 }

@@ -7,7 +7,8 @@ import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
 import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
 import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
 import org.eyeseetea.malariacare.domain.entity.Value;
-import org.eyeseetea.malariacare.domain.usecase.GetReviewValuesBySurveyIdUseCase;
+import org.eyeseetea.malariacare.domain.usecase.AGetReviewValuesBySurveyIdUseCaseStrategy;
+import org.eyeseetea.malariacare.domain.usecase.strategies.GetReviewValuesBySurveyIdUseCaseStrategy;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
 import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
@@ -32,10 +33,11 @@ public class ReviewPresenter implements ReviewScreenAdapter.onClickListener {
         IMainExecutor mainExecutor = new UIThreadExecutor();
         IAsyncExecutor asyncExecutor = new AsyncExecutor();
         IValueRepository valueLocalDataSource = new ValueLocalDataSource();
-        GetReviewValuesBySurveyIdUseCase getReviewValuesBySurveyIdUseCase =
-                new GetReviewValuesBySurveyIdUseCase(mainExecutor, asyncExecutor,
+        AGetReviewValuesBySurveyIdUseCaseStrategy AGetReviewValuesBySurveyIdUseCaseStrategy =
+                new GetReviewValuesBySurveyIdUseCaseStrategy(mainExecutor, asyncExecutor,
                         valueLocalDataSource);
-        getReviewValuesBySurveyIdUseCase.execute(new GetReviewValuesBySurveyIdUseCase.Callback() {
+        AGetReviewValuesBySurveyIdUseCaseStrategy.execute(
+                new AGetReviewValuesBySurveyIdUseCaseStrategy.Callback() {
             @Override
             public void onGetValues(List<Value> values) {
                 view.showValues(values);
@@ -43,6 +45,7 @@ public class ReviewPresenter implements ReviewScreenAdapter.onClickListener {
             }
         }, Session.getMalariaSurvey().getId_survey());
     }
+
 
     @Override
     public void onClickOnValue(String UId) {

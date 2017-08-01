@@ -6,9 +6,6 @@ import android.widget.TableRow;
 
 import org.eyeseetea.malariacare.BuildConfig;
 import org.eyeseetea.malariacare.domain.entity.Value;
-import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
-
-import java.util.List;
 
 public abstract class AReviewFragmentStrategy{
 
@@ -16,10 +13,5 @@ public abstract class AReviewFragmentStrategy{
 
     public static boolean shouldShowReviewScreen() {
         return getMalariaSurvey().isRDT() || BuildConfig.patientTestedByDefault;
-    }
-
-    public static List<org.eyeseetea.malariacare.data.database.model.Value> orderValues(
-            List<org.eyeseetea.malariacare.data.database.model.Value> values) {
-        return values;
     }
 }

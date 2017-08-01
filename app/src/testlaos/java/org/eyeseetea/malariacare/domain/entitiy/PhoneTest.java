@@ -1,4 +1,4 @@
-package org.eyeseetea.malariacare.domain.entitiy;
+package org.eyeseetea.malariacare.domain.entity;
 
 
 import static org.hamcrest.CoreMatchers.notNullValue;

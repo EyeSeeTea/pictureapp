@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.TableRow;
 
-import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
 import org.eyeseetea.malariacare.data.database.model.Question;
 import org.eyeseetea.malariacare.data.database.utils.PreferencesState;
@@ -14,10 +13,10 @@ import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
 import org.eyeseetea.malariacare.layout.adapters.survey.DynamicTabAdapter;
 import org.eyeseetea.sdk.presentation.views.CustomTextView;
 
-public class ReviewFragmentStrategy extends AReviewFragmentStrategy {
+public class ReviewScreenAdapterStrategy extends AReviewScreenAdapterStrategy {
     ReviewScreenAdapter.onClickListener onClickListener;
 
-    public ReviewFragmentStrategy(ReviewScreenAdapter.onClickListener onClickListener) {
+    public ReviewScreenAdapterStrategy(ReviewScreenAdapter.onClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
 

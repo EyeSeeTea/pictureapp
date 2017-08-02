@@ -10,13 +10,25 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.google.common.collect.Iterables;
+
 import org.eyeseetea.malariacare.DashboardActivity;
 import org.eyeseetea.malariacare.R;
+import org.eyeseetea.malariacare.data.database.datasources.ValueLocalDataSource;
+import org.eyeseetea.malariacare.domain.boundary.executors.IAsyncExecutor;
+import org.eyeseetea.malariacare.domain.boundary.executors.IMainExecutor;
+import org.eyeseetea.malariacare.domain.boundary.repositories.IValueRepository;
+import org.eyeseetea.malariacare.domain.entity.Value;
+import org.eyeseetea.malariacare.domain.usecase.GetReviewValuesBySurveyIdUseCase;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.IDashboardAdapter;
 import org.eyeseetea.malariacare.layout.adapters.dashboard.ReviewScreenAdapter;
+import org.eyeseetea.malariacare.presentation.executors.AsyncExecutor;
+import org.eyeseetea.malariacare.presentation.executors.UIThreadExecutor;
 import org.eyeseetea.malariacare.presenter.ReviewPresenter;
 import org.eyeseetea.malariacare.strategies.DashboardHeaderStrategy;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewView {
@@ -98,12 +110,23 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
     }
 
     private void initializePresenter() {
-        mReviewPresenter = new ReviewPresenter();
+        IMainExecutor mainExecutor = new UIThreadExecutor();
+        IAsyncExecutor asyncExecutor = new AsyncExecutor();
+        IValueRepository valueLocalDataSource = new ValueLocalDataSource();
+        GetReviewValuesBySurveyIdUseCase getReviewValuesBySurveyIdUseCase =
+                new GetReviewValuesBySurveyIdUseCase(mainExecutor, asyncExecutor,
+                        valueLocalDataSource);
+        mReviewPresenter = new ReviewPresenter(getReviewValuesBySurveyIdUseCase);
         mReviewPresenter.attachView(this);
     }
 
     @Override
     public void showValues(List<org.eyeseetea.malariacare.domain.entity.Value> values) {
+        Iterator<String> colorIterator = Iterables.cycle(
+                createBackgroundColorList(values)).iterator();
+        for (Value value : values) {
+            value.setBackgroundColor(colorIterator.next());
+        }
         ReviewScreenAdapter adapterInSession = new ReviewScreenAdapter(values, lInflater,
                 getActivity(), new ReviewScreenAdapter.onClickListener() {
             @Override
@@ -113,6 +136,28 @@ public class ReviewFragment extends Fragment implements ReviewPresenter.ReviewVi
         });
         this.adapter = adapterInSession;
     }
+
+    private List<String> createBackgroundColorList(
+            List<Value> values) {
+        List<java.lang.String> colorsList = new ArrayList<>();
+        for (Value value : values) {
+            if (value.getBackgroundColor() != null) {
+                java.lang.String color = value.getBackgroundColor();
+                if (!colorsList.contains(color)) {
+                    colorsList.add(color);
+                }
+            }
+        }
+        //Hardcoded colors for a colorList without colors.
+        if (colorsList.size() == 0) {
+            colorsList.add("#4d3a4b");
+        }
+        if (colorsList.size() == 1 && values.size() > 1) {
+            colorsList.add("#9c7f9b");
+        }
+        return colorsList;
+    }
+
 
     public void setOnEndReviewListener(
             OnEndReviewListener onEndReviewListener) {
